@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\1.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\1.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\.vs\\test.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|solutionrelative:.vs\\test.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "test.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\1.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\.vs\\test.cpp",
+              "RelativeDocumentMoniker": ".vs\\test.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\1.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\.vs\\test.cpp",
+              "RelativeToolTip": ".vs\\test.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-14T14:58:48.768Z",
+              "EditorCaption": ""
             }
           ]
         },
