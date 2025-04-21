@@ -1,19 +1,30 @@
+/*
+   - main.cpp -
+   DxLib‚ÌƒƒCƒ“ˆ—.
+*/
 #include "myDraw.h"
 #include "GlovalConst.h"
+#include "GameManager.h"
 
 float g_ang = 0;
 
 void Init() {
-
+	InitGame();
 }
 
 void Update() {
+	
 	g_ang+=1;
+
+	UpdateGame();
 }
 
 void Draw() {
+	
 	INT_XY pos = { 100, 100 };
 	DrawLineAng(pos, g_ang, 100, GetColor(0, 255, 0));
+
+	DrawGame();
 }
 
 int WINAPI WinMain(
