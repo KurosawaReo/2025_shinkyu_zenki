@@ -12,11 +12,11 @@ void GameManager::Init() {
 
 //çXêV.
 void GameManager::Update() {
-	g_ang += 1;
+	m_ang += 1;
 }
 
 //ï`âÊ.
 void GameManager::Draw() {
 	INT_XY pos = { 100, 100 };
-	DrawLineAng(pos, g_ang, 100, GetColor(0, 255, 0));
+	DrawLineAng(pos, m_ang, 100, GetColor(0, 255, 0));
 }
