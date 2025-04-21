@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GlovalFunc.cpp" />
     <ClCompile Include="myDraw.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GlovalConst.h" />
     <ClInclude Include="GlovalFunc.h" />
     <ClInclude Include="myDraw.h" />
