@@ -1,9 +1,23 @@
-#include "DxLib.h"
+/*
+   - Player.cpp -
+   プレイヤー管理.
+*/
 #include "Player.h"
+
 //WinMain関数
 int PlayerX = 320, PlayerY = 400, PlayerGraph = -1; // 中央下に初期値を設定
 int i = 0; // iにも初期値を設定
-void Player()
+
+//初期化.
+void Player::Init()
+{
+}
+//更新.
+void Player::Update()
+{
+}
+//描画.
+void Player::Draw()
 {
 
 
