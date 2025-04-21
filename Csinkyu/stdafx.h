@@ -22,7 +22,8 @@
 /---------------------------------------------------------------------*/
 #pragma once
 
+#define _USE_MATH_DEFINES
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
-
+#include "DxLib.h"
