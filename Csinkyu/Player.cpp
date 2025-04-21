@@ -23,7 +23,7 @@ void Player::Draw()
 	unsigned int Cr;
 	Cr = GetColor(0, 0, 255);
 
-	PlayerGraph = DrawBox(270, 430, 270 + 50, 430 + 50, Cr, TRUE);//ŽlŠpŒ`‚ð•`‰æ
+	PlayerGraph = LoadGraph
 	PlayerX = 320; PlayerY = 400;
 	
 }
