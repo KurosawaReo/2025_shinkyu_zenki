@@ -1,12 +1,145 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ydauser01\\Documents\\\u5B66\u6821\u306E\u6388\u696D\\2\u5E74\u751F\\\u9032\u7D1A\u5236\u4F5C\u2161(\u30C1\u30FC\u30E0)\\C\u002B\u002B\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\\Csinkyu\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\myDraw.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:myDraw.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GlovalFunc.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GlovalFunc.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalConst.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GlovalConst.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-21T04:50:50.791Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-21T04:50:32.17Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "myDraw.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\myDraw.cpp",
+              "RelativeDocumentMoniker": "myDraw.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\myDraw.cpp",
+              "RelativeToolTip": "myDraw.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-21T03:51:30.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GlovalConst.h",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalConst.h",
+              "RelativeDocumentMoniker": "GlovalConst.h",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalConst.h",
+              "RelativeToolTip": "GlovalConst.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-21T03:51:25.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GlovalFunc.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.cpp",
+              "RelativeDocumentMoniker": "GlovalFunc.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.cpp",
+              "RelativeToolTip": "GlovalFunc.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-21T03:51:13.277Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GlovalFunc.h",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.h",
+              "RelativeDocumentMoniker": "GlovalFunc.h",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.h",
+              "RelativeToolTip": "GlovalFunc.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-21T03:51:12.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AQIAACoAAAAAAAAAAAAAABUAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-21T03:49:05.984Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 739,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
