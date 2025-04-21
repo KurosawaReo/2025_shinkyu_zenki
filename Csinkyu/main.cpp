@@ -8,12 +8,12 @@ void Init() {
 }
 
 void Update() {
-	g_ang+=1;
+	g_ang+=0.01;
 }
 
 void Draw() {
 	INT_XY pos = { 100, 100 };
-	DrawLineAng(pos, g_ang, 100, GetColor(0, 255, 0));
+	DrawLineAng(pos, sin(g_ang), 100, GetColor(0, 255, 0));
 }
 
 int WINAPI WinMain(
