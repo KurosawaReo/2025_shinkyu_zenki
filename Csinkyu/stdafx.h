@@ -27,3 +27,6 @@
 #include <math.h>
 #include <assert.h>
 #include "DxLib.h"
+
+#include "myDraw.h"
+#include "GlovalConst.h"

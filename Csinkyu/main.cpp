@@ -1,20 +1,18 @@
-#include "myDraw.h"
-#include "GlovalConst.h"
-#include "Player.h"
+#include "GameManager.h"
 
-float g_ang = 0;
+//classの関数を使うのに必要.
+static GameManager gm;
 
 void Init() {
-
+	gm.Init();
 }
 
 void Update() {
-	g_ang+=1;
+	gm.Update();
 }
 
 void Draw() {
-	INT_XY pos = { 100, 100 };
-	DrawLineAng(pos, g_ang, 100, GetColor(0, 255, 0));
+	gm.Draw();
 }
 
 int WINAPI WinMain(
@@ -41,7 +39,6 @@ int WINAPI WinMain(
 		Draw();					 //描画処理.
 		ScreenFlip();			 //表画面へ描画.
 		WaitTimer(WAIT_LOOP_MS); //待機時間(m秒)
-		Player();
 	}
 
 	DxLib_End(); //DXライブラリの終了処理

@@ -1,3 +1,13 @@
+/*
+   - Player.h -
+   プレイヤー管理.
+*/
+#pragma once
 
+class Player {
 
-void Player();//プレイヤー標示
+public:
+	void Init();
+	void Update();
+	void Draw();
+};
