@@ -3,30 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\myDraw.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:myDraw.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|solutionrelative:Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GameManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|solutionrelative:GameManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GlovalFunc.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GameManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|solutionrelative:GameManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GlovalFunc.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalConst.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GlovalConst.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2A83D23F-709B-4AA5-BCC5-9720F6555B29}|Csinkyu.vcxproj|solutionrelative:Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -36,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -44,76 +38,55 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Player.cpp",
-              "DocumentMoniker": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
-              "ToolTip": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\Player.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAASAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-21T04:50:50.791Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
-              "ToolTip": "C:\\Users\\ydauser01\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Documents\\_\u5B66\u6821\u6559\u6750\u30D5\u30A1\u30A4\u30EB\\[3]2\u5E74_\u524D\u671F\\8.\u9032\u7D1A\u5236\u4F5CII\\\u8CC7\u6599PR\\[PR] z02\\\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\\main.cpp",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-21T04:50:32.17Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "myDraw.cpp",
-              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\myDraw.cpp",
-              "RelativeDocumentMoniker": "myDraw.cpp",
-              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\myDraw.cpp",
-              "RelativeToolTip": "myDraw.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAApAAAA",
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\Player.cpp",
+              "RelativeDocumentMoniker": "Player.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\Player.cpp",
+              "RelativeToolTip": "Player.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-21T03:51:30.381Z",
+              "WhenOpened": "2025-04-21T05:37:44.786Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "GlovalConst.h",
-              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalConst.h",
-              "RelativeDocumentMoniker": "GlovalConst.h",
-              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalConst.h",
-              "RelativeToolTip": "GlovalConst.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "DocumentIndex": 3,
+              "Title": "GameManager.h",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GameManager.h",
+              "RelativeDocumentMoniker": "GameManager.h",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GameManager.h",
+              "RelativeToolTip": "GameManager.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-21T03:51:25.98Z"
+              "WhenOpened": "2025-04-21T05:36:20.701Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GameManager.cpp",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GameManager.cpp",
+              "RelativeDocumentMoniker": "GameManager.cpp",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GameManager.cpp",
+              "RelativeToolTip": "GameManager.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-21T05:36:12.88Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "GlovalFunc.cpp",
-              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.cpp",
-              "RelativeDocumentMoniker": "GlovalFunc.cpp",
-              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.cpp",
-              "RelativeToolTip": "GlovalFunc.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-21T03:51:13.277Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "GlovalFunc.h",
-              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.h",
-              "RelativeDocumentMoniker": "GlovalFunc.h",
-              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\GlovalFunc.h",
-              "RelativeToolTip": "GlovalFunc.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Title": "Player.h",
+              "DocumentMoniker": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\Player.h",
+              "RelativeDocumentMoniker": "Player.h",
+              "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\Player.h",
+              "RelativeToolTip": "Player.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-21T03:51:12.662Z"
+              "WhenOpened": "2025-04-21T05:34:57.57Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -123,9 +96,10 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\ydauser01\\Desktop\\File\\7.Sourcetree\\2.\u9032\u7D1A\u5236\u4F5C\\PR2_zenki_shinkyu\\Csinkyu\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AQIAACoAAAAAAAAAAAAAABUAAAAfAAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABEAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-04-21T03:49:05.984Z"
+              "WhenOpened": "2025-04-21T05:34:48.292Z",
+              "EditorCaption": ""
             }
           ]
         },
