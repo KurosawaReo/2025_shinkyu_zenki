@@ -1,5 +1,6 @@
 #include "myDraw.h"
 #include "GlovalConst.h"
+#include "Player.h"
 
 float g_ang = 0;
 
@@ -40,6 +41,7 @@ int WINAPI WinMain(
 		Draw();					 //描画処理.
 		ScreenFlip();			 //表画面へ描画.
 		WaitTimer(WAIT_LOOP_MS); //待機時間(m秒)
+		Player();
 	}
 
 	DxLib_End(); //DXライブラリの終了処理
