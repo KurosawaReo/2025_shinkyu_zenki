@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GlovalFunc.cpp" />
     <ClCompile Include="myDraw.cpp" />
@@ -34,6 +35,9 @@
     <ClInclude Include="GlovalFunc.h" />
     <ClInclude Include="myDraw.h" />
     <ClInclude Include="stdafx.h" />
+=======
+    <ClCompile Include="Player.cpp" />
+>>>>>>> player
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
