@@ -1,5 +1,4 @@
-﻿0:ChangeWindowMode実行 
-<<<<<<< HEAD
+﻿0:ChangeWindowMode実行
 5:ウインドウモードフラグが立てられました
 10:ＤＸライブラリの初期化処理開始
 16:	システムの情報を出力します
@@ -162,7 +161,6 @@
 4090:Alloc memory dump
 4095:	Total size:0(0.000kb)  Alloc num:0
 4100:
-=======
 7:ウインドウモードフラグが立てられました
 13:ＤＸライブラリの初期化処理開始
 16:	システムの情報を出力します
@@ -325,4 +323,3 @@
 14586:Alloc memory dump
 14591:	Total size:0(0.000kb)  Alloc num:0
 14597:
->>>>>>> Player3

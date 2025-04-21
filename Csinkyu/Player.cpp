@@ -27,6 +27,8 @@ void Player::Draw()
 	PlayerX = 320; PlayerY = 400;
 	
 }
+
+#if false
 void PlayerMove()
 {
 	
@@ -49,3 +51,4 @@ void PlayerMove()
 		DrawGraph(PlayerX, PlayerY, PlayerGraph, FALSE);
 	
 }
+#endif
