@@ -6,13 +6,6 @@
 */
 #pragma once
 
-//xとyの凝縮体.
-struct INT_XY
-{
-	int x;
-	int y;
-};
-
 //画像データ格納用.
 struct IMG
 {

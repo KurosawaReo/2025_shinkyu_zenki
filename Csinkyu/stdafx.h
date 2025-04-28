@@ -28,5 +28,5 @@
 #include <assert.h>
 #include "DxLib.h"
 
+#include "Gloval.h"
 #include "myDraw.h"
-#include "GlovalConst.h"
