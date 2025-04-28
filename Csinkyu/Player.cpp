@@ -3,7 +3,16 @@
    プレイヤー管理.
 */
 #include "Player.h"
+<<<<<<< HEAD
+=======
+#include "GlovalConst.h"
+>>>>>>> main
 
+//WinMain関数
+int PlayerX, PlayerY, PlayerGraph; // 中央下に初期値を設定
+int i = 0; // iにも初期値を設定
+void Move();
+void atari();
 //初期化.
 void Player::Init()
 {
@@ -11,15 +20,71 @@ void Player::Init()
 //更新.
 void Player::Update()
 {
+<<<<<<< HEAD
 	PlayerMove();
+=======
+
+	Move();
+>>>>>>> main
 }
 //描画.
 void Player::Draw()
 {
 	unsigned int Cr;
 	Cr = GetColor(255, 255, 255); // 白色
+<<<<<<< HEAD
+=======
 
 	// 四角形を描画（プレイヤーの位置に）
+	DrawBox(PlayerX, PlayerY, PlayerX + 30, PlayerY + 30, Cr, TRUE);
+}
+void Move()
+{
+	// キー入力に応じてプレイヤーを移動
+	if (CheckHitKey(KEY_INPUT_UP) == 1)
+	{
+		PlayerY -= 3;
+	}
+	if (CheckHitKey(KEY_INPUT_DOWN) == 1)
+	{
+		PlayerY += 3;
+	}
+	if (CheckHitKey(KEY_INPUT_LEFT) == 1)
+	{
+		PlayerX -= 3;
+	}
+	if (CheckHitKey(KEY_INPUT_RIGHT) == 1)
+	{
+		PlayerX += 3;
+	}
+
+	if (PlayerX < 0)
+	{
+		PlayerX = 0;
+	}
+>>>>>>> main
+
+	if (PlayerY < 0)
+	{
+		PlayerY = 0;
+	}
+	if (PlayerX > WINDOW_WID - 30)
+	{
+		PlayerX = WINDOW_WID - 30;
+	}
+	if (PlayerY > WINDOW_HEI - 30)
+	{
+		PlayerY = WINDOW_HEI - 30;
+	}
+	
+	
+}
+void atari()
+{
+
+<<<<<<< HEAD
+	// 四角形を描画（プレイヤーの位置に）
+<<<<<<< HEAD
 	int x  = _int(pos.x);
 	int y  = _int(pos.y);
 	int dx = _int(pos.x + PLAYER_SIZE);
@@ -71,3 +136,9 @@ void Player::PlayerMove()
 	if (pos.x > WINDOW_WID - PLAYER_SIZE) pos.x = WINDOW_WID - PLAYER_SIZE;
 	if (pos.y > WINDOW_HEI - PLAYER_SIZE) pos.y = WINDOW_HEI - PLAYER_SIZE;
 }
+=======
+	DrawBox(PlayerX, PlayerY, PlayerX + 30, PlayerY + 30, Cr, TRUE);
+=======
+>>>>>>> Player4
+}
+>>>>>>> main
