@@ -44,9 +44,6 @@ void Player::Draw()
 	unsigned int Cr;
 	Cr = GetColor(255, 255, 255); // 白色
 
-	PlayerGraph = DrawBox(270, 430, 270 + 50, 430 + 50, Cr, TRUE);//四角形を描画
-	PlayerX = 320; PlayerY = 400;
-
 	// 四角形を描画（プレイヤーの位置に）
 	DrawBox(PlayerX, PlayerY, PlayerX + 30, PlayerY + 30, Cr, TRUE);
 }
