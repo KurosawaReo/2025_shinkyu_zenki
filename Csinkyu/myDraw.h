@@ -6,12 +6,19 @@
 */
 #pragma once
 
-struct INT_XY //xとyの凝縮版.
+//xとyの凝縮体.
+struct INT_XY
 {
 	int x;
 	int y;
 };
 
+//画像データ格納用.
+struct IMG
+{
+	int    handle;	//ハンドル.
+	INT_XY size;	//画像のサイズ.
+};
 //画像描画に使う用.
 struct IMG_DRAW
 {
@@ -33,6 +40,8 @@ struct IMG_DRAW_RECT
 	BOOL   isTrans; //透過の可否.
 };
 
-INT_XY DrawLineAng    (INT_XY pos, float ang, float len, int clr);
-int    DrawGraphST    (const IMG_DRAW* img, BOOL isDrawCenter);
+INT_XY DrawLineAng    (INT_XY pos, float ang, float len, int clr, int _thickness = 1);
+
+int    LoadGraphST    (IMG* img, const TCHAR* fileName);
+int    DrawGraphST    (const IMG_DRAW* img, BOOL isDrawCenter = FALSE);
 int    DrawRectGraphST(const IMG_DRAW_RECT* img);
