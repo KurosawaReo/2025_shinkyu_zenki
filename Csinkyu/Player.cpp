@@ -44,37 +44,9 @@ void Player::Draw()
 	unsigned int Cr;
 	Cr = GetColor(255, 255, 255); // 白色
 
-<<<<<<< HEAD
 	PlayerGraph = DrawBox(270, 430, 270 + 50, 430 + 50, Cr, TRUE);//四角形を描画
 	PlayerX = 320; PlayerY = 400;
-	
-}
 
-#if false
-void PlayerMove()
-{
-	
-		if (CheckHitKey(KEY_INPUT_UP) == 1)
-		{
-			PlayerY -= 3;
-		}
-		if (CheckHitKey(KEY_INPUT_DOWN) == 1)
-		{
-			PlayerY += 3;
-		}
-		if (CheckHitKey(KEY_INPUT_LEFT) == 1)
-		{
-			PlayerX -= 3;
-		}
-		if (CheckHitKey(KEY_INPUT_RIGHT) == 1)
-		{
-			PlayerY = 3;
-		}
-		DrawGraph(PlayerX, PlayerY, PlayerGraph, FALSE);
-	
-}
-#endif
-=======
 	// 四角形を描画（プレイヤーの位置に）
 	DrawBox(PlayerX, PlayerY, PlayerX + 30, PlayerY + 30, Cr, TRUE);
 }
@@ -82,4 +54,3 @@ void PlayerMove()
 //{
 //	
 //}
->>>>>>> Player4
