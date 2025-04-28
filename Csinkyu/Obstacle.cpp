@@ -1,0 +1,5 @@
+/*
+   - Obstacle.cpp -
+   è·äQï®ä«óù.
+*/
+#include "Obstacle.h"
