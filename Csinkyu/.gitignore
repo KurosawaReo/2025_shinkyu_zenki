@@ -9,14 +9,3 @@
 # よく分からない大量のファイルを除外
 .vs/
 Debug/
-v17/
-/v17/
-DocumentLayout.json
-Browse.VC.db
-.suo
-
-# プロジェクト本体に関するファイルを除外
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
