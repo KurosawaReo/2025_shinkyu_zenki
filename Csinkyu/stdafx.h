@@ -29,4 +29,5 @@
 #include "DxLib.h"
 
 #include "Gloval.h"
-#include "myDraw.h"
+#include "myDrawST.h"
+#include "myInputST.h"

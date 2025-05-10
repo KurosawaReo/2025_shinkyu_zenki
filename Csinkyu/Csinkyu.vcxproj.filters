@@ -2,19 +2,21 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="myDraw.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Obstacle2.cpp" />
+    <ClCompile Include="myDrawST.cpp" />
+    <ClCompile Include="myInputST.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gloval.h" />
-    <ClInclude Include="myDraw.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Obstacle2.h" />
+    <ClInclude Include="myDrawST.h" />
+    <ClInclude Include="myInputST.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\Player.png" />

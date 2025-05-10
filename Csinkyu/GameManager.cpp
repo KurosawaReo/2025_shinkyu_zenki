@@ -4,14 +4,16 @@
 */
 #include "GameManager.h"
 #include "Player.h"
-#include"Obstacle.h"
+#include "Obstacle2.h"
 
-Player player;
+//‘¼class‚ÌÀ‘Ì.
+Player   player;
 Obstacle obstacle;
+
 //‰Šú‰».
 void GameManager::Init() {
 	player.Init();
-  obstacle.Init();
+    obstacle.Init();
 }
 
 //XV.

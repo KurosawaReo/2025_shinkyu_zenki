@@ -2,8 +2,8 @@
    - Obstacle.cpp -
    è·äQï®ä«óù.
 */
-#include"Obstacle.h"
-#include "myDraw.h"
+#include "Obstacle2.h"
+#include "myDrawST.h"
 
 #define MAX_M 100
 #define PI 3.14159//â~é¸ó¶
@@ -21,15 +21,14 @@ void Obstacle::Init()
 }
 void Obstacle::Update()
 {
-	eneyMove();
+	enemyMove();
 }
 void Obstacle::Draw()
 {
-
+	//IMG img;
+	//LoadGraphST(&img, _T()))
 }
 
-void eneyMove()
+void Obstacle::enemyMove()
 {
-	IMG img;
-	LoadGraphST(&img, _T()))
 }

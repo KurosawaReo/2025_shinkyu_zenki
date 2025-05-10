@@ -25,7 +25,7 @@ struct DBL_XY
 #endif
 
 // - マクロ -
-#define _int(n)	((int)lround(n))	//int型変換マクロ.
+#define _int(n)	((int)round(n))			//int型変換マクロ.
 
 // - 定数 -
 #define IS_WINDOW_MODE		(TRUE)		//ウィンドウモードにするか.
