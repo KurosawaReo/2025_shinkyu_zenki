@@ -1,6 +1,6 @@
 /*
-   - Obstacle.cpp -
-   áŠQ•¨ŠÇ—.
+   - Obstacle2.cpp -
+   áŠQ•¨ŠÇ—.(¬“c“‡ì)
 */
 #include "Obstacle2.h"
 #include "myDrawST.h"

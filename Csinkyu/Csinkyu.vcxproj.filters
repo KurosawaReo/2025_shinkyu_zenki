@@ -5,18 +5,18 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gloval.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
+    <ClInclude Include="Obstacle.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\Player.png" />
