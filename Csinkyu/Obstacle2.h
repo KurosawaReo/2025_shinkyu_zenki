@@ -4,7 +4,7 @@
 */
 #pragma once
 
-class Obstacle
+class Obstacle2
 {
 private:
 
