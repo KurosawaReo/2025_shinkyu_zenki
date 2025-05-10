@@ -5,14 +5,10 @@
 #include "Player.h"
 #include "GlovalConst.h"
 
-//WinMain関数
-void Move();
-void atari();
-//初期化.
-int PlayerX, PlayerY, PlayerGraph;
-int i = 0;
 void Player::Init()
 {
+	PlayerX = 100;
+	PlayerY = 100;
 }
 //更新.
 void Player::Update()
@@ -29,7 +25,9 @@ void Player::Draw()
 	// 四角形を描画（プレイヤーの位置に）
 	DrawBox(PlayerX, PlayerY, PlayerX + 30, PlayerY + 30, Cr, TRUE);
 }
-void Move()
+
+//古い移動関数.
+void Player::Move()
 {
 	// キー入力に応じてプレイヤーを移動
 	if (CheckHitKey(KEY_INPUT_UP) == 1)
@@ -66,6 +64,4 @@ void Move()
 	{
 		PlayerY = WINDOW_HEI - 30;
 	}
-	
-	
 }

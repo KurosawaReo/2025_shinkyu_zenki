@@ -4,9 +4,10 @@
 */
 #pragma once
 
-class GameManager {
+class GameManager 
+{
 private:
-	float m_ang = 0;
+
 public:
 	void Init();
 	void Update();
