@@ -1,6 +1,6 @@
 /*
-   - Obstacle.cpp -
-   障害物管理.
+   - Obstacle2.cpp -
+   障害物管理.(小田島作)
 */
 #include "Player.h"
 #include "Obstacle2.h"
@@ -30,7 +30,7 @@ void Obstacle2::Draw()
 		//ミサイルデータが有効でない場合は次に移る.
 		if (Mv[i] == 0) continue;
 
-		float size = 0.1; //仮.
+		double size = 0.1; //仮.
 		DrawRotaGraph(Mx[i], My[i], size, Ma[i], img.handle, TRUE);
 	}
 }

@@ -1,6 +1,5 @@
 #include "GameManager.h"
 
-
 //class‚ÌŠÖ”‚ğg‚¤‚Ì‚É•K—v.
 static GameManager gm;
 

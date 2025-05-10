@@ -12,15 +12,16 @@
 class Player
 {
 private:
-	int PlayerX, PlayerY;
+	DBL_XY pos;   //位置.
+	int    graph; //画像データ.
 
 public:
 	void Init();
 	void Update();
 	void Draw();
-	void Move();
+	void PlayerMove(); //プレイヤー移動.
 
 	// 追加：プレイヤーの位置を取得するメソッド
-	int GetX() { return PlayerX; }
-	int GetY() { return PlayerY; }
+	double GetX() { return pos.x; }
+	double GetY() { return pos.y; }
 };
