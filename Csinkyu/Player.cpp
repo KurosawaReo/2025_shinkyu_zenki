@@ -4,7 +4,6 @@
 */
 #include "Player.h"
 
-//WinMainŠÖ”
 int PlayerX, PlayerY, PlayerGraph; // ’†‰›‰º‚É‰Šú’l‚ğİ’è
 int i = 0; // i‚É‚à‰Šú’l‚ğİ’è
 
@@ -31,6 +30,7 @@ void Player::Draw()
 	DrawBox(x, y, dx, dy, Cr, TRUE);
 }
 
+//ˆÚ“®ˆ—(Î‚ß‘Î‰)
 void Player::PlayerMove()
 {	
 	INT_XY pow{};  //ˆÚ“®—Í.
