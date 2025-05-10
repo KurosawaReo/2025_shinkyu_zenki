@@ -6,11 +6,11 @@
 #include "GlovalConst.h"
 
 //WinMain関数
-int PlayerX, PlayerY, PlayerGraph; // 中央下に初期値を設定
-int i = 0; // iにも初期値を設定
 void Move();
 void atari();
 //初期化.
+int PlayerX, PlayerY, PlayerGraph;
+int i = 0;
 void Player::Init()
 {
 }
@@ -68,13 +68,4 @@ void Move()
 	}
 	
 	
-}
-void atari()
-{
-
-<<<<<<< HEAD
-	// 四角形を描画（プレイヤーの位置に）
-	DrawBox(PlayerX, PlayerY, PlayerX + 30, PlayerY + 30, Cr, TRUE);
-=======
->>>>>>> Player4
 }

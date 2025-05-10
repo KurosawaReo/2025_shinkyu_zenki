@@ -24,6 +24,7 @@
     <ClCompile Include="GlovalFunc.cpp" />
     <ClCompile Include="myDraw.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -38,6 +39,7 @@
     <ClInclude Include="GlovalFunc.h" />
     <ClInclude Include="myDraw.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
