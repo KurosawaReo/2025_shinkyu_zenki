@@ -9,7 +9,11 @@
 # よく分からない大量のファイルを除外
 .vs/
 Debug/
-Csinkyu/.vs/
+v17/
+/v17/
+DocumentLayout.json
+Browse.VC.db
+.suo
 
 # プロジェクト本体に関するファイルを除外
 *.sln
