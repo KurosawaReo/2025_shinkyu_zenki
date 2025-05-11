@@ -29,6 +29,6 @@
 #include <assert.h>
 #include "DxLib.h"
 
-#include "Gloval.h"
+#include "Global.h"
 #include "myDrawST.h"
 #include "myInputST.h"
