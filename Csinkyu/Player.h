@@ -12,8 +12,9 @@
 class Player
 {
 private:
-	DBL_XY pos;   //位置.
-	int    graph; //画像データ.
+	DBL_XY pos;    //位置.
+	int    graph;  //画像データ.
+	BOOL   active; //有効か.
 
 public:
 	void Init();
@@ -21,7 +22,9 @@ public:
 	void Draw();
 	void PlayerMove(); //プレイヤー移動.
 
-	// 追加：プレイヤーの位置を取得するメソッド
-	double GetX() { return pos.x; }
-	double GetY() { return pos.y; }
+	//set.
+	void   SetActive(BOOL _active) { active = _active; }
+	//get.
+	DBL_XY GetPos()    { return pos; }
+	BOOL   GetActive() { return active; }
 };

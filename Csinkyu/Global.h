@@ -37,7 +37,11 @@ struct DBL_XY
 #define WAIT_LOOP_MS		(10)		//ループ処理の待機時間(m秒)
 
 #define PLAYER_SIZE			(20)		//プレイヤーサイズ.
-#define PLAYER_MOVE_SPEED	(5)			//プレイヤー移動速度.
+#define PLAYER_MOVE_SPEED	(4)			//プレイヤー移動速度.
+
+#define MISSILE_SIZE		(20)		//ミサイルサイズ.
+#define MISSILE_TRACK_POW	(8)			//ミサイルの追尾力.
+#define MISSILE_SPEED		(3)			//ミサイルの速度.
 
 // - 関数 -
 BOOL IsHitBox(DBL_XY pos1, INT_XY size1, DBL_XY pos2, INT_XY size2);

@@ -8,15 +8,18 @@
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Obstacle2.cpp" />
+    <ClCompile Include="Global.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Gloval.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Obstacle2.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\Player.png" />

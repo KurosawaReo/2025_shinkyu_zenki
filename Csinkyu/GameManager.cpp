@@ -8,7 +8,7 @@
 #include "Obstacle2.h"
 
 //他classの実体.
-Player player;
+Player    player;
 Obstacle  obstacle;
 Obstacle2 obstacle2;
 
@@ -19,27 +19,33 @@ float GameManager::GetTime() {
 
 //初期化.
 void GameManager::Init() {
+
+	srand((unsigned)time(NULL)); //乱数初期化.
+
 	stTime = clock(); //開始時刻.
 
 	player.Init();
-	obstacle.Init();
-	obstacle2.Init();
+	//obstacle.Init();
+	obstacle2.Init(&player);
 }
 
 //更新.
 void GameManager::Update() {
 
-	nowTime = clock(); //現在時刻.
+	//生存中のみ更新.
+	if (player.GetActive()) {
+		nowTime = clock(); //現在時刻.
+	}
 
 	player.Update();
-	obstacle.Update();
+	//obstacle.Update();
 	obstacle2.Update();
 }
 
 //描画.
 void GameManager::Draw() {
 	player.Draw();
-	obstacle.Draw();
+	//obstacle.Draw();
 	obstacle2.Draw();
 
 	//タイマー表示.

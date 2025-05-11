@@ -15,5 +15,5 @@ BOOL IsHitBox(DBL_XY pos1, INT_XY size1, DBL_XY pos2, INT_XY size2) {
 }
 //“–‚½‚è”»’è(‰~‚Æ‰~)
 BOOL IsHitCircle(DBL_XY pos1, int r1, DBL_XY pos2, int r2) {
-
+    return TRUE;
 }
