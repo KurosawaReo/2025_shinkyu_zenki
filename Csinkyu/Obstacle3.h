@@ -1,6 +1,5 @@
-#pragma once
 /*
-   - Obstacle2.h -
+   - Obstacle3.h -
    障害物管理.
 */
 #pragma once
@@ -8,7 +7,7 @@
 #define MAX_M 100 //ミサイルが飛ぶ最大距離.
 //#define PI 3.14159//円周率
 
-class Obstacle2
+class Obstacle3
 {
 private:
 	int    hsc;                    //エネミーの出る間隔.

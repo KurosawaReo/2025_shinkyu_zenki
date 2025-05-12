@@ -7,24 +7,32 @@
 //初期化.
 void Player::Init()
 {
+	pos    = { 100, 100 }; //初期位置.
+	active = TRUE;
 }
 //更新.
 void Player::Update()
 {
-	PlayerMove();
+	//有効なら.
+	if (active) {
+		PlayerMove();
+	}
 }
 //描画.
 void Player::Draw()
 {
-	unsigned int Cr;
-	Cr = GetColor(255, 255, 255); // 白色
+	//有効なら.
+	if (active) {
+		unsigned int Cr;
+		Cr = GetColor(255, 255, 255); // 白色
 
-	// 四角形を描画（プレイヤーの位置に）
-	int x  = _int(pos.x);
-	int y  = _int(pos.y);
-	int dx = _int(pos.x + PLAYER_SIZE);
-	int dy = _int(pos.y + PLAYER_SIZE);
-	DrawBox(x, y, dx, dy, Cr, TRUE);
+		// 四角形を描画（プレイヤーの位置に）
+		int x  = _int(pos.x - PLAYER_SIZE/2);
+		int y  = _int(pos.y - PLAYER_SIZE/2);
+		int dx = _int(pos.x + PLAYER_SIZE/2);
+		int dy = _int(pos.y + PLAYER_SIZE/2);
+		DrawBox(x, y, dx, dy, Cr, TRUE);
+	}
 }
 
 //移動処理(斜め対応)
@@ -67,8 +75,8 @@ void Player::PlayerMove()
 	pos.x += move.x * PLAYER_MOVE_SPEED;
 	pos.y += move.y * PLAYER_MOVE_SPEED;
 	//移動限界.
-	if (pos.x < 0) pos.x = 0;
-	if (pos.y < 0) pos.y = 0;
-	if (pos.x > WINDOW_WID - PLAYER_SIZE) pos.x = WINDOW_WID - PLAYER_SIZE;
-	if (pos.y > WINDOW_HEI - PLAYER_SIZE) pos.y = WINDOW_HEI - PLAYER_SIZE;
+	if (pos.x < 0 + PLAYER_SIZE/2) pos.x = PLAYER_SIZE/2;
+	if (pos.y < 0 + PLAYER_SIZE/2) pos.y = PLAYER_SIZE/2;
+	if (pos.x > WINDOW_WID - PLAYER_SIZE/2) pos.x = WINDOW_WID - PLAYER_SIZE/2;
+	if (pos.y > WINDOW_HEI - PLAYER_SIZE/2) pos.y = WINDOW_HEI - PLAYER_SIZE/2;
 }

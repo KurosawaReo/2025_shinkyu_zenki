@@ -5,12 +5,14 @@
 #include "Player.h"
 #include "Obstacle2.h"
 
-void Obstacle2::Init()
+void Obstacle2::Init(Player* _player)
 {
 	LoadGraphST(&img, _T("image/enemy.png"));
 	//img.handle;
 	//img.size.x;
 	//img.size.y;
+
+	player = _player; //プレイヤーの実体アドレスをもらう.
 
 	for (int i = 0; i < MAX_M; i++)
 	{
@@ -40,7 +42,7 @@ void Obstacle2::Draw()
 void Obstacle2::enemyMove()
 {
 	//extrn変数を使用してプレイヤーにアクセス.
-	extern Player player;
+	//extern Player player;
 
 	//ショットカウンタを減らす.
 	hsc--;
@@ -52,14 +54,14 @@ void Obstacle2::enemyMove()
 		{
 			//使われてないデータを見つけたら.
 			if (Mv[i] == 0) {
-		
+
 				//ミサイルの位置を設定.
 				Mx[i] = 320 + 16; //砲台のX座標.
 				My[i] = 30 + 16;  //砲台のy座標.
 
 				//プレイヤーの方向へ向かう角度を計算.
-				double px = player.GetX() + PLAYER_SIZE / 2.0;//プレイヤーの中心x.
-				double py = player.GetY() + PLAYER_SIZE / 2.0;//プレイヤーの中心y.
+				double px = player->GetPos().x + PLAYER_SIZE / 2.0;//プレイヤーの中心x.
+				double py = player->GetPos().y + PLAYER_SIZE / 2.0;//プレイヤーの中心y.
 				Ma[i] = atan2(py - My[i], px - Mx[i]); // プレイヤーへの角度を計算.
 				//角度をセット.
 				//Ma[i] = M_PI / 2;
@@ -88,12 +90,12 @@ void Obstacle2::enemyMove()
 		//衝突判定
 		bool isCollison = false;
 
-		int x  = Mx[i] < player.GetX() + PLAYER_SIZE;
-		int x2 = Mx[i] + 16 > player.GetX();
-		int y  = My[i] < player.GetY() + PLAYER_SIZE;
-		int y2 = My[i] + 16 > player.GetX();
+		int x = Mx[i] < player->GetPos().x + PLAYER_SIZE;
+		int x2 = Mx[i] + 16 > player->GetPos().x;
+		int y = My[i] < player->GetPos().y + PLAYER_SIZE;
+		int y2 = My[i] + 16 > player->GetPos().y;
 		//プレイヤーとミサイルの距離が重ねっているか確認.
-		if (x &&x2 &&y &&y2)
+		if (x && x2 && y && y2)
 		{
 			isCollison = true;
 		}
@@ -103,14 +105,14 @@ void Obstacle2::enemyMove()
 			Mv[i] = 0;
 			continue;
 		}
-	
+
 		//追尾カウンタが規定値に来ていなければ追尾処理.
 		if (Mc[i] < 100)
 		{
 
 			//プレイヤーへの中心座標を計算.
-			double px = player.GetX() + PLAYER_SIZE / 2.0;
-			double py = player.GetY() + PLAYER_SIZE / 2.0;
+			double px = player->GetPos().x + PLAYER_SIZE / 2.0;
+			double py = player->GetPos().y + PLAYER_SIZE / 2.0;
 
 			double targetAngle = atan2(py - My[i], px - Mx[i]);
 
@@ -130,7 +132,7 @@ void Obstacle2::enemyMove()
 				// 角度差がほぼ0の場合は調整しない.
 				// 何もしない.
 			}
-			else if(angleDiff > 0 )
+			else if (angleDiff > 0)
 			{
 				Ma[i] += fmin(turnSpeed, angleDiff);
 			}

@@ -24,10 +24,11 @@
 
 #define _USE_MATH_DEFINES
 #include <stdio.h>
+#include <time.h>
 #include <math.h>
 #include <assert.h>
 #include "DxLib.h"
 
-#include "Gloval.h"
+#include "Global.h"
 #include "myDrawST.h"
 #include "myInputST.h"
