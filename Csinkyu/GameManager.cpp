@@ -17,7 +17,7 @@
 Player    player;
 //è·äQï®ÇÃé¿ëÃ.
 Obstacle  obstacle[] = {
-	Obstacle({150, 150}, 0, 50),
+	Obstacle({150, 150}, 0,  50),
 	Obstacle({400, 150}, 30, 50),
 	Obstacle({300, 300}, 60, 80)
 };
