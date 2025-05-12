@@ -7,7 +7,7 @@
 #define MAX_M 100 //ミサイルが飛ぶ最大距離.
 //#define PI 3.14159//円周率
 
-class Obstacle3
+class Obstacle4
 {
 private:
 	int    hsc;                    //エネミーの出る間隔.
@@ -24,5 +24,5 @@ public:
 	void Init(Player*);
 	void Update();
 	void Draw();
-	void enemyMove();
+	void enemy4Move();
 };
