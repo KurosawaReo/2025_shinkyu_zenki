@@ -2,7 +2,7 @@
    - GameManager.cpp -
    ゲーム全体管理.
 */
-#define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
+//#define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
 #include "GameManager.h"
 #include "Player.h"
@@ -13,9 +13,14 @@
 #include "Obstacle3.h"
 #endif
 
-//他classの実体.
+//プレイヤーの実体.
 Player    player;
-Obstacle  obstacle;
+//障害物の実体.
+Obstacle  obstacle[] = {
+	Obstacle({150, 150}, 0, 50),
+	Obstacle({400, 150}, 30, 50),
+	Obstacle({300, 300}, 60, 80)
+};
 
 #if defined ODAZIMA
 Obstacle2 obstacle2;
@@ -35,8 +40,12 @@ void GameManager::Init() {
 
 	stTime = clock(); //開始時刻.
 
+	//プレイヤーclass.
 	player.Init();
-	//obstacle.Init();
+	//障害物class.
+	for (int i = 0; i < _countof(obstacle); i++) {
+		obstacle[i].Init(&player);
+	}
 #if defined ODAZIMA
 	obstacle2.Init(&player);
 #else
@@ -52,8 +61,12 @@ void GameManager::Update() {
 		nowTime = clock(); //現在時刻.
 	}
 
+	//プレイヤーclass.
 	player.Update();
-	//obstacle.Update();
+	//障害物class.
+	for (int i = 0; i < _countof(obstacle); i++) {
+		obstacle[i].Update();
+	}
 #if defined ODAZIMA
 	obstacle2.Update();
 #else
@@ -63,8 +76,13 @@ void GameManager::Update() {
 
 //描画.
 void GameManager::Draw() {
+
+	//プレイヤーclass.
 	player.Draw();
-	//obstacle.Draw();
+	//障害物class.
+	for (int i = 0; i < _countof(obstacle); i++) {
+		obstacle[i].Draw();
+	}
 #if defined ODAZIMA
 	obstacle2.Draw();
 #else

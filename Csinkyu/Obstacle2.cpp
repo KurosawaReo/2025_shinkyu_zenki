@@ -12,7 +12,7 @@ void Obstacle2::Init(Player* _player)
 	//img.size.x;
 	//img.size.y;
 
-	player = _player; //プレイヤーの実体アドレスをもらう.
+	player = _player; //プレイヤー実体のアドレスをもらう.
 
 	for (int i = 0; i < MAX_M; i++)
 	{
