@@ -1,6 +1,6 @@
 /*
    - Obstacle.h -
-   áŠQ•¨ŠÇ—.(•àVì)
+   áŠQ•¨ŠÇ—.
 */
 #pragma once
 

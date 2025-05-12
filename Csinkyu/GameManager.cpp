@@ -5,12 +5,12 @@
 #include "GameManager.h"
 #include "Player.h"
 #include "Obstacle.h"
-#include "Obstacle2.h"
+#include "Obstacle3.h"
 
 //他classの実体.
 Player    player;
 Obstacle  obstacle;
-Obstacle2 obstacle2;
+Obstacle3 obstacle3;
 
 //get.
 float GameManager::GetTime() {
@@ -26,7 +26,7 @@ void GameManager::Init() {
 
 	player.Init();
 	//obstacle.Init();
-	obstacle2.Init(&player);
+	obstacle3.Init(&player);
 }
 
 //更新.
@@ -39,14 +39,14 @@ void GameManager::Update() {
 
 	player.Update();
 	//obstacle.Update();
-	obstacle2.Update();
+	obstacle3.Update();
 }
 
 //描画.
 void GameManager::Draw() {
 	player.Draw();
 	//obstacle.Draw();
-	obstacle2.Draw();
+	obstacle3.Draw();
 
 	//タイマー表示.
 	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), GetTime());

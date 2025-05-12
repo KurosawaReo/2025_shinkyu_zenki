@@ -25,7 +25,7 @@
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
     <ClCompile Include="Obstacle.cpp" />
-    <ClCompile Include="Obstacle2.cpp" />
+    <ClCompile Include="Obstacle3.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -40,7 +40,7 @@
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
     <ClInclude Include="Obstacle.h" />
-    <ClInclude Include="Obstacle2.h" />
+    <ClInclude Include="Obstacle3.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

@@ -1,6 +1,6 @@
 /*
    - Obstacle.cpp -
-   áŠQ•¨ŠÇ—.(•àVì)
+   áŠQ•¨ŠÇ—.
 */
 #include "Obstacle.h"
 
