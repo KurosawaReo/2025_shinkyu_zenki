@@ -32,3 +32,4 @@
 #include "Global.h"
 #include "myDrawST.h"
 #include "myInputST.h"
+#include "myCalcST.h"

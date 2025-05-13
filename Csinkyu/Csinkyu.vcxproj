@@ -22,6 +22,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="myCalcST.cpp" />
     <ClCompile Include="myDrawST.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -40,6 +41,7 @@
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="myCalcST.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
     <ClInclude Include="Obstacle.h" />

@@ -7,20 +7,18 @@
 class Obstacle
 {
 private:
-	INT_XY stPos{}; //start  pos: 始点
-	INT_XY mdPos{}; //middle pos: 中点
-	INT_XY edPos{}; //end    pos: 終点
-	float  ang;     //角度.
-	float  len;     //長さ.
+	Line  line{};
+	float ang;  //角度.
+	float len;  //長さ.
 
 	Player* player{};
 
 public:
 	//コンストラクタ.
-	Obstacle(INT_XY _stPos, float _ang, float _len) {
-		stPos = _stPos;
-		ang   = _ang;
-		len   = _len;
+	Obstacle(DBL_XY _stPos, float _ang, float _len) {
+		line.stPos = _stPos;
+		ang        = _ang;
+		len        = _len;
 	}
 
 	void Init(Player*);
