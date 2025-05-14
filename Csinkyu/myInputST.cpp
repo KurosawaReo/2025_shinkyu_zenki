@@ -14,7 +14,7 @@
 #include "myInputST.h"
 
 //int型変換マクロ.
-#define _int(n) (int)(round(n))
+//#define _int(n) (int)(round(n))
 
 #define KEY_MAX 256
 int g_tmKey[KEY_MAX]; //キーを押している時間.
