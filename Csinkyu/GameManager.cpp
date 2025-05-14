@@ -14,12 +14,12 @@
 #endif
 
 //ÉvÉåÉCÉÑÅ[ÇÃé¿ëÃ.
-Player    player;
+Player    player({100, 100}, TRUE);
 //è·äQï®ÇÃé¿ëÃ.
 Obstacle  obstacle[] = {
-	Obstacle({150, 150}, 0,  50),
-	Obstacle({400, 150}, 30, 50),
-	Obstacle({300, 300}, 60, 80)
+	Obstacle({150, 150}, 0,  50, 0x00FF00),
+	Obstacle({400, 150}, 30, 50, 0x00FF00),
+	Obstacle({300, 300}, 60, 80, 0x00FF00)
 };
 
 #if defined ODAZIMA

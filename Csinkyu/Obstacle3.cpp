@@ -98,7 +98,8 @@ void Obstacle3::enemyMove()
 			//当たり判定.
 			BOOL hit = IsHitBox(
 				player->GetPos(), { PLAYER_SIZE,  PLAYER_SIZE  }, //プレイヤー.
-				{ Mx[i], My[i] }, { MISSILE_SIZE, MISSILE_SIZE }  //ミサイル.
+				{ Mx[i], My[i] }, { MISSILE_SIZE, MISSILE_SIZE }, //ミサイル.
+				TRUE
 			);
 
 			//playerに当たったらミサイルデータを無効にする.

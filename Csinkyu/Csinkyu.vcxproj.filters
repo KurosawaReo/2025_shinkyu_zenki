@@ -8,7 +8,6 @@
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
     <ClCompile Include="Obstacle3.cpp" />
-    <ClCompile Include="Global.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="myCalcST.cpp" />

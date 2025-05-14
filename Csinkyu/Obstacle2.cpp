@@ -34,7 +34,7 @@ void Obstacle2::Draw()
 
 		double size = 0.1; //‰¼.
 
-		DrawRotaGraph(Mx[i], My[i], size, Ma[i], img.handle, TRUE);
+		DrawRotaGraph(_int(Mx[i]), _int(My[i]), size, Ma[i], img.handle, TRUE);
 	}
 }
 

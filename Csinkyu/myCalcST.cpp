@@ -15,7 +15,7 @@
 #include "myCalcST.h"
 
 //intŒ^•ÏŠ·ƒ}ƒNƒ.
-#define _int(n) (int)(round(n))
+//#define _int(n) (int)(round(n))
 
 //“–‚½‚è”»’è(‰~‚Æ‰~)
 BOOL IsHitCircle(DBL_XY pos1, int r1, DBL_XY pos2, int r2) {

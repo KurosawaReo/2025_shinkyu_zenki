@@ -67,6 +67,17 @@ struct IMG_DRAW
 	BOOL   isCenter; //中央基準にするか.
 	BOOL   isTrans;  //透過の可否.
 };
+struct IMG_DRAW_ROTA
+{
+	IMG    img;      //画像データ.
+
+	INT_XY pos;      //画面のどこに描画するか.
+	double extend;   //サイズ倍率.
+	double ang;      //角度.
+
+	BOOL   isCenter; //中央基準にするか.
+	BOOL   isTrans;  //透過の可否.
+};
 struct IMG_DRAW_RECT
 {
 	IMG    img;      //画像データ.
@@ -113,6 +124,7 @@ int    DrawLineST      (const Line*   data);
 
 int    LoadGraphST     (IMG* img, const TCHAR* fileName);
 int    DrawGraphST     (const IMG_DRAW*      data);
+int    DrawRotaGraphST (const IMG_DRAW_ROTA* data);
 int    DrawRectGraphST (const IMG_DRAW_RECT* data);
 
 int    DrawStringST    (const STR_DRAW*      data, int font = -1);

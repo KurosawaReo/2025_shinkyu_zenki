@@ -38,11 +38,10 @@ struct DBL_XY
 
 #define PLAYER_SIZE			(20)		//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED	(4)			//プレイヤー移動速度.
+#define PLAYER_HIT_R        (10)        //プレイヤーの当たり判定円の半径.
 
 #define MISSILE_SIZE		(20)		//ミサイルサイズ.
 #define MISSILE_TRACK_POW	(8)			//ミサイルの追尾力.
 #define MISSILE_SPEED		(3)			//ミサイルの速度.
 
 // - 関数 -
-BOOL IsHitBox(DBL_XY pos1, INT_XY size1, DBL_XY pos2, INT_XY size2);
-BOOL IsHitCircle(DBL_XY pos1, int r1, DBL_XY pos2, int r2);

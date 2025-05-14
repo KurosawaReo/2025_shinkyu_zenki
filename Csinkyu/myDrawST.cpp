@@ -15,7 +15,7 @@
 #include "myDrawST.h"
 
 //int型変換マクロ.
-#define _int(n) (int)(round(n))
+//#define _int(n) (int)(round(n))
 
 //DrawCircleの改造版.
 int DrawCircleST(const Circle* data) {
@@ -88,6 +88,26 @@ int DrawGraphST(const IMG_DRAW* data) {
 	}
 
 	int err = DrawGraph(x, y, data->img.handle, data->isTrans);
+	return err; //-1: DrawGraphエラー.
+}
+
+//DrawRotaGraphの改造版.
+int DrawRotaGraphST(const IMG_DRAW_ROTA* data) {
+
+	if (data->img.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
+
+	int x = data->pos.x;
+	int y = data->pos.y;
+
+	//中央座標モード.
+	if (data->isCenter) {
+		x -= data->img.size.x / 2; //(size/2)ずらす.
+		y -= data->img.size.y / 2;
+	}
+
+	int err = DrawRotaGraph(x, y, data->extend, data->ang, data->img.handle, data->isTrans);
 	return err; //-1: DrawGraphエラー.
 }
 

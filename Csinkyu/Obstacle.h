@@ -15,10 +15,11 @@ private:
 
 public:
 	//コンストラクタ.
-	Obstacle(DBL_XY _stPos, float _ang, float _len) {
+	Obstacle(DBL_XY _stPos, float _ang, float _len, UINT _clr) {
 		line.stPos = _stPos;
 		ang        = _ang;
 		len        = _len;
+		line.clr   = _clr;
 	}
 
 	void Init(Player*);
