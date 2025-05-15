@@ -1,21 +1,14 @@
 /*
    - myDrawST.cpp - (original)
+   ver.2025/05/15
    
    DxLibで使う用のオリジナル描画関数.
-   2025/05/14
 */
-#if false
-  #include "stdafx.h" //stdafxがあるならこっちを使う.
-#else
-  #define _USE_MATH_DEFINES //math定数を使うのに必要.
-  #include <math.h>
-  #include "DxLib.h"
+#if !defined DEF_GLOBAL_H
+#include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myDrawST.h"
-
-//int型変換マクロ.
-//#define _int(n) (int)(round(n))
 
 //DrawCircleの改造版.
 int DrawCircleST(const Circle* data) {

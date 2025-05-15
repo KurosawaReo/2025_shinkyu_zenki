@@ -1,12 +1,22 @@
 /*
    - Global.h -
-   定数などをまとめる所.
+   共通で使用する型やマクロを入れる所.
 */
 #pragma once
 
+//このGlobal.hが定義されているか判別する用.
+#define DEF_GLOBAL_H
+
+//stdafxがあるならいらない.
+#if false
+#define _USE_MATH_DEFINES //math定数を使うのに必要.
+#include <math.h>
+#include "DxLib.h"
+#endif
+
 #if !defined DEF_INT_XY
-#define DEF_INT_XY 
-//xとyの凝縮体.
+#define DEF_INT_XY
+//int型の凝縮xy.
 struct INT_XY
 {
 	int x;
@@ -15,8 +25,8 @@ struct INT_XY
 #endif
 
 #if !defined DEF_DBL_XY
-#define DEF_DBL_XY 
-//xとyの凝縮体.
+#define DEF_DBL_XY
+//double型の凝縮xy.
 struct DBL_XY
 {
 	double x;
@@ -24,8 +34,37 @@ struct DBL_XY
 };
 #endif
 
-// - マクロ -
-#define _int(n)	((int)round(n))			//int型変換マクロ.
+#if !defined DEF_SHAPES
+#define DEF_SHAPES
+//円データ.
+struct Circle
+{
+	DBL_XY pos;  //座標.
+	int    r;    //半径.
+	UINT   clr;  //色.
+};
+//四角形データ.
+struct Box
+{
+	DBL_XY pos;  //座標.
+	INT_XY size; //サイズ.
+	UINT   clr;  //色.
+};
+//線データ.
+struct Line
+{
+	DBL_XY stPos; //始点座標.
+	DBL_XY edPos; //終点座標.
+	UINT   clr;   //色.
+};
+#endif
+
+#if !defined DEF_VARTYPE_MACRO
+#define DEF_VARTYPE_MACRO
+#define _int(n)      (int)(round(n))            //int型変換マクロ.
+#define _intXY(n)    {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
+#define _doubleXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
+#endif
 
 // - 定数 -
 #define IS_WINDOW_MODE		(TRUE)		//ウィンドウモードにするか.

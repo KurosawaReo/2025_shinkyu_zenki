@@ -1,30 +1,10 @@
 /*
    - myInputST.h - (original)
+   ver.2025/05/15
 
    DxLib‚Åg‚¤—p‚ÌƒIƒŠƒWƒiƒ‹“ü—ÍŠÖ”.
-   2025/05/14
 */
 #pragma once
-
-#if !defined DEF_INT_XY
-#define DEF_INT_XY
-//intŒ^‚Ì‹Ãkxy.
-struct INT_XY
-{
-	int x;
-	int y;
-};
-#endif
-
-#if !defined DEF_DBL_XY
-#define DEF_DBL_XY
-//doubleŒ^‚Ì‹Ãkxy.
-struct DBL_XY
-{
-	double x;
-	double y;
-};
-#endif
 
 BOOL IsPushMouse  (int num);
 BOOL IsPushKey    (int num);

@@ -1,20 +1,14 @@
 /*
    - myInputST.cpp - (original)
+   ver.2025/05/15
 
    DxLibで使う用のオリジナル入力関数.
-   2025/05/14
 */
-#if false
-  #include "stdafx.h" //stdafxがあるならこっちを使う.
-#else
-  #include <math.h>
-  #include "DxLib.h"
+#if !defined DEF_GLOBAL_H
+#include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myInputST.h"
-
-//int型変換マクロ.
-//#define _int(n) (int)(round(n))
 
 #define KEY_MAX 256
 int g_tmKey[KEY_MAX]; //キーを押している時間.

@@ -1,21 +1,14 @@
 /*
    - myCalcST.cpp - (original)
+   ver.2025/05/15
 
    DxLibで使う用のオリジナル計算関数.
-   2025/05/14
 */
-#if false
-  #include "stdafx.h" //stdafxがあるならこっちを使う.
-#else
-  #define _USE_MATH_DEFINES //math定数を使うのに必要.
-  #include <math.h>
-  #include "DxLib.h"
+#if !defined DEF_GLOBAL_H
+  #include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myCalcST.h"
-
-//int型変換マクロ.
-//#define _int(n) (int)(round(n))
 
 //当たり判定(円と円)
 BOOL IsHitCircle(DBL_XY pos1, int r1, DBL_XY pos2, int r2) {
@@ -65,7 +58,7 @@ BOOL IsHitLine(const Line* line, const Circle* circle) {
 			katamuki = y / x;
 		}
 		else {
-			katamuki = 100; //0割対策.
+			katamuki = 999; //0割対策.
 		}
 	}
 	//線を方程式にした時の切片.
