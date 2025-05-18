@@ -12,6 +12,8 @@
 #include "Obstacle4.h"
 #else
 #include "Obstacle3.h"
+#endif
+
 
 
 //‘¼class‚ÌŽÀ‘Ì.
