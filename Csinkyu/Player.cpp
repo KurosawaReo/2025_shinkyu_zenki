@@ -4,14 +4,23 @@
 */
 #include "Player.h"
 
-//初期化.
-void Player::Init()
+//初期化(一回のみ行う)
+void Player::Init(Scene* _scene)
 {
-
+	p_scene = _scene;
+}
+//リセット(何回でも行う)
+void Player::Reset(DBL_XY _pos, BOOL _active) {
+	hit    = {_pos, PLAYER_HIT_R, 0x000000};
+	active = _active;
 }
 //更新.
 void Player::Update()
 {
+	//デバッグモード切り替え.
+	if (IsPushKeyTime(KEY_INPUT_M) == 1) {
+		isDebug = !isDebug;
+	}
 	//有効なら.
 	if (active) {
 		PlayerMove();
@@ -20,6 +29,10 @@ void Player::Update()
 //描画.
 void Player::Draw()
 {
+	//デバッグ表示.
+	if (isDebug) {
+		DrawString(0, 430, _T("[Debug] 無敵モード"), 0xFFFFFF);
+	}
 	//有効なら.
 	if (active) {
 		// 四角形を描画（プレイヤーの位置に）
@@ -29,7 +42,13 @@ void Player::Draw()
 		int dy = _int(hit.pos.y + PLAYER_SIZE/2);
 
 		unsigned int Cr;
-		Cr = GetColor(255, 255, 255); // 白色
+		//デバッグモード中.
+		if (isDebug) {
+			Cr = GetColor(255, 150, 150); //赤色.
+		}
+		else {
+			Cr = GetColor(255, 255, 255); //白色.
+		}
 
 		DrawBox(x, y, dx, dy, Cr, TRUE);
 	}
@@ -42,4 +61,14 @@ void Player::PlayerMove()
 	InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
 	//移動限界.
 	LimMovePos(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+}
+
+//死亡処理.
+void Player::PlayerDeath() {
+
+	//デバッグモード中は無敵.
+	if (isDebug) { return; }
+
+	active = FALSE;
+	*p_scene = SCENE_END; //ゲーム終了へ.
 }

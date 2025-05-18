@@ -8,21 +8,22 @@ class Obstacle
 {
 private:
 	Line  line{};
-	float ang;  //角度.
-	float len;  //長さ.
+	float ang{}; //角度.
+	float len;   //長さ.
+	float speed; //速さ.
 
 	Player* player{};
 
 public:
 	//コンストラクタ.
-	Obstacle(DBL_XY _stPos, float _ang, float _len, UINT _clr) {
-		line.stPos = _stPos;
-		ang        = _ang;
+	Obstacle(float _len, float _speed, UINT _clr) {
 		len        = _len;
+		speed      = _speed;
 		line.clr   = _clr;
 	}
 
-	void Init(Player*);
+	void Init  (Player*);
+	void Reset (DBL_XY _pos, float _ang);
 	void Update();
-	void Draw();
+	void Draw  ();
 };

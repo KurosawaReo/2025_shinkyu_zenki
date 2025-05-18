@@ -21,8 +21,10 @@ private:
 	Player* player;
 
 public:
-	void Init(Player*);
+	void Init  (Player*);
+	void Reset ();
 	void Update();
-	void Draw();
+	void Draw  ();
+
 	void enemyMove();
 };

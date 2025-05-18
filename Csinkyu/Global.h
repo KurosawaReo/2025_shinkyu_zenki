@@ -83,4 +83,12 @@ struct Line
 #define MISSILE_TRACK_POW	(8)			//ミサイルの追尾力.
 #define MISSILE_SPEED		(3)			//ミサイルの速度.
 
+// - 列挙体 -
+enum Scene
+{
+	SCENE_TITLE,
+	SCENE_GAME,
+	SCENE_END,
+};
+
 // - 関数 -

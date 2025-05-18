@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/05/17
+   ver.2025/05/18
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -32,16 +32,16 @@ void InputKey4Dir(DBL_XY* pos, int speed) {
 	DBL_XY move{}; //求めた移動量.
 
 	//キー入力に応じて移動力を与える.
-	if (CheckHitKey(KEY_INPUT_UP)) {
+	if (CheckHitKey(KEY_INPUT_UP)||CheckHitKey(KEY_INPUT_W)) {
 		pow.y += -1;
 	}
-	if (CheckHitKey(KEY_INPUT_DOWN)) {
+	if (CheckHitKey(KEY_INPUT_DOWN)||CheckHitKey(KEY_INPUT_S)) {
 		pow.y += +1;
 	}
-	if (CheckHitKey(KEY_INPUT_LEFT)) {
+	if (CheckHitKey(KEY_INPUT_LEFT)||CheckHitKey(KEY_INPUT_A)) {
 		pow.x += -1;
 	}
-	if (CheckHitKey(KEY_INPUT_RIGHT)) {
+	if (CheckHitKey(KEY_INPUT_RIGHT)||CheckHitKey(KEY_INPUT_D)) {
 		pow.x += +1;
 	}
 

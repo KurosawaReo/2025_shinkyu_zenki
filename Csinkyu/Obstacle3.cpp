@@ -7,13 +7,18 @@
 
 void Obstacle3::Init(Player* _player)
 {
+	player = _player; //プレイヤーの実体アドレスをもらう.
+	
 	LoadGraphST(&img, _T("image/enemy.png"));
 	//img.handle;
 	//img.size.x;
 	//img.size.y;
-
-	player = _player; //プレイヤーの実体アドレスをもらう.
-
+	
+	Reset();
+}
+void Obstacle3::Reset() 
+{
+	//全てのミサイルを未使用に.
 	for (int i = 0; i < MAX_M; i++)
 	{
 		Mv[i] = 0;
@@ -106,7 +111,7 @@ void Obstacle3::enemyMove()
 			if (hit)
 			{
 				Mv[i] = 0;
-				player->SetActive(FALSE);
+				player->PlayerDeath();
 				break;
 			}
 		}

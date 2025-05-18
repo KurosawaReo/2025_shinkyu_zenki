@@ -12,22 +12,15 @@
 class Player
 {
 private:
-	int    graph;  //画像データ.
-	BOOL   active; //有効か.
+	int    graph{};   //画像データ.
+	BOOL   active{};  //有効か.
+	BOOL   isDebug{}; //デバッグ用.
 
-	Circle hit;    //プレイヤーの当たり判定円.
+	Circle hit{};     //プレイヤーの当たり判定円.
+
+	Scene* p_scene{}; //シーンデータ.
 
 public:
-	Player(DBL_XY _pos, BOOL _active) {
-		graph  = {};
-		active = _active;
-		hit    = { _pos, PLAYER_HIT_R, 0x000000 };
-	}
-
-	void Init();
-	void Update();
-	void Draw();
-	void PlayerMove(); //プレイヤー移動.
 
 	//set.
 	void    SetActive(BOOL _active) { active = _active; }
@@ -35,4 +28,13 @@ public:
 	DBL_XY  GetPos()   { return hit.pos; }
 	BOOL    GetActive(){ return active; }
 	Circle* GetHit()   { return &hit; }
+
+	//その他.
+	void Init  (Scene* _scene);
+	void Reset (DBL_XY _pos, BOOL _active);
+	void Update();
+	void Draw  ();
+
+	void PlayerMove();  //プレイヤー移動.
+	void PlayerDeath(); //プレイヤー死亡.
 };

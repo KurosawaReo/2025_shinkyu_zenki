@@ -15,12 +15,12 @@
 #endif
 
 //プレイヤーの実体.
-Player    player({100, 100}, TRUE);
+Player   player;
 //障害物の実体.
-Obstacle  obstacle[] = {
-	Obstacle({150, 150}, 0,  50, 0x00FF00),
-	Obstacle({400, 150}, 30, 50, 0x00FF00),
-	Obstacle({300, 300}, 60, 80, 0x00FF00)
+Obstacle obstacle[] = {
+	Obstacle(80, 1, 0x00FF00),
+	Obstacle(60, 0.5, 0x00FF00),
+	Obstacle(100, 1, 0x00FF00)
 };
 
 #if defined ODAZIMA
@@ -35,15 +35,13 @@ float GameManager::GetTime() {
 	return (float)(nowTime - stTime)/1000; //時刻の差.
 }
 
-//初期化.
+//初期化(一回のみ行う)
 void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
 
-	stTime = clock(); //開始時刻.
+	scene = SCENE_TITLE; //タイトル.
 
-	//プレイヤーclass.
-	player.Init();
 	//障害物class.
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Init(&player);
@@ -54,18 +52,65 @@ void GameManager::Init() {
 #else
 	obstacle3.Init(&player);
 #endif
+	//プレイヤーclass.
+	player.Init(&scene);
+
+	Reset();
+}
+
+//リセット(何回でも行う)
+void GameManager::Reset() {
+
+	//障害物class.
+	obstacle[0].Reset({ 150, 150 }, 0);
+	obstacle[1].Reset({ 400, 150 }, 30);
+	obstacle[2].Reset({ 300, 300 }, 60);
+	obstacle3.Reset();
+	//プレイヤーclass.
+	player.Reset({ 100, 100 }, TRUE);
 }
 
 //更新.
 void GameManager::Update() {
 
-	//生存中のみ更新.
-	if (player.GetActive()) {
-		nowTime = clock(); //現在時刻.
-	}
+	UpdateKeys(); //キー入力更新.
 
-	//プレイヤーclass.
-	player.Update();
+	//シーン別.
+	switch (scene) {
+		case SCENE_TITLE: UpdateTitle(); break;
+		case SCENE_GAME:  UpdateGame();  break;
+		case SCENE_END:   UpdateEnd();   break;
+	
+		default: assert(FALSE); break;
+	}
+}
+
+//描画.
+void GameManager::Draw() {
+
+	//シーン別.
+	switch (scene) {
+		case SCENE_TITLE: DrawTitle(); break;
+		case SCENE_GAME:  DrawGame();  break;
+		case SCENE_END:   DrawEnd();   break;
+
+		default: assert(FALSE); break;
+	}
+}
+
+//シーン別更新.
+void GameManager::UpdateTitle() {
+
+	//SPACEが押された瞬間、ゲーム開始.
+	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+		stTime = clock();    //開始時刻.
+		scene  = SCENE_GAME; //ゲームシーンへ.
+	}
+}
+void GameManager::UpdateGame() {
+
+	nowTime = clock(); //現在時刻.
+
 	//障害物class.
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Update();
@@ -76,13 +121,43 @@ void GameManager::Update() {
 #else
 	obstacle3.Update();
 #endif
+	//プレイヤーclass.
+	player.Update();
+}
+void GameManager::UpdateEnd() {
+
+	//SPACEが押された瞬間、タイトルへ.
+	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+		scene = SCENE_TITLE; //ゲームシーンへ.
+		Reset();
+	}
 }
 
-//描画.
-void GameManager::Draw() {
+//シーン別描画.
+void GameManager::DrawTitle() {
+	// ゲームが開始されていない場合は開始案内を表示
+	DrawFormatString(260, 160, GetColor(255, 255, 255), _T("PUSH SPACE"));
+}
+void GameManager::DrawGame() {
 
-	//プレイヤーclass.
-	player.Draw();
+	DrawObjests();
+
+	//タイマー表示.
+	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), GetTime());
+}
+void GameManager::DrawEnd() {
+	
+	DrawObjests();
+
+	//タイマー表示.
+	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), GetTime());
+	// 終了案内.
+	DrawFormatString(260, 160, GetColor(255, 0, 0), _T("GAME OVER"));
+}
+
+//オブジェクトの描画.
+void GameManager::DrawObjests() {
+
 	//障害物class.
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Draw();
@@ -93,7 +168,6 @@ void GameManager::Draw() {
 #else
 	obstacle3.Draw();
 #endif
-
-	//タイマー表示.
-	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), GetTime());
+	//プレイヤーclass.
+	player.Draw();
 }
