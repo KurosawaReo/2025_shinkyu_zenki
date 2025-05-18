@@ -9,9 +9,10 @@
 #include "Obstacle.h"
 #if defined ODAZIMA
 #include "Obstacle2.h"
+#include "Obstacle4.h"
 #else
 #include "Obstacle3.h"
-#endif
+
 
 //‘¼class‚ÌŽÀ‘Ì.
 Player    player;
@@ -19,6 +20,7 @@ Obstacle  obstacle;
 
 #if defined ODAZIMA
 Obstacle2 obstacle2;
+Obstacle4 obstacle4;
 #else
 Obstacle3 obstacle3;
 #endif
@@ -39,6 +41,7 @@ void GameManager::Init() {
 	//obstacle.Init();
 #if defined ODAZIMA
 	obstacle2.Init(&player);
+	obstacle4.Init(&player);
 #else
 	obstacle3.Init(&player);
 #endif
@@ -56,6 +59,7 @@ void GameManager::Update() {
 	//obstacle.Update();
 #if defined ODAZIMA
 	obstacle2.Update();
+	obstacle4.Update();
 #else
 	obstacle3.Update();
 #endif
@@ -67,6 +71,7 @@ void GameManager::Draw() {
 	//obstacle.Draw();
 #if defined ODAZIMA
 	obstacle2.Draw();
+	obstacle4.Draw();
 #else
 	obstacle3.Draw();
 #endif

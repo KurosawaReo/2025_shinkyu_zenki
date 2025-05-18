@@ -3,7 +3,7 @@
    áŠQ•¨ŠÇ—.
 */
 #pragma once
-
+#include "Player.h"
 #define MAX_M 100 //ƒ~ƒTƒCƒ‹‚ª”ò‚ÔÅ‘å‹——£.
 //#define PI 3.14159//‰~ü—¦
 
