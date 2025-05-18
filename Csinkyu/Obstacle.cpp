@@ -1,19 +1,41 @@
 /*
    - Obstacle.cpp -
-   áŠQ•¨ŠÇ—.(•àVì)
+   áŠQ•¨ŠÇ—.
 */
+#include "Player.h"
 #include "Obstacle.h"
 
-void Obstacle::Init()
-{
-	
+void Obstacle::Init(Player* _player) {
+	//ƒvƒŒƒCƒ„[À‘Ì‚ÌƒAƒhƒŒƒX‚ğ‚à‚ç‚¤.
+	player = _player;
 }
-void Obstacle::Update()
-{
+
+void Obstacle::Update() {
+
+	//ü‚Ì‰ñ“].
 	ang += 1;
+	line.edPos = CalcLineAng(line.stPos, ang, len);
+
+	//“–‚½‚Á‚½‚ç€–S.
+	if (IsHitLine(&line, player->GetHit())) {
+		player->SetActive(FALSE);
+	}
 }
-void Obstacle::Draw()
-{
-	INT_XY pos = { 100, 100 };
-	DrawLineAng(pos, ang, 100, GetColor(0, 255, 0));
+
+void Obstacle::Draw() {
+
+	//“–‚½‚è”»’è‚Ì‰Â‹‰».
+	if (CheckHitKey(KEY_INPUT_0)) {
+		
+		DBL_XY mdPos = CalcMidPos(line.stPos, line.edPos);
+		DrawCircle(_int(mdPos.x), _int(mdPos.y), _int(len/2), 0x303030);
+
+		Line debugLine1 = {line.stPos, CalcLineAng(line.stPos, ang, 1000),       0x303030};
+		Line debugLine2 = {line.stPos, CalcLineAng(line.stPos, ang + 180, 1000), 0x303030};
+		DrawLineST(&debugLine1);
+		DrawLineST(&debugLine2);
+	}
+
+	//ü‚Ì•`‰æ.
+	DrawLineST(&line);
 }

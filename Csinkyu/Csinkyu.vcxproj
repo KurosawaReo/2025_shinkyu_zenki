@@ -21,31 +21,38 @@
   <ItemGroup>
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="myDrawST.cpp" />
+    <ClCompile Include="myCalcST.cpp" />
+    <ClCompile Include="myDrawST.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="myInputST.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
+    <ClCompile Include="Obstacle3.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="Gloval.h" />
-    <ClInclude Include="myDrawST.h" />
-    <ClInclude Include="myInputST.h" />
-    <ClInclude Include="Obstacle.h" />
-    <ClInclude Include="Obstacle2.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\enemy.png" />
     <Image Include="image\Player.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="myCalcST.h" />
+    <ClInclude Include="myDrawST.h" />
+    <ClInclude Include="myInputST.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Obstacle2.h" />
+    <ClInclude Include="Obstacle3.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
