@@ -16,7 +16,7 @@ private:
 	double Mx[MAX_M], My[MAX_M];   //ミサイルのグラフィック.
 	double Mv[MAX_M];              //ミサイルデータの使用状態(1:使用中,0:未使用)
 	double Ma[MAX_M];              //ミサイルの角度.
-	int    Mc[MAX_M];              //ミサイルの追尾カウンタ
+	int    Mc[MAX_M];              //ミサイルの追尾カウンタ-
 
 	IMG img;
 	Player* player;
