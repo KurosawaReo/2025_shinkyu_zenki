@@ -12,7 +12,7 @@
 #include "Obstacle4.h"
 #else
 #include "Obstacle3.h"
-
+#endif
 
 //ƒvƒŒƒCƒ„[‚ÌÀ‘Ì.
 Player    player({100, 100}, TRUE);
