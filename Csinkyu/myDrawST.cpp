@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/05/15
+   ver.2025/05/18
    
    DxLibで使う用のオリジナル描画関数.
 */
@@ -11,9 +11,9 @@
 #include "myDrawST.h"
 
 //DrawCircleの改造版.
-int DrawCircleST(const Circle* data) {
+int DrawCircleST(const Circle* data, BOOL isFill, int thick) {
 
-	int ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), data->r, data->clr);
+	int ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), data->r, data->clr, isFill, thick);
 	return ret;
 }
 //DrawBoxの改造版.
@@ -39,11 +39,11 @@ int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill) {
 	return ret;
 }
 //DrawLineの改造版.
-int DrawLineST(const Line* data) {
+int DrawLineST(const Line* data, int thick) {
 
 	int ret = DrawLine(
 		_int(data->stPos.x), _int(data->stPos.y), 
-		_int(data->edPos.x), _int(data->edPos.y), data->clr
+		_int(data->edPos.x), _int(data->edPos.y), data->clr, thick
 	);
 	return ret;
 }

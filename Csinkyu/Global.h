@@ -61,9 +61,9 @@ struct Line
 
 #if !defined DEF_VARTYPE_MACRO
 #define DEF_VARTYPE_MACRO
-#define _int(n)      (int)(round(n))            //int型変換マクロ.
-#define _intXY(n)    {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
-#define _doubleXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
+#define _int(n)   (int)(round(n))            //int型変換マクロ.
+#define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
+#define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
 #endif
 
 // - 定数 -

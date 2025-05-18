@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/05/15
+   ver.2025/05/17
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -26,7 +26,7 @@ int  IsPushKeyTime(int num) {
 }
 
 //4方向移動操作.
-void InputMove4Dir(DBL_XY* pos, int speed) {
+void InputKey4Dir(DBL_XY* pos, int speed) {
 
 	INT_XY pow{};  //移動力.
 	DBL_XY move{}; //求めた移動量.
@@ -62,7 +62,7 @@ void InputMove4Dir(DBL_XY* pos, int speed) {
 	pos->y += move.y * speed;
 }
 //移動可能範囲内に補正する.
-void MoveLimPos(DBL_XY* pos, INT_XY size, int lLim, int uLim, int rLim, int dLim) {
+void LimMovePos(DBL_XY* pos, INT_XY size, int lLim, int uLim, int rLim, int dLim) {
 
 	if (pos->x < lLim + size.x/2) { pos->x = lLim + size.x/2; }
 	if (pos->y < uLim + size.y/2) { pos->y = uLim + size.y/2; }

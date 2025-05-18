@@ -38,6 +38,8 @@ void Player::Draw()
 //ˆÚ“®ˆ—(ŽÎ‚ß‘Î‰ž)
 void Player::PlayerMove()
 {
-	InputMove4Dir(&hit.pos, PLAYER_MOVE_SPEED);
-	MoveLimPos(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+	//ˆÚ“®‚·‚é.
+	InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
+	//ˆÚ“®ŒÀŠE.
+	LimMovePos(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
