@@ -7,8 +7,9 @@
 #include "Obstacle2.h" // 障害物クラスのヘッダーをインクルード
 
 // 初期化関数
-void Obstacle2::Init(Player* _player)
+void Obstacle2::Init(GameData* _data, Player* _player)
 {
+	data   = _data;
 	player = _player; // プレイヤーのポインタを保存
 
 	// 敵の画像を読み込む.
@@ -50,7 +51,7 @@ void Obstacle2::Draw()
 
 		double size = 0.1; // 描画サイズ仮の値
 		// ミサイルを回転させて描画する位置、サイズ、角度、画像ハンドル、透過フラグ
-		DrawRotaGraph(Mx[i], My[i], size, Ma[i], img.handle, TRUE);
+		DrawRotaGraph(_int(Mx[i]), _int(My[i]), size, Ma[i], img.handle, TRUE);
 	}
 }
 
@@ -184,10 +185,13 @@ void Obstacle2::enemyMove()
 		// cosは角度からX座標の比率を、sinは角度からY座標の比率を教えてくれる
 		// どちらも - 1から1の間の値を返すよ！
 
+		// ミサイルの速度
+		double speed = OBSTACLE2_SPEED;
+		if (data->isSlow) { speed *= SLOW_MODE_SPEED; }
+
 		// 現在の角度に基づいてミサイルを移動させる
-		double speed = 4.0; // ミサイルの速度
-		Mx[i] += (int)(cos(Ma[i]) * speed); // X方向の移動
-		My[i] += (int)(sin(Ma[i]) * speed); // Y方向の移動
+		Mx[i] += _int(cos(Ma[i]) * speed); // X方向の移動
+		My[i] += _int(sin(Ma[i]) * speed); // Y方向の移動
 
 		// 画面外に出たらミサイルを無効化
 		if (Mx[i] < -100 || Mx[i] > 740 || My[i] < -100 || My[i] > 500)

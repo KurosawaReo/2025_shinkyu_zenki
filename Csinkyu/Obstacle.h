@@ -12,7 +12,8 @@ private:
 	float len;   //長さ.
 	float speed; //速さ.
 
-	Player* player{};
+	GameData* data  {};
+	Player*   player{};
 
 public:
 	//コンストラクタ.
@@ -22,7 +23,7 @@ public:
 		line.clr   = _clr;
 	}
 
-	void Init  (Player*);
+	void Init  (GameData*, Player*);
 	void Reset (DBL_XY _pos, float _ang);
 	void Update();
 	void Draw  ();

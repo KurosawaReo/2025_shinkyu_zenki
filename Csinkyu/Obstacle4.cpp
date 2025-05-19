@@ -8,35 +8,32 @@
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
 
-// ゲーム内の定数定義
-#define PLAYER_SIZE 32  // プレイヤーのサイズ（幅と高さ）
-#define WINDOW_WID 640  // ウィンドウの幅
-#define WINDOW_HEI 480  // ウィンドウの高さ
-
 /**
  * @brief 障害物の初期化処理
  * @param _player プレイヤーオブジェクトへのポインタ
  */
-void Obstacle4::Init(Player* _player)
+void Obstacle4::Init(GameData* _data, Player* _player)
 {
+	data   = _data;
 	player = _player;  // プレイヤーオブジェクトを参照として保存
+	
 	Reset();
 }
 
 //リセット.
 void Obstacle4::Reset() {
 
-	Hx = 320;             // 砲台のX座標初期値（画面中央）
-	Hy = 30;              // 砲台のY座標初期値（画面上部）
-	Hm = 3;               // 砲台の移動速度
+	Hx  = 320;            // 砲台のX座標初期値（画面中央）
+	Hy  = 30;             // 砲台のY座標初期値（画面上部）
+	Hm  = 3;              // 砲台の移動速度
 	Hsc = OBSTACLE4_SPAN; // 砲台の発射カウンタ初期値
 
 	// レーザーデータの初期化
-	for (int i = 0; i < MAX_L; i++)
+	for (int i = 0; i < OBSTACLE4_MAX_L; i++)
 		Ld[i].ValidFlag = 0;  // すべてのレーザーを無効状態に
 
 	// レーザーの軌跡データの初期化
-	for (int i = 0; i < LINE_MAXNUM; i++)
+	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 		Line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
 }
 
@@ -61,7 +58,7 @@ void Obstacle4::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
 	// レーザーの軌跡の描画処理
-	for (int i = 0; i < LINE_MAXNUM; i++)
+	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
 		if (Line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
@@ -70,15 +67,18 @@ void Obstacle4::Draw()
 			Line[i].x2, Line[i].y2,
 			GetColor(0, 255 - Line[i].Counter * 4, 0));  // 緑色で、時間経過で徐々に薄くなる
 
-		Line[i].Counter++;  // 経過時間カウンタ増加
-		if (Line[i].Counter == 64) Line[i].ValidFlag = 0;  // 64フレーム経過したら軌跡を無効化
+		// 経過時間カウンタ増加
+		Line[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		// 64フレーム経過したら軌跡を無効化
+		if (Line[i].Counter >= 64) Line[i].ValidFlag = 0;
 	}
 
 	// 通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	// 動く砲台を描画
-	DrawBox(Hx - 8, Hy - 8, Hx + 8, Hy + 8, GetColor(100, 100, 100), TRUE);
+	Box box = { {Hx, Hy}, {8, 8}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
+	DrawBoxST(&box, TRUE);
 }
 
 /**
@@ -88,7 +88,7 @@ void Obstacle4::Draw()
 void Obstacle4::enemy4Move()
 {
 	// 各レーザーの処理
-	for (int i = 0; i < MAX_L; i++)
+	for (int i = 0; i < OBSTACLE4_MAX_L; i++)
 	{
 		int xb, yb;  // 前回位置を保存する変数
 		if (Ld[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
@@ -119,11 +119,11 @@ void Obstacle4::enemy4Move()
 			double angleDiff = targetAngle - currentAngle;
 
 			// 角度差分を-PI～PIの範囲に正規化
-			while (angleDiff > PI) angleDiff -= 2 * PI;
-			while (angleDiff < -PI) angleDiff += 2 * PI;
+			while (angleDiff >  M_PI) angleDiff -= 2 * M_PI;
+			while (angleDiff < -M_PI) angleDiff += 2 * M_PI;
 
 			// 最大旋回角度を制限（1フレームに15度まで）
-			const double maxTurn = PI / 180 * 15;
+			const double maxTurn = M_PI/180 * 15;
 			if (angleDiff > maxTurn) angleDiff = maxTurn;
 			if (angleDiff < -maxTurn) angleDiff = -maxTurn;
 
@@ -133,18 +133,23 @@ void Obstacle4::enemy4Move()
 			Ld[i].sy += (int)(sin(newAngle) * 30);  // Y方向速度を更新
 		}
 
-		Ld[i].Counter++;  // レーザーの経過時間カウンタを増加
+		// レーザーの経過時間カウンタを増加
+		Ld[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 
 		// 移動前の座標を保存
 		xb = Ld[i].x;
 		yb = Ld[i].y;
 
+		// ミサイルの速度
+		double speed = OBSTACLE4_SPEED;
+		if (data->isSlow) { speed /= SLOW_MODE_SPEED; }
+
 		// レーザーの位置を更新（速度に基づいて移動）
-		Ld[i].x = (Ld[i].x * 100 + Ld[i].sx) / 100;
-		Ld[i].y = (Ld[i].y * 100 + Ld[i].sy) / 100;
+		Ld[i].x = _int((Ld[i].x * speed + Ld[i].sx)/speed);
+		Ld[i].y = _int((Ld[i].y * speed + Ld[i].sy)/speed);
 
 		// レーザーの軌跡を生成
-		for (int j = 0; j < LINE_MAXNUM; j++)
+		for (int j = 0; j < OBSTACLE4_LINE_MAX; j++)
 		{
 			if (Line[j].ValidFlag == 0)  // 未使用の軌跡スロットを探す
 			{
@@ -169,17 +174,23 @@ void Obstacle4::enemy4Move()
 
 	// 砲台の移動とレーザー発射処理
 	{
-		Hx += Hm;  // 砲台をX方向に移動
-
+		// 砲台をX方向に移動
+		Hx += Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
 		// 画面端で反射
-		if (Hx > WINDOW_WID - 16 || Hx < 0) Hm *= -1;
+		if (Hm > 0 && Hx > WINDOW_WID - 16) {
+			Hm *= -1;
+		}
+		if (Hm < 0 && Hx < 0) {
+			Hm *= -1;
+		}
 
-		Hsc--;  // 発射カウンタを減少
+		// 発射カウンタを減少
+		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// タイミングが来たらレーザー発射
-		if (Hsc == 0 || Hsc == 15 || Hsc == 30)
+		if (Hsc <= HscTm)
 		{
 			// 未使用のレーザースロットを探してレーザーを発射
-			for (int i = 0; i < MAX_L; i++)
+			for (int i = 0; i < OBSTACLE4_MAX_L; i++)
 			{
 				if (Ld[i].ValidFlag == 0)  // 未使用のレーザースロットを見つけた
 				{
@@ -191,24 +202,27 @@ void Obstacle4::enemy4Move()
 					// 発射位置（砲台の少し下から）
 					double startX = Hx + 16;
 					double startY = Hy + 16;
-
+					
 					// プレイヤー方向への初期角度計算
 					double angle = atan2(Py - startY, Px - startX);
 
 					// レーザーデータの初期化
-					Ld[i].x = startX;       // 初期X座標
-					Ld[i].y = startY;       // 初期Y座標
+					Ld[i].x = _int(startX);				// 初期X座標
+					Ld[i].y = _int(startY);				// 初期Y座標
 					Ld[i].sx = (int)(cos(angle) * 30);  // X方向初期速度
 					Ld[i].sy = (int)(sin(angle) * 30);  // Y方向初期速度
-					Ld[i].Counter = 0;      // 経過時間カウンタ初期化
-					Ld[i].LogNum = 0;       // 軌跡カウンタ初期化
-					Ld[i].ValidFlag = 1;    // レーザーを有効化
+					Ld[i].Counter = 0;					// 経過時間カウンタ初期化
+					Ld[i].LogNum = 0;					// 軌跡カウンタ初期化
+					Ld[i].ValidFlag = 1;				// レーザーを有効化
 					break;
 				}
 			}
+			HscTm -= 15; //発射タイミングを変更.
 		}
-		if (Hsc == 0) {
+		//0秒を下回ったらもう一周.
+		if (Hsc <= 0) {
 			Hsc = OBSTACLE4_SPAN;  // 発射カウンタをリセット（次の発射までの待機時間）
+			HscTm = 30;
 		}
 	}
 }

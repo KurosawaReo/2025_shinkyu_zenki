@@ -29,7 +29,7 @@ public:
 	Circle* GetHit()   { return &hit; }
 
 	//‚»‚Ì‘¼.
-	void Init  (GameData* _data);
+	void Init  (GameData*);
 	void Reset (DBL_XY _pos, BOOL _active);
 	void Update();
 	void Draw  ();

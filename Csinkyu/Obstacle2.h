@@ -19,10 +19,12 @@ private:
 	int    Mc[MAX_M];              //ミサイルの追尾カウンタ-
 
 	IMG img;
+
+	GameData* data{};
 	Player* player;
 
 public:
-	void Init(Player*);
+	void Init(GameData*, Player*);
 	void Reset();
 	void Update();
 	void Draw();

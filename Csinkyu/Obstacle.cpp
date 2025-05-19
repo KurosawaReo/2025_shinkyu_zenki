@@ -5,8 +5,9 @@
 #include "Player.h"
 #include "Obstacle.h"
 
-void Obstacle::Init(Player* _player) {
-	//プレイヤー実体のアドレスをもらう.
+void Obstacle::Init(GameData* _data, Player* _player) {
+	//実体のアドレスをもらう.
+	data   = _data;
 	player = _player;
 }
 
@@ -17,8 +18,9 @@ void Obstacle::Reset(DBL_XY _pos, float _ang) {
 
 void Obstacle::Update() {
 
+	//回転速度.
+	ang += speed * (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 	//線の回転.
-	ang += speed;
 	line.edPos = CalcLineAng(line.stPos, ang, len);
 
 	//当たったら死亡.

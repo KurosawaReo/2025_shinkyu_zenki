@@ -2,6 +2,12 @@
    - GameManager.cpp -
    ゲーム全体管理.
 */
+/*--------------------------------------------------------/
+   [TODO]
+   2025/05/20:
+   仮でスローモードを実装したが、レーザーの動きが怪しい。
+   体力を実装したい。表示はゲージで。
+/--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
 #include "GameManager.h"
@@ -45,11 +51,11 @@ void GameManager::Init() {
 
 	//障害物class.
 	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Init(&player);
+		obstacle[i].Init(&data, &player);
 	}
 #if defined ODAZIMA
-	obstacle2.Init(&player);
-	obstacle4.Init(&player);
+	obstacle2.Init(&data, &player);
+	obstacle4.Init(&data, &player);
 #else
 	obstacle3.Init(&player);
 #endif
@@ -61,6 +67,8 @@ void GameManager::Init() {
 
 //リセット(何回でも行う)
 void GameManager::Reset() {
+
+	data.isSlow = FALSE; //スローモード解除.
 
 	//障害物class.
 	obstacle[0].Reset({ 150, 150 }, 0);
@@ -96,8 +104,10 @@ void GameManager::Update() {
 void GameManager::Draw() {
 
 	//背景色.
-//	Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0xA0A0A0 };
-//	DrawBoxST(&box, FALSE);
+	if (data.isSlow) {
+		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
+		DrawBoxST(&box, FALSE);
+	}
 
 	//シーン別.
 	switch (data.scene) {
