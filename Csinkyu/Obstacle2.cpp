@@ -9,15 +9,22 @@
 // 初期化関数
 void Obstacle2::Init(Player* _player)
 {
-	player = _player; //プレイヤー実体のアドレスをもらう.
-	
 	// 敵の画像を読み込む.
 	LoadGraphST(&img, _T("image/enemy.png"));
 	// img.handle;  読み込んだ画像.
 	// img.size.x;  画像の幅
 	// img.size.y;/ 画像の高さ
 
-	Reset();
+	player = _player; // プレイヤーのポインタを保存
+
+	// すべてのミサイルの状態を初期化.
+	for (int i = 0; i < MAX_M; i++)
+	{
+		Mv[i] = 0; // ミサイルの有効フラグをリセット.
+	}
+
+	// ミサイル発射カウントをリセット.
+	hsc = 30;
 }
 
 // リセット
@@ -48,9 +55,9 @@ void Obstacle2::Draw()
 		// ミサイルが無効（Mv[i]=0）なら、このミサイルの描画をしない.
 		if (Mv[i] == 0) continue;
 
-		double size = 0.1; //仮.
-
-		DrawRotaGraph(_int(Mx[i]), _int(My[i]), size, Ma[i], img.handle, TRUE);
+		double size = 0.1; // 描画サイズ仮の値
+		// ミサイルを回転させて描画する位置、サイズ、角度、画像ハンドル、透過フラグ
+		DrawRotaGraph(Mx[i], My[i], size, Ma[i], img.handle, TRUE);
 	}
 }
 
@@ -97,7 +104,7 @@ void Obstacle2::enemyMove()
 		}
 
 		// 次のミサイル発射までのカウンタをリセット
-		hsc = OBSTACLE2_SPAN;
+		hsc = 30;
 	}
 
 	// すべてのミサイルの移動処理
@@ -130,7 +137,7 @@ void Obstacle2::enemyMove()
 		}
 
 		// 追尾処理（発射後100フレームまで追尾する）
-		if (Mc[i] < OBSTACLE2_LIM_F)
+		if (Mc[i] < 100)
 		{
 			// プレイヤーの中心座標を計算
 			double px = player->GetPos().x + PLAYER_SIZE / 2.0;
@@ -152,6 +159,8 @@ void Obstacle2::enemyMove()
 			double turnSpeed = (M_PI / 180.0) * 5.0; // 1フレームあたり最大5度回転
 
 			// 角度を更新（差がほぼ0なら調整しない、差が正なら右回り、負なら左回りに調整）
+			//fabsは少数の絶対値を計算する関数
+			//使った場面ここでは、角度の差がほんのわずかしかないかどうかをチェックする
 			if (fabs(angleDiff) < 0.001)
 			{
 				// 角度差がほぼ0の場合は調整しない
@@ -160,17 +169,27 @@ void Obstacle2::enemyMove()
 			else if (angleDiff > 0)
 			{
 				// 右回りに調整（ただし最大turnSpeed度まで）
+				//fminは2つの数値のうち小さい方を、fmaxは大きい方を返してくれる関数なんだ
+				//	使った場面これはミサイルの回転速度を制限するために使ってる
+				//fminの場合は,turnSpeed最大回転角度とangleDiffまだ回転すべき角度のうち小さい方を選んでる
+				// これで「一度に回転しすぎない」ようにしてる。
 				Ma[i] += fmin(turnSpeed, angleDiff);
 			}
 			else
 			{
 				// 左回りに調整（ただし最大turnSpeed度まで）
+				//fmaxの場合は、左回りの制限のために使って
+				// て,-turnSpeed最大左回り角度とangleDiffマイナスの値＝左回りのうち大きい方を選んでる。
 				Ma[i] += fmax(-turnSpeed, angleDiff);
 			}
 		}
 
 		// 追尾カウンタを増加
 		Mc[i]++;
+		//数学関数を使用した.
+		//「cosとsinは三角関数で、角度から座標を求めるときによく使われる
+		// cosは角度からX座標の比率を、sinは角度からY座標の比率を教えてくれる
+		// どちらも - 1から1の間の値を返すよ！
 
 		// 現在の角度に基づいてミサイルを移動させる
 		double speed = 4.0; // ミサイルの速度
