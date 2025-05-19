@@ -20,10 +20,16 @@
 void Obstacle4::Init(Player* _player)
 {
 	player = _player;  // プレイヤーオブジェクトを参照として保存
-	Hx = 320;          // 砲台のX座標初期値（画面中央）
-	Hy = 30;           // 砲台のY座標初期値（画面上部）
-	Hm = 3;            // 砲台の移動速度
-	Hsc = 30;          // 砲台の発射カウンタ初期値
+	Reset();
+}
+
+//リセット.
+void Obstacle4::Reset() {
+
+	Hx = 320;             // 砲台のX座標初期値（画面中央）
+	Hy = 30;              // 砲台のY座標初期値（画面上部）
+	Hm = 3;               // 砲台の移動速度
+	Hsc = OBSTACLE4_SPAN; // 砲台の発射カウンタ初期値
 
 	// レーザーデータの初期化
 	for (int i = 0; i < MAX_L; i++)
@@ -72,7 +78,7 @@ void Obstacle4::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	// 砲台を黄色の四角形で描画
-	DrawBox(Hx - 8, Hy - 8, Hx + 8, Hy + 8, GetColor(255, 255, 0), TRUE);
+	DrawBox(Hx - 8, Hy - 8, Hx + 8, Hy + 8, GetColor(100, 100, 100), TRUE);
 }
 
 /**
@@ -98,6 +104,7 @@ void Obstacle4::enemy4Move()
 			(Ld[i].y > Py - halfSize && Ld[i].y < Py + halfSize))
 		{
 			Ld[i].ValidFlag = 0;  // 当たったらレーザーを無効化
+			player->PlayerDeath();
 			continue;
 		}
 
@@ -168,7 +175,8 @@ void Obstacle4::enemy4Move()
 		if (Hx > WINDOW_WID - 16 || Hx < 0) Hm *= -1;
 
 		Hsc--;  // 発射カウンタを減少
-		if (Hsc == 0)  // カウンタが0になったらレーザー発射
+		// タイミングが来たらレーザー発射
+		if (Hsc == 0 || Hsc == 15 || Hsc == 30)
 		{
 			// 未使用のレーザースロットを探してレーザーを発射
 			for (int i = 0; i < MAX_L; i++)
@@ -198,7 +206,9 @@ void Obstacle4::enemy4Move()
 					break;
 				}
 			}
-			Hsc = 30;  // 発射カウンタをリセット（次の発射までの待機時間）
+		}
+		if (Hsc == 0) {
+			Hsc = OBSTACLE4_SPAN;  // 発射カウンタをリセット（次の発射までの待機時間）
 		}
 	}
 }

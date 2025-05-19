@@ -9,13 +9,19 @@
 // 初期化関数
 void Obstacle2::Init(Player* _player)
 {
+	player = _player; // プレイヤーのポインタを保存
+
 	// 敵の画像を読み込む.
 	LoadGraphST(&img, _T("image/enemy.png"));
 	// img.handle;  読み込んだ画像.
 	// img.size.x;  画像の幅
 	// img.size.y;/ 画像の高さ
 
-	player = _player; // プレイヤーのポインタを保存
+	Reset();
+}
+
+// リセット
+void Obstacle2::Reset() {
 
 	// すべてのミサイルの状態を初期化.
 	for (int i = 0; i < MAX_M; i++)
@@ -24,7 +30,7 @@ void Obstacle2::Init(Player* _player)
 	}
 
 	// ミサイル発射カウントをリセット.
-	hsc = 30;
+	hsc = OBSTACLE2_SPAN;
 }
 
 // 更新関数
@@ -91,7 +97,7 @@ void Obstacle2::enemyMove()
 		}
 
 		// 次のミサイル発射までのカウンタをリセット
-		hsc = 30;
+		hsc = OBSTACLE2_SPAN;
 	}
 
 	// すべてのミサイルの移動処理
@@ -119,6 +125,7 @@ void Obstacle2::enemyMove()
 		if (isCollison)
 		{
 			Mv[i] = 0;
+			player->PlayerDeath();
 			continue;
 		}
 

@@ -1,32 +1,51 @@
 /*
    - myDrawST.cpp - (original)
+   ver.2025/05/18
    
    DxLibで使う用のオリジナル描画関数.
 */
-#if false
-  #include "stdafx.h" //stdafxがあるならこっちを使う.
-#else
-  #define _USE_MATH_DEFINES //math定数を使うのに必要.
-  #include <math.h>
-  #include "DxLib.h"
+#if !defined DEF_GLOBAL_H
+#include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myDrawST.h"
 
-//#define _int(n) ((int)round(n)) //int型変換マクロ.
+//DrawCircleの改造版.
+int DrawCircleST(const Circle* data, BOOL isFill, int thick) {
 
-//線の描画関数.
-INT_XY DrawLineAng(INT_XY stPos, float ang, float len, int clr, int thick) {
+	int ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), data->r, data->clr, isFill, thick);
+	return ret;
+}
+//DrawBoxの改造版.
+int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill) {
 
-	//角度をradに変換し、座標の計算.
-	int y = _int(sin(ang * M_PI/180) * len);
-	int x = _int(cos(ang * M_PI/180) * len);
-	//終点座標.
-	INT_XY edPos = { stPos.x+x, stPos.y+y };
-	//始点から終点へ描画.
-	DrawLine(stPos.x, stPos.y, edPos.x, edPos.y, clr, thick);
+	double x1, x2, y1, y2;
 
-	return edPos; //終点座標を返す.
+	//中央基準かどうか.
+	if (isCenter) {
+		x1 = data->pos.x - data->size.x/2;
+		x2 = data->pos.x + data->size.x/2;
+		y1 = data->pos.y - data->size.y/2;
+		y2 = data->pos.y + data->size.y/2;
+	}
+	else {
+		x1 = data->pos.x;
+		x2 = data->pos.x + data->size.x;
+		y1 = data->pos.y;
+		y2 = data->pos.y + data->size.y;
+	}
+
+	int ret = DrawBox(_int(x1), _int(y1), _int(x2), _int(y2), data->clr, isFill);
+	return ret;
+}
+//DrawLineの改造版.
+int DrawLineST(const Line* data, int thick) {
+
+	int ret = DrawLine(
+		_int(data->stPos.x), _int(data->stPos.y), 
+		_int(data->edPos.x), _int(data->edPos.y), data->clr, thick
+	);
+	return ret;
 }
 
 //LoadGraphの改造版.
@@ -167,4 +186,20 @@ int DrawModiStringST(const STR_DRAW_MODI* data, int font) {
 	}
 
 	return ret;
+}
+
+//テキストのサイズ取得.
+INT_XY GetTextSize(const char* str) {
+	
+	//横幅を求める.
+	//横幅 = 字数*サイズ + (字数-1)*字間.
+	int x1 =  (int)strlen(str)    * GetFontSize();
+	int x2 = ((int)strlen(str)-1) * GetFontSpace();
+	int wid = x1 + x2;
+
+	//縦幅を求める.
+	//縦幅 = サイズ + 行間.
+	int hei = GetFontSize() + GetFontLineSpace();
+
+	return { wid, hei };
 }

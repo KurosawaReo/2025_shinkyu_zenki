@@ -45,6 +45,7 @@ private:
 
 public:
 	void Init(Player*);
+	void Reset();
 	void Update();
 	void Draw();
 	void enemy4Move();

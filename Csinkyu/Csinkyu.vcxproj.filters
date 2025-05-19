@@ -7,11 +7,10 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle3.cpp" />
-    <ClCompile Include="Global.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
-    <ClCompile Include="Obstacle4.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="myCalcST.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h" />
@@ -20,10 +19,10 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
-    <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Obstacle3.h" />
     <ClInclude Include="Obstacle2.h" />
-    <ClInclude Include="Obstacle4.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="myCalcST.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\Player.png" />
