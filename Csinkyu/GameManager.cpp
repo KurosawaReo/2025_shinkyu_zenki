@@ -93,6 +93,10 @@ void GameManager::Update() {
 //ï`âÊ.
 void GameManager::Draw() {
 
+	//îwåiêF.
+//	Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0xA0A0A0 };
+//	DrawBoxST(&box, FALSE);
+
 	//ÉVÅ[Éìï .
 	switch (scene) {
 		case SCENE_TITLE: DrawTitle(); break;
