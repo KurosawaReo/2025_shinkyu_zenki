@@ -8,11 +8,6 @@
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
 
-// ゲーム内の定数定義
-#define PLAYER_SIZE 32  // プレイヤーのサイズ（幅と高さ）
-#define WINDOW_WID 640  // ウィンドウの幅
-#define WINDOW_HEI 480  // ウィンドウの高さ
-
 /**
  * @brief 障害物の初期化処理
  * @param _player プレイヤーオブジェクトへのポインタ
