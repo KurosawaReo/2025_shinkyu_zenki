@@ -77,7 +77,7 @@ void Obstacle4::Draw()
 	// 通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
-	// 砲台を黄色の四角形で描画
+	// 動く砲台を描画
 	DrawBox(Hx - 8, Hy - 8, Hx + 8, Hy + 8, GetColor(100, 100, 100), TRUE);
 }
 
