@@ -12,13 +12,12 @@
 class Player
 {
 private:
-	int    graph{};   //画像データ.
-	BOOL   active{};  //有効か.
-	BOOL   isDebug{}; //デバッグ用.
-
-	Circle hit{};     //プレイヤーの当たり判定円.
-
-	Scene* p_scene{}; //シーンデータ.
+	int    graph{};     //画像データ.
+	BOOL   active{};    //有効か.
+	Circle hit{};       //プレイヤーの当たり判定円.
+	BOOL   isDebug{};   //デバッグ用.
+	
+	GameData* p_data{}; //ゲームデータ.
 
 public:
 
@@ -30,7 +29,7 @@ public:
 	Circle* GetHit()   { return &hit; }
 
 	//その他.
-	void Init  (Scene* _scene);
+	void Init  (GameData* _data);
 	void Reset (DBL_XY _pos, BOOL _active);
 	void Update();
 	void Draw  ();

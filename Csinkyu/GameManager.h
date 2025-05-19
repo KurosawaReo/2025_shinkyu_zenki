@@ -4,13 +4,14 @@
 */
 #pragma once
 
+//ゲームマネージャー.
 class GameManager 
 {
 private:
-	clock_t stTime;
-	clock_t nowTime;
+	clock_t  stTime;
+	clock_t  nowTime;
 
-	Scene scene; //シーンの記録用.
+	GameData data{}; //ゲームデータ.
 
 public:
 

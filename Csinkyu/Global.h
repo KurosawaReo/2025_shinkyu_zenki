@@ -66,6 +66,21 @@ struct Line
 #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
 #endif
 
+// - 列挙体 -
+enum Scene
+{
+	SCENE_TITLE,
+	SCENE_GAME,
+	SCENE_END,
+};
+
+// - ゲームデータ -
+struct GameData
+{
+	Scene scene;  //シーンの記録用.
+	BOOL  isSlow; //スローモードかどうか.
+};
+
 // - 定数 -
 #define IS_WINDOW_MODE		(TRUE)		//ウィンドウモードにするか.
 
@@ -87,13 +102,5 @@ struct Line
 #define OBSTACLE3_SPEED		(3)			//ミサイルの速度.
 
 #define OBSTACLE4_SPAN		(80)		//ミサイルの発射間隔.
-
-// - 列挙体 -
-enum Scene
-{
-	SCENE_TITLE,
-	SCENE_GAME,
-	SCENE_END,
-};
 
 // - 関数 -
