@@ -187,3 +187,19 @@ int DrawModiStringST(const STR_DRAW_MODI* data, int font) {
 
 	return ret;
 }
+
+//テキストのサイズ取得.
+INT_XY GetTextSize(const char* str) {
+	
+	//横幅を求める.
+	//横幅 = 字数*サイズ + (字数-1)*字間.
+	int x1 =  (int)strlen(str)    * GetFontSize();
+	int x2 = ((int)strlen(str)-1) * GetFontSpace();
+	int wid = x1 + x2;
+
+	//縦幅を求める.
+	//縦幅 = サイズ + 行間.
+	int hei = GetFontSize() + GetFontLineSpace();
+
+	return { wid, hei };
+}
