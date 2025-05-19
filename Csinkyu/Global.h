@@ -79,9 +79,14 @@ struct Line
 #define PLAYER_MOVE_SPEED	(4)			//プレイヤー移動速度.
 #define PLAYER_HIT_R        (10)        //プレイヤーの当たり判定円の半径.
 
-#define MISSILE_SIZE		(20)		//ミサイルサイズ.
-#define MISSILE_TRACK_POW	(8)			//ミサイルの追尾力.
-#define MISSILE_SPEED		(3)			//ミサイルの速度.
+#define OBSTACLE2_LIM_F     (80)        //最大追跡フレーム数.
+#define OBSTACLE2_SPAN		(50)		//ミサイルの発射間隔.
+
+#define OBSTACLE3_SIZE		(20)		//ミサイルサイズ.
+#define OBSTACLE3_TRACK_POW	(8)			//ミサイルの追尾力.
+#define OBSTACLE3_SPEED		(3)			//ミサイルの速度.
+
+#define OBSTACLE4_SPAN		(80)		//ミサイルの発射間隔.
 
 // - 列挙体 -
 enum Scene

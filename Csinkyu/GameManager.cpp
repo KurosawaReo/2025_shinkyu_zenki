@@ -65,7 +65,10 @@ void GameManager::Reset() {
 	obstacle[0].Reset({ 150, 150 }, 0);
 	obstacle[1].Reset({ 400, 150 }, 30);
 	obstacle[2].Reset({ 300, 300 }, 60);
-#if !defined ODAZIMA
+#if defined ODAZIMA
+	obstacle2.Reset();
+	obstacle4.Reset();
+#else
 	obstacle3.Reset();
 #endif
 	//ÉvÉåÉCÉÑÅ[class.
