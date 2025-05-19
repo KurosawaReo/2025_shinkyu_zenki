@@ -78,7 +78,7 @@ void Obstacle4::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	// ñCë‰Çâ©êFÇÃéläpå`Ç≈ï`âÊ
-	DrawBox(Hx - 8, Hy - 8, Hx + 8, Hy + 8, GetColor(255, 255, 0), TRUE);
+	DrawBox(Hx - 8, Hy - 8, Hx + 8, Hy + 8, GetColor(100, 100, 100), TRUE);
 }
 
 /**
