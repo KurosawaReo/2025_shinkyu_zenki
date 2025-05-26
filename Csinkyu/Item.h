@@ -9,5 +9,6 @@ public:
 	void Init();
 	void Update();
 	void Draw();
-	void ItemMove(); //プレイヤー移動.
+	void ItemMove(); //アイテム.
+
 };

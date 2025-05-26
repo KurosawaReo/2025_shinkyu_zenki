@@ -3,6 +3,7 @@
    ItemŠÇ—.
 */
 #include "Item.h"
+#include "Player.h"
 
 //‰Šú‰».
 void Item::Init()
