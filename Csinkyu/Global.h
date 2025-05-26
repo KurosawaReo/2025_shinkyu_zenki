@@ -43,6 +43,9 @@ struct DBL_XY
 #define MISSILE_TRACK_POW	(8)			//ミサイルの追尾力.
 #define MISSILE_SPEED		(3)			//ミサイルの速度.
 
+#define ITEM_SIZE           (20)        //アイテムのサイズ.
+#define ITEM_SIZE           (4)         //アイテムの移動スピード.    
+
 // - 関数 -
 BOOL IsHitBox(DBL_XY pos1, INT_XY size1, DBL_XY pos2, INT_XY size2);
 BOOL IsHitCircle(DBL_XY pos1, int r1, DBL_XY pos2, int r2);
