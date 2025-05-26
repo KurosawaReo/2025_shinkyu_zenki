@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/05/18
+   ver.2025/05/21
    
    DxLibで使う用のオリジナル描画関数.
 */
@@ -49,7 +49,7 @@ int DrawLineST(const Line* data, int thick) {
 }
 
 //LoadGraphの改造版.
-int LoadGraphST(IMG* img, const TCHAR* fileName) {
+int LoadGraphST(IMG* img, const TCHAR fileName[]) {
 
 	//画像読み込み.
 	img->handle = LoadGraph(fileName);
@@ -67,10 +67,6 @@ int LoadGraphST(IMG* img, const TCHAR* fileName) {
 //DrawGraphの改造版.
 int DrawGraphST(const IMG_DRAW* data) {
 
-	if (data->img.handle == 0) {
-		return -2; //-2: handle未設定.
-	}
-
 	int x = data->pos.x;
 	int y = data->pos.y;
 
@@ -80,6 +76,9 @@ int DrawGraphST(const IMG_DRAW* data) {
 		y -= data->img.size.y / 2;
 	}
 
+	if (data->img.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
 	int err = DrawGraph(x, y, data->img.handle, data->isTrans);
 	return err; //-1: DrawGraphエラー.
 }
@@ -87,10 +86,6 @@ int DrawGraphST(const IMG_DRAW* data) {
 //DrawRotaGraphの改造版.
 int DrawRotaGraphST(const IMG_DRAW_ROTA* data) {
 
-	if (data->img.handle == 0) {
-		return -2; //-2: handle未設定.
-	}
-
 	int x = data->pos.x;
 	int y = data->pos.y;
 
@@ -100,6 +95,9 @@ int DrawRotaGraphST(const IMG_DRAW_ROTA* data) {
 		y -= data->img.size.y / 2;
 	}
 
+	if (data->img.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
 	int err = DrawRotaGraph(x, y, data->extend, data->ang, data->img.handle, data->isTrans);
 	return err; //-1: DrawGraphエラー.
 }
@@ -121,17 +119,25 @@ int DrawRectGraphST(const IMG_DRAW_RECT* data) {
 }
 
 //DrawStringの改造版.
-int DrawStringST(const STR_DRAW* data, int font) {
+int DrawStringST(const STR_DRAW* data, BOOL isCenter, int font) {
 	
 	int ret = 0;
+	int x = data->pos.x;
+	int y = data->pos.y;
+
+	//中央座標モード.
+	if (isCenter) {
+		x = data->pos.x - GetTextSize(data->text).x/2;
+		y = data->pos.y - GetTextSize(data->text).y/2;
+	}
 
 	//デフォルトフォント.
 	if (font < 0) {
-		ret = DrawString(data->pos.x, data->pos.y, data->text, data->color);
+		ret = DrawString(x, y, data->text, data->color);
 	}
 	//フォント設定あり.
 	else {
-		ret = DrawStringToHandle(data->pos.x, data->pos.y, data->text, data->color, font);
+		ret = DrawStringToHandle(x, y, data->text, data->color, font);
 	}
 
 	return ret;
@@ -187,19 +193,13 @@ int DrawModiStringST(const STR_DRAW_MODI* data, int font) {
 
 	return ret;
 }
-
 //テキストのサイズ取得.
-INT_XY GetTextSize(const char* str) {
+INT_XY GetTextSize(const TCHAR str[]) {
 	
-	//横幅を求める.
-	//横幅 = 字数*サイズ + (字数-1)*字間.
-	int x1 =  (int)strlen(str)    * GetFontSize();
-	int x2 = ((int)strlen(str)-1) * GetFontSpace();
-	int wid = x1 + x2;
+	INT_XY size;
+	int    line;
+	//サイズと行数の取得.
+	GetDrawStringSize(&size.x, &size.y, &line, str, 255);
 
-	//縦幅を求める.
-	//縦幅 = サイズ + 行間.
-	int hei = GetFontSize() + GetFontLineSpace();
-
-	return { wid, hei };
+	return size;
 }

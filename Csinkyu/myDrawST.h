@@ -1,6 +1,6 @@
 /*
-   - myDrawST.cpp - (original)
-   ver.2025/05/18
+   - myDrawST.h - (original)
+   ver.2025/05/21
 
    DxLibで使う用のオリジナル描画関数.
 */
@@ -73,17 +73,19 @@ struct STR_DRAW_MODI
 	BOOL   isVertical = FALSE; //縦書きにするか.
 };
 
+//図形.
 int    DrawCircleST    (const Circle* data, BOOL isFill = TRUE, int thick = 1);
 int    DrawBoxST       (const Box*    data, BOOL isCenter, BOOL isFill = TRUE);
 int    DrawLineST      (const Line*   data, int  thick = 1);
 
-int    LoadGraphST     (IMG* img, const TCHAR* fileName);
+//画像.
+int    LoadGraphST     (IMG* img, const TCHAR fileName[]);
 int    DrawGraphST     (const IMG_DRAW*      data);
 int    DrawRotaGraphST (const IMG_DRAW_ROTA* data);
 int    DrawRectGraphST (const IMG_DRAW_RECT* data);
 
-int    DrawStringST    (const STR_DRAW*      data, int font = -1);
+//テキスト.
+int    DrawStringST    (const STR_DRAW*      data, BOOL isCenter, int font = -1);
 int    DrawRotaStringST(const STR_DRAW_ROTA* data, int font = -1);
 int    DrawModiStringST(const STR_DRAW_MODI* data, int font = -1);
-
-INT_XY GetTextSize     (const char* str); //テスト追加.
+INT_XY GetTextSize     (const TCHAR str[]);

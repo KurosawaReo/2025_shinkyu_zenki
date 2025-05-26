@@ -2,6 +2,12 @@
    - GameManager.cpp -
    ゲーム全体管理.
 */
+/*--------------------------------------------------------/
+   [TODO]
+   2025/05/20:
+   仮でスローモードを実装したが、レーザーの動きが怪しい。
+   体力を実装したい。表示はゲージで。
+/--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
 #include "GameManager.h"
@@ -20,7 +26,8 @@ Player   player;
 Obstacle obstacle[] = {
 	Obstacle(80, 1, 0x00FF00),
 	Obstacle(60, 0.5, 0x00FF00),
-	Obstacle(100, 1, 0x00FF00)
+	Obstacle(100, 1, 0x00FF00),
+	Obstacle(200, 1, 0x00FF00)
 };
 
 #if defined ODAZIMA
@@ -40,20 +47,20 @@ void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
 
-	scene = SCENE_TITLE; //タイトル.
+	data.scene = SCENE_TITLE; //タイトル.
 
 	//障害物class.
 	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Init(&player);
+		obstacle[i].Init(&data, &player);
 	}
 #if defined ODAZIMA
-	obstacle2.Init(&player);
-	obstacle4.Init(&player);
+	obstacle2.Init(&data, &player);
+	obstacle4.Init(&data, &player);
 #else
 	obstacle3.Init(&player);
 #endif
 	//プレイヤーclass.
-	player.Init(&scene);
+	player.Init(&data);
 
 	Reset();
 }
@@ -61,10 +68,13 @@ void GameManager::Init() {
 //リセット(何回でも行う)
 void GameManager::Reset() {
 
+	data.isSlow = FALSE; //スローモード解除.
+
 	//障害物class.
 	obstacle[0].Reset({ 150, 150 }, 0);
 	obstacle[1].Reset({ 400, 150 }, 30);
 	obstacle[2].Reset({ 300, 300 }, 60);
+	obstacle[3].Reset({ 500, 300 }, 90);
 #if defined ODAZIMA
 	obstacle2.Reset();
 	obstacle4.Reset();
@@ -81,7 +91,7 @@ void GameManager::Update() {
 	UpdateKeys(); //キー入力更新.
 
 	//シーン別.
-	switch (scene) {
+	switch (data.scene) {
 		case SCENE_TITLE: UpdateTitle(); break;
 		case SCENE_GAME:  UpdateGame();  break;
 		case SCENE_END:   UpdateEnd();   break;
@@ -93,8 +103,14 @@ void GameManager::Update() {
 //描画.
 void GameManager::Draw() {
 
+	//背景色.
+	if (data.isSlow) {
+		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
+		DrawBoxST(&box, FALSE);
+	}
+
 	//シーン別.
-	switch (scene) {
+	switch (data.scene) {
 		case SCENE_TITLE: DrawTitle(); break;
 		case SCENE_GAME:  DrawGame();  break;
 		case SCENE_END:   DrawEnd();   break;
@@ -108,13 +124,18 @@ void GameManager::UpdateTitle() {
 
 	//SPACEが押された瞬間、ゲーム開始.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
-		stTime = clock();    //開始時刻.
-		scene  = SCENE_GAME; //ゲームシーンへ.
+		stTime = clock();        //開始時刻.
+		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
 }
 void GameManager::UpdateGame() {
 
 	nowTime = clock(); //現在時刻.
+
+	//スローモード切り替え.
+	if (IsPushKeyTime(KEY_INPUT_L) == 1) {
+		data.isSlow = !data.isSlow;
+	}
 
 	//障害物class.
 	for (int i = 0; i < _countof(obstacle); i++) {
@@ -133,7 +154,7 @@ void GameManager::UpdateEnd() {
 
 	//SPACEが押された瞬間、タイトルへ.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
-		scene = SCENE_TITLE; //ゲームシーンへ.
+		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
 	}
 }

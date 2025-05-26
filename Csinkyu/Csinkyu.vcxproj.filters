@@ -11,6 +11,7 @@
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="myCalcST.cpp" />
+    <ClCompile Include="Obstacle4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="myCalcST.h" />
+    <ClInclude Include="Obstacle4.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\Player.png" />
