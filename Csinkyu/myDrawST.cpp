@@ -1,36 +1,55 @@
 /*
    - myDrawST.cpp - (original)
+   ver.2025/05/21
    
    DxLibで使う用のオリジナル描画関数.
 */
-#if false
-  #include "stdafx.h" //stdafxがあるならこっちを使う.
-#else
-  #define _USE_MATH_DEFINES //math定数を使うのに必要.
-  #include <math.h>
-  #include "DxLib.h"
+#if !defined DEF_GLOBAL_H
+#include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myDrawST.h"
 
-//#define _int(n) ((int)round(n)) //int型変換マクロ.
+//DrawCircleの改造版.
+int DrawCircleST(const Circle* data, BOOL isFill, int thick) {
 
-//線の描画関数.
-INT_XY DrawLineAng(INT_XY stPos, float ang, float len, int clr, int thick) {
+	int ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), data->r, data->clr, isFill, thick);
+	return ret;
+}
+//DrawBoxの改造版.
+int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill) {
 
-	//角度をradに変換し、座標の計算.
-	int y = _int(sin(ang * M_PI/180) * len);
-	int x = _int(cos(ang * M_PI/180) * len);
-	//終点座標.
-	INT_XY edPos = { stPos.x+x, stPos.y+y };
-	//始点から終点へ描画.
-	DrawLine(stPos.x, stPos.y, edPos.x, edPos.y, clr, thick);
+	double x1, x2, y1, y2;
 
-	return edPos; //終点座標を返す.
+	//中央基準かどうか.
+	if (isCenter) {
+		x1 = data->pos.x - data->size.x/2;
+		x2 = data->pos.x + data->size.x/2;
+		y1 = data->pos.y - data->size.y/2;
+		y2 = data->pos.y + data->size.y/2;
+	}
+	else {
+		x1 = data->pos.x;
+		x2 = data->pos.x + data->size.x;
+		y1 = data->pos.y;
+		y2 = data->pos.y + data->size.y;
+	}
+
+	int ret = DrawBox(_int(x1), _int(y1), _int(x2), _int(y2), data->clr, isFill);
+	return ret;
+}
+//DrawLineの改造版.
+int DrawLineST(const Line* data, int thick) {
+
+	int ret = DrawLine(
+		_int(data->stPos.x), _int(data->stPos.y), 
+		_int(data->edPos.x), _int(data->edPos.y), data->clr, thick
+	);
+	return ret;
 }
 
 //LoadGraphの改造版.
-int LoadGraphST(IMG* img, const TCHAR* fileName) {
+int LoadGraphST(IMG* img, const TCHAR fileName[]) {
 
 	//画像読み込み.
 	img->handle = LoadGraph(fileName);
@@ -48,10 +67,6 @@ int LoadGraphST(IMG* img, const TCHAR* fileName) {
 //DrawGraphの改造版.
 int DrawGraphST(const IMG_DRAW* data) {
 
-	if (data->img.handle == 0) {
-		return -2; //-2: handle未設定.
-	}
-
 	int x = data->pos.x;
 	int y = data->pos.y;
 
@@ -61,6 +76,9 @@ int DrawGraphST(const IMG_DRAW* data) {
 		y -= data->img.size.y / 2;
 	}
 
+	if (data->img.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
 	int err = DrawGraph(x, y, data->img.handle, data->isTrans);
 	return err; //-1: DrawGraphエラー.
 }
@@ -68,10 +86,6 @@ int DrawGraphST(const IMG_DRAW* data) {
 //DrawRotaGraphの改造版.
 int DrawRotaGraphST(const IMG_DRAW_ROTA* data) {
 
-	if (data->img.handle == 0) {
-		return -2; //-2: handle未設定.
-	}
-
 	int x = data->pos.x;
 	int y = data->pos.y;
 
@@ -81,6 +95,9 @@ int DrawRotaGraphST(const IMG_DRAW_ROTA* data) {
 		y -= data->img.size.y / 2;
 	}
 
+	if (data->img.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
 	int err = DrawRotaGraph(x, y, data->extend, data->ang, data->img.handle, data->isTrans);
 	return err; //-1: DrawGraphエラー.
 }
@@ -102,17 +119,25 @@ int DrawRectGraphST(const IMG_DRAW_RECT* data) {
 }
 
 //DrawStringの改造版.
-int DrawStringST(const STR_DRAW* data, int font) {
+int DrawStringST(const STR_DRAW* data, BOOL isCenter, int font) {
 	
 	int ret = 0;
+	int x = data->pos.x;
+	int y = data->pos.y;
+
+	//中央座標モード.
+	if (isCenter) {
+		x = data->pos.x - GetTextSize(data->text).x/2;
+		y = data->pos.y - GetTextSize(data->text).y/2;
+	}
 
 	//デフォルトフォント.
 	if (font < 0) {
-		ret = DrawString(data->pos.x, data->pos.y, data->text, data->color);
+		ret = DrawString(x, y, data->text, data->color);
 	}
 	//フォント設定あり.
 	else {
-		ret = DrawStringToHandle(data->pos.x, data->pos.y, data->text, data->color, font);
+		ret = DrawStringToHandle(x, y, data->text, data->color, font);
 	}
 
 	return ret;
@@ -167,4 +192,14 @@ int DrawModiStringST(const STR_DRAW_MODI* data, int font) {
 	}
 
 	return ret;
+}
+//テキストのサイズ取得.
+INT_XY GetTextSize(const TCHAR str[]) {
+	
+	INT_XY size;
+	int    line;
+	//サイズと行数の取得.
+	GetDrawStringSize(&size.x, &size.y, &line, str, 255);
+
+	return size;
 }

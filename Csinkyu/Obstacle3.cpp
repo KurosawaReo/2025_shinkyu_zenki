@@ -7,13 +7,18 @@
 
 void Obstacle3::Init(Player* _player)
 {
+	player = _player; //プレイヤーの実体アドレスをもらう.
+	
 	LoadGraphST(&img, _T("image/enemy.png"));
 	//img.handle;
 	//img.size.x;
 	//img.size.y;
-
-	player = _player; //プレイヤーの実体アドレスをもらう.
-
+	
+	Reset();
+}
+void Obstacle3::Reset() 
+{
+	//全てのミサイルを未使用に.
 	for (int i = 0; i < MAX_M; i++)
 	{
 		Mv[i] = 0;
@@ -98,14 +103,15 @@ void Obstacle3::enemyMove()
 			//当たり判定.
 			BOOL hit = IsHitBox(
 				player->GetPos(), { PLAYER_SIZE,  PLAYER_SIZE  }, //プレイヤー.
-				{ Mx[i], My[i] }, { MISSILE_SIZE, MISSILE_SIZE }  //ミサイル.
+				{ Mx[i], My[i] }, { OBSTACLE3_SIZE, OBSTACLE3_SIZE }, //ミサイル.
+				TRUE
 			);
 
 			//playerに当たったらミサイルデータを無効にする.
 			if (hit)
 			{
 				Mv[i] = 0;
-				player->SetActive(FALSE);
+				player->PlayerDeath();
 				break;
 			}
 		}
@@ -123,17 +129,17 @@ void Obstacle3::enemyMove()
 
 			//外積を利用し向きを標準側に向ける.
 			if (ax * by - ay * bx < 0.0) {
-				Ma[i] +=  (M_PI/180) * MISSILE_TRACK_POW;
+				Ma[i] +=  (M_PI/180) * OBSTACLE3_TRACK_POW;
 			} 
 			else {
-				Ma[i] += -(M_PI/180) * MISSILE_TRACK_POW;
+				Ma[i] += -(M_PI/180) * OBSTACLE3_TRACK_POW;
 			}
 		}
 		//追尾カウンタ加算.
 		Mc[i]++;
 		//移動する.
-		Mx[i] += (int)(cos(Ma[i]) * MISSILE_SPEED);
-		My[i] += (int)(sin(Ma[i]) * MISSILE_SPEED);
+		Mx[i] += (int)(cos(Ma[i]) * OBSTACLE3_SPEED);
+		My[i] += (int)(sin(Ma[i]) * OBSTACLE3_SPEED);
 
 		//画面外にでたらミサイルデータを無効にする.
 		if (Mx[i] < -100 || Mx[i] > 740 || My[i] < -100 || My[i] > 500) Mv[i] = 0;
