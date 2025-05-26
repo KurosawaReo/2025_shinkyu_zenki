@@ -1,5 +1,7 @@
 /*
    - Global.h -
+   ver.2025/05/21
+
    共通で使用する型やマクロを入れる所.
 */
 #pragma once
@@ -8,9 +10,11 @@
 #define DEF_GLOBAL_H
 
 //stdafxがあるならいらない.
-#if false
-#define _USE_MATH_DEFINES //math定数を使うのに必要.
+#if true
+#define _USE_MATH_DEFINES  //math定数を使うのに必要.
+#define _CRT_SECURE_NO_WARNINGS
 #include <math.h>
+#include <time.h>
 #include "DxLib.h"
 #endif
 

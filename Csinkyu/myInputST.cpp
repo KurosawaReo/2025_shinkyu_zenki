@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/05/18
+   ver.2025/05/21
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -10,19 +10,30 @@
 
 #include "myInputST.h"
 
-#define KEY_MAX 256
-int g_tmKey[KEY_MAX]; //キーを押している時間.
+#define KEY_MAX   256
+#define MOUSE_MAX 3
+
+int g_tmKey  [KEY_MAX];   //キーを押している時間.
+int g_tmMouse[MOUSE_MAX]; //マウスを押下している時間.
 
 //マウス入力の判定.
 BOOL IsPushMouse(int num) {
-	return ((GetMouseInput() & num) != 0); //And演算.
+	return (g_tmMouse[num] > 0); //押してるならTRUE.
+}
+int  IsPushMouseTime(int num) {
+	return g_tmMouse[num];       //押している時間.
 }
 //キー入力の判定.
 BOOL IsPushKey(int num) {
-	return (g_tmKey[num] > 0); //押してるならTRUE.
+	return (g_tmKey[num] > 0);   //押してるならTRUE.
 }
 int  IsPushKeyTime(int num) {
-	return g_tmKey[num];       //押している時間.
+	return g_tmKey[num];         //押している時間.
+}
+
+//マウス座標取得.
+void GetMousePos(INT_XY* pos) {
+	GetMousePoint(&pos->x, &pos->y);
 }
 
 //4方向移動操作.
@@ -83,6 +94,19 @@ void UpdateKeys() {
 		}
 		else {
 			g_tmKey[i] = 0; //0秒にリセット.
+		}
+	}
+}
+//マウスの更新処理.
+void UpdateMouse() {
+
+	for (int i = 0; i < MOUSE_MAX; i++) {
+		//押されているなら.
+		if ((GetMouseInput() & i) != 0) { //And演算.
+			g_tmMouse[i]++;   //カウント.
+		}
+		else {
+			g_tmMouse[i] = 0; //0秒にリセット.
 		}
 	}
 }
