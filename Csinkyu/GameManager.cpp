@@ -6,7 +6,12 @@
    [TODO]
    2025/05/20:
    仮でスローモードを実装したが、レーザーの動きが怪しい。
-   体力を実装したい。表示はゲージで。
+   
+   2025/05/26:
+   スローモード完成。レーザーの動きの怪しさも解決。
+   ・アイテムの実装
+   ・スローモードの時間制限 <<< now
+   ・障害物4の砲台を画面一周動かす(ゲーム時間??秒以降)
 /--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
@@ -116,20 +121,28 @@ void GameManager::Draw() {
 
 //シーン別更新.
 void GameManager::UpdateTitle() {
-
+	Timer t;
 	//SPACEが押された瞬間、ゲーム開始.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
-		stTime = clock();        //開始時刻.
+		tmGame.StartTimer();     //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
 }
 void GameManager::UpdateGame() {
 
-	nowTime = clock(); //現在時刻.
+	tmGame.StopTimer();
 
-	//スローモード切り替え.
-	if (IsPushKeyTime(KEY_INPUT_L) == 1) {
-		data.isSlow = !data.isSlow;
+	//稼働していれば.
+	if (tmSlowMode.GetIsMove()) {
+		tmSlowMode.GetTime();
+	}
+	//稼働してなければ.
+	else {
+		//Lボタンでスローモードに(kari)
+		if (IsPushKeyTime(KEY_INPUT_L) == 1) {
+			data.isSlow = TRUE;
+			tmSlowMode.StartTimer();
+		}
 	}
 
 	//障害物class.
@@ -164,14 +177,14 @@ void GameManager::DrawGame() {
 	DrawObjests();
 
 	//タイマー表示.
-	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), GetTime());
+	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), tmGame.GetTime());
 }
 void GameManager::DrawEnd() {
 	
 	DrawObjests();
 
 	//タイマー表示.
-	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), GetTime());
+	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), tmGame.GetTime());
 	// 終了案内.
 	DrawFormatString(260, 160, GetColor(255, 0, 0), _T("GAME OVER"));
 }

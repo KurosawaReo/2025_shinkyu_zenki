@@ -83,7 +83,6 @@ struct GameData
 {
 	Scene scene;     //シーンの記録用.
 	BOOL  isSlow;    //スローモードかどうか.
-	Timer gameTimer; //ゲーム時間.
 };
 
 // - 定数 -

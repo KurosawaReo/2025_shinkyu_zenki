@@ -8,7 +8,10 @@
 class GameManager 
 {
 private:
-	GameData data{}; //ゲームデータ.
+	GameData data{};     //ゲームデータ.
+
+	Timer    tmGame;     //ゲーム時間.
+	Timer    tmSlowMode; //スロー継続時間.
 
 public:
 
