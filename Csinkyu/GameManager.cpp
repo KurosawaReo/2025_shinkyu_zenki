@@ -37,11 +37,6 @@ Obstacle4 obstacle4;
 Obstacle3 obstacle3;
 #endif
 
-//get.
-float GameManager::GetTime() {
-	return (float)(nowTime - stTime)/1000; //‚Ì·.
-}
-
 //‰Šú‰»(ˆê‰ñ‚Ì‚İs‚¤)
 void GameManager::Init() {
 
