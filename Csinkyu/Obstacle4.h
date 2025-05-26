@@ -9,27 +9,26 @@
 //#define PI 3.14159//円周率.
 //#define LINE_MAXNUM 3000//描画する線の最大数.
 
-typedef struct TUGLASER
+typedef struct tagLASER_DATA
 {  
-	int   x, y;      //現在の画像.
-	int   sx, sy;    //現在の速度.
+	double x, y;      //現在の画像.
+	double sx, sy;    //現在の速度.
 
-	int   LogNum;    //記録した軌跡の数.
-	float Counter;   //追尾を初めてから通過した時間.
+	int    LogNum;    //記録した軌跡の数.
+	float  Counter;   //追尾を初めてから通過した時間.
 
-	int   ValidFlag; //このデータが使用中かフラグ.
+	int    ValidFlag; //このデータが使用中かフラグ.
 
+}LASER_DATA,*LPLASER_DATA;
 
-}LASER,*LPLASER;
-
-typedef struct TUGLINE
+typedef struct tagLINE_DATA
 {
-	int   x1, y1, x2, y2;  //描くラインの座標.
-	float Counter;         //描くラインの色決定用値.
+	double x1, y1, x2, y2;  //描くラインの座標.
+	float  Counter;         //描くラインの色決定用値.
 
-    int   ValidFlag;       //このデータが使用中かフラグ.
+    int    ValidFlag;       //このデータが使用中かフラグ.
 
-}LINE,*LPLINE;
+}LINE_DATA,*LPLINE_DATA;
 
 
 class Obstacle4
@@ -40,12 +39,12 @@ private:
 	float Hsc;     //砲台のショット間隔カウンタ.
 	float HscTm;   //砲台がショットする時間.
 
-	LASER Ld[OBSTACLE4_MAX_L];     //ホーミングレーザーのデータ.
-	LINE Line[OBSTACLE4_LINE_MAX]; //ライン描画用データ.
-	IMG img;
+	LASER_DATA ld  [OBSTACLE4_MAX_L];    //ホーミングレーザーのデータ.
+	LINE_DATA  line[OBSTACLE4_LINE_MAX]; //ライン描画用データ.
+	IMG        img;
 
-	GameData* data{};
-	Player*   player{};
+	GameData*  data{};
+	Player*    player{};
 
 public:
 	void Init(GameData*, Player*);

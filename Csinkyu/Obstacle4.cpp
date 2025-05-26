@@ -23,18 +23,18 @@ void Obstacle4::Init(GameData* _data, Player* _player)
 //リセット.
 void Obstacle4::Reset() {
 
-	Hx  = 320;            // 砲台のX座標初期値（画面中央）
-	Hy  = 30;             // 砲台のY座標初期値（画面上部）
-	Hm  = 3;              // 砲台の移動速度
-	Hsc = OBSTACLE4_SPAN; // 砲台の発射カウンタ初期値
+	Hx  = 320;                  // 砲台のX座標初期値（画面中央）
+	Hy  = 30;                   // 砲台のY座標初期値（画面上部）
+	Hm  = 3;                    // 砲台の移動速度
+	Hsc = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
 
 	// レーザーデータの初期化
 	for (int i = 0; i < OBSTACLE4_MAX_L; i++)
-		Ld[i].ValidFlag = 0;  // すべてのレーザーを無効状態に
+		ld[i].ValidFlag = 0;  // すべてのレーザーを無効状態に
 
 	// レーザーの軌跡データの初期化
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
-		Line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
+		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
 }
 
 /**
@@ -60,17 +60,19 @@ void Obstacle4::Draw()
 	// レーザーの軌跡の描画処理
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
-		if (Line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
+		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
+		//緑色の値, 時間経過で徐々に薄くする.
+		int g = _int(255 - line[i].Counter * 4);
+		
 		// 軌跡の線を描画（時間経過で色が変化）
-		DrawLine(Line[i].x1, Line[i].y1,
-			Line[i].x2, Line[i].y2,
-			GetColor(0, 255 - Line[i].Counter * 4, 0));  // 緑色で、時間経過で徐々に薄くなる
+		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(0, g, 0)};
+		DrawLineST(&tmpLine);
 
 		// 経過時間カウンタ増加
-		Line[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		line[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// 64フレーム経過したら軌跡を無効化
-		if (Line[i].Counter >= 64) Line[i].ValidFlag = 0;
+		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
 	}
 
 	// 通常の描画モードに戻す
@@ -87,34 +89,32 @@ void Obstacle4::Draw()
  */
 void Obstacle4::enemy4Move()
 {
+	DBL_XY pPos = player->GetPos(); // プレイヤーの現在位置を取得
+	double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
+
 	// 各レーザーの処理
 	for (int i = 0; i < OBSTACLE4_MAX_L; i++)
 	{
-		int xb, yb;  // 前回位置を保存する変数
-		if (Ld[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
+		if (ld[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
-		// プレイヤーの現在位置を取得
-		DBL_XY playerPos = player->GetPos();
-		double Px = playerPos.x;
-		double Py = playerPos.y;
-		double halfSize = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
+		DBL_XY befPos;  // 前回位置を保存する変数
 
 		// プレイヤーとレーザーの当たり判定
-		if ((Ld[i].x > Px - halfSize && Ld[i].x < Px + halfSize) &&
-			(Ld[i].y > Py - halfSize && Ld[i].y < Py + halfSize))
+		if ((ld[i].x > pPos.x - pSizeHalf && ld[i].x < pPos.x + pSizeHalf) &&
+			(ld[i].y > pPos.y - pSizeHalf && ld[i].y < pPos.y + pSizeHalf))
 		{
-			Ld[i].ValidFlag = 0;  // 当たったらレーザーを無効化
+			ld[i].ValidFlag = 0;  // 当たったらレーザーを無効化
 			player->PlayerDeath();
 			continue;
 		}
 
 		// レーザーの追尾処理（発射後一定時間のみ）
-		if (Ld[i].Counter < 200)  // 200フレーム（約3.3秒）以内のみ追尾
+		if (ld[i].Counter < 200)  // 200フレーム（約3.3秒）以内のみ追尾
 		{
 			// 現在のプレイヤー方向への角度を計算
-			double targetAngle = atan2(Py - Ld[i].y, Px - Ld[i].x);
+			double targetAngle  = atan2(pPos.y - ld[i].y, pPos.x - ld[i].x);
 			// レーザーの現在の移動方向の角度
-			double currentAngle = atan2(Ld[i].sy, Ld[i].sx);
+			double currentAngle = atan2(ld[i].sy, ld[i].sx);
 			// 角度の差分を計算
 			double angleDiff = targetAngle - currentAngle;
 
@@ -129,46 +129,45 @@ void Obstacle4::enemy4Move()
 
 			// 新しい角度を計算して速度を更新
 			double newAngle = currentAngle + angleDiff;
-			Ld[i].sx += (int)(cos(newAngle) * 30);  // X方向速度を更新
-			Ld[i].sy += (int)(sin(newAngle) * 30);  // Y方向速度を更新
+			ld[i].sx += (int)(cos(newAngle) * 30);  // X方向速度を更新
+			ld[i].sy += (int)(sin(newAngle) * 30);  // Y方向速度を更新
 		}
 
 		// レーザーの経過時間カウンタを増加
-		Ld[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		ld[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 
 		// 移動前の座標を保存
-		xb = Ld[i].x;
-		yb = Ld[i].y;
+		befPos = { ld[i].x, ld[i].y };
 
 		// ミサイルの速度
 		double speed = OBSTACLE4_SPEED;
 		if (data->isSlow) { speed /= SLOW_MODE_SPEED; }
 
 		// レーザーの位置を更新（速度に基づいて移動）
-		Ld[i].x = _int((Ld[i].x * speed + Ld[i].sx)/speed);
-		Ld[i].y = _int((Ld[i].y * speed + Ld[i].sy)/speed);
+		ld[i].x = (ld[i].x * speed + ld[i].sx)/speed;
+		ld[i].y = (ld[i].y * speed + ld[i].sy)/speed;
 
 		// レーザーの軌跡を生成
 		for (int j = 0; j < OBSTACLE4_LINE_MAX; j++)
 		{
-			if (Line[j].ValidFlag == 0)  // 未使用の軌跡スロットを探す
+			if (line[j].ValidFlag == 0)  // 未使用の軌跡スロットを探す
 			{
 				// 軌跡データの設定
-				Line[j].x1 = xb;           // 開始点X座標
-				Line[j].y1 = yb;           // 開始点Y座標
-				Line[j].x2 = Ld[i].x;      // 終了点X座標
-				Line[j].y2 = Ld[i].y;      // 終了点Y座標
-				Line[j].Counter = 0;       // 経過時間カウンタ初期化
-				Line[j].ValidFlag = 1;     // 軌跡を有効化
+				line[j].x1 = befPos.x;     // 開始点X座標
+				line[j].y1 = befPos.y;     // 開始点Y座標
+				line[j].x2 = ld[i].x;      // 終了点X座標
+				line[j].y2 = ld[i].y;      // 終了点Y座標
+				line[j].Counter = 0;       // 経過時間カウンタ初期化
+				line[j].ValidFlag = 1;     // 軌跡を有効化
 				break;
 			}
 		}
 
 		// 画面外に出たレーザーを無効化
-		if (Ld[i].x < -100 || Ld[i].x > WINDOW_WID + 100 ||
-			Ld[i].y < -100 || Ld[i].y > WINDOW_HEI + 100)
+		if (ld[i].x < -100 || ld[i].x > WINDOW_WID + 100 ||
+			ld[i].y < -100 || ld[i].y > WINDOW_HEI + 100)
 		{
-			Ld[i].ValidFlag = 0;
+			ld[i].ValidFlag = 0;
 		}
 	}
 
@@ -192,37 +191,32 @@ void Obstacle4::enemy4Move()
 			// 未使用のレーザースロットを探してレーザーを発射
 			for (int i = 0; i < OBSTACLE4_MAX_L; i++)
 			{
-				if (Ld[i].ValidFlag == 0)  // 未使用のレーザースロットを見つけた
+				if (ld[i].ValidFlag == 0)  // 未使用のレーザースロットを見つけた
 				{
-					// プレイヤー座標取得
-					DBL_XY playerPos = player->GetPos();
-					double Px = playerPos.x;
-					double Py = playerPos.y;
-
 					// 発射位置（砲台の少し下から）
 					double startX = Hx + 16;
 					double startY = Hy + 16;
 					
 					// プレイヤー方向への初期角度計算
-					double angle = atan2(Py - startY, Px - startX);
+					double angle = atan2(pPos.y - startY, pPos.x - startX);
 
 					// レーザーデータの初期化
-					Ld[i].x = _int(startX);				// 初期X座標
-					Ld[i].y = _int(startY);				// 初期Y座標
-					Ld[i].sx = (int)(cos(angle) * 30);  // X方向初期速度
-					Ld[i].sy = (int)(sin(angle) * 30);  // Y方向初期速度
-					Ld[i].Counter = 0;					// 経過時間カウンタ初期化
-					Ld[i].LogNum = 0;					// 軌跡カウンタ初期化
-					Ld[i].ValidFlag = 1;				// レーザーを有効化
+					ld[i].x = startX;			// 初期X座標
+					ld[i].y = startY;			// 初期Y座標
+					ld[i].sx = cos(angle) * 30; // X方向初期速度
+					ld[i].sy = sin(angle) * 30; // Y方向初期速度
+					ld[i].Counter = 0;			// 経過時間カウンタ初期化
+					ld[i].LogNum = 0;			// 軌跡カウンタ初期化
+					ld[i].ValidFlag = 1;		// レーザーを有効化
 					break;
 				}
 			}
-			HscTm -= 15; //発射タイミングを変更.
+			HscTm -= OBSTACLE4_SHOT_SPAN; //発射タイミングを変更.
 		}
 		//0秒を下回ったらもう一周.
 		if (Hsc <= 0) {
-			Hsc = OBSTACLE4_SPAN;  // 発射カウンタをリセット（次の発射までの待機時間）
-			HscTm = 30;
+			Hsc   = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
+			HscTm = OBSTACLE4_SHOT_START;
 		}
 	}
 }

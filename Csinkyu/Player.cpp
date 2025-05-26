@@ -59,7 +59,7 @@ void Player::PlayerMove()
 {
 	//ˆÚ“®‚·‚é.
 	if (p_data->isSlow) {
-		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED/3);
+		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
 	}
 	else {
 		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
