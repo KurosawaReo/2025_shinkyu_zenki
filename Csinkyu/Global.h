@@ -86,31 +86,33 @@ struct GameData
 };
 
 // - 定数 -
-#define IS_WINDOW_MODE		(TRUE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE			(TRUE)			//ウィンドウモードにするか.
 
-#define WINDOW_WID			(600)			//ウィンドウの横幅.
-#define WINDOW_HEI			(480)			//ウィンドウの縦幅.
-#define WINDOW_COLOR_BIT	(32)			//ウィンドウのカラーbit数.
+#define WINDOW_WID				(600)			//ウィンドウの横幅.
+#define WINDOW_HEI				(480)			//ウィンドウの縦幅.
+#define WINDOW_COLOR_BIT		(32)			//ウィンドウのカラーbit数.
 
-#define WAIT_LOOP_MS		(10)			//ループ処理の待機時間(m秒)
+#define WAIT_LOOP_MS			(10)			//ループ処理の待機時間(m秒)
 
-#define SLOW_MODE_SPEED     (0.25)			//スローモード速度倍率.
+#define SLOW_MODE_SPEED			(0.25)			//スローモード速度倍率.
 
-#define PLAYER_SIZE			(20)			//プレイヤーサイズ.
-#define PLAYER_MOVE_SPEED	(4)				//プレイヤー移動速度.
-#define PLAYER_HIT_R        (10)			//プレイヤーの当たり判定円の半径.
+#define PLAYER_SIZE				(20)			//プレイヤーサイズ.
+#define PLAYER_MOVE_SPEED		(4)				//プレイヤー移動速度.
+#define PLAYER_HIT_R			(10)			//プレイヤーの当たり判定円の半径.
 
-#define OBSTACLE2_SPAN		(50)			//障害物の発射間隔.
-#define OBSTACLE2_SPEED		(4.0)			//障害物の速度.
-#define OBSTACLE2_LIM_F     (80)			//最大追跡フレーム数.
+#define OBSTACLE2_SPAN			(50)			//障害物の発射間隔.
+#define OBSTACLE2_SPEED			(4.0)			//障害物の速度.
+#define OBSTACLE2_LIM_F			(80)			//最大追跡フレーム数.
 
-#define OBSTACLE3_SIZE		(20)			//障害物サイズ.
-#define OBSTACLE3_TRACK_POW	(8)				//障害物の追尾力.
-#define OBSTACLE3_SPEED		(3)				//障害物の速度.
+#define OBSTACLE3_SIZE			(20)			//障害物サイズ.
+#define OBSTACLE3_TRACK_POW		(8)				//障害物の追尾力.
+#define OBSTACLE3_SPEED			(3)				//障害物の速度.
 
-#define OBSTACLE4_SPAN		(80)			//障害物の発射間隔.
-#define OBSTACLE4_SPEED		(100)			//障害物の速度.
-#define OBSTACLE4_MAX_L		(100)			//障害物が飛ぶ最大距離.
-#define OBSTACLE4_LINE_MAX	(500)			//障害物で描画する線の最大数.
+#define OBSTACLE4_SHOT_RESET	(50)			//障害物の発射リセット時間.
+#define OBSTACLE4_SHOT_START	(30)			//障害物の発射開始時間.
+#define OBSTACLE4_SHOT_SPAN		(1)			//障害物の発射間隔時間.
+#define OBSTACLE4_SPEED			(100)			//障害物の速度.
+#define OBSTACLE4_MAX_L			(100)			//障害物が飛ぶ最大距離.
+#define OBSTACLE4_LINE_MAX		(2000)			//障害物で描画する線の最大数.
 
 // - 関数 -

@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/05/21
+   ver.2025/05/26
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -37,7 +37,7 @@ void GetMousePos(INT_XY* pos) {
 }
 
 //4方向移動操作.
-void InputKey4Dir(DBL_XY* pos, int speed) {
+void InputKey4Dir(DBL_XY* pos, float speed) {
 
 	INT_XY pow{};  //移動力.
 	DBL_XY move{}; //求めた移動量.

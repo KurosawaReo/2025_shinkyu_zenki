@@ -190,8 +190,8 @@ void Obstacle2::enemyMove()
 		if (data->isSlow) { speed *= SLOW_MODE_SPEED; }
 
 		// 現在の角度に基づいてミサイルを移動させる
-		Mx[i] += _int(cos(Ma[i]) * speed); // X方向の移動
-		My[i] += _int(sin(Ma[i]) * speed); // Y方向の移動
+		Mx[i] += cos(Ma[i]) * speed; // X方向の移動
+		My[i] += sin(Ma[i]) * speed; // Y方向の移動
 
 		// 画面外に出たらミサイルを無効化
 		if (Mx[i] < -100 || Mx[i] > 740 || My[i] < -100 || My[i] > 500)
