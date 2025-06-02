@@ -8,26 +8,25 @@
 class GameManager 
 {
 private:
-	clock_t  stTime;
-	clock_t  nowTime;
+	GameData data{};     //ゲームデータ.
 
-	GameData data{}; //ゲームデータ.
+	Timer    tmGame;     //ゲーム時間.
+	Timer    tmSlowMode; //スロー継続時間.
 
 public:
 
-	//get.
-	float GetTime();
-
-	//その他.
+	//メイン処理.
 	void Init();
 	void Reset();
 	void Update();
 	void Draw();
 
+	//Update.
 	void UpdateTitle();
 	void UpdateGame();
 	void UpdateEnd();
 
+	//Draw.
 	void DrawTitle();
 	void DrawGame();
 	void DrawEnd();

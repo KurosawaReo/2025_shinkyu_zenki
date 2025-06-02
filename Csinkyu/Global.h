@@ -87,8 +87,8 @@ enum MoveDir {
 // - ゲームデータ -
 struct GameData
 {
-	Scene scene;  //シーンの記録用.
-	BOOL  isSlow; //スローモードかどうか.
+	Scene scene;     //シーンの記録用.
+	BOOL  isSlow;    //スローモードかどうか.
 };
 
 // - 定数 -
