@@ -12,6 +12,11 @@
    ・アイテムの実装
    ・スローモードの時間制限 <<< now
    ・障害物4の砲台を画面一周動かす(ゲーム時間??秒以降)
+
+   2025/06/02:
+   スローモードの解除まで完成。
+   ・アイテムの落下速度、定数いじっても変わらない。
+   ・とる、こわすをどうするか考える。
 /--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
@@ -58,7 +63,7 @@ void GameManager::Init() {
 #if defined ODAZIMA
 	obstacle2.Init(&data, &player);
 	obstacle4.Init(&data, &player);
-	item.Init();
+	item.Init(&data);
 #else
 	obstacle3.Init(&player);
 #endif

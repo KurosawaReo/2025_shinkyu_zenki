@@ -102,7 +102,7 @@ struct GameData
 #define WAIT_LOOP_MS			(10)			//ループ処理の待機時間(m秒)
 
 #define SLOW_MODE_TIME          (5)             //スローモード制限時間.
-#define SLOW_MODE_SPEED			(0.25)			//スローモード速度倍率.
+#define SLOW_MODE_SPEED			(0.20)			//スローモード速度倍率.
 
 #define PLAYER_SIZE				(20)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED		(4)				//プレイヤー移動速度.
@@ -126,7 +126,3 @@ struct GameData
 #define OBSTACLE4_SPEED			(100)			//障害物の速度.
 #define OBSTACLE4_MAX_L			(100)			//障害物が飛ぶ最大距離.
 #define OBSTACLE4_LINE_MAX		(1000)			//障害物で描画する線の最大数.
-
-
-
-// - 関数 -
