@@ -7,8 +7,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>  // sqrt関数のため
-
+#include"Global.h"
 //初期化.
+GameData gamedata;
 void Item::Init()
 {
 	// ランダムシードを設定（初回のみ）
@@ -60,6 +61,15 @@ void Item::Update()
 			Reset(); // 新しいアイテムとして再生成
 		}
 	}
+	else
+	{
+		//アイテムが生成されてない時でもチェック.
+		itemCounter++;
+		if (itemCounter > ITEM_RESPAWN_TIME)//フレーム1秒に生成.
+		{
+			Reset();
+		}
+	}
 }
 
 // プレイヤーとの当たり判定
@@ -93,11 +103,13 @@ BOOL Item::CheckHitPlayer(Player* player)
 void Item::OnHitPlayer()
 {
 	// ドットログを表示
-	//printfDx(_T("アイテムがプレイヤーと当たりました！ X:%.1f Y:%.1f\n"), itemX, itemY);
+	//printfDx(_T("当たりました！ X:%.1f Y:%.1f\n"), itemX, itemY);
 
 	// アイテムを削除（非アクティブにする）
 	active = FALSE;
 	itemFlag = 0;
+	itemCounter = 0;//カウンターをリセットして再生成タイマー開始.
+
 
 	// 座標を画面外に移動（念のため）
 	itemX = -100;
@@ -142,7 +154,7 @@ void Item::ItemMove()
 			itemX += moveX;
 
 			// 画面外に出ないように制限
-			if (itemX < 0) itemX = 0;
+			if (itemX < 0)   itemX = 0;
 			if (itemX > 620) itemX = 620;
 		}
 

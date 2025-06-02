@@ -109,7 +109,8 @@ struct GameData
 #define PLAYER_HIT_R			(10)			//プレイヤーの当たり判定円の半径.
 
 #define ITEM_SIZE				(20)			//アイテムのサイズ.
-#define ITEM_SPEED				(4)				//アイテムの移動スピード.    
+#define ITEM_SPEED				(4)				//アイテムの移動スピード.  
+#define ITEM_RESPAWN_TIME       (480)            //アイテム復活時間(60フレーム,1秒).
 
 #define OBSTACLE2_SPAN			(50)			//障害物の発射間隔.
 #define OBSTACLE2_SPEED			(4.0)			//障害物の速度.
@@ -124,6 +125,8 @@ struct GameData
 #define OBSTACLE4_SHOT_SPAN		(15)			//障害物の発射間隔時間.
 #define OBSTACLE4_SPEED			(100)			//障害物の速度.
 #define OBSTACLE4_MAX_L			(100)			//障害物が飛ぶ最大距離.
-#define OBSTACLE4_LINE_MAX		(2000)			//障害物で描画する線の最大数.
+#define OBSTACLE4_LINE_MAX		(1000)			//障害物で描画する線の最大数.
+
+
 
 // - 関数 -
