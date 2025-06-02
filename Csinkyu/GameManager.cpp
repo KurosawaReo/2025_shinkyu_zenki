@@ -16,6 +16,7 @@
 #if defined ODAZIMA
 #include "Obstacle2.h"
 #include "Obstacle4.h"
+#include "Item.h"
 #else
 #include "Obstacle3.h"
 #endif
@@ -33,6 +34,7 @@ Obstacle obstacle[] = {
 #if defined ODAZIMA
 Obstacle2 obstacle2;
 Obstacle4 obstacle4;
+Item  item;
 #else
 Obstacle3 obstacle3;
 #endif
@@ -56,6 +58,7 @@ void GameManager::Init() {
 #if defined ODAZIMA
 	obstacle2.Init(&data, &player);
 	obstacle4.Init(&data, &player);
+	item.Init();
 #else
 	obstacle3.Init(&player);
 #endif
@@ -144,6 +147,9 @@ void GameManager::UpdateGame() {
 #if defined ODAZIMA
 	obstacle2.Update();
 	obstacle4.Update();
+	item.Update();
+	item.ItemMove();
+	item.CheckHitPlayer(&player);
 #else
 	obstacle3.Update();
 #endif
@@ -191,6 +197,7 @@ void GameManager::DrawObjests() {
 #if defined ODAZIMA
 	obstacle2.Draw();
 	obstacle4.Draw();
+	item.Draw();
 #else
 	obstacle3.Draw();
 #endif

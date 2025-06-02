@@ -7,7 +7,10 @@
 #include <math.h>      // 数学関数を使用するためのヘッダーファイル
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
+#include"Global.h"
 
+//移動定義.
+MoveDir moveDir;  // 現在の移動方向
 /**
  * @brief 障害物の初期化処理
  * @param _player プレイヤーオブジェクトへのポインタ
@@ -23,11 +26,11 @@ void Obstacle4::Init(GameData* _data, Player* _player)
 //リセット.
 void Obstacle4::Reset() {
 
-	Hx  = 320;                  // 砲台のX座標初期値（画面中央）
+	Hx  = 0;                  // 砲台のX座標初期値（画面中央）
 	Hy  = 30;                   // 砲台のY座標初期値（画面上部）
 	Hm  = 3;                    // 砲台の移動速度
 	Hsc = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
-
+	moveDir = MOVE_RIGHT;     // 初期方向を右に設定.
 	// レーザーデータの初期化
 	for (int i = 0; i < OBSTACLE4_MAX_L; i++)
 		ld[i].ValidFlag = 0;  // すべてのレーザーを無効状態に
@@ -70,6 +73,7 @@ void Obstacle4::Draw()
 		DrawLineST(&tmpLine);
 
 		// 経過時間カウンタ増加
+
 		line[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// 64フレーム経過したら軌跡を無効化
 		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
@@ -173,15 +177,56 @@ void Obstacle4::enemy4Move()
 
 	// 砲台の移動とレーザー発射処理
 	{
-		// 砲台をX方向に移動
-		Hx += Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
-		// 画面端で反射
-		if (Hm > 0 && Hx > WINDOW_WID - 16) {
+		// 移動速度
+		float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
+
+		// 矩形経路の移動処理
+		switch (moveDir)
+		{
+		case MOVE_RIGHT:
+			Hx += moveSpeed;
+			if (Hx > WINDOW_WID - 16) {
+				Hx = WINDOW_WID - 16;
+				moveDir = MOVE_DOWN;
+			}
+			break;
+
+		case MOVE_DOWN:
+			Hy += moveSpeed;
+			if (Hy > WINDOW_HEI - 16) {
+				Hy = WINDOW_HEI - 16;
+				moveDir = MOVE_LEFT;
+			}
+			break;
+
+		case MOVE_LEFT:
+			Hx -= moveSpeed;
+			if (Hx < 0) {
+				Hx = 0;
+				moveDir = MOVE_UP;
+			}
+			break;
+
+		case MOVE_UP:
+			Hy -= moveSpeed;
+			if (Hy < 0) {
+				Hy = 0;
+				moveDir = MOVE_RIGHT;
+			}
+			break;
+		}
+	
+
+		/*Hx += Hm *((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
+		if (Hm > 0 && Hx > WINDOW_WID - 16)
+		{
 			Hm *= -1;
 		}
-		if (Hm < 0 && Hx < 0) {
+		if (Hm < 0 && Hx<0)
+		{
 			Hm *= -1;
-		}
+		}*/
+
 
 		// 発射カウンタを減少
 		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
@@ -194,8 +239,8 @@ void Obstacle4::enemy4Move()
 				if (ld[i].ValidFlag == 0)  // 未使用のレーザースロットを見つけた
 				{
 					// 発射位置（砲台の少し下から）
-					double startX = Hx + 16;
-					double startY = Hy + 16;
+					double startX = Hx;
+					double startY = Hy;
 					
 					// プレイヤー方向への初期角度計算
 					double angle = atan2(pPos.y - startY, pPos.x - startX);
