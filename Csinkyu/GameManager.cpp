@@ -81,6 +81,7 @@ void GameManager::Reset() {
 #if defined ODAZIMA
 	obstacle2.Reset();
 	obstacle4.Reset();
+	item.Reset();
 #else
 	obstacle3.Reset();
 #endif
