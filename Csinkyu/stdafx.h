@@ -34,3 +34,4 @@
 #include "myDrawST.h"
 #include "myInputST.h"
 #include "myCalcST.h"
+#include "myTimerST.h"

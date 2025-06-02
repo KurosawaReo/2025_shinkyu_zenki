@@ -93,7 +93,7 @@ BOOL Item::CheckHitPlayer(Player* player)
 void Item::OnHitPlayer()
 {
 	// ドットログを表示
-	printfDx(_T("アイテムがプレイヤーと当たりました！ X:%.1f Y:%.1f\n", itemX, itemY));
+	printfDx(_T("アイテムがプレイヤーと当たりました！ X:%.1f Y:%.1f\n"), itemX, itemY);
 
 	// アイテムを削除（非アクティブにする）
 	active = FALSE;
@@ -119,7 +119,7 @@ void Item::Draw()
 		Iy = (float)itemY;
 
 		// 描画（既存のコードを活用）
-		Box box = { {(int)Ix, (int)Iy}, {itemW, itemH}, clr }; //{pos}, {size}, color.
+		Box box = { {Ix, Iy}, {itemW, itemH}, clr }; //{pos}, {size}, color.
 		DrawBoxST(&box, TRUE);
 
 		// 画像を使用する場合のコード例

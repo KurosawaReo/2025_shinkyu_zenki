@@ -1,6 +1,6 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/05/20
+   ver.2025/05/26
 
    DxLibで使う用のオリジナル時間関数.
 */

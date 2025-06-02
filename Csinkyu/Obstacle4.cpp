@@ -73,7 +73,6 @@ void Obstacle4::Draw()
 		DrawLineST(&tmpLine);
 
 		// 経過時間カウンタ増加
-
 		line[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// 64フレーム経過したら軌跡を無効化
 		if (line[i].Counter >= 64) line[i].ValidFlag = 0;

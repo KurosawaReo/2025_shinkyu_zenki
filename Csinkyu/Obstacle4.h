@@ -34,14 +34,14 @@ typedef struct tagLINE_DATA
 class Obstacle4
 {
 private:
-	float Hx, Hy;  //砲台の位置.
-	float Hm;      //砲台の移動方向.
-	float Hsc;     //砲台のショット間隔カウンタ.
-	float HscTm;   //砲台がショットする時間.
+	float Hx{}, Hy{};  //砲台の位置.
+	float Hm{};        //砲台の移動方向.
+	float Hsc{};       //砲台のショット間隔カウンタ.
+	float HscTm{};     //砲台がショットする時間.
 
-	LASER_DATA ld  [OBSTACLE4_MAX_L];    //ホーミングレーザーのデータ.
-	LINE_DATA  line[OBSTACLE4_LINE_MAX]; //ライン描画用データ.
-	IMG        img;
+	LASER_DATA ld[OBSTACLE4_MAX_L]{};      //ホーミングレーザーのデータ.
+	LINE_DATA  line[OBSTACLE4_LINE_MAX]{}; //ライン描画用データ.
+	IMG        img{};
 
 	GameData*  data{};
 	Player*    player{};
