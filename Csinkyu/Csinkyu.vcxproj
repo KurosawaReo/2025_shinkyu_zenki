@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="myCalcST.cpp" />
     <ClCompile Include="myDrawST.cpp">
@@ -27,7 +28,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="myInputST.cpp" />
-    <ClCompile Include="myTimerST.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle3.cpp" />
@@ -47,10 +47,10 @@
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="myCalcST.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
-    <ClInclude Include="myTimerST.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Obstacle3.h" />
