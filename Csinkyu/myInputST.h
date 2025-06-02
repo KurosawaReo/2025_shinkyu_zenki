@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/05/26
+   ver.2025/06/02
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -13,11 +13,11 @@ BOOL IsPushKey      (int num);
 int  IsPushKeyTime  (int num);
 
 //取得.
-void GetMousePos    (INT_XY* pos);
+void GetMousePos    (DBL_XY* pos);
 
-//テンプレ.
+//移動系.
 void InputKey4Dir   (DBL_XY* pos, float speed);
-void LimMovePos     (DBL_XY* pos, INT_XY size, int lLim, int uLim, int rLim, int dLim);
+void FixPosInArea   (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
 
 //更新.
 void UpdateKeys();

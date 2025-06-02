@@ -78,7 +78,8 @@ enum Scene
 	SCENE_END,
 };
 //レーザー移動列挙.
-enum MoveDir {
+enum MoveDir 
+{
 	MOVE_RIGHT,
 	MOVE_DOWN,
 	MOVE_LEFT,
@@ -100,6 +101,7 @@ struct GameData
 
 #define WAIT_LOOP_MS			(10)			//ループ処理の待機時間(m秒)
 
+#define SLOW_MODE_TIME          (5)             //スローモード制限時間.
 #define SLOW_MODE_SPEED			(0.25)			//スローモード速度倍率.
 
 #define PLAYER_SIZE				(20)			//プレイヤーサイズ.

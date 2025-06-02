@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/05/21
+   ver.2025/06/02
 
    DxLibで使う用のオリジナル計算関数.
 */
@@ -11,10 +11,10 @@
 #include "myCalcST.h"
 
 //当たり判定(円と円)
-BOOL IsHitCircle(DBL_XY pos1, int r1, DBL_XY pos2, int r2) {
+BOOL IsHitCircle(const Circle* cir1, const Circle* cir2) {
 
     //距離が半径の合計より短ければ当たっている.
-    if (CalcDis(pos1, pos2) <= r1 + r2) {
+    if (CalcDis(cir1->pos, cir2->pos) <= cir1->r + cir2->r) {
         return TRUE;
     }
     else {
@@ -22,22 +22,22 @@ BOOL IsHitCircle(DBL_XY pos1, int r1, DBL_XY pos2, int r2) {
     }
 }
 //当たり判定(四角と四角)
-BOOL IsHitBox(DBL_XY pos1, INT_XY size1, DBL_XY pos2, INT_XY size2, BOOL isCenter) {
+BOOL IsHitBox(const Box* box1, const Box* box2, BOOL isCenter) {
 
     BOOL hit = FALSE;
 
     //中央基準座標での判定.
     if (isCenter) {
-        if (fabs(pos1.x - pos2.x) <= (size1.x + size2.x)/2 &&
-            fabs(pos1.y - pos2.y) <= (size1.y + size2.y)/2)
+        if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
+            fabs(box1->pos.y - box2->pos.y) <= (box1->size.y + box2->size.y)/2)
         {
             hit = TRUE;
         }
     }
     //左上基準座標での判定.
     else {
-        if (pos1.x + size1.x >= pos2.x && pos2.x + size2.x >= pos1.x &&
-            pos1.y + size1.y >= pos2.y && pos2.y + size2.y >= pos1.y)
+        if (box1->pos.x + box1->size.x >= box2->pos.x && box2->pos.x + box2->size.x >= box1->pos.x &&
+            box1->pos.y + box1->size.y >= box2->pos.y && box2->pos.y + box2->size.y >= box1->pos.y)
         {
             hit = TRUE;
         }
@@ -45,7 +45,7 @@ BOOL IsHitBox(DBL_XY pos1, INT_XY size1, DBL_XY pos2, INT_XY size2, BOOL isCente
     return hit;
 }
 //当たり判定(線と円)
-BOOL IsHitLine(const Line* line, const Circle* circle) {
+BOOL IsHitLine(const Line* line, const Circle* cir) {
 
 	//線の始点と終点から傾きを求める.
 	double katamuki;
@@ -71,20 +71,20 @@ BOOL IsHitLine(const Line* line, const Circle* circle) {
 		double b = 1;
 		double c = -seppen;
 		//公式: d = |ax + by + c|/√(a^2 + b^2)
-		dis1 = fabs(a*circle->pos.x + b*circle->pos.y + c) / sqrt(a*a + b*b);
+		dis1 = fabs(a*cir->pos.x + b*cir->pos.y + c) / sqrt(a*a + b*b);
 	}
 	//線の中点～円の中心の距離.
 	double dis2;
 	{
-		double x = circle->pos.x - CalcMidPos(line->stPos, line->edPos).x;
-		double y = circle->pos.y - CalcMidPos(line->stPos, line->edPos).y;
+		double x = cir->pos.x - CalcMidPos(line->stPos, line->edPos).x;
+		double y = cir->pos.y - CalcMidPos(line->stPos, line->edPos).y;
 		//距離: d = √(x^2 + y^2) (三平方の定理)
 		dis2 = sqrt(x*x + y*y);
 	}
 
 	//hit条件.
-	if (dis1 <= circle->r &&                                    //条件1:線に触れている.
-		dis2 <= CalcDis(line->stPos, line->edPos)/2 + circle->r //条件2:線を直径とする円に触れている.
+	if (dis1 <= cir->r &&                                    //条件1:線に触れている.
+		dis2 <= CalcDis(line->stPos, line->edPos)/2 + cir->r //条件2:線を直径とする円に触れている.
 	){
 		return TRUE;
 	}
@@ -94,7 +94,7 @@ BOOL IsHitLine(const Line* line, const Circle* circle) {
 }
 
 //距離計算.
-int CalcDis(INT_XY pos1, INT_XY pos2) {
+double CalcDis(INT_XY pos1, INT_XY pos2) {
 
 	double x = pos1.x - pos2.x; //xの差.
     double y = pos1.y - pos2.y; //yの差.

@@ -10,7 +10,8 @@ void Player::Init(GameData* _data)
 	p_data = _data;
 }
 //リセット(何回でも行う)
-void Player::Reset(DBL_XY _pos, BOOL _active) {
+void Player::Reset(DBL_XY _pos, BOOL _active) 
+{
 	hit    = {_pos, PLAYER_HIT_R, 0x000000};
 	active = _active;
 }
@@ -65,7 +66,7 @@ void Player::PlayerMove()
 		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
-	LimMovePos(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
 
 //死亡処理.
