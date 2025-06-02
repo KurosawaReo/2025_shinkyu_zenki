@@ -93,7 +93,7 @@ BOOL Item::CheckHitPlayer(Player* player)
 void Item::OnHitPlayer()
 {
 	// ドットログを表示
-	printfDx(_T("アイテムがプレイヤーと当たりました！ X:%.1f Y:%.1f\n"), itemX, itemY);
+	//printfDx(_T("アイテムがプレイヤーと当たりました！ X:%.1f Y:%.1f\n"), itemX, itemY);
 
 	// アイテムを削除（非アクティブにする）
 	active = FALSE;
