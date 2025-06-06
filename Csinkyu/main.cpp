@@ -1,22 +1,23 @@
 /*
    - main.cpp -
    プログラムの開始地点.
-   基本的にここはいじらない.
 */
 #include "GameManager.h"
 
-GameManager gm; //classの関数を使うのに必要.
+GameManager GameManager::self; //static変数の宣言.
+GameManager* gm;               //実体を入れる用.
 
 void Init() {
-	gm.Init();
+	gm = GameManager::GetPtr(); //GameManagerから実体取得.
+	gm->Init();
 }
 
 void Update() {
-	gm.Update();
+	gm->Update();
 }
 
 void Draw() {
-	gm.Draw();
+	gm->Draw();
 }
 
 int WINAPI WinMain(

@@ -77,5 +77,6 @@ void Player::PlayerDeath() {
 	if (isDebug) { return; }
 
 	active = FALSE;
-	//GameManager::pSelf->DrawGame(); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TODO どうするか.
+	//GamaManagerの関数実行(includeだけすれば使える)
+	GameManager::GetPtr()->GameEnd(); //ゲーム終了.
 }

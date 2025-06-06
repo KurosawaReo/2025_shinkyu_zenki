@@ -20,7 +20,6 @@
 /--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
-#include "GameManager.h"
 #include "Player.h"
 #include "Obstacle.h"
 #if defined ODAZIMA
@@ -30,6 +29,8 @@
 #else
 #include "Obstacle3.h"
 #endif
+
+#include "GameManager.h"
 
 //プレイヤーの実体.
 Player   player;
