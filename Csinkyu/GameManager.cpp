@@ -12,10 +12,14 @@
    ・アイテムの実装
    ・スローモードの時間制限 <<< now
    ・障害物4の砲台を画面一周動かす(ゲーム時間??秒以降)
+
+   2025/06/02:
+   スローモードの解除まで完成。
+   ・アイテムの落下速度、定数いじっても変わらない。
+   ・とる、こわすをどうするか考える。
 /--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
-#include "GameManager.h"
 #include "Player.h"
 #include "Obstacle.h"
 #if defined ODAZIMA
@@ -25,6 +29,8 @@
 #else
 #include "Obstacle3.h"
 #endif
+
+#include "GameManager.h"
 
 //プレイヤーの実体.
 Player   player;
@@ -58,7 +64,7 @@ void GameManager::Init() {
 #if defined ODAZIMA
 	obstacle2.Init(&data, &player);
 	obstacle4.Init(&data, &player);
-	item.Init();
+	item.Init(&data);
 #else
 	obstacle3.Init(&player);
 #endif
@@ -168,8 +174,6 @@ void GameManager::UpdateGame() {
 }
 void GameManager::UpdateEnd() {
 
-	tmGame.Stop(); //停止.
-
 	//SPACEが押された瞬間、タイトルへ.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
@@ -191,6 +195,7 @@ void GameManager::DrawGame() {
 	//カウントダウン中.
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetTime() > 0) 
 	{
+		//画面中央に数字を表示.
 		DrawFormatString(WINDOW_WID/2, WINDOW_HEI/2, 0xFFFFFF, _T("%d"), (int)ceil(tmSlowMode.GetTime()));
 	}
 }
@@ -220,4 +225,14 @@ void GameManager::DrawObjests() {
 #endif
 	//プレイヤーclass.
 	player.Draw();
+}
+
+//ゲーム終了.
+void GameManager::GameEnd() {
+	
+	data.scene = SCENE_END; //ゲーム終了へ.
+	
+	tmGame.Stop(); //停止.
+	data.isSlow = FALSE;
+	tmSlowMode.Reset();
 }

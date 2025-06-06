@@ -2,22 +2,20 @@
    - Item.cpp -
    Item管理.
 */
-#include "Item.h"
 #include "Player.h"
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>  // sqrt関数のため
-#include"Global.h"
+#include "Item.h"
+
 //初期化.
-GameData gamedata;
-void Item::Init()
+void Item::Init(GameData* _data)
 {
-	// ランダムシードを設定（初回のみ）
-	static bool seedSet = false;
+	p_data = _data;
+
+	// ランダムシードを設定（初回のみ） >>>GameManagerの方で初期化済.
+	/*static bool seedSet = false;
 	if (!seedSet) {
 		srand((unsigned int)time(NULL));
 		seedSet = true;
-	}
+	}*/
 
 	Reset(); // リセット関数を呼び出し
 }
@@ -52,9 +50,11 @@ void Item::Reset()
 //更新.
 void Item::Update()
 {
+	//カウンタ.
+	itemCounter += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+
 	if (active && itemFlag) {
 		ItemMove();
-		itemCounter++;
 
 		// 画面下部を超えたら再生成
 		if (itemY > 480) {
@@ -64,7 +64,6 @@ void Item::Update()
 	else
 	{
 		//アイテムが生成されてない時でもチェック.
-		itemCounter++;
 		if (itemCounter > ITEM_RESPAWN_TIME)//フレーム1秒に生成.
 		{
 			Reset();
@@ -143,25 +142,26 @@ void Item::Draw()
 
 void Item::ItemMove()
 {
-	if (active && itemFlag) {
-		// 基本的な落下動作
-		double fallSpeed = 2.0 + (rand() % 3);  // 2.0～4.0の落下速度
-		itemY += fallSpeed;
+	//落下速度.
+	double fallSpeed = ITEM_SPEED + (rand() % 3);  // speed～speed+2の乱数.
+	//スローモード.
+	itemY += fallSpeed * (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
-		// 左右にも少しランダムな動きを追加（オプション）
-		if (itemCounter % 20 == 0) {  // 一定間隔で左右に移動
-			double moveX = ((rand() % 3) - 1) * 0.5;  // -0.5, 0, 0.5のいずれか
-			itemX += moveX;
+#if false //よく分からん機能.
+	// 左右にも少しランダムな動きを追加（オプション）
+	if ((int)itemCounter % 20 == 0) {  // 一定間隔で左右に移動
+		double moveX = ((rand() % 3) - 1) * 0.5;  // -0.5, 0, 0.5のいずれか
+		itemX += moveX;
 
-			// 画面外に出ないように制限
-			if (itemX < 0)   itemX = 0;
-			if (itemX > 620) itemX = 620;
-		}
-
-		// 座標の同期
-		pos.x = itemX;
-		pos.y = itemY;
-		Ix = (float)itemX;
-		Iy = (float)itemY;
+		// 画面外に出ないように制限
+		if (itemX < 0)   itemX = 0;
+		if (itemX > 620) itemX = 620;
 	}
+#endif
+
+	// 座標の同期
+	pos.x = itemX;
+	pos.y = itemY;
+	Ix = (float)itemX;
+	Iy = (float)itemY;
 }

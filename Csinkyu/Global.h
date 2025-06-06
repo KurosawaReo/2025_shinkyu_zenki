@@ -1,7 +1,7 @@
 /*
    - Global.h -
-   ver.2025/05/21
-
+   ver.2025/06/06
+   
    共通で使用する型やマクロを入れる所.
 */
 #pragma once
@@ -11,11 +11,12 @@
 
 //stdafxがあるならいらない.
 #if true
-#define _USE_MATH_DEFINES  //math定数を使うのに必要.
-#define _CRT_SECURE_NO_WARNINGS
-#include <math.h>
-#include <time.h>
-#include "DxLib.h"
+  #define _USE_MATH_DEFINES  //math定数を使うのに必要.
+  #define _CRT_SECURE_NO_WARNINGS
+  #include <assert.h>
+  #include <math.h>
+  #include <time.h>
+  #include "DxLib.h"
 #endif
 
 #if !defined DEF_INT_XY
@@ -38,13 +39,13 @@ struct DBL_XY
 };
 #endif
 
-#if !defined DEF_SHAPES
-#define DEF_SHAPES
+#if !defined DEF_OBJECT
+#define DEF_OBJECT
 //円データ.
 struct Circle
 {
 	DBL_XY pos;  //座標.
-	int    r;    //半径.
+	float  r;    //半径.
 	UINT   clr;  //色.
 };
 //四角形データ.
@@ -61,13 +62,50 @@ struct Line
 	DBL_XY edPos; //終点座標.
 	UINT   clr;   //色.
 };
+//画像データ格納用.
+struct IMG
+{
+	int    handle;	 //ハンドル.
+	INT_XY size;	 //画像のサイズ.
+};
+
+//オブジェクト(四角形)
+class ObjectBox
+{
+private:
+	Box hitBox{};
+	IMG img{};
+public:
+	ObjectBox(DBL_XY _pos, INT_XY _size, UINT _clr) :
+		hitBox({ _pos, _size, _clr })
+	{}
+	//set.
+	void SetPos (DBL_XY _pos) { hitBox.pos  = _pos; }
+	void SetSize(INT_XY _size){ hitBox.size = _size; }
+	void SetClr (UINT   _clr) { hitBox.clr  = _clr; }
+	void SetImg (IMG    _img) { img = _img; }
+	//get
+	Box GetBox() { return hitBox; }
+	IMG GetImg() { return img; }
+};
+//オブジェクト(円)
+class ObjectCir
+{
+private:
+	Circle hitCir{};
+	IMG    img{};
+public:
+	ObjectCir(DBL_XY pos, float r, UINT clr) :
+		hitCir({ pos, r, clr })
+	{}
+};
 #endif
 
 #if !defined DEF_VARTYPE_MACRO
 #define DEF_VARTYPE_MACRO
-#define _int(n)   (int)(round(n))            //int型変換マクロ.
-#define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
-#define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
+  #define _int(n)   (int)(round(n))            //int型変換マクロ.
+  #define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
+  #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
 #endif
 
 // - 列挙体 -
@@ -99,10 +137,10 @@ struct GameData
 #define WINDOW_HEI				(480)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT		(32)			//ウィンドウのカラーbit数.
 
-#define WAIT_LOOP_MS			(10)			//ループ処理の待機時間(m秒)
+#define WAIT_LOOP_MS			(1000/60)		//ループ処理の待機時間(m秒)
 
 #define SLOW_MODE_TIME          (5)             //スローモード制限時間.
-#define SLOW_MODE_SPEED			(0.25)			//スローモード速度倍率.
+#define SLOW_MODE_SPEED			(0.20f)			//スローモード速度倍率.
 
 #define PLAYER_SIZE				(20)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED		(4)				//プレイヤー移動速度.
@@ -126,7 +164,3 @@ struct GameData
 #define OBSTACLE4_SPEED			(100)			//障害物の速度.
 #define OBSTACLE4_MAX_L			(100)			//障害物が飛ぶ最大距離.
 #define OBSTACLE4_LINE_MAX		(1000)			//障害物で描画する線の最大数.
-
-
-
-// - 関数 -

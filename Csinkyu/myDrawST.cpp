@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/05/21
+   ver.2025/06/06
    
    DxLibで使う用のオリジナル描画関数.
 */

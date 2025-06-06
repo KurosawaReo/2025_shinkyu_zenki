@@ -62,10 +62,10 @@ void Obstacle2::enemyMove()
 	// extern Player player;
 
 	// ミサイル発射カウンタを少なくする.
-	hsc--;
+	hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 
 	// カウンタが0になったらミサイルを発射.
-	if (hsc == 0)
+	if (hsc <= 0)
 	{
 		// 使われていないミサイルデータ（Mv[i]=0）を探す.
 		for (int i = 0; i < MAX_M; i++)

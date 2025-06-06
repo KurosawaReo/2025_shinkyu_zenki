@@ -11,7 +11,7 @@
 class Obstacle2
 {
 private:
-	int    hsc{};                      //エネミーの出る間隔.
+	float  hsc{};                      //エネミーの出る間隔.
 	int    Mg{};                       //エネミーの画像.
 	double Mx[MAX_M]{}, My[MAX_M]{};   //ミサイルのグラフィック.
 	double Mv[MAX_M]{};                //ミサイルデータの使用状態(1:使用中,0:未使用)

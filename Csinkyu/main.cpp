@@ -1,23 +1,23 @@
 /*
    - main.cpp -
    プログラムの開始地点.
-   基本的にここはいじらない.
 */
 #include "GameManager.h"
 
-//classの関数を使うのに必要.
-static GameManager gm;
+GameManager GameManager::self; //static変数の宣言.
+GameManager* gm;               //実体を入れる用.
 
 void Init() {
-	gm.Init();
+	gm = GameManager::GetPtr(); //GameManagerから実体取得.
+	gm->Init();
 }
 
 void Update() {
-	gm.Update();
+	gm->Update();
 }
 
 void Draw() {
-	gm.Draw();
+	gm->Draw();
 }
 
 int WINAPI WinMain(
@@ -29,6 +29,7 @@ int WINAPI WinMain(
 	ChangeWindowMode(IS_WINDOW_MODE);						//TRUEでwindow, FALSEで全画面にする.
 	SetGraphMode(WINDOW_WID, WINDOW_HEI, WINDOW_COLOR_BIT);	//windowサイズとカラーbit数の指定.
 	SetDrawScreen(DX_SCREEN_BACK);							//裏画面へ描画(ダブルバッファ)
+	SetWaitVSyncFlag(FALSE);                                //VSyncを無効化（FPS制限なし）
 
 	//DxLibの初期化.
 	if (DxLib_Init() == -1) {
