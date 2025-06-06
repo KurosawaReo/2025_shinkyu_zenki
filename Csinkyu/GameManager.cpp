@@ -12,10 +12,14 @@
    ・アイテムの実装
    ・スローモードの時間制限 <<< now
    ・障害物4の砲台を画面一周動かす(ゲーム時間??秒以降)
+
+   2025/06/02:
+   スローモードの解除まで完成。
+   ・アイテムの落下速度、定数いじっても変わらない。
+   ・とる、こわすをどうするか考える。
 /--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
-#include "GameManager.h"
 #include "Player.h"
 #include "Obstacle.h"
 #if defined ODAZIMA
@@ -26,14 +30,16 @@
 #include "Obstacle3.h"
 #endif
 
+#include "GameManager.h"
+
 //プレイヤーの実体.
 Player   player;
 //障害物の実体.
 Obstacle obstacle[] = {
-	Obstacle(80, 1, 0x00FF00),
-	Obstacle(60, 0.5, 0x00FF00),
-	Obstacle(100, 1, 0x00FF00),
-	Obstacle(200, 1, 0x00FF00)
+	Obstacle( 80, 1,   0x00FF00),
+	Obstacle( 60, 0.5, 0x00FF00),
+	Obstacle(100, 1,   0x00FF00),
+	Obstacle(200, 1,   0x00FF00)
 };
 
 #if defined ODAZIMA
@@ -58,7 +64,7 @@ void GameManager::Init() {
 #if defined ODAZIMA
 	obstacle2.Init(&data, &player);
 	obstacle4.Init(&data, &player);
-	item.Init();
+	item.Init(&data);
 #else
 	obstacle3.Init(&player);
 #endif
@@ -95,7 +101,8 @@ void GameManager::Update() {
 	UpdateKeys(); //キー入力更新.
 
 	//シーン別.
-	switch (data.scene) {
+	switch (data.scene) 
+	{
 		case SCENE_TITLE: UpdateTitle(); break;
 		case SCENE_GAME:  UpdateGame();  break;
 		case SCENE_END:   UpdateEnd();   break;
@@ -114,7 +121,8 @@ void GameManager::Draw() {
 	}
 
 	//シーン別.
-	switch (data.scene) {
+	switch (data.scene) 
+	{
 		case SCENE_TITLE: DrawTitle(); break;
 		case SCENE_GAME:  DrawGame();  break;
 		case SCENE_END:   DrawEnd();   break;
@@ -124,29 +132,28 @@ void GameManager::Draw() {
 }
 
 //シーン別更新.
-void GameManager::UpdateTitle() {
-	Timer t;
+void GameManager::UpdateTitle() 
+{
 	//SPACEが押された瞬間、ゲーム開始.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
-		tmGame.StartTimer();     //タイマー開始.
+		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
 }
 void GameManager::UpdateGame() {
 
-	tmGame.StopTimer();
-
-	//稼働していれば.
-	if (tmSlowMode.GetIsMove()) {
-		tmSlowMode.GetTime();
-	}
 	//稼働してなければ.
-	else {
-		//Lボタンでスローモードに(kari)
+	if (!tmSlowMode.GetIsMove()) {
+		//Lボタンでスローモードに(仮)
 		if (IsPushKeyTime(KEY_INPUT_L) == 1) {
 			data.isSlow = TRUE;
-			tmSlowMode.StartTimer();
+			tmSlowMode.Start();
 		}
+	}
+	//時間切れで解除.
+	else if(tmSlowMode.GetTime() == 0){
+		data.isSlow = FALSE;
+		tmSlowMode.Reset();
 	}
 
 	//障害物class.
@@ -176,7 +183,7 @@ void GameManager::UpdateEnd() {
 
 //シーン別描画.
 void GameManager::DrawTitle() {
-	// ゲームが開始されていない場合は開始案内を表示
+	//ゲームが開始されていない場合は開始案内を表示
 	DrawFormatString(260, 160, GetColor(255, 255, 255), _T("PUSH SPACE"));
 }
 void GameManager::DrawGame() {
@@ -185,6 +192,12 @@ void GameManager::DrawGame() {
 
 	//タイマー表示.
 	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), tmGame.GetTime());
+	//カウントダウン中.
+	if (tmSlowMode.GetIsMove() && tmSlowMode.GetTime() > 0) 
+	{
+		//画面中央に数字を表示.
+		DrawFormatString(WINDOW_WID/2, WINDOW_HEI/2, 0xFFFFFF, _T("%d"), (int)ceil(tmSlowMode.GetTime()));
+	}
 }
 void GameManager::DrawEnd() {
 	
@@ -192,7 +205,7 @@ void GameManager::DrawEnd() {
 
 	//タイマー表示.
 	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), tmGame.GetTime());
-	// 終了案内.
+	//終了案内.
 	DrawFormatString(260, 160, GetColor(255, 0, 0), _T("GAME OVER"));
 }
 
@@ -212,4 +225,14 @@ void GameManager::DrawObjests() {
 #endif
 	//プレイヤーclass.
 	player.Draw();
+}
+
+//ゲーム終了.
+void GameManager::GameEnd() {
+	
+	data.scene = SCENE_END; //ゲーム終了へ.
+	
+	tmGame.Stop(); //停止.
+	data.isSlow = FALSE;
+	tmSlowMode.Reset();
 }

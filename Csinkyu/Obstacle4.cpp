@@ -67,7 +67,8 @@ void Obstacle4::Draw()
 
 		//緑色の値, 時間経過で徐々に薄くする.
 		int g = _int(255 - line[i].Counter * 4);
-		
+		g = max(g, 0); //最低値を0にする.
+
 		// 軌跡の線を描画（時間経過で色が変化）
 		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(0, g, 0)};
 		DrawLineST(&tmpLine);
@@ -214,7 +215,6 @@ void Obstacle4::enemy4Move()
 			}
 			break;
 		}
-	
 
 		/*Hx += Hm *((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
 		if (Hm > 0 && Hx > WINDOW_WID - 16)
@@ -225,7 +225,6 @@ void Obstacle4::enemy4Move()
 		{
 			Hm *= -1;
 		}*/
-
 
 		// 発射カウンタを減少
 		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;

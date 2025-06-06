@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/05/26
+   ver.2025/06/02
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -32,8 +32,12 @@ int  IsPushKeyTime(int num) {
 }
 
 //マウス座標取得.
-void GetMousePos(INT_XY* pos) {
-	GetMousePoint(&pos->x, &pos->y);
+void GetMousePos(DBL_XY* pos) {
+
+	INT_XY mPos;
+	GetMousePoint(&mPos.x, &mPos.y); //取得.
+	
+	*pos = _dblXY(mPos); //double型にして代入.
 }
 
 //4方向移動操作.
@@ -43,13 +47,13 @@ void InputKey4Dir(DBL_XY* pos, float speed) {
 	DBL_XY move{}; //求めた移動量.
 
 	//キー入力に応じて移動力を与える.
-	if (CheckHitKey(KEY_INPUT_UP)||CheckHitKey(KEY_INPUT_W)) {
+	if (CheckHitKey(KEY_INPUT_UP)   ||CheckHitKey(KEY_INPUT_W)) {
 		pow.y += -1;
 	}
-	if (CheckHitKey(KEY_INPUT_DOWN)||CheckHitKey(KEY_INPUT_S)) {
+	if (CheckHitKey(KEY_INPUT_DOWN) ||CheckHitKey(KEY_INPUT_S)) {
 		pow.y += +1;
 	}
-	if (CheckHitKey(KEY_INPUT_LEFT)||CheckHitKey(KEY_INPUT_A)) {
+	if (CheckHitKey(KEY_INPUT_LEFT) ||CheckHitKey(KEY_INPUT_A)) {
 		pow.x += -1;
 	}
 	if (CheckHitKey(KEY_INPUT_RIGHT)||CheckHitKey(KEY_INPUT_D)) {
@@ -73,12 +77,12 @@ void InputKey4Dir(DBL_XY* pos, float speed) {
 	pos->y += move.y * speed;
 }
 //移動可能範囲内に補正する.
-void LimMovePos(DBL_XY* pos, INT_XY size, int lLim, int uLim, int rLim, int dLim) {
+void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
 
-	if (pos->x < lLim + size.x/2) { pos->x = lLim + size.x/2; }
-	if (pos->y < uLim + size.y/2) { pos->y = uLim + size.y/2; }
-	if (pos->x > rLim - size.x/2) { pos->x = rLim - size.x/2; }
-	if (pos->y > dLim - size.y/2) { pos->y = dLim - size.y/2; }
+	if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
+	if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
+	if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
+	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
 }
 
 //ボタンの更新処理.

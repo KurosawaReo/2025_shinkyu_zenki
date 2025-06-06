@@ -1,38 +1,53 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/05/26
+   ver.2025/06/02
 
    DxLibで使う用のオリジナル時間関数.
 */
 #pragma once
 
+//タイマーモード.
+enum TimerMode
+{
+	CountUp,
+	CountDown,
+};
 //タイマー機能.
 class Timer
 {
 private:
-	clock_t stTime; //開始時刻.
-	clock_t edTime; //終了時刻.
-	BOOL    isMove; //計測中か.
+	float     initTime{}; //初期時間.
+	clock_t   stTime{};   //計測開始時刻.
+	clock_t   edTime{};   //計測終了時刻.
+
+	BOOL      isMove{};   //計測中か.
+	TimerMode mode{};     //計測モード.
 
 public:
-	void StartTimer() {
+	//コンストラクタ.
+	Timer(float _init, TimerMode _mode) : 
+		initTime(_init), mode(_mode) //初期化子.
+	{}
+
+	void Start() {
 		stTime = clock(); //タイマー開始.
 		edTime = 0;
-		isMove = TRUE;    //動いた.
+		isMove = TRUE;    //計測中.
 	}
-	void StopTimer() {
-		edTime = clock(); //タイマー終了.
-		isMove = FALSE;   //停止した.
+	void Stop() {
+		if (isMove) {
+			edTime = clock(); //タイマー終了.
+			isMove = FALSE;   //停止.
+		}
+	}
+	void Reset() {
+		stTime = 0;
+		edTime = 0;
+		isMove = FALSE;
 	}
 	BOOL GetIsMove() {
 		return isMove;
 	}
-	float GetTime() {
-		if (!isMove) {
-			return (float)(edTime - stTime)/1000; //時間差を返す.
-		}
-		else {
-			return (float)(clock() - stTime)/1000; //時間差を返す.
-		}
-	}
+
+	float GetTime(); //時間取得.
 };

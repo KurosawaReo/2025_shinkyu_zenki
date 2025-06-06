@@ -2,6 +2,7 @@
    - Obstacle3.cpp -
    è·äQï®ä«óù.
 */
+#if false
 #include "Player.h"
 #include "Obstacle3.h"
 
@@ -145,3 +146,4 @@ void Obstacle3::enemyMove()
 		if (Mx[i] < -100 || Mx[i] > 740 || My[i] < -100 || My[i] > 500) Mv[i] = 0;
 	}
 }
+#endif

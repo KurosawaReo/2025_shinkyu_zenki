@@ -1,5 +1,5 @@
 #pragma once
-#include "Player.h"  // Player クラスを使用するため
+//#include "Player.h"  // Player クラスを使用するため
 
 class Item
 {
@@ -9,13 +9,16 @@ private:
 	UINT   clr;  //色.
 	BOOL   active; //有効か.
 
-	float Ix, Iy;
+	float  Ix, Iy;
 	double itemX, itemY;
-	int itemFlag;
-	int itemW, itemH, itemGraph;
-	int itemCounter;
+	int    itemFlag;
+	int    itemW, itemH, itemGraph;
+	float  itemCounter;
+
+	GameData* p_data{}; //ゲームデータ.
+
 public:
-	void Init();
+	void Init(GameData*);
 	void Update();
 	void Draw();
 	void ItemMove(); //アイテム.

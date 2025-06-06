@@ -1,17 +1,11 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/05/21
+   ver.2025/06/06
 
    DxLibで使う用のオリジナル描画関数.
 */
 #pragma once
 
-//画像データ格納用.
-struct IMG
-{
-	int    handle;	 //ハンドル.
-	INT_XY size;	 //画像のサイズ.
-};
 //画像描画に使う用.
 struct IMG_DRAW
 {

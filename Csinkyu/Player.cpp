@@ -2,6 +2,7 @@
    - Player.cpp -
    プレイヤー管理.
 */
+#include "GameManager.h"
 #include "Player.h"
 
 //初期化(一回のみ行う)
@@ -10,7 +11,8 @@ void Player::Init(GameData* _data)
 	p_data = _data;
 }
 //リセット(何回でも行う)
-void Player::Reset(DBL_XY _pos, BOOL _active) {
+void Player::Reset(DBL_XY _pos, BOOL _active) 
+{
 	hit    = {_pos, PLAYER_HIT_R, 0x000000};
 	active = _active;
 }
@@ -65,7 +67,7 @@ void Player::PlayerMove()
 		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
-	LimMovePos(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
 
 //死亡処理.
@@ -75,5 +77,6 @@ void Player::PlayerDeath() {
 	if (isDebug) { return; }
 
 	active = FALSE;
-	p_data->scene = SCENE_END; //ゲーム終了へ.
+	//GamaManagerの関数実行(includeだけすれば使える)
+	GameManager::GetPtr()->GameEnd(); //ゲーム終了.
 }

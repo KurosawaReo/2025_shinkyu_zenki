@@ -28,6 +28,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="myInputST.cpp" />
+    <ClCompile Include="myTimerST.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle3.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="myCalcST.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
+    <ClInclude Include="myTimerST.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Obstacle3.h" />
@@ -151,6 +153,7 @@
       <AdditionalIncludeDirectories>"C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用"</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,6 +171,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

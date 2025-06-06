@@ -62,10 +62,10 @@ void Obstacle2::enemyMove()
 	// extern Player player;
 
 	// ミサイル発射カウンタを少なくする.
-	hsc--;
+	hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 
 	// カウンタが0になったらミサイルを発射.
-	if (hsc == 0)
+	if (hsc <= 0)
 	{
 		// 使われていないミサイルデータ（Mv[i]=0）を探す.
 		for (int i = 0; i < MAX_M; i++)
@@ -112,9 +112,9 @@ void Obstacle2::enemyMove()
 
 		// 衝突判定の条件チェック（矩形同士の交差判定）
 		int x = Mx[i] < player->GetPos().x + PLAYER_SIZE;    // ミサイルの左端がプレイヤーの右端より左にあるか
-		int x2 = Mx[i] + 16 > player->GetPos().x;           // ミサイルの右端がプレイヤーの左端より右にあるか
+		int x2 = Mx[i] + 16 > player->GetPos().x;            // ミサイルの右端がプレイヤーの左端より右にあるか
 		int y = My[i] < player->GetPos().y + PLAYER_SIZE;    // ミサイルの上端がプレイヤーの下端より上にあるか
-		int y2 = My[i] + 16 > player->GetPos().y;           // ミサイルの下端がプレイヤーの上端より下にあるか
+		int y2 = My[i] + 16 > player->GetPos().y;            // ミサイルの下端がプレイヤーの上端より下にあるか
 
 		// すべての条件が真なら衝突している
 		if (x && x2 && y && y2)
