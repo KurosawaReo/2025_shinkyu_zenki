@@ -14,6 +14,7 @@ private:
 	Timer tmSlowMode = Timer(SLOW_MODE_TIME, CountDown); //スロー継続時間.
 
 public:
+	static GameManager* pSelf; //自身のポインタ.
 
 	//メイン処理.
 	void Init();
@@ -31,4 +32,7 @@ public:
 	void DrawGame();
 	void DrawEnd();
 	void DrawObjests();
+
+	//その他.
+	void GameEnd();
 };

@@ -173,8 +173,6 @@ void GameManager::UpdateGame() {
 }
 void GameManager::UpdateEnd() {
 
-	tmGame.Stop(); //停止.
-
 	//SPACEが押された瞬間、タイトルへ.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
@@ -196,6 +194,7 @@ void GameManager::DrawGame() {
 	//カウントダウン中.
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetTime() > 0) 
 	{
+		//画面中央に数字を表示.
 		DrawFormatString(WINDOW_WID/2, WINDOW_HEI/2, 0xFFFFFF, _T("%d"), (int)ceil(tmSlowMode.GetTime()));
 	}
 }
@@ -225,4 +224,14 @@ void GameManager::DrawObjests() {
 #endif
 	//プレイヤーclass.
 	player.Draw();
+}
+
+//ゲーム終了.
+void GameManager::GameEnd() {
+	
+	data.scene = SCENE_END; //ゲーム終了へ.
+	
+	tmGame.Stop(); //停止.
+	data.isSlow = FALSE;
+	tmSlowMode.Reset();
 }

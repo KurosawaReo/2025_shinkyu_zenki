@@ -2,6 +2,7 @@
    - Player.cpp -
    プレイヤー管理.
 */
+#include "GameManager.h"
 #include "Player.h"
 
 //初期化(一回のみ行う)
@@ -76,5 +77,5 @@ void Player::PlayerDeath() {
 	if (isDebug) { return; }
 
 	active = FALSE;
-	p_data->scene = SCENE_END; //ゲーム終了へ.
+	//GameManager::pSelf->DrawGame(); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TODO どうするか.
 }

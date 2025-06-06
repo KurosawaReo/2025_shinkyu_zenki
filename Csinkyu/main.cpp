@@ -5,8 +5,7 @@
 */
 #include "GameManager.h"
 
-//classの関数を使うのに必要.
-static GameManager gm;
+GameManager gm; //classの関数を使うのに必要.
 
 void Init() {
 	gm.Init();
@@ -29,6 +28,7 @@ int WINAPI WinMain(
 	ChangeWindowMode(IS_WINDOW_MODE);						//TRUEでwindow, FALSEで全画面にする.
 	SetGraphMode(WINDOW_WID, WINDOW_HEI, WINDOW_COLOR_BIT);	//windowサイズとカラーbit数の指定.
 	SetDrawScreen(DX_SCREEN_BACK);							//裏画面へ描画(ダブルバッファ)
+	SetWaitVSyncFlag(FALSE);                                //VSyncを無効化（FPS制限なし）
 
 	//DxLibの初期化.
 	if (DxLib_Init() == -1) {
