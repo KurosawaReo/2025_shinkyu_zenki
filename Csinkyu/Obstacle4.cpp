@@ -28,17 +28,17 @@ void Obstacle4::Init(GameData* _data, Player* _player)
 //リセット.
 void Obstacle4::Reset() {
 
-	Hx  = 0;                  // 砲台のX座標初期値（画面中央）
+	Hx  = 0;                    // 砲台のX座標初期値（画面中央）
 	Hy  = 30;                   // 砲台のY座標初期値（画面上部）
 	Hm  = 3;                    // 砲台の移動速度
 	Hsc = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
-	moveDir = MOVE_RIGHT;     // 初期方向を右に設定.
+	moveDir = MOVE_RIGHT;       // 初期方向を右に設定.
 	// レーザーデータの初期化
-	for (int i = 0; i < OBSTACLE4_MAX_L; i++)
+	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 		ld[i].ValidFlag = 0;  // すべてのレーザーを無効状態に
 
 	// レーザーの軌跡データの初期化
-	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
+	for (int i = 0; i < OBSTACLE4_LASER_LINE_MAX; i++)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
 }
 
@@ -63,7 +63,7 @@ void Obstacle4::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
 	// レーザーの軌跡の描画処理
-	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
+	for (int i = 0; i < OBSTACLE4_LASER_LINE_MAX; i++)
 	{
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
@@ -99,7 +99,7 @@ void Obstacle4::enemy4Move()
 	double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
 	// 各レーザーの処理
-	for (int i = 0; i < OBSTACLE4_MAX_L; i++)
+	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 	{
 		if (ld[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
@@ -146,7 +146,7 @@ void Obstacle4::enemy4Move()
 		befPos = { ld[i].x, ld[i].y };
 
 		// ミサイルの速度
-		double speed = OBSTACLE4_SPEED;
+		double speed = OBSTACLE4_LASER_SPEED;
 		if (data->isSlow) { speed /= SLOW_MODE_SPEED; }
 
 		// レーザーの位置を更新（速度に基づいて移動）
@@ -154,7 +154,7 @@ void Obstacle4::enemy4Move()
 		ld[i].y = (ld[i].y * speed + ld[i].sy)/speed;
 
 		// レーザーの軌跡を生成
-		for (int j = 0; j < OBSTACLE4_LINE_MAX; j++)
+		for (int j = 0; j < OBSTACLE4_LASER_LINE_MAX; j++)
 		{
 			if (line[j].ValidFlag == 0)  // 未使用の軌跡スロットを探す
 			{
@@ -187,32 +187,32 @@ void Obstacle4::enemy4Move()
 		{
 		case MOVE_RIGHT:
 			Hx += moveSpeed;
-			if (Hx > WINDOW_WID - 16) {
-				Hx = WINDOW_WID - 16;
+			if (Hx > WINDOW_WID - OBSTACLE4_OUTER_MARGIN) {
+				Hx = WINDOW_WID - OBSTACLE4_OUTER_MARGIN;
 				moveDir = MOVE_DOWN;
 			}
 			break;
 
 		case MOVE_DOWN:
 			Hy += moveSpeed;
-			if (Hy > WINDOW_HEI - 16) {
-				Hy = WINDOW_HEI - 16;
+			if (Hy > WINDOW_HEI - OBSTACLE4_OUTER_MARGIN) {
+				Hy = WINDOW_HEI - OBSTACLE4_OUTER_MARGIN;
 				moveDir = MOVE_LEFT;
 			}
 			break;
 
 		case MOVE_LEFT:
 			Hx -= moveSpeed;
-			if (Hx < 0) {
-				Hx = 0;
+			if (Hx < 0 + OBSTACLE4_OUTER_MARGIN) {
+				Hx = 0 + OBSTACLE4_OUTER_MARGIN;
 				moveDir = MOVE_UP;
 			}
 			break;
 
 		case MOVE_UP:
 			Hy -= moveSpeed;
-			if (Hy < 0) {
-				Hy = 0;
+			if (Hy < 0 + OBSTACLE4_OUTER_MARGIN) {
+				Hy = 0 + OBSTACLE4_OUTER_MARGIN;
 				moveDir = MOVE_RIGHT;
 			}
 			break;
@@ -234,7 +234,7 @@ void Obstacle4::enemy4Move()
 		if (Hsc <= HscTm)
 		{
 			// 未使用のレーザースロットを探してレーザーを発射
-			for (int i = 0; i < OBSTACLE4_MAX_L; i++)
+			for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 			{
 				if (ld[i].ValidFlag == 0)  // 未使用のレーザースロットを見つけた
 				{
