@@ -135,7 +135,7 @@ void GameManager::Draw() {
 void GameManager::UpdateTitle() 
 {
 	//SPACEが押された瞬間、ゲーム開始.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_1 ||IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
 		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
@@ -179,7 +179,7 @@ void GameManager::UpdateGame() {
 void GameManager::UpdateEnd() {
 
 	//SPACEが押された瞬間、タイトルへ.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_1||IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
 	}
