@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/05
+   ver.2025/06/09
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -10,9 +10,10 @@
 
 #include "myInputST.h"
 
+//キーやボタンの種類の最大数(変更禁止)
 #define KEY_MAX     256
 #define MOUSE_MAX   3
-#define PAD_BTN_MAX 3
+#define PAD_BTN_MAX 32
 
 int g_tmKey   [KEY_MAX];     //キーを押している時間.
 int g_tmMouse [MOUSE_MAX];   //マウスを押下している時間.
@@ -134,7 +135,7 @@ void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int dow
 }
 
 //ボタンの更新処理.
-void UpdateKeys() {
+void UpdateKey() {
 	
 	char key[KEY_MAX];
 	GetHitKeyStateAll(key); //押しているキー情報を取得.
@@ -167,7 +168,7 @@ void UpdatePadBtn() {
 
 	for (int i = 0; i < PAD_BTN_MAX; i++) {
 		//押されているなら.
-		if (GetJoypadInputState(DX_INPUT_PAD1) & (2 >> i)) { //And演算.
+		if (GetJoypadInputState(DX_INPUT_PAD1) & (1 << i)) { //And演算.
 			g_tmPadBtn[i]++;   //カウント.
 		}
 		else {

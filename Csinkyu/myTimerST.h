@@ -1,6 +1,6 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/06/02
+   ver.2025/06/09
 
    DxLibで使う用のオリジナル時間関数.
 */
@@ -29,16 +29,24 @@ public:
 		initTime(_init), mode(_mode) //初期化子.
 	{}
 
-	void StartTimer() {
+	void Start() {
 		stTime = clock(); //タイマー開始.
 		edTime = 0;
 		isMove = TRUE;    //計測中.
 	}
-	void StopTimer() {
+	void Stop() {
 		if (isMove) {
 			edTime = clock(); //タイマー終了.
 			isMove = FALSE;   //停止.
 		}
+	}
+	void Reset() {
+		stTime = 0;
+		edTime = 0;
+		isMove = FALSE;
+	}
+	BOOL GetIsMove() {
+		return isMove;
 	}
 
 	float GetTime(); //時間取得.

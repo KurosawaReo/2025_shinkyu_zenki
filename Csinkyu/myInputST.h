@@ -25,6 +25,6 @@ DBL_XY Move4Dir       (INT_XY  pow);
 void   FixPosInArea   (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
 
 //çXêV.
-void   UpdateKeys();
+void   UpdateKey();
 void   UpdateMouse();
 void   UpdatePadBtn();
