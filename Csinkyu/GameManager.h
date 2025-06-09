@@ -42,4 +42,5 @@ public:
 
 	//‚»‚Ì‘¼.
 	void GameEnd();
+	void TakeItem();
 };

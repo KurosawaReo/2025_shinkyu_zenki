@@ -1,7 +1,7 @@
 /*
    - Global.h -
    ver.2025/06/06
-   
+
    共通で使用する型やマクロを入れる所.
 */
 #pragma once
@@ -70,39 +70,29 @@ struct IMG
 };
 
 //オブジェクト(四角形)
-class ObjectBox
+struct ObjectBox
 {
-private:
-	Box hitBox{};
-	IMG img{};
-public:
+	Box box{}; //当たり判定と座標.
+	IMG img{}; //画像.
+
 	ObjectBox(DBL_XY _pos, INT_XY _size, UINT _clr) :
-		hitBox({ _pos, _size, _clr })
+		box({ _pos, _size, _clr })
 	{}
-	//set.
-	void SetPos (DBL_XY _pos) { hitBox.pos  = _pos; }
-	void SetSize(INT_XY _size){ hitBox.size = _size; }
-	void SetClr (UINT   _clr) { hitBox.clr  = _clr; }
-	void SetImg (IMG    _img) { img = _img; }
-	//get
-	Box GetBox() { return hitBox; }
-	IMG GetImg() { return img; }
 };
 //オブジェクト(円)
-class ObjectCir
+struct ObjectCir
 {
-private:
-	Circle hitCir{};
-	IMG    img{};
-public:
+	Circle cir{}; //当たり判定と座標.
+	IMG    img{}; //画像.
+
 	ObjectCir(DBL_XY pos, float r, UINT clr) :
-		hitCir({ pos, r, clr })
+		cir({ pos, r, clr })
 	{}
 };
 #endif
 
 #if !defined DEF_VARTYPE_MACRO
-#define DEF_VARTYPE_MACRO
+  #define DEF_VARTYPE_MACRO
   #define _int(n)   (int)(round(n))            //int型変換マクロ.
   #define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
   #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
