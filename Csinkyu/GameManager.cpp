@@ -142,6 +142,7 @@ void GameManager::UpdateTitle()
 }
 void GameManager::UpdateGame() {
 
+#if false
 	//稼働してなければ.
 	if (!tmSlowMode.GetIsMove()) {
 		//Lボタンでスローモードに(仮)
@@ -150,10 +151,13 @@ void GameManager::UpdateGame() {
 			tmSlowMode.Start();
 		}
 	}
-	//時間切れで解除.
-	else if(tmSlowMode.GetTime() == 0){
-		data.isSlow = FALSE;
-		tmSlowMode.Reset();
+#endif
+	if (tmSlowMode.GetIsMove()) {
+		//時間切れで解除.
+		if(tmSlowMode.GetTime() == 0){
+			data.isSlow = FALSE;
+			tmSlowMode.Reset();
+		}
 	}
 
 	//障害物class.
@@ -235,4 +239,10 @@ void GameManager::GameEnd() {
 	tmGame.Stop(); //停止.
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
+}
+//アイテムを取った時.
+void GameManager::TakeItem() {
+
+	data.isSlow = TRUE; //スローモードにする.
+	tmSlowMode.Start(); //タイマー開始.
 }
