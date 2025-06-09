@@ -29,24 +29,16 @@ public:
 		initTime(_init), mode(_mode) //初期化子.
 	{}
 
-	void Start() {
+	void StartTimer() {
 		stTime = clock(); //タイマー開始.
 		edTime = 0;
 		isMove = TRUE;    //計測中.
 	}
-	void Stop() {
+	void StopTimer() {
 		if (isMove) {
 			edTime = clock(); //タイマー終了.
 			isMove = FALSE;   //停止.
 		}
-	}
-	void Reset() {
-		stTime = 0;
-		edTime = 0;
-		isMove = FALSE;
-	}
-	BOOL GetIsMove() {
-		return isMove;
 	}
 
 	float GetTime(); //時間取得.

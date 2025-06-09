@@ -1,24 +1,30 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/02
+   ver.2025/06/09
 
    DxLibで使う用のオリジナル入力関数.
 */
 #pragma once
 
 //判定.
-BOOL IsPushMouse    (int num);
-BOOL IsPushMouseTime(int num);
-BOOL IsPushKey      (int num);
-int  IsPushKeyTime  (int num);
+BOOL   IsPushKey       (int keyNum);
+int    IsPushKeyTime   (int keyNum);
+BOOL   IsPushMouse     (int mouseNum);
+int    IsPushMouseTime (int mouseNum);
+BOOL   IsPushPadBtn    (int btnNum);
+int    IsPushPadBtnTime(int btnNum);
 
 //取得.
-void GetMousePos    (DBL_XY* pos);
+void   GetMousePos    (DBL_XY* pos, BOOL isValidX = TRUE, BOOL isValidY = TRUE);
 
 //移動系.
-void InputKey4Dir   (DBL_XY* pos, float speed);
-void FixPosInArea   (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
+void   InputKey4Dir   (DBL_XY* pos, float speed);
+void   InputPad4Dir   (DBL_XY* pos, float speed);
+DBL_XY Move4Dir       (INT_XY  pow);
+
+void   FixPosInArea   (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
 
 //更新.
-void UpdateKeys();
-void UpdateMouse();
+void   UpdateKeys();
+void   UpdateMouse();
+void   UpdatePadBtn();
