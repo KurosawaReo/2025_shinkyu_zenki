@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/02
+   ver.2025/06/05
 
    DxLibで使う用のオリジナル計算関数.
 */
@@ -13,8 +13,12 @@
 //当たり判定(円と円)
 BOOL IsHitCircle(const Circle* cir1, const Circle* cir2) {
 
+	//距離差.
+	double x = cir1->pos.x - cir2->pos.x;
+	double y = cir1->pos.y - cir2->pos.y;
     //距離が半径の合計より短ければ当たっている.
-    if (CalcDis(cir1->pos, cir2->pos) <= cir1->r + cir2->r) {
+	//(√を削減するために2乗して計算)
+    if (x*x + y*y <= pow(cir1->r+cir2->r, 2)) {
         return TRUE;
     }
     else {
