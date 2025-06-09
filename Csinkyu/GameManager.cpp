@@ -17,6 +17,13 @@
    スローモードの解除まで完成。
    ・アイテムの落下速度、定数いじっても変わらない。
    ・とる、こわすをどうするか考える。
+
+   2025/06/09:
+   "こわす"の方針決定。
+   敵のレーザーと多角形の隕石だけ残し、回る線などは無くす。
+   跳ね返す方向だけ迷うが、一旦跳ね返すシステムだけ仮で作る所から始める。
+   ・小田島 →レーザーの跳ね返り
+   ・黒澤　 →線で作る多角形の隕石(来る方向はランダム)
 /--------------------------------------------------------*/
 #define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
 
@@ -64,7 +71,7 @@ void GameManager::Init() {
 #if defined ODAZIMA
 	obstacle2.Init(&data, &player);
 	obstacle4.Init(&data, &player);
-	item.Init(&data);
+	item.Init(&data, &player);
 #else
 	obstacle3.Init(&player);
 #endif
@@ -135,14 +142,16 @@ void GameManager::Draw() {
 //シーン別更新.
 void GameManager::UpdateTitle() 
 {
-	//SPACEが押された瞬間、ゲーム開始.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+	//特定の操作でゲーム開始.
+	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
+		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	{
 		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
 }
 void GameManager::UpdateGame() {
-
+	
 #if false
 	//稼働してなければ.
 	if (!tmSlowMode.GetIsMove()) {
@@ -169,8 +178,6 @@ void GameManager::UpdateGame() {
 	obstacle2.Update();
 	obstacle4.Update();
 	item.Update();
-	item.ItemMove();
-	item.CheckHitPlayer(&player);
 #else
 	obstacle3.Update();
 #endif
@@ -179,8 +186,10 @@ void GameManager::UpdateGame() {
 }
 void GameManager::UpdateEnd() {
 
-	//SPACEが押された瞬間、タイトルへ.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+	//特定の操作でタイトルへ.
+	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
+		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
 	}
@@ -189,7 +198,7 @@ void GameManager::UpdateEnd() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	//ゲームが開始されていない場合は開始案内を表示
-	DrawFormatString(260, 160, GetColor(255, 255, 255), _T("PUSH SPACE"));
+	DrawFormatString(260, 160, 0xFFFFFF, _T("PUSH SPACE"));
 }
 void GameManager::DrawGame() {
 

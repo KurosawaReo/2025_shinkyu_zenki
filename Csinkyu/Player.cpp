@@ -37,22 +37,17 @@ void Player::Draw()
 	}
 	//有効なら.
 	if (active) {
-		// 四角形を描画（プレイヤーの位置に）
-		int x  = _int(hit.pos.x - PLAYER_SIZE/2);
-		int y  = _int(hit.pos.y - PLAYER_SIZE/2);
-		int dx = _int(hit.pos.x + PLAYER_SIZE/2);
-		int dy = _int(hit.pos.y + PLAYER_SIZE/2);
+		//四角形.
+		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
+		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xA0A0A0 };
 
-		unsigned int Cr;
 		//デバッグモード中.
 		if (isDebug) {
-			Cr = GetColor(255, 150, 150); //赤色.
-		}
-		else {
-			Cr = GetColor(255, 255, 255); //白色.
+			box1.clr = box2.clr = GetColor(255, 150, 150); //赤色.
 		}
 
-		DrawBox(x, y, dx, dy, Cr, TRUE);
+		DrawBoxST(&box1, TRUE, FALSE);
+		DrawBoxST(&box2, TRUE, FALSE);
 	}
 }
 
@@ -62,9 +57,11 @@ void Player::PlayerMove()
 	//移動する.
 	if (p_data->isSlow) {
 		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
+		InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED); //コントローラ移動(仮)
 	}
 	else {
 		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
+		InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED); //コントローラ移動(仮)
 	}
 	//移動限界.
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);

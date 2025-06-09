@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/09
+   ver.2025/06/10
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -16,6 +16,7 @@ int    IsPushPadBtnTime(int btnNum);
 
 //取得.
 void   GetMousePos    (DBL_XY* pos, BOOL isValidX = TRUE, BOOL isValidY = TRUE);
+void   GetJoypadStick ();
 
 //移動系.
 void   InputKey4Dir   (DBL_XY* pos, float speed);

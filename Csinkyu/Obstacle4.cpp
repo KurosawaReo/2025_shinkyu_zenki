@@ -3,11 +3,13 @@
    障害物管理クラス (小田島作)
    プレイヤーを追尾するレーザーを発射する障害物を実装
 */
-#include "DxLib.h"     // DXライブラリのヘッダーファイルをインクルード
-#include <math.h>      // 数学関数を使用するためのヘッダーファイル
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
-#include"Global.h"
+
+//stdafx.hに入ってるため不要.
+//#include <math.h>      // 数学関数を使用するためのヘッダーファイル
+//#include "DxLib.h"     // DXライブラリのヘッダーファイルをインクルード
+//#include "Global.h"
 
 //移動定義.
 MoveDir moveDir;  // 現在の移動方向
