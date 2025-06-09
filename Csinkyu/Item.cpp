@@ -2,6 +2,7 @@
    - Item.cpp -
    Item管理.
 */
+#include "GameManager.h"
 #include "Player.h"
 #include "Item.h"
 
@@ -109,7 +110,6 @@ void Item::OnHitPlayer()
 	itemFlag = 0;
 	itemCounter = 0;//カウンターをリセットして再生成タイマー開始.
 
-
 	// 座標を画面外に移動（念のため）
 	itemX = -100;
 	itemY = -100;
@@ -117,6 +117,9 @@ void Item::OnHitPlayer()
 	Iy = (float)itemY;
 	pos.x = itemX;
 	pos.y = itemY;
+
+	//アイテムを取った処理.
+	GameManager::GetPtr()->TakeItem();
 }
 
 //描画.
