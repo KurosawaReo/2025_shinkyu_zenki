@@ -9,7 +9,6 @@ class GameManager
 {
 private: //実体.
 	static GameManager self; //自身の実体.
-	//GameManager(); //privateにすることでコンストラクタを使用禁止する.
 
 private: //データ.
 	GameData data{}; //ゲームデータ.

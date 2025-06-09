@@ -1,6 +1,6 @@
 /*
    - myCalcST.h - (original)
-   ver.2025/06/02
+   ver.2025/06/05
 
    DxLibで使う用のオリジナル計算関数.
 */

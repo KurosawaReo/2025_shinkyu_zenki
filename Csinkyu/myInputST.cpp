@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/02
+   ver.2025/06/09
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -10,41 +10,60 @@
 
 #include "myInputST.h"
 
-#define KEY_MAX   256
-#define MOUSE_MAX 3
+//キーやボタンの種類の最大数(変更禁止)
+#define KEY_MAX     256
+#define MOUSE_MAX   3
+#define PAD_BTN_MAX 32
 
-int g_tmKey  [KEY_MAX];   //キーを押している時間.
-int g_tmMouse[MOUSE_MAX]; //マウスを押下している時間.
+int g_tmKey   [KEY_MAX];     //キーを押している時間.
+int g_tmMouse [MOUSE_MAX];   //マウスを押下している時間.
+int g_tmPadBtn[PAD_BTN_MAX]; //コントローラボタンを押下している時間.
 
-//マウス入力の判定.
-BOOL IsPushMouse(int num) {
-	return (g_tmMouse[num] > 0); //押してるならTRUE.
-}
-int  IsPushMouseTime(int num) {
-	return g_tmMouse[num];       //押している時間.
-}
 //キー入力の判定.
-BOOL IsPushKey(int num) {
-	return (g_tmKey[num] > 0);   //押してるならTRUE.
+BOOL IsPushKey(int keyNum) {
+	return (g_tmKey[keyNum] > 0);     //押してるならTRUE.
 }
-int  IsPushKeyTime(int num) {
-	return g_tmKey[num];         //押している時間.
+int  IsPushKeyTime(int keyNum) {
+	return g_tmKey[keyNum];           //押している時間.
+}
+//マウス入力の判定.
+BOOL IsPushMouse(int mouseNum) {
+	return (g_tmMouse[mouseNum] > 0); //押してるならTRUE.
+}
+int  IsPushMouseTime(int mouseNum) {
+	return g_tmMouse[mouseNum];       //押している時間.
+}
+//コントローラ入力の判定.
+BOOL IsPushPadBtn(int btnNum) {
+	return (g_tmPadBtn[btnNum] > 0);  //押してるならTRUE.
+}
+int  IsPushPadBtnTime(int btnNum) {
+	return g_tmPadBtn[btnNum];        //押している時間.
 }
 
 //マウス座標取得.
-void GetMousePos(DBL_XY* pos) {
+void GetMousePos(DBL_XY* pos, BOOL isValidX, BOOL isValidY) {
 
-	INT_XY mPos;
+	INT_XY mPos{};
 	GetMousePoint(&mPos.x, &mPos.y); //取得.
 	
-	*pos = _dblXY(mPos); //double型にして代入.
+	//xを反映させる.
+	if (isValidX) {
+		pos->x = (double)mPos.x; //double型にして反映.
+	}
+	if (isValidY){
+		pos->y = (double)mPos.y; //double型にして反映.
+	}
+}
+//コントローラ操作取得.
+void GetJoyPadStick() {
+
 }
 
-//4方向移動操作.
+//4方向移動(キー操作)
 void InputKey4Dir(DBL_XY* pos, float speed) {
 
 	INT_XY pow{};  //移動力.
-	DBL_XY move{}; //求めた移動量.
 
 	//キー入力に応じて移動力を与える.
 	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_UP ||CheckHitKey(KEY_INPUT_W)) {
@@ -64,9 +83,40 @@ void InputKey4Dir(DBL_XY* pos, float speed) {
 		pow.x += +1;
 	}
 
+	//座標移動.
+	pos->x += Move4Dir(pow).x * speed;
+	pos->y += Move4Dir(pow).y * speed;
+}
+//4方向移動(コントローラ操作)
+void InputPad4Dir(DBL_XY* pos, float speed) {
+
+	INT_XY pow{};  //移動力.
+
+	//キー入力に応じて移動力を与える.
+	if (IsPushPadBtn(PAD_INPUT_UP)) {
+		pow.y += -1;
+	}
+	if (IsPushPadBtn(PAD_INPUT_DOWN)) {
+		pow.y += +1;
+	}
+	if (IsPushPadBtn(PAD_INPUT_LEFT)) {
+		pow.x += -1;
+	}
+	if (IsPushPadBtn(PAD_INPUT_RIGHT)) {
+		pow.x += +1;
+	}
+
+	//座標移動.
+	pos->x += Move4Dir(pow).x * speed;
+	pos->y += Move4Dir(pow).y * speed;
+}
+//移動4方向処理(斜め計算)
+DBL_XY Move4Dir(INT_XY pow){
+
+	DBL_XY move{}; //求めた移動量.
+
 	//移動力があれば.
 	if (pow.x != 0 || pow.y != 0) {
-
 		//角度にする.
 		double theta = atan2(pow.y, pow.x);
 		//移動量を求める.
@@ -76,10 +126,9 @@ void InputKey4Dir(DBL_XY* pos, float speed) {
 		if (fabs(move.y) < 0.0001) { move.y = 0; }
 	}
 
-	//座標移動.
-	pos->x += move.x * speed;
-	pos->y += move.y * speed;
+	return move;
 }
+
 //移動可能範囲内に補正する.
 void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
 
@@ -90,7 +139,7 @@ void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int dow
 }
 
 //ボタンの更新処理.
-void UpdateKeys() {
+void UpdateKey() {
 	
 	char key[KEY_MAX];
 	GetHitKeyStateAll(key); //押しているキー情報を取得.
@@ -115,6 +164,19 @@ void UpdateMouse() {
 		}
 		else {
 			g_tmMouse[i] = 0; //0秒にリセット.
+		}
+	}
+}
+//コントローラの更新処理.
+void UpdatePadBtn() {
+
+	for (int i = 0; i < PAD_BTN_MAX; i++) {
+		//押されているなら.
+		if (GetJoypadInputState(DX_INPUT_PAD1) & (1 << i)) { //And演算.
+			g_tmPadBtn[i]++;   //カウント.
+		}
+		else {
+			g_tmPadBtn[i] = 0; //0秒にリセット.
 		}
 	}
 }

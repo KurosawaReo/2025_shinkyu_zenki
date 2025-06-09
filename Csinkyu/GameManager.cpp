@@ -98,7 +98,8 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	UpdateKeys(); //キー入力更新.
+	UpdateKey();    //キー入力更新.
+	UpdatePadBtn(); //コントローラのボタン入力更新.
 
 	//シーン別.
 	switch (data.scene) 
