@@ -25,37 +25,34 @@
    ・小田島 →レーザーの跳ね返り
    ・黒澤　 →線で作る多角形の隕石(来る方向はランダム)
 /--------------------------------------------------------*/
-#define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
+//#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
 #include "Player.h"
-#include "Obstacle.h"
-#if defined ODAZIMA
-#include "Obstacle2.h"
 #include "Obstacle4.h"
 #include "Item.h"
-#else
-#include "Obstacle3.h"
+#if defined ALL_OBSTACLE
+#include "Obstacle.h"
+#include "Obstacle2.h"
 #endif
 
 #include "GameManager.h"
 
-//プレイヤーの実体.
-Player   player;
-//障害物の実体.
+#if defined ALL_OBSTACLE
 Obstacle obstacle[] = {
 	Obstacle( 80, 1,   0x00FF00),
 	Obstacle( 60, 0.5, 0x00FF00),
 	Obstacle(100, 1,   0x00FF00),
 	Obstacle(200, 1,   0x00FF00)
 };
-
-#if defined ODAZIMA
 Obstacle2 obstacle2;
-Obstacle4 obstacle4;
-Item  item;
-#else
-Obstacle3 obstacle3;
 #endif
+
+//障害物の実体.
+Obstacle4 obstacle4;
+//アイテムの実体.
+Item item;
+//プレイヤーの実体.
+Player player;
 
 //初期化(一回のみ行う)
 void GameManager::Init() {
@@ -64,17 +61,17 @@ void GameManager::Init() {
 
 	data.scene = SCENE_TITLE; //タイトル.
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Init(&data, &player);
 	}
-#if defined ODAZIMA
 	obstacle2.Init(&data, &player);
-	obstacle4.Init(&data, &player);
-	item.Init(&data, &player);
-#else
-	obstacle3.Init(&player);
 #endif
+
+	//障害物class.
+	obstacle4.Init(&data, &player);
+	//アイテムclass.
+	item.Init(&data, &player);
 	//プレイヤーclass.
 	player.Init(&data);
 
@@ -86,18 +83,18 @@ void GameManager::Reset() {
 
 	data.isSlow = FALSE; //スローモード解除.
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	obstacle[0].Reset({ 150, 150 }, 0);
 	obstacle[1].Reset({ 400, 150 }, 30);
 	obstacle[2].Reset({ 300, 300 }, 60);
 	obstacle[3].Reset({ 500, 300 }, 90);
-#if defined ODAZIMA
 	obstacle2.Reset();
-	obstacle4.Reset();
-	item.Reset();
-#else
-	obstacle3.Reset();
 #endif
+
+	//障害物class.
+	obstacle4.Reset();
+	//アイテムclass.
+	item.Reset();
 	//プレイヤーclass.
 	player.Reset({ 100, 100 }, TRUE);
 }
@@ -170,17 +167,17 @@ void GameManager::UpdateGame() {
 		}
 	}
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Update();
 	}
-#if defined ODAZIMA
 	obstacle2.Update();
-	obstacle4.Update();
-	item.Update();
-#else
-	obstacle3.Update();
 #endif
+
+	//障害物class.
+	obstacle4.Update();
+	//アイテムclass.
+	item.Update();
 	//プレイヤーclass.
 	player.Update();
 }
@@ -226,17 +223,17 @@ void GameManager::DrawEnd() {
 //オブジェクトの描画.
 void GameManager::DrawObjests() {
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Draw();
 	}
-#if defined ODAZIMA
 	obstacle2.Draw();
-	obstacle4.Draw();
-	item.Draw();
-#else
-	obstacle3.Draw();
 #endif
+
+	//障害物class.
+	obstacle4.Draw();
+	//アイテムclass.
+	item.Draw();
 	//プレイヤーclass.
 	player.Draw();
 }
