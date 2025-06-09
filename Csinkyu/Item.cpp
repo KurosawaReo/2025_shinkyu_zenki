@@ -85,7 +85,6 @@ BOOL Item::CheckHitPlayer(Player* player)
 	double dx = itemX - playerHit->pos.x;
 	double dy = itemY - playerHit->pos.y;
 	double distance = sqrt(dx * dx + dy * dy);
-
 	// アイテムのサイズを考慮した当たり判定
 	double itemRadius = (itemW + itemH) / 4.0; // アイテムの半径として計算
 
