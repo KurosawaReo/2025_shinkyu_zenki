@@ -13,9 +13,7 @@ void Obstacle3::Init(Player* _player)
 	LoadGraphST(&img, _T("image/enemy.png"));
 	//img.handle;
 	//img.size.x;
-	//img.size.y;
-	
-	Reset();
+	//img.size.y;	
 }
 void Obstacle3::Reset() 
 {

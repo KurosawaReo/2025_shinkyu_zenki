@@ -5,10 +5,6 @@
 #pragma once
 #include "Player.h"
 
-//#define MAX_L 100 //ミサイルが飛ぶ最大距離.
-//#define PI 3.14159//円周率.
-//#define LINE_MAXNUM 3000//描画する線の最大数.
-
 typedef struct tagLASER_DATA
 {
 	double x, y;      //現在の画像.
@@ -30,6 +26,7 @@ typedef struct tagLINE_DATA
 
 }LINE_DATA, * LPLINE_DATA;
 
+//継承元となるクラス(親)
 class Obstacle4main
 {
 protected:
@@ -44,11 +41,14 @@ protected:
 	MoveDir moveDir;  // 現在の移動方向.
 	GameData* data{};
 	Player* player{};
+
 public:
-    void Init(GameData*, Player*);
-	virtual void Reset(float _Hx, float _Hy, float _Hm) = 0;
-	void Update();
-	void Draw();
-	void enemy4Move();
+	//基本処理.
+	virtual void Init  (GameData*, Player*) = 0;
+	virtual void Reset (float _Hx, float _Hy, float _Hm) = 0;
+	        void Update();
+	        void Draw  ();
+	//移動系.
+	        void enemy4Move();
 	virtual void idou() = 0;
 };

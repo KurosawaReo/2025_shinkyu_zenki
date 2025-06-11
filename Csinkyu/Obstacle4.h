@@ -10,22 +10,20 @@
 //#define PI 3.14159//‰~ü—¦.
 //#define LINE_MAXNUM 3000//•`‰æ‚·‚éü‚ÌÅ‘å”.
 
-
+//Œp³æƒNƒ‰ƒX(q1)
 class Obstacle5 : public Obstacle4main
 {
-
 public:
-	void Reset(float _Hx, float _Hy, float _Hm)override;
+	void Init(GameData*, Player*);
+	void Reset(float _Hx, float _Hy, float _Hm) override;
 	void idou() override;
 };
 
+//Œp³æƒNƒ‰ƒX(q2)
 class Obstacle4 : public Obstacle4main
-
 {
-private:
-
 public:
-	void Reset(float _Hx, float _Hy, float _Hm)override;
+	void Init(GameData*, Player*);
+	void Reset(float _Hx, float _Hy, float _Hm) override;
 	void idou() override;
-
 };

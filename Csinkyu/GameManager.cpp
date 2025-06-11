@@ -78,9 +78,8 @@ void GameManager::Init() {
 #endif
 
 	//障害物class.
-	
-		obstacle4.Init(&data, &player);
-		obstacle5.Init(&data, &player);
+	obstacle4.Init(&data, &player);
+	obstacle5.Init(&data, &player);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -103,8 +102,8 @@ void GameManager::Reset() {
 #endif
 
 	//障害物class.
-	obstacle4.Reset(0, 30, 3);
-	obstacle5.Reset(0, 30, 3);
+	obstacle4.Reset(WINDOW_WID/2, 30, 3);
+	obstacle5.Reset(WINDOW_WID/2, 30, 3);
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
@@ -185,10 +184,10 @@ void GameManager::UpdateGame() {
 	}
 	obstacle2.Update();
 #endif
-		obstacle4.Update();
-		obstacle5.Update();
+
 	//障害物class.
-	//obstacle4.Update();
+	obstacle4.Update();
+	obstacle5.Update();
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.
@@ -242,11 +241,10 @@ void GameManager::DrawObjests() {
 	}
 	obstacle2.Draw();
 #endif
-		obstacle4.Draw();
-		obstacle5.Draw();
 
 	//障害物class.
-	//obstacle4.Draw();
+	obstacle4.Draw();
+	obstacle5.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.
