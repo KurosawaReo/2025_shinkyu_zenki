@@ -56,8 +56,8 @@ Obstacle2 obstacle2;
 #endif
 
 //障害物の実体.
-Obstacle4_2 obstacle4;
-Obstacle4_1 obstacle5;
+Obstacle4_1 obstacle4_1;
+Obstacle4_2 obstacle4_2;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -82,8 +82,8 @@ void GameManager::Init() {
 #endif
 
 	//障害物class.
-	obstacle4.Init(&data, &player);
-	obstacle5.Init(&data, &player);
+	obstacle4_1.Init(&data, &player);
+	obstacle4_2.Init(&data, &player);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -106,8 +106,8 @@ void GameManager::Reset() {
 #endif
 
 	//障害物class.
-	obstacle4.Reset(WINDOW_WID/2, 0, 3);
-	obstacle5.Reset(WINDOW_WID/2, 0, 3);
+	obstacle4_1.Reset(WINDOW_WID/2, 0, 3);
+	obstacle4_2.Reset(WINDOW_WID/2, 0, 3);
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
@@ -190,8 +190,8 @@ void GameManager::UpdateGame() {
 #endif
 
 	//障害物class.
-	obstacle4.Update();
-	obstacle5.Update();
+	obstacle4_1.Update();
+	obstacle4_2.Update();
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.
@@ -265,8 +265,8 @@ void GameManager::DrawObjests() {
 #endif
 
 	//障害物class.
-	obstacle4.Draw();
-	obstacle5.Draw();
+	obstacle4_1.Draw();
+	obstacle4_2.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.
