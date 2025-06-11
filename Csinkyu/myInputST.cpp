@@ -71,16 +71,20 @@ void InputKey4Dir(DBL_XY* pos, float speed) {
 	INT_XY pow{}; //à⁄ìÆóÕ.
 
 	//ÉLÅ[ì¸óÕÇ…âûÇ∂Çƒà⁄ìÆóÕÇó^Ç¶ÇÈ.
-	if (CheckHitKey(KEY_INPUT_UP)   ||CheckHitKey(KEY_INPUT_W)) {
+	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_UP ||CheckHitKey(KEY_INPUT_W)) {
+		//printfDx(_T("a"));
 		pow.y += -1;
 	}
-	if (CheckHitKey(KEY_INPUT_DOWN) ||CheckHitKey(KEY_INPUT_S)) {
+	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_DOWN ||CheckHitKey(KEY_INPUT_S)) {
+		//printfDx(_T("b"));
 		pow.y += +1;
 	}
-	if (CheckHitKey(KEY_INPUT_LEFT) ||CheckHitKey(KEY_INPUT_A)) {
+	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_LEFT ||CheckHitKey(KEY_INPUT_A)) {
+		//printfDx(_T("c"));
 		pow.x += -1;
 	}
-	if (CheckHitKey(KEY_INPUT_RIGHT)||CheckHitKey(KEY_INPUT_D)) {
+	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_RIGHT ||CheckHitKey(KEY_INPUT_D)) {
+		//printfDx(_T("d"));
 		pow.x += +1;
 	}
 
