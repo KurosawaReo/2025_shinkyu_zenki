@@ -147,15 +147,10 @@ void GameManager::Draw() {
 //シーン別更新.
 void GameManager::UpdateTitle() 
 {
-<<<<<<< HEAD
-	//SPACEが押された瞬間、ゲーム開始.
-	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_1 ||IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
-=======
 	//特定の操作でゲーム開始.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
 		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
 	{
->>>>>>> main
 		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
@@ -196,15 +191,10 @@ void GameManager::UpdateGame() {
 }
 void GameManager::UpdateEnd() {
 
-<<<<<<< HEAD
-	//SPACEが押された瞬間、タイトルへ.
-	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_1||IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
-=======
 	//特定の操作でタイトルへ.
 	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
 		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
 	{
->>>>>>> main
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
 	}
