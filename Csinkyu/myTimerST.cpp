@@ -1,6 +1,6 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/06/09
+   ver.2025/06/10
 
    DxLibで使う用のオリジナル時間関数.
 */
@@ -20,10 +20,10 @@ float Timer::GetTime() {
 
 	switch (mode)
 	{
-		case CountUp:   
+		case CountUp:
 			ret = initTime + (float)(ed - stTime)/1000; //タイマー増加.
 			break;
-		case CountDown: 
+		case CountDown:
 			ret = initTime - (float)(ed - stTime)/1000; //タイマー減少.
 			ret = max(ret, 0); //下限は0秒.
 			break;

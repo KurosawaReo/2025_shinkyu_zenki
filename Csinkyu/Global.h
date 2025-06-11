@@ -121,36 +121,38 @@ struct GameData
 };
 
 // - 定数 -
-#define IS_WINDOW_MODE			(TRUE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE				(TRUE)			//ウィンドウモードにするか.
 
-#define WINDOW_WID				(600)			//ウィンドウの横幅.
-#define WINDOW_HEI				(480)			//ウィンドウの縦幅.
-#define WINDOW_COLOR_BIT		(32)			//ウィンドウのカラーbit数.
+#define WINDOW_WID					(600)			//ウィンドウの横幅.
+#define WINDOW_HEI					(480)			//ウィンドウの縦幅.
+#define WINDOW_COLOR_BIT			(32)			//ウィンドウのカラーbit数.
 
-#define WAIT_LOOP_MS			(1000/60)		//ループ処理の待機時間(m秒)
+#define WAIT_LOOP_MS				(1000/60)		//ループ処理の待機時間(m秒)
 
-#define SLOW_MODE_TIME          (5)             //スローモード制限時間.
-#define SLOW_MODE_SPEED			(0.20f)			//スローモード速度倍率.
+#define SLOW_MODE_TIME				(5)             //スローモード制限時間.
+#define SLOW_MODE_SPEED				(0.20f)			//スローモード速度倍率.
 
-#define PLAYER_SIZE				(20)			//プレイヤーサイズ.
-#define PLAYER_MOVE_SPEED		(4)				//プレイヤー移動速度.
-#define PLAYER_HIT_R			(10)			//プレイヤーの当たり判定円の半径.
+#define PLAYER_SIZE					(20)			//プレイヤーサイズ.
+#define PLAYER_MOVE_SPEED			(4)				//プレイヤー移動速度.
+#define PLAYER_HIT_R				(10)			//プレイヤーの当たり判定円の半径.
 
-#define ITEM_SIZE				(20)			//アイテムのサイズ.
-#define ITEM_SPEED				(4)				//アイテムの移動スピード.  
-#define ITEM_RESPAWN_TIME       (480)            //アイテム復活時間(60フレーム,1秒).
+#define ITEM_SIZE					(20)			//アイテムサイズ.
+#define ITEM_SPEED					(9)				//アイテム移動スピード.  
+#define ITEM_RESPAWN_TIME			(480)           //アイテム復活時間.
 
-#define OBSTACLE2_SPAN			(50)			//障害物の発射間隔.
-#define OBSTACLE2_SPEED			(4.0)			//障害物の速度.
-#define OBSTACLE2_LIM_F			(80)			//最大追跡フレーム数.
+#define OBSTACLE2_SPAN				(80)			//障害物の発射間隔.
+#define OBSTACLE2_SPEED				(3.0)			//障害物の速度.
+#define	OBSTACLE2_ROT_MAX			(5.0)			//障害物の追尾力(1フレームで回転できる最大度数)
+#define OBSTACLE2_LIM_F				(80)			//最大追跡フレーム数.
 
-#define OBSTACLE3_SIZE			(20)			//障害物サイズ.
-#define OBSTACLE3_TRACK_POW		(8)				//障害物の追尾力.
-#define OBSTACLE3_SPEED			(3)				//障害物の速度.
+#define OBSTACLE3_SIZE				(20)			//障害物サイズ.
+#define OBSTACLE3_TRACK_POW			(8)				//障害物の追尾力.
+#define OBSTACLE3_SPEED				(3)				//障害物の速度.
 
-#define OBSTACLE4_SHOT_RESET	(50)			//障害物の発射リセット時間.
-#define OBSTACLE4_SHOT_START	(30)			//障害物の発射開始時間.
-#define OBSTACLE4_SHOT_SPAN		(15)			//障害物の発射間隔時間.
-#define OBSTACLE4_SPEED			(100)			//障害物の速度.
-#define OBSTACLE4_MAX_L			(100)			//障害物が飛ぶ最大距離.
-#define OBSTACLE4_LINE_MAX		(1000)			//障害物で描画する線の最大数.
+#define OBSTACLE4_OUTER_MARGIN		(20)			//砲台の周回時の外側余白.
+#define OBSTACLE4_SHOT_RESET		(60)			//砲台の発射リセット時間.
+#define OBSTACLE4_SHOT_START		(20)			//砲台の発射開始時間.
+#define OBSTACLE4_SHOT_SPAN			(10)			//砲台の発射間隔時間.
+#define OBSTACLE4_LASER_SPEED		(100)			//レーザーの速度.
+#define OBSTACLE4_LASER_LIM			(100)			//レーザーが飛ぶ最大距離.
+#define OBSTACLE4_LASER_LINE_MAX	(1000)			//レーザーで描画する線の最大数.
