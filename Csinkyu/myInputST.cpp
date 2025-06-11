@@ -1,11 +1,11 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/10
+   ver.2025/06/11
 
    DxLibで使う用のオリジナル入力関数.
 */
 #if !defined DEF_GLOBAL_H
-#include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myInputST.h"
@@ -71,20 +71,16 @@ void InputKey4Dir(DBL_XY* pos, float speed) {
 	INT_XY pow{}; //移動力.
 
 	//キー入力に応じて移動力を与える.
-	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_UP ||CheckHitKey(KEY_INPUT_W)) {
-		//printfDx(_T("a"));
+	if (CheckHitKey(KEY_INPUT_UP)   ||CheckHitKey(KEY_INPUT_W)) {
 		pow.y += -1;
 	}
-	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_DOWN ||CheckHitKey(KEY_INPUT_S)) {
-		//printfDx(_T("b"));
+	if (CheckHitKey(KEY_INPUT_DOWN) ||CheckHitKey(KEY_INPUT_S)) {
 		pow.y += +1;
 	}
-	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_LEFT ||CheckHitKey(KEY_INPUT_A)) {
-		//printfDx(_T("c"));
+	if (CheckHitKey(KEY_INPUT_LEFT) ||CheckHitKey(KEY_INPUT_A)) {
 		pow.x += -1;
 	}
-	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_RIGHT ||CheckHitKey(KEY_INPUT_D)) {
-		//printfDx(_T("d"));
+	if (CheckHitKey(KEY_INPUT_RIGHT)||CheckHitKey(KEY_INPUT_D)) {
 		pow.x += +1;
 	}
 

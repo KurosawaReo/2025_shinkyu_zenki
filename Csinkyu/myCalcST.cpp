@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/05
+   ver.2025/06/11
 
    DxLibで使う用のオリジナル計算関数.
 */
@@ -97,6 +97,17 @@ BOOL IsHitLine(const Line* line, const Circle* cir) {
 	}
 }
 
+//値の抽選.
+int RndNum(int st, int ed) {
+	
+	int rnd = 0;
+	//edがst以上の時のみ抽選(0割回避)
+	assert(st <= ed);
+	if (st <= ed) {
+		rnd = rand() % ((ed - st)+1); //st～endの差で抽選.
+	}
+	return st + rnd;
+}
 //距離計算.
 double CalcDis(INT_XY pos1, INT_XY pos2) {
 

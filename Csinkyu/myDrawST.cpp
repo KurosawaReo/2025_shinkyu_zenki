@@ -1,11 +1,11 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/06/06
+   ver.2025/06/11
    
    DxLibで使う用のオリジナル描画関数.
 */
 #if !defined DEF_GLOBAL_H
-#include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myDrawST.h"
@@ -125,18 +125,22 @@ int DrawStringST(const STR_DRAW* data, BOOL isCenter, int font) {
 	int x = data->pos.x;
 	int y = data->pos.y;
 
-	//中央座標モード.
-	if (isCenter) {
-		x = data->pos.x - GetTextSize(data->text).x/2;
-		y = data->pos.y - GetTextSize(data->text).y/2;
-	}
-
 	//デフォルトフォント.
 	if (font < 0) {
+		//中央座標モード.
+		if (isCenter) {
+			x = data->pos.x - GetTextSize(data->text).x/2;
+			y = data->pos.y - GetTextSize(data->text).y/2;
+		}
 		ret = DrawString(x, y, data->text, data->color);
 	}
 	//フォント設定あり.
 	else {
+		//中央座標モード.
+		if (isCenter) {
+			x = data->pos.x - GetTextSize(data->text, font).x/2;
+			y = data->pos.y - GetTextSize(data->text, font).y/2;
+		}
 		ret = DrawStringToHandle(x, y, data->text, data->color, font);
 	}
 
@@ -193,13 +197,21 @@ int DrawModiStringST(const STR_DRAW_MODI* data, int font) {
 
 	return ret;
 }
+
 //テキストのサイズ取得.
-INT_XY GetTextSize(const TCHAR str[]) {
+INT_XY GetTextSize(const TCHAR str[], int font) {
 	
 	INT_XY size;
-	int    line;
-	//サイズと行数の取得.
-	GetDrawStringSize(&size.x, &size.y, &line, str, 255);
+	int    line; //無視.
+
+	//デフォルトフォント.
+	if (font < 0) {
+		GetDrawStringSize(&size.x, &size.y, &line, str, 255);
+	}
+	//フォント設定あり.
+	else {
+		GetDrawStringSizeToHandle(&size.x, &size.y, &line, str, 255, font);
+	}
 
 	return size;
 }

@@ -11,19 +11,19 @@
 //#define LINE_MAXNUM 3000//描画する線の最大数.
 
 //継承先クラス(子1)
-class Obstacle5 : public Obstacle4main
+class Obstacle4_1 : public Obstacle4main
 {
 public:
 	void Init(GameData*, Player*);
 	void Reset(float _Hx, float _Hy, float _Hm) override;
-	void idou() override;
+	void Move() override;
 };
 
 //継承先クラス(子2)
-class Obstacle4 : public Obstacle4main
+class Obstacle4_2 : public Obstacle4main
 {
 public:
 	void Init(GameData*, Player*);
 	void Reset(float _Hx, float _Hy, float _Hm) override;
-	void idou() override;
+	void Move() override;
 };

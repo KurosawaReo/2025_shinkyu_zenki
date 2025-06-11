@@ -34,13 +34,14 @@ protected:
 	float Hm{};        //砲台の移動方向.
 	float Hsc{};       //砲台のショット間隔カウンタ.
 	float HscTm{};     //砲台がショットする時間.
+	MoveDir moveDir{};  // 現在の移動方向.
 
-	LASER_DATA ld[OBSTACLE4_LASER_LIM]{};      //ホーミングレーザーのデータ.
+	LASER_DATA ld[OBSTACLE4_LASER_LIM]{};        //ホーミングレーザーのデータ.
 	LINE_DATA  line[OBSTACLE4_LASER_LINE_MAX]{}; //ライン描画用データ.
 	IMG        img{};
-	MoveDir moveDir;  // 現在の移動方向.
-	GameData* data{};
-	Player* player{};
+
+	GameData*  data{};
+	Player*    player{};
 
 public:
 	//基本処理.
@@ -50,5 +51,5 @@ public:
 	        void Draw  ();
 	//移動系.
 	        void enemy4Move();
-	virtual void idou() = 0;
+	virtual void Move() = 0;
 };

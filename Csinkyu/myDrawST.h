@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/06/06
+   ver.2025/06/11
 
    DxLibで使う用のオリジナル描画関数.
 */
@@ -82,4 +82,4 @@ int    DrawRectGraphST (const IMG_DRAW_RECT* data);
 int    DrawStringST    (const STR_DRAW*      data, BOOL isCenter, int font = -1);
 int    DrawRotaStringST(const STR_DRAW_ROTA* data, int font = -1);
 int    DrawModiStringST(const STR_DRAW_MODI* data, int font = -1);
-INT_XY GetTextSize     (const TCHAR str[]);
+INT_XY GetTextSize     (const TCHAR str[], int font = -1);

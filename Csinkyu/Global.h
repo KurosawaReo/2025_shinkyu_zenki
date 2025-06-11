@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/06/06
+   ver.2025/06/11
 
    共通で使用する型やマクロを入れる所.
 */
@@ -13,6 +13,7 @@
 #if true
   #define _USE_MATH_DEFINES  //math定数を使うのに必要.
   #define _CRT_SECURE_NO_WARNINGS
+  #include <stdlib.h>
   #include <assert.h>
   #include <math.h>
   #include <time.h>
@@ -45,7 +46,7 @@ struct DBL_XY
 struct Circle
 {
 	DBL_XY pos;  //座標.
-	float  r;    //半径.
+	int    r;    //半径.
 	UINT   clr;  //色.
 };
 //四角形データ.
@@ -85,7 +86,7 @@ struct ObjectCir
 	Circle cir{}; //当たり判定と座標.
 	IMG    img{}; //画像.
 
-	ObjectCir(DBL_XY pos, float r, UINT clr) :
+	ObjectCir(DBL_XY pos, int r, UINT clr) :
 		cir({ pos, r, clr })
 	{}
 };
@@ -118,6 +119,8 @@ struct GameData
 {
 	Scene scene;     //シーンの記録用.
 	BOOL  isSlow;    //スローモードかどうか.
+	int   font1;     //フォント.
+	int   font2;     //フォント.
 };
 
 // - 定数 -
@@ -138,7 +141,7 @@ struct GameData
 
 #define ITEM_SIZE					(20)			//アイテムサイズ.
 #define ITEM_SPEED					(9)				//アイテム移動スピード.  
-#define ITEM_RESPAWN_TIME			(480)           //アイテム復活時間.
+#define ITEM_RESPAWN_TIME			(300)           //アイテム復活時間.
 
 #define OBSTACLE2_SPAN				(80)			//障害物の発射間隔.
 #define OBSTACLE2_SPEED				(3.0)			//障害物の速度.
