@@ -18,8 +18,6 @@ void Item::Init(GameData* _gamedata, Player* _player)
 		srand((unsigned int)time(NULL));
 		seedSet = true;
 	}*/
-
-	Reset(); // リセット関数を呼び出し
 }
 
 // アイテムのリセット（再生成用）

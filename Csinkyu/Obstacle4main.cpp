@@ -6,26 +6,6 @@
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
 
-//stdafx.hに入ってるため不要.
-//#include <math.h>      // 数学関数を使用するためのヘッダーファイル
-//#include "DxLib.h"     // DXライブラリのヘッダーファイルをインクルード
-//#include "Global.h"
-
-/**
- * @brief 障害物の初期化処理
- * @param _player プレイヤーオブジェクトへのポインタ
- */
-void Obstacle4main::Init(GameData* _data, Player* _player)
-{
-	data = _data;
-	player = _player;  // プレイヤーオブジェクトを参照として保存
-
-	Reset(0, 30, 3);
-}
-
-//リセット.
-
-
 /**
  * @brief 障害物の更新処理
  * プレイヤーが有効な場合のみ障害物の動きを更新
@@ -69,8 +49,8 @@ void Obstacle4main::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	// 動く砲台を描画
-	Box box = { {Hx, Hy}, {8, 8}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
-	DrawBoxST(&box, TRUE);
+	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
+	//DrawBoxST(&box, TRUE, FALSE);
 }
 
 /**
@@ -164,7 +144,7 @@ void Obstacle4main::enemy4Move()
 	// 砲台の移動とレーザー発射処理
 	{
 		//移動処理.
-		 idou();
+		idou();
            
 		// 発射カウンタを減少
 		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
@@ -201,6 +181,5 @@ void Obstacle4main::enemy4Move()
 			Hsc = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
 			HscTm = OBSTACLE4_SHOT_START;
 		}
-	}
-	
+	}	
 }
