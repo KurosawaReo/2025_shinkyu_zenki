@@ -1,11 +1,11 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/09
+   ver.2025/06/11
 
    DxLibで使う用のオリジナル入力関数.
 */
 #if !defined DEF_GLOBAL_H
-#include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafxがなければここで定義.
 #endif
 
 #include "myInputST.h"
@@ -16,8 +16,8 @@
 #define PAD_BTN_MAX 32
 
 int g_tmKey   [KEY_MAX];     //キーを押している時間.
-int g_tmMouse [MOUSE_MAX];   //マウスを押下している時間.
-int g_tmPadBtn[PAD_BTN_MAX]; //コントローラボタンを押下している時間.
+int g_tmMouse [MOUSE_MAX];   //マウスを押下している時間.(bitフラグで管理)
+int g_tmPadBtn[PAD_BTN_MAX]; //コントローラボタンを押下している時間.(bitフラグで管理)
 
 //キー入力の判定.
 BOOL IsPushKey(int keyNum) {
@@ -28,17 +28,21 @@ int  IsPushKeyTime(int keyNum) {
 }
 //マウス入力の判定.
 BOOL IsPushMouse(int mouseNum) {
-	return (g_tmMouse[mouseNum] > 0); //押してるならTRUE.
+	int num = (int)log2(mouseNum);    //2進数bitを何桁目かに変換.
+	return (g_tmMouse[num] > 0);      //押してるならTRUE.
 }
 int  IsPushMouseTime(int mouseNum) {
-	return g_tmMouse[mouseNum];       //押している時間.
+	int num = (int)log2(mouseNum);    //2進数bitを何桁目かに変換.
+	return g_tmMouse[num];            //押している時間.
 }
 //コントローラ入力の判定.
 BOOL IsPushPadBtn(int btnNum) {
-	return (g_tmPadBtn[btnNum] > 0);  //押してるならTRUE.
+	int num = (int)log2(btnNum);      //2進数bitを何桁目かに変換.
+	return (g_tmPadBtn[num] > 0);     //押している時間.
 }
 int  IsPushPadBtnTime(int btnNum) {
-	return g_tmPadBtn[btnNum];        //押している時間.
+	int num = (int)log2(btnNum);      //2進数bitを何桁目かに変換.
+	return g_tmPadBtn[num];           //押している時間.
 }
 
 //マウス座標取得.
@@ -51,19 +55,20 @@ void GetMousePos(DBL_XY* pos, BOOL isValidX, BOOL isValidY) {
 	if (isValidX) {
 		pos->x = (double)mPos.x; //double型にして反映.
 	}
+	//yを反映させる.
 	if (isValidY){
 		pos->y = (double)mPos.y; //double型にして反映.
 	}
 }
-//コントローラ操作取得.
-void GetJoyPadStick() {
+//コントローラスティック操作取得.
+void GetJoypadStick() {
 
 }
 
 //4方向移動(キー操作)
 void InputKey4Dir(DBL_XY* pos, float speed) {
 
-	INT_XY pow{};  //移動力.
+	INT_XY pow{}; //移動力.
 
 	//キー入力に応じて移動力を与える.
 	if (CheckHitKey(KEY_INPUT_UP)   ||CheckHitKey(KEY_INPUT_W)) {
@@ -155,7 +160,7 @@ void UpdateMouse() {
 
 	for (int i = 0; i < MOUSE_MAX; i++) {
 		//押されているなら.
-		if ((GetMouseInput() & i) != 0) { //And演算.
+		if ((GetMouseInput() & (1 << i)) != 0) { //And演算で抽出.
 			g_tmMouse[i]++;   //カウント.
 		}
 		else {
@@ -168,7 +173,7 @@ void UpdatePadBtn() {
 
 	for (int i = 0; i < PAD_BTN_MAX; i++) {
 		//押されているなら.
-		if (GetJoypadInputState(DX_INPUT_PAD1) & (1 << i)) { //And演算.
+		if (GetJoypadInputState(DX_INPUT_PAD1) & (1 << i)) { //And演算で抽出.
 			g_tmPadBtn[i]++;   //カウント.
 		}
 		else {

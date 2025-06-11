@@ -7,9 +7,10 @@
 #include "Item.h"
 
 //初期化.
-void Item::Init(GameData* _data)
+void Item::Init(GameData* _gamedata, Player* _player)
 {
-	p_data = _data;
+	p_gamedata = _gamedata;
+	p_player   = _player;
 
 	// ランダムシードを設定（初回のみ） >>>GameManagerの方で初期化済.
 	/*static bool seedSet = false;
@@ -17,16 +18,14 @@ void Item::Init(GameData* _data)
 		srand((unsigned int)time(NULL));
 		seedSet = true;
 	}*/
-
-	Reset(); // リセット関数を呼び出し
 }
 
 // アイテムのリセット（再生成用）
 void Item::Reset()
 {
 	// 座標の初期化
-	itemX = (double)(rand() % 600 + 20);  // X座標をランダムに設定（20～620の範囲）
-	itemY = -20.0;                        // 画面上部の少し上から開始
+	itemX = (double)RndNum(itemW, WINDOW_WID-itemW); // X座標をランダムに設定
+	itemY = -itemH - 50;                             // 画面上部の少し上から開始
 	Ix = (float)itemX;
 	Iy = (float)itemY;
 
@@ -37,7 +36,8 @@ void Item::Reset()
 	// サイズと色の設定
 	size.x = 20;
 	size.y = 20;
-	clr = GetColor(0, 255, 250);
+	clr[0] = GetColor(  0, 255, 250);
+	clr[1] = GetColor(128, 255, 250); //0xA0FFFA
 
 	// アイテムの状態設定
 	active = TRUE;
@@ -52,13 +52,13 @@ void Item::Reset()
 void Item::Update()
 {
 	//カウンタ.
-	itemCounter += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	itemCounter += (p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1;
 
 	if (active && itemFlag) {
 		ItemMove();
 
 		// 画面下部を超えたら再生成
-		if (itemY > 480) {
+		if (itemY > WINDOW_HEI + itemH) {
 			Reset(); // 新しいアイテムとして再生成
 		}
 	}
@@ -70,23 +70,24 @@ void Item::Update()
 			Reset();
 		}
 	}
+
+	CheckHitPlayer(); //当たり判定.
 }
 
 // プレイヤーとの当たり判定
-BOOL Item::CheckHitPlayer(Player* player)
+BOOL Item::CheckHitPlayer()
 {
-	if (!active || !itemFlag || !player->GetActive()) {
+	if (!active || !itemFlag || !p_player->GetActive()) {
 		return FALSE;
 	}
 
 	// プレイヤーの位置と当たり判定円を取得
-	Circle* playerHit = player->GetHit();
+	Circle* playerHit = p_player->GetHit();
 
 	// アイテムの矩形とプレイヤーの円の当たり判定
 	double dx = itemX - playerHit->pos.x;
 	double dy = itemY - playerHit->pos.y;
 	double distance = sqrt(dx * dx + dy * dy);
-
 	// アイテムのサイズを考慮した当たり判定
 	double itemRadius = (itemW + itemH) / 4.0; // アイテムの半径として計算
 
@@ -133,8 +134,11 @@ void Item::Draw()
 		Iy = (float)itemY;
 
 		// 描画（既存のコードを活用）
-		Box box = { {Ix, Iy}, {itemW, itemH}, clr }; //{pos}, {size}, color.
-		DrawBoxST(&box, TRUE);
+		Box box1 = { {Ix, Iy}, {itemW,   itemH  }, clr[0] }; //{pos}, {size}, color.
+		Box box2 = { {Ix, Iy}, {itemW-2, itemH-2}, clr[1] }; //{pos}, {size}, color.
+
+		DrawBoxST(&box1, TRUE, FALSE);
+		DrawBoxST(&box2, TRUE, FALSE);
 
 		// 画像を使用する場合のコード例
 		// if (itemGraph != -1) {
@@ -148,7 +152,7 @@ void Item::ItemMove()
 	//落下速度.
 	double fallSpeed = ITEM_SPEED + (rand() % 3);  // speed～speed+2の乱数.
 	//スローモード.
-	itemY += fallSpeed * (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	itemY += fallSpeed * (p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1;
 
 #if false //よく分からん機能.
 	// 左右にも少しランダムな動きを追加（オプション）

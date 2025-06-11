@@ -8,12 +8,13 @@
 class Player
 {
 private:
+	Circle hit{};       //プレイヤーの当たり判定円.
 	int    graph{};     //画像データ.
 	BOOL   active{};    //有効か.
-	Circle hit{};       //プレイヤーの当たり判定円.
-	BOOL   isDebug{};   //デバッグ用.
 	
 	GameData* p_data{}; //ゲームデータ.
+
+	BOOL   isDebug{};   //デバッグ用.
 
 public:
 

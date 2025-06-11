@@ -17,8 +17,6 @@ void Obstacle2::Init(GameData* _data, Player* _player)
 	// img.handle;  読み込んだ画像.
 	// img.size.x;  画像の幅
 	// img.size.y;/ 画像の高さ
-
-	Reset();
 }
 
 // リセット
@@ -150,7 +148,7 @@ void Obstacle2::enemyMove()
 			while (angleDiff < -M_PI) angleDiff += 2 * M_PI;
 
 			// 一度に回転できる最大角度を制限して滑らかな追尾を実現
-			double turnSpeed = (M_PI / 180.0) * 5.0; // 1フレームあたり最大5度回転
+			double turnSpeed = (M_PI/180.0) * OBSTACLE2_ROT_MAX;
 
 			// 角度を更新（差がほぼ0なら調整しない、差が正なら右回り、負なら左回りに調整）
 			//fabsは少数の絶対値を計算する関数

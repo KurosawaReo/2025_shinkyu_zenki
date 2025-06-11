@@ -1,6 +1,6 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/06/09
+   ver.2025/06/10
 
    DxLibで使う用のオリジナル時間関数.
 */
@@ -16,12 +16,12 @@ enum TimerMode
 class Timer
 {
 private:
+	TimerMode mode{};     //計測モード.
+
 	float     initTime{}; //初期時間.
 	clock_t   stTime{};   //計測開始時刻.
 	clock_t   edTime{};   //計測終了時刻.
-
 	BOOL      isMove{};   //計測中か.
-	TimerMode mode{};     //計測モード.
 
 public:
 	//コンストラクタ.

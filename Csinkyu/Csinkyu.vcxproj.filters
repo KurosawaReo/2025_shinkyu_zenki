@@ -14,6 +14,7 @@
     <ClCompile Include="Obstacle4.cpp" />
     <ClCompile Include="myTimerST.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Obstacle4main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="Obstacle4.h" />
     <ClInclude Include="myTimerST.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="Obstacle4main.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\Player.png" />
