@@ -39,8 +39,8 @@ private:
 	float Hsc{};       //砲台のショット間隔カウンタ.
 	float HscTm{};     //砲台がショットする時間.
 
-	LASER_DATA ld[OBSTACLE4_MAX_L]{};      //ホーミングレーザーのデータ.
-	LINE_DATA  line[OBSTACLE4_LINE_MAX]{}; //ライン描画用データ.
+	LASER_DATA ld[OBSTACLE4_LASER_LIM]{};      //ホーミングレーザーのデータ.
+	LINE_DATA  line[OBSTACLE4_LASER_LINE_MAX]{}; //ライン描画用データ.
 	IMG        img{};
 
 	GameData*  data{};

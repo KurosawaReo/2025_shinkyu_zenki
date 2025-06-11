@@ -17,38 +17,50 @@
    スローモードの解除まで完成。
    ・アイテムの落下速度、定数いじっても変わらない。
    ・とる、こわすをどうするか考える。
+
+   2025/06/09:
+   "こわす"の方針決定。
+   
+   1.線で構成された多角形の隕石が定期的に降ってくる(全方向からランダム)
+   2.アイテムを取るとレーザーを反射するようになり、拡散するように飛んでいく。
+   3.近くに隕石がある場合、隕石に向かって飛んでいく。
+   4.反射したレーザーが隕石に当たると壊れる(可能なら壊れるアニメーションを入れたい)
+   課題点: どうやって隕石の座標を取得するか.
+
+   小田島 →レーザーの反射
+   黒澤　 →線で構成された多角形の隕石
+
+   [余裕があれば]
+   ・FPSはm秒待機ではなく、時間計測で測りたい.
 /--------------------------------------------------------*/
-#define ODAZIMA //これを定義すると小田島作の障害物に切り替え.
+#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
 #include "Player.h"
-#include "Obstacle.h"
-#if defined ODAZIMA
-#include "Obstacle2.h"
 #include "Obstacle4.h"
 #include "Item.h"
-#else
-#include "Obstacle3.h"
+#if defined ALL_OBSTACLE
+#include "Obstacle.h"
+#include "Obstacle2.h"
 #endif
 
 #include "GameManager.h"
 
-//プレイヤーの実体.
-Player   player;
-//障害物の実体.
+#if defined ALL_OBSTACLE
 Obstacle obstacle[] = {
 	Obstacle( 80, 1,   0x00FF00),
 	Obstacle( 60, 0.5, 0x00FF00),
 	Obstacle(100, 1,   0x00FF00),
 	Obstacle(200, 1,   0x00FF00)
 };
-
-#if defined ODAZIMA
 Obstacle2 obstacle2;
-Obstacle4 obstacle4;
-Item  item;
-#else
-Obstacle3 obstacle3;
 #endif
+
+//障害物の実体.
+Obstacle4 obstacle4;
+//アイテムの実体.
+Item item;
+//プレイヤーの実体.
+Player player;
 
 //初期化(一回のみ行う)
 void GameManager::Init() {
@@ -57,17 +69,17 @@ void GameManager::Init() {
 
 	data.scene = SCENE_TITLE; //タイトル.
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Init(&data, &player);
 	}
-#if defined ODAZIMA
 	obstacle2.Init(&data, &player);
-	obstacle4.Init(&data, &player);
-	item.Init(&data);
-#else
-	obstacle3.Init(&player);
 #endif
+
+	//障害物class.
+	obstacle4.Init(&data, &player);
+	//アイテムclass.
+	item.Init(&data, &player);
 	//プレイヤーclass.
 	player.Init(&data);
 
@@ -79,18 +91,18 @@ void GameManager::Reset() {
 
 	data.isSlow = FALSE; //スローモード解除.
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	obstacle[0].Reset({ 150, 150 }, 0);
 	obstacle[1].Reset({ 400, 150 }, 30);
 	obstacle[2].Reset({ 300, 300 }, 60);
 	obstacle[3].Reset({ 500, 300 }, 90);
-#if defined ODAZIMA
 	obstacle2.Reset();
-	obstacle4.Reset();
-	item.Reset();
-#else
-	obstacle3.Reset();
 #endif
+
+	//障害物class.
+	obstacle4.Reset();
+	//アイテムclass.
+	item.Reset();
 	//プレイヤーclass.
 	player.Reset({ 100, 100 }, TRUE);
 }
@@ -135,14 +147,21 @@ void GameManager::Draw() {
 //シーン別更新.
 void GameManager::UpdateTitle() 
 {
+<<<<<<< HEAD
 	//SPACEが押された瞬間、ゲーム開始.
 	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_1 ||IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+=======
+	//特定の操作でゲーム開始.
+	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
+		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	{
+>>>>>>> main
 		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
 }
 void GameManager::UpdateGame() {
-
+	
 #if false
 	//稼働してなければ.
 	if (!tmSlowMode.GetIsMove()) {
@@ -161,26 +180,31 @@ void GameManager::UpdateGame() {
 		}
 	}
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Update();
 	}
-#if defined ODAZIMA
 	obstacle2.Update();
-	obstacle4.Update();
-	item.Update();
-	item.ItemMove();
-	item.CheckHitPlayer(&player);
-#else
-	obstacle3.Update();
 #endif
+
+	//障害物class.
+	obstacle4.Update();
+	//アイテムclass.
+	item.Update();
 	//プレイヤーclass.
 	player.Update();
 }
 void GameManager::UpdateEnd() {
 
+<<<<<<< HEAD
 	//SPACEが押された瞬間、タイトルへ.
 	if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_1||IsPushKeyTime(KEY_INPUT_SPACE) == 1) {
+=======
+	//特定の操作でタイトルへ.
+	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
+		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	{
+>>>>>>> main
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
 	}
@@ -189,7 +213,7 @@ void GameManager::UpdateEnd() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	//ゲームが開始されていない場合は開始案内を表示
-	DrawFormatString(260, 160, GetColor(255, 255, 255), _T("PUSH SPACE"));
+	DrawFormatString(260, 160, 0xFFFFFF, _T("PUSH SPACE"));
 }
 void GameManager::DrawGame() {
 
@@ -217,17 +241,17 @@ void GameManager::DrawEnd() {
 //オブジェクトの描画.
 void GameManager::DrawObjests() {
 
-	//障害物class.
+#if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Draw();
 	}
-#if defined ODAZIMA
 	obstacle2.Draw();
-	obstacle4.Draw();
-	item.Draw();
-#else
-	obstacle3.Draw();
 #endif
+
+	//障害物class.
+	obstacle4.Draw();
+	//アイテムclass.
+	item.Draw();
 	//プレイヤーclass.
 	player.Draw();
 }

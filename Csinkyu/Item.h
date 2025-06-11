@@ -4,29 +4,30 @@
 class Item
 {
 private:
-	DBL_XY pos;  //座標.
-	INT_XY size; //サイズ.
-	UINT   clr;  //色.
-	BOOL   active; //有効か.
+	DBL_XY pos{};    //座標.
+	INT_XY size{};   //サイズ.
+	UINT   clr[2]{}; //色.
+	BOOL   active{}; //有効か.
 
-	float  Ix, Iy;
-	double itemX, itemY;
-	int    itemFlag;
-	int    itemW, itemH, itemGraph;
-	float  itemCounter;
+	float  Ix{}, Iy{};
+	double itemX{}, itemY{};
+	int    itemFlag{};
+	int    itemW{}, itemH{}, itemGraph{};
+	float  itemCounter{};
 
-	GameData* p_data{}; //ゲームデータ.
+	GameData* p_gamedata{}; //ゲームデータ.
+	Player*   p_player{};   //プレイヤーデータ.
 
 public:
-	void Init(GameData*);
+	void Init(GameData*, Player*);
 	void Update();
 	void Draw();
 	void ItemMove(); //アイテム.
 	void Reset();    // アイテムのリセット（再生成用）
 
 	// 当たり判定関連
-	BOOL CheckHitPlayer(Player* player);  // プレイヤーとの当たり判定
-	void OnHitPlayer();                   // 当たったときの処理
+	BOOL CheckHitPlayer(); // プレイヤーとの当たり判定
+	void OnHitPlayer();    // 当たったときの処理
 
 	// 便利な関数も追加
 	BOOL IsActive() const { return active && itemFlag; }
