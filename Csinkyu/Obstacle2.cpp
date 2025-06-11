@@ -17,8 +17,6 @@ void Obstacle2::Init(GameData* _data, Player* _player)
 	// img.handle;  “Ç‚İ‚ñ‚¾‰æ‘œ.
 	// img.size.x;  ‰æ‘œ‚Ì•
 	// img.size.y;/ ‰æ‘œ‚Ì‚‚³
-
-	Reset();
 }
 
 // ƒŠƒZƒbƒg

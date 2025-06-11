@@ -149,7 +149,7 @@ struct GameData
 #define OBSTACLE3_TRACK_POW			(8)				//障害物の追尾力.
 #define OBSTACLE3_SPEED				(3)				//障害物の速度.
 
-#define OBSTACLE4_OUTER_MARGIN		(20)			//砲台の周回時の外側余白.
+#define OBSTACLE4_OUTER_MARGIN		(0)				//砲台の周回時の外側余白.
 #define OBSTACLE4_SHOT_RESET		(60)			//砲台の発射リセット時間.
 #define OBSTACLE4_SHOT_START		(20)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN			(10)			//砲台の発射間隔時間.
