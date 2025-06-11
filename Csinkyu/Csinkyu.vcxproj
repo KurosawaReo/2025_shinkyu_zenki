@@ -33,6 +33,7 @@
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle3.cpp" />
     <ClCompile Include="Obstacle4.cpp" />
+    <ClCompile Include="Obstacle4main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -57,6 +58,7 @@
     <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Obstacle3.h" />
     <ClInclude Include="Obstacle4.h" />
+    <ClInclude Include="Obstacle4main.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

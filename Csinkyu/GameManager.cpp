@@ -33,7 +33,7 @@
    [余裕があれば]
    ・FPSはm秒待機ではなく、時間計測で測りたい.
 /--------------------------------------------------------*/
-#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
+//#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
 #include "Player.h"
 #include "Obstacle4.h"
@@ -57,6 +57,7 @@ Obstacle2 obstacle2;
 
 //障害物の実体.
 Obstacle4 obstacle4;
+Obstacle5 obstacle5;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -77,7 +78,9 @@ void GameManager::Init() {
 #endif
 
 	//障害物class.
-	obstacle4.Init(&data, &player);
+	
+		obstacle4.Init(&data, &player);
+		obstacle5.Init(&data, &player);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -100,7 +103,8 @@ void GameManager::Reset() {
 #endif
 
 	//障害物class.
-	obstacle4.Reset();
+	obstacle4.Reset(0, 30, 3);
+	obstacle5.Reset(0, 30, 3);
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
@@ -181,9 +185,10 @@ void GameManager::UpdateGame() {
 	}
 	obstacle2.Update();
 #endif
-
+		obstacle4.Update();
+		obstacle5.Update();
 	//障害物class.
-	obstacle4.Update();
+	//obstacle4.Update();
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.
@@ -237,9 +242,11 @@ void GameManager::DrawObjests() {
 	}
 	obstacle2.Draw();
 #endif
+		obstacle4.Draw();
+		obstacle5.Draw();
 
 	//障害物class.
-	obstacle4.Draw();
+	//obstacle4.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.

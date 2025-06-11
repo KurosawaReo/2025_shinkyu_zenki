@@ -1,4 +1,5 @@
 #pragma once
+#include "Player.h"
 /*
    - Obstacle2.h -
    áŠQ•¨ŠÇ—.
