@@ -4,6 +4,7 @@
 */
 #include "GameManager.h"
 #include "Player.h"
+#include "Obstacle4main.h"
 
 //初期化(一回のみ行う)
 void Player::Init(GameData* _data)
@@ -23,6 +24,17 @@ void Player::Update()
 	if (IsPushKeyTime(KEY_INPUT_M) == 1) {
 		isDebug = !isDebug;
 	}
+
+	// 反射モードの状態をコンソールに出力（デバッグ用）
+	if (CheckHitKey(KEY_INPUT_V)) {
+		printf("Vキー押下中, クールダウン: %.1f\n", reflectionCooldown);
+	}
+
+
+	if (reflectionCooldown > 0)
+	{
+		reflectionCooldown -= (p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+	}
 	//有効なら.
 	if (active) {
 		PlayerMove();
@@ -35,11 +47,30 @@ void Player::Draw()
 	if (isDebug) {
 		DrawString(0, 430, _T("[Debug] 無敵モード"), 0xFFFFFF);
 	}
+
+	// 反射モード表示.
+	if (IsReflectionMode())
+	{
+		DrawString(0, 430, _T("反射モード ON"), 0x00FF00);
+	}
+
+	// クールダウン表示.
+	if (reflectionCooldown > 0) {
+		DrawString(0, 470, _T("反射クールダウン中..."), 0xFF0000);
+	}
+
+
 	//有効なら.
 	if (active) {
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
 		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xA0A0A0 };
+
+		//反射モード中は青色に変更.
+		if (IsReflectionMode())
+		{
+			box1.clr = box2.clr = GetColor(255, 155, 255);//青色.
+		}
 
 		//デバッグモード中.
 		if (isDebug) {
@@ -66,6 +97,29 @@ void Player::PlayerMove()
 	//移動限界.
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
+
+BOOL Player::IsReflectionMode()
+{
+	int vKeyPressed = CheckHitKey(KEY_INPUT_V);
+	int cooldownOK = (reflectionCooldown <= 0);
+
+	// デバッグ出力.
+	DrawFormatString(0, 300, 0xFF0000, _T("反射モード確認: Vキー=%d"), vKeyPressed);
+	DrawFormatString(0, 320, 0xFF0000, _T("クールダウン=%.1f"), reflectionCooldown);
+	DrawFormatString(0, 340, 0xFF0000, _T("結果=%d"), (vKeyPressed & cooldownOK));
+
+	return vKeyPressed && cooldownOK;
+}
+
+void Player::UseReflection()
+{
+	reflectionCooldown = 60;
+}
+float Player::GetReflectionCooldown()
+{
+	return reflectionCooldown;
+}
+
 
 //死亡処理.
 void Player::PlayerDeath() {
