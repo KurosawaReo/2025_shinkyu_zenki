@@ -1,6 +1,12 @@
 /*
+<<<<<<<< HEAD:Csinkyu/Obstacle4main_syusei.cpp
    - Obstacle4main_syusei.cpp -
    障害物管理クラス (小田島作)
+========
+   - Obstacle4main_kr.cpp -
+
+   レーザーの継承元クラス (黒澤修正)
+>>>>>>>> main:Csinkyu/Obstacle4main_kr.cpp
    プレイヤーを追尾するレーザーを発射する障害物を実装
 
    << 2025/06/13 >>
@@ -10,6 +16,12 @@
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
 
+<<<<<<<< HEAD:Csinkyu/Obstacle4main_syusei.cpp
+========
+//これが定義されてなければ、こちらがON.
+#if !defined ODAZIMA_LASER
+
+>>>>>>>> main:Csinkyu/Obstacle4main_kr.cpp
 /**
  * @brief 障害物の更新処理
  * プレイヤーが有効な場合のみ障害物の動きを更新
@@ -52,9 +64,15 @@ void Obstacle4main::Draw()
 	// 通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
+<<<<<<<< HEAD:Csinkyu/Obstacle4main_syusei.cpp
 	//レーザーの色を変えるためには↑を改造する必要あり.
 	//ここは一旦保留.
 #if false
+========
+	/*
+	//レーザーの色を変えるためには↑を改造する必要あり.
+	//ここは一旦保留.
+>>>>>>>> main:Csinkyu/Obstacle4main_kr.cpp
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 	{
 		//無効なレーザーはスキップ.
@@ -63,7 +81,11 @@ void Obstacle4main::Draw()
 		// 反射レーザーは赤色、通常レーザーは緑色で描画
 		int color = laser[i].isReflected ? GetColor(255, 100, 100) : GetColor(100, 255, 100);
 	}
+<<<<<<<< HEAD:Csinkyu/Obstacle4main_syusei.cpp
 #endif
+========
+	*/
+>>>>>>>> main:Csinkyu/Obstacle4main_kr.cpp
 
 	//[debug] レーザーの先端に円を描く.
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
@@ -246,6 +268,7 @@ void Obstacle4main::enemy4Move()
 //	}
 //
 //	DrawString(0, 450, _T("反射処理を開始します。レーザー位置:(%.2f, %.2f) 速度:(%.2f, %.2f)\n",
+<<<<<<<< HEAD:Csinkyu/Obstacle4main_syusei.cpp
 //		ld[laserIndex].x, ld[laserIndex].y, ld[laserIndex].sx, ld[laserIndex].sy), 0xFFFFFF);
 //
 //	CreateReflectedLasers(
@@ -253,6 +276,15 @@ void Obstacle4main::enemy4Move()
 //		ld[laserIndex].y,
 //		ld[laserIndex].sx,
 //		ld[laserIndex].sy
+========
+//		laser[laserIndex].x, laser[laserIndex].y, laser[laserIndex].sx, laser[laserIndex].sy), 0xFFFFFF);
+//
+//	CreateReflectedLasers(
+//		laser[laserIndex].x,
+//		laser[laserIndex].y,
+//		laser[laserIndex].sx,
+//		laser[laserIndex].sy
+>>>>>>>> main:Csinkyu/Obstacle4main_kr.cpp
 //	);
 //
 //	//プレイヤーのクールダウンを設定.
@@ -260,7 +292,11 @@ void Obstacle4main::enemy4Move()
 //
 //
 //	//元のレーザーを無効化.
+<<<<<<<< HEAD:Csinkyu/Obstacle4main_syusei.cpp
 //	ld[laserIndex].ValidFlag = 0;
+========
+//	laser[laserIndex].ValidFlag = 0;
+>>>>>>>> main:Csinkyu/Obstacle4main_kr.cpp
 //
 //	return TRUE;//反射処理完了.
 //}
@@ -312,3 +348,8 @@ void Obstacle4main::CreateReflectedLasers(double reflectX, double reflectY, int 
 
 	//printfDx(_T("反射レーザー生成完了: %d個作成\n"), createdCount);
 }
+<<<<<<<< HEAD:Csinkyu/Obstacle4main_syusei.cpp
+========
+
+#endif
+>>>>>>>> main:Csinkyu/Obstacle4main_kr.cpp
