@@ -1,10 +1,12 @@
 /*
-   - Obstacle3.h -
-   障害物管理.
+   - Obstacle4.h -
+
+   レーザーの継承先クラス.
+   砲台(不可視)を左右で違う動きにするため、overrideを使用.
 */
 #pragma once
 #include "Player.h"
-#include"Obstacle4main.h"
+#include "Obstacle4main.h"
 
 //#define MAX_L 100 //ミサイルが飛ぶ最大距離.
 //#define PI 3.14159//円周率.
