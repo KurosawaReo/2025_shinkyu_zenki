@@ -23,10 +23,10 @@ void Obstacle4_1::Reset(float _Hx, float _Hy, float _Hm)
 	moveDir = MOVE_RIGHT;           // 初期方向を右に設定.
 	// レーザーデータの初期化
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
-		ld[i].ValidFlag = 0;    // すべてのレーザーを無効状態に
+		laser[i].ValidFlag = 0;    // すべてのレーザーを無効状態に
 
 	// レーザーの軌跡データの初期化
-	for (int i = 0; i < OBSTACLE4_LASER_LINE_MAX; i++)
+	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
  
 }
@@ -87,10 +87,10 @@ void Obstacle4_2::Reset(float _Hx, float _Hy, float _Hm)
 	moveDir = MOVE_LEFT;            // 初期方向を左に設定.
 	// レーザーデータの初期化
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
-		ld[i].ValidFlag = 0;    // すべてのレーザーを無効状態に
+		laser[i].ValidFlag = 0;    // すべてのレーザーを無効状態に
 
 	// レーザーの軌跡データの初期化
-	for (int i = 0; i < OBSTACLE4_LASER_LINE_MAX; i++)
+	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
 }
 //obstacle4mainのMove関数をobstacle5用に上書き.

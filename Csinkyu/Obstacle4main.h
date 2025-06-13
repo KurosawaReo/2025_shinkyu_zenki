@@ -5,6 +5,7 @@
 #pragma once
 #include "Player.h"
 
+//レーザー本体.
 typedef struct tagLASER_DATA
 {
 	double x, y;      //現在の画像.
@@ -14,10 +15,11 @@ typedef struct tagLASER_DATA
 	float  Counter;   //追尾を初めてから通過した時間.
 
 	int    ValidFlag; //このデータが使用中かフラグ.
-	BOOL isReflected;
+	BOOL isReflected; //反射用レーザーかどうか.
 
 }LASER_DATA, * LPLASER_DATA;
 
+//レーザーが描く軌道ライン.
 typedef struct tagLINE_DATA
 {
 	double x1, y1, x2, y2;  //描くラインの座標.
@@ -36,8 +38,8 @@ protected:
 	float HscTm{};     //砲台がショットする時間.
 	MoveDir moveDir{};  // 現在の移動方向.
 
-	LASER_DATA ld[OBSTACLE4_LASER_LIM]{};        //ホーミングレーザーのデータ.
-	LINE_DATA  line[OBSTACLE4_LASER_LINE_MAX]{}; //ライン描画用データ.
+	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
+	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 	IMG        img{};
 
 	GameData*  data{};
