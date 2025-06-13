@@ -16,7 +16,7 @@ class Obstacle5 : public Obstacle4main
 public:
 	void Init(GameData*, Player*);
 	void Reset(float _Hx, float _Hy, float _Hm) override;
-	void idou() override;
+	void Move() override;
 };
 
 //åpè≥êÊÉNÉâÉX(éq2)
@@ -25,5 +25,5 @@ class Obstacle4 : public Obstacle4main
 public:
 	void Init(GameData*, Player*);
 	void Reset(float _Hx, float _Hy, float _Hm) override;
-	void idou() override;
+	void Move() override;
 };

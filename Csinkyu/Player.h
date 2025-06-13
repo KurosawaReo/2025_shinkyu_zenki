@@ -12,6 +12,8 @@ private:
 	int    graph{};     //画像データ.
 	BOOL   active{};    //有効か.
 	
+	float reflectionCooldown;//反射のクールダウン時間.
+
 	GameData* p_data{}; //ゲームデータ.
 
 	BOOL   isDebug{};   //デバッグ用.
@@ -33,4 +35,8 @@ public:
 
 	void PlayerMove();  //プレイヤー移動.
 	void PlayerDeath(); //プレイヤー死亡.
+
+	BOOL IsReflectionMode();    //反射モードかどうかを返す.
+	void UseReflection();         //反射を使用.
+	float GetReflectionCooldown();//クールダウン時間を持つ.
 };

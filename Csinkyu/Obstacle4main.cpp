@@ -48,9 +48,17 @@ void Obstacle4main::Draw()
 	// 通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
-	// 動く砲台を描画
-	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
-	//DrawBoxST(&box, TRUE, FALSE);
+
+	// レーザー本体の描画処理を追加.
+	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
+	{
+		//無効なレーザーはスキップ.
+		if (ld[i].ValidFlag == 0)continue;
+
+		// 反射レーザーは赤色、通常レーザーは緑色で描画
+		int color = ld[i].isReflected ? GetColor(255, 100, 100) : GetColor(100, 255, 100);
+
+	}
 }
 
 /**
@@ -73,13 +81,31 @@ void Obstacle4main::enemy4Move()
 		if ((ld[i].x > pPos.x - pSizeHalf && ld[i].x < pPos.x + pSizeHalf) &&
 			(ld[i].y > pPos.y - pSizeHalf && ld[i].y < pPos.y + pSizeHalf))
 		{
+		
+			if (player->IsReflectionMode())
+			{
+				CreateReflectedLasers(
+                  ld[i].x,
+			      ld[i].y,
+				  ld[i].sx,
+				  ld[i].sy
+				);
+				//プレイヤーのクールダウンを設定.
+				player->UseReflection();
+
+				//元のレーザを無効化.
+				ld[i].ValidFlag = 0;
+				continue;
+		    }
+	
+			DrawString(0, 400, _T("反射処理が失敗したか、条件を満たしませんでした"), 0xFFFFFF);
 			ld[i].ValidFlag = 0;  // 当たったらレーザーを無効化
 			player->PlayerDeath();
 			continue;
 		}
 
-		// レーザーの追尾処理（発射後一定時間のみ）
-		if (ld[i].Counter < 200)  // 200フレーム（約3.3秒）以内のみ追尾
+		// レーザーの追尾処理（発射後一定時間のみ、かつ反射レーザー以外）
+		if (ld[i].Counter < 200 && !ld[i].isReflected)  // 200フレーム（約3.3秒）以内のみ追尾、反射レーザーは追尾しない
 		{
 			// 現在のプレイヤー方向への角度を計算
 			double targetAngle = atan2(pPos.y - ld[i].y, pPos.x - ld[i].x);
@@ -144,8 +170,8 @@ void Obstacle4main::enemy4Move()
 	// 砲台の移動とレーザー発射処理
 	{
 		//移動処理.
-		idou();
-           
+		Move();
+
 		// 発射カウンタを減少
 		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// タイミングが来たらレーザー発射
@@ -171,6 +197,7 @@ void Obstacle4main::enemy4Move()
 					ld[i].Counter = 0;			// 経過時間カウンタ初期化
 					ld[i].LogNum = 0;			// 軌跡カウンタ初期化
 					ld[i].ValidFlag = 1;		// レーザーを有効化
+					ld[i].isReflected = FALSE;	// 通常レーザーは反射フラグをFALSEに設定
 					break;
 				}
 			}
@@ -181,5 +208,85 @@ void Obstacle4main::enemy4Move()
 			Hsc = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
 			HscTm = OBSTACLE4_SHOT_START;
 		}
-	}	
+	}
+}
+
+//BOOL Obstacle4main::HandleLaserHit(int laserIndex)
+//{
+//	DrawString(0, 440, _T("HandleLaserHit関数が呼ばれました。: %d\n", laserIndex), 0xFFFFFF);
+//	//反射モードかチェック.
+//	if (!player->IsReflectionMode())
+//	{
+//		DrawString(0, 430, _T("プレイヤーが反射モードではありません\n"), 0xFFFFFF);
+//		return FALSE;//反射しない.
+//	}
+//
+//	DrawString(0, 450, _T("反射処理を開始します。レーザー位置:(%.2f, %.2f) 速度:(%.2f, %.2f)\n",
+//		ld[laserIndex].x, ld[laserIndex].y, ld[laserIndex].sx, ld[laserIndex].sy), 0xFFFFFF);
+//
+//	CreateReflectedLasers(
+//		ld[laserIndex].x,
+//		ld[laserIndex].y,
+//		ld[laserIndex].sx,
+//		ld[laserIndex].sy
+//	);
+//
+//	//プレイヤーのクールダウンを設定.
+//	player->UseReflection();
+//
+//
+//	//元のレーザーを無効化.
+//	ld[laserIndex].ValidFlag = 0;
+//
+//	return TRUE;//反射処理完了.
+//}
+
+void Obstacle4main::CreateReflectedLasers(double reflectX, double reflectY, int originalSx, int originalSy)
+{
+	//8方向に拡散するレーザーを生成.
+	const int numReflectedLasers = 8;
+	const double angleStep = 2 * M_PI / numReflectedLasers;
+
+	//元のレーザーの速度を基に反射レーザーの基本速度を計算
+	double baseSpeed = sqrt(originalSx * originalSx + originalSy * originalSy) * 0.8;
+
+	int createdCount = 0;
+	for (int dir = 0; dir < numReflectedLasers && createdCount < numReflectedLasers; dir++)
+	{
+		if (baseSpeed < 20)
+		{
+			baseSpeed = 30;
+		}
+
+
+		// 未使用のレーザースロットを探す
+		bool foundSlot = false;
+		for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
+		{
+			if (ld[i].ValidFlag == 0)
+			{
+				DrawCircle(ld[i].x, ld[i].y, 5, 0xFFFF00);
+				printfDx(_T("反射レーザー生成: 方向%d\n"), dir);
+				double angle = dir * angleStep;
+
+				ld[i].x = player->GetPos().x;
+				ld[i].y = player->GetPos().y;
+				ld[i].sx = cos(angle) * baseSpeed;
+				ld[i].sy = sin(angle) * baseSpeed;
+				ld[i].Counter = 300;  // クールタイムを無効化（追尾しないように大きな値を設定）
+				ld[i].LogNum = 0;
+				ld[i].ValidFlag = 1;
+				ld[i].isReflected = TRUE;
+
+				createdCount++;
+				foundSlot = true;
+				break;  // 1つのレーザーを作成したら次の方向へ
+			}
+		}
+		if (!foundSlot) {
+			printfDx(_T("レーザースロットが見つかりません\n"));
+		}
+	}
+
+	printfDx(_T("反射レーザー生成完了: %d個作成\n"), createdCount);
 }

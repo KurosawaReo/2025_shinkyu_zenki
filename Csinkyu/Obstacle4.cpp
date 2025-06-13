@@ -30,7 +30,7 @@ void Obstacle4::Reset(float _Hx, float _Hy, float _Hm)
  
 }
 //obstacle4mainのidou関数をobstacle4用に上書き.
-void Obstacle4::idou()
+void Obstacle4::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
@@ -92,7 +92,7 @@ void Obstacle5::Reset(float _Hx, float _Hy, float _Hm)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
 }
 //obstacle4mainのidou関数をobstacle5用に上書き.
-void Obstacle5::idou()
+void Obstacle5::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
