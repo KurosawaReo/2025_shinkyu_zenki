@@ -55,5 +55,5 @@ public:
 
 	//”½Ëˆ—.
 	BOOL HandleLaserHit(int laserIndex);
-	void CreateReflectedLasers(double reflectX, double reflectY, int originalSx, int originalSy);
+	void ReflectLaser(int laserIndex, DBL_XY playerPos);
 };

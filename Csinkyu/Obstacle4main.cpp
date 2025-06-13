@@ -2,6 +2,7 @@
    - Obstacle4.cpp -
    障害物管理クラス (小田島作)
    プレイヤーを追尾するレーザーを発射する障害物を実装
+   レーザー反射機能追加
 */
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
@@ -31,7 +32,7 @@ void Obstacle4main::Draw()
 	{
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
-		// 緑色の値, 時間経過で徐々に薄くする.
+		//緑色の値, 時間経過で徐々に薄くする.
 		int g = _int(255 - line[i].Counter * 4);
 		g = max(g, 0); //最低値を0にする.
 
@@ -48,17 +49,9 @@ void Obstacle4main::Draw()
 	// 通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
-
-	// レーザー本体の描画処理を追加.
-	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
-	{
-		//無効なレーザーはスキップ.
-		if (ld[i].ValidFlag == 0)continue;
-
-		// 反射レーザーは赤色、通常レーザーは緑色で描画
-		int color = ld[i].isReflected ? GetColor(255, 100, 100) : GetColor(100, 255, 100);
-
-	}
+	// 動く砲台を描画
+	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
+	//DrawBoxST(&box, TRUE, FALSE);
 }
 
 /**
@@ -81,31 +74,25 @@ void Obstacle4main::enemy4Move()
 		if ((ld[i].x > pPos.x - pSizeHalf && ld[i].x < pPos.x + pSizeHalf) &&
 			(ld[i].y > pPos.y - pSizeHalf && ld[i].y < pPos.y + pSizeHalf))
 		{
-		
+			// プレイヤーが反射モード中かチェック
 			if (player->IsReflectionMode())
 			{
-				CreateReflectedLasers(
-                  ld[i].x,
-			      ld[i].y,
-				  ld[i].sx,
-				  ld[i].sy
-				);
-				//プレイヤーのクールダウンを設定.
-				player->UseReflection();
-
-				//元のレーザを無効化.
+				// レーザーを反射させる
+				ReflectLaser(i, pPos);
+				Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(100, 255, 100) };
+				player->UseReflection(); // 反射使用でクールダウン開始
+			}
+			else
+			{
+				// 通常時はレーザーを無効化してプレイヤー死亡
 				ld[i].ValidFlag = 0;
-				continue;
-		    }
-	
-			DrawString(0, 400, _T("反射処理が失敗したか、条件を満たしませんでした"), 0xFFFFFF);
-			ld[i].ValidFlag = 0;  // 当たったらレーザーを無効化
-			player->PlayerDeath();
+				player->PlayerDeath();
+			}
 			continue;
 		}
 
-		// レーザーの追尾処理（発射後一定時間のみ、かつ反射レーザー以外）
-		if (ld[i].Counter < 200 && !ld[i].isReflected)  // 200フレーム（約3.3秒）以内のみ追尾、反射レーザーは追尾しない
+		// レーザーの追尾処理（発射後一定時間のみ）
+		if (ld[i].Counter < 200)  // 200フレーム（約3.3秒）以内のみ追尾
 		{
 			// 現在のプレイヤー方向への角度を計算
 			double targetAngle = atan2(pPos.y - ld[i].y, pPos.x - ld[i].x);
@@ -169,8 +156,9 @@ void Obstacle4main::enemy4Move()
 
 	// 砲台の移動とレーザー発射処理
 	{
-		Move(); //移動処理.
-           
+		//移動処理.
+		Move();
+
 		// 発射カウンタを減少
 		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// タイミングが来たらレーザー発射
@@ -196,7 +184,6 @@ void Obstacle4main::enemy4Move()
 					ld[i].Counter = 0;			// 経過時間カウンタ初期化
 					ld[i].LogNum = 0;			// 軌跡カウンタ初期化
 					ld[i].ValidFlag = 1;		// レーザーを有効化
-					ld[i].isReflected = FALSE;	// 通常レーザーは反射フラグをFALSEに設定
 					break;
 				}
 			}
@@ -204,88 +191,55 @@ void Obstacle4main::enemy4Move()
 		}
 		//0秒を下回ったらもう一周.
 		if (Hsc <= 0) {
-			Hsc   = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
+			Hsc = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
 			HscTm = OBSTACLE4_SHOT_START;
 		}
 	}
 }
 
-//BOOL Obstacle4main::HandleLaserHit(int laserIndex)
-//{
-//	DrawString(0, 440, _T("HandleLaserHit関数が呼ばれました。: %d\n", laserIndex), 0xFFFFFF);
-//	//反射モードかチェック.
-//	if (!player->IsReflectionMode())
-//	{
-//		DrawString(0, 430, _T("プレイヤーが反射モードではありません\n"), 0xFFFFFF);
-//		return FALSE;//反射しない.
-//	}
-//
-//	DrawString(0, 450, _T("反射処理を開始します。レーザー位置:(%.2f, %.2f) 速度:(%.2f, %.2f)\n",
-//		ld[laserIndex].x, ld[laserIndex].y, ld[laserIndex].sx, ld[laserIndex].sy), 0xFFFFFF);
-//
-//	CreateReflectedLasers(
-//		ld[laserIndex].x,
-//		ld[laserIndex].y,
-//		ld[laserIndex].sx,
-//		ld[laserIndex].sy
-//	);
-//
-//	//プレイヤーのクールダウンを設定.
-//	player->UseReflection();
-//
-//
-//	//元のレーザーを無効化.
-//	ld[laserIndex].ValidFlag = 0;
-//
-//	return TRUE;//反射処理完了.
-//}
-
-void Obstacle4main::CreateReflectedLasers(double reflectX, double reflectY, int originalSx, int originalSy)
+/**
+ * @brief レーザー反射処理
+ * プレイヤーの位置を基準にレーザーの進行方向を反転させる
+ * @param laserIndex 反射するレーザーのインデックス
+ * @param playerPos プレイヤーの位置
+ */
+void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 {
-	//8方向に拡散するレーザーを生成.
-	const int numReflectedLasers = 8;
-	const double angleStep = 2 * M_PI / numReflectedLasers;
+	// レーザーからプレイヤーへのベクトルを計算
+	double dx = playerPos.x - ld[laserIndex].x;
+	double dy = playerPos.y - ld[laserIndex].y;
 
-	//元のレーザーの速度を基に反射レーザーの基本速度を計算
-	double baseSpeed = sqrt(originalSx * originalSx + originalSy * originalSy) * 0.8;
+	// ベクトルの長さを計算
+	double length = sqrt(dx * dx + dy * dy);
 
-	int createdCount = 0;
-	for (int dir = 0; dir < numReflectedLasers && createdCount < numReflectedLasers; dir++)
+	// 正規化（長さを1にする）
+	if (length > 0)
 	{
-		if (baseSpeed < 20)
-		{
-			baseSpeed = 30;
-		}
-
-
-		// 未使用のレーザースロットを探す
-		bool foundSlot = false;
-		for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
-		{
-			if (ld[i].ValidFlag == 0)
-			{
-				DrawCircle(ld[i].x, ld[i].y, 5, 0xFFFF00);
-				printfDx(_T("反射レーザー生成: 方向%d\n"), dir);
-				double angle = dir * angleStep;
-
-				ld[i].x = player->GetPos().x;
-				ld[i].y = player->GetPos().y;
-				ld[i].sx = cos(angle) * baseSpeed;
-				ld[i].sy = sin(angle) * baseSpeed;
-				ld[i].Counter = 300;  // クールタイムを無効化（追尾しないように大きな値を設定）
-				ld[i].LogNum = 0;
-				ld[i].ValidFlag = 1;
-				ld[i].isReflected = TRUE;
-
-				createdCount++;
-				foundSlot = true;
-				break;  // 1つのレーザーを作成したら次の方向へ
-			}
-		}
-		if (!foundSlot) {
-			printfDx(_T("レーザースロットが見つかりません\n"));
-		}
+		dx /= length;
+		dy /= length;
 	}
 
-	printfDx(_T("反射レーザー生成完了: %d個作成\n"), createdCount);
+	// レーザーの現在の速度ベクトル
+	double currentSpeedX = ld[laserIndex].sx;
+	double currentSpeedY = ld[laserIndex].sy;
+
+	// 現在の速度の大きさを計算
+	double speedMagnitude = sqrt(currentSpeedX * currentSpeedX + currentSpeedY * currentSpeedY);
+
+	// プレイヤーから外向きの方向に反射
+	// 反射方向 = プレイヤーからレーザーへの方向ベクトル
+	double reflectDx = -dx; // プレイヤーから離れる方向
+	double reflectDy = -dy;
+
+	// 反射後の速度を設定（元の速度の大きさを保持）
+	ld[laserIndex].sx = reflectDx * speedMagnitude;
+	ld[laserIndex].sy = reflectDy * speedMagnitude;
+
+	// 反射後は追尾を無効化（カウンタを最大値に設定）
+	ld[laserIndex].Counter = 200;
+
+	// レーザーをプレイヤーから少し離れた位置に移動（重複当たり判定を防ぐ）
+	double pushDistance = PLAYER_SIZE / 2.0 + 5; // プレイヤーサイズの半分 + 余裕
+	ld[laserIndex].x = playerPos.x + reflectDx * pushDistance;
+	ld[laserIndex].y = playerPos.y + reflectDy * pushDistance;
 }
