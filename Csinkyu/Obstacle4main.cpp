@@ -169,14 +169,8 @@ void Obstacle4main::enemy4Move()
 
 	// 砲台の移動とレーザー発射処理
 	{
-<<<<<<< HEAD
 		Move(); //移動処理.
            
-=======
-		//移動処理.
-		Move();
-
->>>>>>> Item
 		// 発射カウンタを減少
 		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// タイミングが来たらレーザー発射

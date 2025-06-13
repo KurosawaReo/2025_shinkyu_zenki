@@ -30,13 +30,8 @@ void Obstacle4_1::Reset(float _Hx, float _Hy, float _Hm)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
  
 }
-<<<<<<< HEAD
 //obstacle4mainのMove関数をobstacle4用に上書き.
 void Obstacle4_1::Move()
-=======
-//obstacle4mainのidou関数をobstacle4用に上書き.
-void Obstacle4::Move()
->>>>>>> Item
 {
 	// 移動速度
 	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
@@ -98,13 +93,8 @@ void Obstacle4_2::Reset(float _Hx, float _Hy, float _Hm)
 	for (int i = 0; i < OBSTACLE4_LASER_LINE_MAX; i++)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
 }
-<<<<<<< HEAD
 //obstacle4mainのMove関数をobstacle5用に上書き.
 void Obstacle4_2::Move()
-=======
-//obstacle4mainのidou関数をobstacle5用に上書き.
-void Obstacle5::Move()
->>>>>>> Item
 {
 	// 移動速度
 	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);

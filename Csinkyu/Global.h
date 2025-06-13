@@ -140,13 +140,8 @@ struct GameData
 #define PLAYER_HIT_R				(10)			//プレイヤーの当たり判定円の半径.
 
 #define ITEM_SIZE					(20)			//アイテムサイズ.
-<<<<<<< HEAD
 #define ITEM_SPEED					(9)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME			(300)           //アイテム復活時間.
-=======
-#define ITEM_SPEED					(8)				//アイテム移動スピード.  
-#define ITEM_RESPAWN_TIME			(480)           //アイテム復活時間.
->>>>>>> Item
 
 #define OBSTACLE2_SPAN				(80)			//障害物の発射間隔.
 #define OBSTACLE2_SPEED				(3.0)			//障害物の速度.
