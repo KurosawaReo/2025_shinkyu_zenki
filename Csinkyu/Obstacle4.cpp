@@ -7,19 +7,20 @@
 #include "Obstacle4.h" // 自身のヘッダーファイル
 
 //obstacle4mainのInit関数をobstacle4用に上書き.
-void Obstacle4::Init(GameData* _data, Player* _player)
+void Obstacle4_1::Init(GameData* _data, Player* _player)
 {
 	data   = _data;
 	player = _player;  // プレイヤーオブジェクトを参照として保存
 }
 //obstacle4mainのReset関数をobstacle4用に上書き.
-void Obstacle4::Reset(float _Hx, float _Hy, float _Hm)
+void Obstacle4_1::Reset(float _Hx, float _Hy, float _Hm)
 {
-	Hx = _Hx;                   // 砲台のX座標初期値（画面中央）
-	Hy = _Hy;                   // 砲台のY座標初期値（画面上部）
-	Hm = _Hm;                   // 砲台の移動速度
-	Hsc = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
-	moveDir = MOVE_RIGHT;       // 初期方向を右に設定.
+	Hx      = _Hx;                  // 砲台のX座標初期値（画面中央）
+	Hy      = _Hy;                  // 砲台のY座標初期値（画面上部）
+	Hm      = _Hm;                  // 砲台の移動速度
+	Hsc     = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
+	HscTm   = OBSTACLE4_SHOT_START; // 砲台の発射タイミング初期値
+	moveDir = MOVE_RIGHT;           // 初期方向を右に設定.
 	// レーザーデータの初期化
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 		ld[i].ValidFlag = 0;    // すべてのレーザーを無効状態に
@@ -29,13 +30,13 @@ void Obstacle4::Reset(float _Hx, float _Hy, float _Hm)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
  
 }
-//obstacle4mainのidou関数をobstacle4用に上書き.
-void Obstacle4::Move()
+//obstacle4mainのMove関数をobstacle4用に上書き.
+void Obstacle4_1::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
 
-	// 矩形経路の移動処理
+	// 矩形経路の移動(右回り)
 	switch (moveDir)
 	{
 	case MOVE_LEFT:
@@ -70,19 +71,20 @@ void Obstacle4::Move()
 }
 
 //obstacle4mainのInit関数をobstacle5用に上書き.
-void Obstacle5::Init(GameData* _data, Player* _player)
+void Obstacle4_2::Init(GameData* _data, Player* _player)
 {
 	data   = _data;
 	player = _player;  // プレイヤーオブジェクトを参照として保存
 }
 //obstacle4mainのReset関数をobstacle5用に上書き.
-void Obstacle5::Reset(float _Hx, float _Hy, float _Hm)
+void Obstacle4_2::Reset(float _Hx, float _Hy, float _Hm)
 {
-	Hx = _Hx;                   // 砲台のX座標初期値（画面中央）
-	Hy = _Hy;                   // 砲台のY座標初期値（画面上部）
-	Hm = _Hm;                   // 砲台の移動速度
-	Hsc = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
-	moveDir = MOVE_LEFT;        // 初期方向を左に設定.
+	Hx      = _Hx;                  // 砲台のX座標初期値（画面中央）
+	Hy      = _Hy;                  // 砲台のY座標初期値（画面上部）
+	Hm      = _Hm;                  // 砲台の移動速度
+	Hsc     = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
+	HscTm   = OBSTACLE4_SHOT_START; // 砲台の発射タイミング初期値
+	moveDir = MOVE_LEFT;            // 初期方向を左に設定.
 	// レーザーデータの初期化
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 		ld[i].ValidFlag = 0;    // すべてのレーザーを無効状態に
@@ -91,13 +93,13 @@ void Obstacle5::Reset(float _Hx, float _Hy, float _Hm)
 	for (int i = 0; i < OBSTACLE4_LASER_LINE_MAX; i++)
 		line[i].ValidFlag = 0;  // すべての軌跡を無効状態に
 }
-//obstacle4mainのidou関数をobstacle5用に上書き.
-void Obstacle5::Move()
+//obstacle4mainのMove関数をobstacle5用に上書き.
+void Obstacle4_2::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
 
-	// 矩形経路の移動処理
+	// 矩形経路の移動(左回り)
 	switch (moveDir)
 	{
 	case MOVE_LEFT:

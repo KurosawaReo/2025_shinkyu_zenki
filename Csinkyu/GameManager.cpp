@@ -56,8 +56,8 @@ Obstacle2 obstacle2;
 #endif
 
 //障害物の実体.
-Obstacle4 obstacle4;
-Obstacle5 obstacle5;
+Obstacle4_1 obstacle4_1;
+Obstacle4_2 obstacle4_2;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -68,7 +68,11 @@ void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
 
-	data.scene = SCENE_TITLE; //タイトル.
+	//タイトル.
+	data.scene = SCENE_TITLE;
+	//フォント作成.
+	data.font1 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_NORMAL);
+	data.font2 = CreateFontToHandle(NULL, 20, 1, DX_FONTTYPE_NORMAL);
 
 #if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
@@ -78,8 +82,8 @@ void GameManager::Init() {
 #endif
 
 	//障害物class.
-	obstacle4.Init(&data, &player);
-	obstacle5.Init(&data, &player);
+	obstacle4_1.Init(&data, &player);
+	obstacle4_2.Init(&data, &player);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -102,8 +106,8 @@ void GameManager::Reset() {
 #endif
 
 	//障害物class.
-	obstacle4.Reset(WINDOW_WID/2, 30, 3);
-	obstacle5.Reset(WINDOW_WID/2, 30, 3);
+	obstacle4_1.Reset(WINDOW_WID/2, 0, 3);
+	obstacle4_2.Reset(WINDOW_WID/2, 0, 3);
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
@@ -186,8 +190,8 @@ void GameManager::UpdateGame() {
 #endif
 
 	//障害物class.
-	obstacle4.Update();
-	obstacle5.Update();
+	obstacle4_1.Update();
+	obstacle4_2.Update();
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.
@@ -207,19 +211,30 @@ void GameManager::UpdateEnd() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	//ゲームが開始されていない場合は開始案内を表示
-	DrawFormatString(260, 160, 0xFFFFFF, _T("PUSH SPACE"));
+	{
+		//テキストの設定.
+		STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID / 2, 160}, 0xFFFFFF };
+		//画面中央に文字を表示.
+		DrawStringST(&str, TRUE, data.font2); //fontあり.
+	}
 }
 void GameManager::DrawGame() {
 
 	DrawObjests();
 
 	//タイマー表示.
-	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), tmGame.GetTime());
+	DrawFormatStringToHandle(
+		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetTime()
+	);
 	//カウントダウン中.
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetTime() > 0) 
 	{
+		//テキストの設定.
+		STR_DRAW str = { _T(""), {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF };
+		sprintf((char*)str.text, "%d", (int)ceil(tmSlowMode.GetTime()));
+
 		//画面中央に数字を表示.
-		DrawFormatString(WINDOW_WID/2, WINDOW_HEI/2, 0xFFFFFF, _T("%d"), (int)ceil(tmSlowMode.GetTime()));
+		DrawStringST(&str, TRUE, data.font1); //fontあり.
 	}
 }
 void GameManager::DrawEnd() {
@@ -227,9 +242,16 @@ void GameManager::DrawEnd() {
 	DrawObjests();
 
 	//タイマー表示.
-	DrawFormatString(0, 0, 0xFFFFFF, _T("time:%.3f"), tmGame.GetTime());
+	DrawFormatStringToHandle(
+		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetTime()
+	);
 	//終了案内.
-	DrawFormatString(260, 160, GetColor(255, 0, 0), _T("GAME OVER"));
+	{
+		//テキストの設定.
+		STR_DRAW str = { _T("GAME OVER"), {WINDOW_WID/2, 160}, 0xFF0000 };
+		//画面中央に文字を表示.
+		DrawStringST(&str, TRUE, data.font2); //fontあり.
+	}
 }
 
 //オブジェクトの描画.
@@ -243,8 +265,8 @@ void GameManager::DrawObjests() {
 #endif
 
 	//障害物class.
-	obstacle4.Draw();
-	obstacle5.Draw();
+	obstacle4_1.Draw();
+	obstacle4_2.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.

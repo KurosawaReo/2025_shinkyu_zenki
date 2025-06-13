@@ -24,8 +24,8 @@ void Item::Init(GameData* _gamedata, Player* _player)
 void Item::Reset()
 {
 	// 座標の初期化
-	itemX = (double)(rand() % 600 + 20);  // X座標をランダムに設定（20～620の範囲）
-	itemY = -20.0;                        // 画面上部の少し上から開始
+	itemX = (double)RndNum(itemW, WINDOW_WID-itemW); // X座標をランダムに設定
+	itemY = -itemH - 50;                             // 画面上部の少し上から開始
 	Ix = (float)itemX;
 	Iy = (float)itemY;
 
@@ -58,7 +58,7 @@ void Item::Update()
 		ItemMove();
 
 		// 画面下部を超えたら再生成
-		if (itemY > 480) {
+		if (itemY > WINDOW_HEI + itemH) {
 			Reset(); // 新しいアイテムとして再生成
 		}
 	}

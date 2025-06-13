@@ -31,7 +31,7 @@ void Obstacle4main::Draw()
 	{
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
-		//緑色の値, 時間経過で徐々に薄くする.
+		// 緑色の値, 時間経過で徐々に薄くする.
 		int g = _int(255 - line[i].Counter * 4);
 		g = max(g, 0); //最低値を0にする.
 
@@ -169,9 +169,8 @@ void Obstacle4main::enemy4Move()
 
 	// 砲台の移動とレーザー発射処理
 	{
-		//移動処理.
-		Move();
-
+		Move(); //移動処理.
+           
 		// 発射カウンタを減少
 		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 		// タイミングが来たらレーザー発射
@@ -205,7 +204,7 @@ void Obstacle4main::enemy4Move()
 		}
 		//0秒を下回ったらもう一周.
 		if (Hsc <= 0) {
-			Hsc = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
+			Hsc   = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
 			HscTm = OBSTACLE4_SHOT_START;
 		}
 	}
