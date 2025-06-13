@@ -158,4 +158,4 @@ struct GameData
 #define OBSTACLE4_SHOT_SPAN			(10)			//砲台の発射間隔時間.
 #define OBSTACLE4_LASER_SPEED		(100)			//レーザーの速度.
 #define OBSTACLE4_LASER_LIM			(100)			//レーザーの最大数.
-#define OBSTACLE4_LINE_MAX			(200)			//レーザーで描画する線の最大数.
+#define OBSTACLE4_LINE_MAX			(1000)			//レーザーで描画する線の最大数.
