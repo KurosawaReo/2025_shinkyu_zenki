@@ -117,8 +117,10 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	UpdateKey();    //キー入力更新.
-	UpdatePadBtn(); //コントローラのボタン入力更新.
+	InputST* input = InputST::GetPtr();
+
+	input->UpdateKey();    //キー入力更新.
+	input->UpdatePadBtn(); //コントローラのボタン入力更新.
 
 	//シーン別.
 	switch (data.scene) 
@@ -154,9 +156,10 @@ void GameManager::Draw() {
 //シーン別更新.
 void GameManager::UpdateTitle() 
 {
+	InputST* input = InputST::GetPtr();
+
 	//特定の操作でゲーム開始.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
-		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_A) == 1)
 	{
 		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
@@ -199,9 +202,10 @@ void GameManager::UpdateGame() {
 }
 void GameManager::UpdateEnd() {
 
+	InputST* input = InputST::GetPtr();
+
 	//特定の操作でタイトルへ.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
-		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_A) == 1)
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
