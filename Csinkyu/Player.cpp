@@ -20,16 +20,17 @@ void Player::Reset(DBL_XY _pos, BOOL _active)
 //更新.
 void Player::Update()
 {
+	InputST* input = InputST::GetPtr();
+
 	//デバッグモード切り替え.
-	if (IsPushKeyTime(KEY_INPUT_M) == 1) {
+	if (input->IsPushKeyTime(KEY_M) == 1) {
 		isDebug = !isDebug;
 	}
 
-	// 反射モードの状態をコンソールに出力（デバッグ用）
-	if (CheckHitKey(KEY_INPUT_V)) {
-		printf("Vキー押下中, クールダウン: %.1f\n", reflectionCooldown);
+	//反射モードの状態をコンソールに出力（デバッグ用）
+	if (input->IsPushKey(KEY_V)) {
+//		printf("Vキー押下中, クールダウン: %.1f\n", reflectionCooldown);
 	}
-
 
 	if (reflectionCooldown > 0)
 	{
@@ -59,7 +60,6 @@ void Player::Draw()
 		DrawString(0, 470, _T("反射クールダウン中..."), 0xFF0000);
 	}
 
-
 	//有効なら.
 	if (active) {
 		//四角形.
@@ -85,17 +85,19 @@ void Player::Draw()
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
+	InputST* input = InputST::GetPtr();
+
 	//移動する.
 	if (p_data->isSlow) {
-		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
-		InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED); //コントローラ移動(仮)
+		input->InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
+		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED); //コントローラ移動(仮)
 	}
 	else {
-		InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
-		InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED); //コントローラ移動(仮)
+		input->InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
+		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED); //コントローラ移動(仮)
 	}
 	//移動限界.
-	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+	input->FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
 
 BOOL Player::IsReflectionMode()

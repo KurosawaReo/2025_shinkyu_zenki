@@ -42,7 +42,9 @@ void Obstacle::Draw() {
 		DrawLineST(&debugLine1);
 		DrawLineST(&debugLine2);
 
-		DrawString(0, 455, _T("[Debug] ü‚Ì“–‚½‚è”»’è‚ğ•\¦"), 0xFFFFFF);
+		
+		
+		(0, 455, _T("[Debug] ü‚Ì“–‚½‚è”»’è‚ğ•\¦"), 0xFFFFFF);
 	}
 
 	//ü‚Ì•`‰æ.

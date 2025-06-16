@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/06/11
+   ver.2025/06/14
 
    共通で使用する型やマクロを入れる所.
 */
@@ -20,28 +20,25 @@
   #include "DxLib.h"
 #endif
 
-#if !defined DEF_INT_XY
-#define DEF_INT_XY
 //int型の凝縮xy.
 struct INT_XY
 {
 	int x;
 	int y;
 };
-#endif
-
-#if !defined DEF_DBL_XY
-#define DEF_DBL_XY
 //double型の凝縮xy.
 struct DBL_XY
 {
 	double x;
 	double y;
 };
-#endif
+//画像データ格納用.
+struct IMG
+{
+	int    handle;	 //ハンドル.
+	INT_XY size;	 //画像のサイズ.
+};
 
-#if !defined DEF_OBJECT
-#define DEF_OBJECT
 //円データ.
 struct Circle
 {
@@ -63,41 +60,45 @@ struct Line
 	DBL_XY edPos; //終点座標.
 	UINT   clr;   //色.
 };
-//画像データ格納用.
-struct IMG
-{
-	int    handle;	 //ハンドル.
-	INT_XY size;	 //画像のサイズ.
-};
-
 //オブジェクト(四角形)
 struct ObjectBox
 {
-	Box box{}; //当たり判定と座標.
-	IMG img{}; //画像.
+	Box    box{};      //当たり判定と座標.
+	DBL_XY offset{};   //画像をずらす量.
+	IMG    img{};      //画像.
+	BOOL   isActive{}; //有効かどうか.
 
-	ObjectBox(DBL_XY _pos, INT_XY _size, UINT _clr) :
-		box({ _pos, _size, _clr })
+	//初期化用.
+	ObjectBox(){}
+	//初期化用(引数あり)
+	ObjectBox(DBL_XY _pos, INT_XY _size, DBL_XY _offset, UINT _clr, BOOL _isActive) :
+		box     ({_pos, _size, _clr}), 
+		offset  (_offset), 
+		isActive(_isActive)
 	{}
 };
 //オブジェクト(円)
 struct ObjectCir
 {
-	Circle cir{}; //当たり判定と座標.
-	IMG    img{}; //画像.
+	Circle cir{};      //当たり判定と座標.
+	DBL_XY offset{};   //画像をずらす量.
+	IMG    img{};      //画像.
+	BOOL   isActive{}; //有効かどうか.
 
-	ObjectCir(DBL_XY pos, int r, UINT clr) :
-		cir({ pos, r, clr })
+	//初期化用.
+	ObjectCir(){}
+	//初期化用(引数あり)
+	ObjectCir(DBL_XY _pos, int _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
+		cir     ({ _pos, _r, _clr }), 
+		offset  (_offset), 
+		isActive(_isActive)
 	{}
 };
-#endif
 
-#if !defined DEF_VARTYPE_MACRO
-  #define DEF_VARTYPE_MACRO
-  #define _int(n)   (int)(round(n))            //int型変換マクロ.
-  #define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
-  #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
-#endif
+//型変換マクロ.
+#define _int(n)   (int)(round(n))            //int型変換マクロ.
+#define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
+#define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
 
 // - 列挙体 -
 enum Scene
