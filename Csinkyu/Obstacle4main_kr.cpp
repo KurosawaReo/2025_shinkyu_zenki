@@ -1,6 +1,7 @@
 /*
-   - Obstacle4main_syusei.cpp -
-   障害物管理クラス (小田島作)
+   - Obstacle4main_kr.cpp -
+
+   レーザーの継承元クラス (黒澤修正)
    プレイヤーを追尾するレーザーを発射する障害物を実装
 
    << 2025/06/13 >>
@@ -9,6 +10,9 @@
 */
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
+
+//これが定義されてなければ、こちらがON.
+#if !defined ODAZIMA_LASER
 
 /**
  * @brief 障害物の更新処理
@@ -52,9 +56,9 @@ void Obstacle4main::Draw()
 	// 通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
+	/*
 	//レーザーの色を変えるためには↑を改造する必要あり.
 	//ここは一旦保留.
-#if false
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 	{
 		//無効なレーザーはスキップ.
@@ -63,7 +67,7 @@ void Obstacle4main::Draw()
 		// 反射レーザーは赤色、通常レーザーは緑色で描画
 		int color = laser[i].isReflected ? GetColor(255, 100, 100) : GetColor(100, 255, 100);
 	}
-#endif
+	*/
 
 	//[debug] レーザーの先端に円を描く.
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
@@ -246,13 +250,13 @@ void Obstacle4main::enemy4Move()
 //	}
 //
 //	DrawString(0, 450, _T("反射処理を開始します。レーザー位置:(%.2f, %.2f) 速度:(%.2f, %.2f)\n",
-//		ld[laserIndex].x, ld[laserIndex].y, ld[laserIndex].sx, ld[laserIndex].sy), 0xFFFFFF);
+//		laser[laserIndex].x, laser[laserIndex].y, laser[laserIndex].sx, laser[laserIndex].sy), 0xFFFFFF);
 //
 //	CreateReflectedLasers(
-//		ld[laserIndex].x,
-//		ld[laserIndex].y,
-//		ld[laserIndex].sx,
-//		ld[laserIndex].sy
+//		laser[laserIndex].x,
+//		laser[laserIndex].y,
+//		laser[laserIndex].sx,
+//		laser[laserIndex].sy
 //	);
 //
 //	//プレイヤーのクールダウンを設定.
@@ -260,7 +264,7 @@ void Obstacle4main::enemy4Move()
 //
 //
 //	//元のレーザーを無効化.
-//	ld[laserIndex].ValidFlag = 0;
+//	laser[laserIndex].ValidFlag = 0;
 //
 //	return TRUE;//反射処理完了.
 //}
@@ -312,3 +316,5 @@ void Obstacle4main::CreateReflectedLasers(double reflectX, double reflectY, int 
 
 	//printfDx(_T("反射レーザー生成完了: %d個作成\n"), createdCount);
 }
+
+#endif

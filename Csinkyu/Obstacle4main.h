@@ -1,21 +1,24 @@
 /*
    - Obstacle4main.h -
-   障害物管理.
+
+   レーザーの継承元クラス.
 */
 #pragma once
 #include "Player.h"
 
+#define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
+
 //レーザー本体.
 typedef struct tagLASER_DATA
 {
-	double x, y;      //現在の画像.
-	double sx, sy;    //現在の速度.
+	double x, y;        //現在の画像.
+	double sx, sy;      //現在の速度.
 
-	int    LogNum;    //記録した軌跡の数.
-	float  Counter;   //追尾を初めてから通過した時間.
+	int    LogNum;      //記録した軌跡の数.
+	float  Counter;     //追尾を初めてから通過した時間.
 
-	int    ValidFlag; //このデータが使用中かフラグ.
-	BOOL isReflected; //反射用レーザーかどうか.
+	int    ValidFlag;   //このデータが使用中かフラグ.
+	BOOL   isReflected; //反射用レーザーかどうか.
 
 }LASER_DATA, * LPLASER_DATA;
 
@@ -36,7 +39,7 @@ protected:
 	float Hm{};        //砲台の移動方向.
 	float Hsc{};       //砲台のショット間隔カウンタ.
 	float HscTm{};     //砲台がショットする時間.
-	MoveDir moveDir{};  // 現在の移動方向.
+	MoveDir moveDir{}; // 現在の移動方向.
 
 	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
 	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
@@ -57,5 +60,6 @@ public:
 
 	//反射処理.
 	BOOL HandleLaserHit(int laserIndex);
+	void ReflectLaser(int laserIndex, DBL_XY playerPos);
 	void CreateReflectedLasers(double reflectX, double reflectY, int originalSx, int originalSy);
 };
