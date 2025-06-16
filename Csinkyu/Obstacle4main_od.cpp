@@ -41,7 +41,7 @@ void Obstacle4main::Draw()
 		g = max(g, 0); //最低値を0にする.
 
 		// 軌跡の線を描画（時間経過で色が変化）
-		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(0, g, 0) };
+		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(50, g, 255) };
 		DrawLineST(&tmpLine);
 
 		// 経過時間カウンタ増加
@@ -67,11 +67,16 @@ void Obstacle4main::enemy4Move()
 	const DBL_XY pPos = player->GetPos();        // プレイヤーの現在位置を取得
 	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
+	// 反射モード中かどうかを一度だけ判定
+	bool isReflectionMode = player->IsReflectionMode();
+
 	// 各レーザーの処理
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 	{
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
+		bool isReflected = false; //弾が反射したかどうか.
+	
 		//レーザータイプ別.
 		switch (laser[i].type) 
 		{
@@ -85,8 +90,9 @@ void Obstacle4main::enemy4Move()
 					{
 						// レーザーを反射させる
 						ReflectLaser(i, pPos);
-						Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(100, 255, 100) };
 						player->UseReflection(); // 反射使用でクールダウン開始
+						Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(100, 255, 100) };
+						isReflected = true; //反射したことを記録.
 					}
 					else
 					{
@@ -102,6 +108,11 @@ void Obstacle4main::enemy4Move()
 
 			//想定外の値エラー.
 			default: assert(FALSE); break;
+		}
+
+		//反射したら処理終了.
+		if (isReflected) {
+			continue;
 		}
 
 		// レーザーの追尾処理（発射後一定時間のみ）
@@ -152,8 +163,8 @@ void Obstacle4main::enemy4Move()
 				// 軌跡データの設定
 				line[j].x1 = befPos.x;     // 開始点X座標
 				line[j].y1 = befPos.y;     // 開始点Y座標
-				line[j].x2 = laser[i].x;      // 終了点X座標
-				line[j].y2 = laser[i].y;      // 終了点Y座標
+				line[j].x2 = laser[i].x;   // 終了点X座標
+				line[j].y2 = laser[i].y;   // 終了点Y座標
 				line[j].Counter = 0;       // 経過時間カウンタ初期化
 				line[j].ValidFlag = 1;     // 軌跡を有効化
 				break;
@@ -165,6 +176,7 @@ void Obstacle4main::enemy4Move()
 			laser[i].y < -100 || laser[i].y > WINDOW_HEI + 100)
 		{
 			laser[i].ValidFlag = 0;
+			laser[i].type = Laser_Normal; //ノーマルモードに戻す.
 		}
 	}
 
@@ -193,11 +205,11 @@ void Obstacle4main::enemy4Move()
 					// レーザーデータの初期化
 					laser[i].x = startX;			// 初期X座標
 					laser[i].y = startY;			// 初期Y座標
-					laser[i].sx = cos(angle) * 30; // X方向初期速度
-					laser[i].sy = sin(angle) * 30; // Y方向初期速度
+					laser[i].sx = cos(angle) * 30;  // X方向初期速度
+					laser[i].sy = sin(angle) * 30;  // Y方向初期速度
 					laser[i].Counter = 0;			// 経過時間カウンタ初期化
 					laser[i].LogNum = 0;			// 軌跡カウンタ初期化
-					laser[i].ValidFlag = 1;		// レーザーを有効化
+					laser[i].ValidFlag = 1;			// レーザーを有効化
 					break;
 				}
 			}
