@@ -104,9 +104,9 @@ BOOL Player::IsReflectionMode()
 	int cooldownOK = (reflectionCooldown <= 0);
 
 	// デバッグ出力.
-	DrawFormatString(0, 300, 0xFF0000, _T("反射モード確認: Vキー=%d"), vKeyPressed);
-	DrawFormatString(0, 320, 0xFF0000, _T("クールダウン=%.1f"), reflectionCooldown);
-	DrawFormatString(0, 340, 0xFF0000, _T("結果=%d"), (vKeyPressed & cooldownOK));
+	//DrawFormatString(0, 300, 0xFF0000, _T("反射モード確認: Vキー=%d"), vKeyPressed);
+	//DrawFormatString(0, 320, 0xFF0000, _T("クールダウン=%.1f"), reflectionCooldown);
+	//DrawFormatString(0, 340, 0xFF0000, _T("結果=%d"), (vKeyPressed & cooldownOK));
 
 	return vKeyPressed && cooldownOK;
 }

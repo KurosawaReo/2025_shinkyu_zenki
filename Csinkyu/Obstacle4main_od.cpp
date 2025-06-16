@@ -41,7 +41,7 @@ void Obstacle4main::Draw()
 		g = max(g, 0); //最低値を0にする.
 
 		// 軌跡の線を描画（時間経過で色が変化）
-		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(0, g, 0) };
+		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(50, g, 255) };
 		DrawLineST(&tmpLine);
 
 		// 経過時間カウンタ増加
@@ -67,6 +67,10 @@ void Obstacle4main::enemy4Move()
 	DBL_XY pPos = player->GetPos(); // プレイヤーの現在位置を取得
 	double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
+	// 反射モード中かどうかを一度だけ判定
+	bool isReflectionMode = player->IsReflectionMode();
+	bool hasReflected = false; // この フレームで反射したかどうか
+
 	// 各レーザーの処理
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 	{
@@ -83,8 +87,7 @@ void Obstacle4main::enemy4Move()
 			{
 				// レーザーを反射させる
 				ReflectLaser(i, pPos);
-				Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(100, 255, 100) };
-				player->UseReflection(); // 反射使用でクールダウン開始
+				hasReflected = true;//反射したことを記録
 			}
 			else
 			{
