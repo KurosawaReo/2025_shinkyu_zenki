@@ -159,7 +159,7 @@ void GameManager::UpdateTitle()
 	InputST* input = InputST::GetPtr();
 
 	//特定の操作でゲーム開始.
-	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_A) == 1)
+	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_X) == 1)
 	{
 		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
@@ -167,6 +167,8 @@ void GameManager::UpdateTitle()
 }
 void GameManager::UpdateGame() {
 	
+	DrawFormatString(30, 200, 0xFFFFFF, _T("%d"), GetJoypadInputState(DX_INPUT_PAD1));
+
 #if false
 	//稼働してなければ.
 	if (!tmSlowMode.GetIsMove()) {
@@ -217,7 +219,7 @@ void GameManager::DrawTitle() {
 	//ゲームが開始されていない場合は開始案内を表示
 	{
 		//テキストの設定.
-		STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID / 2, 160}, 0xFFFFFF };
+		STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
 		//画面中央に文字を表示.
 		DrawStringST(&str, TRUE, data.font2); //fontあり.
 	}

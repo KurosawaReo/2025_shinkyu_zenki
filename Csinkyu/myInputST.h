@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/15
+   ver.2025/06/16
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -9,10 +9,10 @@
 //キーID(不正な値を入力できないように)
 enum KEY_ID
 {
-	KEY_LEFT  = KEY_INPUT_LEFT,
-	KEY_UP    = KEY_INPUT_UP,
-	KEY_RIGHT = KEY_INPUT_RIGHT,
 	KEY_DOWN  = KEY_INPUT_DOWN,
+	KEY_LEFT  = KEY_INPUT_LEFT,
+	KEY_RIGHT = KEY_INPUT_RIGHT,
+	KEY_UP    = KEY_INPUT_UP,
 	KEY_A     = KEY_INPUT_A,
 	KEY_B     = KEY_INPUT_B,
 	KEY_C     = KEY_INPUT_C,
@@ -52,14 +52,19 @@ enum MOUSE_ID
 //コントローラボタンID(不正な値を入力できないように)
 enum PAD_BTN_ID
 {
-	PAD_BTN_LEFT  = PAD_INPUT_LEFT,
-	PAD_BTN_UP    = PAD_INPUT_UP,
-	PAD_BTN_RIGHT = PAD_INPUT_RIGHT,
-	PAD_BTN_DOWN  = PAD_INPUT_DOWN,
-	PAD_BTN_A     = PAD_INPUT_A,
-	PAD_BTN_B     = PAD_INPUT_B,
-	PAD_BTN_X     = PAD_INPUT_X,
-	PAD_BTN_Y     = PAD_INPUT_Y,
+	//DxLibで用意されている定数とは違うため直指定(xboxコントローラ基準)
+	PAD_BTN_DOWN  = 0x0001,
+	PAD_BTN_LEFT  = 0x0002,
+	PAD_BTN_RIGHT = 0x0004,
+	PAD_BTN_UP    = 0x0008,
+	PAD_BTN_A     = 0x0010,
+	PAD_BTN_B     = 0x0020,
+	PAD_BTN_X     = 0x0040,
+	PAD_BTN_Y     = 0x0080,
+	PAD_BTN_L     = 0x0100,
+	PAD_BTN_R     = 0x0200,
+	PAD_STICK_L   = 0x1000,
+	PAD_STICK_R   = 0x2000,
 };
 
 //キーやボタンの種類の最大数(変更禁止)

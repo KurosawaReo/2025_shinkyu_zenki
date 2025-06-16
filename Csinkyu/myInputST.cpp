@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/15
+   ver.2025/06/16
 
    DxLibで使う用のオリジナル入力関数.
 */

@@ -92,7 +92,6 @@ void Obstacle4main::enemy4Move()
 						ReflectLaser(i, pPos);
 						player->UseReflection(); // 反射使用でクールダウン開始
 						Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(100, 255, 100) };
-						isHit = true; //当たったことを記録.
 					}
 					else
 					{
@@ -100,6 +99,7 @@ void Obstacle4main::enemy4Move()
 						laser[i].ValidFlag = 0;
 						player->PlayerDeath();
 					}
+					isHit = true; //当たったことを記録.
 				}
 				break;
 
