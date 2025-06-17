@@ -131,7 +131,7 @@ struct GameData
 #define WINDOW_HEI					(480)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT			(32)			//ウィンドウのカラーbit数.
 
-#define WAIT_LOOP_MS				(1000/80)		//ループ処理の待機時間(m秒)
+#define FPS							(80)			//ループ処理の待機時間(m秒)
 
 #define SLOW_MODE_TIME				(5)             //スローモード制限時間.
 #define SLOW_MODE_SPEED				(0.20f)			//スローモード速度倍率.

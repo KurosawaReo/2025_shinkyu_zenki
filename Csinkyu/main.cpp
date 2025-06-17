@@ -22,7 +22,7 @@ void Init() {
 
 BOOL Update() {
 
-	if (tmFps.GetPassTime() < 1000000/100) {
+	if (tmFps.GetPassTime() < 1000000/FPS) {
 		return FALSE;
 	}
 	tmFps.Start();
@@ -60,7 +60,6 @@ int WINAPI WinMain(
 			Draw();			   // •`‰æˆ—
 			ScreenFlip();      // •\‰æ–Ê‚Ö•`‰æ
 		}
-//		WaitTimer(10);          // ‘Ò‹@ŽžŠÔ(m•b)
 	}
 
 	DxLib_End(); //DXƒ‰ƒCƒuƒ‰ƒŠ‚ÌI—¹ˆ—
