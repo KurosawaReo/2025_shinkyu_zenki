@@ -55,5 +55,8 @@ LONGLONG TimerMicro::GetPassTime() {
 		default: assert(FALSE); break;
 	}
 
+	ret *= 1000000;
+	ret /= freq.QuadPart;
+
 	return ret; //ŽžŠÔ‚ð•Ô‚·.
 }

@@ -85,19 +85,17 @@ void Obstacle4main::enemy4Move()
 				if ((laser[i].x > pPos.x - pSizeHalf && laser[i].x < pPos.x + pSizeHalf) &&
 					(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
 				{
-					// プレイヤーが反射モード中かチェック
+					//反射あり.
 					if (player->IsReflectionMode())
 					{
-						// レーザーを反射させる
-						ReflectLaser(i, pPos);
-						player->UseReflection(); // 反射使用でクールダウン開始
-						Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(100, 255, 100) };
+						ReflectLaser(i, pPos);   //レーザーを反射.
+						player->UseReflection(); //クールダウン開始.
 					}
+					//反射なし.
 					else
 					{
-						// 通常時はレーザーを無効化してプレイヤー死亡
-						laser[i].ValidFlag = 0;
-						player->PlayerDeath();
+						laser[i].ValidFlag = 0; //レーザーを無効化.
+						player->PlayerDeath();  //プレイヤー死亡.
 					}
 					isHit = true; //当たったことを記録.
 				}

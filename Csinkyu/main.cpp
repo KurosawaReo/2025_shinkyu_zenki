@@ -4,16 +4,31 @@
 */
 #include "GameManager.h"
 
+//stdafxがあるならいらない.
+#if false
+  #include "myTimerST.h"
+#endif
+
 GameManager GameManager::self; //static変数の宣言.
 GameManager* gm;               //実体を入れる用.
 
+TimerMicro tmFps(CountUp, 0);  //fps計測用タイマー.
+
 void Init() {
+	tmFps.Start();
 	gm = GameManager::GetPtr(); //GameManagerから実体取得.
 	gm->Init();
 }
 
-void Update() {
+BOOL Update() {
+
+	if (tmFps.GetPassTime() < 1000000/100) {
+		return FALSE;
+	}
+	tmFps.Start();
+	
 	gm->Update();
+	return TRUE;
 }
 
 void Draw() {
@@ -40,11 +55,12 @@ int WINAPI WinMain(
 	Init();
 	//ESCが押されるまでループ.
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
-		ClearDrawScreen(); // 画面クリア
-		Update();          // 更新処理
-		Draw();            // 描画処理
-		ScreenFlip();      // 表画面へ描画
-		WaitTimer(WAIT_LOOP_MS); // 待機時間(m秒)
+		if (Update()) {        // 更新処理
+			ClearDrawScreen(); // 画面クリア
+			Draw();			   // 描画処理
+			ScreenFlip();      // 表画面へ描画
+		}
+//		WaitTimer(10);          // 待機時間(m秒)
 	}
 
 	DxLib_End(); //DXライブラリの終了処理

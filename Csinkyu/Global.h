@@ -10,7 +10,7 @@
 #define DEF_GLOBAL_H
 
 //stdafxがあるならいらない.
-#if true
+#if false
   #define _USE_MATH_DEFINES  //math定数を使うのに必要.
   #define _CRT_SECURE_NO_WARNINGS
   #include <stdlib.h>
@@ -139,6 +139,7 @@ struct GameData
 #define PLAYER_SIZE					(20)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED			(5)				//プレイヤー移動速度.
 #define PLAYER_HIT_R				(10)			//プレイヤーの当たり判定円の半径.
+#define PLAYER_REF_COOLDOWN			(0)				//反射クールダウン時間.
 
 #define ITEM_SIZE					(20)			//アイテムサイズ.
 #define ITEM_SPEED					(9)				//アイテム移動スピード.  

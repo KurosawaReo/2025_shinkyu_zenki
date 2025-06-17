@@ -77,12 +77,12 @@ public:
 	void Start() {
 		QueryPerformanceCounter(&tmStart); //タイマー開始.
 		tmEnd.QuadPart = 0;
-		isMove = TRUE;     //計測中.
+		isMove = TRUE; //計測中.
 	}
 	void Stop() {
 		if (isMove) {
 			QueryPerformanceCounter(&tmEnd); //タイマー終了.
-			isMove = FALSE;  //停止.
+			isMove = FALSE; //停止.
 		}
 	}
 	void Reset() {

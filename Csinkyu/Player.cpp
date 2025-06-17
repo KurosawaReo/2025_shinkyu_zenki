@@ -102,7 +102,9 @@ void Player::PlayerMove()
 
 BOOL Player::IsReflectionMode()
 {
-	int vKeyPressed = CheckHitKey(KEY_INPUT_V);
+	InputST* input = InputST::GetPtr(); //input情報を取得.
+
+	int vKeyPressed = input->IsPushKey(KEY_V); //Vキーを押していれば.
 	int cooldownOK = (reflectionCooldown <= 0);
 
 	// デバッグ出力.
@@ -115,11 +117,11 @@ BOOL Player::IsReflectionMode()
 
 void Player::UseReflection()
 {
-	reflectionCooldown = 60;
+	reflectionCooldown = PLAYER_REF_COOLDOWN; //クールダウン開始.
 }
 float Player::GetReflectionCooldown()
 {
-	return reflectionCooldown;
+	return reflectionCooldown; //クールダウン時間を返す.
 }
 
 
