@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/16
+   ver.2025/06/17
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -52,7 +52,7 @@ enum MOUSE_ID
 //コントローラボタンID(不正な値を入力できないように)
 enum PAD_BTN_ID
 {
-	//DxLibで用意されている定数とは違うため直指定(xboxコントローラ基準)
+	//DxLibの定数とは違うため直指定(xboxコントローラ基準)
 	PAD_BTN_DOWN  = 0x0001,
 	PAD_BTN_LEFT  = 0x0002,
 	PAD_BTN_RIGHT = 0x0004,
@@ -63,8 +63,10 @@ enum PAD_BTN_ID
 	PAD_BTN_Y     = 0x0080,
 	PAD_BTN_L     = 0x0100,
 	PAD_BTN_R     = 0x0200,
-	PAD_STICK_L   = 0x1000,
-	PAD_STICK_R   = 0x2000,
+	PAD_BTN_VIEW  = 0x0400,
+	PAD_BTN_MENU  = 0x0800,
+	PAD_STICK_L   = 0x1000, //左スティック押し込み.
+	PAD_STICK_R   = 0x2000, //右スティック押し込み.
 };
 
 //キーやボタンの種類の最大数(変更禁止)

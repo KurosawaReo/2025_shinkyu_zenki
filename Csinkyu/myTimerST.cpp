@@ -1,6 +1,6 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/06/10
+   ver.2025/06/17
 
    DxLibで使う用のオリジナル時間関数.
 */
@@ -10,22 +10,46 @@
 
 #include "myTimerST.h"
 
-//時間取得.
-float Timer::GetTime() {
+//経過時間取得.
+float Timer::GetPassTime() {
 
-	//終わりの時間.
-	clock_t ed = (isMove) ? clock() : edTime;
+	//終了時刻のセット.
+	if (isMove) { tmEnd = clock(); }
 	//時間差.
 	float ret = 0;
 
 	switch (mode)
 	{
 		case CountUp:
-			ret = initTime + (float)(ed - stTime)/1000; //タイマー増加.
+			ret = tmInit + (float)(tmEnd - tmStart)/1000; //タイマー増加.
 			break;
 		case CountDown:
-			ret = initTime - (float)(ed - stTime)/1000; //タイマー減少.
+			ret = tmInit - (float)(tmEnd - tmStart)/1000; //タイマー減少.
 			ret = max(ret, 0); //下限は0秒.
+			break;
+
+		default: assert(FALSE); break;
+	}
+
+	return ret; //時間を返す.
+}
+
+//経過時間取得(マイクロ秒)
+LONGLONG TimerMicro::GetPassTime() {
+
+	//終了時刻のセット.
+	if (isMove) { QueryPerformanceCounter(&tmEnd); }
+	//時間差.
+	LONGLONG ret = 0;
+
+	switch (mode)
+	{
+		case CountUp:
+			ret = tmInit + tmEnd.QuadPart - tmStart.QuadPart; //タイマー増加.
+			break;
+		case CountDown:
+			ret = tmInit - tmEnd.QuadPart - tmStart.QuadPart; //タイマー減少.
+			ret = max(ret, 0); //下限は0μ秒.
 			break;
 
 		default: assert(FALSE); break;

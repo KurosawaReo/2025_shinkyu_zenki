@@ -13,8 +13,8 @@ private: //実体.
 private: //データ.
 	GameData data{}; //ゲームデータ.
 
-	Timer tmGame     = Timer(0, CountUp);                //ゲーム時間.
-	Timer tmSlowMode = Timer(SLOW_MODE_TIME, CountDown); //スロー継続時間.
+	Timer tmGame     = Timer(CountUp,   0);              //ゲーム時間.
+	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
 public:
 	//実体の取得.
