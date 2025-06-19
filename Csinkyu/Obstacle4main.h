@@ -31,6 +31,14 @@ typedef struct tagLINE_DATA
 	int    ValidFlag;       //このデータが使用中かフラグ
 }LINE_DATA, * LPLINE_DATA;
 
+typedef struct tagFLASHEFFECT
+{
+	double x, y;    // エフェクト位置.
+	float Counter;  // 経過時間.
+	float Duration; // エフェクトの持続時間.
+	int BaseSize;   // 基本サイズ
+	int ValidFlag; // 有効フラグ
+};
 //継承元となるクラス(親)
 class Obstacle4main
 {
@@ -44,7 +52,7 @@ protected:
 	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
 	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 	IMG        img{};
-
+	tagFLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]; // クラスのメンバ変数として追加
 	GameData*  data{};
 	Player*    player{};
 
@@ -57,6 +65,9 @@ public:
 	//移動系.
 	        void enemy4Move();
 	virtual void Move() = 0;
+
+	//出る直前の点滅.
+	void CreateFlashEffect(double x, double y);
 
 	//反射処理.
 	BOOL HandleLaserHit(int laserIndex);
