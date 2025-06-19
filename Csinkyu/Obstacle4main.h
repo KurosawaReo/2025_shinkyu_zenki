@@ -8,17 +8,25 @@
 
 #define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
 
+//レーザータイプ.
+enum LaserType
+{
+	Laser_Normal,    //通常レーザー.
+	Laser_Reflected, //反射レーザー.
+};
+
 //レーザー本体.
 typedef struct tagLASER_DATA
 {
-	double x, y;        //現在の画像.
-	double sx, sy;      //現在の速度.
+	double    x, y;      //現在の画像.
+	double    sx, sy;    //現在の速度.
 
-	int    LogNum;      //記録した軌跡の数.
-	float  Counter;     //追尾を初めてから通過した時間.
+	int       LogNum;    //記録した軌跡の数.
+	float     Counter;   //追尾を初めてから通過した時間.
 
-	int    ValidFlag;   //このデータが使用中かフラグ.
-	BOOL   isReflected; //反射用レーザーかどうか.
+	int       ValidFlag; //このデータが使用中かフラグ.
+
+	LaserType type;      //レーザータイプ.
 
 }LASER_DATA, * LPLASER_DATA;
 

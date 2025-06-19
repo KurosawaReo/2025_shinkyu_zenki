@@ -123,37 +123,52 @@ void Obstacle4main::CreateFlashEffect(double fx, double fy)
  */
 void Obstacle4main::enemy4Move()
 {
-	DBL_XY pPos = player->GetPos(); // プレイヤーの現在位置を取得
-	double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
+	const DBL_XY pPos = player->GetPos();        // プレイヤーの現在位置を取得
+	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
 	// 反射モード中かどうかを一度だけ判定
 	bool isReflectionMode = player->IsReflectionMode();
-	bool hasReflected = false; // この フレームで反射したかどうか
 
 	// 各レーザーの処理
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
 	{
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
-		DBL_XY befPos;  // 前回位置を保存する変数
-
-		// プレイヤーとレーザーの当たり判定
-		if ((laser[i].x > pPos.x - pSizeHalf && laser[i].x < pPos.x + pSizeHalf) &&
-			(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
+		bool isHit = false; //弾が当たったかどうか.
+	
+		//レーザータイプ別.
+		switch (laser[i].type) 
 		{
-			// プレイヤーが反射モード中かチェック
-			if (player->IsReflectionMode())
-			{
-				// レーザーを反射させる
-				ReflectLaser(i, pPos);
-				hasReflected = true;//反射したことを記録
-			}
-			else
-			{
-				// 通常時はレーザーを無効化してプレイヤー死亡
-				laser[i].ValidFlag = 0;
-				player->PlayerDeath();
-			}
+			case Laser_Normal:
+				// プレイヤーとレーザーの当たり判定
+				if ((laser[i].x > pPos.x - pSizeHalf && laser[i].x < pPos.x + pSizeHalf) &&
+					(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
+				{
+					//反射あり.
+					if (player->IsReflectionMode())
+					{
+						ReflectLaser(i, pPos);   //レーザーを反射.
+						player->UseReflection(); //クールダウン開始.
+					}
+					//反射なし.
+					else
+					{
+						laser[i].ValidFlag = 0; //レーザーを無効化.
+						player->PlayerDeath();  //プレイヤー死亡.
+					}
+					isHit = true; //当たったことを記録.
+				}
+				break;
+
+			case Laser_Reflected:
+				break;
+
+			//想定外の値エラー.
+			default: assert(FALSE); break;
+		}
+
+		//当たったら処理終了.
+		if (isHit) {
 			continue;
 		}
 
@@ -186,6 +201,7 @@ void Obstacle4main::enemy4Move()
 		laser[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
 
 		// 移動前の座標を保存
+		DBL_XY befPos;  // 前回位置を保存する変数
 		befPos = { laser[i].x, laser[i].y };
 
 		// ミサイルの速度
@@ -205,8 +221,8 @@ void Obstacle4main::enemy4Move()
 				// 軌跡データの設定
 				line[j].x1 = befPos.x;     // 開始点X座標
 				line[j].y1 = befPos.y;     // 開始点Y座標
-				line[j].x2 = laser[i].x;      // 終了点X座標
-				line[j].y2 = laser[i].y;      // 終了点Y座標
+				line[j].x2 = laser[i].x;   // 終了点X座標
+				line[j].y2 = laser[i].y;   // 終了点Y座標
 				line[j].Counter = 0;       // 経過時間カウンタ初期化
 				line[j].ValidFlag = 1;     // 軌跡を有効化
 				break;
@@ -218,6 +234,7 @@ void Obstacle4main::enemy4Move()
 			laser[i].y < -100 || laser[i].y > WINDOW_HEI + 100)
 		{
 			laser[i].ValidFlag = 0;
+			laser[i].type = Laser_Normal; //ノーマルモードに戻す.
 		}
 	}
 
@@ -247,11 +264,11 @@ void Obstacle4main::enemy4Move()
 					// レーザーデータの初期化
 					laser[i].x = startX;			// 初期X座標
 					laser[i].y = startY;			// 初期Y座標
-					laser[i].sx = cos(angle) * 30; // X方向初期速度
-					laser[i].sy = sin(angle) * 30; // Y方向初期速度
+					laser[i].sx = cos(angle) * 30;  // X方向初期速度
+					laser[i].sy = sin(angle) * 30;  // Y方向初期速度
 					laser[i].Counter = 0;			// 経過時間カウンタ初期化
 					laser[i].LogNum = 0;			// 軌跡カウンタ初期化
-					laser[i].ValidFlag = 1;		// レーザーを有効化
+					laser[i].ValidFlag = 1;			// レーザーを有効化
 					break;
 				}
 			}
@@ -306,10 +323,14 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 	// 反射後は追尾を無効化（カウンタを最大値に設定）
 	laser[laserIndex].Counter = 200;
 
+#if 1
 	// レーザーをプレイヤーから少し離れた位置に移動（重複当たり判定を防ぐ）
 	double pushDistance = PLAYER_SIZE / 2.0 + 5; // プレイヤーサイズの半分 + 余裕
 	laser[laserIndex].x = playerPos.x + reflectDx * pushDistance;
 	laser[laserIndex].y = playerPos.y + reflectDy * pushDistance;
+#endif
+
+	laser[laserIndex].type = Laser_Reflected; //反射モードへ.
 }
 
 #endif

@@ -12,7 +12,7 @@ private:
 	int    graph{};     //画像データ.
 	BOOL   active{};    //有効か.
 	
-	float reflectionCooldown;//反射のクールダウン時間.
+	float  reflectionCooldown{}; //反射のクールダウン時間.
 
 	GameData* p_data{}; //ゲームデータ.
 

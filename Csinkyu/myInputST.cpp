@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/11
+   ver.2025/06/17
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -10,46 +10,36 @@
 
 #include "myInputST.h"
 
-//キーやボタンの種類の最大数(変更禁止)
-#define KEY_MAX     256
-#define MOUSE_MAX   3
-#define PAD_BTN_MAX 32
-
-int g_tmKey   [KEY_MAX];     //キーを押している時間.
-int g_tmMouse [MOUSE_MAX];   //マウスを押下している時間.(bitフラグで管理)
-int g_tmPadBtn[PAD_BTN_MAX]; //コントローラボタンを押下している時間.(bitフラグで管理)
+InputST InputST::self; //実体の宣言.
 
 //キー入力の判定.
-BOOL IsPushKey(int keyNum) {
-	return (g_tmKey[keyNum] > 0);     //押してるならTRUE.
+BOOL InputST::IsPushKey(KEY_ID id) {
+	return (tmKey[id] > 0);     //押してるならTRUE.
 }
-int  IsPushKeyTime(int keyNum) {
-	return g_tmKey[keyNum];           //押している時間.
+int  InputST::IsPushKeyTime(KEY_ID id) {
+	return tmKey[id];           //押している時間.
 }
 //マウス入力の判定.
-BOOL IsPushMouse(int mouseNum) {
-	int num = (int)log2(mouseNum);    //2進数bitを何桁目かに変換.
-	return (g_tmMouse[num] > 0);      //押してるならTRUE.
+BOOL InputST::IsPushMouse(MOUSE_ID id) {
+	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	return (tmMouse[num] > 0);  //押してるならTRUE.
 }
-int  IsPushMouseTime(int mouseNum) {
-	int num = (int)log2(mouseNum);    //2進数bitを何桁目かに変換.
-	return g_tmMouse[num];            //押している時間.
+int  InputST::IsPushMouseTime(MOUSE_ID id) {
+	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	return tmMouse[num];        //押している時間.
 }
 //コントローラ入力の判定.
-BOOL IsPushPadBtn(int btnNum) {
-	int num = (int)log2(btnNum);      //2進数bitを何桁目かに変換.
-	return (g_tmPadBtn[num] > 0);     //押している時間.
+BOOL InputST::IsPushPadBtn(PAD_BTN_ID id) {
+	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	return (tmPadBtn[num] > 0); //押している時間.
 }
-int  IsPushPadBtnTime(int btnNum) {
-	int num = (int)log2(btnNum);      //2進数bitを何桁目かに変換.
-	return g_tmPadBtn[num];           //押している時間.
+int  InputST::IsPushPadBtnTime(PAD_BTN_ID id) {
+	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	return tmPadBtn[num];       //押している時間.
 }
 
 //マウス座標取得.
-void GetMousePos(DBL_XY* pos, BOOL isValidX, BOOL isValidY) {
-
-	INT_XY mPos{};
-	GetMousePoint(&mPos.x, &mPos.y); //取得.
+void InputST::GetMousePos(DBL_XY* pos, BOOL isValidX, BOOL isValidY) {
 	
 	//xを反映させる.
 	if (isValidX) {
@@ -61,26 +51,26 @@ void GetMousePos(DBL_XY* pos, BOOL isValidX, BOOL isValidY) {
 	}
 }
 //コントローラスティック操作取得.
-void GetJoypadStick() {
+void InputST::GetPadStick() {
 
 }
 
 //4方向移動(キー操作)
-void InputKey4Dir(DBL_XY* pos, float speed) {
+void InputST::InputKey4Dir(DBL_XY* pos, float speed) {
 
 	INT_XY pow{}; //移動力.
 
 	//キー入力に応じて移動力を与える.
-	if (CheckHitKey(KEY_INPUT_UP)   ||CheckHitKey(KEY_INPUT_W)) {
+	if (IsPushKey(KEY_UP)   ||IsPushKey(KEY_W)) {
 		pow.y += -1;
 	}
-	if (CheckHitKey(KEY_INPUT_DOWN) ||CheckHitKey(KEY_INPUT_S)) {
+	if (IsPushKey(KEY_DOWN) ||IsPushKey(KEY_S)) {
 		pow.y += +1;
 	}
-	if (CheckHitKey(KEY_INPUT_LEFT) ||CheckHitKey(KEY_INPUT_A)) {
+	if (IsPushKey(KEY_LEFT) ||IsPushKey(KEY_A)) {
 		pow.x += -1;
 	}
-	if (CheckHitKey(KEY_INPUT_RIGHT)||CheckHitKey(KEY_INPUT_D)) {
+	if (IsPushKey(KEY_RIGHT)||IsPushKey(KEY_D)) {
 		pow.x += +1;
 	}
 
@@ -89,21 +79,21 @@ void InputKey4Dir(DBL_XY* pos, float speed) {
 	pos->y += Move4Dir(pow).y * speed;
 }
 //4方向移動(コントローラ操作)
-void InputPad4Dir(DBL_XY* pos, float speed) {
+void InputST::InputPad4Dir(DBL_XY* pos, float speed) {
 
 	INT_XY pow{};  //移動力.
 
 	//キー入力に応じて移動力を与える.
-	if (IsPushPadBtn(PAD_INPUT_UP)) {
+	if (IsPushPadBtn(PAD_BTN_UP)) {
 		pow.y += -1;
 	}
-	if (IsPushPadBtn(PAD_INPUT_DOWN)) {
+	if (IsPushPadBtn(PAD_BTN_DOWN)) {
 		pow.y += +1;
 	}
-	if (IsPushPadBtn(PAD_INPUT_LEFT)) {
+	if (IsPushPadBtn(PAD_BTN_LEFT)) {
 		pow.x += -1;
 	}
-	if (IsPushPadBtn(PAD_INPUT_RIGHT)) {
+	if (IsPushPadBtn(PAD_BTN_RIGHT)) {
 		pow.x += +1;
 	}
 
@@ -112,7 +102,7 @@ void InputPad4Dir(DBL_XY* pos, float speed) {
 	pos->y += Move4Dir(pow).y * speed;
 }
 //移動4方向処理(斜め計算)
-DBL_XY Move4Dir(INT_XY pow){
+DBL_XY InputST::Move4Dir(INT_XY pow){
 
 	DBL_XY move{}; //求めた移動量.
 
@@ -131,7 +121,7 @@ DBL_XY Move4Dir(INT_XY pow){
 }
 
 //移動可能範囲内に補正する.
-void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
+void InputST::FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
 
 	if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
 	if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
@@ -140,7 +130,7 @@ void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int dow
 }
 
 //ボタンの更新処理.
-void UpdateKey() {
+void InputST::UpdateKey() {
 	
 	char key[KEY_MAX];
 	GetHitKeyStateAll(key); //押しているキー情報を取得.
@@ -148,36 +138,38 @@ void UpdateKey() {
 	for (int i = 0; i < KEY_MAX; i++) {
 		//押されているなら.
 		if (key[i] != 0) {
-			g_tmKey[i]++;   //カウント.
+			tmKey[i]++;   //カウント.
 		}
 		else {
-			g_tmKey[i] = 0; //0秒にリセット.
+			tmKey[i] = 0; //0秒にリセット.
 		}
 	}
 }
 //マウスの更新処理.
-void UpdateMouse() {
+void InputST::UpdateMouse() {
+
+	GetMousePoint(&mPos.x, &mPos.y); //マウス座標取得.
 
 	for (int i = 0; i < MOUSE_MAX; i++) {
 		//押されているなら.
 		if ((GetMouseInput() & (1 << i)) != 0) { //And演算で抽出.
-			g_tmMouse[i]++;   //カウント.
+			tmMouse[i]++;   //カウント.
 		}
 		else {
-			g_tmMouse[i] = 0; //0秒にリセット.
+			tmMouse[i] = 0; //0秒にリセット.
 		}
 	}
 }
 //コントローラの更新処理.
-void UpdatePadBtn() {
+void InputST::UpdatePadBtn() {
 
 	for (int i = 0; i < PAD_BTN_MAX; i++) {
 		//押されているなら.
 		if (GetJoypadInputState(DX_INPUT_PAD1) & (1 << i)) { //And演算で抽出.
-			g_tmPadBtn[i]++;   //カウント.
+			tmPadBtn[i]++;   //カウント.
 		}
 		else {
-			g_tmPadBtn[i] = 0; //0秒にリセット.
+			tmPadBtn[i] = 0; //0秒にリセット.
 		}
 	}
 }
