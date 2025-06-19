@@ -94,5 +94,6 @@ public:
 		return isMove;
 	}
 
-	LONGLONG GetPassTime(); //ŽžŠÔŽæ“¾.
+	LONGLONG GetPassTime ();          //ŽžŠÔŽæ“¾.
+	BOOL     IntervalTime(float sec); //ˆê’èŽžŠÔ‚²‚Æ‚ÉTRUE‚ð•Ô‚·.
 };

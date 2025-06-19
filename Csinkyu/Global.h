@@ -1,6 +1,5 @@
 /*
    - Global.h -
-   ver.2025/06/14
 
    共通で使用する型やマクロを入れる所.
 */
@@ -100,6 +99,8 @@ struct ObjectCir
 #define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
 #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
 
+#define _if_check(n) assert(n); if(n)        //if文の前に同条件のassertを挟む.
+
 // - 列挙体 -
 enum Scene
 {
@@ -131,7 +132,7 @@ struct GameData
 #define WINDOW_HEI					(480)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT			(32)			//ウィンドウのカラーbit数.
 
-#define FPS							(80)			//ループ処理の待機時間(m秒)
+#define FPS							(80)			//フレームレート.
 
 #define SLOW_MODE_TIME				(5)             //スローモード制限時間.
 #define SLOW_MODE_SPEED				(0.20f)			//スローモード速度倍率.

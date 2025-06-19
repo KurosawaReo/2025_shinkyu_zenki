@@ -15,20 +15,12 @@ GameManager* gm;               //実体を入れる用.
 TimerMicro tmFps(CountUp, 0);  //fps計測用タイマー.
 
 void Init() {
-	tmFps.Start();
 	gm = GameManager::GetPtr(); //GameManagerから実体取得.
 	gm->Init();
 }
 
-BOOL Update() {
-
-	if (tmFps.GetPassTime() < 1000000/FPS) {
-		return FALSE;
-	}
-	tmFps.Start();
-	
+void Update() {
 	gm->Update();
-	return TRUE;
 }
 
 void Draw() {
@@ -53,10 +45,14 @@ int WINAPI WinMain(
 
 	//初期化処理.
 	Init();
-	//ESCが押されるまでループ.
+	tmFps.Start();
+	//メインループ.
+	//ESCが押されるか、エラーが発生すれば終了.
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
-		if (Update()) {        // 更新処理
+		//一定時間ごとに処理.
+		if (tmFps.IntervalTime(FPS)) {
 			ClearDrawScreen(); // 画面クリア
+			Update();          // 更新処理
 			Draw();			   // 描画処理
 			ScreenFlip();      // 表画面へ描画
 		}
