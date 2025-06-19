@@ -29,3 +29,7 @@ public:
 	void Reset(float _Hx, float _Hy, float _Hm) override;
 	void Move() override;
 };
+class Obstacle4_yosoku :public Obstacle4main
+{
+public:
+};
