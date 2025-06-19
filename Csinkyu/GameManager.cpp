@@ -37,6 +37,7 @@
 
 #include "Player.h"
 #include "Obstacle4.h"
+#include "Obstacle4main.h"
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
@@ -58,6 +59,7 @@ Obstacle2 obstacle2;
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
+Obstacle4main ;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -197,6 +199,8 @@ void GameManager::UpdateGame() {
 	//障害物class.
 	obstacle4_1.Update();
 	obstacle4_2.Update();
+
+	
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.

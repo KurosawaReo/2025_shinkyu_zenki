@@ -50,6 +50,44 @@ void Obstacle4main::Draw()
 		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
 	}
 
+	//発射エフェクトの処理.
+	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
+	{
+		
+
+		if (flashEffect[i].ValidFlag == 0)
+		{
+			continue;//無効なエフェクトをスキップ.
+		}
+		DrawString(0, 400, _T("反応してる"), 0xFFFFFF);
+		//エフェクトの透明度を時間に応じて計算.
+		float alpha = 1.5f - (flashEffect[i].Counter / flashEffect[i].Duration);
+		int alphaValue = (int)(255 * alpha);
+		alphaValue = max(alphaValue, 0);
+
+		//エフェクトのサイズを時間に応じて拡大.
+		float sizeMuktiplier = 1.5f + (flashEffect[i].Counter / flashEffect[i].Duration);
+		int effectSize = (int)(flashEffect[i].BaseSize * sizeMuktiplier);
+
+		//発射エフェクトを円形で描画(白く光る)
+		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
+		DrawCircle((int)flashEffect[i].x, (int)flashEffect[i].y, effectSize, GetColor(0, 255, 255), FALSE);
+
+		// 内側により明るい円を描画
+		int innerSize = effectSize / 2;
+		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
+		DrawCircle((int)flashEffect[i].x, (int)flashEffect[i].y, innerSize, GetColor(0, 255, 200), FALSE);
+
+		// エフェクトのカウンタを更新
+		flashEffect[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+
+		// エフェクト時間が終了したら無効化
+		if (flashEffect[i].Counter >= flashEffect[i].Duration)
+		{
+			flashEffect[i].ValidFlag = 0;
+		}
+
+	}
 	// 通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
@@ -58,6 +96,27 @@ void Obstacle4main::Draw()
 	//DrawBoxST(&box, TRUE, FALSE);
 }
 
+
+
+void Obstacle4main::CreateFlashEffect(double fx, double fy)
+{
+	//未使用のエフェクトスロットを探す.
+	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
+	{
+		if (flashEffect[i].ValidFlag == 0)
+		{
+			DrawString(0, 400, _T("反応してる"), 0xFFFFFF);
+			//エフェクトデータの設定.
+			flashEffect[i].x = fx;
+			flashEffect[i].y = fy;
+			flashEffect[i].Counter = 0;
+			flashEffect[i].Duration = 15; //15フレーム光る.
+			flashEffect[i].BaseSize = 20; //基本サイズ
+			flashEffect[i].ValidFlag = 1;
+			break;
+		}
+	}
+}
 /**
  * @brief 敵（障害物）の移動処理
  * レーザーの移動とプレイヤーへの追尾、砲台の移動とレーザー発射を管理
@@ -158,6 +217,7 @@ void Obstacle4main::enemy4Move()
 		{
 			if (line[j].ValidFlag == 0)  // 未使用の軌跡スロットを探す
 			{
+
 				// 軌跡データの設定
 				line[j].x1 = befPos.x;     // 開始点X座標
 				line[j].y1 = befPos.y;     // 開始点Y座標
@@ -193,10 +253,11 @@ void Obstacle4main::enemy4Move()
 			{
 				if (laser[i].ValidFlag == 0)  // 未使用のレーザースロットを見つけた
 				{
+					CreateFlashEffect(Hx,Hy);
+
 					// 発射位置（砲台の少し下から）
 					double startX = Hx;
 					double startY = Hy;
-
 					// プレイヤー方向への初期角度計算
 					double angle = atan2(pPos.y - startY, pPos.x - startX);
 
