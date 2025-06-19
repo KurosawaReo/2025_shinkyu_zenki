@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/11
+   ver.2025/06/18
 
    DxLibで使う用のオリジナル計算関数.
 */
@@ -98,13 +98,20 @@ BOOL IsHitLine(const Line* line, const Circle* cir) {
 }
 
 //値の抽選.
-int RndNum(int st, int ed) {
+int RndNum(int st, int ed, BOOL isDxRnd) {
 	
 	int rnd = 0;
-	//edがst以上の時のみ抽選(0割回避)
-	assert(st <= ed);
-	if (st <= ed) {
-		rnd = rand() % ((ed - st)+1); //st～endの差で抽選.
+
+	//edがst以上の時のみ抽選.
+	_if_check(st <= ed) {
+
+		//DxLib用の乱数を使うかどうか.
+		if (isDxRnd) {
+			rnd = GetRand(ed-st); //st～endの差で抽選.
+		}
+		else {
+			rnd = rand() % ((ed - st)+1); //st～endの差で抽選.
+		}
 	}
 	return st + rnd;
 }
@@ -139,4 +146,9 @@ DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
     double x = cos(ang * M_PI/180) * len;
 
     return { stPos.x+x, stPos.y+y }; //終点座標を返す.
+}
+
+//角度から座標を求める.
+DBL_XY CalcAngToPos(double ang) {
+	return { cos(ang * M_PI/180), sin(ang * M_PI/180) };
 }

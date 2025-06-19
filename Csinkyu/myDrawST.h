@@ -1,10 +1,19 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/06/11
+   ver.2025/06/18
 
    DxLibで使う用のオリジナル描画関数.
 */
 #pragma once
+
+//フォントタイプID(入力しやすくする用)
+enum FONTTYPE_ID
+{
+	FONT_NORMAL = DX_FONTTYPE_NORMAL,
+	FONT_EDGE   = DX_FONTTYPE_EDGE,
+
+	FONT_NONE   = -1, //指定なし.
+};
 
 //画像描画に使う用.
 struct IMG_DRAW
@@ -83,3 +92,10 @@ int    DrawStringST    (const STR_DRAW*      data, BOOL isCenter, int font = -1)
 int    DrawRotaStringST(const STR_DRAW_ROTA* data, int font = -1);
 int    DrawModiStringST(const STR_DRAW_MODI* data, int font = -1);
 INT_XY GetTextSize     (const TCHAR str[], int font = -1);
+
+//フォント.
+int    CreateFontH     (int size, int thick, FONTTYPE_ID fontId = FONT_NONE);
+
+//オブジェクト.
+int    DrawObjectBox   (const ObjectBox* data, BOOL isDrawHit = FALSE);
+int    DrawObjectCir   (const ObjectCir* data, BOOL isDrawHit = FALSE);

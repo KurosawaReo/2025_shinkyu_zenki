@@ -28,17 +28,30 @@ void Obstacle4main::Update()
  */
 void Obstacle4main::Draw()
 {
-	// 加算合成モードで軌跡を描画（発光エフェクト）
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	// レーザーの軌跡の描画処理.
+	DrawObstLine();
 
-	// レーザーの軌跡の描画処理
+	// 発射エフェクトの処理.
+	DrawObstFlash();
+
+	// 動く砲台を描画.
+	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
+	//DrawBoxST(&box, TRUE, FALSE);
+}
+
+// レーザーの軌跡の描画処理.
+void Obstacle4main::DrawObstLine() {
+
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
-		//緑色の値, 時間経過で徐々に薄くする.
+		//時間経過で徐々に薄くする.
 		int g = _int(255 - line[i].Counter * 4);
 		g = max(g, 0); //最低値を0にする.
+
+		// 加算合成モードで軌跡を描画（発光エフェクト）
+		SetDrawBlendMode(DX_BLENDMODE_ADD, g);
 
 		// 軌跡の線を描画（時間経過で色が変化）
 		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(50, g, 255) };
@@ -50,73 +63,52 @@ void Obstacle4main::Draw()
 		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
 	}
 
-	//発射エフェクトの処理.
+	//通常の描画モードに戻す
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
+// 発射エフェクトの処理.
+void Obstacle4main::DrawObstFlash() {
+
 	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
 	{
-		
-
 		if (flashEffect[i].ValidFlag == 0)
 		{
 			continue;//無効なエフェクトをスキップ.
 		}
-		DrawString(0, 400, _T("反応してる"), 0xFFFFFF);
+
 		//エフェクトの透明度を時間に応じて計算.
-		float alpha = 1.5f - (flashEffect[i].Counter / flashEffect[i].Duration);
-		int alphaValue = (int)(255 * alpha);
-		alphaValue = max(alphaValue, 0);
+		float alpha = 1.0f - (
+			flashEffect[i].Counter * OBSTACLE4_FLASH_ALPHA_TM / flashEffect[i].Duration
+		);
+		int alphaValue = _int(255 * alpha);
+		alphaValue = max(alphaValue, 0); //下限は0.
 
 		//エフェクトのサイズを時間に応じて拡大.
-		float sizeMuktiplier = 1.5f + (flashEffect[i].Counter / flashEffect[i].Duration);
-		int effectSize = (int)(flashEffect[i].BaseSize * sizeMuktiplier);
+		float sizeMultiplier = OBSTACLE4_FLASH_SIZE_INIT + (
+			flashEffect[i].Counter * OBSTACLE4_FLASH_SIZE_SPREAD / flashEffect[i].Duration
+		);
+		int effectSize = _int(flashEffect[i].BaseSize * sizeMultiplier);
+		int innerSize = effectSize / 2;
 
 		//発射エフェクトを円形で描画(白く光る)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
-		DrawCircle((int)flashEffect[i].x, (int)flashEffect[i].y, effectSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(flashEffect[i].x), _int(flashEffect[i].y), effectSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(flashEffect[i].x), _int(flashEffect[i].y), innerSize,  GetColor(0, 255, 200), FALSE); // 内側により明るい円を描画
 
-		// 内側により明るい円を描画
-		int innerSize = effectSize / 2;
-		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
-		DrawCircle((int)flashEffect[i].x, (int)flashEffect[i].y, innerSize, GetColor(0, 255, 200), FALSE);
-
-		// エフェクトのカウンタを更新
+		//エフェクトのカウンタを更新
 		flashEffect[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
-
-		// エフェクト時間が終了したら無効化
+		//エフェクト時間が終了したら無効化
 		if (flashEffect[i].Counter >= flashEffect[i].Duration)
 		{
 			flashEffect[i].ValidFlag = 0;
 		}
-
 	}
-	// 通常の描画モードに戻す
+
+	//通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
-	// 動く砲台を描画
-	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
-	//DrawBoxST(&box, TRUE, FALSE);
 }
 
-
-
-void Obstacle4main::CreateFlashEffect(double fx, double fy)
-{
-	//未使用のエフェクトスロットを探す.
-	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
-	{
-		if (flashEffect[i].ValidFlag == 0)
-		{
-			DrawString(0, 400, _T("反応してる"), 0xFFFFFF);
-			//エフェクトデータの設定.
-			flashEffect[i].x = fx;
-			flashEffect[i].y = fy;
-			flashEffect[i].Counter = 0;
-			flashEffect[i].Duration = 15; //15フレーム光る.
-			flashEffect[i].BaseSize = 20; //基本サイズ
-			flashEffect[i].ValidFlag = 1;
-			break;
-		}
-	}
-}
 /**
  * @brief 敵（障害物）の移動処理
  * レーザーの移動とプレイヤーへの追尾、砲台の移動とレーザー発射を管理
@@ -204,8 +196,8 @@ void Obstacle4main::enemy4Move()
 		DBL_XY befPos;  // 前回位置を保存する変数
 		befPos = { laser[i].x, laser[i].y };
 
-		// ミサイルの速度
-		double speed = OBSTACLE4_LASER_SPEED;
+		// ミサイルの速度(時間経過で速くなる)
+		double speed = OBSTACLE4_LASER_SPEED / (laser[i].Counter * 0.01);
 		if (data->isSlow) { speed /= SLOW_MODE_SPEED; }
 
 		// レーザーの位置を更新（速度に基づいて移動）
@@ -217,7 +209,6 @@ void Obstacle4main::enemy4Move()
 		{
 			if (line[j].ValidFlag == 0)  // 未使用の軌跡スロットを探す
 			{
-
 				// 軌跡データの設定
 				line[j].x1 = befPos.x;     // 開始点X座標
 				line[j].y1 = befPos.y;     // 開始点Y座標
@@ -282,6 +273,26 @@ void Obstacle4main::enemy4Move()
 	}
 }
 
+//光るeffectの生成.
+void Obstacle4main::CreateFlashEffect(double fx, double fy)
+{
+	//未使用のエフェクトスロットを探す.
+	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
+	{
+		if (flashEffect[i].ValidFlag == 0)
+		{
+			//エフェクトデータの設定.
+			flashEffect[i].x = fx;
+			flashEffect[i].y = fy;
+			flashEffect[i].Counter = 0;
+			flashEffect[i].Duration = OBSTACLE4_FLASH_VALID_TM; //一定フレーム光る.
+			flashEffect[i].BaseSize = 20; //基本サイズ
+			flashEffect[i].ValidFlag = 1;
+			break;
+		}
+	}
+}
+
 /**
  * @brief レーザー反射処理
  * プレイヤーの位置を基準にレーザーの進行方向を反転させる
@@ -304,21 +315,23 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 		dy /= length;
 	}
 
-	// レーザーの現在の速度ベクトル
-	double currentSpeedX = laser[laserIndex].sx;
-	double currentSpeedY = laser[laserIndex].sy;
-
-	// 現在の速度の大きさを計算
-	double speedMagnitude = sqrt(currentSpeedX * currentSpeedX + currentSpeedY * currentSpeedY);
-
-	// プレイヤーから外向きの方向に反射
-	// 反射方向 = プレイヤーからレーザーへの方向ベクトル
-	double reflectDx = -dx; // プレイヤーから離れる方向
-	double reflectDy = -dy;
+#if 1
+	// レーザーの現在速度(x, y)
+	double nowSpeedX = laser[laserIndex].sx;
+	double nowSpeedY = laser[laserIndex].sy;
+	// 速度ベクトルを計算.
+	double speedVector = sqrt(pow(nowSpeedX, 2) + pow(nowSpeedY,2)); //vector = √(x*x + y*y)
 
 	// 反射後の速度を設定（元の速度の大きさを保持）
-	laser[laserIndex].sx = reflectDx * speedMagnitude;
-	laser[laserIndex].sy = reflectDy * speedMagnitude;
+	// ※プレイヤーから外向きの方向に反射.
+	// ※反射方向 = プレイヤーからレーザーへの方向ベクトル.
+	laser[laserIndex].sx = -dx * speedVector;
+	laser[laserIndex].sy = -dy * speedVector;
+#else
+	//仮で反転するだけ.
+	laser[laserIndex].sx *= -1;
+	laser[laserIndex].sy *= -1;
+#endif
 
 	// 反射後は追尾を無効化（カウンタを最大値に設定）
 	laser[laserIndex].Counter = 200;
@@ -326,8 +339,8 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 #if 1
 	// レーザーをプレイヤーから少し離れた位置に移動（重複当たり判定を防ぐ）
 	double pushDistance = PLAYER_SIZE / 2.0 + 5; // プレイヤーサイズの半分 + 余裕
-	laser[laserIndex].x = playerPos.x + reflectDx * pushDistance;
-	laser[laserIndex].y = playerPos.y + reflectDy * pushDistance;
+	laser[laserIndex].x = playerPos.x + -dx * pushDistance;
+	laser[laserIndex].y = playerPos.y + -dy * pushDistance;
 #endif
 
 	laser[laserIndex].type = Laser_Reflected; //反射モードへ.

@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/17
+   ver.2025/06/18
 
    DxLibで使う用のオリジナル入力関数.
 */
@@ -21,20 +21,20 @@ int  InputST::IsPushKeyTime(KEY_ID id) {
 }
 //マウス入力の判定.
 BOOL InputST::IsPushMouse(MOUSE_ID id) {
-	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return (tmMouse[num] > 0);  //押してるならTRUE.
 }
 int  InputST::IsPushMouseTime(MOUSE_ID id) {
-	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return tmMouse[num];        //押している時間.
 }
 //コントローラ入力の判定.
 BOOL InputST::IsPushPadBtn(PAD_BTN_ID id) {
-	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return (tmPadBtn[num] > 0); //押している時間.
 }
 int  InputST::IsPushPadBtnTime(PAD_BTN_ID id) {
-	int num = (int)log2(id);      //2進数bitを何桁目かに変換.
+	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return tmPadBtn[num];       //押している時間.
 }
 

@@ -47,6 +47,7 @@ typedef struct tagFLASHEFFECT
 	int BaseSize;   // 基本サイズ
 	int ValidFlag; // 有効フラグ
 };
+
 //継承元となるクラス(親)
 class Obstacle4main
 {
@@ -61,6 +62,7 @@ protected:
 	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 	IMG        img{};
 	tagFLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]; // クラスのメンバ変数として追加
+
 	GameData*  data{};
 	Player*    player{};
 
@@ -70,6 +72,9 @@ public:
 	virtual void Reset (float _Hx, float _Hy, float _Hm) = 0;
 	        void Update();
 	        void Draw  ();
+	//描画系.
+			void DrawObstLine();
+			void DrawObstFlash();
 	//移動系.
 	        void enemy4Move();
 	virtual void Move() = 0;
@@ -78,7 +83,5 @@ public:
 	void CreateFlashEffect(double x, double y);
 
 	//反射処理.
-	BOOL HandleLaserHit(int laserIndex);
 	void ReflectLaser(int laserIndex, DBL_XY playerPos);
-	void CreateReflectedLasers(double reflectX, double reflectY, int originalSx, int originalSy);
 };
