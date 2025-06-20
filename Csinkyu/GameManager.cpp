@@ -73,8 +73,8 @@ void GameManager::Init() {
 	//タイトル.
 	data.scene = SCENE_TITLE;
 	//フォント作成.
-	data.font1 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_NORMAL);
-	data.font2 = CreateFontToHandle(NULL, 20, 1, DX_FONTTYPE_NORMAL);
+	data.font1 = CreateFontToHandle(NULL, 30, 1);
+	data.font2 = CreateFontToHandle(NULL, 20, 1);
 
 #if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
@@ -119,8 +119,10 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	UpdateKey();    //キー入力更新.
-	UpdatePadBtn(); //コントローラのボタン入力更新.
+	InputST* input = InputST::GetPtr();
+
+	input->UpdateKey();    //キー入力更新.
+	input->UpdatePadBtn(); //コントローラのボタン入力更新.
 
 	//シーン別.
 	switch (data.scene) 
@@ -156,9 +158,10 @@ void GameManager::Draw() {
 //シーン別更新.
 void GameManager::UpdateTitle() 
 {
+	InputST* input = InputST::GetPtr();
+
 	//特定の操作でゲーム開始.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
-		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_X) == 1)
 	{
 		tmGame.Start();          //タイマー開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
@@ -166,6 +169,8 @@ void GameManager::UpdateTitle()
 }
 void GameManager::UpdateGame() {
 	
+	DrawFormatString(30, 200, 0xFFFFFF, _T("%d"), GetJoypadInputState(DX_INPUT_PAD1));
+
 #if false
 	//稼働してなければ.
 	if (!tmSlowMode.GetIsMove()) {
@@ -178,7 +183,7 @@ void GameManager::UpdateGame() {
 #endif
 	if (tmSlowMode.GetIsMove()) {
 		//時間切れで解除.
-		if(tmSlowMode.GetTime() == 0){
+		if(tmSlowMode.GetPassTime() == 0){
 			data.isSlow = FALSE;
 			tmSlowMode.Reset();
 		}
@@ -203,9 +208,10 @@ void GameManager::UpdateGame() {
 }
 void GameManager::UpdateEnd() {
 
+	InputST* input = InputST::GetPtr();
+
 	//特定の操作でタイトルへ.
-	if (IsPushKeyTime(KEY_INPUT_SPACE) == 1 || 
-		IsPushPadBtnTime(PAD_INPUT_A) == 1) 
+	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_A) == 1)
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
@@ -217,7 +223,7 @@ void GameManager::DrawTitle() {
 	//ゲームが開始されていない場合は開始案内を表示
 	{
 		//テキストの設定.
-		STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID / 2, 160}, 0xFFFFFF };
+		STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
 		//画面中央に文字を表示.
 		DrawStringST(&str, TRUE, data.font2); //fontあり.
 	}
@@ -228,14 +234,14 @@ void GameManager::DrawGame() {
 
 	//タイマー表示.
 	DrawFormatStringToHandle(
-		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetTime()
+		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
 	);
 	//カウントダウン中.
-	if (tmSlowMode.GetIsMove() && tmSlowMode.GetTime() > 0) 
+	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
 		STR_DRAW str = { _T(""), {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF };
-		sprintf((char*)str.text, "%d", (int)ceil(tmSlowMode.GetTime()));
+		sprintf((char*)str.text, "%d", (int)ceil(tmSlowMode.GetPassTime()));
 
 		//画面中央に数字を表示.
 		DrawStringST(&str, TRUE, data.font1); //fontあり.
@@ -247,7 +253,7 @@ void GameManager::DrawEnd() {
 
 	//タイマー表示.
 	DrawFormatStringToHandle(
-		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetTime()
+		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
 	);
 	//終了案内.
 	{

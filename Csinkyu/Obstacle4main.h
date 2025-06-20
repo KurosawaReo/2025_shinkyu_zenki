@@ -8,17 +8,25 @@
 
 #define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
 
+//レーザータイプ.
+enum LaserType
+{
+	Laser_Normal,    //通常レーザー.
+	Laser_Reflected, //反射レーザー.
+};
+
 //レーザー本体.
 typedef struct tagLASER_DATA
 {
-	double x, y;        //現在の画像.
-	double sx, sy;      //現在の速度.
+	double    x, y;      //現在の画像.
+	double    sx, sy;    //現在の速度.
 
-	int    LogNum;      //記録した軌跡の数.
-	float  Counter;     //追尾を初めてから通過した時間.
+	int       LogNum;    //記録した軌跡の数.
+	float     Counter;   //追尾を初めてから通過した時間.
 
-	int    ValidFlag;   //このデータが使用中かフラグ.
-	BOOL   isReflected; //反射用レーザーかどうか.
+	int       ValidFlag; //このデータが使用中かフラグ.
+
+	LaserType type;      //レーザータイプ.
 
 }LASER_DATA, * LPLASER_DATA;
 
@@ -39,6 +47,7 @@ typedef struct tagFLASHEFFECT
 	int BaseSize;   // 基本サイズ
 	int ValidFlag; // 有効フラグ
 };
+
 //継承元となるクラス(親)
 class Obstacle4main
 {
@@ -53,6 +62,7 @@ protected:
 	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 	IMG        img{};
 	tagFLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]; // クラスのメンバ変数として追加
+
 	GameData*  data{};
 	Player*    player{};
 
@@ -62,6 +72,9 @@ public:
 	virtual void Reset (float _Hx, float _Hy, float _Hm) = 0;
 	        void Update();
 	        void Draw  ();
+	//描画系.
+			void DrawObstLine();
+			void DrawObstFlash();
 	//移動系.
 	        void enemy4Move();
 	virtual void Move() = 0;
@@ -70,7 +83,5 @@ public:
 	void CreateFlashEffect(double x, double y);
 
 	//反射処理.
-	BOOL HandleLaserHit(int laserIndex);
 	void ReflectLaser(int laserIndex, DBL_XY playerPos);
-	void CreateReflectedLasers(double reflectX, double reflectY, int originalSx, int originalSy);
 };

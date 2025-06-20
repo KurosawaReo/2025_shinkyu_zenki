@@ -33,7 +33,7 @@
 #include "DxLib.h"
 
 #include "Global.h"
+#include "myCalcST.h"
 #include "myDrawST.h"
 #include "myInputST.h"
-#include "myCalcST.h"
 #include "myTimerST.h"
