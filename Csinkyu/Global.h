@@ -126,10 +126,10 @@ struct GameData
 };
 
 // - 定数 -
-#define IS_WINDOW_MODE				(TRUE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE				(FALSE)			//ウィンドウモードにするか.
 
-#define WINDOW_WID					(600)			//ウィンドウの横幅.
-#define WINDOW_HEI					(480)			//ウィンドウの縦幅.
+#define WINDOW_WID					(1920)			//ウィンドウの横幅.
+#define WINDOW_HEI					(1080)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT			(32)			//ウィンドウのカラーbit数.
 
 #define FPS							(80)			//フレームレート.
