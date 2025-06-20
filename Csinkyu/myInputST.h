@@ -1,12 +1,12 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/17
+   ver.2025/06/18
 
    DxLibで使う用のオリジナル入力関数.
 */
 #pragma once
 
-//キーID(不正な値を入力できないように)
+//キーID(入力しやすくする用)
 enum KEY_ID
 {
 	KEY_DOWN  = KEY_INPUT_DOWN,
@@ -42,14 +42,14 @@ enum KEY_ID
 	KEY_SPACE = KEY_INPUT_SPACE,
 	KEY_ENTER = KEY_INPUT_RETURN, //Enterキー.
 };
-//マウスID(不正な値を入力できないように)
+//マウスID(入力しやすくする用)
 enum MOUSE_ID
 {
 	MOUSE_L = MOUSE_INPUT_LEFT,   //Left.
 	MOUSE_R = MOUSE_INPUT_RIGHT,  //Right.
 	MOUSE_M = MOUSE_INPUT_MIDDLE, //Middle.
 };
-//コントローラボタンID(不正な値を入力できないように)
+//コントローラボタンID(入力しやすくする用)
 enum PAD_BTN_ID
 {
 	//DxLibの定数とは違うため直指定(xboxコントローラ基準)

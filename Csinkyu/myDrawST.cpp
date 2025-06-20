@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/06/11
+   ver.2025/06/18
    
    DxLibで使う用のオリジナル描画関数.
 */
@@ -214,4 +214,60 @@ INT_XY GetTextSize(const TCHAR str[], int font) {
 	}
 
 	return size;
+}
+
+//フォント作成.
+int CreateFontH(int size, int thick, FONTTYPE_ID fontId) {
+	return CreateFontToHandle(NULL, size, thick, fontId);
+}
+
+//オブジェクト(ObjectBox型)の描画.
+int DrawObjectBox(const ObjectBox* data, BOOL isDrawHit) {
+
+	int ret = 0;
+
+	//画像設定.
+	IMG_DRAW draw = { data->img, {}, TRUE, TRUE };
+	draw.pos.x = _int(data->box.pos.x + data->offset.x);
+	draw.pos.y = _int(data->box.pos.y + data->offset.y);
+	//画像描画.
+	ret = DrawGraphST(&draw);
+	if (ret < 0) {
+		return -1; //-1:DrawGraphSTで問題発生.
+	}
+
+	//当たり判定表示.
+	if (isDrawHit) {
+		ret = DrawBoxST(&data->box, TRUE, FALSE);
+		if (ret < 0) {
+			return -2; //-2:DrawBoxSTで問題発生.
+		}
+	}
+
+	return 0; //正常終了.
+}
+//オブジェクト(ObjectCir型)の描画.
+int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
+
+	int ret = 0;
+
+	//画像設定.
+	IMG_DRAW draw = { data->img, {}, TRUE, TRUE };
+	draw.pos.x = _int(data->cir.pos.x + data->offset.x);
+	draw.pos.y = _int(data->cir.pos.y + data->offset.y);
+	//画像描画.
+	ret = DrawGraphST(&draw);
+	if (ret < 0) {
+		return -1; //-1:DrawGraphSTで問題発生.
+	}
+
+	//当たり判定表示.
+	if (isDrawHit) {
+		ret = DrawCircleST(&data->cir, FALSE);
+		if (ret < 0) {
+			return -2; //-2:DrawBoxSTで問題発生.
+		}
+	}
+
+	return 0; //正常終了.
 }
