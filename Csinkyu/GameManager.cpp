@@ -59,7 +59,6 @@ Obstacle2 obstacle2;
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
-Obstacle4main ;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -239,16 +238,10 @@ void GameManager::DrawGame() {
 	//カウントダウン中.
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
-		//テキストを入れる用.
-		TCHAR    txt[256]{};
+		//テキストデータ.
 		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF};
-
 		//テキストの設定.
-//		sprintf (txt,    "time:%d",  (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
-		wsprintf(txt, _T("time:%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
-//		strcpy (str.text, txt);	//char型の文字列をコピー.
-		_tcscpy(str.text, txt); //TCHAR型の文字列をコピー.
-
+		swprintf(str.text, _T("time:%f"), tmSlowMode.GetPassTime()); //TCHAR型に変数を代入.
 		//画面中央に数字を表示.
 		DrawStringST(&str, TRUE, data.font1); //fontあり.
 	}
