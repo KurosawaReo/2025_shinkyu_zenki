@@ -9,7 +9,7 @@ void MeteoManager::Init(GameData* _data) {
 	p_data = _data;
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_MAX; i++) {
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		meteo[i].Init(_data);
 	}
 }
@@ -19,7 +19,7 @@ void MeteoManager::Reset() {
 	timer = 0;
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_MAX; i++) {
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		meteo[i].Reset();
 	}
 }
@@ -36,14 +36,14 @@ void MeteoManager::Update() {
 	}
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_MAX; i++) {
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		meteo[i].Update(); //更新.
 	}
 }
 
 void MeteoManager::Draw() {
 	//全隕石ループ.
-	for (int i = 0; i < METEO_MAX; i++) {
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		meteo[i].Draw(); //描画.
 	}
 }
@@ -52,7 +52,7 @@ void MeteoManager::Draw() {
 void MeteoManager::GenerateMeteo(){
 
 	//空いてる所を探す.
-	for (int i = 0; i < METEO_MAX; i++) {
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		if (!meteo[i].GetActive()) {
 
 			meteo[i].SetActive(TRUE); //有効にする.
@@ -71,7 +71,7 @@ DBL_XY MeteoManager::GetMeteoPosNearest(DBL_XY _pivotPos) {
 	double shortest; //暫定の最短距離.
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_MAX; i++) {
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		//有効なら.
 		if (meteo[i].GetActive()) {
 

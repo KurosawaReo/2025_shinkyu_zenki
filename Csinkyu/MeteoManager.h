@@ -5,17 +5,14 @@
 #pragma once
 #include "Meteo.h"
 
-#define METEO_MAX (256) //隕石の最大出現数.
-#define METEO_SPAWN_SPAN (10) //隕石の出現時間間隔.
-
 //隕石管理.
 class MeteoManager
 {
 private:
-	Meteo meteo[METEO_MAX]{}; //隕石データ.
-	float timer;              //隕石生成用.
+	Meteo meteo[METEO_CNT_MAX]{}; //隕石データ.
+	float timer;			      //隕石生成用.
 
-	GameData* p_data;         //ゲームデータ.
+	GameData* p_data;             //ゲームデータ.
 
 public:
 	void Init(GameData*);
