@@ -1,8 +1,8 @@
 /*
    - myCalcST.h - (original)
-   ver.2025/06/18
+   ver.2025/06/20
 
-   DxLibで使う用のオリジナル計算関数.
+   DxLib: オリジナル計算機能の追加.
 */
 #pragma once
 

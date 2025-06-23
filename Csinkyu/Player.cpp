@@ -34,7 +34,7 @@ void Player::Update()
 
 	if (reflectionCooldown > 0)
 	{
-		reflectionCooldown -= (p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		reflectionCooldown -= (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 	}
 	//—LŒø‚È‚ç.
 	if (active) {

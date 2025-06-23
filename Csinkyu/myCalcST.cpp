@@ -1,11 +1,11 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/18
+   ver.2025/06/20
 
-   DxLibで使う用のオリジナル計算関数.
+   DxLib: オリジナル計算機能の追加.
 */
 #if !defined DEF_GLOBAL_H
-  #include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 
 #include "myCalcST.h"
@@ -150,5 +150,5 @@ DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
 //角度から座標を求める.
 DBL_XY CalcAngToPos(double ang) {
-	return { cos(ang * M_PI/180), sin(ang * M_PI/180) };
+	return { cos(ang * 180/M_PI), sin(ang * 180/M_PI) };
 }

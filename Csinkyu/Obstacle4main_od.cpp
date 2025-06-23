@@ -58,7 +58,7 @@ void Obstacle4main::DrawObstLine() {
 		DrawLineST(&tmpLine);
 
 		// 経過時間カウンタ増加
-		line[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		line[i].Counter += (double)((data->isSlow) ? SLOW_MODE_SPEED : 1);
 		// 64フレーム経過したら軌跡を無効化
 		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
 	}
@@ -97,7 +97,7 @@ void Obstacle4main::DrawObstFlash() {
 		DrawCircle(_int(flashEffect[i].x), _int(flashEffect[i].y), innerSize,  GetColor(0, 255, 200), FALSE); // 内側により明るい円を描画
 
 		//エフェクトのカウンタを更新
-		flashEffect[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		flashEffect[i].Counter += (double)((data->isSlow) ? SLOW_MODE_SPEED : 1);
 		//エフェクト時間が終了したら無効化
 		if (flashEffect[i].Counter >= flashEffect[i].Duration)
 		{
@@ -190,7 +190,7 @@ void Obstacle4main::enemy4Move()
 		}
 
 		// レーザーの経過時間カウンタを増加
-		laser[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		laser[i].Counter += (double)((data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 		// 移動前の座標を保存
 		DBL_XY befPos;  // 前回位置を保存する変数
@@ -235,7 +235,7 @@ void Obstacle4main::enemy4Move()
 		Move();
 
 		// 発射カウンタを減少
-		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		Hsc -= (double)((data->isSlow) ? SLOW_MODE_SPEED : 1);
 		// タイミングが来たらレーザー発射
 		if (Hsc <= HscTm)
 		{

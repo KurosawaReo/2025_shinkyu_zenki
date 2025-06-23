@@ -9,7 +9,7 @@
 #define DEF_GLOBAL_H
 
 //stdafxがあるならいらない.
-#if false
+#if true
   #define _USE_MATH_DEFINES  //math定数を使うのに必要.
   #define _CRT_SECURE_NO_WARNINGS
   #include <stdlib.h>
@@ -135,7 +135,7 @@ struct GameData
 #define FPS							(80)			//フレームレート.
 
 #define SLOW_MODE_TIME				(5)             //スローモード制限時間.
-#define SLOW_MODE_SPEED				(0.20f)			//スローモード速度倍率.
+#define SLOW_MODE_SPEED				(0.20)			//スローモード速度倍率.
 
 #define PLAYER_SIZE					(20)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED			(5)				//プレイヤー移動速度.

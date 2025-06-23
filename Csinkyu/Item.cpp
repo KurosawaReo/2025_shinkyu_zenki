@@ -52,7 +52,7 @@ void Item::Reset()
 void Item::Update()
 {
 	//カウンタ.
-	itemCounter += (p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1;
+	itemCounter += (double)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
 
 	if (active && itemFlag) {
 		ItemMove();
@@ -152,7 +152,7 @@ void Item::ItemMove()
 	//落下速度.
 	double fallSpeed = ITEM_SPEED + (rand() % 3);  // speed～speed+2の乱数.
 	//スローモード.
-	itemY += fallSpeed * (p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1;
+	itemY += fallSpeed * (double)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
 
 #if false //よく分からん機能.
 	// 左右にも少しランダムな動きを追加（オプション）

@@ -1,8 +1,8 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/18
+   ver.2025/06/23
 
-   DxLibで使う用のオリジナル入力関数.
+   DxLib: オリジナル入力機能の追加.
 */
 #pragma once
 
@@ -111,6 +111,7 @@ public:
 	DBL_XY Move4Dir        (INT_XY  pow);
 
 	void   FixPosInArea    (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
+	BOOL   IsOutInArea     (DBL_XY  pos, INT_XY size, int left, int up, int right, int down);
 
 	//更新.
 	void   UpdateKey();

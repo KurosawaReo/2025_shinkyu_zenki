@@ -1,11 +1,11 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/18
+   ver.2025/06/23
 
-   DxLibで使う用のオリジナル入力関数.
+   DxLib: オリジナル入力機能の追加.
 */
 #if !defined DEF_GLOBAL_H
-  #include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 
 #include "myInputST.h"
@@ -127,6 +127,18 @@ void InputST::FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right
 	if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
 	if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
 	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
+}
+
+//範囲外かどうか.
+BOOL InputST::IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down) {
+
+	//範囲外.
+	if (pos.x < left  + size.x/2) { return TRUE; }
+	if (pos.y < up    + size.y/2) { return TRUE; }
+	if (pos.x > right - size.x/2) { return TRUE; }
+	if (pos.y > down  - size.y/2) { return TRUE; }
+
+	return FALSE; //範囲内.
 }
 
 //ボタンの更新処理.

@@ -32,12 +32,18 @@
 
    [余裕があれば]
    ・FPSはm秒待機ではなく、時間計測で測りたい.
+
+   2025/06/23:
+   仮で隕石が降るのを作ったが、正常かどうかが怪しい。
+   特にisSlowによりスローになる所でdouble型にうまくキャストできておらず
+   一旦全ての速度調整をしてる所を確認したい。 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO
 /--------------------------------------------------------*/
 //#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
 #include "Player.h"
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
+#include "MeteoManager.h"
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
@@ -59,6 +65,8 @@ Obstacle2 obstacle2;
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
+//隕石管理の実体.
+MeteoManager meteoMng;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -85,6 +93,8 @@ void GameManager::Init() {
 	//障害物class.
 	obstacle4_1.Init(&data, &player);
 	obstacle4_2.Init(&data, &player);
+	//隕石管理class.
+	meteoMng.Init(&data);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -109,6 +119,8 @@ void GameManager::Reset() {
 	//障害物class.
 	obstacle4_1.Reset(WINDOW_WID/2, 0, 3);
 	obstacle4_2.Reset(WINDOW_WID/2, 0, 3);
+	//隕石管理class.
+	meteoMng.Reset();
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
@@ -198,8 +210,8 @@ void GameManager::UpdateGame() {
 	//障害物class.
 	obstacle4_1.Update();
 	obstacle4_2.Update();
-
-	
+	//隕石管理class.
+	meteoMng.Update();
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.
@@ -276,6 +288,8 @@ void GameManager::DrawObjests() {
 	//障害物class.
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
+	//隕石管理class.
+	meteoMng.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.
