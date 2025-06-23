@@ -124,7 +124,7 @@ void GameManager::Reset() {
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
-	player.Reset({ 100, 100 }, TRUE);
+	player.Reset({ WINDOW_WID/2, WINDOW_HEI/2 }, TRUE);
 }
 
 //更新.
@@ -149,11 +149,7 @@ void GameManager::Update() {
 //描画.
 void GameManager::Draw() {
 
-	//背景色.
-	if (data.isSlow) {
-		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
-		DrawBoxST(&box, FALSE);
-	}
+	DrawBG();
 
 	//シーン別.
 	switch (data.scene) 
@@ -182,16 +178,6 @@ void GameManager::UpdateGame() {
 	
 	DrawFormatString(30, 200, 0xFFFFFF, _T("%d"), GetJoypadInputState(DX_INPUT_PAD1));
 
-#if false
-	//稼働してなければ.
-	if (!tmSlowMode.GetIsMove()) {
-		//Lボタンでスローモードに(仮)
-		if (IsPushKeyTime(KEY_INPUT_L) == 1) {
-			data.isSlow = TRUE;
-			tmSlowMode.Start();
-		}
-	}
-#endif
 	if (tmSlowMode.GetIsMove()) {
 		//時間切れで解除.
 		if(tmSlowMode.GetPassTime() == 0){
@@ -275,6 +261,22 @@ void GameManager::DrawEnd() {
 	}
 }
 
+//背景の描画.
+void GameManager::DrawBG() {
+
+	//背景デザイン.
+	for (int x = 0; x < WINDOW_WID; x += 5) {
+
+		float clr = 20 * fabs(sin((double)x / 200)); //色の変化.
+		Line line = { {x, 0},{x, WINDOW_HEI}, GetColor(0, clr, clr) };
+		DrawLineST(&line, 5);
+	}
+	//背景(スローモード).
+	if (data.isSlow) {
+		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
+		DrawBoxST(&box, FALSE);
+	}
+}
 //オブジェクトの描画.
 void GameManager::DrawObjests() {
 

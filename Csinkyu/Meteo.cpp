@@ -22,12 +22,9 @@ void Meteo::Update() {
 		//移動.
 		pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-		//printfDx(_T("② x:%f, y:%f\n"), vel.x, vel.y);
-		//printfDx(_T("③ x:%f, y:%f\n"), pos.x, pos.y);
 		//画面外で消去.
 		if (IsOutInArea(pos, {}, 0, 0, WINDOW_WID, WINDOW_HEI)){
 			active = FALSE; //無効にする.
-			//printfDx(_T("無効になった\n"));
 		}
 	}
 }
@@ -36,7 +33,11 @@ void Meteo::Draw() {
 	
 	//有効なら.
 	if (active) {
-		DrawCircle(pos.x, pos.y, 20, 0xFFFFFF); //kari
+
+		float g = 255 * fabs(sin(pos.x/200)); //色の変化.
+
+		Circle cir = {pos, 10, GetColor(0, g, 255)};
+		DrawCircleST(&cir, FALSE);
 	}
 }
 
@@ -64,11 +65,8 @@ void Meteo::Spawn() {
 		goalPos.x = RndNum(WINDOW_WID/2 - METEO_GOAL_RAND_RANGE, WINDOW_WID/2 + METEO_GOAL_RAND_RANGE);
 		goalPos.y = RndNum(WINDOW_HEI/2 - METEO_GOAL_RAND_RANGE, WINDOW_HEI/2 + METEO_GOAL_RAND_RANGE);
 		//目標地点までの角度を求める.
-		double ang = atan2(goalPos.y - pos.y, goalPos.x - pos.x);
+		double rad = atan2(goalPos.y - pos.y, goalPos.x - pos.x);
 		//xとyのvectorに分解.
-		vel = CalcAngToPos(ang);
-
-		printfDx(_T("ang:%f\n"), ang*180/M_PI);
-		printfDx(_T("x:%f, y:%f\n"), vel.x, vel.y);
+		vel = CalcRadToPos(rad);
 	}
 }

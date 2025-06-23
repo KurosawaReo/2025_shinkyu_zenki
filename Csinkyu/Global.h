@@ -138,12 +138,12 @@ struct GameData
 #define SLOW_MODE_SPEED				(0.20)			//スローモード速度倍率.
 
 #define PLAYER_SIZE					(20)			//プレイヤーサイズ.
-#define PLAYER_MOVE_SPEED			(5)				//プレイヤー移動速度.
+#define PLAYER_MOVE_SPEED			(6)				//プレイヤー移動速度.
 #define PLAYER_HIT_R				(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_REF_COOLDOWN			(0)				//反射クールダウン時間.
 
 #define ITEM_SIZE					(20)			//アイテムサイズ.
-#define ITEM_SPEED					(4)				//アイテム移動スピード.  
+#define ITEM_SPEED					(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME			(300)           //アイテム復活時間.
 
 #define OBSTACLE2_SPAN				(80)			//障害物の発射間隔.

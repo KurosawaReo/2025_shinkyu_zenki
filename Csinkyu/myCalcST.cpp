@@ -171,5 +171,11 @@ DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
 //角度から座標を求める.
 DBL_XY CalcAngToPos(double ang) {
-	return { cos(ang), sin(ang) };
+	//座標vector(値が-1～+1になる)を返す.
+	return { cos(ang * 180/M_PI), sin(ang * 180/M_PI) };
+}
+//ラジアンから座標を求める.
+DBL_XY CalcRadToPos(double rad) {
+	//座標vector(値が-1～+1になる)を返す.
+	return { cos(rad), sin(rad) };
 }

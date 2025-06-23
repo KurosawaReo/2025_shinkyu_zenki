@@ -23,3 +23,4 @@ double CalcDis		(DBL_XY pos1, DBL_XY pos2);
 DBL_XY CalcMidPos	(DBL_XY pos1, DBL_XY pos2);
 DBL_XY CalcLineAng	(DBL_XY stPos, float ang, float len);
 DBL_XY CalcAngToPos	(double ang);
+DBL_XY CalcRadToPos (double rad);
