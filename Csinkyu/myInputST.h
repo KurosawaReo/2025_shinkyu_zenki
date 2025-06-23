@@ -110,9 +110,6 @@ public:
 	void   InputPad4Dir    (DBL_XY* pos, float speed);
 	DBL_XY Move4Dir        (INT_XY  pow);
 
-	void   FixPosInArea    (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
-	BOOL   IsOutInArea     (DBL_XY  pos, INT_XY size, int left, int up, int right, int down);
-
 	//çXêV.
 	void   UpdateKey();
 	void   UpdateMouse();

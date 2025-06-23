@@ -143,7 +143,7 @@ struct GameData
 #define PLAYER_REF_COOLDOWN			(0)				//反射クールダウン時間.
 
 #define ITEM_SIZE					(20)			//アイテムサイズ.
-#define ITEM_SPEED					(9)				//アイテム移動スピード.  
+#define ITEM_SPEED					(4)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME			(300)           //アイテム復活時間.
 
 #define OBSTACLE2_SPAN				(80)			//障害物の発射間隔.
@@ -161,10 +161,15 @@ struct GameData
 #define OBSTACLE4_SHOT_SPAN			(10)			//砲台の発射間隔時間.
 #define OBSTACLE4_LASER_SPEED		(150)			//レーザーの速度.
 #define OBSTACLE4_LASER_LIM			(100)			//レーザーの最大数.
-#define OBSTACLE4_LINE_MAX			(1000)			//レーザーで描画する線の最大数.
+#define OBSTACLE4_LINE_MAX			(2000)			//レーザーで描画する線の最大数.
 
 #define OBSTACLE4_FLASH_MAX         (30)            //最大フラッシュエフェクト数
 #define OBSTACLE4_FLASH_SIZE_INIT   (1.0f)          //フラッシュエフェクトの初期サイズ.
 #define OBSTACLE4_FLASH_SIZE_SPREAD (2)             //フラッシュエフェクトの拡大量.
 #define OBSTACLE4_FLASH_VALID_TM	(50)            //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE4_FLASH_ALPHA_TM	(2)             //フラッシュエフェクトの透明化速度.
+
+#define METEO_LINE_MAX				(16)			//最大16角形.
+#define METEO_SPEED					(10)			//移動速度.
+#define METEO_ERASE_OUT_DIS			(50)			//隕石が画面外で消える距離.
+#define METEO_GOAL_RAND_RANGE		(500)			//隕石の目標地点の乱数範囲.

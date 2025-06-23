@@ -63,8 +63,8 @@ protected:
 	IMG        img{};
 	tagFLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]; // クラスのメンバ変数として追加
 
-	GameData*  data{};
-	Player*    player{};
+	GameData*  p_data{};
+	Player*    p_player{};
 
 public:
 	//基本処理.

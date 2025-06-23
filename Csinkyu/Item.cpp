@@ -52,7 +52,7 @@ void Item::Reset()
 void Item::Update()
 {
 	//ƒJƒEƒ“ƒ^.
-	itemCounter += (double)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
+	itemCounter += (float)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
 
 	if (active && itemFlag) {
 		ItemMove();

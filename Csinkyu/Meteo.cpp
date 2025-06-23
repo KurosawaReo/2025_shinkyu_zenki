@@ -4,10 +4,6 @@
 */
 #include "Meteo.h"
 
-#define METEO_SPEED           (10) //ˆÚ“®‘¬“x.
-#define METEO_ERASE_OUT_DIS   (50) //è¦Î‚ª‰æ–ÊŠO‚ÅÁ‚¦‚é‹——£.
-#define METEO_GOAL_RAND_RANGE (10) //è¦Î‚Ì–Ú•W’n“_‚Ì—””ÍˆÍ.
-
 void Meteo::Init(GameData* _data) {
 	p_data = _data;
 }
@@ -21,21 +17,17 @@ void Meteo::Reset() {
 
 void Meteo::Update() {
 
-	InputST* input = InputST::GetPtr();
-
 	//—LŒø‚È‚ç.
 	if (active) {
 		//ˆÚ“®.
 		pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-		printfDx(_T("‡A x:%f, y:%f\n"), vel.x, vel.y);
-		printfDx(_T("‡B x:%f, y:%f\n"), pos.x, pos.y);
+		//printfDx(_T("‡A x:%f, y:%f\n"), vel.x, vel.y);
+		//printfDx(_T("‡B x:%f, y:%f\n"), pos.x, pos.y);
 		//‰æ–ÊŠO‚ÅÁ‹Ž.
-		if (input->IsOutInArea(
-			pos, {}, 0, 0, WINDOW_WID, WINDOW_HEI
-		)){
+		if (IsOutInArea(pos, {}, 0, 0, WINDOW_WID, WINDOW_HEI)){
 			active = FALSE; //–³Œø‚É‚·‚é.
-			printfDx(_T("–³Œø‚É‚È‚Á‚½\n"));
+			//printfDx(_T("–³Œø‚É‚È‚Á‚½\n"));
 		}
 	}
 }
@@ -76,6 +68,7 @@ void Meteo::Spawn() {
 		//x‚Æy‚Ìvector‚É•ª‰ð.
 		vel = CalcAngToPos(ang);
 
-		printfDx(_T("‡@ x:%f, y:%f\n"), vel.x, vel.y);
+		printfDx(_T("ang:%f\n"), ang*180/M_PI);
+		printfDx(_T("x:%f, y:%f\n"), vel.x, vel.y);
 	}
 }

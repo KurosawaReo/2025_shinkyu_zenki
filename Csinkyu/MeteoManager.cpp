@@ -5,6 +5,9 @@
 #include "MeteoManager.h"
 
 void MeteoManager::Init(GameData* _data) {
+
+	p_data = _data;
+
 	//全隕石ループ.
 	for (int i = 0; i < METEO_MAX; i++) {
 		meteo[i].Init(_data);
@@ -13,8 +16,8 @@ void MeteoManager::Init(GameData* _data) {
 
 void MeteoManager::Reset() {
 
-	timer.Start();
-	
+	timer = 0;
+
 	//全隕石ループ.
 	for (int i = 0; i < METEO_MAX; i++) {
 		meteo[i].Reset();
@@ -23,8 +26,12 @@ void MeteoManager::Reset() {
 
 void MeteoManager::Update() {
 
+	//タイマーが残っていれば.
+	if (timer > 0) {
+		timer -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+	}
 	//タイマーが0になったら.
-	if (timer.GetPassTime() <= 0) {
+	else {
 		GenerateMeteo(); //隕石生成.
 	}
 
@@ -50,7 +57,7 @@ void MeteoManager::GenerateMeteo(){
 
 			meteo[i].SetActive(TRUE); //有効にする.
 			meteo[i].Spawn();         //出現.
-			timer.Start();            //タイマー再開.
+			timer = METEO_SPAWN_SPAN; //タイマー再開.
 
 			break; //出現完了.
 		}

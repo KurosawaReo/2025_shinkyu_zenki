@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/20
+   ver.2025/06/23
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -115,6 +115,27 @@ int RndNum(int st, int ed, BOOL isDxRnd) {
 	}
 	return st + rnd;
 }
+
+//移動可能範囲内に補正する.
+void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
+
+	if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
+	if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
+	if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
+	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
+}
+//範囲外かどうか.
+BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down) {
+
+	//範囲外.
+	if (pos.x < left  + size.x/2) { return TRUE; }
+	if (pos.y < up    + size.y/2) { return TRUE; }
+	if (pos.x > right - size.x/2) { return TRUE; }
+	if (pos.y > down  - size.y/2) { return TRUE; }
+
+	return FALSE; //範囲内.
+}
+
 //距離計算.
 double CalcDis(INT_XY pos1, INT_XY pos2) {
 
@@ -150,5 +171,5 @@ DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
 //角度から座標を求める.
 DBL_XY CalcAngToPos(double ang) {
-	return { cos(ang * 180/M_PI), sin(ang * 180/M_PI) };
+	return { cos(ang), sin(ang) };
 }
