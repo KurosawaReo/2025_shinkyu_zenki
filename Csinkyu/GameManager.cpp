@@ -241,7 +241,7 @@ void GameManager::DrawGame() {
 		//テキストデータ.
 		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF};
 		//テキストの設定.
-		swprintf(str.text, _T("time:%f"), tmSlowMode.GetPassTime()); //TCHAR型に変数を代入.
+		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 		//画面中央に数字を表示.
 		DrawStringST(&str, TRUE, data.font1); //fontあり.
 	}
