@@ -54,8 +54,6 @@ void MeteoManager::GenerateMeteo(){
 	//空いてる所を探す.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		if (!meteo[i].GetActive()) {
-
-			meteo[i].SetActive(TRUE); //有効にする.
 			meteo[i].Spawn();         //出現.
 			timer = METEO_SPAWN_SPAN; //タイマー再開.
 

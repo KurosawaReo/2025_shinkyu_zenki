@@ -170,8 +170,8 @@ struct GameData
 #define OBSTACLE4_FLASH_ALPHA_TM	(2)             //フラッシュエフェクトの透明化速度.
 
 #define METEO_CNT_MAX				(256)			//隕石の最大出現数.
-#define METEO_SPAWN_SPAN			(10)			//隕石の出現時間間隔.
+#define METEO_SPAWN_SPAN			(100)			//隕石の出現時間間隔.
 #define METEO_LINE_MAX				(16)			//最大16角形.
-#define METEO_SPEED					(10)			//移動速度.
+#define METEO_SPEED					(5)				//移動速度.
 #define METEO_ERASE_OUT_DIS			(50)			//隕石が画面外で消える距離.
 #define METEO_GOAL_RAND_RANGE		(500)			//隕石の目標地点の乱数範囲.

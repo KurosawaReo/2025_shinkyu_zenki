@@ -36,7 +36,7 @@ void Meteo::Draw() {
 
 		float g = 255 * fabs(sin(pos.x/200)); //F‚Ì•Ï‰».
 
-		Circle cir = {pos, 10, GetColor(0, g, 255)};
+		Circle cir = {pos, 80, GetColor(0, g, 255)};
 		DrawCircleST(&cir, FALSE);
 	}
 }
@@ -69,4 +69,6 @@ void Meteo::Spawn() {
 		//x‚Æy‚Ìvector‚É•ª‰ğ.
 		vel = CalcRadToPos(rad);
 	}
+
+	active = TRUE; //—LŒø‚É‚·‚é.
 }
