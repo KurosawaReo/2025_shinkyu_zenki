@@ -10,8 +10,8 @@
 //obstacle4mainのInit関数をobstacle4用に上書き.
 void Obstacle4_1::Init(GameData* _data, Player* _player)
 {
-	data   = _data;
-	player = _player;  // プレイヤーオブジェクトを参照として保存
+	p_data   = _data;
+	p_player = _player;  // プレイヤーオブジェクトを参照として保存
 }
 //obstacle4mainのReset関数をobstacle4用に上書き.
 void Obstacle4_1::Reset(float _Hx, float _Hy, float _Hm)
@@ -35,7 +35,7 @@ void Obstacle4_1::Reset(float _Hx, float _Hy, float _Hm)
 void Obstacle4_1::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
+	float moveSpeed = Hm * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 	// 矩形経路の移動(右回り)
 	switch (moveDir)
@@ -74,8 +74,8 @@ void Obstacle4_1::Move()
 //obstacle4mainのInit関数をobstacle5用に上書き.
 void Obstacle4_2::Init(GameData* _data, Player* _player)
 {
-	data   = _data;
-	player = _player;  // プレイヤーオブジェクトを参照として保存
+	p_data   = _data;
+	p_player = _player;  // プレイヤーオブジェクトを参照として保存
 }
 //obstacle4mainのReset関数をobstacle5用に上書き.
 void Obstacle4_2::Reset(float _Hx, float _Hy, float _Hm)
@@ -98,7 +98,7 @@ void Obstacle4_2::Reset(float _Hx, float _Hy, float _Hm)
 void Obstacle4_2::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * ((data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
+	float moveSpeed = Hm * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 	// 矩形経路の移動(左回り)
 	switch (moveDir)

@@ -34,7 +34,7 @@ void Player::Update()
 
 	if (reflectionCooldown > 0)
 	{
-		reflectionCooldown -= (p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		reflectionCooldown -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 	}
 	//有効なら.
 	if (active) {
@@ -97,7 +97,7 @@ void Player::PlayerMove()
 		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED); //コントローラ移動(仮)
 	}
 	//移動限界.
-	input->FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
 
 BOOL Player::IsReflectionMode()

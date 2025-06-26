@@ -17,7 +17,7 @@
  */
 void Obstacle4main::Update()
 {
-	if (player->GetActive()) {  // プレイヤーがアクティブな場合のみ
+	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
 		enemy4Move();           // 障害物の移動処理を実行
 	}
 }
@@ -58,7 +58,7 @@ void Obstacle4main::DrawObstLine() {
 		DrawLineST(&tmpLine);
 
 		// 経過時間カウンタ増加
-		line[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		line[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		// 64フレーム経過したら軌跡を無効化
 		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
 	}
@@ -97,7 +97,7 @@ void Obstacle4main::DrawObstFlash() {
 		DrawCircle(_int(flashEffect[i].x), _int(flashEffect[i].y), innerSize,  GetColor(0, 255, 200), FALSE); // 内側により明るい円を描画
 
 		//エフェクトのカウンタを更新
-		flashEffect[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		//エフェクト時間が終了したら無効化
 		if (flashEffect[i].Counter >= flashEffect[i].Duration)
 		{
@@ -115,11 +115,11 @@ void Obstacle4main::DrawObstFlash() {
  */
 void Obstacle4main::enemy4Move()
 {
-	const DBL_XY pPos = player->GetPos();        // プレイヤーの現在位置を取得
+	const DBL_XY pPos = p_player->GetPos();        // プレイヤーの現在位置を取得
 	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
 	// 反射モード中かどうかを一度だけ判定
-	bool isReflectionMode = player->IsReflectionMode();
+	bool isReflectionMode = p_player->IsReflectionMode();
 
 	// 各レーザーの処理
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
@@ -137,16 +137,16 @@ void Obstacle4main::enemy4Move()
 					(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
 				{
 					//反射あり.
-					if (player->IsReflectionMode())
+					if (p_player->IsReflectionMode())
 					{
 						ReflectLaser(i, pPos);   //レーザーを反射.
-						player->UseReflection(); //クールダウン開始.
+						p_player->UseReflection(); //クールダウン開始.
 					}
 					//反射なし.
 					else
 					{
 						laser[i].ValidFlag = 0; //レーザーを無効化.
-						player->PlayerDeath();  //プレイヤー死亡.
+						p_player->PlayerDeath();  //プレイヤー死亡.
 					}
 					isHit = true; //当たったことを記録.
 				}
@@ -190,7 +190,7 @@ void Obstacle4main::enemy4Move()
 		}
 
 		// レーザーの経過時間カウンタを増加
-		laser[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		laser[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 		// 移動前の座標を保存
 		DBL_XY befPos;  // 前回位置を保存する変数
@@ -198,7 +198,7 @@ void Obstacle4main::enemy4Move()
 
 		// ミサイルの速度(時間経過で速くなる)
 		double speed = OBSTACLE4_LASER_SPEED / (laser[i].Counter * 0.01);
-		if (data->isSlow) { speed /= SLOW_MODE_SPEED; }
+		if (p_data->isSlow) { speed /= SLOW_MODE_SPEED; }
 
 		// レーザーの位置を更新（速度に基づいて移動）
 		laser[i].x = (laser[i].x * speed + laser[i].sx) / speed;
@@ -235,7 +235,7 @@ void Obstacle4main::enemy4Move()
 		Move();
 
 		// 発射カウンタを減少
-		Hsc -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+		Hsc -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		// タイミングが来たらレーザー発射
 		if (Hsc <= HscTm)
 		{

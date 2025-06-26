@@ -1,11 +1,11 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/18
+   ver.2025/06/23
 
-   DxLibで使う用のオリジナル計算関数.
+   DxLib: オリジナル計算機能の追加.
 */
 #if !defined DEF_GLOBAL_H
-  #include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 
 #include "myCalcST.h"
@@ -115,6 +115,27 @@ int RndNum(int st, int ed, BOOL isDxRnd) {
 	}
 	return st + rnd;
 }
+
+//移動可能範囲内に補正する.
+void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
+
+	if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
+	if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
+	if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
+	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
+}
+//範囲外かどうか.
+BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down) {
+
+	//範囲外.
+	if (pos.x < left  + size.x/2) { return TRUE; }
+	if (pos.y < up    + size.y/2) { return TRUE; }
+	if (pos.x > right - size.x/2) { return TRUE; }
+	if (pos.y > down  - size.y/2) { return TRUE; }
+
+	return FALSE; //範囲内.
+}
+
 //距離計算.
 double CalcDis(INT_XY pos1, INT_XY pos2) {
 
@@ -150,5 +171,11 @@ DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
 //角度から座標を求める.
 DBL_XY CalcAngToPos(double ang) {
-	return { cos(ang * M_PI/180), sin(ang * M_PI/180) };
+	//座標vector(値が-1～+1になる)を返す.
+	return { cos(ang * 180/M_PI), sin(ang * 180/M_PI) };
+}
+//ラジアンから座標を求める.
+DBL_XY CalcRadToPos(double rad) {
+	//座標vector(値が-1～+1になる)を返す.
+	return { cos(rad), sin(rad) };
 }

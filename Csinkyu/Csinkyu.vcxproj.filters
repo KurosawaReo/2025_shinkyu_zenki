@@ -16,6 +16,8 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Obstacle4main_kr.cpp" />
     <ClCompile Include="Obstacle4main_od.cpp" />
+    <ClCompile Include="Meteo.cpp" />
+    <ClCompile Include="MeteoManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h" />
@@ -32,6 +34,8 @@
     <ClInclude Include="myTimerST.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Obstacle4main.h" />
+    <ClInclude Include="Meteo.h" />
+    <ClInclude Include="MeteoManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="image\Player.png" />

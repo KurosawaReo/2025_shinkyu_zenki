@@ -1,11 +1,11 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/06/17
+   ver.2025/06/20
 
-   DxLibで使う用のオリジナル時間関数.
+   DxLib: オリジナルタイマー機能の追加.
 */
 #if !defined DEF_GLOBAL_H
-  #include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 
 #include "myTimerST.h"

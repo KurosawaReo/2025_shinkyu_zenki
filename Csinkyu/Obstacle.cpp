@@ -19,7 +19,7 @@ void Obstacle::Reset(DBL_XY _pos, float _ang) {
 void Obstacle::Update() {
 
 	//‰ñ“]‘¬“x.
-	ang += speed * (data->isSlow) ? (float)SLOW_MODE_SPEED : 1;
+	ang += speed * (float)((data->isSlow) ? SLOW_MODE_SPEED : 1);
 	//ü‚Ì‰ñ“].
 	line.edPos = CalcLineAng(line.stPos, ang, len);
 

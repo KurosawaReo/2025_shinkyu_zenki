@@ -9,7 +9,7 @@
 #define DEF_GLOBAL_H
 
 //stdafxがあるならいらない.
-#if false
+#if true
   #define _USE_MATH_DEFINES  //math定数を使うのに必要.
   #define _CRT_SECURE_NO_WARNINGS
   #include <stdlib.h>
@@ -135,15 +135,15 @@ struct GameData
 #define FPS							(80)			//フレームレート.
 
 #define SLOW_MODE_TIME				(5)             //スローモード制限時間.
-#define SLOW_MODE_SPEED				(0.20f)			//スローモード速度倍率.
+#define SLOW_MODE_SPEED				(0.20)			//スローモード速度倍率.
 
 #define PLAYER_SIZE					(20)			//プレイヤーサイズ.
-#define PLAYER_MOVE_SPEED			(5)				//プレイヤー移動速度.
+#define PLAYER_MOVE_SPEED			(6)				//プレイヤー移動速度.
 #define PLAYER_HIT_R				(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_REF_COOLDOWN			(0)				//反射クールダウン時間.
 
 #define ITEM_SIZE					(20)			//アイテムサイズ.
-#define ITEM_SPEED					(9)				//アイテム移動スピード.  
+#define ITEM_SPEED					(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME			(300)           //アイテム復活時間.
 
 #define OBSTACLE2_SPAN				(80)			//障害物の発射間隔.
@@ -168,3 +168,10 @@ struct GameData
 #define OBSTACLE4_FLASH_SIZE_SPREAD (2)             //フラッシュエフェクトの拡大量.
 #define OBSTACLE4_FLASH_VALID_TM	(50)            //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE4_FLASH_ALPHA_TM	(2)             //フラッシュエフェクトの透明化速度.
+
+#define METEO_CNT_MAX				(256)			//隕石の最大出現数.
+#define METEO_SPAWN_SPAN			(100)			//隕石の出現時間間隔.
+#define METEO_LINE_MAX				(16)			//最大16角形.
+#define METEO_SPEED					(5)				//移動速度.
+#define METEO_ERASE_OUT_DIS			(50)			//隕石が画面外で消える距離.
+#define METEO_GOAL_RAND_RANGE		(500)			//隕石の目標地点の乱数範囲.
