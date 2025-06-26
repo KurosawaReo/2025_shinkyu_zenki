@@ -120,6 +120,27 @@ DBL_XY InputST::Move4Dir(INT_XY pow){
 	return move;
 }
 
+//移動可能範囲内に補正する.
+void InputST::FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
+
+	if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
+	if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
+	if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
+	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
+}
+
+//範囲外かどうか.
+BOOL InputST::IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down) {
+
+	//範囲外.
+	if (pos.x < left  + size.x/2) { return TRUE; }
+	if (pos.y < up    + size.y/2) { return TRUE; }
+	if (pos.x > right - size.x/2) { return TRUE; }
+	if (pos.y > down  - size.y/2) { return TRUE; }
+
+	return FALSE; //範囲内.
+}
+
 //ボタンの更新処理.
 void InputST::UpdateKey() {
 	

@@ -12,9 +12,9 @@
 #if true
   #define _USE_MATH_DEFINES  //math定数を使うのに必要.
   #define _CRT_SECURE_NO_WARNINGS
-  #include <stdlib.h>
   #include <assert.h>
   #include <math.h>
+  #include <stdlib.h>
   #include <time.h>
   #include "DxLib.h"
 #endif
@@ -42,14 +42,14 @@ struct IMG
 struct Circle
 {
 	DBL_XY pos;  //座標.
-	int    r;    //半径.
+	float  r;    //半径.
 	UINT   clr;  //色.
 };
 //四角形データ.
 struct Box
 {
 	DBL_XY pos;  //座標.
-	INT_XY size; //サイズ.
+	DBL_XY size; //サイズ.
 	UINT   clr;  //色.
 };
 //線データ.
@@ -70,7 +70,7 @@ struct ObjectBox
 	//初期化用.
 	ObjectBox(){}
 	//初期化用(引数あり)
-	ObjectBox(DBL_XY _pos, INT_XY _size, DBL_XY _offset, UINT _clr, BOOL _isActive) :
+	ObjectBox(DBL_XY _pos, DBL_XY _size, DBL_XY _offset, UINT _clr, BOOL _isActive) :
 		box     ({_pos, _size, _clr}), 
 		offset  (_offset), 
 		isActive(_isActive)
@@ -87,7 +87,7 @@ struct ObjectCir
 	//初期化用.
 	ObjectCir(){}
 	//初期化用(引数あり)
-	ObjectCir(DBL_XY _pos, int _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
+	ObjectCir(DBL_XY _pos, float _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
 		cir     ({ _pos, _r, _clr }), 
 		offset  (_offset), 
 		isActive(_isActive)
@@ -95,7 +95,7 @@ struct ObjectCir
 };
 
 //型変換マクロ.
-#define _int(n)   (int)(round(n))            //int型変換マクロ.
+#define _int(n)   (int)(round(n))            //int   型変換マクロ.
 #define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
 #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
 
@@ -135,7 +135,7 @@ struct GameData
 #define FPS							(80)			//フレームレート.
 
 #define SLOW_MODE_TIME				(5)             //スローモード制限時間.
-#define SLOW_MODE_SPEED				(0.20)			//スローモード速度倍率.
+#define SLOW_MODE_SPEED				(0.20f)			//スローモード速度倍率.
 
 #define PLAYER_SIZE					(20)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED			(6)				//プレイヤー移動速度.

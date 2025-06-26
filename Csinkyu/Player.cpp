@@ -100,7 +100,7 @@ void Player::PlayerMove()
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
 
-BOOL Player::IsReflectionMode()
+BOOL Player::IsReflectionMode() const
 {
 	InputST* input = InputST::GetPtr(); //input情報を取得.
 
@@ -114,14 +114,13 @@ BOOL Player::IsReflectionMode()
 
 	return vKeyPressed && cooldownOK;
 }
-
+float Player::GetReflectionCooldown() const
+{
+	return reflectionCooldown; //クールダウン時間を返す.
+}
 void Player::UseReflection()
 {
 	reflectionCooldown = PLAYER_REF_COOLDOWN; //クールダウン開始.
-}
-float Player::GetReflectionCooldown()
-{
-	return reflectionCooldown; //クールダウン時間を返す.
 }
 
 

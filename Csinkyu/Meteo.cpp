@@ -34,7 +34,7 @@ void Meteo::Draw() {
 	//有効なら.
 	if (active) {
 
-		float g = 255 * fabs(sin(pos.x/200)); //色の変化.
+		int g = _int(255 * fabs(sin(pos.x/200))); //色の変化.
 
 		Circle cir = {pos, 80, GetColor(0, g, 255)};
 		DrawCircleST(&cir, FALSE);
@@ -47,7 +47,7 @@ void Meteo::Spawn() {
 	int rnd1 = RndNum(0, 99);
 	int rnd2 = RndNum(0, 99);
 
-	INT_XY goalPos; //目標座標.
+	INT_XY goalPos{}; //目標座標.
 
 	//50%:上下端から出現.
 	if (rnd1 < 50) {
