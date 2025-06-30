@@ -11,8 +11,9 @@ private:
 
 	float  Ix{}, Iy{};
 	double itemX{}, itemY{};
+	double itemW{}, itemH{};
 	int    itemFlag{};
-	int    itemW{}, itemH{}, itemGraph{};
+	int    itemGraph{};
 	float  itemCounter{};
 
 	GameData* p_gamedata{}; //ゲームデータ.

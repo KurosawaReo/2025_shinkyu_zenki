@@ -36,20 +36,29 @@
    2025/06/23:
    仮で隕石が降るのを作ったが、正常かどうかが怪しい。
    特にisSlowによりスローになる所でdouble型にうまくキャストできておらず
-   一旦全ての速度調整をしてる所を確認したい。 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO
+   一旦全ての速度調整をしてる所を確認したい。
+
+   2025/06/26:
+   隕石は大体正常にできたと思われる。
+   レーザーの発射を、三角形の敵の先端から出るようにできたら良さそう。
+   打つ方向に三角形を回転させる。
 /--------------------------------------------------------*/
 #define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
-#include "Player.h"
+#include "MeteoManager.h"
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
+<<<<<<< HEAD
 #include "Obstacle5.h"
 #include "MeteoManager.h"
+=======
+>>>>>>> main
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
 //#include "Obstacle2.h"
 #endif
+#include "Player.h"
 
 #include "GameManager.h"
 
@@ -297,13 +306,13 @@ void GameManager::DrawEnd() {
 }
 
 //背景の描画.
-void GameManager::DrawBG() {
+void GameManager::DrawBG() const {
 
 	//背景デザイン.
 	for (int x = 0; x < WINDOW_WID; x += 5) {
 
-		float clr = 20 * fabs(sin((double)x / 200)); //色の変化.
-		Line line = { {x, 0},{x, WINDOW_HEI}, GetColor(0, clr, clr) };
+		int clr = _int(20 * fabs(sin((double)x / 200))); //色の変化.
+		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
 		DrawLineST(&line, 5);
 	}
 	//背景(スローモード).

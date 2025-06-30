@@ -4,7 +4,6 @@
 */
 #pragma once
 
-
 class Player
 {
 private:
@@ -34,10 +33,19 @@ public:
 	void Update();
 	void Draw  ();
 
+<<<<<<< HEAD
 	void PlayerMove();          //プレイヤー移動.
 	void PlayerDeath();         //プレイヤー死亡.
 	void PlayerFaterimage();        //プレイヤー残像.
 	BOOL IsReflectionMode();    //反射モードかどうかを返す.
 	void UseReflection();         //反射を使用.
 	float GetReflectionCooldown();//クールダウン時間を持つ.
+=======
+	void PlayerMove();  //プレイヤー移動.
+	void PlayerDeath(); //プレイヤー死亡.
+
+	BOOL  IsReflectionMode() const;			//反射モードかどうかを返す.
+	float GetReflectionCooldown() const;	//クールダウン時間を持つ.
+	void  UseReflection();					//反射を使用.
+>>>>>>> main
 };
