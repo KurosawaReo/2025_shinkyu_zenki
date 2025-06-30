@@ -4,7 +4,7 @@
    レーザーの継承元クラス.
 */
 #pragma once
-#include "Player.h"
+
 
 #define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
 
@@ -46,6 +46,8 @@ typedef struct tagFLASHEFFECT
 	float Duration; // エフェクトの持続時間.
 	int BaseSize;   // 基本サイズ
 	int ValidFlag; // 有効フラグ
+
+	double angle;
 }FLASHEFFECT;
 
 //継承元となるクラス(親)
@@ -58,9 +60,11 @@ protected:
 	float HscTm{};     //砲台がショットする時間.
 	MoveDir moveDir{}; // 現在の移動方向.
 
-	LASER_DATA  laser[OBSTACLE4_LASER_LIM]{};		//ホーミングレーザーのデータ.
-	LINE_DATA   line [OBSTACLE4_LINE_MAX]{};		//ライン描画用データ.
-	IMG         img{};
+
+	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
+	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
+	IMG        img{};
+	DBL_XY pPos;// プレイヤーの現在位置を取得
 	FLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
 	GameData*  p_data{};
@@ -69,7 +73,7 @@ protected:
 public:
 	//基本処理.
 	virtual void Init  (GameData*, Player*) = 0;
-	virtual void Reset (float _Hx, float _Hy, float _Hm) = 0;
+	virtual void Reset (float _Hx, float _Hy, float _Hm, MoveDir) = 0;
 	        void Update();
 	        void Draw  ();
 	//描画系.

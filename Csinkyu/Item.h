@@ -1,5 +1,5 @@
 #pragma once
-//#include "Player.h"  // Player クラスを使用するため
+#include "Player.h"  // Player クラスを使用するため
 
 class Item
 {
