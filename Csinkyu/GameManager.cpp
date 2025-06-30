@@ -48,11 +48,8 @@
 #include "MeteoManager.h"
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
-<<<<<<< HEAD
 #include "Obstacle5.h"
 #include "MeteoManager.h"
-=======
->>>>>>> main
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
