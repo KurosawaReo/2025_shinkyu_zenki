@@ -69,7 +69,7 @@ protected:
 public:
 	//Šî–{ˆ—.
 	virtual void Init  (GameData*, Player*) = 0;
-	virtual void Reset (float _Hx, float _Hy, float _Hm) = 0;
+	virtual void Reset (float _Hx, float _Hy, float _Hm, MoveDir) = 0;
 	        void Update();
 	        void Draw  ();
 	//•`‰æŒn.

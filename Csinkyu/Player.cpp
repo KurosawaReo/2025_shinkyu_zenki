@@ -16,6 +16,11 @@ void Player::Reset(DBL_XY _pos, BOOL _active)
 {
 	hit    = {_pos, PLAYER_HIT_R, 0x000000};
 	active = _active;
+
+	for (int i = 0; i < AFTIMAGENUM; i++)
+	{
+		afterImagePos[i] = _pos;
+	}
 }
 //更新.
 void Player::Update()
@@ -38,6 +43,15 @@ void Player::Update()
 	}
 	//有効なら.
 	if (active) {
+
+		//残像データを後ろにずらす.
+		for (int i = AFTIMAGENUM - 1; i > 0; i--)
+		{
+			afterImagePos[i] = afterImagePos[i - 1];
+			
+		}
+		
+		afterImagePos[0] = hit.pos;
 		PlayerMove();
 	}
 }
@@ -60,8 +74,12 @@ void Player::Draw()
 		DrawString(0, 470, _T("反射クールダウン中..."), 0xFF0000);
 	}
 
+
 	//有効なら.
 	if (active) {
+
+		PlayerFaterimage();
+
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
 		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xA0A0A0 };
@@ -69,7 +87,7 @@ void Player::Draw()
 		//反射モード中は青色に変更.
 		if (IsReflectionMode())
 		{
-			box1.clr = box2.clr = GetColor(255, 155, 255);//青色.
+			box1.clr = box2.clr = GetColor(255, 105, 180);//青色.
 		}
 
 		//デバッグモード中.
@@ -79,7 +97,38 @@ void Player::Draw()
 
 		DrawBoxST(&box1, TRUE, FALSE);
 		DrawBoxST(&box2, TRUE, FALSE);
+
+		
 	}
+}
+
+void Player::PlayerFaterimage()
+{
+	//残像処理.
+	for (int i = AFTIMAGENUM - 1; i >= 0; i -= 1)
+	{
+		DBL_XY& pos = afterImagePos[i];
+
+		int alpha  = 105 - 105 * i / AFTIMAGENUM;
+
+		int alpha2 = 50 - 50 * i / AFTIMAGENUM;
+
+		int color = GetColor(alpha, alpha, alpha);
+
+
+		if (IsReflectionMode())
+		{
+			color = GetColor(alpha2 * 255 / 50, alpha2 / 2, alpha2 * 255 / 50);
+		}
+		else
+		{
+		 color = GetColor(alpha, alpha, alpha);
+		}
+
+		Box box3 = { afterImagePos[i], {PLAYER_SIZE,   PLAYER_SIZE}, color };
+		DrawBoxST(&box3, TRUE, FALSE);
+	}
+
 }
 
 //移動処理(斜め対応)

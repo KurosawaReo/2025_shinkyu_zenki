@@ -126,7 +126,7 @@ struct GameData
 };
 
 // - 定数 -
-#define IS_WINDOW_MODE				(FALSE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE				(TRUE)			//ウィンドウモードにするか.
 
 #define WINDOW_WID					(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI					(1080)			//ウィンドウの縦幅.
@@ -139,6 +139,7 @@ struct GameData
 
 #define PLAYER_SIZE					(20)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED			(5)				//プレイヤー移動速度.
+#define AFTIMAGENUM	                (10)            // 残像データの数.
 #define PLAYER_HIT_R				(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_REF_COOLDOWN			(0)				//反射クールダウン時間.
 
@@ -157,14 +158,20 @@ struct GameData
 
 #define OBSTACLE4_OUTER_MARGIN		(0)				//砲台の周回時の外側余白.
 #define OBSTACLE4_SHOT_RESET		(80)			//砲台の発射リセット時間.
-#define OBSTACLE4_SHOT_START		(20)			//砲台の発射開始時間.
+#define OBSTACLE4_SHOT_START		(30)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN			(10)			//砲台の発射間隔時間.
 #define OBSTACLE4_LASER_SPEED		(150)			//レーザーの速度.
 #define OBSTACLE4_LASER_LIM			(100)			//レーザーの最大数.
 #define OBSTACLE4_LINE_MAX			(2000)			//レーザーで描画する線の最大数.
 
 #define OBSTACLE4_FLASH_MAX         (30)            //最大フラッシュエフェクト数
-#define OBSTACLE4_FLASH_SIZE_INIT   (1.0f)          //フラッシュエフェクトの初期サイズ.
-#define OBSTACLE4_FLASH_SIZE_SPREAD (2)             //フラッシュエフェクトの拡大量.
+#define OBSTACLE4_FLASH_SIZE_INIT   (5.0f)          //フラッシュエフェクトの初期サイズ.
+#define OBSTACLE4_FLASH_SIZE_SPREAD (3)             //フラッシュエフェクトの拡大量.
 #define OBSTACLE4_FLASH_VALID_TM	(50)            //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE4_FLASH_ALPHA_TM	(2)             //フラッシュエフェクトの透明化速度.
+
+#define OBSTACLE5_FLASH_MAX         (30)            //最大フラッシュエフェクト数
+#define OBSTACLE5_FLASH_SIZE_INIT   (5.0f)          //フラッシュエフェクトの初期サイズ.
+#define OBSTACLE5_FLASH_SIZE_SPREAD (3)             //フラッシュエフェクトの拡大量.
+#define OBSTACLE5_FLASH_VALID_TM	(50)            //フラッシュエフェクトの持続フレーム.
+#define OBSTACLE5_FLASH_ALPHA_TM	(2)             //フラッシュエフェクトの透明化速度.

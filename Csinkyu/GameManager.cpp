@@ -33,15 +33,16 @@
    [余裕があれば]
    ・FPSはm秒待機ではなく、時間計測で測りたい.
 /--------------------------------------------------------*/
-//#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
+#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
 #include "Player.h"
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
+#include "Obstacle5.h"
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
-#include "Obstacle2.h"
+//#include "Obstacle2.h"
 #endif
 
 #include "GameManager.h"
@@ -53,12 +54,18 @@ Obstacle obstacle[] = {
 	Obstacle(100, 1,   0x00FF00),
 	Obstacle(200, 1,   0x00FF00)
 };
-Obstacle2 obstacle2;
+//Obstacle2 obstacle2;
 #endif
 
 //障害物の実体.
+
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
+Obstacle4_3 obstacle4_3;
+Obstacle4_4 obstacle4_4;
+Obstacle5   obstacle5;
+
+Obstacle4main ;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -79,12 +86,15 @@ void GameManager::Init() {
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Init(&data, &player);
 	}
-	obstacle2.Init(&data, &player);
+	//obstacle2.Init(&data, &player);
 #endif
 
 	//障害物class.
 	obstacle4_1.Init(&data, &player);
 	obstacle4_2.Init(&data, &player);
+	obstacle4_3.Init(&data, &player);
+	obstacle4_4.Init(&data, &player);
+	obstacle5.Init(&data, &player);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -103,12 +113,15 @@ void GameManager::Reset() {
 	obstacle[1].Reset({ 400, 150 }, 30);
 	obstacle[2].Reset({ 300, 300 }, 60);
 	obstacle[3].Reset({ 500, 300 }, 90);
-	obstacle2.Reset();
+	//obstacle2.Reset();
 #endif
 
 	//障害物class.
-	obstacle4_1.Reset(WINDOW_WID/2, 0, 3);
-	obstacle4_2.Reset(WINDOW_WID/2, 0, 3);
+	obstacle4_1.Reset(WINDOW_WID /  2, 0, 3, MOVE_RIGHT);
+	obstacle4_2.Reset(WINDOW_WID /  2, 0, 3, MOVE_LEFT);
+	obstacle4_3.Reset(WINDOW_WID / 2, 1070, 3, MOVE_RIGHT);
+	obstacle4_4.Reset(WINDOW_WID / 2, 1070, 3, MOVE_LEFT);
+	obstacle5.Reset(WINDOW_WID / 2, WINDOW_HEI / 2, 3, 0); // 画面中央に配置
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
@@ -192,12 +205,15 @@ void GameManager::UpdateGame() {
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Update();
 	}
-	obstacle2.Update();
+	//obstacle2.Update();
 #endif
 
 	//障害物class.
 	obstacle4_1.Update();
 	obstacle4_2.Update();
+	obstacle4_3.Update();
+	obstacle4_4.Update();
+	//obstacle5.Update();
 
 	
 	//アイテムclass.
@@ -238,10 +254,16 @@ void GameManager::DrawGame() {
 	//カウントダウン中.
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
-		//テキストデータ.
+		//テキストを入れる用.
+		TCHAR    txt[256]{};
 		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF};
+
 		//テキストの設定.
-		swprintf(str.text, _T("time:%f"), tmSlowMode.GetPassTime()); //TCHAR型に変数を代入.
+//		sprintf (txt,    "time:%d",  (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
+		wsprintf(txt, _T("time:%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+//		strcpy (str.text, txt);	//char型の文字列をコピー.
+		_tcscpy(str.text, txt); //TCHAR型の文字列をコピー.
+
 		//画面中央に数字を表示.
 		DrawStringST(&str, TRUE, data.font1); //fontあり.
 	}
@@ -258,8 +280,13 @@ void GameManager::DrawEnd() {
 	{
 		//テキストの設定.
 		STR_DRAW str = { _T("GAME OVER"), {WINDOW_WID/2, 160}, 0xFF0000 };
+		STR_DRAW str2 = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0xFFFFFF };
+		swprintf(str2.text, _T("time:%.3f"), tmGame.GetPassTime());
+
+
 		//画面中央に文字を表示.
 		DrawStringST(&str, TRUE, data.font2); //fontあり.
+		DrawStringST(&str2, TRUE, data.font2);
 	}
 }
 
@@ -270,12 +297,15 @@ void GameManager::DrawObjests() {
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Draw();
 	}
-	obstacle2.Draw();
+	//obstacle2.Draw();
 #endif
 
 	//障害物class.
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
+	obstacle4_3.Draw();
+	obstacle4_4.Draw();
+	//obstacle5.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.
