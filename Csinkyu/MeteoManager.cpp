@@ -63,10 +63,11 @@ void MeteoManager::GenerateMeteo(){
 }
 
 //ÅŠñ‚è‚Ìè¦ÎÀ•W‚ğ’T‚·.
-DBL_XY MeteoManager::GetMeteoPosNearest(DBL_XY _pivotPos) {
+BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 	
-	DBL_XY nearPos;  //ÅŠñ‚èÀ•W.
-	double shortest; //b’è‚ÌÅ’Z‹——£.
+	BOOL isExistMeteo = FALSE; //1‚Â‚Å‚àè¦Î‚ª‚ ‚é‚©.
+
+	double shortest = 0; //b’è‚ÌÅ’Z‹——£.
 
 	//‘Sè¦Îƒ‹[ƒv.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
@@ -74,20 +75,22 @@ DBL_XY MeteoManager::GetMeteoPosNearest(DBL_XY _pivotPos) {
 		if (meteo[i].GetActive()) {
 
 			DBL_XY tmpPos = meteo[i].GetPos();          //1‚Â‚¸‚ÂÀ•Wæ“¾.
-			double tmpDis = CalcDis(tmpPos, _pivotPos); //‹——£‚ğŒvZ.
+			double tmpDis = CalcDis(tmpPos, _startPos); //‹——£‚ğŒvZ.
 
 			//‰‰ñŒÀ’è.
 			if (i == 0) {
-				shortest = tmpDis; //b’è1ˆÊ.
-				nearPos  = tmpPos;
+				shortest  = tmpDis; //b’è1ˆÊ.
+				*_nearPos = tmpPos;
 			}
 			//‚æ‚è‹ß‚¢êŠ‚ªŒ©‚Â‚©‚ê‚ÎXV.
 			else if (tmpDis < shortest){
-				shortest = tmpDis;
-				nearPos  = tmpPos;
+				shortest  = tmpDis;
+				*_nearPos = tmpPos;
 			}
+
+			isExistMeteo = TRUE; //è¦Î‚ª‚ ‚é.
 		}
 	}
 
-	return nearPos; //ÅŠñ‚èÀ•W‚ğ•Ô‚·.
+	return isExistMeteo;
 }
