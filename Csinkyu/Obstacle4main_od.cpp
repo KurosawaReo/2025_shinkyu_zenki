@@ -142,7 +142,6 @@ void Obstacle4main::enemy4Move()
 					{
 						ReflectLaser(i, pPos);   //レーザーを反射.
 						p_player->UseReflection(); //クールダウン開始.
-						//p_data->GetMeteoPosNearest(pPos);
 
 					}
 					//反射なし.

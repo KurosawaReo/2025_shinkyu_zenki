@@ -39,8 +39,17 @@ void Player::Update()
 	}
 	//有効なら.
 	if (active) {
+		//残像データを後ろにずらす.
+		for (int i = AFTIMAGENUM - 1; i > 0; i--)
+		{
+			afterImagePos[i] = afterImagePos[i - 1];
+
+		}
+
+		afterImagePos[0] = hit.pos;
 		PlayerMove();
 	}
+
 }
 //描画.
 void Player::Draw()
