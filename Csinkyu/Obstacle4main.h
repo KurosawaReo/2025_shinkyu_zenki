@@ -4,7 +4,7 @@
    レーザーの継承元クラス.
 */
 #pragma once
-#include "Player.h"
+
 
 #define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
 

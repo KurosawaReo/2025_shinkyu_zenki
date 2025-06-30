@@ -7,6 +7,7 @@
 */
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
+#include "MeteoManager.h"//隕石ののヘッダーファイル.
 
 //これが定義されてたら、こちらがON.
 #if defined ODAZIMA_LASER
@@ -141,6 +142,8 @@ void Obstacle4main::enemy4Move()
 					{
 						ReflectLaser(i, pPos);   //レーザーを反射.
 						p_player->UseReflection(); //クールダウン開始.
+						//p_data->GetMeteoPosNearest(pPos);
+
 					}
 					//反射なし.
 					else
