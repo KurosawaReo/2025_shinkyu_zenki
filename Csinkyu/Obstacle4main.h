@@ -46,6 +46,7 @@ typedef struct tagFLASHEFFECT
 	float Duration; // エフェクトの持続時間.
 	int BaseSize;   // 基本サイズ
 	int ValidFlag; // 有効フラグ
+	double angle;
 };
 
 //継承元となるクラス(親)
@@ -62,7 +63,7 @@ protected:
 	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 	IMG        img{};
 	tagFLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]; // クラスのメンバ変数として追加
-
+	DBL_XY pPos;// プレイヤーの現在位置を取得
 	GameData*  p_data{};
 	Player*    p_player{};
 

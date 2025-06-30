@@ -133,7 +133,7 @@ void GameManager::Reset() {
 	obstacle4_2.Reset(WINDOW_WID /  2, 0, 3, MOVE_LEFT);
 	obstacle4_3.Reset(WINDOW_WID / 2, 1070, 3, MOVE_RIGHT);
 	obstacle4_4.Reset(WINDOW_WID / 2, 1070, 3, MOVE_LEFT);
-	obstacle5.Reset(WINDOW_WID / 2, WINDOW_HEI / 2, 3, 0); // 画面中央に配置
+	obstacle5.Reset(WINDOW_WID / 2, WINDOW_HEI / 1, 0, 0); // 画面中央に配置
 
 	//隕石管理class.
 	meteoMng.Reset();
@@ -214,7 +214,7 @@ void GameManager::UpdateGame() {
 	obstacle4_2.Update();
 	obstacle4_3.Update();
 	obstacle4_4.Update();
-	//obstacle5.Update();
+	obstacle5.Update();
 
 	
 
@@ -327,7 +327,7 @@ void GameManager::DrawObjests() {
 	obstacle4_2.Draw();
 	obstacle4_3.Draw();
 	obstacle4_4.Draw();
-	//obstacle5.Draw();
+	obstacle5.Draw();
 	//隕石管理class.
 	meteoMng.Draw();
 	//アイテムclass.

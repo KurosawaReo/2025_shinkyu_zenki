@@ -92,10 +92,36 @@ void Obstacle4main::DrawObstFlash() {
 		int effectSize = _int(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
 
+		//三角形の頂点を計算(プレイヤーの方向を向く).
+		double angle = flashEffect[i].angle;
+		double cos_a = cos(angle);
+		double sin_a = sin(angle);
+		//外側の三角形(大きい)
+		int x1 = _int(flashEffect[i].x + cos_a * effectSize);//先端.
+		int y1 = _int(flashEffect[i].y + sin_a * effectSize);
+		int x2 = _int(flashEffect[i].x - cos_a * effectSize / 3 + sin_a * effectSize / 2);//左後.
+		int y2 = _int(flashEffect[i].y - sin_a * effectSize / 3 - cos_a * effectSize / 2);
+		int x3 = _int(flashEffect[i].x - cos_a * effectSize / 3 - sin_a * effectSize / 2);//右後.
+		int y3 = _int(flashEffect[i].y - sin_a * effectSize / 3 + cos_a * effectSize / 2);
+		//内側の三角形(小さい)
+		int ix1 = _int(flashEffect[i].x + cos_a * effectSize);//先端.
+		int iy1 = _int(flashEffect[i].y + sin_a * effectSize);
+		int ix2 = _int(flashEffect[i].x - cos_a * effectSize / 3 + sin_a * effectSize / 2);
+		int iy2 = _int(flashEffect[i].y - sin_a * effectSize / 3 - cos_a * effectSize / 2);
+		int ix3 = _int(flashEffect[i].x - cos_a * effectSize / 3 - sin_a * effectSize / 2);
+		int iy3 = _int(flashEffect[i].y - sin_a * effectSize / 3 + cos_a * effectSize / 2);
+
+
+
 		//発射エフェクトを円形で描画(白く光る)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
-		DrawCircle(_int(flashEffect[i].x), _int(flashEffect[i].y), effectSize, GetColor(0, 255, 255), FALSE);
-		DrawCircle(_int(flashEffect[i].x), _int(flashEffect[i].y), innerSize,  GetColor(0, 255, 200), FALSE); // 内側により明るい円を描画
+
+		//外側の三角形.
+		DrawTriangle(x1, y1, x2, y2, x3, y3, GetColor(0, 255, 255), FALSE);
+
+		//内側により明るい三角形を描画.
+		//DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
+
 
 		//エフェクトのカウンタを更新
 		flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
@@ -116,7 +142,7 @@ void Obstacle4main::DrawObstFlash() {
  */
 void Obstacle4main::enemy4Move()
 {
-	const DBL_XY pPos = p_player->GetPos();        // プレイヤーの現在位置を取得
+	pPos = p_player->GetPos();        // プレイヤーの現在位置を取得
 	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
 	// 反射モード中かどうかを一度だけ判定
@@ -278,14 +304,20 @@ void Obstacle4main::enemy4Move()
 //光るeffectの生成.
 void Obstacle4main::CreateFlashEffect(double fx, double fy)
 {
+
 	//未使用のエフェクトスロットを探す.
 	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
 	{
 		if (flashEffect[i].ValidFlag == 0)
 		{
+			double dx = pPos.x - fx;
+			double dy = pPos.y - fy;
+			double angle = atan2(dy, dx);
+
 			//エフェクトデータの設定.
 			flashEffect[i].x = fx;
 			flashEffect[i].y = fy;
+			flashEffect[i].angle = angle; // プレイヤーへの角度を保存
 			flashEffect[i].Counter = 0;
 			flashEffect[i].Duration = OBSTACLE4_FLASH_VALID_TM; //一定フレーム光る.
 			flashEffect[i].BaseSize = 20; //基本サイズ
@@ -348,4 +380,4 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 	laser[laserIndex].type = Laser_Reflected; //反射モードへ.
 }
 
-#endif
+#endif;
