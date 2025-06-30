@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/06/20
+   ver.2025/06/26
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -13,7 +13,7 @@
 //DrawCircleの改造版.
 int DrawCircleST(const Circle* data, BOOL isFill, int thick) {
 
-	int ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), data->r, data->clr, isFill, thick);
+	int ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->clr, isFill, thick);
 	return ret;
 }
 //DrawBoxの改造版.
@@ -46,6 +46,29 @@ int DrawLineST(const Line* data, int thick) {
 		_int(data->edPos.x), _int(data->edPos.y), data->clr, thick
 	);
 	return ret;
+}
+//画面全体にグリッド線を描画.
+int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
+
+	//縦線の描画.
+	for (int x = 0; x < wid; x += size) {
+
+		Line line = { {(double)x, 0}, {(double)x, (double)hei}, clrHei };
+		int ret = DrawLineST(&line);
+		if (ret < 0) {
+			return -1; //-1:縦線でError.
+		}
+	}
+	//横線の描画.
+	for (int y = 0; y < hei; y += size) {
+
+		Line line = { {0, (double)y}, {(double)wid, (double)y}, clrWid };
+		int ret = DrawLineST(&line);
+		if (ret < 0) {
+			return -2; //-2:横線でError.
+		}
+	}
+	return 0; //正常終了.
 }
 
 //LoadGraphの改造版.
@@ -201,8 +224,8 @@ int DrawModiStringST(const STR_DRAW_MODI* data, int font) {
 //テキストのサイズ取得.
 INT_XY GetTextSize(const TCHAR str[], int font) {
 	
-	INT_XY size;
-	int    line; //無視.
+	INT_XY size{};
+	int    line{}; //無視.
 
 	//デフォルトフォント.
 	if (font < 0) {

@@ -20,6 +20,6 @@ public:
 	void Update();
 	void Draw();
 
-	void   GenerateMeteo();                 //è¦Î¶¬.
-	DBL_XY GetMeteoPosNearest(DBL_XY _pos); //ÅŠñ‚è‚Ìè¦ÎÀ•W‚ğ’T‚·.
+	void GenerateMeteo(); //è¦Î¶¬.
+	BOOL GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //ÅŠñ‚è‚Ìè¦ÎÀ•W‚ğ’T‚·.
 };
