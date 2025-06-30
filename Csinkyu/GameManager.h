@@ -37,6 +37,7 @@ public:
 	void DrawTitle();
 	void DrawGame();
 	void DrawEnd();
+	void DrawBG();
 	void DrawObjests();
 
 	//‚»‚Ì‘¼.

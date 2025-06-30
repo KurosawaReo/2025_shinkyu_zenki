@@ -1,11 +1,11 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/06/18
+   ver.2025/06/20
    
-   DxLibで使う用のオリジナル描画関数.
+   DxLib: オリジナル描画機能の追加.
 */
 #if !defined DEF_GLOBAL_H
-  #include "Global.h" //stdafxがなければここで定義.
+  #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 
 #include "myDrawST.h"

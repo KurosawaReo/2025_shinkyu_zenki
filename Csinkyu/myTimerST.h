@@ -1,8 +1,8 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/06/17
+   ver.2025/06/20
 
-   DxLibで使う用のオリジナル時間関数.
+   DxLib: オリジナルタイマー機能の追加.
 */
 #pragma once
 

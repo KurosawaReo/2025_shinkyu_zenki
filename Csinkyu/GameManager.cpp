@@ -32,6 +32,11 @@
 
    [余裕があれば]
    ・FPSはm秒待機ではなく、時間計測で測りたい.
+
+   2025/06/23:
+   仮で隕石が降るのを作ったが、正常かどうかが怪しい。
+   特にisSlowによりスローになる所でdouble型にうまくキャストできておらず
+   一旦全ての速度調整をしてる所を確認したい。 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO
 /--------------------------------------------------------*/
 #define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
@@ -39,6 +44,7 @@
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
 #include "Obstacle5.h"
+#include "MeteoManager.h"
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
@@ -66,6 +72,8 @@ Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
 
 Obstacle4main ;
+//隕石管理の実体.
+MeteoManager meteoMng;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -95,6 +103,9 @@ void GameManager::Init() {
 	obstacle4_3.Init(&data, &player);
 	obstacle4_4.Init(&data, &player);
 	obstacle5.Init(&data, &player);
+
+	//隕石管理class.
+	meteoMng.Init(&data);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -117,15 +128,19 @@ void GameManager::Reset() {
 #endif
 
 	//障害物class.
+
 	obstacle4_1.Reset(WINDOW_WID /  2, 0, 3, MOVE_RIGHT);
 	obstacle4_2.Reset(WINDOW_WID /  2, 0, 3, MOVE_LEFT);
 	obstacle4_3.Reset(WINDOW_WID / 2, 1070, 3, MOVE_RIGHT);
 	obstacle4_4.Reset(WINDOW_WID / 2, 1070, 3, MOVE_LEFT);
 	obstacle5.Reset(WINDOW_WID / 2, WINDOW_HEI / 2, 3, 0); // 画面中央に配置
+
+	//隕石管理class.
+	meteoMng.Reset();
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
-	player.Reset({ 100, 100 }, TRUE);
+	player.Reset({ WINDOW_WID/2, WINDOW_HEI/2 }, TRUE);
 }
 
 //更新.
@@ -150,11 +165,7 @@ void GameManager::Update() {
 //描画.
 void GameManager::Draw() {
 
-	//背景色.
-	if (data.isSlow) {
-		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
-		DrawBoxST(&box, FALSE);
-	}
+	DrawBG();
 
 	//シーン別.
 	switch (data.scene) 
@@ -183,16 +194,6 @@ void GameManager::UpdateGame() {
 	
 	DrawFormatString(30, 200, 0xFFFFFF, _T("%d"), GetJoypadInputState(DX_INPUT_PAD1));
 
-#if false
-	//稼働してなければ.
-	if (!tmSlowMode.GetIsMove()) {
-		//Lボタンでスローモードに(仮)
-		if (IsPushKeyTime(KEY_INPUT_L) == 1) {
-			data.isSlow = TRUE;
-			tmSlowMode.Start();
-		}
-	}
-#endif
 	if (tmSlowMode.GetIsMove()) {
 		//時間切れで解除.
 		if(tmSlowMode.GetPassTime() == 0){
@@ -216,6 +217,9 @@ void GameManager::UpdateGame() {
 	//obstacle5.Update();
 
 	
+
+	//隕石管理class.
+	meteoMng.Update();
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.
@@ -264,6 +268,8 @@ void GameManager::DrawGame() {
 //		strcpy (str.text, txt);	//char型の文字列をコピー.
 		_tcscpy(str.text, txt); //TCHAR型の文字列をコピー.
 
+
+		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 		//画面中央に数字を表示.
 		DrawStringST(&str, TRUE, data.font1); //fontあり.
 	}
@@ -290,6 +296,22 @@ void GameManager::DrawEnd() {
 	}
 }
 
+//背景の描画.
+void GameManager::DrawBG() {
+
+	//背景デザイン.
+	for (int x = 0; x < WINDOW_WID; x += 5) {
+
+		float clr = 20 * fabs(sin((double)x / 200)); //色の変化.
+		Line line = { {x, 0},{x, WINDOW_HEI}, GetColor(0, clr, clr) };
+		DrawLineST(&line, 5);
+	}
+	//背景(スローモード).
+	if (data.isSlow) {
+		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
+		DrawBoxST(&box, FALSE);
+	}
+}
 //オブジェクトの描画.
 void GameManager::DrawObjests() {
 
@@ -306,6 +328,8 @@ void GameManager::DrawObjests() {
 	obstacle4_3.Draw();
 	obstacle4_4.Draw();
 	//obstacle5.Draw();
+	//隕石管理class.
+	meteoMng.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.

@@ -1,8 +1,8 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/06/18
+   ver.2025/06/20
 
-   DxLibで使う用のオリジナル描画関数.
+   DxLib: オリジナル描画機能の追加.
 */
 #pragma once
 
