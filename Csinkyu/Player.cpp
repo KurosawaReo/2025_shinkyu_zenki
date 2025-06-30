@@ -63,6 +63,8 @@ void Player::Draw()
 
 	//有効なら.
 	if (active) {
+
+		PlayerFaterimage();
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
 		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xA0A0A0 };
@@ -82,7 +84,34 @@ void Player::Draw()
 		DrawBoxST(&box2, TRUE, FALSE);
 	}
 }
+void Player::PlayerFaterimage()
+{
+	//残像処理.
+	for (int i = AFTIMAGENUM - 1; i >= 0; i -= 1)
+	{
+		DBL_XY& pos = afterImagePos[i];
 
+		int alpha = 105 - 105 * i / AFTIMAGENUM;
+
+		int alpha2 = 50 - 50 * i / AFTIMAGENUM;
+
+		int color = GetColor(alpha, alpha, alpha);
+
+
+		if (IsReflectionMode())
+		{
+			color = GetColor(alpha2 * 255 / 50, alpha2 / 2, alpha2 * 255 / 50);
+		}
+		else
+		{
+			color = GetColor(alpha, alpha, alpha);
+		}
+
+		Box box3 = { afterImagePos[i], {PLAYER_SIZE,   PLAYER_SIZE}, color };
+		DrawBoxST(&box3, TRUE, FALSE);
+	}
+
+}
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
