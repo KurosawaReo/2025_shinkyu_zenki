@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/06/20
+   ver.2025/06/26
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -80,6 +80,7 @@ struct STR_DRAW_MODI
 int    DrawCircleST    (const Circle* data, BOOL isFill = TRUE, int thick = 1);
 int    DrawBoxST       (const Box*    data, BOOL isCenter, BOOL isFill = TRUE);
 int    DrawLineST      (const Line*   data, int  thick = 1);
+int    DrawWindowGrid  (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
 //画像.
 int    LoadGraphST     (IMG* img, const TCHAR fileName[]);

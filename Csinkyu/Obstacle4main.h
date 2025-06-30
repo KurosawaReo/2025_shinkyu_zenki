@@ -46,7 +46,7 @@ typedef struct tagFLASHEFFECT
 	float Duration; // エフェクトの持続時間.
 	int BaseSize;   // 基本サイズ
 	int ValidFlag; // 有効フラグ
-};
+}FLASHEFFECT;
 
 //継承元となるクラス(親)
 class Obstacle4main
@@ -58,10 +58,10 @@ protected:
 	float HscTm{};     //砲台がショットする時間.
 	MoveDir moveDir{}; // 現在の移動方向.
 
-	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
-	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
-	IMG        img{};
-	tagFLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]; // クラスのメンバ変数として追加
+	LASER_DATA  laser[OBSTACLE4_LASER_LIM]{};		//ホーミングレーザーのデータ.
+	LINE_DATA   line [OBSTACLE4_LINE_MAX]{};		//ライン描画用データ.
+	IMG         img{};
+	FLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
 	GameData*  p_data{};
 	Player*    p_player{};
