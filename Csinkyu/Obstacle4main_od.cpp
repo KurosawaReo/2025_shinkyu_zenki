@@ -52,7 +52,8 @@ void Obstacle4main::DrawObstLine() {
 		g = max(g, 0); //最低値を0にする.
 
 		// 加算合成モードで軌跡を描画（発光エフェクト）
-		SetDrawBlendMode(DX_BLENDMODE_ADD, g);
+//		SetDrawBlendMode(DX_BLENDMODE_ADD, g);
+		SetDrawBlendModeST(MODE_ADD, g);
 
 		// 軌跡の線を描画（時間経過で色が変化）
 		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(50, g, 255) };
@@ -65,7 +66,8 @@ void Obstacle4main::DrawObstLine() {
 	}
 
 	//通常の描画モードに戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+//	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	ResetDrawBlendMode();
 }
 
 // 発射エフェクトの処理.
@@ -111,10 +113,9 @@ void Obstacle4main::DrawObstFlash() {
 		int ix3 = _int(flashEffect[i].x - cos_a * effectSize / 3 - sin_a * effectSize / 2);
 		int iy3 = _int(flashEffect[i].y - sin_a * effectSize / 3 + cos_a * effectSize / 2);
 
-
-
 		//発射エフェクトを円形で描画(白く光る)
-		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
+//		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
+		SetDrawBlendModeST(MODE_ADD, alphaValue);
 
 		//外側の三角形.
 		DrawTriangle(x1, y1, x2, y2, x3, y3, GetColor(0, 255, 255), FALSE);
@@ -133,7 +134,8 @@ void Obstacle4main::DrawObstFlash() {
 	}
 
 	//通常の描画モードに戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+//	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	ResetDrawBlendMode();
 }
 
 /**

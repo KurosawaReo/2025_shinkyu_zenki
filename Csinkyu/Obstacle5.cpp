@@ -131,7 +131,7 @@ void Obstacle5::DrawObstFlash()
 		int innerSize = effectSize / 2;
 
 		//発射エフェクトを円形で描画(白く光る)
-		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
+		SetDrawBlendModeST(MODE_ADD, alphaValue);
 		DrawCircle((int)(flashEffect[i].x), (int)(flashEffect[i].y), effectSize, GetColor(0, 255, 255), FALSE);
 		DrawCircle((int)(flashEffect[i].x), (int)(flashEffect[i].y), innerSize, GetColor(0, 255, 200), FALSE); // 内側により明るい円を描画
 
@@ -153,5 +153,5 @@ void Obstacle5::DrawObstFlash()
 		}
 	}
 	//通常の描画モードに戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	ResetDrawBlendMode();
 }

@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/23
+   ver.2025/07/01
 
    DxLib: オリジナル計算機能の追加.
 */

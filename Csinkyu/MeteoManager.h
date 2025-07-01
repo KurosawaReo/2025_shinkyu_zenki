@@ -15,7 +15,7 @@ private:
 	GameData* p_data{};           //ゲームデータ.
 
 public:
-	void Init(GameData*);
+	void Init(GameData*, Player*);
 	void Reset();
 	void Update();
 	void Draw();

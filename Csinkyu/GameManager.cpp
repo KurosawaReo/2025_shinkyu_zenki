@@ -47,8 +47,12 @@
    仮で多角形は完成した。
    ただ辺がうまく繋がらないため、そのロジックだけ見直す。
    (頂点の位置を回転を使って測れば行ける気がする)
+
+   2025/07/01:
+   当たると即死で難しく、ゲーム性の問題があるため
+   プレイヤーの周りに小さな四角を並べたバリアを作りたい。(HPは作らない)
 /--------------------------------------------------------*/
-#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
+//#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
 #include "MeteoManager.h"
 #include "Obstacle4.h"
@@ -58,7 +62,7 @@
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
-//#include "Obstacle2.h"
+#include "Obstacle2.h"
 #endif
 #include "Player.h"
 
@@ -71,7 +75,7 @@ Obstacle obstacle[] = {
 	Obstacle(100, 1,   0x00FF00),
 	Obstacle(200, 1,   0x00FF00)
 };
-//Obstacle2 obstacle2;
+Obstacle2 obstacle2;
 #endif
 
 //障害物の実体.
@@ -102,7 +106,7 @@ void GameManager::Init() {
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Init(&data, &player);
 	}
-	//obstacle2.Init(&data, &player);
+	obstacle2.Init(&data, &player);
 #endif
 
 	//障害物class.
@@ -113,7 +117,7 @@ void GameManager::Init() {
 	obstacle5.Init(&data, &player);
 
 	//隕石管理class.
-	meteoMng.Init(&data);
+	meteoMng.Init(&data, &player);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -132,7 +136,7 @@ void GameManager::Reset() {
 	obstacle[1].Reset({ 400, 150 }, 30);
 	obstacle[2].Reset({ 300, 300 }, 60);
 	obstacle[3].Reset({ 500, 300 }, 90);
-	//obstacle2.Reset();
+	obstacle2.Reset();
 #endif
 
 	//障害物class.
@@ -214,7 +218,7 @@ void GameManager::UpdateGame() {
 	for (int i = 0; i < _countof(obstacle); i++) {
 		obstacle[i].Update();
 	}
-	//obstacle2.Update();
+	obstacle2.Update();
 #endif
 
 	//障害物class.
