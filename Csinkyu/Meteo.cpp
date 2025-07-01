@@ -5,8 +5,7 @@
 #include "Meteo.h"
 
 void Meteo::Init(GameData* _data) {
-	p_data   = _data;
-	shapeCnt = 4;
+	p_data = _data;
 }
 
 void Meteo::Reset() {
@@ -17,21 +16,6 @@ void Meteo::Reset() {
 }
 
 void Meteo::Update() {
-
-	InputST* input = InputST::GetPtr();
-
-	if (input->IsPushKeyTime(KEY_1) == 1) {
-		shapeCnt++;
-		if (shapeCnt > METEO_LINE_MAX) {
-			shapeCnt = METEO_LINE_MAX;
-		}
-	}
-	if (input->IsPushKeyTime(KEY_2) == 1) {
-		shapeCnt--;
-		if (shapeCnt < 3) {
-			shapeCnt = 3;
-		}
-	}
 
 	//è¦Î–{‘Ì‚ª—LŒø‚È‚ç.
 	if (active) {
@@ -58,11 +42,11 @@ void Meteo::Draw() {
 		DrawCircleST(&cir, FALSE);
 
 		//—LŒø‚Èü‚ð‘S‚Ä•`‰æ.
-		for (int i = 0; i < shapeCnt; i++) {
+		for (int i = 0; i < shape.lineCnt; i++) {
 			
 			int g = _int(255 * fabs(sin(pos.x/200))); //F‚Ì•Ï‰».
-			line[i].clr = GetColor(0, g, 255);
-			DrawLineST(&line[i]);
+			shape.line[i].clr = GetColor(0, g, 255);
+			DrawLineST(&shape.line[i]);
 		}
 	}
 }
@@ -96,22 +80,31 @@ void Meteo::Spawn() {
 		vel = CalcRadToPos(rad);
 	}
 
-	active = TRUE; //—LŒø‚É‚·‚é.
+	//è¦Î‚ÌÝ’è.
+	{
+		//‰½ŠpŒ`‚É‚·‚é‚©.
+		shape.lineCnt = RndNum(3, METEO_LINE_CNT_MAX);
+		//’¸“_‚ÌˆÊ’u‚ð’Š‘I.
+		for (int i = 0; i < shape.lineCnt; i++) {
+			shape.lineDis[i] = RndNum(METEO_LINE_DIS_MIN, METEO_LINE_DIS_MAX);
+		}
+	}
+
+	active = TRUE; //è¦Î‚ð—LŒø‚É‚·‚é.
 }
 
 //è¦Î‚ð\¬‚·‚éü‚ÌXV.
 void Meteo::UpdateMeteoLine() {
 
-	float rot = 360/shapeCnt; //}Œ`‚Ì1‚Â‚ÌŠp‚ÌŠp“x.
-	float len = 120/shapeCnt; //}Œ`‚Ì1‚Â‚Ì•Ó‚Ì’·‚³.
+	float rot = 360/shape.lineCnt; //}Œ`‚Ì1‚Â‚ÌŠp‚ÌŠp“x.
 
-	for (int i = 0; i < shapeCnt; i++) {
+	//‰ñ“]‚µ‚È‚ª‚çŽn“_‚ÆI“_‚ðÝ’è‚µ‚Ä‚¢‚­.
+	for (int i = 0; i < shape.lineCnt; i++) {
 		
-		//Šî€‚Æ‚È‚éˆÊ’u‚ÆŠp“x.
-		float  mainAng = ang+i*rot;
-		DBL_XY mainPos = CalcLineAng(pos, mainAng, 30);
-		
-		line[i].stPos = CalcLineAng(mainPos, mainAng+90, len);
-		line[i].edPos = CalcLineAng(mainPos, mainAng-90, len);
+		//—v‘f”‚ª0–¢–ž‚È‚çÅ‘å’l‚ÖˆÚ“®‚·‚é.
+		int i2 = ((i-1) < 0) ? shape.lineCnt-1 : (i-1);
+
+		shape.line[i].stPos = CalcLineAng(pos, ang +  i  *rot, shape.lineDis[i]);  //Œ»Ý‚ÌŠp“x‚©‚çŒvŽZ.
+		shape.line[i].edPos = CalcLineAng(pos, ang + (i2)*rot, shape.lineDis[i2]); //1‚Â‘O‚ÌŠp“x‚©‚çŒvŽZ.
 	}
 }
