@@ -61,14 +61,14 @@ protected:
 	MoveDir moveDir{}; // 現在の移動方向.
 
 
-	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
-	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
-	IMG        img{};
-	DBL_XY pPos;// プレイヤーの現在位置を取得
+	LASER_DATA  laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
+	LINE_DATA   line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
+	IMG         img{};
+	DBL_XY      pPos{};// プレイヤーの現在位置を取得
 	FLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
-	GameData*  p_data{};
-	Player*    p_player{};
+	GameData*   p_data{};
+	Player*     p_player{};
 
 public:
 	//基本処理.

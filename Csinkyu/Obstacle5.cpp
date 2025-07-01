@@ -93,9 +93,9 @@ void Obstacle5::Hitjudgment()
 		DBL_XY playerPos = player->GetPos();
 
 		// プレイヤーとエフェクト円の距離を計算
-		float dx = playerPos.x - flashEffect[i].x;
-		float dy = playerPos.y - flashEffect[i].y;
-		float distance = sqrt(dx * dx + dy * dy);
+		double dx = playerPos.x - flashEffect[i].x;
+		double dy = playerPos.y - flashEffect[i].y;
+		double distance = sqrt(dx * dx + dy * dy);
 
 		// プレイヤーの当たり判定半径（適切な値に調整してください）
 		float playerRadius = 10.0f; // または player->GetHitSize() など、実際のメソッドがあれば使用

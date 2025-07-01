@@ -10,7 +10,7 @@ typedef struct tagFLASHEFFECT5
 	float Duration; // エフェクトの持続時間.
 	int BaseSize;   // 基本サイズ
 	int ValidFlag; // 有効フラグ
-};
+}FLASHEFFECT5;
 
 class Obstacle5
 {
@@ -22,7 +22,7 @@ private:
 
 	GameData* data{};
 	Player* player{};
-	tagFLASHEFFECT5 flashEffect[OBSTACLE5_FLASH_MAX]; // クラスのメンバ変数として追加
+	FLASHEFFECT5 flashEffect[OBSTACLE5_FLASH_MAX]; // クラスのメンバ変数として追加
 
 public:
 	void Init(GameData*, Player*);  // ポインタのポインタから修正
@@ -33,5 +33,4 @@ public:
 	void UpdateFlashGeneration();
 	void DrawObstFlash();
 	void StartFlashEffect(double x, double y);  // この行を追加
-
 };

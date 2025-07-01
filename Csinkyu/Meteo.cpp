@@ -17,7 +17,7 @@ void Meteo::Reset() {
 
 void Meteo::Update() {
 
-	//有効なら.
+	//隕石本体が有効なら.
 	if (active) {
 		//移動.
 		pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
@@ -26,18 +26,28 @@ void Meteo::Update() {
 		if (IsOutInArea(pos, {}, 0, 0, WINDOW_WID, WINDOW_HEI)){
 			active = FALSE; //無効にする.
 		}
+		//回転.
+		ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+
+		UpdateMeteoLine();
 	}
 }
 
 void Meteo::Draw() {
 	
-	//有効なら.
+	//隕石本体が有効なら.
 	if (active) {
 
-		int g = _int(255 * fabs(sin(pos.x/200))); //色の変化.
-
-		Circle cir = {pos, 80, GetColor(0, g, 255)};
+		Circle cir = {pos, 8, 0xFFFFFF};
 		DrawCircleST(&cir, FALSE);
+
+		//有効な線を全て描画.
+		for (int i = 0; i < shape.lineCnt; i++) {
+			
+			int g = _int(255 * fabs(sin(pos.x/200))); //色の変化.
+			shape.line[i].clr = GetColor(0, g, 255);
+			DrawLineST(&shape.line[i]);
+		}
 	}
 }
 
@@ -70,5 +80,31 @@ void Meteo::Spawn() {
 		vel = CalcRadToPos(rad);
 	}
 
-	active = TRUE; //有効にする.
+	//隕石の設定.
+	{
+		//何角形にするか.
+		shape.lineCnt = RndNum(3, METEO_LINE_CNT_MAX);
+		//頂点の位置を抽選.
+		for (int i = 0; i < shape.lineCnt; i++) {
+			shape.lineDis[i] = RndNum(METEO_LINE_DIS_MIN, METEO_LINE_DIS_MAX);
+		}
+	}
+
+	active = TRUE; //隕石を有効にする.
+}
+
+//隕石を構成する線の更新.
+void Meteo::UpdateMeteoLine() {
+
+	float rot = 360/shape.lineCnt; //図形の1つの角の角度.
+
+	//回転しながら始点と終点を設定していく.
+	for (int i = 0; i < shape.lineCnt; i++) {
+		
+		//要素数が0未満なら最大値へ移動する.
+		int i2 = ((i-1) < 0) ? shape.lineCnt-1 : (i-1);
+
+		shape.line[i].stPos = CalcLineAng(pos, ang +  i  *rot, shape.lineDis[i]);  //現在の角度から計算.
+		shape.line[i].edPos = CalcLineAng(pos, ang + (i2)*rot, shape.lineDis[i2]); //1つ前の角度から計算.
+	}
 }
