@@ -151,7 +151,7 @@ double CalcDis(DBL_XY pos1, DBL_XY pos2) {
 
 	return sqrt(x*x + y*y); //斜辺の長さを返す.
 }
-//中点座標計算.
+//2つの座標の中点を計算.
 DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 
 	double x = (pos1.x + pos2.x)/2; //xの平均.
@@ -159,7 +159,7 @@ DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 
 	return { x, y };
 }
-//線の終点計算.
+//始点から角度と長さを入れた座標を計算.
 DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
     //角度をradに変換し、座標の計算.

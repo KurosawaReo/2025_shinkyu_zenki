@@ -42,6 +42,11 @@
    隕石は大体正常にできたと思われる。
    レーザーの発射を、三角形の敵の先端から出るようにできたら良さそう。
    打つ方向に三角形を回転させる。
+
+   2025/06/30:
+   仮で多角形は完成した。
+   ただ辺がうまく繋がらないため、そのロジックだけ見直す。
+   (頂点の位置を回転を使って測れば行ける気がする)
 /--------------------------------------------------------*/
 #define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
@@ -70,14 +75,11 @@ Obstacle obstacle[] = {
 #endif
 
 //障害物の実体.
-
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
 Obstacle4_3 obstacle4_3;
 Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
-
-Obstacle4main ;
 //隕石管理の実体.
 MeteoManager meteoMng;
 //アイテムの実体.

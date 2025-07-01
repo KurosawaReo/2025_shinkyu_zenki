@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/23
+   ver.2025/06/30
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -13,6 +13,16 @@ enum KEY_ID
 	KEY_LEFT  = KEY_INPUT_LEFT,
 	KEY_RIGHT = KEY_INPUT_RIGHT,
 	KEY_UP    = KEY_INPUT_UP,
+	KEY_0     = KEY_INPUT_0,
+	KEY_1     = KEY_INPUT_1,
+	KEY_2     = KEY_INPUT_2,
+	KEY_3     = KEY_INPUT_3,
+	KEY_4     = KEY_INPUT_4,
+	KEY_5     = KEY_INPUT_5,
+	KEY_6     = KEY_INPUT_6,
+	KEY_7     = KEY_INPUT_7,
+	KEY_8     = KEY_INPUT_8,
+	KEY_9     = KEY_INPUT_9,
 	KEY_A     = KEY_INPUT_A,
 	KEY_B     = KEY_INPUT_B,
 	KEY_C     = KEY_INPUT_C,

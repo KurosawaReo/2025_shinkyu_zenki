@@ -113,7 +113,7 @@ void Player::PlayerFaterimage()
 			color = GetColor(alpha, alpha, alpha);
 		}
 
-		Box box3 = { afterImagePos[i], {PLAYER_SIZE,   PLAYER_SIZE}, color };
+		Box box3 = { afterImagePos[i], {PLAYER_SIZE,   PLAYER_SIZE}, (UINT)color };
 		DrawBoxST(&box3, TRUE, FALSE);
 	}
 

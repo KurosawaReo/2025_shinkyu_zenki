@@ -68,7 +68,8 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 			return -2; //-2:‰¡ü‚ÅError.
 		}
 	}
-	return 0; //³íI—¹.
+
+	return 0;
 }
 
 //LoadGraph‚Ì‰ü‘¢”Å.
