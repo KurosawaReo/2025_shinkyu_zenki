@@ -17,7 +17,7 @@ class Obstacle4_1 : public Obstacle4main
 {
 public:
 	void Init(GameData*, Player*);
-	void Reset(float _Hx, float _Hy, float _Hm) override;
+	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
 	void Move() override;
 };
 
@@ -26,7 +26,21 @@ class Obstacle4_2 : public Obstacle4main
 {
 public:
 	void Init(GameData*, Player*);
-	void Reset(float _Hx, float _Hy, float _Hm) override;
+	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
+	void Move() override;
+};
+class Obstacle4_3 : public Obstacle4main
+{
+public:
+	void Init(GameData*, Player*);
+	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
+	void Move() override;
+};
+class Obstacle4_4 : public Obstacle4main
+{
+public:
+	void Init(GameData*, Player*);
+	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
 	void Move() override;
 };
 class Obstacle4_yosoku :public Obstacle4main

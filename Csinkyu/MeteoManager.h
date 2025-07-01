@@ -10,9 +10,9 @@ class MeteoManager
 {
 private:
 	Meteo meteo[METEO_CNT_MAX]{}; //隕石データ.
-	float timer;			      //隕石生成用.
+	float timer{};			      //隕石生成用.
 
-	GameData* p_data;             //ゲームデータ.
+	GameData* p_data{};           //ゲームデータ.
 
 public:
 	void Init(GameData*);
