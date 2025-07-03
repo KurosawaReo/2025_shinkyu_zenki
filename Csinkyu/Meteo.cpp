@@ -33,7 +33,7 @@ void Meteo::Update() {
 		UpdateMeteoLine();
 		
 		//隕石に当たっているなら.
-		if (IsHitMeteo()) {
+		if (IsHitMeteo(p_player->GetHit())) {
 			p_player->PlayerDeath();
 		}
 	}
@@ -117,12 +117,12 @@ void Meteo::UpdateMeteoLine() {
 }
 
 //隕石の当たり判定.
-BOOL Meteo::IsHitMeteo() {
+BOOL Meteo::IsHitMeteo(Circle* pos) {
 
 	//全ての線で判定.
 	for (int i = 0; i < shape.lineCnt; i++) {
 		//線とプレイヤーが当たったら.
-		if (IsHitLine(&shape.line[i], p_player->GetHit())) {
+		if (IsHitLine(&shape.line[i], pos)) {
 			return TRUE; //当たった.
 		}
 	}

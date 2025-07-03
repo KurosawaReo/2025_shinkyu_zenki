@@ -102,3 +102,21 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 
 	return isExistMeteo;
 }
+
+//è¦Î‚Ì‚Ç‚ê‚©1‚Â‚Å‚à“–‚½‚Á‚Ä‚¢‚é‚©.
+BOOL MeteoManager::IsHitMeteos(Circle* pos) {
+
+	BOOL hit;
+
+	//‘Sè¦Îƒ‹[ƒv.
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
+		if (meteo[i].GetActive()) {
+			
+			hit = meteo[i].IsHitMeteo(pos); //1‚±‚¸‚Â”»’è.
+			if (hit) {
+				return TRUE; //1‚Â‚Å‚à“–‚½‚Á‚Ä‚¢‚é.
+			}
+		}
+	}
+	return FALSE; //‚Ç‚ê‚à“–‚½‚Á‚Ä‚¢‚È‚¢.
+}

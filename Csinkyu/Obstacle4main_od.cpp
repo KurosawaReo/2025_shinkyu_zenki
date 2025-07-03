@@ -194,8 +194,20 @@ void Obstacle4main::enemy4Move()
 				break;
 
 			case Laser_Reflected:
-				// 反射したレーザーは隕石追尾処理を行う
-			HandleReflectedLaserTracking(i);
+				{
+					// 反射したレーザーは隕石追尾処理を行う
+					HandleReflectedLaserTracking(i);
+
+					/*
+					   【仮】TODO: レーザーの円形当たり判定.
+					*/
+					Circle hit = { {laser[i].x, laser[i].y}, 10, {} }; 
+
+					//隕石と当たっているなら.
+					if (p_meteoMg->IsHitMeteos(&hit)) {
+						laser[i].ValidFlag = 0; //無効にする.
+					}
+				}
 				break;
 
 			//想定外の値エラー.
@@ -328,7 +340,6 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 	DBL_XY nearestMeteoPos{};
 	bool hasMeteo = p_meteoMg->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
 	    
-	printfDx(L"%d", hasMeteo);
 	//隕石が1つでも存在すれば.
 	if (hasMeteo)
 	{
@@ -345,7 +356,6 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 		double angleDiff = targetAngle - currentAngle;
 
 		// 角度差分を-PI～PIの範囲に正規化
-		
 		while (angleDiff > M_PI)
 		{
 			angleDiff -= 2 * M_PI;

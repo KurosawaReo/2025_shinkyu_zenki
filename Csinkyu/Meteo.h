@@ -42,8 +42,8 @@ public:
 	void Update();
 	void Draw();
 
-	void Spawn();           //隕石出現. 
-	void UpdateMeteoLine(); //隕石を構成する線の更新.
+	void Spawn();				//隕石出現. 
+	void UpdateMeteoLine();		//隕石を構成する線の更新.
 
-	BOOL IsHitMeteo();		//隕石の当たり判定.
+	BOOL IsHitMeteo(Circle*);	//隕石の当たり判定.
 };
