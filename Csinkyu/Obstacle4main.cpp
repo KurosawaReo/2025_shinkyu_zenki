@@ -149,6 +149,8 @@ void Obstacle4main::enemy4Move()
 //光るeffectの生成.
 void Obstacle4main::CreateFlashEffect(double fx, double fy)
 {
+	DBL_XY pPos = p_player->GetPos();
+
 	//未使用のエフェクトスロットを探す.
 	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
 	{

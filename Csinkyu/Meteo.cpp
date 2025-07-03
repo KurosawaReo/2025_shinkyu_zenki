@@ -67,13 +67,13 @@ void Meteo::Spawn() {
 
 	//50%:上下端から出現.
 	if (rnd1 < 50) {
-		pos.x = RndNum(0, WINDOW_WID);        //xの設定.
-		pos.y = (rnd2 < 50) ? 0 : WINDOW_HEI; //yの設定.
+		pos.x = RndNum(0, WINDOW_WID);                                                  //xの設定.
+		pos.y = (rnd2 < 50) ? 0 - METEO_LINE_DIS_MAX : WINDOW_HEI + METEO_LINE_DIS_MAX; //yの設定.
 	}
 	//50%:左右端から出現.
 	else {
-		pos.x = (rnd2 < 50) ? 0 : WINDOW_WID; //xの設定.
-		pos.y = RndNum(0, WINDOW_HEI);        //yの設定.
+		pos.x = (rnd2 < 50) ? 0 - METEO_LINE_DIS_MAX : WINDOW_WID + METEO_LINE_DIS_MAX; //xの設定.
+		pos.y = RndNum(0, WINDOW_HEI);                                                  //yの設定.
 	}
 
 	//目標地点の抽選.
