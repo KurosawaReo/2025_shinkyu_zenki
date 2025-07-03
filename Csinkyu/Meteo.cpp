@@ -4,8 +4,9 @@
 */
 #include "Meteo.h"
 
-void Meteo::Init(GameData* _data) {
-	p_data = _data;
+void Meteo::Init(GameData* _data, Player* _player) {
+	p_data   = _data;
+	p_player = _player;
 }
 
 void Meteo::Reset() {
@@ -30,6 +31,11 @@ void Meteo::Update() {
 		ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
 		UpdateMeteoLine();
+		
+		//隕石に当たっているなら.
+		if (IsHitMeteo()) {
+			p_player->PlayerDeath();
+		}
 	}
 }
 
@@ -38,8 +44,8 @@ void Meteo::Draw() {
 	//隕石本体が有効なら.
 	if (active) {
 
-		Circle cir = {pos, 8, 0xFFFFFF};
-		DrawCircleST(&cir, FALSE);
+		//Circle cir = {pos, 8, 0xFFFFFF};
+		//DrawCircleST(&cir, FALSE);
 
 		//有効な線を全て描画.
 		for (int i = 0; i < shape.lineCnt; i++) {
@@ -83,10 +89,10 @@ void Meteo::Spawn() {
 	//隕石の設定.
 	{
 		//何角形にするか.
-		shape.lineCnt = RndNum(3, METEO_LINE_CNT_MAX);
+		shape.lineCnt = RndNum(METEO_LINE_CNT_MIN, METEO_LINE_CNT_MAX);
 		//頂点の位置を抽選.
 		for (int i = 0; i < shape.lineCnt; i++) {
-			shape.lineDis[i] = RndNum(METEO_LINE_DIS_MIN, METEO_LINE_DIS_MAX);
+			shape.lineDis[i] = (float)RndNum(METEO_LINE_DIS_MIN*10, METEO_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
 		}
 	}
 
@@ -96,15 +102,30 @@ void Meteo::Spawn() {
 //隕石を構成する線の更新.
 void Meteo::UpdateMeteoLine() {
 
-	float rot = 360/shape.lineCnt; //図形の1つの角の角度.
+	//何度ずつずれるか.
+	float rot = (float)360/shape.lineCnt; //360度÷描く線の数.
 
 	//回転しながら始点と終点を設定していく.
 	for (int i = 0; i < shape.lineCnt; i++) {
-		
-		//要素数が0未満なら最大値へ移動する.
-		int i2 = ((i-1) < 0) ? shape.lineCnt-1 : (i-1);
 
-		shape.line[i].stPos = CalcLineAng(pos, ang +  i  *rot, shape.lineDis[i]);  //現在の角度から計算.
-		shape.line[i].edPos = CalcLineAng(pos, ang + (i2)*rot, shape.lineDis[i2]); //1つ前の角度から計算.
+		//要素数が0未満なら最大値へ移動する.
+		int bef = ((i-1) < 0) ? shape.lineCnt-1 : (i-1);
+
+		shape.line[i].stPos = CalcLineAng(pos, ang+i  *rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
+		shape.line[i].edPos = CalcLineAng(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
 	}
+}
+
+//隕石の当たり判定.
+BOOL Meteo::IsHitMeteo() {
+
+	//全ての線で判定.
+	for (int i = 0; i < shape.lineCnt; i++) {
+		//線とプレイヤーが当たったら.
+		if (IsHitLine(&shape.line[i], p_player->GetHit())) {
+			return TRUE; //当たった.
+		}
+	}
+
+	return FALSE; //当たっていない.
 }

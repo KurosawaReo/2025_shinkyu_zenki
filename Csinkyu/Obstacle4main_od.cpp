@@ -15,8 +15,9 @@
 //初期化.
 void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMg)
 {
+	// プレイヤーオブジェクトを参照として保存
 	p_data    = _data;
-	p_player  = _player;  // プレイヤーオブジェクトを参照として保存
+	p_player  = _player;
 	p_meteoMg = _meteoMg;
 }
 
@@ -177,21 +178,16 @@ void Obstacle4main::enemy4Move()
 					(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
 				{
 					//反射あり.
-			
 					if (p_player->IsReflectionMode())
 					{
-						ReflectLaser(i, pPos);   //レーザーを反射.
-					
-						p_player->UseReflection(); //クールダウン開始.
-
-	
-				
+						ReflectLaser(i, pPos);     //レーザーを反射.
+						p_player->UseReflection(); //クールダウン開始.			
 					}
 					//反射なし.
 					else
 					{
-						laser[i].ValidFlag = 0; //レーザーを無効化.
-						p_player->PlayerDeath();  //プレイヤー死亡.
+						laser[i].ValidFlag = 0;  //レーザーを無効化.
+						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
 					isHit = true; //当たったことを記録.
 				}
@@ -454,4 +450,4 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 	laser[laserIndex].type = Laser_Reflected; //反射モードへ.
 }
 
-#endif;
+#endif

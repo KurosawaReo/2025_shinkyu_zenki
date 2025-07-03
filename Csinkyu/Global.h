@@ -138,11 +138,10 @@ struct GameData
 #define SLOW_MODE_SPEED				(0.20f)			//スローモード速度倍率.
 
 #define PLAYER_SIZE					(20)			//プレイヤーサイズ.
-#define PLAYER_MOVE_SPEED			(5)				//プレイヤー移動速度.
-#define AFTIMAGENUM	                (10)            // 残像データの数.
 #define PLAYER_MOVE_SPEED			(6)				//プレイヤー移動速度.
 #define PLAYER_HIT_R				(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_REF_COOLDOWN			(0)				//反射クールダウン時間.
+#define PLAYER_AFT_IMG_NUM	        (10)            //残像データの数.
 
 #define ITEM_SIZE					(20)			//アイテムサイズ.
 #define ITEM_SPEED					(3)				//アイテム移動スピード.  
@@ -183,6 +182,7 @@ struct GameData
 #define METEO_ERASE_OUT_DIS			(50)			//隕石が画面外で消える距離.
 #define METEO_GOAL_RAND_RANGE		(500)			//隕石の目標地点の乱数範囲.
 
-#define METEO_LINE_CNT_MAX			(16)			//最大16角形.
+#define METEO_LINE_CNT_MIN			(5)				//最低n角形.
+#define METEO_LINE_CNT_MAX			(16)			//最大n角形.
 #define METEO_LINE_DIS_MIN			(40)			//頂点の最短距離.
 #define METEO_LINE_DIS_MAX			(60)			//頂点の最大距離.

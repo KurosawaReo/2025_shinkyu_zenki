@@ -4,13 +4,13 @@
 */
 #include "MeteoManager.h"
 
-void MeteoManager::Init(GameData* _data) {
+void MeteoManager::Init(GameData* _data, Player* _player) {
 
 	p_data = _data;
 
 	//‘Sè¦Îƒ‹[ƒv.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		meteo[i].Init(_data);
+		meteo[i].Init(_data, _player);
 	}
 }
 
