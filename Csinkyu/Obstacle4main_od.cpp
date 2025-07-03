@@ -9,6 +9,9 @@
 #include "Obstacle4.h" // 自身のヘッダーファイル
 #include "MeteoManager.h"//隕石ののヘッダーファイル.
 
+//これが定義されてたら、こちらがON.
+#if defined ODAZIMA_LASER
+
 //初期化.
 void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMg)
 {
@@ -183,7 +186,7 @@ void Obstacle4main::enemy4Move()
 					//反射なし.
 					else
 					{
-						DeleteLaser(i);
+						laser[i].ValidFlag = 0;  //レーザーを無効化.
 						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
 					isHit = true; //当たったことを記録.
@@ -202,7 +205,7 @@ void Obstacle4main::enemy4Move()
 
 					//隕石と当たっているなら.
 					if (p_meteoMg->IsHitMeteos(&hit)) {
-						DeleteLaser(i);
+						laser[i].ValidFlag = 0; //無効にする.
 					}
 				}
 				break;
@@ -276,7 +279,8 @@ void Obstacle4main::enemy4Move()
 		if (laser[i].x < -100 || laser[i].x > WINDOW_WID + 100 ||
 			laser[i].y < -100 || laser[i].y > WINDOW_HEI + 100)
 		{
-			DeleteLaser(i);
+			laser[i].ValidFlag = 0;
+			laser[i].type = Laser_Normal; //ノーマルモードに戻す.
 		}
 	}
 
@@ -456,9 +460,4 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 	laser[laserIndex].type = Laser_Reflected; //反射モードへ.
 }
 
-//レーザー消去.
-void Obstacle4main::DeleteLaser(int idx) {
-
-	laser[idx].ValidFlag = 0;       //無効にする.
-	laser[idx].type = Laser_Normal; //ノーマルモードに戻す.
-}
+#endif
