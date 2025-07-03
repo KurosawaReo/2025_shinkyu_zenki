@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/23
+   ver.2025/07/03
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -125,13 +125,22 @@ void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int dow
 	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
 }
 //範囲外かどうか.
-BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down) {
+BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down, BOOL isCompOut) {
 
-	//範囲外.
-	if (pos.x < left  + size.x/2) { return TRUE; }
-	if (pos.y < up    + size.y/2) { return TRUE; }
-	if (pos.x > right - size.x/2) { return TRUE; }
-	if (pos.y > down  - size.y/2) { return TRUE; }
+	//完全に出たら範囲外とする.
+	if (isCompOut) {
+		if (pos.x < left  - size.x/2) { return TRUE; }
+		if (pos.y < up    - size.y/2) { return TRUE; }
+		if (pos.x > right + size.x/2) { return TRUE; }
+		if (pos.y > down  + size.y/2) { return TRUE; }
+	}
+	//触れた瞬間に範囲外とする.
+	else {
+		if (pos.x < left  + size.x/2) { return TRUE; }
+		if (pos.y < up    + size.y/2) { return TRUE; }
+		if (pos.x > right - size.x/2) { return TRUE; }
+		if (pos.y > down  - size.y/2) { return TRUE; }
+	}
 
 	return FALSE; //範囲内.
 }
@@ -151,7 +160,7 @@ double CalcDis(DBL_XY pos1, DBL_XY pos2) {
 
 	return sqrt(x*x + y*y); //斜辺の長さを返す.
 }
-//中点座標計算.
+//2つの座標の中点を計算.
 DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 
 	double x = (pos1.x + pos2.x)/2; //xの平均.
@@ -159,7 +168,7 @@ DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 
 	return { x, y };
 }
-//線の終点計算.
+//始点から角度と長さを入れた座標を計算.
 DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
     //角度をradに変換し、座標の計算.

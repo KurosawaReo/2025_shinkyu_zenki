@@ -1,44 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="myDrawST.cpp" />
-    <ClCompile Include="myInputST.cpp" />
-    <ClCompile Include="Obstacle3.cpp" />
-    <ClCompile Include="Obstacle2.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
-    <ClCompile Include="myCalcST.cpp" />
-    <ClCompile Include="Obstacle4.cpp" />
-    <ClCompile Include="myTimerST.cpp" />
-    <ClCompile Include="Item.cpp" />
-    <ClCompile Include="Obstacle4main_kr.cpp" />
-    <ClCompile Include="Obstacle4main_od.cpp" />
+    <Image Include="image\enemy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LaserManager.cpp" />
     <ClCompile Include="Meteo.cpp" />
     <ClCompile Include="MeteoManager.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Obstacle2.cpp" />
+    <ClCompile Include="Obstacle4.cpp" />
+    <ClCompile Include="Obstacle4main.cpp" />
+    <ClCompile Include="Obstacle5.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="myCalcST.cpp" />
+    <ClCompile Include="myDrawST.cpp" />
+    <ClCompile Include="myInputST.cpp" />
+    <ClCompile Include="myTimerST.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="myDrawST.h" />
-    <ClInclude Include="myInputST.h" />
-    <ClInclude Include="Obstacle3.h" />
-    <ClInclude Include="Obstacle2.h" />
-    <ClInclude Include="Obstacle.h" />
-    <ClInclude Include="myCalcST.h" />
-    <ClInclude Include="Obstacle4.h" />
-    <ClInclude Include="myTimerST.h" />
-    <ClInclude Include="Item.h" />
-    <ClInclude Include="Obstacle4main.h" />
+    <ClInclude Include="LaserManager.h" />
     <ClInclude Include="Meteo.h" />
     <ClInclude Include="MeteoManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="image\Player.png" />
-    <Image Include="image\enemy.png" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Obstacle2.h" />
+    <ClInclude Include="Obstacle4.h" />
+    <ClInclude Include="Obstacle4main.h" />
+    <ClInclude Include="Obstacle5.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="myCalcST.h" />
+    <ClInclude Include="myDrawST.h" />
+    <ClInclude Include="myInputST.h" />
+    <ClInclude Include="myTimerST.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/06/26
+   ver.2025/07/01
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -68,7 +68,8 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 			return -2; //-2:横線でError.
 		}
 	}
-	return 0; //正常終了.
+
+	return 0;
 }
 
 //LoadGraphの改造版.
@@ -291,6 +292,15 @@ int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
 			return -2; //-2:DrawBoxSTで問題発生.
 		}
 	}
-
+	
 	return 0; //正常終了.
+}
+
+//描画モード変更.
+int SetDrawBlendModeST(BLENDMODE_ID id, int power) {
+	return SetDrawBlendMode(id, power);
+}
+//描画モードリセット.
+int ResetDrawBlendMode() {
+	return SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }

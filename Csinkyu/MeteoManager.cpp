@@ -4,13 +4,13 @@
 */
 #include "MeteoManager.h"
 
-void MeteoManager::Init(GameData* _data) {
+void MeteoManager::Init(GameData* _data, Player* _player) {
 
 	p_data = _data;
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		meteo[i].Init(_data);
+		meteo[i].Init(_data, _player);
 	}
 }
 
@@ -42,6 +42,7 @@ void MeteoManager::Update() {
 }
 
 void MeteoManager::Draw() {
+
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		meteo[i].Draw(); //描画.
@@ -54,9 +55,9 @@ void MeteoManager::GenerateMeteo(){
 	//空いてる所を探す.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		if (!meteo[i].GetActive()) {
+
 			meteo[i].Spawn();         //出現.
 			timer = METEO_SPAWN_SPAN; //タイマー再開.
-
 			break; //出現完了.
 		}
 	}
@@ -64,7 +65,7 @@ void MeteoManager::GenerateMeteo(){
 
 //最寄りの隕石座標を探す.
 BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
-	
+
 	BOOL isExistMeteo = FALSE; //1つでも隕石があるか.
 
 	double shortest = 0; //暫定の最短距離.
@@ -93,4 +94,23 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 	}
 
 	return isExistMeteo;
+}
+
+//隕石のどれか1つでも当たっているか.
+BOOL MeteoManager::IsHitMeteos(Circle* pos) {
+
+	BOOL hit;
+	
+	//全隕石ループ.
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
+		if (meteo[i].GetActive()) {
+			
+			hit = meteo[i].IsHitMeteo(pos); //1こずつ判定.
+			if (hit) {
+				meteo[i].Destroy(); //隕石を破壊.
+				return TRUE; //1つでも当たっている.
+			}
+		}
+	}
+	return FALSE; //どれも当たっていない.
 }
