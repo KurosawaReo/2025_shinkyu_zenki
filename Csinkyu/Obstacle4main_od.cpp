@@ -12,10 +12,15 @@
 //これが定義されてたら、こちらがON.
 #if defined ODAZIMA_LASER
 
-/**
- * @brief 障害物の更新処理
- * プレイヤーが有効な場合のみ障害物の動きを更新
- */
+//初期化.
+void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMg)
+{
+	p_data    = _data;
+	p_player  = _player;  // プレイヤーオブジェクトを参照として保存
+	p_meteoMg = _meteoMg;
+}
+
+//更新.
 void Obstacle4main::Update()
 {
 	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
@@ -23,10 +28,7 @@ void Obstacle4main::Update()
 	}
 }
 
-/**
- * @brief 障害物の描画処理
- * レーザーの軌跡と砲台を描画
- */
+//描画.
 void Obstacle4main::Draw()
 {
 	// レーザーの軌跡の描画処理.
@@ -42,6 +44,17 @@ void Obstacle4main::Draw()
 
 // レーザーの軌跡の描画処理.
 void Obstacle4main::DrawObstLine() {
+
+#if false
+	//デバッグ表示.
+	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
+	{
+		int x =   0 + 10 * (i%100);
+		int y = 100 + 20 * (i/100);
+		DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
+		DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
+	}
+#endif
 
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
@@ -313,11 +326,14 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 	//レーザーの現在位置.
 	DBL_XY laserPos = { laser[laserIndex].x, laser[laserIndex].y };
 	
+	assert(p_meteoMg != nullptr); //ポインタが空でないことを確認.
+
 	//最も近い隕石の位置を取得するぜ.
 	DBL_XY nearestMeteoPos{};
-	printfDx(_T("エラーーー"));
 	bool hasMeteo = p_meteoMg->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
 	    
+	printfDx(L"%d", hasMeteo);
+	//隕石が1つでも存在すれば.
 	if (hasMeteo)
 	{
 		//隕石が存在する場合は隕石に向かって追尾だぜ.
@@ -358,7 +374,6 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 		laser[laserIndex].sx = cos(newAngle) * currentSpeed;
 		laser[laserIndex].sy = sin(newAngle) * currentSpeed;
 	}
-
 }
 //光るeffectの生成.
 void Obstacle4main::CreateFlashEffect(double fx, double fy)

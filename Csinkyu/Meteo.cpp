@@ -23,7 +23,7 @@ void Meteo::Update() {
 		pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		//âÊñ äOÇ≈è¡ãé.
-		if (IsOutInArea(pos, {}, 0, 0, WINDOW_WID, WINDOW_HEI)){
+		if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, TRUE)){
 			active = FALSE; //ñ≥å¯Ç…Ç∑ÇÈ.
 		}
 		//âÒì].
