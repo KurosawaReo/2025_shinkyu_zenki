@@ -62,15 +62,19 @@ void MeteoManager::GenerateMeteo(){
 	}
 }
 
+
 //最寄りの隕石座標を探す.
 BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
-	
+
+
 	BOOL isExistMeteo = FALSE; //1つでも隕石があるか.
 
 	double shortest = 0; //暫定の最短距離.
 
+
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
+		
 		//有効なら.
 		if (meteo[i].GetActive()) {
 

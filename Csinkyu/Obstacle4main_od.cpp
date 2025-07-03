@@ -164,13 +164,15 @@ void Obstacle4main::enemy4Move()
 					(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
 				{
 					//反射あり.
+			
 					if (p_player->IsReflectionMode())
 					{
 						ReflectLaser(i, pPos);   //レーザーを反射.
-						p_player->UseReflection(); //クールダウン開始.
 					
-						HandleReflectedLaserTracking(i);
+						p_player->UseReflection(); //クールダウン開始.
 
+	
+				
 					}
 					//反射なし.
 					else
@@ -184,7 +186,7 @@ void Obstacle4main::enemy4Move()
 
 			case Laser_Reflected:
 				// 反射したレーザーは隕石追尾処理を行う
-			//HandleReflectedLaserTracking(i);
+			HandleReflectedLaserTracking(i);
 				break;
 
 			//想定外の値エラー.
@@ -312,8 +314,8 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 	DBL_XY laserPos = { laser[laserIndex].x, laser[laserIndex].y };
 	
 	//最も近い隕石の位置を取得するぜ.
-	DBL_XY nearestMeteoPos;
-
+	DBL_XY nearestMeteoPos{};
+	printfDx(_T("エラーーー"));
 	bool hasMeteo = p_meteoMg->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
 	    
 	if (hasMeteo)
@@ -328,26 +330,25 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 		double currentAngle = atan2(laser[laserIndex].sy, laser[laserIndex].sx);
 
 		//角度の差分を計算.
-		double anagleDiff = targetAngle - currentAngle;
+		double angleDiff = targetAngle - currentAngle;
 
 		// 角度差分を-PI～PIの範囲に正規化
-		while (anagleDiff > M_PI) anagleDiff -= 2 * M_PI;
-		while (anagleDiff < -M_PI) anagleDiff += 2 * M_PI;
-		/*while (anagleDiff > M_PI)
+		
+		while (angleDiff > M_PI)
 		{
-			anagleDiff -= 2 * M_PI;
+			angleDiff -= 2 * M_PI;
 		}
-		while (anagleDiff < - M_PI)
+		while (angleDiff < - M_PI)
 		{
-			anagleDiff += 2 * M_PI;*/
-		//
+			angleDiff += 2 * M_PI;
+	    }
 		// 反射レーザーの旋回角度（通常レーザーより少し速く）
 		const double maxTurn = M_PI / 180 * 20;//二十度まで
-		if (anagleDiff  > maxTurn)anagleDiff = maxTurn;
-		if (anagleDiff <- maxTurn)anagleDiff = -maxTurn;
+		if (angleDiff  > maxTurn)angleDiff = maxTurn;
+		if (angleDiff <- maxTurn)angleDiff = -maxTurn;
 
 		//新しい角度を計算して速度を更新
-		double newAngle = currentAngle + anagleDiff;
+		double newAngle = currentAngle + angleDiff;
 
 		// 現在の速度の大きさを保持
 		double currentSpeed = sqrt(laser[laserIndex].sx * laser[laserIndex].sx +
