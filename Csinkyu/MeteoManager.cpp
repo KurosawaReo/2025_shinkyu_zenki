@@ -107,13 +107,14 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 BOOL MeteoManager::IsHitMeteos(Circle* pos) {
 
 	BOOL hit;
-
+	
 	//‘Sè¦Îƒ‹[ƒv.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		if (meteo[i].GetActive()) {
 			
 			hit = meteo[i].IsHitMeteo(pos); //1‚±‚¸‚Â”»’è.
 			if (hit) {
+				meteo[i].Destroy(); //è¦Î‚ğ”j‰ó.
 				return TRUE; //1‚Â‚Å‚à“–‚½‚Á‚Ä‚¢‚é.
 			}
 		}
