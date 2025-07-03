@@ -15,11 +15,12 @@ private:
 	GameData* p_data{};           //ゲームデータ.
 
 public:
-	void Init(GameData*);
+	void Init(GameData*, Player*);
 	void Reset();
 	void Update();
 	void Draw();
 
 	void GenerateMeteo(); //隕石生成.
 	BOOL GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //最寄りの隕石座標を探す.
+	BOOL IsHitMeteos(Circle* pos); //隕石のどれか1つでも当たっているか.
 };

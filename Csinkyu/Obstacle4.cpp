@@ -7,12 +7,6 @@
 #include "Player.h"    // プレイヤークラスのヘッダーファイル
 #include "Obstacle4.h" // 自身のヘッダーファイル
 
-//obstacle4mainのInit関数をobstacle4用に上書き.
-void Obstacle4_1::Init(GameData* _data, Player* _player)
-{
-	p_data   = _data;
-	p_player = _player;  // プレイヤーオブジェクトを参照として保存
-}
 //obstacle4mainのReset関数をobstacle4用に上書き.
 void Obstacle4_1::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 {
@@ -71,12 +65,6 @@ void Obstacle4_1::Move()
 	}
 }
 
-//obstacle4mainのInit関数をobstacle5用に上書き.
-void Obstacle4_2::Init(GameData* _data, Player* _player)
-{
-	p_data   = _data;
-	p_player = _player;  // プレイヤーオブジェクトを参照として保存
-}
 //obstacle4mainのReset関数をobstacle5用に上書き.
 void Obstacle4_2::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 {
@@ -133,12 +121,7 @@ void Obstacle4_2::Move()
 		break;
 	}
 }
-//obstacle4mainのInit関数をobstacle5用に上書き.
-void Obstacle4_3::Init(GameData* _data, Player* _player)
-{
-	p_data = _data;
-	p_player = _player;  // プレイヤーオブジェクトを参照として保存
-}
+
 //obstacle4mainのReset関数をobstacle5用に上書き.
 void Obstacle4_3::Reset(float _Hx, float _Hy, float _Hm,MoveDir _moveDir)
 {
@@ -195,11 +178,7 @@ void Obstacle4_3::Move()
 		break;
 	}
 }
-void Obstacle4_4::Init(GameData* _data, Player* _player)
-{
-	p_data = _data;
-	p_player = _player;  // プレイヤーオブジェクトを参照として保存
-}
+
 //obstacle4mainのReset関数をobstacle4用に上書き.
 void Obstacle4_4::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 {
