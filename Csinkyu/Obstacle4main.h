@@ -6,6 +6,7 @@
 #pragma once
 
 #include "MeteoManager.h"//隕石ののヘッダーファイル.
+#define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
 
 //レーザータイプ.
 enum LaserType
@@ -92,6 +93,5 @@ public:
 	//laserIndex 処理するレーザーのインデックス
 	void HandleReflectedLaserTracking(int laserIndex);
 
-	//レーザー消去.
 	void DeleteLaser(int idx);
 };

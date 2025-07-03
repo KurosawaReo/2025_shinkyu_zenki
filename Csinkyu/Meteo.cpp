@@ -99,21 +99,9 @@ void Meteo::Spawn() {
 	active = TRUE; //隕石を有効にする.
 }
 
-//隕石を構成する線の更新.
-void Meteo::UpdateMeteoLine() {
-
-	//何度ずつずれるか.
-	float rot = (float)360/shape.lineCnt; //360度÷描く線の数.
-
-	//回転しながら始点と終点を設定していく.
-	for (int i = 0; i < shape.lineCnt; i++) {
-
-		//要素数が0未満なら最大値へ移動する.
-		int bef = ((i-1) < 0) ? shape.lineCnt-1 : (i-1);
-
-		shape.line[i].stPos = CalcLineAng(pos, ang+i  *rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
-		shape.line[i].edPos = CalcLineAng(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
-	}
+//隕石破壊.
+void Meteo::Destroy() {
+	active = FALSE;
 }
 
 //隕石の当たり判定.
@@ -128,4 +116,21 @@ BOOL Meteo::IsHitMeteo(Circle* pos) {
 	}
 
 	return FALSE; //当たっていない.
+}
+
+//隕石を構成する線の更新.
+void Meteo::UpdateMeteoLine() {
+
+	//何度ずつずれるか.
+	float rot = (float)360 / shape.lineCnt; //360度÷描く線の数.
+
+	//回転しながら始点と終点を設定していく.
+	for (int i = 0; i < shape.lineCnt; i++) {
+
+		//要素数が0未満なら最大値へ移動する.
+		int bef = ((i - 1) < 0) ? shape.lineCnt - 1 : (i - 1);
+
+		shape.line[i].stPos = CalcLineAng(pos, ang + i * rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
+		shape.line[i].edPos = CalcLineAng(pos, ang + bef * rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
+	}
 }
