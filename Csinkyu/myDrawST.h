@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/06/26
+   ver.2025/07/01
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -13,6 +13,15 @@ enum FONTTYPE_ID
 	FONT_EDGE   = DX_FONTTYPE_EDGE,
 
 	FONT_NONE   = -1, //指定なし.
+};
+//描画モードID(入力しやすくする用)
+enum BLENDMODE_ID
+{
+	MODE_NONE  = DX_BLENDMODE_NOBLEND, //デフォルト.
+	MODE_ALPHA = DX_BLENDMODE_ALPHA,   //αブレンド.
+	MODE_ADD   = DX_BLENDMODE_ADD,     //加算ブレンド.
+	MODE_SUB   = DX_BLENDMODE_SUB,     //減算ブレンド.
+	MODE_MUL   = DX_BLENDMODE_MUL      //乗算ブレンド.
 };
 
 //画像描画に使う用.
@@ -77,26 +86,30 @@ struct STR_DRAW_MODI
 };
 
 //図形.
-int    DrawCircleST    (const Circle* data, BOOL isFill = TRUE, int thick = 1);
-int    DrawBoxST       (const Box*    data, BOOL isCenter, BOOL isFill = TRUE);
-int    DrawLineST      (const Line*   data, int  thick = 1);
-int    DrawWindowGrid  (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
+int    DrawCircleST		 (const Circle* data, BOOL isFill = TRUE, int thick = 1);
+int    DrawBoxST		 (const Box*    data, BOOL isCenter, BOOL isFill = TRUE);
+int    DrawLineST		 (const Line*   data, int  thick = 1);
+int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
 //画像.
-int    LoadGraphST     (IMG* img, const TCHAR fileName[]);
-int    DrawGraphST     (const IMG_DRAW*      data);
-int    DrawRotaGraphST (const IMG_DRAW_ROTA* data);
-int    DrawRectGraphST (const IMG_DRAW_RECT* data);
+int    LoadGraphST		 (IMG* img, const TCHAR fileName[]);
+int    DrawGraphST		 (const IMG_DRAW*      data);
+int    DrawRotaGraphST	 (const IMG_DRAW_ROTA* data);
+int    DrawRectGraphST	 (const IMG_DRAW_RECT* data);
 
 //テキスト.
-int    DrawStringST    (const STR_DRAW*      data, BOOL isCenter, int font = -1);
-int    DrawRotaStringST(const STR_DRAW_ROTA* data, int font = -1);
-int    DrawModiStringST(const STR_DRAW_MODI* data, int font = -1);
-INT_XY GetTextSize     (const TCHAR str[], int font = -1);
+int    DrawStringST		 (const STR_DRAW*      data, BOOL isCenter, int font = -1);
+int    DrawRotaStringST	 (const STR_DRAW_ROTA* data, int font = -1);
+int    DrawModiStringST	 (const STR_DRAW_MODI* data, int font = -1);
+INT_XY GetTextSize		 (const TCHAR str[], int font = -1);
 
 //フォント.
-int    CreateFontH     (int size, int thick, FONTTYPE_ID fontId = FONT_NONE);
+int    CreateFontH		 (int size, int thick, FONTTYPE_ID fontId = FONT_NONE);
 
 //オブジェクト.
-int    DrawObjectBox   (const ObjectBox* data, BOOL isDrawHit = FALSE);
-int    DrawObjectCir   (const ObjectCir* data, BOOL isDrawHit = FALSE);
+int    DrawObjectBox	 (const ObjectBox* data, BOOL isDrawHit = FALSE);
+int    DrawObjectCir	 (const ObjectCir* data, BOOL isDrawHit = FALSE);
+
+//描画モード.
+int    SetDrawBlendModeST(BLENDMODE_ID id, int power);
+int    ResetDrawBlendMode();

@@ -29,23 +29,17 @@ void Player::Update()
 	}
 
 	//反射モードの状態をコンソールに出力（デバッグ用）
-	if (input->IsPushKey(KEY_V)) {
+//	if (input->IsPushKey(KEY_V)) {
 //		printf("Vキー押下中, クールダウン: %.1f\n", reflectionCooldown);
-	}
+//	}
 
 	if (reflectionCooldown > 0)
 	{
-		reflectionCooldown -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		reflectionCooldown -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 	}
 	//有効なら.
 	if (active) {
-		//残像データを後ろにずらす.
-		for (int i = AFTIMAGENUM - 1; i > 0; i--)
-		{
-			afterImagePos[i] = afterImagePos[i - 1];
-
-		}
-		afterImagePos[0] = hit.pos;
+		UpdateAfterImage();
 		PlayerMove();
 	}
 }
@@ -70,7 +64,7 @@ void Player::Draw()
 
 	//有効なら.
 	if (active) {
-		PlayerFaterimage();
+		DrawAfterImage();
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
 		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xA0A0A0 };
@@ -90,33 +84,55 @@ void Player::Draw()
 		DrawBoxST(&box2, TRUE, FALSE);
 	}
 }
-void Player::PlayerFaterimage()
+
+//残像更新.
+void Player::UpdateAfterImage()
 {
+	afterCntr -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+
+	//残像を残すタイミングになったら(基本は毎フレーム)
+	if (afterCntr <= 0) {
+		afterCntr = 1;
+
+		//残像データを後ろにずらす.
+		for (int i = PLAYER_AFT_IMG_NUM-1; i > 0; i--)
+		{
+			afterPos[i] = afterPos[i - 1];
+		}
+		afterPos[0] = hit.pos; //プレイヤー座標を1フレーム目に記録.
+	}
+}
+
+//残像描画.
+void Player::DrawAfterImage()
+{
+	//描画モード変更.
+	SetDrawBlendModeST(MODE_ADD, 255);
+
 	//残像処理.
-	for (int i = AFTIMAGENUM - 1; i >= 0; i -= 1)
+	for (int i = PLAYER_AFT_IMG_NUM - 1; i >= 0; i -= 1)
 	{
-		DBL_XY& pos = afterImagePos[i];
+		DBL_XY& pos = afterPos[i];
 
-		int alpha = 105 - 105 * i / AFTIMAGENUM;
-
-		int alpha2 = 50 - 50 * i / AFTIMAGENUM;
-
-		int color = GetColor(alpha, alpha, alpha);
-
+		int alpha  = 105 - 105*i/PLAYER_AFT_IMG_NUM;
+		int alpha2 =  50 -  50*i/PLAYER_AFT_IMG_NUM;
+		int color  = GetColor(alpha, alpha, alpha);
 
 		if (IsReflectionMode())
 		{
-			color = GetColor(alpha2 * 255 / 50, alpha2 / 2, alpha2 * 255 / 50);
+			color = GetColor(alpha2*255/50, alpha2/2, alpha2*255/50);
 		}
 		else
 		{
 			color = GetColor(alpha, alpha, alpha);
 		}
 
-		Box box3 = { afterImagePos[i], {PLAYER_SIZE,   PLAYER_SIZE}, (UINT)color };
+		Box box3 = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, (UINT)color };
 		DrawBoxST(&box3, TRUE, FALSE);
 	}
 
+	//描画モードリセット.
+	ResetDrawBlendMode();
 }
 
 //移動処理(斜め対応)

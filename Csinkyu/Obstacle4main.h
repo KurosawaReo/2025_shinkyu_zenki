@@ -73,7 +73,7 @@ protected:
 
 public:
 	//Šî–{ˆ—.
-	virtual void Init  (GameData*, Player*) = 0;
+	        void Init  (GameData*, Player*, MeteoManager*);
 	virtual void Reset (float _Hx, float _Hy, float _Hm, MoveDir) = 0;
 	        void Update();
 	        void Draw  ();

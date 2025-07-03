@@ -12,10 +12,16 @@
 //これが定義されてたら、こちらがON.
 #if defined ODAZIMA_LASER
 
-/**
- * @brief 障害物の更新処理
- * プレイヤーが有効な場合のみ障害物の動きを更新
- */
+//初期化.
+void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMg)
+{
+	// プレイヤーオブジェクトを参照として保存
+	p_data    = _data;
+	p_player  = _player;
+	p_meteoMg = _meteoMg;
+}
+
+//更新.
 void Obstacle4main::Update()
 {
 	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
@@ -23,10 +29,7 @@ void Obstacle4main::Update()
 	}
 }
 
-/**
- * @brief 障害物の描画処理
- * レーザーの軌跡と砲台を描画
- */
+//描画.
 void Obstacle4main::Draw()
 {
 	// レーザーの軌跡の描画処理.
@@ -42,6 +45,17 @@ void Obstacle4main::Draw()
 
 // レーザーの軌跡の描画処理.
 void Obstacle4main::DrawObstLine() {
+
+#if false
+	//デバッグ表示.
+	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
+	{
+		int x =   0 + 10 * (i%100);
+		int y = 100 + 20 * (i/100);
+		DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
+		DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
+	}
+#endif
 
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
@@ -164,29 +178,36 @@ void Obstacle4main::enemy4Move()
 					(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
 				{
 					//反射あり.
-			
 					if (p_player->IsReflectionMode())
 					{
-						ReflectLaser(i, pPos);   //レーザーを反射.
-					
-						p_player->UseReflection(); //クールダウン開始.
-
-	
-				
+						ReflectLaser(i, pPos);     //レーザーを反射.
+						p_player->UseReflection(); //クールダウン開始.			
 					}
 					//反射なし.
 					else
 					{
-						laser[i].ValidFlag = 0; //レーザーを無効化.
-						p_player->PlayerDeath();  //プレイヤー死亡.
+						laser[i].ValidFlag = 0;  //レーザーを無効化.
+						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
 					isHit = true; //当たったことを記録.
 				}
 				break;
 
 			case Laser_Reflected:
-				// 反射したレーザーは隕石追尾処理を行う
-			HandleReflectedLaserTracking(i);
+				{
+					// 反射したレーザーは隕石追尾処理を行う
+					HandleReflectedLaserTracking(i);
+
+					/*
+					   【仮】TODO: レーザーの円形当たり判定.
+					*/
+					Circle hit = { {laser[i].x, laser[i].y}, 10, {} }; 
+
+					//隕石と当たっているなら.
+					if (p_meteoMg->IsHitMeteos(&hit)) {
+						laser[i].ValidFlag = 0; //無効にする.
+					}
+				}
 				break;
 
 			//想定外の値エラー.
@@ -313,11 +334,13 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 	//レーザーの現在位置.
 	DBL_XY laserPos = { laser[laserIndex].x, laser[laserIndex].y };
 	
+	assert(p_meteoMg != nullptr); //ポインタが空でないことを確認.
+
 	//最も近い隕石の位置を取得するぜ.
 	DBL_XY nearestMeteoPos{};
-	printfDx(_T("エラーーー"));
 	bool hasMeteo = p_meteoMg->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
 	    
+	//隕石が1つでも存在すれば.
 	if (hasMeteo)
 	{
 		//隕石が存在する場合は隕石に向かって追尾だぜ.
@@ -333,7 +356,6 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 		double angleDiff = targetAngle - currentAngle;
 
 		// 角度差分を-PI～PIの範囲に正規化
-		
 		while (angleDiff > M_PI)
 		{
 			angleDiff -= 2 * M_PI;
@@ -358,7 +380,6 @@ void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 		laser[laserIndex].sx = cos(newAngle) * currentSpeed;
 		laser[laserIndex].sy = sin(newAngle) * currentSpeed;
 	}
-
 }
 //光るeffectの生成.
 void Obstacle4main::CreateFlashEffect(double fx, double fy)
@@ -439,4 +460,4 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 	laser[laserIndex].type = Laser_Reflected; //反射モードへ.
 }
 
-#endif;
+#endif

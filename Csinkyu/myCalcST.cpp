@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/06/23
+   ver.2025/07/03
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -125,13 +125,22 @@ void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int dow
 	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
 }
 //範囲外かどうか.
-BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down) {
+BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down, BOOL isCompOut) {
 
-	//範囲外.
-	if (pos.x < left  + size.x/2) { return TRUE; }
-	if (pos.y < up    + size.y/2) { return TRUE; }
-	if (pos.x > right - size.x/2) { return TRUE; }
-	if (pos.y > down  - size.y/2) { return TRUE; }
+	//完全に出たら範囲外とする.
+	if (isCompOut) {
+		if (pos.x < left  - size.x/2) { return TRUE; }
+		if (pos.y < up    - size.y/2) { return TRUE; }
+		if (pos.x > right + size.x/2) { return TRUE; }
+		if (pos.y > down  + size.y/2) { return TRUE; }
+	}
+	//触れた瞬間に範囲外とする.
+	else {
+		if (pos.x < left  + size.x/2) { return TRUE; }
+		if (pos.y < up    + size.y/2) { return TRUE; }
+		if (pos.x > right - size.x/2) { return TRUE; }
+		if (pos.y > down  - size.y/2) { return TRUE; }
+	}
 
 	return FALSE; //範囲内.
 }
