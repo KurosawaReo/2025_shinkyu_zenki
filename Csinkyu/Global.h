@@ -161,8 +161,9 @@ struct GameData
 #define OBSTACLE4_SHOT_START		(30)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN			(10)			//砲台の発射間隔時間.
 #define OBSTACLE4_LASER_SPEED		(150)			//レーザーの速度.
+#define OBSTACLE4_ROT_LIMIT			(90)			//曲がる限界角度.
 #define OBSTACLE4_LASER_LIM			(100)			//レーザーの最大数.
-#define OBSTACLE4_LINE_MAX			(2000)			//レーザーで描画する線の最大数.
+#define OBSTACLE4_LINE_MAX			(10000)			//レーザーで描画する線の最大数.
 
 #define OBSTACLE4_FLASH_MAX         (30)            //最大フラッシュエフェクト数
 #define OBSTACLE4_FLASH_SIZE_INIT   (5.0f)          //フラッシュエフェクトの初期サイズ.
@@ -177,7 +178,7 @@ struct GameData
 #define OBSTACLE5_FLASH_ALPHA_TM	(2)             //フラッシュエフェクトの透明化速度.
 
 #define METEO_CNT_MAX				(256)			//隕石の最大出現数.
-#define METEO_SPAWN_SPAN			(100)			//隕石の出現時間間隔.
+#define METEO_SPAWN_SPAN			(10)			//隕石の出現時間間隔.
 #define METEO_SPEED					(5)				//移動速度.
 #define METEO_ERASE_OUT_DIS			(50)			//隕石が画面外で消える距離.
 #define METEO_GOAL_RAND_RANGE		(500)			//隕石の目標地点の乱数範囲.

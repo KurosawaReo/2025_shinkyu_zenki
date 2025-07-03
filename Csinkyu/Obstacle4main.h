@@ -5,39 +5,7 @@
 */
 #pragma once
 
-#include "MeteoManager.h"//隕石ののヘッダーファイル.
-#define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
-
-//レーザータイプ.
-enum LaserType
-{
-	Laser_Normal,    //通常レーザー.
-	Laser_Reflected, //反射レーザー.
-};
-
-//レーザー本体.
-typedef struct tagLASER_DATA
-{
-	double    x, y;      //現在の画像.
-	double    sx, sy;    //現在の速度.
-
-	int       LogNum;    //記録した軌跡の数.
-	float     Counter;   //追尾を初めてから通過した時間.
-
-	int       ValidFlag; //このデータが使用中かフラグ.
-
-	LaserType type;      //レーザータイプ.
-
-}LASER_DATA, * LPLASER_DATA;
-
-//レーザーが描く軌道ライン.
-typedef struct tagLINE_DATA
-{
-	double x1, y1, x2, y2;  //描くラインの座標.
-	float  Counter;         //描くラインの色決定用値.
-
-	int    ValidFlag;       //このデータが使用中かフラグ
-}LINE_DATA, * LPLINE_DATA;
+#include "LaserManager.h" //レーザー管理のヘッダーファイル.
 
 typedef struct tagFLASHEFFECT
 {
@@ -60,25 +28,22 @@ protected:
 	float HscTm{};     //砲台がショットする時間.
 	MoveDir moveDir{}; // 現在の移動方向.
 
-
-	LASER_DATA  laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
-	LINE_DATA   line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
-	IMG         img{};
+//	IMG         img{};
 	DBL_XY      pPos{};// プレイヤーの現在位置を取得
 	FLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
-	GameData*   p_data{};
-	Player*     p_player{};
-	MeteoManager* p_meteoMg{};
+	GameData*     p_data{};
+	Player*       p_player{};
+	MeteoManager* p_meteoMng{};
+	LaserManager* p_laserMng{};
 
 public:
 	//基本処理.
-	        void Init  (GameData*, Player*, MeteoManager*);
-	virtual void Reset (float _Hx, float _Hy, float _Hm, MoveDir) = 0;
+	        void Init  (GameData*, Player*, MeteoManager*, LaserManager*);
+			void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
 	        void Update();
 	        void Draw  ();
 	//描画系.
-			void DrawObstLine();
 			void DrawObstFlash();
 	//移動系.
 	        void enemy4Move();
@@ -86,12 +51,4 @@ public:
 
 	//出る直前の点滅.
 	void CreateFlashEffect(double x, double y);
-
-	//反射処理.
-	void ReflectLaser(int laserIndex, DBL_XY playerPos);
-	//反射したレーザー隕石追尾処理
-	//laserIndex 処理するレーザーのインデックス
-	void HandleReflectedLaserTracking(int laserIndex);
-
-	void DeleteLaser(int idx);
 };
