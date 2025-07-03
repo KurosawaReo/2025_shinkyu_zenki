@@ -1,14 +1,13 @@
 /*
    - Obstacle4main.cpp -
 
-   レーザーの継承元クラス (小田島作)
-   プレイヤーを追尾するレーザーを発射する障害物を実装
-   レーザー反射機能追加
+   レーザー砲台の継承元クラス.
+
+   プレイヤーを追尾するレーザーを発射する障害物を実装.
+   レーザー反射機能追加.
 */
-
-#include "Player.h"       // プレイヤークラスのヘッダーファイル
-
-#include "Obstacle4.h"    // 自身のヘッダーファイル
+#include "Player.h"    // プレイヤークラスのヘッダーファイル
+#include "Obstacle4.h" // 自身のヘッダーファイル
 
 //初期化.
 void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng, LaserManager* _laserMng)
@@ -19,7 +18,6 @@ void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoM
 	p_meteoMng = _meteoMng;
 	p_laserMng = _laserMng;
 }
-
 //リセット.
 void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 {
@@ -30,21 +28,19 @@ void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 	HscTm   = OBSTACLE4_SHOT_START; // 砲台の発射タイミング初期値
 	moveDir = _moveDir;             // 初期方向を右に設定.
 }
-
 //更新.
 void Obstacle4main::Update()
 {
-	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
-		enemy4Move();           // 障害物の移動処理を実行
+//	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
+	if (p_data->scene == SCENE_GAME) {  // ゲーム中のみ
+		enemy4Move();					// 障害物の移動処理を実行
 	}
 }
-
 //描画.
 void Obstacle4main::Draw()
 {
-	// 発射エフェクトの処理.
-	DrawObstFlash();
-
+	DrawObstFlash(); // 発射エフェクトの処理.
+	
 	// 動く砲台を描画.
 	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
 	//DrawBoxST(&box, TRUE, FALSE);
@@ -134,7 +130,7 @@ void Obstacle4main::enemy4Move()
 		// タイミングが来たらレーザー発射
 		if (Hsc <= HscTm)
 		{
-			BOOL ret = p_laserMng->SpawnLaser(Hx, Hy, pPos); //レーザー召喚.
+			BOOL ret = p_laserMng->SpawnLaser(Hx, Hy); //レーザー召喚.
 			//発射成功したら.
 			if (ret) {
 				CreateFlashEffect(Hx, Hy); //エフェクトを出す.

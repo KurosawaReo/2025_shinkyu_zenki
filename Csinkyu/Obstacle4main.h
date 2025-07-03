@@ -1,7 +1,7 @@
 /*
    - Obstacle4main.h -
 
-   レーザーの継承元クラス.
+   レーザー砲台の継承元クラス.
 */
 #pragma once
 
@@ -22,11 +22,11 @@ typedef struct tagFLASHEFFECT
 class Obstacle4main
 {
 protected:
-	float Hx{}, Hy{};  //砲台の位置.
-	float Hm{};        //砲台の移動方向.
-	float Hsc{};       //砲台のショット間隔カウンタ.
-	float HscTm{};     //砲台がショットする時間.
-	MoveDir moveDir{}; // 現在の移動方向.
+	float   Hx{}, Hy{};  //砲台の位置.
+	float   Hm{};        //砲台の移動方向.
+	float   Hsc{};       //砲台のショット間隔カウンタ.
+	float   HscTm{};     //砲台がショットする時間.
+	MoveDir moveDir{};   //現在の移動方向.
 
 //	IMG         img{};
 	DBL_XY      pPos{};// プレイヤーの現在位置を取得
@@ -39,15 +39,15 @@ protected:
 
 public:
 	//基本処理.
-	        void Init  (GameData*, Player*, MeteoManager*, LaserManager*);
-			void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
-	        void Update();
-	        void Draw  ();
+	void Init  (GameData*, Player*, MeteoManager*, LaserManager*);
+	void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
+	void Update();
+	void Draw  ();
 	//描画系.
-			void DrawObstFlash();
+	void DrawObstFlash();
 	//移動系.
-	        void enemy4Move();
-	virtual void Move() = 0;
+	void enemy4Move();
+	virtual void Move() = 0; //砲台によって動きが違う→overrideを利用し、"動き"だけを変える.
 
 	//出る直前の点滅.
 	void CreateFlashEffect(double x, double y);

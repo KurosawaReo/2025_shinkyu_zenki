@@ -26,7 +26,7 @@ typedef struct tagLASER_DATA
 
 	int       ValidFlag; //このデータが使用中かフラグ.
 
-}LASER_DATA, * LPLASER_DATA;
+}LASER_DATA, *LPLASER_DATA;
 
 //レーザーが描く軌道ライン.
 typedef struct tagLINE_DATA
@@ -38,14 +38,14 @@ typedef struct tagLINE_DATA
 
 	int    ValidFlag;       //このデータが使用中かフラグ
 
-}LINE_DATA, * LPLINE_DATA;
+}LINE_DATA, *LPLINE_DATA;
 
 //レーザー管理用.
 class LaserManager
 {
 private:
 	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
-	LINE_DATA  line[OBSTACLE4_LINE_MAX]{};   //ライン描画用データ.
+	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 
 	GameData*     p_data{};
 	Player*       p_player{};
@@ -57,9 +57,9 @@ public:
 	void Update();
 	void Draw();
 
-	BOOL SpawnLaser  (float x, float y, DBL_XY playerPos); //召喚.
-	void DeleteLaser (int idx);                            //消去.
-	void ReflectLaser(int idx, DBL_XY playerPos);          //反射.
+	BOOL SpawnLaser  (float x, float y);	//召喚.
+	void DeleteLaser (int idx);             //消去.
+	void ReflectLaser(int idx);				//反射.
 	
-	void ReflectedLaserTracking(int idx);                  //反射レーザーの隕石追尾.
+	void ReflectedLaserTracking(int idx);   //反射レーザーの隕石追尾.
 };

@@ -125,6 +125,9 @@ struct GameData
 	int   font2;     //フォント.
 };
 
+// - Debug -
+#define DEBUG_LASER_ACTIVE //定義するとデバッグ表示ON.
+
 // - 定数 -
 #define IS_WINDOW_MODE				(TRUE)			//ウィンドウモードにするか.
 

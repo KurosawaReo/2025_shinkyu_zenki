@@ -1,6 +1,8 @@
 #include "GameManager.h"
 #include "Player.h"
+
 #include "Obstacle5.h"
+
 //初期化(一回のみ行う)
 //リセット(何回でも行う)
 void Obstacle5::Init(GameData* data, Player* player)

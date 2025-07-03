@@ -4,8 +4,9 @@
    プレイヤー管理.
 */
 #include "GameManager.h"
-#include "Player.h"
 #include "Obstacle4main.h"
+
+#include "Player.h"
 
 //初期化(一回のみ行う)
 void Player::Init(GameData* _data)

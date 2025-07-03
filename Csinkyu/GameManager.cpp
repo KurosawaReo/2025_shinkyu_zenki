@@ -54,16 +54,17 @@
 /--------------------------------------------------------*/
 //#define ALL_OBSTACLE //‚±‚ê‚ğ’è‹`‚·‚é‚Æ‘S‚Ä‚ÌáŠQ•¨‚ğo‚·.
 
+#if defined ALL_OBSTACLE
+  #include "Obstacle.h"
+  #include "Obstacle2.h"
+#endif
 #include "MeteoManager.h"
 #include "LaserManager.h"
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
 #include "Obstacle5.h"
+
 #include "Item.h"
-#if defined ALL_OBSTACLE
-#include "Obstacle.h"
-#include "Obstacle2.h"
-#endif
 #include "Player.h"
 
 #include "GameManager.h"

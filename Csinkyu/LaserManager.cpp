@@ -42,46 +42,46 @@ void LaserManager::Update() {
 		//レーザータイプ別.
 		switch (laser[i].type)
 		{
-		case Laser_Normal:
-			// プレイヤーとレーザーの当たり判定
-			if ((laser[i].x > plyPos.x - pSizeHalf && laser[i].x < plyPos.x + pSizeHalf) &&
-				(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
+			case Laser_Normal:
+				// プレイヤーとレーザーの当たり判定
+				if ((laser[i].x > plyPos.x - pSizeHalf && laser[i].x < plyPos.x + pSizeHalf) &&
+					(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
+				{
+					//反射あり.
+					if (p_player->IsReflectionMode())
+					{
+						ReflectLaser(i);           //レーザーを反射.
+						p_player->UseReflection(); //クールダウン開始.			
+					}
+					//反射なし.
+					else
+					{
+						DeleteLaser(i);
+						p_player->PlayerDeath(); //プレイヤー死亡.
+					}
+					isHit = true; //当たったことを記録.
+				}
+				break;
+
+			case Laser_Reflected:
 			{
-				//反射あり.
-				if (p_player->IsReflectionMode())
-				{
-					ReflectLaser(i, plyPos);     //レーザーを反射.
-					p_player->UseReflection(); //クールダウン開始.			
-				}
-				//反射なし.
-				else
-				{
+				// 反射したレーザーは隕石追尾処理を行う
+				ReflectedLaserTracking(i);
+			
+				/*
+				   【仮】TODO: レーザーの円形当たり判定.
+				*/
+				Circle hit = { {laser[i].x, laser[i].y}, 10, {} };
+
+				//隕石と当たっているなら.
+				if (p_meteoMng->IsHitMeteos(&hit)) {
 					DeleteLaser(i);
-					p_player->PlayerDeath(); //プレイヤー死亡.
 				}
-				isHit = true; //当たったことを記録.
 			}
 			break;
 
-		case Laser_Reflected:
-		{
-			// 反射したレーザーは隕石追尾処理を行う
-			ReflectedLaserTracking(i);
-			
-			/*
-			   【仮】TODO: レーザーの円形当たり判定.
-			*/
-			Circle hit = { {laser[i].x, laser[i].y}, 10, {} };
-
-			//隕石と当たっているなら.
-			if (p_meteoMng->IsHitMeteos(&hit)) {
-				DeleteLaser(i);
-			}
-		}
-		break;
-
-		//想定外の値エラー.
-		default: assert(FALSE); break;
+			//想定外の値エラー.
+			default: assert(FALSE); break;
 		}
 
 		//当たったら処理終了.
@@ -156,12 +156,12 @@ void LaserManager::Update() {
 }
 void LaserManager::Draw() {
 
-#if true
+#if defined DEBUG_LASER_ACTIVE
 //デバッグ表示.
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
-		int x =   0 + 8 * (i%200);
-		int y = 100 + 20 * (i/200);
+		int x =   0 +  8 * (i%200);
+		int y = 100 + 16 * (i/200);
 		DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
 		DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
 	}
@@ -184,15 +184,15 @@ void LaserManager::Draw() {
 		//線の色(時間経過で色が変化)
 		switch (line[i].type)
 		{
-		case Laser_Normal:    tmpLine.clr = GetColor(50, clr, 255); break;
-		case Laser_Reflected: tmpLine.clr = GetColor(clr * 255 / 255, 0, clr * 255 / 255); break;
+			case Laser_Normal:    tmpLine.clr = GetColor(50, clr, 255); break;
+			case Laser_Reflected: tmpLine.clr = GetColor(clr, 0, clr); break;
 
-		default: assert(FALSE); break;
+			default: assert(FALSE); break;
 		}
 		DrawLineST(&tmpLine); //描画.
 
 		// 経過時間カウンタ増加
-		line[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		line[i].Counter += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 		// 64フレーム経過したら軌跡を無効化
 		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
 	}
@@ -202,7 +202,9 @@ void LaserManager::Draw() {
 }
 
 //レーザー召喚.
-BOOL LaserManager::SpawnLaser(float x, float y, DBL_XY plyPos) {
+BOOL LaserManager::SpawnLaser(float x, float y) {
+
+	DBL_XY plyPos = p_player->GetPos(); //プレイヤーの現在位置を取得.
 
 	// 未使用のレーザースロットを探してレーザーを発射
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++)
@@ -236,11 +238,13 @@ void LaserManager::DeleteLaser(int idx) {
 	laser[idx].type = Laser_Normal; //ノーマルモードに戻す.
 }
 //レーザー反射.
-void LaserManager::ReflectLaser(int idx, DBL_XY playerPos)
+void LaserManager::ReflectLaser(int idx)
 {
+	DBL_XY plyPos = p_player->GetPos(); //プレイヤーの現在位置を取得.
+
 	// レーザーからプレイヤーへのベクトルを計算
-	double dx = playerPos.x - laser[idx].x;
-	double dy = playerPos.y - laser[idx].y;
+	double dx = plyPos.x - laser[idx].x;
+	double dy = plyPos.y - laser[idx].y;
 
 	// ベクトルの長さを計算
 	double length = sqrt(dx * dx + dy * dy);
@@ -269,8 +273,8 @@ void LaserManager::ReflectLaser(int idx, DBL_XY playerPos)
 
 	// レーザーをプレイヤーから少し離れた位置に移動（重複当たり判定を防ぐ）
 	double pushDistance = PLAYER_SIZE / 2.0 + 5; // プレイヤーサイズの半分 + 余裕
-	laser[idx].x = playerPos.x + -dx * pushDistance;
-	laser[idx].y = playerPos.y + -dy * pushDistance;
+	laser[idx].x = plyPos.x + -dx * pushDistance;
+	laser[idx].y = plyPos.y + -dy * pushDistance;
 
 	laser[idx].type = Laser_Reflected; //反射モードへ.
 }
