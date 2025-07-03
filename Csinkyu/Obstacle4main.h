@@ -29,7 +29,6 @@ protected:
 	MoveDir moveDir{};   //現在の移動方向.
 
 //	IMG         img{};
-	DBL_XY      pPos{};// プレイヤーの現在位置を取得
 	FLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
 	GameData*     p_data{};
