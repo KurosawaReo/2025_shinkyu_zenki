@@ -272,7 +272,7 @@ void Obstacle4main::enemy4Move()
 			}
 		}
 	
-		// 画面外に出たレーザーを無効化
+		// 画面外に出たレーザーを無効化a
 		if (laser[i].x < -100 || laser[i].x > WINDOW_WID + 100 ||
 			laser[i].y < -100 || laser[i].y > WINDOW_HEI + 100)
 		{
