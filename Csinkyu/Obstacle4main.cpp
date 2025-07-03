@@ -12,7 +12,7 @@
 //初期化.
 void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng, LaserManager* _laserMng)
 {
-	// プレイヤーオブジェクトを参照として保存
+	// オブジェクトを参照として保存
 	p_data     = _data;
 	p_player   = _player;
 	p_meteoMng = _meteoMng;
@@ -89,8 +89,6 @@ void Obstacle4main::DrawObstFlash() {
 		int ix3 = _int(flashEffect[i].x - cos_a * effectSize / 3 - sin_a * effectSize / 2);
 		int iy3 = _int(flashEffect[i].y - sin_a * effectSize / 3 + cos_a * effectSize / 2);
 
-
-
 		//発射エフェクトを円形で描画(白く光る)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
 
@@ -99,7 +97,6 @@ void Obstacle4main::DrawObstFlash() {
 
 		//内側により明るい三角形を描画.
 		//DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
-
 
 		//エフェクトのカウンタを更新
 		flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
@@ -149,7 +146,7 @@ void Obstacle4main::enemy4Move()
 //光るeffectの生成.
 void Obstacle4main::CreateFlashEffect(double fx, double fy)
 {
-	DBL_XY pPos = p_player->GetPos();
+	DBL_XY pPos = p_player->GetPos(); //プレイヤー座標取得.
 
 	//未使用のエフェクトスロットを探す.
 	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
