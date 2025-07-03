@@ -74,7 +74,7 @@ void LaserManager::Update() {
 				Circle hit = { {laser[i].x, laser[i].y}, 10, {} };
 
 				//è¦Î‚Æ“–‚½‚Á‚Ä‚¢‚é‚È‚ç.
-				if (p_meteoMng->IsHitMeteos(&hit)) {
+				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
 					DeleteLaser(i);
 				}
 			}

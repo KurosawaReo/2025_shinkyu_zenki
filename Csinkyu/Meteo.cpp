@@ -4,9 +4,8 @@
 */
 #include "Meteo.h"
 
-void Meteo::Init(GameData* _data, Player* _player) {
+void Meteo::Init(GameData* _data) {
 	p_data   = _data;
-	p_player = _player;
 }
 
 void Meteo::Reset() {
@@ -31,11 +30,6 @@ void Meteo::Update() {
 		ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
 		UpdateMeteoLine();
-		
-		//è¦Î‚É“–‚½‚Á‚Ä‚¢‚é‚È‚ç.
-		if (IsHitMeteo(p_player->GetHit())) {
-			p_player->PlayerDeath();
-		}
 	}
 }
 

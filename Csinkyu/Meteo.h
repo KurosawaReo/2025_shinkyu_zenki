@@ -25,7 +25,6 @@ private:
 	MeteoShape shape{};  //隕石の形データ.
 
 	GameData*  p_data;   //ゲームデータ.
-	Player*    p_player; //プレイヤーデータ.
 
 public:
 	//set.
@@ -37,7 +36,7 @@ public:
 	BOOL   GetActive() { return active; }
 
 	//その他.
-	void Init(GameData*, Player*);
+	void Init(GameData*);
 	void Reset();
 	void Update();
 	void Draw();
