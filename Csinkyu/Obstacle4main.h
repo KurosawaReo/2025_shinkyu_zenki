@@ -92,4 +92,6 @@ public:
 	//反射したレーザー隕石追尾処理
 	//laserIndex 処理するレーザーのインデックス
 	void HandleReflectedLaserTracking(int laserIndex);
+
+	void DeleteLaser(int idx);
 };
