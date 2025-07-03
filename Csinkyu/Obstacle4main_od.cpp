@@ -164,11 +164,15 @@ void Obstacle4main::enemy4Move()
 					(laser[i].y > pPos.y - pSizeHalf && laser[i].y < pPos.y + pSizeHalf))
 				{
 					//反射あり.
+			
 					if (p_player->IsReflectionMode())
 					{
 						ReflectLaser(i, pPos);   //レーザーを反射.
+					
 						p_player->UseReflection(); //クールダウン開始.
 
+	
+				
 					}
 					//反射なし.
 					else
@@ -181,6 +185,8 @@ void Obstacle4main::enemy4Move()
 				break;
 
 			case Laser_Reflected:
+				// 反射したレーザーは隕石追尾処理を行う
+			HandleReflectedLaserTracking(i);
 				break;
 
 			//想定外の値エラー.
@@ -247,7 +253,7 @@ void Obstacle4main::enemy4Move()
 				break;
 			}
 		}
-
+	
 		// 画面外に出たレーザーを無効化
 		if (laser[i].x < -100 || laser[i].x > WINDOW_WID + 100 ||
 			laser[i].y < -100 || laser[i].y > WINDOW_HEI + 100)
@@ -300,7 +306,60 @@ void Obstacle4main::enemy4Move()
 		}
 	}
 }
+//反射したレーザーの隕石追尾処理
+//laserIndex 処理するレーザーのインデックス
+void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
+{
+	//レーザーの現在位置.
+	DBL_XY laserPos = { laser[laserIndex].x, laser[laserIndex].y };
+	
+	//最も近い隕石の位置を取得するぜ.
+	DBL_XY nearestMeteoPos{};
+	printfDx(_T("エラーーー"));
+	bool hasMeteo = p_meteoMg->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
+	    
+	if (hasMeteo)
+	{
+		//隕石が存在する場合は隕石に向かって追尾だぜ.
+		//隕石方向への角度を計算(いやむずいて).
+		double targetAngle = atan2(
+			nearestMeteoPos.y - laser[laserIndex].y,
+			nearestMeteoPos.x - laser[laserIndex].x);
 
+		//レーザーの現在の移動方向の角度.
+		double currentAngle = atan2(laser[laserIndex].sy, laser[laserIndex].sx);
+
+		//角度の差分を計算.
+		double angleDiff = targetAngle - currentAngle;
+
+		// 角度差分を-PI～PIの範囲に正規化
+		
+		while (angleDiff > M_PI)
+		{
+			angleDiff -= 2 * M_PI;
+		}
+		while (angleDiff < - M_PI)
+		{
+			angleDiff += 2 * M_PI;
+	    }
+		// 反射レーザーの旋回角度（通常レーザーより少し速く）
+		const double maxTurn = M_PI / 180 * 20;//二十度まで
+		if (angleDiff  > maxTurn)angleDiff = maxTurn;
+		if (angleDiff <- maxTurn)angleDiff = -maxTurn;
+
+		//新しい角度を計算して速度を更新
+		double newAngle = currentAngle + angleDiff;
+
+		// 現在の速度の大きさを保持
+		double currentSpeed = sqrt(laser[laserIndex].sx * laser[laserIndex].sx +
+			laser[laserIndex].sy * laser[laserIndex].sy);
+
+		// 新しい方向に速度を設定
+		laser[laserIndex].sx = cos(newAngle) * currentSpeed;
+		laser[laserIndex].sy = sin(newAngle) * currentSpeed;
+	}
+
+}
 //光るeffectの生成.
 void Obstacle4main::CreateFlashEffect(double fx, double fy)
 {
