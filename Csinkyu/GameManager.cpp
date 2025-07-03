@@ -110,10 +110,10 @@ void GameManager::Init() {
 #endif
 
 	//障害物class.
-	obstacle4_1.Init(&data, &player);
-	obstacle4_2.Init(&data, &player);
-	obstacle4_3.Init(&data, &player);
-	obstacle4_4.Init(&data, &player);
+	obstacle4_1.Init(&data, &player, &meteoMng);
+	obstacle4_2.Init(&data, &player, &meteoMng);
+	obstacle4_3.Init(&data, &player, &meteoMng);
+	obstacle4_4.Init(&data, &player, &meteoMng);
 	obstacle5.Init(&data, &player);
 
 	//隕石管理class.
@@ -140,12 +140,11 @@ void GameManager::Reset() {
 #endif
 
 	//障害物class.
-
-	obstacle4_1.Reset(WINDOW_WID /  2, 0, 3, MOVE_RIGHT);
-	obstacle4_2.Reset(WINDOW_WID /  2, 0, 3, MOVE_LEFT);
-	obstacle4_3.Reset(WINDOW_WID / 2, 1070, 3, MOVE_RIGHT);
-	obstacle4_4.Reset(WINDOW_WID / 2, 1070, 3, MOVE_LEFT);
-	obstacle5.Reset(WINDOW_WID / 2, WINDOW_HEI / 1, 0, 0); // 画面中央に配置
+	obstacle4_1.Reset(WINDOW_WID/2,    0, 3, MOVE_RIGHT);
+	obstacle4_2.Reset(WINDOW_WID/2,    0, 3, MOVE_LEFT);
+	obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
+	obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
+	obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置
 
 	//隕石管理class.
 	meteoMng.Reset();

@@ -22,4 +22,5 @@ public:
 
 	void GenerateMeteo(); //и¦ђОђ¶ђ¬.
 	BOOL GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //ЌЕЉс‚и‚Ми¦ђОЌА•W‚р’T‚·.
+	BOOL IsHitMeteos(Circle* pos); //и¦ђО‚М‚З‚к‚©1‚В‚Е‚а“–‚Ѕ‚Б‚Д‚ў‚й‚©.
 };

@@ -5,7 +5,7 @@
 */
 #pragma once
 
-
+#include "MeteoManager.h"//隕石ののヘッダーファイル.
 #define ODAZIMA_LASER //定義する→新しいver / コメントアウトする→旧verの修正版.
 
 //レーザータイプ.
@@ -69,10 +69,11 @@ protected:
 
 	GameData*   p_data{};
 	Player*     p_player{};
+	MeteoManager* p_meteoMg{};
 
 public:
 	//基本処理.
-	virtual void Init  (GameData*, Player*) = 0;
+	        void Init  (GameData*, Player*, MeteoManager*);
 	virtual void Reset (float _Hx, float _Hy, float _Hm, MoveDir) = 0;
 	        void Update();
 	        void Draw  ();
@@ -88,4 +89,7 @@ public:
 
 	//反射処理.
 	void ReflectLaser(int laserIndex, DBL_XY playerPos);
+	//反射したレーザー隕石追尾処理
+	//laserIndex 処理するレーザーのインデックス
+	void HandleReflectedLaserTracking(int laserIndex);
 };

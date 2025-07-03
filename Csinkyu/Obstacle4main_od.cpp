@@ -12,10 +12,16 @@
 //これが定義されてたら、こちらがON.
 #if defined ODAZIMA_LASER
 
-/**
- * @brief 障害物の更新処理
- * プレイヤーが有効な場合のみ障害物の動きを更新
- */
+//初期化.
+void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMg)
+{
+	// プレイヤーオブジェクトを参照として保存
+	p_data    = _data;
+	p_player  = _player;
+	p_meteoMg = _meteoMg;
+}
+
+//更新.
 void Obstacle4main::Update()
 {
 	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
@@ -23,10 +29,7 @@ void Obstacle4main::Update()
 	}
 }
 
-/**
- * @brief 障害物の描画処理
- * レーザーの軌跡と砲台を描画
- */
+//描画.
 void Obstacle4main::Draw()
 {
 	// レーザーの軌跡の描画処理.
@@ -43,6 +46,17 @@ void Obstacle4main::Draw()
 // レーザーの軌跡の描画処理.
 void Obstacle4main::DrawObstLine() {
 
+#if false
+	//デバッグ表示.
+	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
+	{
+		int x =   0 + 10 * (i%100);
+		int y = 100 + 20 * (i/100);
+		DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
+		DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
+	}
+#endif
+
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
@@ -52,8 +66,7 @@ void Obstacle4main::DrawObstLine() {
 		g = max(g, 0); //最低値を0にする.
 
 		// 加算合成モードで軌跡を描画（発光エフェクト）
-//		SetDrawBlendMode(DX_BLENDMODE_ADD, g);
-		SetDrawBlendModeST(MODE_ADD, g);
+		SetDrawBlendMode(DX_BLENDMODE_ADD, g);
 
 		// 軌跡の線を描画（時間経過で色が変化）
 		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, GetColor(50, g, 255) };
@@ -66,8 +79,7 @@ void Obstacle4main::DrawObstLine() {
 	}
 
 	//通常の描画モードに戻す
-//	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-	ResetDrawBlendMode();
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 // 発射エフェクトの処理.
@@ -113,9 +125,10 @@ void Obstacle4main::DrawObstFlash() {
 		int ix3 = _int(flashEffect[i].x - cos_a * effectSize / 3 - sin_a * effectSize / 2);
 		int iy3 = _int(flashEffect[i].y - sin_a * effectSize / 3 + cos_a * effectSize / 2);
 
+
+
 		//発射エフェクトを円形で描画(白く光る)
-//		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
-		SetDrawBlendModeST(MODE_ADD, alphaValue);
+		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
 
 		//外側の三角形.
 		DrawTriangle(x1, y1, x2, y2, x3, y3, GetColor(0, 255, 255), FALSE);
@@ -134,8 +147,7 @@ void Obstacle4main::DrawObstFlash() {
 	}
 
 	//通常の描画モードに戻す
-//	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-	ResetDrawBlendMode();
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 /**
@@ -168,21 +180,34 @@ void Obstacle4main::enemy4Move()
 					//反射あり.
 					if (p_player->IsReflectionMode())
 					{
-						ReflectLaser(i, pPos);   //レーザーを反射.
-						p_player->UseReflection(); //クールダウン開始.
-
+						ReflectLaser(i, pPos);     //レーザーを反射.
+						p_player->UseReflection(); //クールダウン開始.			
 					}
 					//反射なし.
 					else
 					{
-						laser[i].ValidFlag = 0; //レーザーを無効化.
-						p_player->PlayerDeath();  //プレイヤー死亡.
+						laser[i].ValidFlag = 0;  //レーザーを無効化.
+						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
 					isHit = true; //当たったことを記録.
 				}
 				break;
 
 			case Laser_Reflected:
+				{
+					// 反射したレーザーは隕石追尾処理を行う
+					HandleReflectedLaserTracking(i);
+
+					/*
+					   【仮】TODO: レーザーの円形当たり判定.
+					*/
+					Circle hit = { {laser[i].x, laser[i].y}, 10, {} }; 
+
+					//隕石と当たっているなら.
+					if (p_meteoMg->IsHitMeteos(&hit)) {
+						laser[i].ValidFlag = 0; //無効にする.
+					}
+				}
 				break;
 
 			//想定外の値エラー.
@@ -249,7 +274,7 @@ void Obstacle4main::enemy4Move()
 				break;
 			}
 		}
-
+	
 		// 画面外に出たレーザーを無効化
 		if (laser[i].x < -100 || laser[i].x > WINDOW_WID + 100 ||
 			laser[i].y < -100 || laser[i].y > WINDOW_HEI + 100)
@@ -302,7 +327,60 @@ void Obstacle4main::enemy4Move()
 		}
 	}
 }
+//反射したレーザーの隕石追尾処理
+//laserIndex 処理するレーザーのインデックス
+void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
+{
+	//レーザーの現在位置.
+	DBL_XY laserPos = { laser[laserIndex].x, laser[laserIndex].y };
+	
+	assert(p_meteoMg != nullptr); //ポインタが空でないことを確認.
 
+	//最も近い隕石の位置を取得するぜ.
+	DBL_XY nearestMeteoPos{};
+	bool hasMeteo = p_meteoMg->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
+	    
+	//隕石が1つでも存在すれば.
+	if (hasMeteo)
+	{
+		//隕石が存在する場合は隕石に向かって追尾だぜ.
+		//隕石方向への角度を計算(いやむずいて).
+		double targetAngle = atan2(
+			nearestMeteoPos.y - laser[laserIndex].y,
+			nearestMeteoPos.x - laser[laserIndex].x);
+
+		//レーザーの現在の移動方向の角度.
+		double currentAngle = atan2(laser[laserIndex].sy, laser[laserIndex].sx);
+
+		//角度の差分を計算.
+		double angleDiff = targetAngle - currentAngle;
+
+		// 角度差分を-PI～PIの範囲に正規化
+		while (angleDiff > M_PI)
+		{
+			angleDiff -= 2 * M_PI;
+		}
+		while (angleDiff < - M_PI)
+		{
+			angleDiff += 2 * M_PI;
+	    }
+		// 反射レーザーの旋回角度（通常レーザーより少し速く）
+		const double maxTurn = M_PI / 180 * 20;//二十度まで
+		if (angleDiff  > maxTurn)angleDiff = maxTurn;
+		if (angleDiff <- maxTurn)angleDiff = -maxTurn;
+
+		//新しい角度を計算して速度を更新
+		double newAngle = currentAngle + angleDiff;
+
+		// 現在の速度の大きさを保持
+		double currentSpeed = sqrt(laser[laserIndex].sx * laser[laserIndex].sx +
+			laser[laserIndex].sy * laser[laserIndex].sy);
+
+		// 新しい方向に速度を設定
+		laser[laserIndex].sx = cos(newAngle) * currentSpeed;
+		laser[laserIndex].sy = sin(newAngle) * currentSpeed;
+	}
+}
 //光るeffectの生成.
 void Obstacle4main::CreateFlashEffect(double fx, double fy)
 {
@@ -382,4 +460,4 @@ void Obstacle4main::ReflectLaser(int laserIndex, DBL_XY playerPos)
 	laser[laserIndex].type = Laser_Reflected; //反射モードへ.
 }
 
-#endif;
+#endif

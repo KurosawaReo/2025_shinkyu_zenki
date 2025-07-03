@@ -1,6 +1,6 @@
 /*
    - myCalcST.h - (original)
-   ver.2025/07/01
+   ver.2025/07/03
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -15,7 +15,7 @@ int    RndNum		(int st, int ed, BOOL isDxRnd = FALSE);
 
 //移動限界.
 void   FixPosInArea (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
-BOOL   IsOutInArea  (DBL_XY  pos, INT_XY size, int left, int up, int right, int down);
+BOOL   IsOutInArea  (DBL_XY  pos, INT_XY size, int left, int up, int right, int down, BOOL isCompOut);
 
 //計算.
 double CalcDis		(INT_XY pos1, INT_XY pos2);
