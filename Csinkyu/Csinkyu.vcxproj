@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="LaserManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Meteo.cpp" />
     <ClCompile Include="MeteoManager.cpp" />
@@ -35,7 +36,7 @@
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle3.cpp" />
     <ClCompile Include="Obstacle4.cpp" />
-    <ClCompile Include="Obstacle4main_od.cpp" />
+    <ClCompile Include="Obstacle4main.cpp" />
     <ClCompile Include="Obstacle5.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -53,6 +54,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="LaserManager.h" />
     <ClInclude Include="Meteo.h" />
     <ClInclude Include="MeteoManager.h" />
     <ClInclude Include="myCalcST.h" />

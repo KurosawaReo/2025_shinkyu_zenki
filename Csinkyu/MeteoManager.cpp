@@ -46,7 +46,7 @@ void MeteoManager::Draw() {
 	//‘Sè¦Îƒ‹[ƒv.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
 
-#if true
+#if false
 		int x =   0 + 10 * (i%100);
 		int y = 100 + 20 * (i/100);
 		DrawString(0, 80, _T("è¦Î‚Ìactive"), 0xFF00FF);

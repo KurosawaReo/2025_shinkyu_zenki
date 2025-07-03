@@ -55,10 +55,10 @@
 //#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
 #include "MeteoManager.h"
+#include "LaserManager.h"
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
 #include "Obstacle5.h"
-#include "MeteoManager.h"
 #include "Item.h"
 #if defined ALL_OBSTACLE
 #include "Obstacle.h"
@@ -84,8 +84,9 @@ Obstacle4_2 obstacle4_2;
 Obstacle4_3 obstacle4_3;
 Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
-//隕石管理の実体.
+//障害物管理の実体.
 MeteoManager meteoMng;
+LaserManager laserMng;
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -110,14 +111,14 @@ void GameManager::Init() {
 #endif
 
 	//障害物class.
-	obstacle4_1.Init(&data, &player, &meteoMng);
-	obstacle4_2.Init(&data, &player, &meteoMng);
-	obstacle4_3.Init(&data, &player, &meteoMng);
-	obstacle4_4.Init(&data, &player, &meteoMng);
+	obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
+	obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
+	obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
+	obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
 	obstacle5.Init(&data, &player);
-
-	//隕石管理class.
+	//障害物管理class.
 	meteoMng.Init(&data, &player);
+	laserMng.Init(&data, &player, &meteoMng);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -145,9 +146,9 @@ void GameManager::Reset() {
 	obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
 	obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
 	obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置
-
 	//隕石管理class.
 	meteoMng.Reset();
+	laserMng.Reset();
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
@@ -226,11 +227,9 @@ void GameManager::UpdateGame() {
 	obstacle4_3.Update();
 	obstacle4_4.Update();
 	obstacle5.Update();
-
-	
-
-	//隕石管理class.
+	//障害物管理class.
 	meteoMng.Update();
+	laserMng.Update();
 	//アイテムclass.
 	item.Update();
 	//プレイヤーclass.
@@ -339,8 +338,9 @@ void GameManager::DrawObjests() {
 	obstacle4_3.Draw();
 	obstacle4_4.Draw();
 	obstacle5.Draw();
-	//隕石管理class.
+	//障害物管理class.
 	meteoMng.Draw();
+	laserMng.Draw();
 	//アイテムclass.
 	item.Draw();
 	//プレイヤーclass.

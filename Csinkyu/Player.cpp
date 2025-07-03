@@ -67,14 +67,13 @@ void Player::Draw()
 		DrawAfterImage();
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
-		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xA0A0A0 };
+		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
 
-		//反射モード中は青色に変更.
+		//反射モード中の色.
 		if (IsReflectionMode())
 		{
 			box1.clr = box2.clr = GetColor(255, 155, 255);//青色.
 		}
-
 		//デバッグモード中.
 		if (isDebug) {
 			box1.clr = box2.clr = GetColor(255, 150, 150); //赤色.
