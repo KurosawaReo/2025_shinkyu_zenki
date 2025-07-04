@@ -131,7 +131,7 @@ void Obstacle4main::DrawObstFlash() {
 		DrawTriangle(x1, y1, x2, y2, x3, y3, GetColor(0, 255, 255), FALSE);
 
 		//内側により明るい三角形を描画.
-		//DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
+		DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
 
 
 		//エフェクトのカウンタを更新
@@ -193,7 +193,7 @@ void Obstacle4main::enemy4Move()
 			case Laser_Reflected:
 				{
 					// 反射したレーザーは隕石追尾処理を行う
-					HandleReflectedLaserTracking(i);
+					
 
 					/*
 					   【仮】TODO: レーザーの円形当たり判定.
@@ -203,7 +203,11 @@ void Obstacle4main::enemy4Move()
 					//隕石と当たっているなら.
 					if (p_meteoMg->IsHitMeteos(&hit)) {
 						DeleteLaser(i);
+						isHit = true;
+						break;
 					}
+
+					HandleReflectedLaserTracking(i);
 				}
 				break;
 
@@ -327,6 +331,11 @@ void Obstacle4main::enemy4Move()
 //laserIndex 処理するレーザーのインデックス
 void Obstacle4main::HandleReflectedLaserTracking(int laserIndex)
 {
+	if (laser[laserIndex].ValidFlag == 0)
+	{
+		return;
+	}
+
 	//レーザーの現在位置.
 	DBL_XY laserPos = { laser[laserIndex].x, laser[laserIndex].y };
 	
