@@ -162,8 +162,8 @@ void LaserManager::Draw() {
 	{
 		int x =   0 +  8 * (i%200);
 		int y = 100 + 16 * (i/200);
-		DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
-		DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
+		//DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
+		//DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
 	}
 #endif
 
@@ -291,7 +291,7 @@ void LaserManager::ReflectedLaserTracking(int idx)
 	//最も近い隕石の位置を取得するぜ.
 	DBL_XY nearestMeteoPos{};
 	bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
-
+	
 	//隕石が1つでも存在すれば.
 	if (hasMeteo)
 	{
@@ -331,5 +331,9 @@ void LaserManager::ReflectedLaserTracking(int idx)
 		// 新しい方向に速度を設定
 		laser[idx].sx = cos(newAngle) * currentSpeed;
 		laser[idx].sy = sin(newAngle) * currentSpeed;
+	}
+	else
+	{
+		return;
 	}
 }

@@ -49,8 +49,8 @@ void Obstacle4main::DrawObstLine() {
 	{
 		int x =   0 + 10 * (i%100);
 		int y = 100 + 20 * (i/100);
-		DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
-		DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
+		//DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
+		//DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
 	}
 #endif
 
