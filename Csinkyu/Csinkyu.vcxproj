@@ -19,50 +19,43 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="image\enemy.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Meteo.cpp" />
-    <ClCompile Include="MeteoManager.cpp" />
     <ClCompile Include="myCalcST.cpp" />
-    <ClCompile Include="myDrawST.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
     <ClCompile Include="myTimerST.cpp" />
+    <ClCompile Include="LaserManager.cpp" />
+    <ClCompile Include="Meteo.cpp" />
+    <ClCompile Include="MeteoManager.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
-    <ClCompile Include="Obstacle3.cpp" />
     <ClCompile Include="Obstacle4.cpp" />
-    <ClCompile Include="Obstacle4main_od.cpp" />
-    <ClCompile Include="Obstacle4main_kr.cpp" />
+    <ClCompile Include="Obstacle4main.cpp" />
     <ClCompile Include="Obstacle5.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="image\enemy.png" />
-    <Image Include="image\Player.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="Meteo.h" />
-    <ClInclude Include="MeteoManager.h" />
     <ClInclude Include="myCalcST.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
     <ClInclude Include="myTimerST.h" />
+    <ClInclude Include="LaserManager.h" />
+    <ClInclude Include="Meteo.h" />
+    <ClInclude Include="MeteoManager.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Obstacle2.h" />
-    <ClInclude Include="Obstacle3.h" />
     <ClInclude Include="Obstacle4.h" />
     <ClInclude Include="Obstacle4main.h" />
     <ClInclude Include="Obstacle5.h" />

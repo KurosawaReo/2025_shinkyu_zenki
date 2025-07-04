@@ -16,7 +16,6 @@
 class Obstacle4_1 : public Obstacle4main
 {
 public:
-	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
 	void Move() override;
 };
 
@@ -24,7 +23,6 @@ public:
 class Obstacle4_2 : public Obstacle4main
 {
 public:
-	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
 	void Move() override;
 };
 
@@ -32,7 +30,6 @@ public:
 class Obstacle4_3 : public Obstacle4main
 {
 public:
-	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
 	void Move() override;
 };
 
@@ -40,7 +37,6 @@ public:
 class Obstacle4_4 : public Obstacle4main
 {
 public:
-	void Reset(float _Hx, float _Hy, float _Hm, MoveDir) override;
 	void Move() override;
 };
 

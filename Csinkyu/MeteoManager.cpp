@@ -6,11 +6,12 @@
 
 void MeteoManager::Init(GameData* _data, Player* _player) {
 
-	p_data = _data;
+	p_data   = _data;
+	p_player = _player;
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		meteo[i].Init(_data, _player);
+		meteo[i].Init(_data);
 	}
 }
 
@@ -32,12 +33,16 @@ void MeteoManager::Update() {
 	}
 	//タイマーが0になったら.
 	else {
-		GenerateMeteo(); //隕石生成.
+		SpawnMeteo(); //隕石生成.
 	}
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		meteo[i].Update(); //更新.
+	}
+	//プレイヤーとの当たり判定.
+	if (IsHitMeteos(p_player->GetHit(), FALSE)) {
+		p_player->PlayerDeath(); //死亡.
 	}
 }
 
@@ -45,19 +50,12 @@ void MeteoManager::Draw() {
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-
-#if true
-		int x =   0 + 10 * (i%100);
-		int y = 100 + 20 * (i/100);
-		DrawString(0, 80, _T("隕石のactive"), 0xFF00FF);
-		DrawFormatString(x, y, 0xFF00FF, _T("%d"), meteo[i].GetActive());
-#endif
 		meteo[i].Draw(); //描画.
 	}
 }
 
 //隕石生成.
-void MeteoManager::GenerateMeteo(){
+void MeteoManager::SpawnMeteo(){
 
 	//空いてる所を探す.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
@@ -68,6 +66,28 @@ void MeteoManager::GenerateMeteo(){
 			break; //出現完了.
 		}
 	}
+}
+
+//隕石のどれか1つでも当たっているか.
+BOOL MeteoManager::IsHitMeteos(Circle* pos, BOOL isDestroy) {
+
+	BOOL hit;
+
+	//全隕石ループ.
+	for (int i = 0; i < METEO_CNT_MAX; i++) {
+		if (meteo[i].GetActive()) {
+
+			hit = meteo[i].IsHitMeteo(pos); //1こずつ判定.
+			//当たれば.
+			if (hit) {
+				if (isDestroy) {
+					meteo[i].Destroy(); //隕石を破壊.
+				}
+				return TRUE; //1つでも当たっている.
+			}
+		}
+	}
+	return FALSE; //どれも当たっていない.
 }
 
 //最寄りの隕石座標を探す.
@@ -101,23 +121,4 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 	}
 
 	return isExistMeteo;
-}
-
-//隕石のどれか1つでも当たっているか.
-BOOL MeteoManager::IsHitMeteos(Circle* pos) {
-
-	BOOL hit;
-	
-	//全隕石ループ.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		if (meteo[i].GetActive()) {
-			
-			hit = meteo[i].IsHitMeteo(pos); //1こずつ判定.
-			if (hit) {
-				meteo[i].Destroy(); //隕石を破壊.
-				return TRUE; //1つでも当たっている.
-			}
-		}
-	}
-	return FALSE; //どれも当たっていない.
 }
