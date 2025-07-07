@@ -32,24 +32,24 @@ void Obstacle5::Reset(double x, double y, float speed, int direction)
 	StartFlashEffect(x, y);
 }
 
-void Obstacle5::GenerateRandomPosition(double x, double y)
+void Obstacle5::GenerateRandomPosition(double& x, double& y)  // 参照渡しに修正
 {
 	//画面サイズ
-	int screnWidth  = WINDOW_WID;
+	int screnWidth = WINDOW_WID;
 	int screnHeight = WINDOW_HEI;
 	int margin = 100;//画面端からのマージン大き目.
-	x = margin + (rand() % (screnWidth  - margin * 2));
+	x = margin + (rand() % (screnWidth - margin * 2));
 	y = margin + (rand() % (screnHeight - margin * 2));
 }
 bool Obstacle5::CheckDistance(double x, double y)
 {
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++)
 	{
-		if (flashEffect[i].ValidFlag==1)
+		if (flashEffect[i].ValidFlag == 1)
 		{
 			double dx = x - flashEffect[i].x;
 			double dy = y - flashEffect[i].y;
-			double distance = sqrt(dx * dx + dy + dy);
+			double distance = sqrt(dx * dx + dy * dy);  // dy * dy に修正
 			if (distance < OBSTACLE5_MIN_DISTANCE)
 			{
 				return false;
@@ -76,7 +76,7 @@ void Obstacle5::StartFlashEffect(double x, double y)
 }
 void Obstacle5::SpawnObstaclegroup()
 {
-	//同時出現をランdファムに決定.
+	//同時出現をランダムに決定.
 	int spawnCount = 1 + (rand() % OBSTACLE5_MAX_SIMULTANEOUS);
 	for (int i = 0; i < spawnCount; i++)
 	{
@@ -98,7 +98,7 @@ void Obstacle5::SpawnObstaclegroup()
 }
 int Obstacle5::GetEffectState(int index)
 {
-	if (flashEffect[index].Counter, OBSTACLE5_WARNING_DURATION)
+	if (flashEffect[index].Counter < OBSTACLE5_WARNING_DURATION)  // 比較演算子に修正
 	{
 		return OBSTACLE5_STATE_WARNING;
 	}
@@ -120,7 +120,7 @@ void Obstacle5::UpdateFlashGeneration()
 	flashTimer++;
 	if (flashTimer >= flashInterval) {
 		// 新しいフラッシュエフェクトを生成
-		StartFlashEffect(line.stPos.x, line.stPos.y);
+		SpawnObstaclegroup();  // ランダム位置に複数生成するように変更
 		flashTimer = 0;
 	}
 }
@@ -148,11 +148,20 @@ void Obstacle5::Hitjudgment()
 			continue; // 無効なエフェクトをスキップ
 		}
 
+		// エフェクトの状態を確認
+		int effectState = GetEffectState(i);
+
+		// 予告状態の場合は当たり判定をスキップ
+		if (effectState == OBSTACLE5_STATE_WARNING)
+		{
+			continue;
+		}
+
 		// エフェクトのサイズを時間に応じて拡大（描画と同じ計算）
 		float sizeMultiplier = OBSTACLE5_FLASH_SIZE_INIT + (
 			flashEffect[i].Counter * OBSTACLE5_FLASH_SIZE_SPREAD / flashEffect[i].Duration
 			);
-		int effectSize = _int(flashEffect[i].BaseSize * sizeMultiplier);
+		int effectSize = (int)(flashEffect[i].BaseSize * sizeMultiplier);
 
 		// プレイヤーの位置を取得
 		DBL_XY playerPos = player->GetPos();
@@ -193,14 +202,15 @@ void Obstacle5::DrawObstFlash()
 			// アクティブ状態の描画（元のフラッシュエフェクト）
 			DrawActiveEffect(i);
 		}
-		flashEffect[i].Counter + -(data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
+		// カウンタの更新を修正
+		flashEffect[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
 
 		//エフェクト時間が終了したら無効化.
 		if (flashEffect[i].Counter >= flashEffect[i].Duration)
 		{
 			flashEffect[i].ValidFlag = 0;
 		}
-    }
+	}
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();
 }
@@ -228,16 +238,16 @@ void Obstacle5::DrawActiveEffect(int index)
 {
 	// アクティブ状態での進行度
 	float activeProgress = (flashEffect[index].Counter - OBSTACLE5_WARNING_DURATION) / OBSTACLE5_ACTIVE_DURATION;
-	
+
 	// 透明度を時間に応じて計算
 	float alpha = 1.0f - (activeProgress * OBSTACLE5_FLASH_ALPHA_TM);
 	int alphaValue = (int)(255 * max(alpha, 0.0f));
-	
+
 	// エフェクトのサイズを時間に応じて拡大
 	float sizeMultiplier = OBSTACLE5_FLASH_SIZE_INIT + (activeProgress * OBSTACLE5_FLASH_SIZE_SPREAD);
 	int effectSize = (int)(flashEffect[index].BaseSize * sizeMultiplier);
 	int innerSize = effectSize / 2;
-	
+
 	// アクティブエフェクトを円形で描画（シアン色で光る）
 	SetDrawBlendModeST(MODE_ADD, alphaValue);
 	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), effectSize, GetColor(0, 255, 255), FALSE);

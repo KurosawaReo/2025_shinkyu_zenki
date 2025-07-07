@@ -66,7 +66,7 @@ void LaserManager::Update() {
 			case Laser_Reflected:
 			{
 				// 反射したレーザーは隕石追尾処理を行う
-				ReflectedLaserTracking(i);
+				//ReflectedLaserTracking(i);
 			
 				/*
 				   【仮】TODO: レーザーの円形当たり判定.
@@ -76,7 +76,10 @@ void LaserManager::Update() {
 				//隕石と当たっているなら.
 				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
 					DeleteLaser(i);
+					isHit = true;
+					break;
 				}
+				ReflectedLaserTracking(i);
 			}
 			break;
 
@@ -307,7 +310,7 @@ void LaserManager::ReflectedLaserTracking(int idx)
 		//角度の差分を計算.
 		double angleDiff = targetAngle - currentAngle;
 
-		// 角度差分を-PI～PIの範囲に正規化
+		// 角度差分を-PI～PIの範囲に正規化.
 		while (angleDiff > M_PI)
 		{
 			angleDiff -= 2 * M_PI;
@@ -316,17 +319,25 @@ void LaserManager::ReflectedLaserTracking(int idx)
 		{
 			angleDiff += 2 * M_PI;
 		}
-		// 反射レーザーの旋回角度（通常レーザーより少し速く）
-		const double maxTurn = M_PI / 180 * 20;//二十度まで
+		// 反射レーザーの旋回角度（通常レーザーより少し速く）.
+		const double maxTurn = M_PI / 180 * 20;//二十度まで.
 		if (angleDiff > maxTurn)angleDiff = maxTurn;
 		if (angleDiff < -maxTurn)angleDiff = -maxTurn;
 
 		//新しい角度を計算して速度を更新
 		double newAngle = currentAngle + angleDiff;
 
-		// 現在の速度の大きさを保持
+		// 現在の速度の大きさを保持.
 		double currentSpeed = sqrt(laser[idx].sx * laser[idx].sx +
 			laser[idx].sy * laser[idx].sy);
+
+		//固定の速度を使用(回転を防ぐ.
+		if (currentSpeed < 5.0)
+		{
+			currentSpeed = 5.0;
+		}
+
+		const double fixedSpeed = 100.0; // 固定速度.
 
 		// 新しい方向に速度を設定
 		laser[idx].sx = cos(newAngle) * currentSpeed;
