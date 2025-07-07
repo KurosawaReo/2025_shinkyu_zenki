@@ -70,24 +70,29 @@ void Obstacle4main::DrawObstFlash() {
 		int effectSize = _int(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
 
+		//エフェクトの位置を時間経過とともにプレイヤー方向に移動
+		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
+		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 30; // 30ピクセル分移動
+		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 30;
+
 		//三角形の頂点を計算(プレイヤーの方向を向く).
 		double angle = flashEffect[i].angle;
 		double cos_a = cos(angle);
 		double sin_a = sin(angle);
-		//外側の三角形(大きい)
-		int x1 = _int(flashEffect[i].x + cos_a * effectSize);//先端.
-		int y1 = _int(flashEffect[i].y + sin_a * effectSize);
-		int x2 = _int(flashEffect[i].x - cos_a * effectSize / 3 + sin_a * effectSize / 2);//左後.
-		int y2 = _int(flashEffect[i].y - sin_a * effectSize / 3 - cos_a * effectSize / 2);
-		int x3 = _int(flashEffect[i].x - cos_a * effectSize / 3 - sin_a * effectSize / 2);//右後.
-		int y3 = _int(flashEffect[i].y - sin_a * effectSize / 3 + cos_a * effectSize / 2);
+		//外側の三角形(大きい)(なんかすごくなっちゃった)
+		int x1 = _int(currentX + cos_a * effectSize);//先端.
+		int y1 = _int(currentY + sin_a * effectSize);
+		int x2 = _int(currentX - cos_a * effectSize / 3 + sin_a * effectSize / 2);//左後.
+		int y2 = _int(currentY - sin_a * effectSize / 3 - cos_a * effectSize / 2);
+		int x3 = _int(currentX - cos_a * effectSize / 3 - sin_a * effectSize / 2);//右後.
+		int y3 = _int(currentY - sin_a * effectSize / 3 + cos_a * effectSize / 2);
 		//内側の三角形(小さい)
-		int ix1 = _int(flashEffect[i].x + cos_a * effectSize);//先端.
-		int iy1 = _int(flashEffect[i].y + sin_a * effectSize);
-		int ix2 = _int(flashEffect[i].x - cos_a * effectSize / 3 + sin_a * effectSize / 2);
-		int iy2 = _int(flashEffect[i].y - sin_a * effectSize / 3 - cos_a * effectSize / 2);
-		int ix3 = _int(flashEffect[i].x - cos_a * effectSize / 3 - sin_a * effectSize / 2);
-		int iy3 = _int(flashEffect[i].y - sin_a * effectSize / 3 + cos_a * effectSize / 2);
+		int ix1 = _int(currentX + cos_a * effectSize);//先端.
+		int iy1 = _int(currentY + sin_a * effectSize);
+		int ix2 = _int(currentX - cos_a * effectSize / 3 + sin_a * effectSize / 2);
+		int iy2 = _int(currentY - sin_a * effectSize / 3 - cos_a * effectSize / 2);
+		int ix3 = _int(currentX - cos_a * effectSize / 3 - sin_a * effectSize / 2);
+		int iy3 = _int(currentY - sin_a * effectSize / 3 + cos_a * effectSize / 2);
 
 		//発射エフェクトを円形で描画(白く光る)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
