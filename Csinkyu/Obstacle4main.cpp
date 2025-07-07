@@ -72,8 +72,8 @@ void Obstacle4main::DrawObstFlash() {
 
 		//エフェクトの位置を時間経過とともにプレイヤー方向に移動
 		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
-		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 30; // 30ピクセル分移動
-		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 30;
+		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 60; // 30ピクセル分移動
+		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 60;
 
 		//三角形の頂点を計算(プレイヤーの方向を向く).
 		double angle = flashEffect[i].angle;
@@ -102,6 +102,16 @@ void Obstacle4main::DrawObstFlash() {
 
 		//内側により明るい三角形を描画.
 		//DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
+
+		//エフェクト内に3つの●を描画
+		int dotSize = effectSize / 10; // 三角形のサイズに応じて●のサイズを調整
+		int dotAlpha = alphaValue / 1; // 少し透明度を下げる
+		SetDrawBlendMode(DX_BLENDMODE_ADD, dotAlpha);
+
+		// 3つの●を三角形の内部に配置
+		DrawCircle(_int(currentX + cos_a * effectSize / 3), _int(currentY + sin_a * effectSize / 3), dotSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(currentX - cos_a * effectSize / 6 + sin_a * effectSize / 4), _int(currentY - sin_a * effectSize / 6 - cos_a * effectSize / 4), dotSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(currentX - cos_a * effectSize / 6 - sin_a * effectSize / 4), _int(currentY - sin_a * effectSize / 6 + cos_a * effectSize / 4), dotSize, GetColor(0, 255, 255), FALSE);
 
 		//エフェクトのカウンタを更新
 		flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);

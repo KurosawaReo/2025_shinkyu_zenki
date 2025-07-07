@@ -300,6 +300,10 @@ void LaserManager::ReflectedLaserTracking(int idx)
 	{
 		//隕石が存在する場合は隕石に向かって追尾だぜ.
 		//隕石方向への角度を計算(いやむずいて).
+		// 隕石までの距離を計算
+		double dx = nearestMeteoPos.x - laser[idx].x;
+		double dy = nearestMeteoPos.y - laser[idx].y;
+		double distance = sqrt(dx * dx + dy * dy);
 		double targetAngle = atan2(
 			nearestMeteoPos.y - laser[idx].y,
 			nearestMeteoPos.x - laser[idx].x);
@@ -320,7 +324,24 @@ void LaserManager::ReflectedLaserTracking(int idx)
 			angleDiff += 2 * M_PI;
 		}
 		// 反射レーザーの旋回角度（通常レーザーより少し速く）.
-		const double maxTurn = M_PI / 180 * 20;//二十度まで.
+		
+		double maxTurn;
+		if (distance < 50.0)
+		{
+			//非常に近い場合は大きく曲がる90度まで.
+			maxTurn = M_PI / 180 * 90;
+		}
+		else if (distance < 100.0)
+		{
+			// 近い場合は中程度に曲がる（45度まで）.
+			maxTurn = M_PI / 180 * 45;
+		}
+		else
+		{
+			// 遠い場合は通常の旋回（20度まで）
+			maxTurn = M_PI / 180 * 20;
+		}
+
 		if (angleDiff > maxTurn)angleDiff = maxTurn;
 		if (angleDiff < -maxTurn)angleDiff = -maxTurn;
 
