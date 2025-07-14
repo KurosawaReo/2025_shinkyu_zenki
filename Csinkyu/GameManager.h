@@ -37,8 +37,10 @@ public:
 	void DrawTitle();
 	void DrawGame();
 	void DrawEnd();
-	void DrawBG() const;
-	void DrawObjests();
+
+	void DrawBG();
+	void DrawObjects();
+	void DrawSlowMode();
 
 	//‚»‚Ì‘¼.
 	void GameEnd();

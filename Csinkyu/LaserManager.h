@@ -18,10 +18,11 @@ typedef struct tagLASER_DATA
 {
 	LaserType type;      //レーザータイプ.
 
-	double    x, y;      //現在の座標.
-	double    sx, sy;    //現在の速度.
+	double    x,  y;     //現在の座標.
+	double    vx, vy;    //進行方向ベクトル.
 
-	DBL_XY    meteoPos;  //最寄り隕石座標を記録する用.
+	DBL_XY    goalPos;   //最寄り隕石座標を記録する用.
+	BOOL      isGoGoal;  //目標地点に向かって進むか.
 
 	int       LogNum;    //記録した軌跡の数.
 	float     Counter;   //追尾を初めてから通過した時間.

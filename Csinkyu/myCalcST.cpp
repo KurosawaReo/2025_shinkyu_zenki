@@ -115,6 +115,15 @@ int RndNum(int st, int ed, BOOL isDxRnd) {
 	}
 	return st + rnd;
 }
+//¬”•”‚¾‚¯æ‚èo‚·.
+double GetDecimal(double num) {
+
+	double n = 0; //®”•”.
+	double f = 0; //¬”•”.
+	f = modf(num, &n); //¬”‚¾‚¯æ‚èo‚·.
+	
+	return f;
+}
 
 //ˆÚ“®‰Â”\”ÍˆÍ“à‚É•â³‚·‚é.
 void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {

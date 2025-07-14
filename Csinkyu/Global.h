@@ -140,7 +140,7 @@ struct GameData
 #define SLOW_MODE_TIME					(5)             //スローモード制限時間.
 #define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
 
-#define PLAYER_SIZE						(20)			//プレイヤーサイズ.
+#define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(6)				//プレイヤー移動速度.
 #define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_REF_COOLDOWN				(0)				//反射クールダウン時間.
@@ -165,7 +165,7 @@ struct GameData
 #define OBSTACLE4_SHOT_SPAN				(10)			//砲台の発射間隔時間.
 #define OBSTACLE4_LASER_NOR_ROT_MAX		(15)			//レーザー(normal)   の曲がる限界角度.
 #define OBSTACLE4_LASER_REF_ROT_MAX		(5)				//レーザー(reflected)の曲がる限界角度.
-#define OBSTACLE4_LASER_REF_TRACK_TIME	(50)			//レーザー(reflected)の追尾時間.
+#define OBSTACLE4_LASER_REF_TRACK_TIME	(30)			//レーザー(reflected)の追尾時間.
 #define OBSTACLE4_LASER_SPEED			(1)				//レーザーの速度.
 #define OBSTACLE4_LASER_LIM				(100)			//レーザーの最大数.
 #define OBSTACLE4_LINE_MAX				(10000)			//レーザーで描画する線の最大数.

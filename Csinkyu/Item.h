@@ -6,7 +6,6 @@ class Item
 private:
 	DBL_XY pos{};    //座標.
 	INT_XY size{};   //サイズ.
-	UINT   clr[2]{}; //色.
 	BOOL   active{}; //有効か.
 
 	float  Ix{}, Iy{};

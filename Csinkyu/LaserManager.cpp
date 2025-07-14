@@ -147,17 +147,14 @@ void LaserManager::UpdateLaser() {
 		// レーザーの経過時間カウンタを増加
 		laser[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
-		// 移動前の座標を保存
-		DBL_XY befPos;  // 前回位置を保存する変数
-		befPos = { laser[i].x, laser[i].y };
+		//移動前の座標を保存.
+		DBL_XY befPos = { laser[i].x, laser[i].y };
 
-		// ミサイルの速度(時間経過で速くなる)
-		double speed = OBSTACLE4_LASER_SPEED / (laser[i].Counter * 0.01);
-		if (p_data->isSlow) { speed /= SLOW_MODE_SPEED; }
-
-		// レーザーの位置を更新（速度に基づいて移動）
-		laser[i].x = (laser[i].x * speed + laser[i].sx) / speed;
-		laser[i].y = (laser[i].y * speed + laser[i].sy) / speed;
+		//速度(時間経過で速くなる)
+		double speed = laser[i].Counter * OBSTACLE4_LASER_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		//レーザーの移動.
+		laser[i].x += laser[i].vx * speed;
+		laser[i].y += laser[i].vy * speed;
 
 		// レーザーの軌跡を生成
 		for (int j = 0; j < OBSTACLE4_LINE_MAX; j++)
@@ -211,13 +208,13 @@ BOOL LaserManager::SpawnLaser(float x, float y) {
 			double angle = atan2(plyPos.y - startY, plyPos.x - startX);
 
 			// レーザーデータの初期化
-			laser[i].x = startX;			// 初期X座標
-			laser[i].y = startY;			// 初期Y座標
-			laser[i].sx = cos(angle) * 30;  // X方向初期速度
-			laser[i].sy = sin(angle) * 30;  // Y方向初期速度
-			laser[i].Counter = 0;			// 経過時間カウンタ初期化
-			laser[i].LogNum = 0;			// 軌跡カウンタ初期化
-			laser[i].ValidFlag = 1;			// レーザーを有効化
+			laser[i].x = startX;	  // 初期座標x
+			laser[i].y = startY;      // 初期座標y
+			laser[i].vx = cos(angle); // 初期方向x
+			laser[i].vy = sin(angle); // 初期方向y
+			laser[i].Counter = 0;	  // 経過時間カウンタ初期化
+			laser[i].LogNum = 0;	  // 軌跡カウンタ初期化
+			laser[i].ValidFlag = 1;	  // レーザーを有効化
 
 			return TRUE; //召喚成功.
 		}
@@ -229,6 +226,8 @@ void LaserManager::DeleteLaser(int idx) {
 
 	laser[idx].ValidFlag = 0;       //無効にする.
 	laser[idx].type = Laser_Normal; //ノーマルモードに戻す.
+	laser[idx].goalPos = {0, 0};    //リセット.
+	laser[idx].isGoGoal = false;    //目標地点なし.
 }
 //レーザー反射.
 void LaserManager::ReflectLaser(int idx)
@@ -247,17 +246,13 @@ void LaserManager::ReflectLaser(int idx)
 		dy /= length;
 	}
 
-	// レーザーの現在速度(x, y)
-	double nowSpeedX = laser[idx].sx;
-	double nowSpeedY = laser[idx].sy;
-	// 速度ベクトルを計算.
-	double speedVector = sqrt(pow(nowSpeedX, 2) + pow(nowSpeedY, 2)); //vector = √(x*x + y*y)
-
-	// 反射後の速度を設定（元の速度の大きさを保持）
-	// ※プレイヤーから外向きの方向に反射.
-	// ※反射方向 = プレイヤーからレーザーへの方向ベクトル.
-	laser[idx].sx = -dx * speedVector;
-	laser[idx].sy = -dy * speedVector;
+	//反射時の元の角度.
+	double ang = _dig(atan2(laser[idx].vy, laser[idx].vx));
+	//角度を逆方向へ(少しだけランダムでずれる)
+	ang += 180 + (float)RndNum(-200, 200)/10;
+	//角度反映.
+	laser[idx].vx = cos(_rad(ang));
+	laser[idx].vy = sin(_rad(ang));
 
 	// レーザーをプレイヤーから少し離れた位置に移動（重複当たり判定を防ぐ）
 	double pushDistance = PLAYER_SIZE / 2.0 + 5; // プレイヤーサイズの半分 + 余裕
@@ -272,19 +267,14 @@ void LaserManager::ReflectLaser(int idx)
 		assert(p_meteoMng != nullptr); //ポインタが空でないことを確認.
 
 		DBL_XY laserPos = { laser[idx].x, laser[idx].y }; //レーザーの現在位置.
-		DBL_XY nearestMeteoPos{};
+		DBL_XY meteoPos{};
 
 		//最も近い隕石の位置を取得する.
-		bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
+		bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &meteoPos);
 		//隕石があった場合.
 		if (hasMeteo) {
-			laser[idx].meteoPos = nearestMeteoPos; //登録.
-		}
-		//隕石がなかった場合.
-		else {
-			//ランダムで適当に.
-			laser[idx].meteoPos.x = RndNum(WINDOW_WID / 2 - METEO_GOAL_RAND_RANGE, WINDOW_WID / 2 + METEO_GOAL_RAND_RANGE);
-			laser[idx].meteoPos.y = RndNum(WINDOW_HEI / 2 - METEO_GOAL_RAND_RANGE, WINDOW_HEI / 2 + METEO_GOAL_RAND_RANGE);
+			laser[idx].goalPos  = meteoPos; //登録.
+			laser[idx].isGoGoal = true;
 		}
 	}
 }
@@ -297,8 +287,8 @@ void LaserManager::LaserNorTracking(int idx)
 	{
 		// 現在のプレイヤー方向への角度を計算
 		double targetAngle = atan2(plyPos.y - laser[idx].y, plyPos.x - laser[idx].x);
-		// レーザーの現在の移動方向の角度
-		double currentAngle = atan2(laser[idx].sy, laser[idx].sx);
+		// レーザーの現在の移動方向
+		double currentAngle = atan2(laser[idx].vy, laser[idx].vx);
 		// 角度の差分を計算
 		double angleDiff = targetAngle - currentAngle;
 
@@ -307,87 +297,72 @@ void LaserManager::LaserNorTracking(int idx)
 		while (angleDiff < -M_PI) angleDiff += 2 * M_PI;
 
 		// 最大旋回角度を制限（1フレームにn度まで）
-		const double maxTurn = M_PI / 180 * OBSTACLE4_LASER_NOR_ROT_MAX;
+		const double maxTurn = _rad(OBSTACLE4_LASER_NOR_ROT_MAX) * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		if (angleDiff > +maxTurn) angleDiff = +maxTurn;
 		if (angleDiff < -maxTurn) angleDiff = -maxTurn;
 
-		// 新しい角度を計算して速度を更新
+		// 新しい角度を計算.
 		double newAngle = currentAngle + angleDiff;
-		laser[idx].sx += (int)(cos(newAngle) * 30);  // X方向速度を更新
-		laser[idx].sy += (int)(sin(newAngle) * 30);  // Y方向速度を更新
+		laser[idx].vx += cos(newAngle);
+		laser[idx].vy += sin(newAngle);
 	}
 }
 //レーザー(reflected)の隕石追尾.
 void LaserManager::LaserRefTracking(int idx)
 {
-	//一定時間のみ追尾.
-	if (laser[idx].Counter < OBSTACLE4_LASER_REF_TRACK_TIME)
-	{
-		//隕石が存在する場合は隕石に向かって追尾だぜ.
-		//隕石方向への角度を計算(いやむずいて).
-		double dx = laser[idx].meteoPos.x - laser[idx].x;
-		double dy = laser[idx].meteoPos.y - laser[idx].y;
-		double targetAngle = atan2(
-			laser[idx].meteoPos.y - laser[idx].y,
-			laser[idx].meteoPos.x - laser[idx].x);
-
-		//レーザーの現在の移動方向の角度.
-		double currentAngle = atan2(laser[idx].sy, laser[idx].sx);
-
-		//角度の差分を計算.
-		double angleDiff = targetAngle - currentAngle;
-
-		// 角度差分を-PI～PIの範囲に正規化.
-		while (angleDiff > M_PI)
+	//目標地点に向かうなら.
+	if (laser[idx].isGoGoal) {
+		//一定時間のみ追尾.
+		if (laser[idx].Counter > 10 &&
+		    laser[idx].Counter < OBSTACLE4_LASER_REF_TRACK_TIME) 
 		{
-			angleDiff -= 2 * M_PI;
+			//目標地点までの座標差と方角.
+			double targetAngle = atan2(laser[idx].goalPos.y - laser[idx].y, laser[idx].goalPos.x - laser[idx].x);
+			//レーザーの現在の移動方向の角度.
+			double currentAngle = atan2(laser[idx].vy, laser[idx].vx);
+			//角度の差分を計算.
+			double angleDiff = targetAngle - currentAngle;
+
+			// 角度差分を-PI～PIの範囲に正規化.
+			while (angleDiff > M_PI)
+			{
+				angleDiff -= 2 * M_PI;
+			}
+			while (angleDiff < -M_PI)
+			{
+				angleDiff += 2 * M_PI;
+			}
+
+			/*
+			double distance = sqrt(dx * dx + dy * dy); //隕石までの距離を計算
+			if (distance < 50.0)
+			{
+				//非常に近い場合は大きく曲がる90度まで.
+				maxTurn = M_PI / 180 * 90;
+			}
+			else if (distance < 100.0)
+			{
+				// 近い場合は中程度に曲がる（45度まで）.
+				maxTurn = M_PI / 180 * 45;
+			}
+			else
+			{
+				// 遠い場合は通常の旋回（20度まで）
+				maxTurn = M_PI / 180 * 20;
+			}
+			*/
+
+			// 反射レーザーの旋回角度（通常レーザーより少し速く）.
+			double maxTurn = _rad(OBSTACLE4_LASER_REF_ROT_MAX) * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+			if (angleDiff > +maxTurn) angleDiff = +maxTurn;
+			if (angleDiff < -maxTurn) angleDiff = -maxTurn;
+
+			//新しい角度を計算して速度を更新
+			double newAngle = currentAngle + angleDiff;
+
+			// 方向を計算して設定.
+			laser[idx].vx = cos(newAngle);
+			laser[idx].vy = sin(newAngle);
 		}
-		while (angleDiff < -M_PI)
-		{
-			angleDiff += 2 * M_PI;
-		}
-
-		/*
-		double distance = sqrt(dx * dx + dy * dy); //隕石までの距離を計算
-		if (distance < 50.0)
-		{
-			//非常に近い場合は大きく曲がる90度まで.
-			maxTurn = M_PI / 180 * 90;
-		}
-		else if (distance < 100.0)
-		{
-			// 近い場合は中程度に曲がる（45度まで）.
-			maxTurn = M_PI / 180 * 45;
-		}
-		else
-		{
-			// 遠い場合は通常の旋回（20度まで）
-			maxTurn = M_PI / 180 * 20;
-		}
-		*/
-
-		// 反射レーザーの旋回角度（通常レーザーより少し速く）.
-		double maxTurn = _rad(OBSTACLE4_LASER_REF_ROT_MAX);
-		if (angleDiff > +maxTurn) angleDiff = +maxTurn;
-		if (angleDiff < -maxTurn) angleDiff = -maxTurn;
-
-		//新しい角度を計算して速度を更新
-		double newAngle = currentAngle + angleDiff;
-
-		// 現在の速度の大きさを保持.
-		double currentSpeed = sqrt(laser[idx].sx * laser[idx].sx +
-			laser[idx].sy * laser[idx].sy);
-
-		//固定の速度を使用(回転を防ぐ.
-		if (currentSpeed < 5.0)
-		{
-			currentSpeed = 5.0;
-		}
-
-		const double fixedSpeed = 100.0; // 固定速度.
-
-		// 新しい方向に速度を設定
-		laser[idx].sx = cos(newAngle) * currentSpeed;
-		laser[idx].sy = sin(newAngle) * currentSpeed;
 	}
 }

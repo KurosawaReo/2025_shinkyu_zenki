@@ -16,6 +16,7 @@ BOOL   IsHitBox		(const Box*    box1, const Box*    box2,  BOOL isCenter);
 BOOL   IsHitLine	(const Line*   line, const Circle* cir);
 
 int    RndNum		(int st, int ed, BOOL isDxRnd = FALSE);
+double GetDecimal	(double num);
 
 //ˆÚ“®ŒÀŠE.
 void   FixPosInArea (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);

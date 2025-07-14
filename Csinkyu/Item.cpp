@@ -36,8 +36,6 @@ void Item::Reset()
 	// サイズと色の設定
 	size.x = 20;
 	size.y = 20;
-	clr[0] = GetColor(  0, 255, 250);
-	clr[1] = GetColor(128, 255, 250); //0xA0FFFA
 
 	// アイテムの状態設定
 	active = TRUE;
@@ -134,8 +132,8 @@ void Item::Draw()
 		Iy = (float)itemY;
 
 		// 描画（既存のコードを活用）
-		Box box1 = { {Ix, Iy}, {itemW,   itemH  }, clr[0] }; //{pos}, {size}, color.
-		Box box2 = { {Ix, Iy}, {itemW-2, itemH-2}, clr[1] }; //{pos}, {size}, color.
+		Box box1 = { {Ix, Iy}, {itemW,   itemH  }, GetColor(0, 255, 0) }; //{pos}, {size}, color.
+		Box box2 = { {Ix, Iy}, {itemW-2, itemH-2}, GetColor(0, 255, 0) }; //{pos}, {size}, color.
 
 		DrawBoxST(&box1, TRUE, FALSE);
 		DrawBoxST(&box2, TRUE, FALSE);
