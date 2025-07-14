@@ -44,6 +44,7 @@ public:
 	void Draw  ();
 	//•`‰æŒn.
 	void DrawObstFlash();
+	void DrawPreLaserDots();
 	//ˆÚ“®Œn.
 	void enemy4Move();
 	virtual void Move() = 0; //–C‘ä‚É‚æ‚Á‚Ä“®‚«‚ªˆá‚¤¨override‚ğ—˜—p‚µA"“®‚«"‚¾‚¯‚ğ•Ï‚¦‚é.

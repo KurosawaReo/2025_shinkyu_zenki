@@ -60,6 +60,5 @@ public:
 	BOOL SpawnLaser  (float x, float y);	//¢Š«.
 	void DeleteLaser (int idx);             //Á‹.
 	void ReflectLaser(int idx);				//”½Ë.
-	
 	void ReflectedLaserTracking(int idx);   //”½ËƒŒ[ƒU[‚Ìè¦Î’Ç”ö.
 };

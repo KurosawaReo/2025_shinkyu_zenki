@@ -163,7 +163,7 @@ struct GameData
 #define OBSTACLE4_SHOT_RESET		(80)			//砲台の発射リセット時間.
 #define OBSTACLE4_SHOT_START		(30)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN			(10)			//砲台の発射間隔時間.
-#define OBSTACLE4_LASER_SPEED		(150)			//レーザーの速度.
+#define OBSTACLE4_LASER_SPEED		(1000)			//レーザーの速度.
 #define OBSTACLE4_ROT_LIMIT			(90)			//曲がる限界角度.
 #define OBSTACLE4_LASER_LIM			(100)			//レーザーの最大数.
 #define OBSTACLE4_LINE_MAX			(10000)			//レーザーで描画する線の最大数.
@@ -181,8 +181,8 @@ struct GameData
 #define OBSTACLE5_FLASH_ALPHA_TM	(2)             //フラッシュエフェクトの透明化速度.
 
 #define METEO_CNT_MAX				(256)			//隕石の最大出現数.
-#define METEO_SPAWN_SPAN			(10)			//隕石の出現時間間隔.
-#define METEO_SPEED					(5)				//移動速度.
+#define METEO_SPAWN_SPAN			(30)			//隕石の出現時間間隔.
+#define METEO_SPEED					(1)				//移動速度.
 #define METEO_ERASE_OUT_DIS			(50)			//隕石が画面外で消える距離.
 #define METEO_GOAL_RAND_RANGE		(500)			//隕石の目標地点の乱数範囲.
 
@@ -190,3 +190,11 @@ struct GameData
 #define METEO_LINE_CNT_MAX			(16)			//最大n角形.
 #define METEO_LINE_DIS_MIN			(40)			//頂点の最短距離.
 #define METEO_LINE_DIS_MAX			(60)			//頂点の最大距離.
+
+#define OBSTACLE5_STATE_WARNING     (0)    // 予告状態
+#define OBSTACLE5_STATE_ACTIVE      (1)     // アクティブ状態
+#define OBSTACLE5_WARNING_DURATION  (120.0f)  // 2秒間の予告
+#define OBSTACLE5_ACTIVE_DURATION   (60.0f)    // 1秒間のアクティブ
+#define OBSTACLE5_SPAWN_INTERVAL    (300)       // 5秒間隔
+#define OBSTACLE5_MAX_SIMULTANEOUS  (3)       // 最大同時出現数
+#define OBSTACLE5_MIN_DISTANCE      (100)         // 最小距離
