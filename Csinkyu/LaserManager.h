@@ -21,6 +21,8 @@ typedef struct tagLASER_DATA
 	double    x, y;      //現在の座標.
 	double    sx, sy;    //現在の速度.
 
+	DBL_XY    meteoPos;  //最寄り隕石座標を記録する用.
+
 	int       LogNum;    //記録した軌跡の数.
 	float     Counter;   //追尾を初めてから通過した時間.
 
@@ -47,6 +49,8 @@ private:
 	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
 	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 
+	DBL_XY plyPos; //プレイヤー座標保管用.
+
 	GameData*     p_data{};
 	Player*       p_player{};
 	MeteoManager* p_meteoMng{};
@@ -57,8 +61,13 @@ public:
 	void Update();
 	void Draw();
 
-	BOOL SpawnLaser  (float x, float y);	//召喚.
-	void DeleteLaser (int idx);             //消去.
-	void ReflectLaser(int idx);				//反射.
-	void ReflectedLaserTracking(int idx);   //反射レーザーの隕石追尾.
+	void UpdateLaser();                      //各レーザーの更新.
+	void UpdateLaserLine();                  //各レーザー描画線の更新.
+
+	BOOL SpawnLaser      (float x, float y); //召喚.
+	void DeleteLaser     (int idx);          //消去.
+	void ReflectLaser    (int idx);			 //反射.
+
+	void LaserNorTracking(int idx);          //レーザー(normal)   の隕石追尾.
+	void LaserRefTracking(int idx);          //レーザー(reflected)の隕石追尾.
 };

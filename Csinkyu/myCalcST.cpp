@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/07/03
+   ver.2025/07/14
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -172,18 +172,18 @@ DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
     //角度をradに変換し、座標の計算.
-    double y = sin(ang * M_PI/180) * len;
-    double x = cos(ang * M_PI/180) * len;
+    double y = sin(_rad(ang)) * len;
+    double x = cos(_rad(ang)) * len;
 
     return { stPos.x+x, stPos.y+y }; //終点座標を返す.
 }
 
 //角度から座標を求める.
-DBL_XY CalcAngToPos(double ang) {
+DBL_XY CalcDigToPos(double dig) {
 	//座標vector(値が-1～+1になる)を返す.
-	return { cos(ang * 180/M_PI), sin(ang * 180/M_PI) };
+	return { cos(_rad(dig)), sin(_rad(dig)) };
 }
-//ラジアンから座標を求める.
+//角度から座標を求める.
 DBL_XY CalcRadToPos(double rad) {
 	//座標vector(値が-1～+1になる)を返す.
 	return { cos(rad), sin(rad) };
