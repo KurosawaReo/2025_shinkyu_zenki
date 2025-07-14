@@ -205,7 +205,7 @@ void GameManager::UpdateTitle()
 }
 void GameManager::UpdateGame() {
 	
-	DrawFormatString(30, 200, 0xFFFFFF, _T("%d"), GetJoypadInputState(DX_INPUT_PAD1));
+//	DrawFormatString(30, 200, 0xFFFFFF, _T("%d"), GetJoypadInputState(DX_INPUT_PAD1));
 
 	if (tmSlowMode.GetIsMove()) {
 		//時間切れで解除.
@@ -260,34 +260,17 @@ void GameManager::DrawTitle() {
 }
 void GameManager::DrawGame() {
 
-	DrawObjests();
+	DrawObjects();
 
 	//タイマー表示.
 	DrawFormatStringToHandle(
 		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
 	);
-	//カウントダウン中.
-	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
-	{
-		//テキストを入れる用.
-		TCHAR    txt[256]{};
-		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF};
-
-		//テキストの設定.
-//		sprintf (txt,    "time:%d",  (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
-		wsprintf(txt, _T("time:%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
-//		strcpy (str.text, txt);	//char型の文字列をコピー.
-		_tcscpy(str.text, txt); //TCHAR型の文字列をコピー.
-
-
-		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
-		//画面中央に数字を表示.
-		DrawStringST(&str, TRUE, data.font1); //fontあり.
-	}
+	DrawSlowMode();
 }
 void GameManager::DrawEnd() {
 	
-	DrawObjests();
+	DrawObjects();
 
 	//タイマー表示.
 	DrawFormatStringToHandle(
@@ -300,7 +283,6 @@ void GameManager::DrawEnd() {
 		STR_DRAW str2 = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0xFFFFFF };
 		swprintf(str2.text, _T("time:%.3f"), tmGame.GetPassTime());
 
-
 		//画面中央に文字を表示.
 		DrawStringST(&str, TRUE, data.font2); //fontあり.
 		DrawStringST(&str2, TRUE, data.font2);
@@ -308,7 +290,7 @@ void GameManager::DrawEnd() {
 }
 
 //背景の描画.
-void GameManager::DrawBG() const {
+void GameManager::DrawBG() {
 
 	//背景デザイン.
 	for (int x = 0; x < WINDOW_WID; x += 5) {
@@ -319,12 +301,24 @@ void GameManager::DrawBG() const {
 	}
 	//背景(スローモード).
 	if (data.isSlow) {
-		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
-		DrawBoxST(&box, FALSE);
+		//背景色.
+		{
+			Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
+			DrawBoxST(&box, FALSE);
+		}
+		//枠アニメーション.
+		{
+			float anim = 0.5f-(tmSlowMode.GetPassTime()-4.5f);
+			anim = min(anim, 1); //上限は1.
+			printfDx(L"anim:%f\n", anim);
+
+			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * anim, WINDOW_HEI * anim}, 0x00FF00 };
+			DrawBoxST(&box, TRUE, FALSE);
+		}
 	}
 }
 //オブジェクトの描画.
-void GameManager::DrawObjests() {
+void GameManager::DrawObjects() {
 
 #if defined ALL_OBSTACLE
 	for (int i = 0; i < _countof(obstacle); i++) {
@@ -346,6 +340,35 @@ void GameManager::DrawObjests() {
 	item.Draw();
 	//プレイヤーclass.
 	player.Draw();
+}
+//スローモード演出.
+void GameManager::DrawSlowMode() {
+
+	//カウントダウン中.
+	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
+	{
+		//テキストを入れる用.
+		TCHAR    txt[256]{};
+		STR_DRAW str = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0x00FF00 };
+
+		//テキストの設定.
+//		sprintf (txt,    "time:%d",  (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
+		wsprintf(txt, _T("time:%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+		//		strcpy (str.text, txt);	//char型の文字列をコピー.
+		_tcscpy(str.text, txt); //TCHAR型の文字列をコピー.
+
+		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+
+		//画面中央に数字を表示.
+		{
+			//小数だけ取り出す.
+			double dec = GetDecimal(tmSlowMode.GetPassTime());
+
+			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));
+			DrawStringST(&str, TRUE, data.font1); //fontあり.
+			SetDrawBlendModeST(MODE_NONE, 255);
+		}
+	}
 }
 
 //ゲーム終了.
