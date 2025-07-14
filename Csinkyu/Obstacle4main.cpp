@@ -49,6 +49,10 @@ void Obstacle4main::Draw()
 // 発射エフェクトの処理.
 void Obstacle4main::DrawObstFlash() {
 
+	// レーザー発射前の予告●を描画
+	DrawPreLaserDots();
+
+
 	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
 	{
 		if (flashEffect[i].ValidFlag == 0)
@@ -72,14 +76,14 @@ void Obstacle4main::DrawObstFlash() {
 
 		//エフェクトの位置を時間経過とともにプレイヤー方向に移動
 		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
-		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 30; // 30ピクセル分移動
-		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 30;
+		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 60; // 30ピクセル分移動
+		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 60;
 
-		//三角形の頂点を計算(プレイヤーの方向を向く).
+		////三角形の頂点を計算(プレイヤーの方向を向く).
 		double angle = flashEffect[i].angle;
 		double cos_a = cos(angle);
 		double sin_a = sin(angle);
-		//外側の三角形(大きい)(なんかすごくなっちゃった)
+		////外側の三角形(大きい)(なんかすごくなっちゃった)
 		int x1 = _int(currentX + cos_a * effectSize);//先端.
 		int y1 = _int(currentY + sin_a * effectSize);
 		int x2 = _int(currentX - cos_a * effectSize / 3 + sin_a * effectSize / 2);//左後.
@@ -101,7 +105,17 @@ void Obstacle4main::DrawObstFlash() {
 		DrawTriangle(x1, y1, x2, y2, x3, y3, GetColor(0, 255, 255), FALSE);
 
 		//内側により明るい三角形を描画.
-		//DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
+		DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
+
+		//エフェクト内に3つの●を描画
+		//int dotSize = effectSize / 10; // 三角形のサイズに応じて●のサイズを調整
+		//int dotAlpha = alphaValue / 1; // 少し透明度を下げる
+		//SetDrawBlendMode(DX_BLENDMODE_ADD, dotAlpha);
+
+		// 3つの●を三角形の内部に配置
+		//DrawCircle(_int(currentX + cos_a * effectSize / 3), _int(currentY + sin_a * effectSize / 3), dotSize, GetColor(0, 255, 255), FALSE);
+		//DrawCircle(_int(currentX - cos_a * effectSize / 6 + sin_a * effectSize / 4), _int(currentY - sin_a * effectSize / 6 - cos_a * effectSize / 4), dotSize, GetColor(0, 255, 255), FALSE);
+		//DrawCircle(_int(currentX - cos_a * effectSize / 6 - sin_a * effectSize / 4), _int(currentY - sin_a * effectSize / 6 + cos_a * effectSize / 4), dotSize, GetColor(0, 255, 255), FALSE);
 
 		//エフェクトのカウンタを更新
 		flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
@@ -114,6 +128,26 @@ void Obstacle4main::DrawObstFlash() {
 
 	//通常の描画モードに戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
+// レーザー発射前の予告●を描画
+void Obstacle4main::DrawPreLaserDots() {
+	// 発射タイミングが近づいている場合のみ●を表示
+	if (Hsc <= HscTm + 60) { // 発射60フレーム前から表示
+		// 点滅効果を作成
+		float blinkProgress = (HscTm + 60 - Hsc) / 60.0f; // 0.0から1.0
+		int blinkAlpha = _int(128 + 127 * sin(blinkProgress * 3.14159f * 8)); // 点滅
+
+		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
+
+		// 砲台の位置に3つの●を描画
+		int dotSize = 3+ _int(blinkProgress * 10); // サイズも徐々に大きく
+		DrawCircle(_int(Hx - 10), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(Hx), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(Hx + 10), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	}
 }
 
 /**

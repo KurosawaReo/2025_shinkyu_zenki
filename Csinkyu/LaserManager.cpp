@@ -9,8 +9,8 @@
 
 void LaserManager::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng) {
 	//実体取得.
-	p_data     = _data;
-	p_player   = _player;
+	p_data = _data;
+	p_player = _player;
 	p_meteoMng = _meteoMng;
 }
 void LaserManager::Reset() {
@@ -27,7 +27,7 @@ void LaserManager::Reset() {
 void LaserManager::Update() {
 
 	DBL_XY plyPos = p_player->GetPos();        // プレイヤーの現在位置を取得
-	const double pSizeHalf = PLAYER_SIZE/2.0;  // プレイヤーの当たり判定サイズの半分
+	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
 	// 反射モード中かどうかを一度だけ判定
 	bool isReflectionMode = p_player->IsReflectionMode();
@@ -42,49 +42,49 @@ void LaserManager::Update() {
 		//レーザータイプ別.
 		switch (laser[i].type)
 		{
-			case Laser_Normal:
-				// プレイヤーとレーザーの当たり判定
-				if ((laser[i].x > plyPos.x - pSizeHalf && laser[i].x < plyPos.x + pSizeHalf) &&
-					(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
-				{
-					//反射あり.
-					if (p_player->IsReflectionMode())
-					{
-						ReflectLaser(i);           //レーザーを反射.
-						p_player->UseReflection(); //クールダウン開始.			
-					}
-					//反射なし.
-					else
-					{
-						DeleteLaser(i);
-						p_player->PlayerDeath(); //プレイヤー死亡.
-					}
-					isHit = true; //当たったことを記録.
-				}
-				break;
-
-			case Laser_Reflected:
+		case Laser_Normal:
+			// プレイヤーとレーザーの当たり判定
+			if ((laser[i].x > plyPos.x - pSizeHalf && laser[i].x < plyPos.x + pSizeHalf) &&
+				(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
 			{
-				// 反射したレーザーは隕石追尾処理を行う
-				//ReflectedLaserTracking(i);
-			
-				/*
-				   【仮】TODO: レーザーの円形当たり判定.
-				*/
-				Circle hit = { {laser[i].x, laser[i].y}, 10, {} };
-
-				//隕石と当たっているなら.
-				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
-					DeleteLaser(i);
-					isHit = true;
-					break;
+				//反射あり.
+				if (p_player->IsReflectionMode())
+				{
+					ReflectLaser(i);           //レーザーを反射.
+					p_player->UseReflection(); //クールダウン開始.			
 				}
-				ReflectedLaserTracking(i);
+				//反射なし.
+				else
+				{
+					DeleteLaser(i);
+					p_player->PlayerDeath(); //プレイヤー死亡.
+				}
+				isHit = true; //当たったことを記録.
 			}
 			break;
 
-			//想定外の値エラー.
-			default: assert(FALSE); break;
+		case Laser_Reflected:
+		{
+			// 反射したレーザーは隕石追尾処理を行う
+			//ReflectedLaserTracking(i);
+
+			/*
+			   【仮】TODO: レーザーの円形当たり判定.
+			*/
+			Circle hit = { {laser[i].x, laser[i].y}, 10, {} };
+
+			//隕石と当たっているなら.
+			if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
+				DeleteLaser(i);
+				isHit = true;
+				break;
+			}
+			ReflectedLaserTracking(i);
+		}
+		break;
+
+		//想定外の値エラー.
+		default: assert(FALSE); break;
 		}
 
 		//当たったら処理終了.
@@ -160,11 +160,11 @@ void LaserManager::Update() {
 void LaserManager::Draw() {
 
 #if defined DEBUG_LASER_ACTIVE
-//デバッグ表示.
+	//デバッグ表示.
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
 	{
-		int x =   0 +  8 * (i%200);
-		int y = 100 + 16 * (i/200);
+		int x = 0 + 8 * (i % 200);
+		int y = 100 + 16 * (i / 200);
 		//DrawString(0, 80, _T("レーザー痕跡のactive"), 0xFF00FF);
 		//DrawFormatString(x, y, 0xFF00FF, _T("%d"), line[i].ValidFlag);
 	}
@@ -187,10 +187,11 @@ void LaserManager::Draw() {
 		//線の色(時間経過で色が変化)
 		switch (line[i].type)
 		{
-			case Laser_Normal:    tmpLine.clr = GetColor(50, clr, 255); break;
-			case Laser_Reflected: tmpLine.clr = GetColor(clr, 0, clr); break;
+		case Laser_Normal:    tmpLine.clr = GetColor(50, clr, 255); break;
+		case Laser_Reflected: tmpLine.clr = GetColor(clr, 0, clr); break;
 
-			default: assert(FALSE); break;
+		default: assert(FALSE); break;///97
+
 		}
 		DrawLineST(&tmpLine); //描画.
 
@@ -228,7 +229,7 @@ BOOL LaserManager::SpawnLaser(float x, float y) {
 			laser[i].Counter = 0;			// 経過時間カウンタ初期化
 			laser[i].LogNum = 0;			// 軌跡カウンタ初期化
 			laser[i].ValidFlag = 1;			// レーザーを有効化
-			
+
 			return TRUE; //召喚成功.
 		}
 	}
@@ -294,12 +295,16 @@ void LaserManager::ReflectedLaserTracking(int idx)
 	//最も近い隕石の位置を取得するぜ.
 	DBL_XY nearestMeteoPos{};
 	bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &nearestMeteoPos);
-	
+
 	//隕石が1つでも存在すれば.
 	if (hasMeteo)
 	{
 		//隕石が存在する場合は隕石に向かって追尾だぜ.
 		//隕石方向への角度を計算(いやむずいて).
+		// 隕石までの距離を計算
+		double dx = nearestMeteoPos.x - laser[idx].x;
+		double dy = nearestMeteoPos.y - laser[idx].y;
+		double distance = sqrt(dx * dx + dy * dy);
 		double targetAngle = atan2(
 			nearestMeteoPos.y - laser[idx].y,
 			nearestMeteoPos.x - laser[idx].x);
@@ -320,7 +325,24 @@ void LaserManager::ReflectedLaserTracking(int idx)
 			angleDiff += 2 * M_PI;
 		}
 		// 反射レーザーの旋回角度（通常レーザーより少し速く）.
-		const double maxTurn = M_PI / 180 * 20;//二十度まで.
+
+		double maxTurn;
+		if (distance < 50.0)
+		{
+			//非常に近い場合は大きく曲がる90度まで.
+			maxTurn = M_PI / 180 * 90;
+		}
+		else if (distance < 100.0)
+		{
+			// 近い場合は中程度に曲がる（45度まで）.
+			maxTurn = M_PI / 180 * 45;
+		}
+		else
+		{
+			// 遠い場合は通常の旋回（20度まで）
+			maxTurn = M_PI / 180 * 20;
+		}
+
 		if (angleDiff > maxTurn)angleDiff = maxTurn;
 		if (angleDiff < -maxTurn)angleDiff = -maxTurn;
 
