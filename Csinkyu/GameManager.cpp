@@ -355,25 +355,16 @@ void GameManager::DrawSlowMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストを入れる用.
-		TCHAR    txt[256]{};
 		STR_DRAW str = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0x00FF00 };
-
 		//テキストの設定.
-//		sprintf (txt,    "time:%d",  (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
-		wsprintf(txt, _T("time:%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
-		//		strcpy (str.text, txt);	//char型の文字列をコピー.
-		_tcscpy(str.text, txt); //TCHAR型の文字列をコピー.
-
 		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.
 		{
-			//小数だけ取り出す.
-			double dec = GetDecimal(tmSlowMode.GetPassTime());
-
-			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));
-			DrawStringST(&str, TRUE, data.font1); //fontあり.
-			ResetDrawBlendMode();
+			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
+			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
+			DrawStringST(&str, TRUE, data.font1);              //fontあり.
+			ResetDrawBlendMode();                              //戻す.
 		}
 	}
 }

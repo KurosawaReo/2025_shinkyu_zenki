@@ -42,11 +42,6 @@ void Player::Draw()
 	if (isDebug) {
 		DrawString(0, 430, _T("[Debug] 無敵モード"), 0xFFFFFF);
 	}
-	// 反射モード表示.
-	if (IsReflectionMode())
-	{
-		DrawString(0, 450, _T("反射モード ON"), 0x00FF00);
-	}
 
 	//有効なら.
 	if (active) {
