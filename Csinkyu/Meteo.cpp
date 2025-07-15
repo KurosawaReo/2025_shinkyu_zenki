@@ -31,7 +31,7 @@ void Meteo::Update() {
 		//状態別処理.
 		switch (state) 
 		{
-			case Meteo_Normal: 
+			case Meteo_Normal:
 				//画面外で消去.
 				if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, TRUE)){
 					active = FALSE; //無効にする.
@@ -59,7 +59,6 @@ void Meteo::Draw() {
 	
 	//隕石本体が有効なら.
 	if (active) {
-		
 		//破壊モード限定.
 		if (state == Meteo_Destroy) {
 			int pow = _int(min(255 * (float)(METEO_DEST_TIME-destroyCntr)/METEO_DEST_TIME, 255)); //少しずつ減少(255→0)
@@ -150,29 +149,31 @@ BOOL Meteo::IsHitMeteo(Circle* pos) {
 void Meteo::UpdateMeteoLine() {
 
 	//何度ずつずれるか.
-	float rot = (float)360 / shape.lineCnt; //360度÷描く線の数.
+	float rot = (float)360/shape.lineCnt; //360度÷描く線の数.
 
 	//回転しながら始点と終点を設定していく.
 	for (int i = 0; i < shape.lineCnt; i++) {
 
 		//要素数が0未満なら最大値へ移動する.
-		int bef = ((i - 1) < 0) ? shape.lineCnt - 1 : (i - 1);
+		int bef = ((i-1) < 0) ? shape.lineCnt-1 : (i-1);
 
-		shape.line[i].stPos = CalcLineAng(pos, ang+  i*rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
-		shape.line[i].edPos = CalcLineAng(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
+		shape.line[i].stPos = CalcArcPos(pos, ang+  i*rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
+		shape.line[i].edPos = CalcArcPos(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
 
-		//破壊モードなら.
+		//破壊時の回転アニメーション.
 		if (state == Meteo_Destroy) {
 
-			//隕石を構成する線の中央点を求める.
-			DBL_XY midPos = CalcMidPos(shape.line[i].stPos, shape.line[i].edPos);
-			//線の長さの半分を求める.
-			double len = CalcDis(shape.line[i].stPos, midPos);
-			//線の角度を求める.
-			double ang = CalcFacingAng(midPos, shape.line[i].stPos);
-			//新たな線の始点と終点を決める.
-			shape.line[i].stPos = CalcLineAng(midPos, ang    +destroyCntr*3, len);
-			shape.line[i].edPos = CalcLineAng(midPos, ang+180+destroyCntr*3, len);
+			//①隕石を構成する線の情報.
+			DBL_XY lineMidPos = CalcMidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
+			double lineLen    = CalcDis(shape.line[i].stPos, lineMidPos);             //長さの半分.
+			double lineAng    = CalcFacingAng(lineMidPos, shape.line[i].stPos);       //角度.
+			//②隕石の中央からどんどん離していく.
+			double pivotDis   = CalcDis(pos, lineMidPos);                             //隕石の中央からの距離.
+			double pivotAng   = CalcFacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.
+			DBL_XY newPos     = CalcArcPos(pos, pivotAng, pivotDis+destroyCntr);      //距離を増やす.
+			//③新たな線の始点と終点.
+			shape.line[i].stPos = CalcArcPos(newPos, lineAng    +destroyCntr, lineLen);
+			shape.line[i].edPos = CalcArcPos(newPos, lineAng+180+destroyCntr, lineLen);
 		}
 	}
 }

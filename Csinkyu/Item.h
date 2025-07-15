@@ -5,13 +5,9 @@ class Item
 {
 private:
 	DBL_XY pos{};    //座標.
-	INT_XY size{};   //サイズ.
+	DBL_XY size{};   //サイズ.
 	BOOL   active{}; //有効か.
 
-	float  Ix{}, Iy{};
-	double itemX{}, itemY{};
-	double itemW{}, itemH{};
-	int    itemFlag{};
 	int    itemGraph{};
 	float  itemCounter{};
 
@@ -30,7 +26,5 @@ public:
 	void OnHitPlayer();    // 当たったときの処理
 
 	// 便利な関数も追加
-	BOOL IsActive() const { return active && itemFlag; }
-	double GetX() const { return itemX; }
-	double GetY() const { return itemY; }
+	BOOL IsActive() const { return active; }
 };

@@ -23,7 +23,7 @@ BOOL   IsOutInArea   (DBL_XY  pos, INT_XY size, int left, int up, int right, int
 double CalcDis		 (INT_XY pos1,  INT_XY pos2);
 double CalcDis		 (DBL_XY pos1,  DBL_XY pos2);
 DBL_XY CalcMidPos	 (DBL_XY pos1,  DBL_XY pos2);
-DBL_XY CalcLineAng	 (DBL_XY stPos, double ang, double len);
+DBL_XY CalcArcPos	 (DBL_XY stPos, double ang, double len);
 double CalcFacingAng (DBL_XY stPos, DBL_XY targetPos);
 DBL_XY CalcDigToPos	 (double dig);
 DBL_XY CalcRadToPos	 (double rad);
