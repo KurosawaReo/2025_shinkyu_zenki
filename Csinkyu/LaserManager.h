@@ -50,7 +50,7 @@ private:
 	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
 	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
 
-	DBL_XY plyPos; //プレイヤー座標保管用.
+	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
 	GameData*     p_data{};
 	Player*       p_player{};

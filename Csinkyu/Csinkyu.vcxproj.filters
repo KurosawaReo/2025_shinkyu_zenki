@@ -21,6 +21,7 @@
     <ClCompile Include="myTimerST.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="mySoundST.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
@@ -40,5 +41,6 @@
     <ClInclude Include="myTimerST.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="mySoundST.h" />
   </ItemGroup>
 </Project>

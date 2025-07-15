@@ -101,9 +101,6 @@ BOOL Item::CheckHitPlayer()
 // プレイヤーと当たったときの処理
 void Item::OnHitPlayer()
 {
-	// ドットログを表示
-	//printfDx(_T("当たりました！ X:%.1f Y:%.1f\n"), itemX, itemY);
-
 	// アイテムを削除（非アクティブにする）
 	active = FALSE;
 	itemFlag = 0;
@@ -132,8 +129,8 @@ void Item::Draw()
 		Iy = (float)itemY;
 
 		// 描画（既存のコードを活用）
-		Box box1 = { {Ix, Iy}, {itemW,   itemH  }, GetColor(0, 255, 0) }; //{pos}, {size}, color.
-		Box box2 = { {Ix, Iy}, {itemW-2, itemH-2}, GetColor(0, 255, 0) }; //{pos}, {size}, color.
+		Box box1 = { {Ix, Iy}, {itemW,   itemH  }, COLOR_ITEM }; //{pos}, {size}, color.
+		Box box2 = { {Ix, Iy}, {itemW-2, itemH-2}, COLOR_ITEM }; //{pos}, {size}, color.
 
 		DrawBoxST(&box1, TRUE, FALSE);
 		DrawBoxST(&box2, TRUE, FALSE);

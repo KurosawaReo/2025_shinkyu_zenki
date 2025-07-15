@@ -75,16 +75,13 @@ BOOL MeteoManager::IsHitMeteos(Circle* pos, BOOL isDestroy) {
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		if (meteo[i].GetActive()) {
-
-			hit = meteo[i].IsHitMeteo(pos); //1こずつ判定.
-			//当たれば.
-			if (hit) {
-				if (isDestroy) {
-					meteo[i].Destroy(); //隕石を破壊.
-				}
-				return TRUE; //1つでも当たっている.
+		hit = meteo[i].IsHitMeteo(pos); //1こずつ判定.
+		//当たれば.
+		if (hit) {
+			if (isDestroy) {
+				meteo[i].Destroy(); //隕石を破壊.
 			}
+			return TRUE; //1つでも当たっている.
 		}
 	}
 	return FALSE; //どれも当たっていない.
@@ -99,8 +96,8 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		//有効なら.
-		if (meteo[i].GetActive()) {
+		//有効かつ、破壊されてないなら.
+		if (meteo[i].GetActive() && meteo[i].GetState() == Meteo_Normal) {
 
 			DBL_XY tmpPos = meteo[i].GetPos();          //1つずつ座標取得.
 			double tmpDis = CalcDis(tmpPos, _startPos); //距離を計算.

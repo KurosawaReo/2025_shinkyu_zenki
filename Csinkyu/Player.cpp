@@ -16,8 +16,14 @@ void Player::Init(GameData* _data)
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, BOOL _active) 
 {
-	hit    = {_pos, PLAYER_HIT_R, 0x000000};
-	active = _active;
+	hit       = {_pos, PLAYER_HIT_R, {} };
+	active    = _active;
+	isReflect = false;
+
+	//座標配列のリセット.
+	for (int i = 0; i < _countof(afterPos); i++) {
+		afterPos[i] = _pos;
+	}
 }
 //更新.
 void Player::Update()
@@ -29,15 +35,6 @@ void Player::Update()
 		isDebug = !isDebug;
 	}
 
-	//反射モードの状態をコンソールに出力（デバッグ用）
-//	if (input->IsPushKey(KEY_V)) {
-//		printf("Vキー押下中, クールダウン: %.1f\n", reflectionCooldown);
-//	}
-
-	if (reflectionCooldown > 0)
-	{
-		reflectionCooldown -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
-	}
 	//有効なら.
 	if (active) {
 		UpdateAfterImage();
@@ -52,17 +49,6 @@ void Player::Draw()
 		DrawString(0, 430, _T("[Debug] 無敵モード"), 0xFFFFFF);
 	}
 
-	// 反射モード表示.
-	if (IsReflectionMode())
-	{
-		DrawString(0, 430, _T("反射モード ON"), 0x00FF00);
-	}
-
-	// クールダウン表示.
-	if (reflectionCooldown > 0) {
-		DrawString(0, 470, _T("反射クールダウン中..."), 0xFF0000);
-	}
-
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
@@ -73,11 +59,11 @@ void Player::Draw()
 		//反射モード中の色.
 		if (IsReflectionMode())
 		{
-			box1.clr = box2.clr = GetColor(255, 155, 255);//青色.
+			box1.clr = box2.clr = COLOR_PLY_REFLECT;
 		}
 		//デバッグモード中.
 		if (isDebug) {
-			box1.clr = box2.clr = GetColor(255, 150, 150); //赤色.
+			box1.clr = box2.clr = COLOR_PLY_DEBUG;
 		}
 
 		DrawBoxST(&box1, TRUE, FALSE);
@@ -112,11 +98,9 @@ void Player::DrawAfterImage()
 	//残像処理.
 	for (int i = PLAYER_AFT_IMG_NUM - 1; i >= 0; i -= 1)
 	{
-		DBL_XY& pos = afterPos[i];
-
-		int alpha  = 105 - 105*i/PLAYER_AFT_IMG_NUM;
-		int alpha2 =  50 -  50*i/PLAYER_AFT_IMG_NUM;
-		int color  = GetColor(alpha, alpha, alpha);
+		int  alpha  = 105 - 105*i/PLAYER_AFT_IMG_NUM;
+		int  alpha2 =  50 -  50*i/PLAYER_AFT_IMG_NUM;
+		UINT color  = GetColor(alpha, alpha, alpha);
 
 		if (IsReflectionMode())
 		{
@@ -127,7 +111,7 @@ void Player::DrawAfterImage()
 			color = GetColor(alpha, alpha, alpha);
 		}
 
-		Box box3 = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, (UINT)color };
+		Box box3 = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, color };
 		DrawBoxST(&box3, TRUE, FALSE);
 	}
 
@@ -153,29 +137,16 @@ void Player::PlayerMove()
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
 }
 
+//反射モードかどうか.
 BOOL Player::IsReflectionMode() const
 {
-	InputST* input = InputST::GetPtr(); //input情報を取得.
-
-	int vKeyPressed = input->IsPushKey(KEY_V); //Vキーを押していれば.
-	int cooldownOK = (reflectionCooldown <= 0);
-
-	// デバッグ出力.
-	//DrawFormatString(0, 300, 0xFF0000, _T("反射モード確認: Vキー=%d"), vKeyPressed);
-	//DrawFormatString(0, 320, 0xFF0000, _T("クールダウン=%.1f"), reflectionCooldown);
-	//DrawFormatString(0, 340, 0xFF0000, _T("結果=%d"), (vKeyPressed & cooldownOK));
-
-	return vKeyPressed && cooldownOK;
+	return isReflect;
 }
-float Player::GetReflectionCooldown() const
+//反射モード設定.
+void Player::SetReflectionMode(BOOL tf)
 {
-	return reflectionCooldown; //クールダウン時間を返す.
+	isReflect = tf;
 }
-void Player::UseReflection()
-{
-	reflectionCooldown = PLAYER_REF_COOLDOWN; //クールダウン開始.
-}
-
 
 //死亡処理.
 void Player::PlayerDeath() {

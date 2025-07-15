@@ -31,7 +31,7 @@
    黒澤　 →線で構成された多角形の隕石
 
    [余裕があれば]
-   ・FPSはm秒待機ではなく、時間計測で測りたい.
+   ・FPSはm秒待機ではなく、時間計測で測りたい
 
    2025/06/23:
    仮で隕石が降るのを作ったが、正常かどうかが怪しい。
@@ -48,9 +48,16 @@
    ただ辺がうまく繋がらないため、そのロジックだけ見直す。
    (頂点の位置を回転を使って測れば行ける気がする)
 
-   2025/07/01:
-   当たると即死で難しく、ゲーム性の問題があるため
-   プレイヤーの周りに小さな四角を並べたバリアを作りたい。(HPは作らない)
+   2025/07/14:
+   あまり進捗なし。反射レーザーの回転問題は一旦直したが、挙動は怪しい。
+   前期発表会までにこの辺はやっておきたい
+   ・隕石が壊れる時、構成してる線がバラバラになるようにする
+   ・追尾レーザーとは別に、直線レーザーを追加する
+   ・サウンド関係
+
+   2025/07/15:
+   反射仮完成。このゲームの方針も見えてきた。
+   「隕石を破壊するとスコアを得られ、そのスコアを競うゲーム」で行ける気がする。
 /--------------------------------------------------------*/
 //#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
@@ -211,6 +218,7 @@ void GameManager::UpdateGame() {
 		//時間切れで解除.
 		if(tmSlowMode.GetPassTime() == 0){
 			data.isSlow = FALSE;
+			player.SetReflectionMode(FALSE); //反射モード終了.
 			tmSlowMode.Reset();
 		}
 	}
@@ -306,13 +314,13 @@ void GameManager::DrawBG() {
 			Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
 			DrawBoxST(&box, FALSE);
 		}
-		//枠アニメーション.
+		//枠線アニメーション.
 		{
-			float anim = 0.5f-(tmSlowMode.GetPassTime()-4.5f);
-			anim = min(anim, 1); //上限は1.
-			printfDx(L"anim:%f\n", anim);
-
-			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * anim, WINDOW_HEI * anim}, 0x00FF00 };
+			//最初の0.5秒
+			float time = 0.5f-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5f));
+			time = CalcNumEaseOut(time); //値の曲線変動.
+			
+			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
 			DrawBoxST(&box, TRUE, FALSE);
 		}
 	}
@@ -348,25 +356,16 @@ void GameManager::DrawSlowMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストを入れる用.
-		TCHAR    txt[256]{};
 		STR_DRAW str = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0x00FF00 };
-
 		//テキストの設定.
-//		sprintf (txt,    "time:%d",  (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
-		wsprintf(txt, _T("time:%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
-		//		strcpy (str.text, txt);	//char型の文字列をコピー.
-		_tcscpy(str.text, txt); //TCHAR型の文字列をコピー.
-
 		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.
 		{
-			//小数だけ取り出す.
-			double dec = GetDecimal(tmSlowMode.GetPassTime());
-
-			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));
-			DrawStringST(&str, TRUE, data.font1); //fontあり.
-			SetDrawBlendModeST(MODE_NONE, 255);
+			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
+			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
+			DrawStringST(&str, TRUE, data.font1);              //fontあり.
+			ResetDrawBlendMode();                              //戻す.
 		}
 	}
 }
@@ -383,6 +382,7 @@ void GameManager::GameEnd() {
 //アイテムを取った時.
 void GameManager::TakeItem() {
 
-	data.isSlow = TRUE; //スローモードにする.
-	tmSlowMode.Start(); //タイマー開始.
+	data.isSlow = TRUE;             //スローモードにする.
+	player.SetReflectionMode(TRUE); //反射モード開始.
+	tmSlowMode.Start();             //タイマー開始.
 }

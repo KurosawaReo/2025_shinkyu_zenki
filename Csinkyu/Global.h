@@ -129,7 +129,7 @@ struct GameData
 //#define DEBUG_LASER_ACTIVE //定義するとデバッグ表示ON.
 
 // - 定数 -
-#define IS_WINDOW_MODE					(TRUE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
 
 #define WINDOW_WID						(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
@@ -137,13 +137,12 @@ struct GameData
 
 #define FPS								(80)			//フレームレート.
 
-#define SLOW_MODE_TIME					(5)             //スローモード制限時間.
+#define SLOW_MODE_TIME					(7)             //スローモード制限時間.
 #define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
 
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(6)				//プレイヤー移動速度.
 #define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
-#define PLAYER_REF_COOLDOWN				(0)				//反射クールダウン時間.
 #define PLAYER_AFT_IMG_NUM				(10)            //残像データの数.
 
 #define ITEM_SIZE						(20)			//アイテムサイズ.
@@ -162,10 +161,11 @@ struct GameData
 #define OBSTACLE4_OUTER_MARGIN			(0)				//砲台の周回時の外側余白.
 #define OBSTACLE4_SHOT_RESET			(80)			//砲台の発射リセット時間.
 #define OBSTACLE4_SHOT_START			(30)			//砲台の発射開始時間.
-#define OBSTACLE4_SHOT_SPAN				(10)			//砲台の発射間隔時間.
+#define OBSTACLE4_SHOT_SPAN				(5)				//砲台の発射間隔時間.
 #define OBSTACLE4_LASER_NOR_ROT_MAX		(15)			//レーザー(normal)   の曲がる限界角度.
-#define OBSTACLE4_LASER_REF_ROT_MAX		(5)				//レーザー(reflected)の曲がる限界角度.
-#define OBSTACLE4_LASER_REF_TRACK_TIME	(30)			//レーザー(reflected)の追尾時間.
+#define OBSTACLE4_LASER_REF_ROT_MAX		(10)			//レーザー(reflected)の曲がる限界角度.
+#define OBSTACLE4_LASER_REF_TRACK_ST_TM	(10)			//レーザー(reflected)の追尾開始時間.
+#define OBSTACLE4_LASER_REF_TRACK_ED_TM	(30)			//レーザー(reflected)の追尾終了時間.
 #define OBSTACLE4_LASER_SPEED			(1)				//レーザーの速度.
 #define OBSTACLE4_LASER_LIM				(100)			//レーザーの最大数.
 #define OBSTACLE4_LINE_MAX				(10000)			//レーザーで描画する線の最大数.
@@ -183,9 +183,10 @@ struct GameData
 #define OBSTACLE5_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
 
 #define METEO_CNT_MAX					(256)			//隕石の最大出現数.
-#define METEO_SPAWN_SPAN				(30)			//隕石の出現時間間隔.
-#define METEO_SPEED						(1)				//移動速度.
-#define METEO_ERASE_OUT_DIS				(50)			//隕石が画面外で消える距離.
+#define METEO_SPAWN_SPAN				(60)			//隕石の出現時間間隔.
+#define METEO_SPEED						(2)				//移動速度.
+#define METEO_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
+#define METEO_DEST_TIME					(20)			//隕石の破壊時間.
 #define METEO_GOAL_RAND_RANGE			(500)			//隕石の目標地点の乱数範囲.
 
 #define METEO_LINE_CNT_MIN				(5)				//最低n角形.
@@ -200,3 +201,7 @@ struct GameData
 #define OBSTACLE5_SPAWN_INTERVAL		(300)			// 5秒間隔
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				// 最大同時出現数
 #define OBSTACLE5_MIN_DISTANCE			(100)			// 最小距離
+
+#define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
+#define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
+#define COLOR_ITEM						(GetColor(  0, 255,   0))
