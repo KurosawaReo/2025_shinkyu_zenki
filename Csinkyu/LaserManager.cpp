@@ -104,8 +104,7 @@ void LaserManager::UpdateLaser() {
 					//反射あり.
 					if (p_player->IsReflectionMode())
 					{
-						ReflectLaser(i);           //レーザーを反射.
-						p_player->UseReflection(); //クールダウン開始.			
+						ReflectLaser(i); //レーザーを反射.		
 					}
 					//反射なし.
 					else
@@ -122,6 +121,23 @@ void LaserManager::UpdateLaser() {
 
 			case Laser_Reflected:
 			{
+				//一定時間で目標地点を決める.
+				if (laser[i].Counter >= OBSTACLE4_LASER_REF_TRACK_ST_TM) {
+
+					assert(p_meteoMng != nullptr); //ポインタが空でないことを確認.
+
+					DBL_XY laserPos = { laser[i].x, laser[i].y }; //レーザーの現在位置.
+					DBL_XY meteoPos{};
+
+					//最も近い隕石の位置を取得する.
+					bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &meteoPos);
+					//隕石があった場合.
+					if (hasMeteo) {
+						laser[i].goalPos = meteoPos; //登録.
+						laser[i].isGoGoal = true;
+					}
+				}
+
 				Circle hit = { {laser[i].x, laser[i].y}, 10, {} }; //当たり判定円(仮)
 
 				//隕石と当たっているなら.
@@ -261,22 +277,6 @@ void LaserManager::ReflectLaser(int idx)
 
 	laser[idx].type    = Laser_Reflected; //反射モードへ.
 	laser[idx].Counter = 0;               //カウンターをリセット.
-
-	//目標地点を決める.
-	{
-		assert(p_meteoMng != nullptr); //ポインタが空でないことを確認.
-
-		DBL_XY laserPos = { laser[idx].x, laser[idx].y }; //レーザーの現在位置.
-		DBL_XY meteoPos{};
-
-		//最も近い隕石の位置を取得する.
-		bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &meteoPos);
-		//隕石があった場合.
-		if (hasMeteo) {
-			laser[idx].goalPos  = meteoPos; //登録.
-			laser[idx].isGoGoal = true;
-		}
-	}
 }
 
 //レーザー(normal)の隕石追尾.
@@ -313,8 +313,8 @@ void LaserManager::LaserRefTracking(int idx)
 	//目標地点に向かうなら.
 	if (laser[idx].isGoGoal) {
 		//一定時間のみ追尾.
-		if (laser[idx].Counter > 10 &&
-		    laser[idx].Counter < OBSTACLE4_LASER_REF_TRACK_TIME) 
+		if (laser[idx].Counter > OBSTACLE4_LASER_REF_TRACK_ST_TM &&
+		    laser[idx].Counter < OBSTACLE4_LASER_REF_TRACK_ED_TM) 
 		{
 			//目標地点までの座標差と方角.
 			double targetAngle = atan2(laser[idx].goalPos.y - laser[idx].y, laser[idx].goalPos.x - laser[idx].x);

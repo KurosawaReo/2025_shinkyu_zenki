@@ -21,15 +21,17 @@ void Meteo::Update() {
 
 	//隕石本体が有効なら.
 	if (active) {
+
+		//移動.
+		pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		//回転.
+		ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+
 		//状態別処理.
 		switch (state) 
 		{
 			case Meteo_Normal: 
-				//移動.
-				pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-				pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-				//回転.
-				ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 				//画面外で消去.
 				if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, TRUE)){
 					active = FALSE; //無効にする.
@@ -166,8 +168,8 @@ void Meteo::UpdateMeteoLine() {
 			//線の角度を求める.
 			double ang = CalcFacingAng(midPos, shape.line[i].stPos);
 			//新たな線の始点と終点を決める.
-			shape.line[i].stPos = CalcLineAng(midPos, ang, len);
-			shape.line[i].edPos = CalcLineAng(midPos, ang + 180, len);
+			shape.line[i].stPos = CalcLineAng(midPos, ang    +destroyCntr*5, len);
+			shape.line[i].edPos = CalcLineAng(midPos, ang+180+destroyCntr*5, len);
 		}
 	}
 }

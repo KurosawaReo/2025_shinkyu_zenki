@@ -218,6 +218,7 @@ void GameManager::UpdateGame() {
 		//時間切れで解除.
 		if(tmSlowMode.GetPassTime() == 0){
 			data.isSlow = FALSE;
+			player.SetReflectionMode(FALSE); //反射モード終了.
 			tmSlowMode.Reset();
 		}
 	}
@@ -318,7 +319,7 @@ void GameManager::DrawBG() {
 			float time = 0.5f-(tmSlowMode.GetPassTime()-4.5f); //最初の0.5秒
 			time = CalcNumEaseOut(time); //値の曲線変動.
 			
-			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, 0x00FF00 };
+			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
 			DrawBoxST(&box, TRUE, FALSE);
 		}
 	}
@@ -389,6 +390,7 @@ void GameManager::GameEnd() {
 //アイテムを取った時.
 void GameManager::TakeItem() {
 
-	data.isSlow = TRUE; //スローモードにする.
-	tmSlowMode.Start(); //タイマー開始.
+	data.isSlow = TRUE;             //スローモードにする.
+	player.SetReflectionMode(TRUE); //反射モード開始.
+	tmSlowMode.Start();             //タイマー開始.
 }
