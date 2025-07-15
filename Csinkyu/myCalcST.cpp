@@ -150,7 +150,7 @@ DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 	return { x, y };
 }
 //始点から角度と長さを入れた座標を計算.
-DBL_XY CalcLineAng(DBL_XY stPos, double ang, double len) {
+DBL_XY CalcArcPos(DBL_XY stPos, double ang, double len) {
 
     //角度をradに変換し、座標の計算.
     double y = sin(_rad(ang)) * len;

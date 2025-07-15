@@ -127,7 +127,7 @@ void LaserManager::UpdateLaser() {
 					assert(p_meteoMng != nullptr); //ポインタが空でないことを確認.
 
 					DBL_XY laserPos = { laser[i].x, laser[i].y }; //レーザーの現在位置.
-					DBL_XY meteoPos{};
+					DBL_XY meteoPos{-1, -1};
 
 					//最も近い隕石の位置を取得する.
 					bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &meteoPos);

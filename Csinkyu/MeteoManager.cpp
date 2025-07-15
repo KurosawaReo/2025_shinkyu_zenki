@@ -91,8 +91,7 @@ BOOL MeteoManager::IsHitMeteos(Circle* pos, BOOL isDestroy) {
 BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 
 	BOOL isExistMeteo = FALSE; //1‚Â‚Å‚àè¦Î‚ª‚ ‚é‚©.
-
-	double shortest = 0; //b’è‚ÌÅ’Z‹——£.
+	double shortest = -1; //b’è‚ÌÅ’Z‹——£.
 
 	//‘Sè¦Îƒ‹[ƒv.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
@@ -103,7 +102,7 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 			double tmpDis = CalcDis(tmpPos, _startPos); //‹——£‚ğŒvZ.
 
 			//‰‰ñŒÀ’è.
-			if (i == 0) {
+			if (shortest == -1) {
 				shortest  = tmpDis; //b’è1ˆÊ.
 				*_nearPos = tmpPos;
 			}

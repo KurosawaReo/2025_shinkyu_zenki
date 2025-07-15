@@ -21,7 +21,7 @@ void Obstacle::Update() {
 	//‰ñ“]‘¬“x.
 	ang += speed * (float)((data->isSlow) ? SLOW_MODE_SPEED : 1);
 	//ü‚Ì‰ñ“].
-	line.edPos = CalcLineAng(line.stPos, ang, len);
+	line.edPos = CalcArcPos(line.stPos, ang, len);
 
 	//“–‚½‚Á‚½‚çŽ€–S.
 	if (IsHitLine(&line, player->GetHit())) {
@@ -37,8 +37,8 @@ void Obstacle::Draw() {
 		DBL_XY mdPos = CalcMidPos(line.stPos, line.edPos);
 		DrawCircle(_int(mdPos.x), _int(mdPos.y), _int(len/2), 0x303030);
 
-		Line debugLine1 = {line.stPos, CalcLineAng(line.stPos, ang, 1000),       0x303030};
-		Line debugLine2 = {line.stPos, CalcLineAng(line.stPos, ang + 180, 1000), 0x303030};
+		Line debugLine1 = {line.stPos, CalcArcPos(line.stPos, ang, 1000),       0x303030};
+		Line debugLine2 = {line.stPos, CalcArcPos(line.stPos, ang + 180, 1000), 0x303030};
 		DrawLineST(&debugLine1);
 		DrawLineST(&debugLine2);
 
