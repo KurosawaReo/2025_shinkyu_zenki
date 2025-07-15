@@ -17,8 +17,8 @@ private:
 	BOOL   isReflect{}; //反射モードかどうか.
 	BOOL   active{};    //有効か.
 
-	float  afterCntr;					 //残像用時間カウンター.
-	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]; //残像位置の履歴.
+	float  afterCntr{};					   //残像用時間カウンター.
+	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
 	GameData* p_data{}; //ゲームデータ.
 

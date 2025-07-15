@@ -19,6 +19,11 @@ void Player::Reset(DBL_XY _pos, BOOL _active)
 	hit       = {_pos, PLAYER_HIT_R, {} };
 	active    = _active;
 	isReflect = false;
+
+	//座標配列のリセット.
+	for (int i = 0; i < _countof(afterPos); i++) {
+		afterPos[i] = _pos;
+	}
 }
 //更新.
 void Player::Update()

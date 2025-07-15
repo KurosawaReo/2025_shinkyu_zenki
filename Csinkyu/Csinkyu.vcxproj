@@ -28,6 +28,7 @@
     <ClCompile Include="myCalcST.cpp" />
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
+    <ClCompile Include="mySoundST.cpp" />
     <ClCompile Include="myTimerST.cpp" />
     <ClCompile Include="LaserManager.cpp" />
     <ClCompile Include="Meteo.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="myCalcST.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
+    <ClInclude Include="mySoundST.h" />
     <ClInclude Include="myTimerST.h" />
     <ClInclude Include="LaserManager.h" />
     <ClInclude Include="Meteo.h" />
