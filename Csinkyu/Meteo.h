@@ -42,8 +42,9 @@ public:
 		active = _active; 
 	}
 	//get.
-	DBL_XY GetPos()    { return pos; }
-	BOOL   GetActive() { return active; }
+	DBL_XY     GetPos()    { return pos; }
+	BOOL       GetActive() { return active; }
+	MeteoState GetState()  { return state; }
 
 	//‚»‚Ì‘¼.
 	void Init(GameData*);

@@ -129,7 +129,7 @@ struct GameData
 //#define DEBUG_LASER_ACTIVE //定義するとデバッグ表示ON.
 
 // - 定数 -
-#define IS_WINDOW_MODE					(TRUE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
 
 #define WINDOW_WID						(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
@@ -137,7 +137,7 @@ struct GameData
 
 #define FPS								(80)			//フレームレート.
 
-#define SLOW_MODE_TIME					(5)             //スローモード制限時間.
+#define SLOW_MODE_TIME					(7)             //スローモード制限時間.
 #define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
 
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.

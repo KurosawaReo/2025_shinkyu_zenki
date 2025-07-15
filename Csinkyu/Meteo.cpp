@@ -132,11 +132,14 @@ void Meteo::Destroy() {
 //隕石の当たり判定.
 BOOL Meteo::IsHitMeteo(Circle* pos) {
 
-	//全ての線で判定.
-	for (int i = 0; i < shape.lineCnt; i++) {
-		//線とプレイヤーが当たったら.
-		if (IsHitLine(&shape.line[i], pos)) {
-			return TRUE; //当たった.
+	//有効な隕石なら.
+	if (active && state == Meteo_Normal) {
+		//全ての線で判定.
+		for (int i = 0; i < shape.lineCnt; i++) {
+			//線とプレイヤーが当たったら.
+			if (IsHitLine(&shape.line[i], pos)) {
+				return TRUE; //当たった.
+			}
 		}
 	}
 
@@ -168,8 +171,8 @@ void Meteo::UpdateMeteoLine() {
 			//線の角度を求める.
 			double ang = CalcFacingAng(midPos, shape.line[i].stPos);
 			//新たな線の始点と終点を決める.
-			shape.line[i].stPos = CalcLineAng(midPos, ang    +destroyCntr*5, len);
-			shape.line[i].edPos = CalcLineAng(midPos, ang+180+destroyCntr*5, len);
+			shape.line[i].stPos = CalcLineAng(midPos, ang    +destroyCntr*3, len);
+			shape.line[i].edPos = CalcLineAng(midPos, ang+180+destroyCntr*3, len);
 		}
 	}
 }

@@ -316,7 +316,8 @@ void GameManager::DrawBG() {
 		}
 		//枠線アニメーション.
 		{
-			float time = 0.5f-(tmSlowMode.GetPassTime()-4.5f); //最初の0.5秒
+			//最初の0.5秒
+			float time = 0.5f-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5f));
 			time = CalcNumEaseOut(time); //値の曲線変動.
 			
 			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };

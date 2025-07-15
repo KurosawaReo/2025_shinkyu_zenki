@@ -16,8 +16,9 @@ void Player::Init(GameData* _data)
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, BOOL _active) 
 {
-	hit    = {_pos, PLAYER_HIT_R, {} };
-	active = _active;
+	hit       = {_pos, PLAYER_HIT_R, {} };
+	active    = _active;
+	isReflect = false;
 }
 //更新.
 void Player::Update()
