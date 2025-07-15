@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/07/14
+   ver.2025/07/15
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -97,34 +97,6 @@ BOOL IsHitLine(const Line* line, const Circle* cir) {
 	}
 }
 
-//値の抽選.
-int RndNum(int st, int ed, BOOL isDxRnd) {
-	
-	int rnd = 0;
-
-	//edがst以上の時のみ抽選.
-	_if_check(st <= ed) {
-
-		//DxLib用の乱数を使うかどうか.
-		if (isDxRnd) {
-			rnd = GetRand(ed-st); //st～endの差で抽選.
-		}
-		else {
-			rnd = rand() % ((ed - st)+1); //st～endの差で抽選.
-		}
-	}
-	return st + rnd;
-}
-//小数部だけ取り出す.
-double GetDecimal(double num) {
-
-	double n = 0; //整数部.
-	double f = 0; //小数部.
-	f = modf(num, &n); //小数だけ取り出す.
-	
-	return f;
-}
-
 //移動可能範囲内に補正する.
 void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
 
@@ -178,7 +150,7 @@ DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 	return { x, y };
 }
 //始点から角度と長さを入れた座標を計算.
-DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
+DBL_XY CalcLineAng(DBL_XY stPos, double ang, double len) {
 
     //角度をradに変換し、座標の計算.
     double y = sin(_rad(ang)) * len;
@@ -186,7 +158,14 @@ DBL_XY CalcLineAng(DBL_XY stPos, float ang, float len) {
 
     return { stPos.x+x, stPos.y+y }; //終点座標を返す.
 }
-
+//始点から目標を見た時の角度を計算.
+double CalcFacingAng(DBL_XY stPos, DBL_XY targetPos) {
+	//座標差.
+    double disX = targetPos.x - stPos.x;
+	double disY = targetPos.y - stPos.y;
+	//radをdigにして返す.
+	return _dig(atan2(disY, disX));
+}
 //角度から座標を求める.
 DBL_XY CalcDigToPos(double dig) {
 	//座標vector(値が-1～+1になる)を返す.
@@ -196,4 +175,39 @@ DBL_XY CalcDigToPos(double dig) {
 DBL_XY CalcRadToPos(double rad) {
 	//座標vector(値が-1～+1になる)を返す.
 	return { cos(rad), sin(rad) };
+}
+
+//ease-out:だんだん減速.
+float CalcNumEaseOut(float time) {
+	time = min(time, 1.0f); //上限は1.0
+	time = max(time, 0.0f); //下限は0.0
+	return 1 - (1-time) * (1-time);
+}
+
+//値の抽選.
+int RndNum(int st, int ed, BOOL isDxRnd) {
+
+	int rnd = 0;
+
+	//edがst以上の時のみ抽選.
+	_if_check(st <= ed) {
+
+		//DxLib用の乱数を使うかどうか.
+		if (isDxRnd) {
+			rnd = GetRand(ed - st); //st～endの差で抽選.
+		}
+		else {
+			rnd = rand() % ((ed - st) + 1); //st～endの差で抽選.
+		}
+	}
+	return st + rnd;
+}
+//値から小数だけ取り出す.
+double GetDecimal(double num) {
+
+	double n = 0; //整数部.
+	double f = 0; //小数部.
+	f = modf(num, &n); //小数だけ取り出す.
+
+	return f;
 }

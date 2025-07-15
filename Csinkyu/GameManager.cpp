@@ -31,7 +31,7 @@
    黒澤　 →線で構成された多角形の隕石
 
    [余裕があれば]
-   ・FPSはm秒待機ではなく、時間計測で測りたい.
+   ・FPSはm秒待機ではなく、時間計測で測りたい
 
    2025/06/23:
    仮で隕石が降るのを作ったが、正常かどうかが怪しい。
@@ -51,6 +51,13 @@
    2025/07/01:
    当たると即死で難しく、ゲーム性の問題があるため
    プレイヤーの周りに小さな四角を並べたバリアを作りたい。(HPは作らない)
+
+   2025/07/14:
+   あまり進捗なし。反射レーザーの回転問題は一旦直したが、挙動は怪しい。
+   前期発表会までにこの辺はやっておきたい
+   ・隕石が壊れる時、構成してる線がバラバラになるようにする
+   ・追尾レーザーとは別に、直線レーザーを追加する
+   ・サウンド関係
 /--------------------------------------------------------*/
 //#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
@@ -306,13 +313,12 @@ void GameManager::DrawBG() {
 			Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
 			DrawBoxST(&box, FALSE);
 		}
-		//枠アニメーション.
+		//枠線アニメーション.
 		{
-			float anim = 0.5f-(tmSlowMode.GetPassTime()-4.5f);
-			anim = min(anim, 1); //上限は1.
-			printfDx(L"anim:%f\n", anim);
-
-			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * anim, WINDOW_HEI * anim}, 0x00FF00 };
+			float time = 0.5f-(tmSlowMode.GetPassTime()-4.5f); //最初の0.5秒
+			time = CalcNumEaseOut(time); //値の曲線変動.
+			
+			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, 0x00FF00 };
 			DrawBoxST(&box, TRUE, FALSE);
 		}
 	}
@@ -366,7 +372,7 @@ void GameManager::DrawSlowMode() {
 
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));
 			DrawStringST(&str, TRUE, data.font1); //fontあり.
-			SetDrawBlendModeST(MODE_NONE, 255);
+			ResetDrawBlendMode();
 		}
 	}
 }

@@ -5,6 +5,13 @@
 #pragma once
 #include "Player.h"
 
+//隕石の状態.
+enum MeteoState
+{
+	Meteo_Normal,
+	Meteo_Destroy, //破壊モード.
+};
+
 //隕石の形データ.
 struct MeteoShape
 {
@@ -17,14 +24,17 @@ struct MeteoShape
 class Meteo
 {
 private:
-	DBL_XY     pos{};	 //中心座標.
-	float      ang{};	 //角度.
-	DBL_XY     vel{};    //速度.
-	BOOL       active{}; //有効かどうか.
+	MeteoState state{};		  //隕石の状態.
+	MeteoShape shape{};       //隕石の形データ.
 
-	MeteoShape shape{};  //隕石の形データ.
+	DBL_XY     pos{};	      //中心座標.
+	float      ang{};	      //角度.
+	DBL_XY     vel{};         //速度.
+	BOOL       active{};      //有効かどうか.
 
-	GameData*  p_data;   //ゲームデータ.
+	float      destroyCntr{}; //破壊量の度合.
+
+	GameData*  p_data;        //ゲームデータ.
 
 public:
 	//set.

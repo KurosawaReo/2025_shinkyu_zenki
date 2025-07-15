@@ -5,30 +5,50 @@
 #include "Meteo.h"
 
 void Meteo::Init(GameData* _data) {
-	p_data   = _data;
+	p_data = _data;
 }
 
 void Meteo::Reset() {
 
-	pos    = {0, 0};
-	vel    = {0, 0};
-	active = FALSE;
+	state       = Meteo_Normal;
+	pos         = {0, 0};
+	vel         = {0, 0};
+	active      = FALSE;
+	destroyCntr = 0;
 }
 
 void Meteo::Update() {
 
 	//隕石本体が有効なら.
 	if (active) {
-		//移動.
-		pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-		pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-		//画面外で消去.
-		if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, TRUE)){
-			active = FALSE; //無効にする.
-		}
-		//回転.
-		ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+		//状態別処理.
+		switch (state) 
+		{
+			case Meteo_Normal: 
+				//移動.
+				pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+				pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+				//回転.
+				ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+				//画面外で消去.
+				if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, TRUE)){
+					active = FALSE; //無効にする.
+				}
+				break;
 
+			case Meteo_Destroy:
+				//破壊量の度合.
+				destroyCntr += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+				//時間が終了したら.
+				if (destroyCntr >= METEO_DEST_TIME) {
+					state  = Meteo_Normal; //元に戻す.
+					active = FALSE;        //消滅.
+				}
+				break;
+
+			default: assert(FALSE); break;
+		}
+		//隕石構成線の更新.
 		UpdateMeteoLine();
 	}
 }
@@ -37,17 +57,22 @@ void Meteo::Draw() {
 	
 	//隕石本体が有効なら.
 	if (active) {
-
-		//Circle cir = {pos, 8, 0xFFFFFF};
-		//DrawCircleST(&cir, FALSE);
+		
+		//破壊モード限定.
+		if (state == Meteo_Destroy) {
+			int pow = _int(min(255 * (float)(METEO_DEST_TIME-destroyCntr)/METEO_DEST_TIME, 255)); //少しずつ減少(255→0)
+			SetDrawBlendModeST(MODE_ADD, pow);
+		}
 
 		//有効な線を全て描画.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			
-			int g = _int(255 * fabs(sin(pos.x/200))); //色の変化.
-			shape.line[i].clr = GetColor(0, g, 255);
+			int clr = _int(255 * fabs(sin(pos.x/200))); //色の変化.
+			shape.line[i].clr = GetColor(0, clr, 255);
 			DrawLineST(&shape.line[i]);
 		}
+
+		ResetDrawBlendMode(); //描画モードリセット.
 	}
 }
 
@@ -95,7 +120,11 @@ void Meteo::Spawn() {
 
 //隕石破壊.
 void Meteo::Destroy() {
-	active = FALSE;
+	//破壊してないなら.
+	if (state == Meteo_Normal) {
+		state = Meteo_Destroy; //破壊モードに.
+		destroyCntr = 0;       //0から開始.
+	}
 }
 
 //隕石の当たり判定.
@@ -124,7 +153,21 @@ void Meteo::UpdateMeteoLine() {
 		//要素数が0未満なら最大値へ移動する.
 		int bef = ((i - 1) < 0) ? shape.lineCnt - 1 : (i - 1);
 
-		shape.line[i].stPos = CalcLineAng(pos, ang + i * rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
-		shape.line[i].edPos = CalcLineAng(pos, ang + bef * rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
+		shape.line[i].stPos = CalcLineAng(pos, ang+  i*rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
+		shape.line[i].edPos = CalcLineAng(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
+
+		//破壊モードなら.
+		if (state == Meteo_Destroy) {
+
+			//隕石を構成する線の中央点を求める.
+			DBL_XY midPos = CalcMidPos(shape.line[i].stPos, shape.line[i].edPos);
+			//線の長さの半分を求める.
+			double len = CalcDis(shape.line[i].stPos, midPos);
+			//線の角度を求める.
+			double ang = CalcFacingAng(midPos, shape.line[i].stPos);
+			//新たな線の始点と終点を決める.
+			shape.line[i].stPos = CalcLineAng(midPos, ang, len);
+			shape.line[i].edPos = CalcLineAng(midPos, ang + 180, len);
+		}
 	}
 }

@@ -20,7 +20,7 @@ void LaserManager::Reset() {
 
 	//レーザーデータの初期化.
 	for (int i = 0; i < OBSTACLE4_LASER_LIM; i++) {
-		laser[i].ValidFlag = 0; //すべてのレーザーを無効状態に.
+		DeleteLaser(i); //全て消去しておく.
 	}
 	//レーザーの軌跡データの初期化.
 	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++) {
@@ -224,10 +224,10 @@ BOOL LaserManager::SpawnLaser(float x, float y) {
 //レーザー消去.
 void LaserManager::DeleteLaser(int idx) {
 
-	laser[idx].ValidFlag = 0;       //無効にする.
 	laser[idx].type = Laser_Normal; //ノーマルモードに戻す.
-	laser[idx].goalPos = {0, 0};    //リセット.
+	laser[idx].goalPos = {0, 0};    //目標地点リセット.
 	laser[idx].isGoGoal = false;    //目標地点なし.
+	laser[idx].ValidFlag = 0;       //無効にする.
 }
 //レーザー反射.
 void LaserManager::ReflectLaser(int idx)

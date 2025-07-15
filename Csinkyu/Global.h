@@ -185,7 +185,8 @@ struct GameData
 #define METEO_CNT_MAX					(256)			//隕石の最大出現数.
 #define METEO_SPAWN_SPAN				(30)			//隕石の出現時間間隔.
 #define METEO_SPEED						(1)				//移動速度.
-#define METEO_ERASE_OUT_DIS				(50)			//隕石が画面外で消える距離.
+#define METEO_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
+#define METEO_DEST_TIME					(20)			//隕石の破壊時間.
 #define METEO_GOAL_RAND_RANGE			(500)			//隕石の目標地点の乱数範囲.
 
 #define METEO_LINE_CNT_MIN				(5)				//最低n角形.

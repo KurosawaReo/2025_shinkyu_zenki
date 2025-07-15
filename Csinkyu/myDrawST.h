@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/07/01
+   ver.2025/07/14
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -111,5 +111,5 @@ int    DrawObjectBox	 (const ObjectBox* data, BOOL isDrawHit = FALSE);
 int    DrawObjectCir	 (const ObjectCir* data, BOOL isDrawHit = FALSE);
 
 //描画モード.
-int    SetDrawBlendModeST(BLENDMODE_ID id, int power);
+int    SetDrawBlendModeST(BLENDMODE_ID id, int power = 255);
 int    ResetDrawBlendMode();
