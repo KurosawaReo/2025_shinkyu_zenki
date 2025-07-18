@@ -182,6 +182,8 @@ struct GameData
 #define OBSTACLE5_FLASH_VALID_TM		(50)            //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE5_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
 
+#define OBSTACLE6_LINE_MAX				(10000)			//レーザーで描画する線の最大数.
+
 #define METEO_CNT_MAX					(256)			//隕石の最大出現数.
 #define METEO_SPAWN_SPAN				(60)			//隕石の出現時間間隔.
 #define METEO_SPEED						(2)				//移動速度.
