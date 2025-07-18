@@ -14,12 +14,19 @@
 void MapGimmickLaserManager::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng)
 {
 	//実態取得するぜ.
-	p_data     = _data;
-	p_player   = _player;
+	p_data = _data;
+	p_player = _player;
 	p_meteoMng = _meteoMng;
 
 	laserSpawnTimer = 0;
-	nextLaserIndex  = 0;
+	nextLaserIndex = 0;
+	predictionTimer = 0;
+	showPrediction = false;
+	currentDirection = 0;
+	nextDirection = 0;
+	// 重複削除: currentDirection = 0;
+	// 重複削除: nextDirection = 0;
+	nextCenterPos = 0;  // 追加: 次のレーザー発射位置初期化
 
 }
 /// <summary>
@@ -40,7 +47,10 @@ void MapGimmickLaserManager::Reset()
 		line[i].ValidFlag = 0;//全ての軌跡を無効化状態に.
 	}
 	laserSpawnTimer = 0;
-	nextLaserIndex  = 0;
+	nextLaserIndex = 0;
+	predictionTimer = 0;
+	showPrediction = false;
+	nextCenterPos = 0;  // 追加: 次のレーザー発射位置リセット
 }
 /// <summary>
 /// 更新するぜ.
@@ -52,11 +62,42 @@ void MapGimmickLaserManager::Update()
 	//レーザー発射タイマー更新.
 	laserSpawnTimer += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
-	//180フレーム(約3秒)ごとに直線レーザーを発射.
-	if (laserSpawnTimer >= 180)
+	// 予測線表示タイマー更新（レーザー発射の60フレーム前から表示）
+	if (laserSpawnTimer >= 180) // 240-60 = 180フレームから予測線表示
+	{
+		if (!showPrediction)
+		{
+			// 予測線表示開始時に次の発射方向と位置を決定
+			nextDirection = rand() % 4;
+
+			// 次の発射位置もランダムに決定
+			if (nextDirection == 0 || nextDirection == 1) // 水平発射
+			{
+				nextCenterPos = 100 + rand() % (WINDOW_HEI - 200);
+			}
+			else // 垂直発射
+			{
+				nextCenterPos = 100 + rand() % (WINDOW_WID - 200);
+			}
+
+			showPrediction = true;
+		}
+		predictionTimer = laserSpawnTimer - 180; // 予測線表示からの経過時間
+	}
+	else
+	{
+		showPrediction = false;
+		predictionTimer = 0;
+	}
+
+	//240フレーム(約4秒)ごとに3つの直線レーザーを同時発射.
+	if (laserSpawnTimer >= 240)
 	{
 		SpawnStraightLaser();
 		laserSpawnTimer = 0;
+		showPrediction = false;
+		predictionTimer = 0;
+		currentDirection = nextDirection; // 予測した方向で発射
 	}
 
 	UpdateLaser();    //各レーザーの更新.
@@ -68,6 +109,12 @@ void MapGimmickLaserManager::Update()
 /// </summary>
 void MapGimmickLaserManager::Draw()
 {
+	// 予測線の描画（レーザーより先に描画）
+	if (showPrediction)
+	{
+		DrawPredictionLine();
+	}
+
 	//レーザーの軌跡の描画処理.
 	for (int i = 0; i < OBSTACLE6_LINE_MAX; i++)
 	{
@@ -89,6 +136,72 @@ void MapGimmickLaserManager::Draw()
 
 	}
 	//通常の描画モードに戻す
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
+/// <summary>
+/// 予測線描画処理
+/// </summary>
+void MapGimmickLaserManager::DrawPredictionLine()
+{
+	// 次のレーザー発射方向と位置を使用
+	double startX, startY, endX, endY;
+	double centerPos = nextCenterPos;  // 修正: 予測された位置を使用
+
+	// 点滅効果（30フレーム周期で点滅）
+	int blinkCycle = 30;
+	int alpha = 128; // 基本透明度
+	if ((predictionTimer / blinkCycle) % 2 == 0)
+	{
+		alpha = 64; // 薄くする
+	}
+
+	// 灰色の予測線を描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+	// 中央の予測線のみを描画
+	// 発射方向に応じて予測線を描画
+	switch (nextDirection)
+	{
+	case 0: // 左から右へ
+		startX = -50;
+		endX = WINDOW_WID + 50;
+		{
+			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
+			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			DrawLineST(&predictionLine);
+		}
+		break;
+	case 1: // 右から左へ
+		startX = WINDOW_WID + 50;
+		endX = -50;
+		{
+			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
+			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			DrawLineST(&predictionLine);
+		}
+		break;
+	case 2: // 上から下へ
+		startY = -50;
+		endY = WINDOW_HEI + 50;
+		{
+			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
+			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			DrawLineST(&predictionLine);
+		}
+		break;
+	case 3: // 下から上へ
+		startY = WINDOW_HEI + 50;
+		endY = -50;
+		{
+			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
+			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			DrawLineST(&predictionLine);
+		}
+		break;
+	}
+
+	// 描画モードを戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
@@ -117,13 +230,13 @@ void MapGimmickLaserManager::UpdateLaser()
 		}
 
 		//レーザーの通過時間カウンタを増加.
-		laser[i].Counter += (float)(p_data->isSlow) ? SLOW_MODE_SPEED : 1;
-		
+		laser[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+
 		//移動前の座標を保存.
 		DBL_XY befPos = { laser[i].x,laser[i].y };
 
-		//速度(直線レーザーなので一定速度)
-		double speed = 8.0 * (float)(p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+		//速度(直線レーザーなので一定速度) - 修正: 括弧で優先順位を明確化
+		double speed = 50.0 * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 		//レーザーの移動.
 		laser[i].x += laser[i].vx * speed;
@@ -139,13 +252,16 @@ void MapGimmickLaserManager::UpdateLaser()
 				line[j].y1 = befPos.y;   //開始点Y座標.
 				line[j].x2 = laser[i].x; //終了点X座標.
 				line[j].y2 = laser[i].y; //終了点Y座標.
-				line[j].Counter   = 0;   //通過時間カウンタ初期化.
+				line[j].Counter = 0;   //通過時間カウンタ初期化.
 				line[j].ValidFlag = 1;   //軌跡を有効化.
 				break;
 			}
 		}
-		int _x = laser[i].x < -100 || laser[i].x>WINDOW_WID + 100;
-		int _y = laser[i].y <-100 || laser[i].y>WINDOW_HEI + 100;
+
+		//画面外判定も修正（同じ演算子優先順位問題）
+		int _x = (laser[i].x < -100) || (laser[i].x > WINDOW_WID + 100);
+		int _y = (laser[i].y < -100) || (laser[i].y > WINDOW_HEI + 100);
+
 		//画面外に出たレーザーを無効化.
 		if (_x || _y)
 		{
@@ -171,34 +287,70 @@ void MapGimmickLaserManager::UpdateLaserLine()
 }
 
 /// <summary>
-/// //直線レーザー発射(コードおもれー)
+/// //直線レーザー発射(コードおもれー) - ランダム発射版
 /// </summary>
 void MapGimmickLaserManager::SpawnStraightLaser()
 {
-	// 画面左端から右に向かって発射.
-	double startX = -50;  // 画面左端の少し外側.
-	// 画面を3分割して、上・中・下の位置から発射.
-	double positions[3] = {
-		WINDOW_HEI * 0.25,  // 上部
-		WINDOW_HEI * 0.5,   // 中央
-		WINDOW_HEI * 0.75   // 下部
-	};
-	double startY = positions[nextLaserIndex];
+	// 予測された方向で発射
+	int direction = nextDirection;  // 修正: currentDirectionではなくnextDirectionを使用
 
-	// 右方向への移動ベクトル.
-	double vx = 1.0;  // 右方向
-	double vy = 0.0;  // 水平
+	double startX, startY, vx, vy;
+	double centerPos = nextCenterPos;  // 修正: 予測された位置を使用
+	double spacing = 20;  // レーザー間の間隔
 
-	// レーザーデータの初期化
-	laser[nextLaserIndex].x = startX;       // 初期座標x
-	laser[nextLaserIndex].y = startY;       // 初期座標y
-	laser[nextLaserIndex].vx = vx;          // 初期方向x
-	laser[nextLaserIndex].vy = vy;          // 初期方向y
-	laser[nextLaserIndex].Counter = 0;      // 経過時間カウンタ初期化
-	laser[nextLaserIndex].ValidFlag = 1;    // レーザーを有効化
+	switch (direction)
+	{
+	case 0: // 左から右へ発射
+		startX = -50;
+		vx = 1.0;
+		vy = 0.0;
+		break;
+	case 1: // 右から左へ発射
+		startX = WINDOW_WID + 50;
+		vx = -1.0;
+		vy = 0.0;
+		break;
+	case 2: // 上から下へ発射
+		startY = -50;
+		vx = 0.0;
+		vy = 1.0;
+		break;
+	case 3: // 下から上へ発射
+		startY = WINDOW_HEI + 50;
+		vx = 0.0;
+		vy = -1.0;
+		break;
+	}
 
-	// 次のレーザーインデックスを更新（0, 1, 2をループ）
-	nextLaserIndex = (nextLaserIndex + 1) % 3;
+	// 3つのレーザーを同時に発射
+	for (int i = 0; i < 3; i++)
+	{
+		// 既存のレーザーがあれば削除
+		if (laser[i].ValidFlag == 1)
+		{
+			DeleteLaser(i);
+		}
+
+		// レーザーデータの初期化
+		if (direction == 0 || direction == 1) // 水平発射
+		{
+			laser[i].x = startX;
+			laser[i].y = centerPos + (i - 1) * spacing; // -spacing, 0, +spacing
+		}
+		else // 垂直発射
+		{
+			laser[i].x = centerPos + (i - 1) * spacing; // -spacing, 0, +spacing
+			laser[i].y = startY;
+		}
+
+		laser[i].vx = vx;            // 初期方向x
+		laser[i].vy = vy;            // 初期方向y
+		laser[i].Counter = 0;        // 経過時間カウンタ初期化
+		laser[i].ValidFlag = 1;      // レーザーを有効化
+	}
+
+	nextLaserIndex = 0;
+	currentDirection = nextDirection; // 発射後に現在の方向を更新
 }
 ///レーザー消去.
 void MapGimmickLaserManager::DeleteLaser(int idx) {
