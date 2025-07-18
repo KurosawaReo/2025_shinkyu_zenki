@@ -22,6 +22,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="mySoundST.cpp" />
+    <ClCompile Include="MapGimmickLaserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
@@ -42,5 +43,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="mySoundST.h" />
+    <ClInclude Include="MapGimmickLaserManager.h" />
   </ItemGroup>
 </Project>

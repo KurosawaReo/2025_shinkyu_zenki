@@ -67,6 +67,7 @@
 #endif
 #include "MeteoManager.h"
 #include "LaserManager.h"
+#include "MapGimmickLaserManager.h"
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
 #include "Obstacle5.h"
@@ -92,6 +93,7 @@ Obstacle4_2 obstacle4_2;
 Obstacle4_3 obstacle4_3;
 Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
+MapGimmickLaserManager mglMng;
 //障害物管理の実体.
 MeteoManager meteoMng;
 LaserManager laserMng;
@@ -127,6 +129,7 @@ void GameManager::Init() {
 	//障害物管理class.
 	meteoMng.Init(&data, &player);
 	laserMng.Init(&data, &player, &meteoMng);
+	mglMng.Init(&data, &player, &meteoMng);
 	//アイテムclass.
 	item.Init(&data, &player);
 	//プレイヤーclass.
@@ -153,7 +156,8 @@ void GameManager::Reset() {
 	obstacle4_2.Reset(WINDOW_WID/2,    0, 3, MOVE_LEFT);
 	//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
 	//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
-	//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置
+	//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
+	mglMng.Reset();
 	//隕石管理class.
 	meteoMng.Reset();
 	laserMng.Reset();
@@ -236,6 +240,7 @@ void GameManager::UpdateGame() {
 	//obstacle4_3.Update();
 	//obstacle4_4.Update();
 	//obstacle5.Update();
+	mglMng.Update();
 	//障害物管理class.
 	meteoMng.Update();
 	laserMng.Update();
@@ -341,6 +346,7 @@ void GameManager::DrawObjects() {
 	//obstacle4_3.Draw();
 	//obstacle4_4.Draw();
 	//obstacle5.Draw();
+	mglMng.Draw();
 	//障害物管理class.
 	meteoMng.Draw();
 	laserMng.Draw();
