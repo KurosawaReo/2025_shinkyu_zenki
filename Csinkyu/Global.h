@@ -143,9 +143,14 @@ enum MoveDir
 struct GameData
 {
 	Scene scene;     //シーンの記録用.
-	BOOL  isSlow;    //スローモードかどうか.
+	int   score;     //スコア.
+	int   bestScore; //ベストスコア.
+
 	int   font1;     //フォント.
 	int   font2;     //フォント.
+	IMG   imgLogo;   //タイトルロゴ画像.
+
+	BOOL  isSlow;    //スローモードかどうか.
 };
 
 // - Debug -
@@ -160,7 +165,7 @@ struct GameData
 
 #define FPS								(80)			//フレームレート.
 
-#define SLOW_MODE_TIME					(7)             //スローモード制限時間.
+#define SLOW_MODE_TIME					(8)             //スローモード制限時間.
 #define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
 
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
@@ -189,7 +194,8 @@ struct GameData
 #define OBSTACLE4_LASER_REF_ROT_MAX		(10)			//レーザー(reflected)の曲がる限界角度.
 #define OBSTACLE4_LASER_REF_TRACK_ST_TM	(10)			//レーザー(reflected)の追尾開始時間.
 #define OBSTACLE4_LASER_REF_TRACK_ED_TM	(30)			//レーザー(reflected)の追尾終了時間.
-#define OBSTACLE4_LASER_SPEED			(0.1)		    //レーザーの速度.
+#define OBSTACLE4_LASER_NOR_SPEED		(0.1)		    //レーザー(normal)   の速度.
+#define OBSTACLE4_LASER_REF_SPEED		(0.5)		    //レーザー(reflected)の速度.
 #define OBSTACLE4_LASER_LIM				(100)			//レーザーの最大数.
 #define OBSTACLE4_LINE_MAX				(10000)			//レーザーで描画する線の最大数.
 
@@ -219,13 +225,16 @@ struct GameData
 #define METEO_LINE_DIS_MIN				(40)			//頂点の最短距離.
 #define METEO_LINE_DIS_MAX				(60)			//頂点の最大距離.
 
-#define OBSTACLE5_STATE_WARNING			(0)				// 予告状態
-#define OBSTACLE5_STATE_ACTIVE			(1)				// アクティブ状態
-#define OBSTACLE5_WARNING_DURATION		(120.0f)		// 2秒間の予告
-#define OBSTACLE5_ACTIVE_DURATION		(60.0f)			// 1秒間のアクティブ
-#define OBSTACLE5_SPAWN_INTERVAL		(300)			// 5秒間隔
-#define OBSTACLE5_MAX_SIMULTANEOUS		(3)				// 最大同時出現数
-#define OBSTACLE5_MIN_DISTANCE			(100)			// 最小距離
+#define OBSTACLE5_STATE_WARNING			(0)				//予告状態.
+#define OBSTACLE5_STATE_ACTIVE			(1)				//アクティブ状態.
+#define OBSTACLE5_WARNING_DURATION		(120.0f)		//2秒間の予告.
+#define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//1秒間のアクティブ.
+#define OBSTACLE5_SPAWN_INTERVAL		(300)			//5秒間隔.
+#define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
+#define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
+
+#define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.
+#define SCORE_BREAK_METEO				(500)			//隕石を壊した時のスコア.
 
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))

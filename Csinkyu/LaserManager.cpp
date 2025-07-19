@@ -91,12 +91,16 @@ void LaserManager::UpdateLaser() {
 	{
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
-		bool isHit = false; //弾が当たったかどうか.
+		//移動前の座標を保存.
+		DBL_XY befPos = { laser[i].x, laser[i].y };
+		//弾が当たったかどうか.
+		bool isHit = false;
 
 		//レーザータイプ別.
 		switch (laser[i].type)
 		{
 			case Laser_Normal:
+			{
 				// プレイヤーとレーザーの当たり判定
 				if ((laser[i].x > plyPos.x - pSizeHalf && laser[i].x < plyPos.x + pSizeHalf) &&
 					(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
@@ -117,7 +121,14 @@ void LaserManager::UpdateLaser() {
 					//レーザーの追尾処理.
 					LaserNorTracking(i);
 				}
-				break;
+
+				//速度(時間経過で速くなる)
+				double speed = laser[i].Counter * OBSTACLE4_LASER_NOR_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+				//レーザーの移動.
+				laser[i].x += laser[i].vx * speed;
+				laser[i].y += laser[i].vy * speed;
+			}
+			break;
 
 			case Laser_Reflected:
 			{
@@ -148,6 +159,12 @@ void LaserManager::UpdateLaser() {
 				}
 				//レーザーの追尾処理.
 				LaserRefTracking(i);
+
+				//速度(時間経過で速くなる)
+				double speed = laser[i].Counter * OBSTACLE4_LASER_REF_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+				//レーザーの移動.
+				laser[i].x += laser[i].vx * speed;
+				laser[i].y += laser[i].vy * speed;
 			}
 			break;
 
@@ -162,15 +179,6 @@ void LaserManager::UpdateLaser() {
 
 		// レーザーの経過時間カウンタを増加
 		laser[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-
-		//移動前の座標を保存.
-		DBL_XY befPos = { laser[i].x, laser[i].y };
-
-		//速度(時間経過で速くなる)
-		double speed = laser[i].Counter * OBSTACLE4_LASER_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-		//レーザーの移動.
-		laser[i].x += laser[i].vx * speed;
-		laser[i].y += laser[i].vy * speed;
 
 		// レーザーの軌跡を生成
 		for (int j = 0; j < OBSTACLE4_LINE_MAX; j++)

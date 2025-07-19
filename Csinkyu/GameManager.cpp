@@ -99,6 +99,8 @@ void GameManager::Init() {
 	//フォント作成.
 	data.font1 = CreateFontToHandle(NULL, 30, 1);
 	data.font2 = CreateFontToHandle(NULL, 20, 1);
+	//画像読み込み.
+	int ret = LoadGraphST(&data.imgLogo, _T("Resources/Images/REFLINEロゴ.png"));
 	//サウンド読み込み.
 	SoundST* sound = SoundST::GetPtr();
 	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"),  _T("BGM1"));
@@ -126,6 +128,7 @@ void GameManager::Init() {
 //リセット(何回でも行う)
 void GameManager::Reset() {
 
+	data.score  = 0;     //スコアリセット.
 	data.isSlow = FALSE; //スローモード解除.
 
 	SoundST* sound = SoundST::GetPtr();
@@ -240,22 +243,28 @@ void GameManager::UpdateEnd() {
 
 //シーン別描画.
 void GameManager::DrawTitle() {
-	//ゲームが開始されていない場合は開始案内を表示
-	{
-		//テキストの設定.
-		STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
-		//画面中央に文字を表示.
-		DrawStringST(&str, TRUE, data.font2); //fontあり.
-	}
+	
+	//画像の表示.
+	IMG_DRAW_EXTEND img = { data.imgLogo, {WINDOW_WID/2, WINDOW_HEI/2}, {data.imgLogo.size.x/2, data.imgLogo.size.y/2} };
+	DrawExtendGraphST(&img, TRUE);
+
+	//テキストの表示..
+	STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
+	DrawStringST(&str, TRUE, data.font2); //fontあり.
+	
 }
 void GameManager::DrawGame() {
 
 	DrawObjects();
 
-	//タイマー表示.
+	//UI表示.
 	DrawFormatStringToHandle(
 		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
 	);
+	DrawFormatStringToHandle(
+		0, 20, 0xFFFFFF, data.font2, _T("score:%d"), data.score
+	);
+	//スローモード演出.
 	DrawSlowMode();
 }
 void GameManager::DrawEnd() {
@@ -357,7 +366,7 @@ void GameManager::GameEnd() {
 	tmSlowMode.Reset();
 
 	SoundST* sound = SoundST::GetPtr();
-	sound->ChangeVolume(_T("BGM1"), 10, 3);
+	sound->FadeOutPlay(_T("BGM1"), 3);
 }
 //アイテムを取った時.
 void GameManager::TakeItem() {
