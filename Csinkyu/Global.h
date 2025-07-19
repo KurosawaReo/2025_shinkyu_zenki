@@ -190,14 +190,6 @@ struct GameData
 #define OBSTACLE4_SHOT_RESET			(80)			//砲台の発射リセット時間.
 #define OBSTACLE4_SHOT_START			(30)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN				(5)				//砲台の発射間隔時間.
-#define OBSTACLE4_LASER_NOR_ROT_MAX		(15)			//レーザー(normal)   の曲がる限界角度.
-#define OBSTACLE4_LASER_REF_ROT_MAX		(10)			//レーザー(reflected)の曲がる限界角度.
-#define OBSTACLE4_LASER_REF_TRACK_ST_TM	(10)			//レーザー(reflected)の追尾開始時間.
-#define OBSTACLE4_LASER_REF_TRACK_ED_TM	(30)			//レーザー(reflected)の追尾終了時間.
-#define OBSTACLE4_LASER_NOR_SPEED		(0.1)		    //レーザー(normal)   の速度.
-#define OBSTACLE4_LASER_REF_SPEED		(0.5)		    //レーザー(reflected)の速度.
-#define OBSTACLE4_LASER_LIM				(100)			//レーザーの最大数.
-#define OBSTACLE4_LINE_MAX				(10000)			//レーザーで描画する線の最大数.
 
 #define OBSTACLE4_FLASH_MAX				(30)            //最大フラッシュエフェクト数
 #define OBSTACLE4_FLASH_SIZE_INIT		(5.0f)          //フラッシュエフェクトの初期サイズ.
@@ -210,8 +202,24 @@ struct GameData
 #define OBSTACLE5_FLASH_SIZE_SPREAD		(3)             //フラッシュエフェクトの拡大量.
 #define OBSTACLE5_FLASH_VALID_TM		(50)            //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE5_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
+#define OBSTACLE5_STATE_WARNING			(0)				//予告状態.
+#define OBSTACLE5_STATE_ACTIVE			(1)				//アクティブ状態.
+#define OBSTACLE5_WARNING_DURATION		(120.0f)		//2秒間の予告.
+#define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//1秒間のアクティブ.
+#define OBSTACLE5_SPAWN_INTERVAL		(300)			//5秒間隔.
+#define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
+#define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 
 #define OBSTACLE6_LINE_MAX				(10000)			//レーザーで描画する線の最大数.
+
+#define LASER_NOR_ROT_MAX				(15)			//レーザー(normal)   の曲がる限界角度.
+#define LASER_REF_ROT_MAX				(10)			//レーザー(reflected)の曲がる限界角度.
+#define LASER_REF_TRACK_ST_TM			(10)			//レーザー(reflected)の追尾開始時間.
+#define LASER_REF_TRACK_ED_TM			(30)			//レーザー(reflected)の追尾終了時間.
+#define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
+#define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
+#define LASER_CNT_MAX					(100)			//レーザーの最大数.
+#define LASER_LINE_CNT_MAX				(10000)			//レーザーで描画する線の最大数.
 
 #define METEO_CNT_MAX					(256)			//隕石の最大出現数.
 #define METEO_SPAWN_SPAN				(60)			//隕石の出現時間間隔.
@@ -224,14 +232,6 @@ struct GameData
 #define METEO_LINE_CNT_MAX				(16)			//最大n角形.
 #define METEO_LINE_DIS_MIN				(40)			//頂点の最短距離.
 #define METEO_LINE_DIS_MAX				(60)			//頂点の最大距離.
-
-#define OBSTACLE5_STATE_WARNING			(0)				//予告状態.
-#define OBSTACLE5_STATE_ACTIVE			(1)				//アクティブ状態.
-#define OBSTACLE5_WARNING_DURATION		(120.0f)		//2秒間の予告.
-#define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//1秒間のアクティブ.
-#define OBSTACLE5_SPAWN_INTERVAL		(300)			//5秒間隔.
-#define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
-#define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.
 #define SCORE_BREAK_METEO				(500)			//隕石を壊した時のスコア.

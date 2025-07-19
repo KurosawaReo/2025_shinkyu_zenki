@@ -10,6 +10,7 @@
 enum LaserType
 {
 	Laser_Normal,    //通常レーザー.
+	Laser_Straight,  //直線レーザー.
 	Laser_Reflected, //反射レーザー.
 };
 
@@ -21,7 +22,7 @@ typedef struct tagLASER_DATA
 	double    x,  y;     //現在の座標.
 	double    vx, vy;    //進行方向ベクトル.
 
-	DBL_XY    goalPos;   //最寄り隕石座標を記録する用.
+	DBL_XY    goalPos;   //目標地点の座標.
 	BOOL      isGoGoal;  //目標地点に向かって進むか.
 
 	int       LogNum;    //記録した軌跡の数.
@@ -47,8 +48,8 @@ typedef struct tagLINE_DATA
 class LaserManager
 {
 private:
-	LASER_DATA laser[OBSTACLE4_LASER_LIM]{}; //ホーミングレーザーのデータ.
-	LINE_DATA  line [OBSTACLE4_LINE_MAX]{};  //ライン描画用データ.
+	LASER_DATA laser[LASER_CNT_MAX]{};      //ホーミングレーザーのデータ.
+	LINE_DATA  line [LASER_LINE_CNT_MAX]{}; //ライン描画用データ.
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
@@ -62,13 +63,13 @@ public:
 	void Update();
 	void Draw();
 
-	void UpdateLaser();                      //各レーザーの更新.
-	void UpdateLaserLine();                  //各レーザー描画線の更新.
+	void UpdateLaser();                                            //各レーザーの更新.
+	void UpdateLaserLine();                                        //各レーザー描画線の更新.
+	
+	BOOL SpawnLaser      (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
+	void DeleteLaser     (int idx);                                //消去.
+	void ReflectLaser    (int idx);			                       //反射.
 
-	BOOL SpawnLaser      (float x, float y); //召喚.
-	void DeleteLaser     (int idx);          //消去.
-	void ReflectLaser    (int idx);			 //反射.
-
-	void LaserNorTracking(int idx);          //レーザー(normal)   の隕石追尾.
-	void LaserRefTracking(int idx);          //レーザー(reflected)の隕石追尾.
+	void LaserNorTracking(int idx);                                //レーザー(normal)   の隕石追尾.
+	void LaserRefTracking(int idx);                                //レーザー(reflected)の隕石追尾.
 };
