@@ -97,7 +97,8 @@ void GameManager::Init() {
 	data.font2 = CreateFontToHandle(NULL, 20, 1);
 	//ÉTÉEÉìÉhì«Ç›çûÇ›.
 	SoundST* sound = SoundST::GetPtr();
-	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"), _T("BGM1"));
+	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"),  _T("BGM1"));
+	sound->LoadFile(_T("Resources/Sounds/audiostock_1535055.mp3"), _T("BGM2"));
 
 	//è·äQï®class.
 	obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);

@@ -27,12 +27,17 @@ void Draw() {
 	gm->Draw();
 }
 
+#if false
+int main() {
+#else
 int WINAPI WinMain(
 	_In_     HINSTANCE hinstance, 
 	_In_opt_ HINSTANCE hPrevinstance,
 	_In_     LPSTR     lpCmdLine, 
 	_In_     int       nCmdShow
 ){
+#endif
+
 	ChangeWindowMode(IS_WINDOW_MODE);						//TRUEでwindow, FALSEで全画面にする.
 	SetWindowSize(WINDOW_WID, WINDOW_HEI);					//ウィンドウサイズの設定.
 	SetGraphMode(WINDOW_WID, WINDOW_HEI, WINDOW_COLOR_BIT);	//解像度の設定.
