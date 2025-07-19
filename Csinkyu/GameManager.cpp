@@ -123,7 +123,7 @@ void GameManager::Reset() {
 	data.isSlow = FALSE; //スローモード解除.
 
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("BGM1"), FALSE);
+	sound->FadeInPlay(_T("BGM1"), 80, 3, TRUE);
 
 	//障害物class.
 	obstacle4_1.Reset(WINDOW_WID/2,    0, 3, MOVE_RIGHT);
@@ -143,10 +143,12 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	InputST* input = InputST::GetPtr();
+	InputST* input = InputST::GetPtr(); //inputクラスを使えるように.
+	SoundST* sound = SoundST::GetPtr(); //soundクラスを使えるように.
 
 	input->UpdateKey();    //キー入力更新.
 	input->UpdatePadBtn(); //コントローラのボタン入力更新.
+	sound->Update();       //サウンド更新.
 
 	//シーン別.
 	switch (data.scene) 
@@ -341,6 +343,9 @@ void GameManager::GameEnd() {
 	tmGame.Stop(); //停止.
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
+
+	SoundST* sound = SoundST::GetPtr();
+	sound->ChangeVolume(_T("BGM1"), 10, 3);
 }
 //アイテムを取った時.
 void GameManager::TakeItem() {
