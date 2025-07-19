@@ -123,8 +123,9 @@ void Meteo::Spawn() {
 void Meteo::Destroy() {
 	//破壊してないなら.
 	if (state == Meteo_Normal) {
-		state = Meteo_Destroy; //破壊モードに.
-		destroyCntr = 0;       //0から開始.
+		state = Meteo_Destroy;              //破壊モードに.
+		destroyCntr = 0;                    //0から開始.
+		p_data->score += SCORE_BREAK_METEO; //スコア加算.
 	}
 }
 

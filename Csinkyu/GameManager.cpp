@@ -125,9 +125,15 @@ void GameManager::Init() {
 //リセット(何回でも行う)
 void GameManager::Reset() {
 
-	data.score  = 0;     //スコアリセット.
-	data.isSlow = FALSE; //スローモード解除.
+	if (data.bestScore < data.score) {
+		data.bestScore = data.score; //ハイスコア記録.
+	}
 
+	//リセット.
+	data.scoreBef = 0;
+	data.score = 0;
+	data.isSlow = FALSE;
+	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
 	sound->FadeInPlay(_T("BGM1"), 80, 3, TRUE);
 
@@ -243,10 +249,15 @@ void GameManager::DrawTitle() {
 	IMG_DRAW_EXTEND img = { data.imgLogo, {WINDOW_WID/2, WINDOW_HEI/2}, {data.imgLogo.size.x/2, data.imgLogo.size.y/2} };
 	DrawExtendGraphST(&img, TRUE);
 
-	//テキストの表示..
-	STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
-	DrawStringST(&str, TRUE, data.font2); //fontあり.
-	
+	//テキストの表示.
+	{
+		STR_DRAW str  = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
+		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2+300}, 0xFFFFFF };
+		swprintf(str2.text, _T("best score: %d"), data.bestScore); //ベストスコア.
+
+		DrawStringST(&str,  TRUE, data.font2);
+		DrawStringST(&str2, TRUE, data.font2);
+	}
 }
 void GameManager::DrawGame() {
 
@@ -273,12 +284,16 @@ void GameManager::DrawEnd() {
 	//終了案内.
 	{
 		//テキストの設定.
-		STR_DRAW str = { _T("GAME OVER"), {WINDOW_WID/2, 160}, 0xFF0000 };
-		STR_DRAW str2 = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0xFFFFFF };
-		swprintf(str2.text, _T("time:%.3f"), tmGame.GetPassTime());
-
+		STR_DRAW str  = { _T("GAME OVER"), {WINDOW_WID/2, 160}, 0xFF0000 };
+		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF };
+		//スコア表示.
+		swprintf(
+			str2.text, 
+			_T("[score] %d点 + %d点(time:%.3f)\n[total] %d点"),
+			data.scoreBef, (int)(tmGame.GetPassTime() * 10), tmGame.GetPassTime(), data.score
+		);
 		//画面中央に文字を表示.
-		DrawStringST(&str, TRUE, data.font2); //fontあり.
+		DrawStringST(&str,  TRUE, data.font2);
 		DrawStringST(&str2, TRUE, data.font2);
 	}
 }
@@ -359,6 +374,10 @@ void GameManager::GameEnd() {
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
 
+	data.scoreBef = data.score;                     //時間加算前のスコアを記録.
+	data.score += (int)(tmGame.GetPassTime() * 10); //時間ボーナス加算.
+
+	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
 	sound->FadeOutPlay(_T("BGM1"), 3);
 }
@@ -366,6 +385,7 @@ void GameManager::GameEnd() {
 void GameManager::TakeItem() {
 
 	data.isSlow = TRUE;             //スローモードにする.
+	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	player.SetReflectionMode(TRUE); //反射モード開始.
 	tmSlowMode.Start();             //タイマー開始.
 }

@@ -144,6 +144,7 @@ struct GameData
 {
 	Scene scene;     //シーンの記録用.
 	int   score;     //スコア.
+	int   scoreBef;  //スコア(時間加算前)
 	int   bestScore; //ベストスコア.
 
 	int   font1;     //フォント.
