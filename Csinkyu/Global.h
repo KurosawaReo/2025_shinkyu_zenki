@@ -142,16 +142,16 @@ enum MoveDir
 // - ゲームデータ -
 struct GameData
 {
-	Scene scene;     //シーンの記録用.
-	int   score;     //スコア.
-	int   scoreBef;  //スコア(時間加算前)
-	int   bestScore; //ベストスコア.
+	Scene scene;      //シーンの記録用.
+	int   score;      //スコア.
+	int   scoreBef;   //スコア(時間加算前)
+	int   bestScore;  //ベストスコア.
 
-	int   font1;     //フォント.
-	int   font2;     //フォント.
-	IMG   imgLogo;   //タイトルロゴ画像.
+	int   font1;      //フォント.
+	int   font2;      //フォント.
+	IMG   imgLogo[2]; //タイトルロゴ画像.
 
-	BOOL  isSlow;    //スローモードかどうか.
+	BOOL  isSlow;     //スローモードかどうか.
 };
 
 // - Debug -

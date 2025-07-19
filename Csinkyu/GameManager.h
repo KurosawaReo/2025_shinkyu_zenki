@@ -13,6 +13,7 @@ private: //実体.
 private: //データ.
 	GameData data{}; //ゲームデータ.
 
+	Timer tmTitle    = Timer(CountUp,   0);              //タイトル用タイマー.
 	Timer tmGame     = Timer(CountUp,   0);              //ゲーム時間.
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
@@ -39,6 +40,7 @@ public:
 	void DrawEnd();
 
 	void DrawBG();
+	void DrawUI();
 	void DrawObjects();
 	void DrawSlowMode();
 
