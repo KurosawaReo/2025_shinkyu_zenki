@@ -59,12 +59,7 @@
    反射仮完成。このゲームの方針も見えてきた。
    「隕石を破壊するとスコアを得られ、そのスコアを競うゲーム」で行ける気がする。
 /--------------------------------------------------------*/
-//#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
-#if defined ALL_OBSTACLE
-  #include "Obstacle.h"
-  #include "Obstacle2.h"
-#endif
 #include "MeteoManager.h"
 #include "LaserManager.h"
 #include "Obstacle4.h"
@@ -75,16 +70,6 @@
 #include "Player.h"
 
 #include "GameManager.h"
-
-#if defined ALL_OBSTACLE
-Obstacle obstacle[] = {
-	Obstacle( 80, 1,   0x00FF00),
-	Obstacle( 60, 0.5, 0x00FF00),
-	Obstacle(100, 1,   0x00FF00),
-	Obstacle(200, 1,   0x00FF00)
-};
-Obstacle2 obstacle2;
-#endif
 
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
@@ -110,20 +95,16 @@ void GameManager::Init() {
 	//フォント作成.
 	data.font1 = CreateFontToHandle(NULL, 30, 1);
 	data.font2 = CreateFontToHandle(NULL, 20, 1);
-
-#if defined ALL_OBSTACLE
-	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Init(&data, &player);
-	}
-	obstacle2.Init(&data, &player);
-#endif
+	//サウンド読み込み.
+	SoundST* sound = SoundST::GetPtr();
+	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"), _T("BGM1"));
 
 	//障害物class.
 	obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
 	obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
 	//obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
 	//obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
-	//obstacle5.Init(&data, &player);
+	obstacle5.Init(&data, &player);
 	//障害物管理class.
 	meteoMng.Init(&data, &player);
 	laserMng.Init(&data, &player, &meteoMng);
@@ -140,20 +121,15 @@ void GameManager::Reset() {
 
 	data.isSlow = FALSE; //スローモード解除.
 
-#if defined ALL_OBSTACLE
-	obstacle[0].Reset({ 150, 150 }, 0);
-	obstacle[1].Reset({ 400, 150 }, 30);
-	obstacle[2].Reset({ 300, 300 }, 60);
-	obstacle[3].Reset({ 500, 300 }, 90);
-	obstacle2.Reset();
-#endif
+	SoundST* sound = SoundST::GetPtr();
+	sound->Play(_T("BGM1"), FALSE);
 
 	//障害物class.
 	obstacle4_1.Reset(WINDOW_WID/2,    0, 3, MOVE_RIGHT);
 	obstacle4_2.Reset(WINDOW_WID/2,    0, 3, MOVE_LEFT);
 	//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
 	//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
-	//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置
+	obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置
 	//隕石管理class.
 	meteoMng.Reset();
 	laserMng.Reset();
@@ -223,19 +199,12 @@ void GameManager::UpdateGame() {
 		}
 	}
 
-#if defined ALL_OBSTACLE
-	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Update();
-	}
-	obstacle2.Update();
-#endif
-
 	//障害物class.
 	obstacle4_1.Update();
 	obstacle4_2.Update();
 	//obstacle4_3.Update();
 	//obstacle4_4.Update();
-	//obstacle5.Update();
+	obstacle5.Update();
 	//障害物管理class.
 	meteoMng.Update();
 	laserMng.Update();
@@ -328,19 +297,12 @@ void GameManager::DrawBG() {
 //オブジェクトの描画.
 void GameManager::DrawObjects() {
 
-#if defined ALL_OBSTACLE
-	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Draw();
-	}
-	//obstacle2.Draw();
-#endif
-
 	//障害物class.
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
 	//obstacle4_3.Draw();
 	//obstacle4_4.Draw();
-	//obstacle5.Draw();
+	obstacle5.Draw();
 	//障害物管理class.
 	meteoMng.Draw();
 	laserMng.Draw();

@@ -1,13 +1,12 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/06/30
+   ver.2025/07/19
 
    DxLib: オリジナル入力機能の追加.
 */
 #if !defined DEF_GLOBAL_H
   #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
-
 #include "myInputST.h"
 
 InputST InputST::self; //実体の宣言.

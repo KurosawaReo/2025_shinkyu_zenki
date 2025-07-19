@@ -1,7 +1,8 @@
 /*
    - Global.h -
+   ver.2025/07/16
 
-   共通で使用する型やマクロを入れる所.
+   DxLib: 共通で使う型や定数を入れる所.
 */
 #pragma once
 
@@ -10,12 +11,19 @@
 
 //stdafxがあるならいらない.
 #if true
+  //c言語用.
   #define _USE_MATH_DEFINES  //math定数を使うのに必要.
   #define _CRT_SECURE_NO_WARNINGS
   #include <assert.h>
   #include <math.h>
   #include <stdlib.h>
   #include <time.h>
+  //c++用.
+  #include <vector>
+  #include <map>
+  #include <string>
+  using namespace std;
+  //DxLib.
   #include "DxLib.h"
 #endif
 
@@ -59,6 +67,21 @@ struct Line
 	DBL_XY edPos; //終点座標.
 	UINT   clr;   //色.
 };
+//オブジェクト(グリッド上専用)
+struct ObjectGrid
+{
+	INT_XY pos{};      //座標.
+	IMG    img{};      //画像.
+	BOOL   isActive{}; //有効かどうか.
+
+	//初期化用.
+	ObjectGrid(){}
+	//初期化用(引数あり)
+	ObjectGrid(INT_XY _pos, UINT _clr, BOOL _isActive) :
+		pos(_pos),
+		isActive(_isActive)
+	{}
+};
 //オブジェクト(四角形)
 struct ObjectBox
 {
@@ -95,7 +118,7 @@ struct ObjectCir
 };
 
 //型変換マクロ.
-#define _int(n)   (int)(round(n))            //int   型変換マクロ.
+#define _int(n)   (int)(round(n))            //int型変換マクロ.
 #define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
 #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
 
