@@ -166,7 +166,14 @@ void Obstacle4main::enemy4Move()
 		// タイミングが来たらレーザー発射
 		if (Hsc <= HscTm)
 		{
-			BOOL ret = p_laserMng->SpawnLaser(Hx, Hy); //レーザー召喚.
+			//プレイヤー座標.
+			DBL_XY plyPos = p_player->GetPos();
+			//プレイヤー方向への初期角度計算.
+			double angle = atan2(plyPos.y - Hy, plyPos.x - Hx);
+			DBL_XY vel = {cos(angle), sin(angle)};
+
+			//通常レーザー召喚.
+			BOOL ret = p_laserMng->SpawnLaser({Hx, Hy}, vel, Laser_Normal);
 			//発射成功したら.
 			if (ret) {
 				CreateFlashEffect(Hx, Hy); //エフェクトを出す.
