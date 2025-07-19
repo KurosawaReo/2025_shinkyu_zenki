@@ -59,12 +59,7 @@
    反射仮完成。このゲームの方針も見えてきた。
    「隕石を破壊するとスコアを得られ、そのスコアを競うゲーム」で行ける気がする。
 /--------------------------------------------------------*/
-//#define ALL_OBSTACLE //これを定義すると全ての障害物を出す.
 
-#if defined ALL_OBSTACLE
-  #include "Obstacle.h"
-  #include "Obstacle2.h"
-#endif
 #include "MeteoManager.h"
 #include "LaserManager.h"
 #include "MapGimmickLaserManager.h"
@@ -77,16 +72,6 @@
 #include "Player.h"
 
 #include "GameManager.h"
-
-#if defined ALL_OBSTACLE
-Obstacle obstacle[] = {
-	Obstacle( 80, 1,   0x00FF00),
-	Obstacle( 60, 0.5, 0x00FF00),
-	Obstacle(100, 1,   0x00FF00),
-	Obstacle(200, 1,   0x00FF00)
-};
-Obstacle2 obstacle2;
-#endif
 
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
@@ -114,20 +99,17 @@ void GameManager::Init() {
 	//フォント作成.
 	data.font1 = CreateFontToHandle(NULL, 30, 1);
 	data.font2 = CreateFontToHandle(NULL, 20, 1);
-
-#if defined ALL_OBSTACLE
-	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Init(&data, &player);
-	}
-	obstacle2.Init(&data, &player);
-#endif
+	//サウンド読み込み.
+	SoundST* sound = SoundST::GetPtr();
+	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"),  _T("BGM1"));
+	sound->LoadFile(_T("Resources/Sounds/audiostock_1535055.mp3"), _T("BGM2"));
 
 	//障害物class.
 	obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
 	obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
 	//obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
 	//obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
-	//obstacle5.Init(&data, &player);
+	obstacle5.Init(&data, &player);
 	//障害物管理class.
 	meteoMng.Init(&data, &player);
 	laserMng.Init(&data, &player, &meteoMng);
@@ -146,13 +128,8 @@ void GameManager::Reset() {
 
 	data.isSlow = FALSE; //スローモード解除.
 
-#if defined ALL_OBSTACLE
-	obstacle[0].Reset({ 150, 150 }, 0);
-	obstacle[1].Reset({ 400, 150 }, 30);
-	obstacle[2].Reset({ 300, 300 }, 60);
-	obstacle[3].Reset({ 500, 300 }, 90);
-	obstacle2.Reset();
-#endif
+	SoundST* sound = SoundST::GetPtr();
+	sound->FadeInPlay(_T("BGM1"), 80, 3, TRUE);
 
 	//障害物class.
 	obstacle4_1.Reset(WINDOW_WID/2,    0, 3, MOVE_RIGHT);
@@ -174,10 +151,12 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	InputST* input = InputST::GetPtr();
+	InputST* input = InputST::GetPtr(); //inputクラスを使えるように.
+	SoundST* sound = SoundST::GetPtr(); //soundクラスを使えるように.
 
 	input->UpdateKey();    //キー入力更新.
 	input->UpdatePadBtn(); //コントローラのボタン入力更新.
+	sound->Update();       //サウンド更新.
 
 	//シーン別.
 	switch (data.scene) 
@@ -230,13 +209,6 @@ void GameManager::UpdateGame() {
 			tmSlowMode.Reset();
 		}
 	}
-
-#if defined ALL_OBSTACLE
-	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Update();
-	}
-	obstacle2.Update();
-#endif
 
 	//障害物class.
 	obstacle4_1.Update();
@@ -338,13 +310,6 @@ void GameManager::DrawBG() {
 //オブジェクトの描画.
 void GameManager::DrawObjects() {
 
-#if defined ALL_OBSTACLE
-	for (int i = 0; i < _countof(obstacle); i++) {
-		obstacle[i].Draw();
-	}
-	//obstacle2.Draw();
-#endif
-
 	//障害物class.
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
@@ -390,6 +355,9 @@ void GameManager::GameEnd() {
 	tmGame.Stop(); //停止.
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
+
+	SoundST* sound = SoundST::GetPtr();
+	sound->ChangeVolume(_T("BGM1"), 10, 3);
 }
 //アイテムを取った時.
 void GameManager::TakeItem() {

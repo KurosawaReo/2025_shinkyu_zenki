@@ -1,13 +1,12 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/07/15
+   ver.2025/07/19
 
    DxLib: オリジナル計算機能の追加.
 */
 #if !defined DEF_GLOBAL_H
   #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
-
 #include "myCalcST.h"
 
 //当たり判定(円と円)

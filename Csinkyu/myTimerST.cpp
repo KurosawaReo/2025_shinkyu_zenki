@@ -1,13 +1,12 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/06/20
+   ver.2025/07/19
 
    DxLib: オリジナルタイマー機能の追加.
 */
 #if !defined DEF_GLOBAL_H
   #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
-
 #include "myTimerST.h"
 
 //経過時間取得.
@@ -15,23 +14,18 @@ float Timer::GetPassTime() {
 
 	//終了時刻のセット.
 	if (isMove) { tmEnd = clock(); }
-	//時間差.
-	float ret = 0;
+	
+	float elapsed = (float)(tmEnd - tmStart)/1000; //時間差.
+	float ret;                                     //経過時間.
 
-	switch (mode)
-	{
-		case CountUp:
-			ret = tmInit + (float)(tmEnd - tmStart)/1000; //タイマー増加.
-			break;
-		case CountDown:
-			ret = tmInit - (float)(tmEnd - tmStart)/1000; //タイマー減少.
-			ret = max(ret, 0); //下限は0秒.
-			break;
-
-		default: assert(FALSE); break;
+	if (mode == CountUp) {
+		ret = tmInit + elapsed; //タイマー増加.
 	}
-
-	return ret; //時間を返す.
+	else {
+		ret = tmInit - elapsed; //タイマー減少.
+		ret = max(ret, 0);      //下限は0秒.
+	}
+	return ret;
 }
 
 //経過時間取得(マイクロ秒)
@@ -39,29 +33,32 @@ LONGLONG TimerMicro::GetPassTime() {
 
 	//終了時刻のセット.
 	if (isMove) { QueryPerformanceCounter(&tmEnd); }
-	//時間差.
-	LONGLONG ret = 0;
 
-	//モード別.
+	//時間差(freqでカウントをマイクロ秒に変換する)
+	LONGLONG elapsed = (tmEnd.QuadPart - tmStart.QuadPart) * 1000000/freq.QuadPart;
+	//経過時間.
+	LONGLONG ret;
+
 	if (mode == CountUp) {
-		ret = tmInit + tmEnd.QuadPart - tmStart.QuadPart; //タイマー増加.
+		ret = tmInit + elapsed; //タイマー増加.
 	}
 	else{
-		ret = tmInit - tmEnd.QuadPart - tmStart.QuadPart; //タイマー減少.
-		ret = max(ret, 0); //下限は0μ秒.
+		ret = tmInit - elapsed; //タイマー減少.
+		ret = max(ret, 0);      //下限は0カウント.
 	}
-
-	ret *= 1000000;
-	ret /= freq.QuadPart;
-
-	return ret; //時間を返す.
+	return ret;
 }
 
-//一定時間ごとにTRUEを返す(CountUp専用)
-BOOL TimerMicro::IntervalTime(float sec) {
+//一定時間ごとにTRUEを返す(CountDown専用)
+BOOL TimerMicro::IntervalTime() {
 
-	//一定時間経つまで.
-	if (GetPassTime() < 1000000/sec) {
+	//CountDownじゃない場合はFALSEを返し続ける.
+	if (mode != CountDown) {
+		return FALSE;
+	}
+
+	//タイマーが0になるまで.
+	if (GetPassTime() > 0) {
 		return FALSE; //FALSEを返す.
 	}
 	Start();     //時間リセット.
