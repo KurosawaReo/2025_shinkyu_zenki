@@ -127,7 +127,7 @@ void LaserManager::UpdateLaser() {
 				laser[i].y += laser[i].vy * speed;
 				
 				//レーザーの追尾処理.
-				LaserNorTracking(i);
+				//LaserNorTracking(i);
 			}
 			break;
 
@@ -152,7 +152,7 @@ void LaserManager::UpdateLaser() {
 				}
 
 				//速度(直線レーザーなので一定速度)
-				double speed = 50.0 * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+				double speed = LASER_STR_SPEED * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 				//レーザーの移動.
 				laser[i].x += laser[i].vx * speed;
 				laser[i].y += laser[i].vy * speed;
@@ -313,18 +313,16 @@ void LaserManager::ReflectLaser(int idx)
 	laser[idx].Counter = 0;               //カウンターをリセット.
 }
 
+#if false
 //レーザー(normal)の隕石追尾.
 void LaserManager::LaserNorTracking(int idx) 
 {
 	//一定時間のみ追尾.
 	if (laser[idx].Counter < 200)  // 200フレーム（約3.3秒）以内のみ追尾
 	{
-		// 現在のプレイヤー方向への角度を計算
-		double targetAngle = atan2(plyPos.y - laser[idx].y, plyPos.x - laser[idx].x);
-		// レーザーの現在の移動方向
-		double currentAngle = atan2(laser[idx].vy, laser[idx].vx);
-		// 角度の差分を計算
-		double angleDiff = targetAngle - currentAngle;
+		double targetAngle  = atan2(plyPos.y - laser[idx].y, plyPos.x - laser[idx].x); //プレイヤーへの方向.
+		double currentAngle = atan2(laser[idx].vy, laser[idx].vx);                     //移動方向.
+		double angleDiff = targetAngle - currentAngle;                                 //角度の差分を計算.
 
 		// 角度差分を-PI～PIの範囲に正規化
 		while (angleDiff > +M_PI) angleDiff -= 2 * M_PI;
@@ -336,11 +334,11 @@ void LaserManager::LaserNorTracking(int idx)
 		if (angleDiff < -maxTurn) angleDiff = -maxTurn;
 
 		// 新しい角度を計算.
-		double newAngle = currentAngle + angleDiff;
-		laser[idx].vx += cos(newAngle);
-		laser[idx].vy += sin(newAngle);
+		laser[idx].vx = cos(currentAngle + angleDiff);
+		laser[idx].vy = sin(currentAngle + angleDiff);
 	}
 }
+#endif
 //レーザー(reflected)の隕石追尾.
 void LaserManager::LaserRefTracking(int idx)
 {

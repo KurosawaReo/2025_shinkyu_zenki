@@ -98,7 +98,8 @@ void GameManager::Init() {
 	data.font1 = CreateFontToHandle(NULL, 30, 1);
 	data.font2 = CreateFontToHandle(NULL, 20, 1);
 	//画像読み込み.
-	int ret = LoadGraphST(&data.imgLogo, _T("Resources/Images/REFLINEロゴ.png"));
+	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
+	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
 	//サウンド読み込み.
 	SoundST* sound = SoundST::GetPtr();
 	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"),  _T("BGM1"));
@@ -125,15 +126,23 @@ void GameManager::Init() {
 //リセット(何回でも行う)
 void GameManager::Reset() {
 
-	data.score  = 0;     //スコアリセット.
-	data.isSlow = FALSE; //スローモード解除.
+	if (data.bestScore < data.score) {
+		data.bestScore = data.score; //ハイスコア記録.
+	}
 
+	//リセット.
+	data.scoreBef = 0;
+	data.score = 0;
+	data.isSlow = FALSE;
+	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
 	sound->FadeInPlay(_T("BGM1"), 80, 3, TRUE);
+	//タイマー.
+	tmTitle.Start();
 
 	//障害物class.
-	obstacle4_1.Reset(WINDOW_WID/2,    0, 3, MOVE_RIGHT);
-	obstacle4_2.Reset(WINDOW_WID/2,    0, 3, MOVE_LEFT);
+	obstacle4_1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
+	obstacle4_2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
 	//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
 	//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
 	//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
@@ -144,7 +153,7 @@ void GameManager::Reset() {
 	//アイテムclass.
 	item.Reset();
 	//プレイヤーclass.
-	player.Reset({ WINDOW_WID/2, WINDOW_HEI/2 }, TRUE);
+	player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, TRUE);
 }
 
 //更新.
@@ -188,6 +197,9 @@ void GameManager::Draw() {
 void GameManager::UpdateTitle() 
 {
 	InputST* input = InputST::GetPtr();
+
+	//プレイヤーclass.
+	player.Update();
 
 	//特定の操作でゲーム開始.
 	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_X) == 1)
@@ -239,46 +251,88 @@ void GameManager::UpdateEnd() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	
-	//画像の表示.
-	IMG_DRAW_EXTEND img = { data.imgLogo, {WINDOW_WID/2, WINDOW_HEI/2}, {data.imgLogo.size.x/2, data.imgLogo.size.y/2} };
-	DrawExtendGraphST(&img, TRUE);
+	//プレイヤーclass.
+	player.Draw();
 
-	//テキストの表示..
-	STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
-	DrawStringST(&str, TRUE, data.font2); //fontあり.
+	//画像の表示.
+	{
+		const int delay = 1; //切り替わりポイント.
 	
+		//切り替え前.
+		if (tmTitle.GetPassTime() < delay) {
+			//アニメーション値.
+			float anim = CalcNumEaseIn(tmTitle.GetPassTime()/delay);
+			//画像設定.
+			IMG_DRAW_EXTEND img = { 
+				data.imgLogo[0],
+				{WINDOW_WID/2, WINDOW_HEI/2}, 
+				{data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2}
+			};
+			//ロゴ1枚目.
+			SetDrawBlendModeST(MODE_ADD, 255 * anim);
+			DrawExtendGraphST(&img, TRUE);
+		}
+		//切り替え後.
+		else {
+			//アニメーション値.
+			float anim = CalcNumEaseInOut((tmTitle.GetPassTime()- delay)/2);
+			//画像設定.
+			IMG_DRAW_EXTEND img1 = { 
+				data.imgLogo[0],
+				{WINDOW_WID/2, WINDOW_HEI/2-anim*100}, 
+				{data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2}
+			};
+			IMG_DRAW_EXTEND img2 = {
+				data.imgLogo[1],
+				{WINDOW_WID/2, WINDOW_HEI/2 - anim * 100},
+				{data.imgLogo[1].size.x/2, data.imgLogo[1].size.y/2}
+			};
+			//ロゴ1枚目.
+			SetDrawBlendModeST(MODE_ADD, 255 * anim);
+			DrawExtendGraphST(&img2, TRUE);
+			//ロゴ2枚目.
+			SetDrawBlendModeST(MODE_ADD, 255 - (255 * anim));
+			DrawExtendGraphST(&img1, TRUE);
+		}
+		//描画モードリセット.
+		ResetDrawBlendMode();
+	}
+
+	//テキストの表示.
+	{
+		STR_DRAW str  = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
+		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2+300}, 0xFFFFFF };
+		swprintf(str2.text, _T("best score: %d"), data.bestScore); //ベストスコア.
+
+		DrawStringST(&str,  TRUE, data.font2);
+		DrawStringST(&str2, TRUE, data.font2);
+	}
 }
 void GameManager::DrawGame() {
 
-	DrawObjects();
-
-	//UI表示.
-	DrawFormatStringToHandle(
-		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
-	);
-	DrawFormatStringToHandle(
-		0, 20, 0xFFFFFF, data.font2, _T("score:%d"), data.score
-	);
-	//スローモード演出.
-	DrawSlowMode();
+	player.Draw();  //プレイヤー.
+	DrawObjects();  //オブジェクト.
+	DrawUI();
+	DrawSlowMode(); //スローモード演出.
 }
 void GameManager::DrawEnd() {
 	
 	DrawObjects();
+	DrawUI();
 
-	//タイマー表示.
-	DrawFormatStringToHandle(
-		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
-	);
 	//終了案内.
 	{
 		//テキストの設定.
-		STR_DRAW str = { _T("GAME OVER"), {WINDOW_WID/2, 160}, 0xFF0000 };
-		STR_DRAW str2 = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0xFFFFFF };
-		swprintf(str2.text, _T("time:%.3f"), tmGame.GetPassTime());
-
+		STR_DRAW str  = { _T("GAME OVER"), {WINDOW_WID/2, 160}, 0xFF0000 };
+		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF };
+		//スコア表示.
+		swprintf(
+			str2.text, 
+			_T("[score] %d点 + %d点(time:%.3f)\n[total] %d点"),
+			data.scoreBef, (int)(tmGame.GetPassTime() * 10), tmGame.GetPassTime(), data.score
+		);
 		//画面中央に文字を表示.
-		DrawStringST(&str, TRUE, data.font2); //fontあり.
+		DrawStringST(&str,  TRUE, data.font2);
 		DrawStringST(&str2, TRUE, data.font2);
 	}
 }
@@ -311,6 +365,18 @@ void GameManager::DrawBG() {
 		}
 	}
 }
+//UIの描画.
+void GameManager::DrawUI() {
+
+	//ゲーム時間.
+	DrawFormatStringToHandle(
+		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
+	);
+	//スコア.
+	DrawFormatStringToHandle(
+		0, 20, 0xFFFFFF, data.font2, _T("score:%d"), data.score
+	);
+}
 //オブジェクトの描画.
 void GameManager::DrawObjects() {
 
@@ -326,8 +392,6 @@ void GameManager::DrawObjects() {
 	mglMng[1].Draw();
 	//アイテムclass.
 	item.Draw();
-	//プレイヤーclass.
-	player.Draw();
 }
 //スローモード演出.
 void GameManager::DrawSlowMode() {
@@ -359,6 +423,10 @@ void GameManager::GameEnd() {
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
 
+	data.scoreBef = data.score;                     //時間加算前のスコアを記録.
+	data.score += (int)(tmGame.GetPassTime() * 10); //時間ボーナス加算.
+
+	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
 	sound->FadeOutPlay(_T("BGM1"), 3);
 }
@@ -366,6 +434,7 @@ void GameManager::GameEnd() {
 void GameManager::TakeItem() {
 
 	data.isSlow = TRUE;             //スローモードにする.
+	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	player.SetReflectionMode(TRUE); //反射モード開始.
 	tmSlowMode.Start();             //タイマー開始.
 }

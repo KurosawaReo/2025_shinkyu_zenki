@@ -70,6 +70,6 @@ public:
 	void DeleteLaser     (int idx);                                //消去.
 	void ReflectLaser    (int idx);			                       //反射.
 
-	void LaserNorTracking(int idx);                                //レーザー(normal)   の隕石追尾.
+//  void LaserNorTracking(int idx);                                //レーザー(normal)   の隕石追尾.
 	void LaserRefTracking(int idx);                                //レーザー(reflected)の隕石追尾.
 };

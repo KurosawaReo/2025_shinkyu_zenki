@@ -142,15 +142,16 @@ enum MoveDir
 // - ゲームデータ -
 struct GameData
 {
-	Scene scene;     //シーンの記録用.
-	int   score;     //スコア.
-	int   bestScore; //ベストスコア.
+	Scene scene;      //シーンの記録用.
+	int   score;      //スコア.
+	int   scoreBef;   //スコア(時間加算前)
+	int   bestScore;  //ベストスコア.
 
-	int   font1;     //フォント.
-	int   font2;     //フォント.
-	IMG   imgLogo;   //タイトルロゴ画像.
+	int   font1;      //フォント.
+	int   font2;      //フォント.
+	IMG   imgLogo[2]; //タイトルロゴ画像.
 
-	BOOL  isSlow;    //スローモードかどうか.
+	BOOL  isSlow;     //スローモードかどうか.
 };
 
 // - Debug -
@@ -210,13 +211,12 @@ struct GameData
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
 #define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 
-#define OBSTACLE6_LINE_MAX				(10000)			//レーザーで描画する線の最大数.
-
-#define LASER_NOR_ROT_MAX				(15)			//レーザー(normal)   の曲がる限界角度.
+//#define LASER_NOR_ROT_MAX				(0.1)			//レーザー(normal)   の曲がる限界角度.
 #define LASER_REF_ROT_MAX				(10)			//レーザー(reflected)の曲がる限界角度.
 #define LASER_REF_TRACK_ST_TM			(10)			//レーザー(reflected)の追尾開始時間.
 #define LASER_REF_TRACK_ED_TM			(30)			//レーザー(reflected)の追尾終了時間.
 #define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
+#define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
 #define LASER_CNT_MAX					(100)			//レーザーの最大数.
 #define LASER_LINE_CNT_MAX				(10000)			//レーザーで描画する線の最大数.

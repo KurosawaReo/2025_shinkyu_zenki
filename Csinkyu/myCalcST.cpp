@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/07/19
+   ver.2025/07/20
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -176,11 +176,23 @@ DBL_XY CalcRadToPos(double rad) {
 	return { cos(rad), sin(rad) };
 }
 
+//ease-int:だんだん加速.
+float CalcNumEaseIn(float time) {
+	time = min(time, 1.0f); //上限は1.0
+	time = max(time, 0.0f); //下限は0.0
+	return time * time;
+}
 //ease-out:だんだん減速.
 float CalcNumEaseOut(float time) {
 	time = min(time, 1.0f); //上限は1.0
 	time = max(time, 0.0f); //下限は0.0
 	return 1 - (1-time) * (1-time);
+}
+//ease-in-out:だんだん加速して減速.
+float CalcNumEaseInOut(float time) {
+	time = min(time, 1.0f); //上限は1.0
+	time = max(time, 0.0f); //下限は0.0
+	return 0.5f * (1.0f - cosf(M_PI*time)); //cosの返り値は1.0 → -1.0
 }
 
 //値の抽選.
