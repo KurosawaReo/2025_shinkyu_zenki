@@ -149,9 +149,10 @@ void GameManager::Reset() {
 	SoundST* sound = SoundST::GetPtr();
 	sound->FadeInPlay(_T("BGM1"), 80, 3, TRUE);
 	//タイマー.
-	tmTitle.Start();
-	tmReady.Reset();
-	tmGame.Reset();
+	tmScene[SCENE_TITLE].Start();
+	tmScene[SCENE_READY].Reset();
+	tmScene[SCENE_GAME].Reset();
+	tmScene[SCENE_END].Reset();
 
 	{
 		//管理class.
@@ -223,8 +224,8 @@ void GameManager::UpdateTitle()
 	//特定の操作でゲーム開始.
 	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_X) == 1)
 	{
-		tmReady.Start();          //タイマー開始.
-		data.scene = SCENE_READY; //準備シーンへ.
+		tmScene[SCENE_READY].Start(); //タイマー開始.
+		data.scene = SCENE_READY;     //準備シーンへ.
 	}
 }
 void GameManager::UpdateReady() {
@@ -233,9 +234,9 @@ void GameManager::UpdateReady() {
 	UpdateObjects(); //オブジェクト.
 	
 	//一定時間経ったら.
-	if (tmReady.GetPassTime() >= GAME_START_TIME) {
-		tmGame.Start();          //ゲーム開始.
-		data.scene = SCENE_GAME; //ゲームシーンへ.
+	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
+		tmScene[SCENE_GAME].Start(); //ゲーム開始.
+		data.scene = SCENE_GAME;     //ゲームシーンへ.
 	}
 }
 void GameManager::UpdateGame() {
@@ -301,9 +302,9 @@ void GameManager::DrawTitle() {
 		const int delay = 1; //切り替わりポイント.
 	
 		//切り替え前.
-		if (tmTitle.GetPassTime() < delay) {
+		if (tmScene[SCENE_TITLE].GetPassTime() < delay) {
 			//アニメーション値.
-			float anim = CalcNumEaseIn(tmTitle.GetPassTime()/delay);
+			float anim = CalcNumEaseIn(tmScene[SCENE_TITLE].GetPassTime()/delay);
 			//画像設定.
 			IMG_DRAW_EXTEND img = { 
 				data.imgLogo[0],
@@ -317,7 +318,7 @@ void GameManager::DrawTitle() {
 		//切り替え後.
 		else {
 			//アニメーション値.
-			float anim = CalcNumEaseInOut((tmTitle.GetPassTime()- delay)/2);
+			float anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay)/2);
 			//画像設定.
 			IMG_DRAW_EXTEND img1 = { 
 				data.imgLogo[0],
@@ -365,21 +366,29 @@ void GameManager::DrawGame() {
 void GameManager::DrawEnd() {
 	
 	DrawObjects();
+	{
+		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
+		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
+
+		SetDrawBlendModeST(MODE_ALPHA, 128*anim);
+		DrawBoxST(&box, FALSE);
+		ResetDrawBlendMode();
+	}
 	DrawUI();
 
 	//終了案内.
 	{
 		//テキストの設定.
-		STR_DRAW str  = { _T("GAME OVER"), {WINDOW_WID/2, 160}, 0xFF0000 };
-		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0xFFFFFF };
+		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 450}, 0xFF0000 };
+		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2+100}, 0xFFFFFF };
 		//スコア表示.
 		swprintf(
 			str2.text, 
 			_T("[score] %d点 + %d点(time:%.3f)\n[total] %d点"),
-			data.scoreBef, (int)(tmGame.GetPassTime() * 10), tmGame.GetPassTime(), data.score
+			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
 		);
 		//画面中央に文字を表示.
-		DrawStringST(&str,  TRUE, data.font1);
+		DrawStringST(&str1, TRUE, data.font2);
 		DrawStringST(&str2, TRUE, data.font1);
 	}
 }
@@ -418,7 +427,7 @@ void GameManager::DrawUI() {
 
 	//ゲーム時間.
 	DrawFormatStringToHandle(
-		10, 10, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
+		10, 10, 0xFFFFFF, data.font2, _T("time:%.3f"), tmScene[SCENE_GAME].GetPassTime()
 	);
 	//出現間隔割合.
 	DrawFormatStringToHandle(
@@ -428,13 +437,13 @@ void GameManager::DrawUI() {
 	//ハイスコア表示.
 	{
 		//アニメーション値.
-		float anim1    = CalcNumEaseInOut(tmReady.GetPassTime());
-		float anim2    = CalcNumEaseInOut(tmReady.GetPassTime());
-		float animSin1 = sin(M_PI*tmReady.GetPassTime());
-		float animSin2 = sin(M_PI*tmReady.GetPassTime()-1);
+		float anim1    = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
+		float anim2    = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
+		float animSin1 = sin(M_PI*tmScene[SCENE_READY].GetPassTime());
+		float animSin2 = sin(M_PI*tmScene[SCENE_READY].GetPassTime()-1);
 
 		//テキスト設定.
-		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_SCORE };
+		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_BEST_SCORE };
 		STR_DRAW str2 = { {}, {WINDOW_WID/2, 0+150}, COLOR_SCORE };
 		swprintf(str1.text, _T("best score: %d"), data.bestScore);
 		swprintf(str2.text, _T("score: %d"),      data.score);
@@ -444,11 +453,11 @@ void GameManager::DrawUI() {
 		SetDrawBlendModeST(MODE_ALPHA, 255 * anim2);
 		DrawStringST(&str2, TRUE, data.font3);
 		//テキスト(光沢用)
-		str1.color = 0x80FFD0;
-		str2.color = 0x80FFD0;
-		SetDrawBlendModeST(MODE_ALPHA, 255 * animSin1);
+		str1.color = 0xFFFFFF;
+		str2.color = 0xFFFFFF;
+		SetDrawBlendModeST(MODE_ALPHA, 128 * animSin1);
 		DrawStringST(&str1, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 255 * animSin2);
+		SetDrawBlendModeST(MODE_ALPHA, 128 * animSin2);
 		DrawStringST(&str2, TRUE, data.font3);
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -498,12 +507,13 @@ void GameManager::GameEnd() {
 	
 	data.scene = SCENE_END; //ゲーム終了へ.
 	
-	tmGame.Stop(); //停止.
+	tmScene[SCENE_GAME].Stop(); //停止.
+	tmScene[SCENE_END].Start(); //開始.
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
 
-	data.scoreBef = data.score;                     //時間加算前のスコアを記録.
-	data.score += (int)(tmGame.GetPassTime() * 10); //時間ボーナス加算.
+	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
+	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();

@@ -13,9 +13,13 @@ private: //実体.
 private: //データ.
 	GameData data{}; //ゲームデータ.
 
-	Timer tmTitle    = Timer(CountUp,   0);              //タイトル用タイマー.
-	Timer tmReady    = Timer(CountUp,   0);              //開始用タイマー.
-	Timer tmGame     = Timer(CountUp,   0);              //ゲーム時間.
+	//シーン別に経過時間を記録する.
+	Timer tmScene[SCENE_COUNT] = {
+		Timer(CountUp, 0), //Titleシーン.
+		Timer(CountUp, 0), //Readyシーン.
+		Timer(CountUp, 0), //Gameシーン.
+		Timer(CountUp, 0), //Endシーン.
+	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
 public:
