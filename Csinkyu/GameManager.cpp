@@ -62,26 +62,29 @@
 
 #include "MeteoManager.h"
 #include "LaserManager.h"
-#include "MapGimmickLaser.h"
+#include "EffectManager.h"
+
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
 #include "Obstacle5.h"
+#include "MapGimmickLaser.h"
 
 #include "Item.h"
 #include "Player.h"
 
 #include "GameManager.h"
 
+//管理クラスの実体.
+MeteoManager  meteoMng;
+LaserManager  laserMng;
+EffectManager effectMng;
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
 Obstacle4_3 obstacle4_3;
 Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
-MapGimmickLaser mglMng[2];
-//障害物管理の実体.
-MeteoManager meteoMng;
-LaserManager laserMng;
+MapGimmickLaser mgl[2];
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -105,20 +108,25 @@ void GameManager::Init() {
 	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"),  _T("BGM1"));
 	sound->LoadFile(_T("Resources/Sounds/audiostock_1535055.mp3"), _T("BGM2"));
 
-	//障害物class.
-	obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
-	obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
-	//obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
-	//obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
-	obstacle5.Init(&data, &player);
-	laserMng.Init(&data, &player, &meteoMng);
-	meteoMng.Init(&data, &player);
-	mglMng[0].Init(&data, &player, &laserMng, &meteoMng);
-	mglMng[1].Init(&data, &player, &laserMng, &meteoMng);
-	//アイテムclass.
-	item.Init(&data, &player);
-	//プレイヤーclass.
-	player.Init(&data);
+	//Init処理
+	{
+		//管理class.
+		laserMng.Init(&data, &player, &meteoMng);
+		meteoMng.Init(&data, &player, &effectMng);
+		effectMng.Init(&data);
+		//障害物class.
+		obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
+		obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
+		//obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
+		//obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
+		obstacle5.Init(&data, &player);
+		mgl[0].Init(&data, &player, &laserMng, &meteoMng);
+		mgl[1].Init(&data, &player, &laserMng, &meteoMng);
+		//アイテムclass.
+		item.Init(&data, &player, &effectMng);
+		//プレイヤーclass.
+		player.Init(&data);
+	}
 
 	Reset();
 }
@@ -140,20 +148,24 @@ void GameManager::Reset() {
 	//タイマー.
 	tmTitle.Start();
 
-	//障害物class.
-	obstacle4_1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
-	obstacle4_2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
-	//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
-	//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
-	//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
-	laserMng.Reset();
-	meteoMng.Reset();
-	mglMng[0].Reset();
-	mglMng[1].Reset();
-	//アイテムclass.
-	item.Reset();
-	//プレイヤーclass.
-	player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, TRUE);
+	{
+		//管理class.
+		laserMng.Reset();
+		meteoMng.Reset();
+		effectMng.Reset();
+		//障害物class.
+		obstacle4_1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
+		obstacle4_2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
+		//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
+		//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
+		//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
+		mgl[0].Reset();
+		mgl[1].Reset();
+		//アイテムclass.
+		item.Reset();
+		//プレイヤーclass.
+		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, TRUE);
+	}
 }
 
 //更新.
@@ -221,20 +233,24 @@ void GameManager::UpdateGame() {
 		}
 	}
 
-	//障害物class.
-	obstacle4_1.Update();
-	obstacle4_2.Update();
-	//obstacle4_3.Update();
-	//obstacle4_4.Update();
-	//obstacle5.Update();
-	meteoMng.Update();
-	laserMng.Update();
-	mglMng[0].Update();
-	mglMng[1].Update();
-	//アイテムclass.
-	item.Update();
-	//プレイヤーclass.
-	player.Update();
+	{
+		//管理class.
+		meteoMng.Update();
+		laserMng.Update();
+		effectMng.Update();
+		//障害物class.
+		obstacle4_1.Update();
+		obstacle4_2.Update();
+		//obstacle4_3.Update();
+		//obstacle4_4.Update();
+		//obstacle5.Update();
+		mgl[0].Update();
+		mgl[1].Update();
+		//アイテムclass.
+		item.Update();
+		//プレイヤーclass.
+		player.Update();
+	}
 }
 void GameManager::UpdateEnd() {
 
@@ -291,7 +307,7 @@ void GameManager::DrawTitle() {
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
 			DrawExtendGraphST(&img2, TRUE);
 			//ロゴ2枚目.
-			SetDrawBlendModeST(MODE_ADD, 255 - (255 * anim));
+			SetDrawBlendModeST(MODE_ADD, 255 * (1-anim));
 			DrawExtendGraphST(&img1, TRUE);
 		}
 		//描画モードリセット.
@@ -380,16 +396,18 @@ void GameManager::DrawUI() {
 //オブジェクトの描画.
 void GameManager::DrawObjects() {
 
+	//管理class.
+	meteoMng.Draw();
+	laserMng.Draw();
+	effectMng.Draw();
 	//障害物class.
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
 	//obstacle4_3.Draw();
 	//obstacle4_4.Draw();
 	//obstacle5.Draw();
-	meteoMng.Draw();
-	laserMng.Draw();
-	mglMng[0].Draw();
-	mglMng[1].Draw();
+	mgl[0].Draw();
+	mgl[1].Draw();
 	//アイテムclass.
 	item.Draw();
 }
@@ -435,6 +453,6 @@ void GameManager::TakeItem() {
 
 	data.isSlow = TRUE;             //スローモードにする.
 	data.score += SCORE_TAKE_ITEM;  //スコア加算.
+	tmSlowMode.Start();             //スローモード計測開始.
 	player.SetReflectionMode(TRUE); //反射モード開始.
-	tmSlowMode.Start();             //タイマー開始.
 }

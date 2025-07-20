@@ -4,10 +4,11 @@
 */
 #include "MeteoManager.h"
 
-void MeteoManager::Init(GameData* _data, Player* _player) {
+void MeteoManager::Init(GameData* _data, Player* _player, EffectManager* _effectMng) {
 
-	p_data   = _data;
-	p_player = _player;
+	p_data      = _data;
+	p_player    = _player;
+	p_effectMng = _effectMng;
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
@@ -69,17 +70,22 @@ void MeteoManager::SpawnMeteo(){
 }
 
 //隕石のどれか1つでも当たっているか.
-BOOL MeteoManager::IsHitMeteos(Circle* pos, BOOL isDestroy) {
+BOOL MeteoManager::IsHitMeteos(Circle* cir, BOOL isDestroy) {
 
 	BOOL hit;
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		hit = meteo[i].IsHitMeteo(pos); //1こずつ判定.
+		hit = meteo[i].IsHitMeteo(cir); //1こずつ判定.
 		//当たれば.
 		if (hit) {
 			if (isDestroy) {
-				meteo[i].Destroy(); //隕石を破壊.
+				//壊れてない隕石であれば.
+				if (meteo[i].GetState() == Meteo_Normal) {
+					meteo[i].Destroy();                                  //隕石を破壊.
+					p_data->score += SCORE_BREAK_METEO;                  //スコア加算.
+					p_effectMng->SpawnEffect(Effect_Score500, cir->pos); //エフェクト召喚.
+				}
 			}
 			return TRUE; //1つでも当たっている.
 		}

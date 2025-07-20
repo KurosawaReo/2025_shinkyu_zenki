@@ -4,13 +4,16 @@
 */
 #include "GameManager.h"
 #include "Player.h"
+#include "EffectManager.h"
+
 #include "Item.h"
 
 //初期化.
-void Item::Init(GameData* _gamedata, Player* _player)
+void Item::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
 {
-	p_gamedata = _gamedata;
-	p_player   = _player;
+	p_gamedata  = _gamedata;
+	p_player    = _player;
+	p_effectMng = _effectMng;
 }
 
 // アイテムのリセット（再生成用）
@@ -85,15 +88,16 @@ BOOL Item::CheckHitPlayer()
 // プレイヤーと当たったときの処理
 void Item::OnHitPlayer()
 {
+	//アイテムを取った処理.
+	GameManager::GetPtr()->TakeItem();
+	//エフェクト召喚.
+	p_effectMng->SpawnEffect(Effect_Score100, pos);
+
 	// アイテムを削除（非アクティブにする）
 	active = FALSE;
 	itemCounter = 0;//カウンターをリセットして再生成タイマー開始.
-
 	// 座標を画面外に移動（念のため）
 	pos = {-100, -100}; 
-
-	//アイテムを取った処理.
-	GameManager::GetPtr()->TakeItem();
 }
 
 //描画.

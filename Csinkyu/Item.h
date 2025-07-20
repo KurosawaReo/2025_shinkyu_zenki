@@ -11,11 +11,12 @@ private:
 	int    itemGraph{};
 	float  itemCounter{};
 
-	GameData* p_gamedata{}; //ゲームデータ.
-	Player*   p_player{};   //プレイヤーデータ.
+	GameData*      p_gamedata{}; //ゲームデータ.
+	Player*        p_player{};   //プレイヤーデータ.
+	EffectManager* p_effectMng{};
 
 public:
-	void Init(GameData*, Player*);
+	void Init(GameData*, Player*, EffectManager*);
 	void Update();
 	void Draw();
 	void ItemMove(); //アイテム.
