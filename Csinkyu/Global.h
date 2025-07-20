@@ -242,3 +242,4 @@ struct GameData
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_ITEM						(GetColor(  0, 255,   0))
+#define COLOR_SCORE						(0x00FFA0)

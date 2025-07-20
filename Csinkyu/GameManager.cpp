@@ -365,17 +365,18 @@ void GameManager::DrawBG() {
 	}
 	//背景(スローモード).
 	if (data.isSlow) {
+		//最初の0.5秒
+		float time = 0.5f-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5f));
+		time = CalcNumEaseOut(time); //値の曲線変動.
 		//背景色.
 		{
 			Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
+			SetDrawBlendModeST(MODE_ADD, 100*time);
 			DrawBoxST(&box, FALSE);
+			ResetDrawBlendMode();
 		}
-		//枠線アニメーション.
+		//枠線.
 		{
-			//最初の0.5秒
-			float time = 0.5f-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5f));
-			time = CalcNumEaseOut(time); //値の曲線変動.
-			
 			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
 			DrawBoxST(&box, TRUE, FALSE);
 		}
@@ -386,12 +387,37 @@ void GameManager::DrawUI() {
 
 	//ゲーム時間.
 	DrawFormatStringToHandle(
-		0, 0, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
+		10, 10, 0xFFFFFF, data.font1, _T("time:%.3f"), tmGame.GetPassTime()
 	);
-	//スコア.
-	DrawFormatStringToHandle(
-		0, 20, 0xFFFFFF, data.font2, _T("score:%d"), data.score
-	);
+
+	//ハイスコア表示.
+	{
+		//アニメーション値.
+		float anim1     = CalcNumEaseInOut(tmGame.GetPassTime());
+		float anim2     = CalcNumEaseInOut(tmGame.GetPassTime());
+		float animSin1 = sin(M_PI*tmGame.GetPassTime());
+		float animSin2 = sin(M_PI*tmGame.GetPassTime()-1);
+
+		//テキスト設定.
+		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_SCORE };
+		STR_DRAW str2 = { {}, {WINDOW_WID/2, 0+150}, COLOR_SCORE };
+		swprintf(str1.text, _T("best score: %d"), data.bestScore);
+		swprintf(str2.text, _T("score: %d"),      data.score);
+		//テキスト(main)
+		SetDrawBlendModeST(MODE_ALPHA, 255 * anim1);
+		DrawStringST(&str1, TRUE, data.font1);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * anim2);
+		DrawStringST(&str2, TRUE, data.font1);
+		//テキスト(光沢用)
+		str1.color = 0x80FFD0;
+		str2.color = 0x80FFD0;
+		SetDrawBlendModeST(MODE_ALPHA, 255 * animSin1);
+		DrawStringST(&str1, TRUE, data.font1);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * animSin2);
+		DrawStringST(&str2, TRUE, data.font1);
+		//描画モードリセット.
+		ResetDrawBlendMode();
+	}
 }
 //オブジェクトの描画.
 void GameManager::DrawObjects() {
@@ -418,7 +444,7 @@ void GameManager::DrawSlowMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストを入れる用.
-		STR_DRAW str = { {}, {WINDOW_WID / 2, WINDOW_HEI / 2}, 0x00FF00 };
+		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FF00 };
 		//テキストの設定.
 		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 

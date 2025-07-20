@@ -364,3 +364,20 @@ void LaserManager::LaserRefTracking(int idx)
 		}
 	}
 }
+
+//レーザーの一括反射.
+void LaserManager::LaserReflectRange(Circle* cir) {
+	
+	for (int i = 0; i < LASER_CNT_MAX; i++) {
+		//有効なレーザー.
+		if (laser[i].ValidFlag) {
+
+			Circle cir2 = { {laser[i].x, laser[i].y}, 1, {} };
+
+			//範囲内なら.
+			if (IsHitCircle(cir, &cir2)) {
+				ReflectLaser(i); //その場で反射.
+			}
+		}
+	}
+}

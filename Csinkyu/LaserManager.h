@@ -72,4 +72,5 @@ public:
 
 //  void LaserNorTracking(int idx);                                //レーザー(normal)   の隕石追尾.
 	void LaserRefTracking(int idx);                                //レーザー(reflected)の隕石追尾.
+	void LaserReflectRange(Circle* cir);						   //レーザーの一括反射.
 };

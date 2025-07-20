@@ -65,7 +65,7 @@ void EffectManager::Draw() {
 				case Effect_Score100:
 				{
 					//テキスト設定.
-					STR_DRAW str = { _T("+100"), {}, 0x00FFA0 };
+					STR_DRAW str = { _T("+100"), {}, COLOR_SCORE };
 					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
 					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME);
@@ -80,7 +80,7 @@ void EffectManager::Draw() {
 				case Effect_Score500:
 				{
 					//テキスト設定.
-					STR_DRAW str = { _T("+500"), {}, 0x00FFA0 };
+					STR_DRAW str = { _T("+500"), {}, COLOR_SCORE };
 					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
 					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME);
