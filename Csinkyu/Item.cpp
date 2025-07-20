@@ -21,7 +21,7 @@ void Item::Reset()
 {
 	// 座標の初期化
 	pos.x = (double)RndNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
-	pos.y = -300;											  // 画面上部の少し上から開始
+	pos.y = -1000;											  // 画面上部の少し上から開始
 	// サイズと色の設定
 	size.x = ITEM_SIZE;
 	size.y = ITEM_SIZE;

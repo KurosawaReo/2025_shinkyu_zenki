@@ -98,8 +98,9 @@ void GameManager::Init() {
 	//タイトル.
 	data.scene = SCENE_TITLE;
 	//フォント作成.
-	data.font1 = CreateFontToHandle(NULL, 30, 1);
-	data.font2 = CreateFontToHandle(NULL, 20, 1);
+	data.font1 = CreateFontToHandle(NULL, 25, 1);
+	data.font2 = CreateFontToHandle(NULL, 30, 1);
+	data.font3 = CreateFontToHandle(NULL, 40, 1);
 	//画像読み込み.
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
@@ -142,11 +143,15 @@ void GameManager::Reset() {
 	data.scoreBef = 0;
 	data.score = 0;
 	data.isSlow = FALSE;
+	data.spawnRate = 1.0; //最初は100%
+	data.counter = 0;
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
 	sound->FadeInPlay(_T("BGM1"), 80, 3, TRUE);
 	//タイマー.
 	tmTitle.Start();
+	tmReady.Reset();
+	tmGame.Reset();
 
 	{
 		//管理class.
@@ -182,6 +187,7 @@ void GameManager::Update() {
 	switch (data.scene) 
 	{
 		case SCENE_TITLE: UpdateTitle(); break;
+		case SCENE_READY: UpdateReady();  break;
 		case SCENE_GAME:  UpdateGame();  break;
 		case SCENE_END:   UpdateEnd();   break;
 	
@@ -198,6 +204,7 @@ void GameManager::Draw() {
 	switch (data.scene) 
 	{
 		case SCENE_TITLE: DrawTitle(); break;
+		case SCENE_READY: DrawReady(); break;
 		case SCENE_GAME:  DrawGame();  break;
 		case SCENE_END:   DrawEnd();   break;
 
@@ -216,7 +223,18 @@ void GameManager::UpdateTitle()
 	//特定の操作でゲーム開始.
 	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_X) == 1)
 	{
-		tmGame.Start();          //タイマー開始.
+		tmReady.Start();          //タイマー開始.
+		data.scene = SCENE_READY; //準備シーンへ.
+	}
+}
+void GameManager::UpdateReady() {
+
+	player.Update(); //プレイヤー.
+	UpdateObjects(); //オブジェクト.
+	
+	//一定時間経ったら.
+	if (tmReady.GetPassTime() >= GAME_START_TIME) {
+		tmGame.Start();          //ゲーム開始.
 		data.scene = SCENE_GAME; //ゲームシーンへ.
 	}
 }
@@ -224,33 +242,23 @@ void GameManager::UpdateGame() {
 	
 //	DrawFormatString(30, 200, 0xFFFFFF, _T("%d"), GetJoypadInputState(DX_INPUT_PAD1));
 
+	//カウンター増加.
+	data.counter += ((data.isSlow) ? SLOW_MODE_SPEED : 1);
+	//出現間隔.
+	data.spawnRate = 1.0/(1 + (data.counter/5000));  //100%から少しずつ減少.
+
+	//スローモード.
 	if (tmSlowMode.GetIsMove()) {
 		//時間切れで解除.
-		if(tmSlowMode.GetPassTime() == 0){
+		if (tmSlowMode.GetPassTime() == 0) {
 			data.isSlow = FALSE;
 			player.SetReflectionMode(FALSE); //反射モード終了.
 			tmSlowMode.Reset();
 		}
 	}
 
-	{
-		//管理class.
-		meteoMng.Update();
-		laserMng.Update();
-		effectMng.Update();
-		//障害物class.
-		obstacle4_1.Update();
-		obstacle4_2.Update();
-		//obstacle4_3.Update();
-		//obstacle4_4.Update();
-		//obstacle5.Update();
-		mgl[0].Update();
-		mgl[1].Update();
-		//アイテムclass.
-		item.Update();
-		//プレイヤーclass.
-		player.Update();
-	}
+	player.Update(); //プレイヤー.
+	UpdateObjects(); //オブジェクト.
 }
 void GameManager::UpdateEnd() {
 
@@ -262,6 +270,24 @@ void GameManager::UpdateEnd() {
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
 	}
+}
+//オブジェクトの更新.
+void GameManager::UpdateObjects() {
+
+	//管理class.
+	meteoMng.Update();
+	laserMng.Update();
+	effectMng.Update();
+	//障害物class.
+	obstacle4_1.Update();
+	obstacle4_2.Update();
+	//obstacle4_3.Update();
+	//obstacle4_4.Update();
+	//obstacle5.Update();
+	mgl[0].Update();
+	mgl[1].Update();
+	//アイテムclass.
+	item.Update();
 }
 
 //シーン別描画.
@@ -320,9 +346,14 @@ void GameManager::DrawTitle() {
 		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2+300}, 0xFFFFFF };
 		swprintf(str2.text, _T("best score: %d"), data.bestScore); //ベストスコア.
 
-		DrawStringST(&str,  TRUE, data.font2);
-		DrawStringST(&str2, TRUE, data.font2);
+		DrawStringST(&str,  TRUE, data.font1);
+		DrawStringST(&str2, TRUE, data.font1);
 	}
+}
+void GameManager::DrawReady() {
+	
+	player.Draw();  //プレイヤー.
+	DrawUI();
 }
 void GameManager::DrawGame() {
 
@@ -348,8 +379,8 @@ void GameManager::DrawEnd() {
 			data.scoreBef, (int)(tmGame.GetPassTime() * 10), tmGame.GetPassTime(), data.score
 		);
 		//画面中央に文字を表示.
-		DrawStringST(&str,  TRUE, data.font2);
-		DrawStringST(&str2, TRUE, data.font2);
+		DrawStringST(&str,  TRUE, data.font1);
+		DrawStringST(&str2, TRUE, data.font1);
 	}
 }
 
@@ -387,16 +418,20 @@ void GameManager::DrawUI() {
 
 	//ゲーム時間.
 	DrawFormatStringToHandle(
-		10, 10, 0xFFFFFF, data.font1, _T("time:%.3f"), tmGame.GetPassTime()
+		10, 10, 0xFFFFFF, data.font2, _T("time:%.3f"), tmGame.GetPassTime()
+	);
+	//出現間隔割合.
+	DrawFormatStringToHandle(
+		10, WINDOW_HEI-40, 0xFFFFFF, data.font2, _T("出現間隔: %.2f%%"), data.spawnRate*100
 	);
 
 	//ハイスコア表示.
 	{
 		//アニメーション値.
-		float anim1     = CalcNumEaseInOut(tmGame.GetPassTime());
-		float anim2     = CalcNumEaseInOut(tmGame.GetPassTime());
-		float animSin1 = sin(M_PI*tmGame.GetPassTime());
-		float animSin2 = sin(M_PI*tmGame.GetPassTime()-1);
+		float anim1    = CalcNumEaseInOut(tmReady.GetPassTime());
+		float anim2    = CalcNumEaseInOut(tmReady.GetPassTime());
+		float animSin1 = sin(M_PI*tmReady.GetPassTime());
+		float animSin2 = sin(M_PI*tmReady.GetPassTime()-1);
 
 		//テキスト設定.
 		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_SCORE };
@@ -405,16 +440,16 @@ void GameManager::DrawUI() {
 		swprintf(str2.text, _T("score: %d"),      data.score);
 		//テキスト(main)
 		SetDrawBlendModeST(MODE_ALPHA, 255 * anim1);
-		DrawStringST(&str1, TRUE, data.font1);
+		DrawStringST(&str1, TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 255 * anim2);
-		DrawStringST(&str2, TRUE, data.font1);
+		DrawStringST(&str2, TRUE, data.font3);
 		//テキスト(光沢用)
 		str1.color = 0x80FFD0;
 		str2.color = 0x80FFD0;
 		SetDrawBlendModeST(MODE_ALPHA, 255 * animSin1);
-		DrawStringST(&str1, TRUE, data.font1);
+		DrawStringST(&str1, TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 255 * animSin2);
-		DrawStringST(&str2, TRUE, data.font1);
+		DrawStringST(&str2, TRUE, data.font3);
 		//描画モードリセット.
 		ResetDrawBlendMode();
 	}
@@ -452,7 +487,7 @@ void GameManager::DrawSlowMode() {
 		{
 			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
-			DrawStringST(&str, TRUE, data.font1);              //fontあり.
+			DrawStringST(&str, TRUE, data.font3);              //fontあり.
 			ResetDrawBlendMode();                              //戻す.
 		}
 	}

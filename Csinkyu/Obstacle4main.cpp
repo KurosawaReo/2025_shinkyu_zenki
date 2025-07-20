@@ -21,12 +21,12 @@ void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoM
 //リセット.
 void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 {
-	Hx      = _Hx;                  // 砲台のX座標初期値（画面中央）
-	Hy      = _Hy;                  // 砲台のY座標初期値（画面上部）
-	Hm      = _Hm;                  // 砲台の移動速度
-	Hsc     = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
-	HscTm   = OBSTACLE4_SHOT_START; // 砲台の発射タイミング初期値
-	moveDir = _moveDir;             // 初期方向を右に設定.
+	Hx      = _Hx;                     // 砲台のX座標初期値（画面中央）
+	Hy      = _Hy;                     // 砲台のY座標初期値（画面上部）
+	Hm      = _Hm;                     // 砲台の移動速度
+	Hsc     = OBSTACLE4_SHOT_START+80; // 砲台の発射カウンタ初期値 
+	HscTm   = OBSTACLE4_SHOT_START;    // 砲台の発射タイミング初期値
+	moveDir = _moveDir;                // 初期方向を右に設定.
 }
 //更新.
 void Obstacle4main::Update()
@@ -183,7 +183,9 @@ void Obstacle4main::enemy4Move()
 		}
 		//0秒を下回ったらもう一周.
 		if (Hsc <= 0) {
-			Hsc = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
+			//タイマー再開(徐々に短くなる)
+			//発射開始時間より短くならないよう時間を設定.
+			Hsc   = OBSTACLE4_SHOT_START + OBSTACLE4_SHOT_RESET * p_data->spawnRate;
 			HscTm = OBSTACLE4_SHOT_START;
 		}
 	}

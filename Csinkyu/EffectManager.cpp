@@ -72,7 +72,7 @@ void EffectManager::Draw() {
 
 					//•`‰æ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE);
+					DrawStringST(&str, TRUE, p_data->font1);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -87,7 +87,7 @@ void EffectManager::Draw() {
 
 					//•`‰æ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE);
+					DrawStringST(&str, TRUE, p_data->font1);
 					ResetDrawBlendMode();
 				}
 				break;
