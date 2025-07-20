@@ -294,11 +294,6 @@ void LaserManager::ReflectLaser(int idx)
 	laser[idx].vx = cos(_rad(ang));
 	laser[idx].vy = sin(_rad(ang));
 
-	// レーザーをプレイヤーから少し離れた位置に移動（重複当たり判定を防ぐ）
-	double pushDistance = PLAYER_SIZE / 2.0 + 5; // プレイヤーサイズの半分 + 余裕
-	laser[idx].x = plyPos.x + -dx * pushDistance;
-	laser[idx].y = plyPos.y + -dy * pushDistance;
-
 	laser[idx].type    = Laser_Reflected; //反射モードへ.
 	laser[idx].Counter = 0;               //カウンターをリセット.
 }
