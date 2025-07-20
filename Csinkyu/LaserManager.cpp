@@ -254,7 +254,7 @@ BOOL LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 	// 未使用のレーザースロットを探してレーザーを発射
 	for (int i = 0; i < LASER_CNT_MAX; i++)
 	{
-		if (laser[i].ValidFlag == 0)  // 未使用のレーザースロットを見つけた
+		if (laser[i].ValidFlag == 0)  // 未使用のレーザースロットを探す
 		{
 			// レーザーデータの初期化
 			laser[i].x = pos.x;	    // 初期座標x

@@ -121,12 +121,8 @@ void Meteo::Spawn() {
 
 //隕石破壊.
 void Meteo::Destroy() {
-	//破壊してないなら.
-	if (state == Meteo_Normal) {
-		state = Meteo_Destroy;              //破壊モードに.
-		destroyCntr = 0;                    //0から開始.
-		p_data->score += SCORE_BREAK_METEO; //スコア加算.
-	}
+	state = Meteo_Destroy; //破壊モードに.
+	destroyCntr = 0;       //0から開始.
 }
 
 //隕石の当たり判定.

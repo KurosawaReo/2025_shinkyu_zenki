@@ -22,6 +22,7 @@
     <Image Include="image\enemy.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
@@ -46,6 +47,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />

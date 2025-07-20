@@ -14,7 +14,7 @@ enum LaserType
 	Laser_Reflected, //反射レーザー.
 };
 
-//レーザー本体.
+//レーザー本体データ.
 typedef struct tagLASER_DATA
 {
 	LaserType type;      //レーザータイプ.
@@ -32,7 +32,7 @@ typedef struct tagLASER_DATA
 
 }LASER_DATA, *LPLASER_DATA;
 
-//レーザーが描く軌道ライン.
+//レーザーが描く軌道ラインデータ.
 typedef struct tagLINE_DATA
 {
 	LaserType type;         //レーザータイプ.
