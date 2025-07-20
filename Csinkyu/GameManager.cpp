@@ -94,13 +94,13 @@ Player player;
 void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
-
+	
 	//タイトル.
 	data.scene = SCENE_TITLE;
 	//フォント作成.
-	data.font1 = CreateFontToHandle(NULL, 25, 1);
-	data.font2 = CreateFontToHandle(NULL, 30, 1);
-	data.font3 = CreateFontToHandle(NULL, 40, 1);
+	data.font1 = CreateFontToHandle(NULL, 26, 1);
+	data.font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
+	data.font3 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
@@ -116,13 +116,13 @@ void GameManager::Init() {
 		meteoMng.Init(&data, &player, &effectMng);
 		effectMng.Init(&data);
 		//障害物class.
+		mgl[0].Init(&data, &player, &laserMng, &meteoMng);
+		mgl[1].Init(&data, &player, &laserMng, &meteoMng);
 		obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
 		//obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
 		//obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle5.Init(&data, &player);
-		mgl[0].Init(&data, &player, &laserMng, &meteoMng);
-		mgl[1].Init(&data, &player, &laserMng, &meteoMng);
 		//アイテムclass.
 		item.Init(&data, &player, &effectMng);
 		//プレイヤーclass.
@@ -159,13 +159,13 @@ void GameManager::Reset() {
 		meteoMng.Reset();
 		effectMng.Reset();
 		//障害物class.
+		mgl[0].Reset();
+		mgl[1].Reset();
 		obstacle4_1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
 		obstacle4_2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
 		//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
 		//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
 		//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
-		mgl[0].Reset();
-		mgl[1].Reset();
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
@@ -279,13 +279,13 @@ void GameManager::UpdateObjects() {
 	laserMng.Update();
 	effectMng.Update();
 	//障害物class.
+	mgl[0].Update();
+	mgl[1].Update();
 	obstacle4_1.Update();
 	obstacle4_2.Update();
 	//obstacle4_3.Update();
 	//obstacle4_4.Update();
 	//obstacle5.Update();
-	mgl[0].Update();
-	mgl[1].Update();
 	//アイテムclass.
 	item.Update();
 }
@@ -462,13 +462,13 @@ void GameManager::DrawObjects() {
 	laserMng.Draw();
 	effectMng.Draw();
 	//障害物class.
+	mgl[0].Draw();
+	mgl[1].Draw();
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
 	//obstacle4_3.Draw();
 	//obstacle4_4.Draw();
 	//obstacle5.Draw();
-	mgl[0].Draw();
-	mgl[1].Draw();
 	//アイテムclass.
 	item.Draw();
 }

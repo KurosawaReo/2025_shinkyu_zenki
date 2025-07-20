@@ -110,6 +110,8 @@ void MapGimmickLaser::DrawPredictionLine()
 	double startX, startY, endX, endY;
 	double centerPos = nextCenterPos;  // 修正: 予測された位置を使用
 
+	//30フレーム周期だとそもそも点滅してない.
+#if false
 	// 点滅効果（30フレーム周期で点滅）
 	int blinkCycle = 30;
 	int alpha = 128; // 基本透明度
@@ -117,9 +119,11 @@ void MapGimmickLaser::DrawPredictionLine()
 	{
 		alpha = 64; // 薄くする
 	}
+#endif
 
-	// 灰色の予測線を描画
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	// 予測線の透明度.
+	float alpha = CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0～1.0の範囲.
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255*(1-alpha));
 
 	// 中央の予測線のみを描画
 	// 発射方向に応じて予測線を描画
@@ -130,7 +134,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endX = WINDOW_WID + 50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			predictionLine.clr = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine);
 		}
 		break;
@@ -139,7 +143,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endX = -50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			predictionLine.clr = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine);
 		}
 		break;
@@ -148,7 +152,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endY = WINDOW_HEI + 50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			predictionLine.clr = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine);
 		}
 		break;
@@ -157,7 +161,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endY = -50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.clr = GetColor(128, 128, 128); // 灰色
+			predictionLine.clr = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine);
 		}
 		break;

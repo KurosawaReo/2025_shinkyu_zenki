@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/07/19
+   ver.2025/07/20
    
    DxLib: オリジナル描画機能の追加.
 */
