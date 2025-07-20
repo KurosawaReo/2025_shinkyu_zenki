@@ -91,8 +91,6 @@ void LaserManager::UpdateLaser() {
 
 		//移動前の座標を保存.
 		DBL_XY befPos = { laser[i].x, laser[i].y };
-		//弾が当たったかどうか.
-		bool isHit = false;
 
 		//レーザータイプ別.
 		switch (laser[i].type)
@@ -114,17 +112,17 @@ void LaserManager::UpdateLaser() {
 						DeleteLaser(i);
 						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
-					isHit = true; //当たったことを記録.
 				}
-
-				//速度(時間経過で速くなる)
-				double speed = laser[i].Counter * LASER_NOR_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-				//レーザーの移動.
-				laser[i].x += laser[i].vx * speed;
-				laser[i].y += laser[i].vy * speed;
+				else{
+					//速度(時間経過で速くなる)
+					double speed = laser[i].Counter * LASER_NOR_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					//レーザーの移動.
+					laser[i].x += laser[i].vx * speed;
+					laser[i].y += laser[i].vy * speed;
 				
-				//レーザーの追尾処理.
-				//LaserNorTracking(i);
+					//レーザーの追尾処理.
+					//LaserNorTracking(i);
+				}
 			}
 			break;
 
@@ -145,14 +143,15 @@ void LaserManager::UpdateLaser() {
 						DeleteLaser(i);
 						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
-					isHit = true; //当たったことを記録.
+				}
+				else{
+					//速度(直線レーザーなので一定速度)
+					double speed = LASER_STR_SPEED * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					//レーザーの移動.
+					laser[i].x += laser[i].vx * speed;
+					laser[i].y += laser[i].vy * speed;
 				}
 
-				//速度(直線レーザーなので一定速度)
-				double speed = LASER_STR_SPEED * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-				//レーザーの移動.
-				laser[i].x += laser[i].vx * speed;
-				laser[i].y += laser[i].vy * speed;
 			}
 			break;
 
@@ -180,7 +179,6 @@ void LaserManager::UpdateLaser() {
 				//隕石と当たっているなら.
 				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
 					DeleteLaser(i);
-					isHit = true;
 					break;
 				}
 				//レーザーの追尾処理.
@@ -196,11 +194,6 @@ void LaserManager::UpdateLaser() {
 
 			//想定外の値エラー.
 			default: assert(FALSE); break;
-		}
-
-		//当たったら処理終了.
-		if (isHit) {
-			continue;
 		}
 
 		// レーザーの経過時間カウンタを増加
