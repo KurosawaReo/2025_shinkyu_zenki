@@ -131,6 +131,8 @@ enum Scene
 	SCENE_READY,
 	SCENE_GAME,
 	SCENE_END,
+
+	SCENE_COUNT, //総数.
 };
 //レーザー移動列挙.
 enum MoveDir 
@@ -190,19 +192,15 @@ struct GameData
 #define	OBSTACLE2_ROT_MAX				(5.0)			//障害物の追尾力(1フレームで回転できる最大度数)
 #define OBSTACLE2_LIM_F					(80)			//最大追跡フレーム数.
 
-#define OBSTACLE3_SIZE					(20)			//障害物サイズ.
-#define OBSTACLE3_TRACK_POW				(8)				//障害物の追尾力.
-#define OBSTACLE3_SPEED					(3)				//障害物の速度.
-
 #define OBSTACLE4_OUTER_MARGIN			(0)				//砲台の周回時の外側余白.
 #define OBSTACLE4_SHOT_RESET			(200)			//砲台の発射リセット時間.
 #define OBSTACLE4_SHOT_START			(20)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN				(5)				//砲台の発射間隔時間.
 
 #define OBSTACLE4_FLASH_MAX				(30)            //最大フラッシュエフェクト数
-#define OBSTACLE4_FLASH_SIZE_INIT		(5.0f)          //フラッシュエフェクトの初期サイズ.
-#define OBSTACLE4_FLASH_SIZE_SPREAD		(3)             //フラッシュエフェクトの拡大量.
-#define OBSTACLE4_FLASH_VALID_TM		(50)            //フラッシュエフェクトの持続フレーム.
+#define OBSTACLE4_FLASH_SIZE_INIT		(3.0f)          //フラッシュエフェクトの初期サイズ.
+#define OBSTACLE4_FLASH_SIZE_SPREAD		(-5)             //フラッシュエフェクトの拡大量.
+#define OBSTACLE4_FLASH_VALID_TM		(100)           //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE4_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
 
 #define OBSTACLE5_FLASH_MAX				(30)            //最大フラッシュエフェクト数
@@ -228,10 +226,10 @@ struct GameData
 #define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
-#define LASER_CNT_MAX					(100)			//レーザーの最大数.
+#define LASER_CNT_MAX					(50)			//レーザーの最大数.
 #define LASER_LINE_CNT_MAX				(10000)			//レーザーで描画する線の最大数.
 
-#define METEO_CNT_MAX					(256)			//隕石の最大出現数.
+#define METEO_CNT_MAX					(50)			//隕石の最大出現数.
 #define METEO_SPAWN_SPAN				(150)			//隕石の出現時間間隔.
 #define METEO_SPEED						(2)				//移動速度.
 #define METEO_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
@@ -252,4 +250,6 @@ struct GameData
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_ITEM						(GetColor(  0, 255,   0))
+#define COLOR_PRE_LINE					(GetColor(128, 128, 128)) //予測線.
+#define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)

@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/07/19
+   ver.2025/07/20
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -11,6 +11,7 @@ enum FONTTYPE_ID
 {
 	FONT_NORMAL = DX_FONTTYPE_NORMAL,
 	FONT_EDGE   = DX_FONTTYPE_EDGE,
+	FONT_ANTI   = DX_FONTTYPE_ANTIALIASING, //アンチエイリアス(滑らかになる)
 
 	FONT_NONE   = -1, //指定なし.
 };

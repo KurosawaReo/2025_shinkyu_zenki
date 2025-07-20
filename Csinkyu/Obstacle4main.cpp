@@ -74,16 +74,20 @@ void Obstacle4main::DrawObstFlash() {
 		int effectSize = _int(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
 
+		/*
 		//エフェクトの位置を時間経過とともにプレイヤー方向に移動
 		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
-		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 60; // 30ピクセル分移動
+		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 60; // nピクセル分移動
 		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 60;
+		*/
 
-		////三角形の頂点を計算(プレイヤーの方向を向く).
+		double currentX = flashEffect[i].x;
+		double currentY = flashEffect[i].y;
+		//三角形の頂点を計算(プレイヤーの方向を向く).
 		double angle = flashEffect[i].angle;
 		double cos_a = cos(angle);
 		double sin_a = sin(angle);
-		////外側の三角形(大きい)(なんかすごくなっちゃった)
+		//外側の三角形(大きい)(なんかすごくなっちゃった)
 		int x1 = _int(currentX + cos_a * effectSize);//先端.
 		int y1 = _int(currentY + sin_a * effectSize);
 		int x2 = _int(currentX - cos_a * effectSize / 3 + sin_a * effectSize / 2);//左後.
@@ -127,7 +131,7 @@ void Obstacle4main::DrawObstFlash() {
 	}
 
 	//通常の描画モードに戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);  
 }
 
 // レーザー発射前の予告●を描画
@@ -136,15 +140,16 @@ void Obstacle4main::DrawPreLaserDots() {
 	if (Hsc <= HscTm + 60) { // 発射60フレーム前から表示
 		// 点滅効果を作成
 		float blinkProgress = (HscTm + 60 - Hsc) / 60.0f; // 0.0から1.0
-		int blinkAlpha = _int(128 + 127 * sin(blinkProgress * 3.14159f * 8)); // 点滅
+		int blinkAlpha = _int(128 + 127 * sin(blinkProgress * M_PI * 8)); // 点滅
 
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
-		// 砲台の位置に3つの●を描画
-		int dotSize = 3+ _int(blinkProgress * 10); // サイズも徐々に大きく
-		DrawCircle(_int(Hx - 10), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
+		// サイズを徐々に大きく.
+		int dotSize  = 3 + CalcNumEaseOut(blinkProgress) * 10;
+		int dotSize2 = 3 + CalcNumEaseOut(blinkProgress) * 25;
+		// 砲台の位置に●を描画
 		DrawCircle(_int(Hx), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
-		DrawCircle(_int(Hx + 10), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(Hx), _int(Hy), dotSize2, GetColor(0, 255, 255), FALSE);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
