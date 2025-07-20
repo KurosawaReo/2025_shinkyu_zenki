@@ -18,7 +18,7 @@ void MeteoManager::Init(GameData* _data, Player* _player, EffectManager* _effect
 
 void MeteoManager::Reset() {
 
-	timer = 0;
+	timer = METEO_SPAWN_SPAN; //初期時間.
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
@@ -35,6 +35,7 @@ void MeteoManager::Update() {
 	//タイマーが0になったら.
 	else {
 		SpawnMeteo(); //隕石生成.
+		timer = METEO_SPAWN_SPAN * p_data->spawnRate; //タイマー再開(徐々に短くなる)
 	}
 
 	//全隕石ループ.
@@ -62,9 +63,8 @@ void MeteoManager::SpawnMeteo(){
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
 		if (!meteo[i].GetActive()) {
 
-			meteo[i].Spawn();         //出現.
-			timer = METEO_SPAWN_SPAN; //タイマー再開.
-			break; //出現完了.
+			meteo[i].Spawn(); //出現.
+			break;            //出現完了.
 		}
 	}
 }

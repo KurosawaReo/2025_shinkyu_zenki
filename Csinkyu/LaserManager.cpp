@@ -91,8 +91,6 @@ void LaserManager::UpdateLaser() {
 
 		//移動前の座標を保存.
 		DBL_XY befPos = { laser[i].x, laser[i].y };
-		//弾が当たったかどうか.
-		bool isHit = false;
 
 		//レーザータイプ別.
 		switch (laser[i].type)
@@ -114,17 +112,17 @@ void LaserManager::UpdateLaser() {
 						DeleteLaser(i);
 						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
-					isHit = true; //当たったことを記録.
 				}
-
-				//速度(時間経過で速くなる)
-				double speed = laser[i].Counter * LASER_NOR_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-				//レーザーの移動.
-				laser[i].x += laser[i].vx * speed;
-				laser[i].y += laser[i].vy * speed;
+				else{
+					//速度(時間経過で速くなる)
+					double speed = laser[i].Counter * LASER_NOR_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					//レーザーの移動.
+					laser[i].x += laser[i].vx * speed;
+					laser[i].y += laser[i].vy * speed;
 				
-				//レーザーの追尾処理.
-				//LaserNorTracking(i);
+					//レーザーの追尾処理.
+					//LaserNorTracking(i);
+				}
 			}
 			break;
 
@@ -145,14 +143,15 @@ void LaserManager::UpdateLaser() {
 						DeleteLaser(i);
 						p_player->PlayerDeath(); //プレイヤー死亡.
 					}
-					isHit = true; //当たったことを記録.
+				}
+				else{
+					//速度(直線レーザーなので一定速度)
+					double speed = LASER_STR_SPEED * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					//レーザーの移動.
+					laser[i].x += laser[i].vx * speed;
+					laser[i].y += laser[i].vy * speed;
 				}
 
-				//速度(直線レーザーなので一定速度)
-				double speed = LASER_STR_SPEED * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-				//レーザーの移動.
-				laser[i].x += laser[i].vx * speed;
-				laser[i].y += laser[i].vy * speed;
 			}
 			break;
 
@@ -180,7 +179,6 @@ void LaserManager::UpdateLaser() {
 				//隕石と当たっているなら.
 				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
 					DeleteLaser(i);
-					isHit = true;
 					break;
 				}
 				//レーザーの追尾処理.
@@ -196,11 +194,6 @@ void LaserManager::UpdateLaser() {
 
 			//想定外の値エラー.
 			default: assert(FALSE); break;
-		}
-
-		//当たったら処理終了.
-		if (isHit) {
-			continue;
 		}
 
 		// レーザーの経過時間カウンタを増加
@@ -301,11 +294,6 @@ void LaserManager::ReflectLaser(int idx)
 	laser[idx].vx = cos(_rad(ang));
 	laser[idx].vy = sin(_rad(ang));
 
-	// レーザーをプレイヤーから少し離れた位置に移動（重複当たり判定を防ぐ）
-	double pushDistance = PLAYER_SIZE / 2.0 + 5; // プレイヤーサイズの半分 + 余裕
-	laser[idx].x = plyPos.x + -dx * pushDistance;
-	laser[idx].y = plyPos.y + -dy * pushDistance;
-
 	laser[idx].type    = Laser_Reflected; //反射モードへ.
 	laser[idx].Counter = 0;               //カウンターをリセット.
 }
@@ -373,6 +361,23 @@ void LaserManager::LaserRefTracking(int idx)
 			// 方向を計算して設定.
 			laser[idx].vx = cos(newAngle);
 			laser[idx].vy = sin(newAngle);
+		}
+	}
+}
+
+//レーザーの一括反射.
+void LaserManager::LaserReflectRange(Circle* cir) {
+	
+	for (int i = 0; i < LASER_CNT_MAX; i++) {
+		//有効なレーザー.
+		if (laser[i].ValidFlag) {
+
+			Circle cir2 = { {laser[i].x, laser[i].y}, 1, {} };
+
+			//範囲内なら.
+			if (IsHitCircle(cir, &cir2)) {
+				ReflectLaser(i); //その場で反射.
+			}
 		}
 	}
 }

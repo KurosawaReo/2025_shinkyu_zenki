@@ -19,23 +19,19 @@ void MapGimmickLaser::Init(GameData* _data, Player* _player, LaserManager* _lase
 	p_laserMng = _laserMng;
 	p_meteoMng = _meteoMng;
 
-	laserSpawnTimer = 0;
-	nextLaserIndex = 0;
-	predictionTimer = 0;
-	showPrediction = false;
 	currentDirection = 0;
 	nextDirection = 0;
 	// 重複削除: currentDirection = 0;
 	// 重複削除: nextDirection = 0;
-	nextCenterPos = 0;  // 追加: 次のレーザー発射位置初期化
-
+	
+	Reset();
 }
 /// <summary>
 /// リセットするよ～ん
 /// </summary>
 void MapGimmickLaser::Reset()
 {
-	laserSpawnTimer = 0;
+	laserSpawnTimer = MGL_LASER_SPAWN_SPAN;
 	nextLaserIndex = 0;
 	predictionTimer = 0;
 	showPrediction = false;
@@ -49,10 +45,10 @@ void MapGimmickLaser::Update()
 	plyPos = p_player->GetPos();//プレイヤーの現在位置を取得.
 
 	//レーザー発射タイマー更新.
-	laserSpawnTimer += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	laserSpawnTimer -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
 	// 予測線表示タイマー更新（レーザー発射の60フレーム前から表示）
-	if (laserSpawnTimer >= 180) // 240-60 = 180フレームから予測線表示
+	if (laserSpawnTimer <= MGL_LASER_PREDICTION_TIME)
 	{
 		if (!showPrediction)
 		{
@@ -71,7 +67,7 @@ void MapGimmickLaser::Update()
 
 			showPrediction = true;
 		}
-		predictionTimer = laserSpawnTimer - 180; // 予測線表示からの経過時間
+		predictionTimer = MGL_LASER_PREDICTION_TIME - laserSpawnTimer; // 予測線表示からの経過時間
 	}
 	else
 	{
@@ -79,11 +75,15 @@ void MapGimmickLaser::Update()
 		predictionTimer = 0;
 	}
 
-	//240フレーム(約4秒)ごとに3つの直線レーザーを同時発射.
-	if (laserSpawnTimer >= 240)
+	//タイミングになったら3つの直線レーザーを同時発射.
+	if (laserSpawnTimer <= 0)
 	{
 		SpawnStraightLaser();
-		laserSpawnTimer = 0;
+
+		//タイマー再開(徐々に短くなる)
+		//予測線の出る時間より短くならないよう設定.
+		laserSpawnTimer = MGL_LASER_PREDICTION_TIME + MGL_LASER_SPAWN_SPAN * p_data->spawnRate;
+
 		showPrediction = false;
 		predictionTimer = 0;
 		currentDirection = nextDirection; // 予測した方向で発射

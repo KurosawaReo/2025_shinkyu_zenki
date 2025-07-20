@@ -128,6 +128,7 @@ struct ObjectCir
 enum Scene
 {
 	SCENE_TITLE,
+	SCENE_READY,
 	SCENE_GAME,
 	SCENE_END,
 };
@@ -147,8 +148,12 @@ struct GameData
 	int   scoreBef;   //スコア(時間加算前)
 	int   bestScore;  //ベストスコア.
 
-	int   font1;      //フォント.
+	float spawnRate;  //障害物の出現時間割合.
+	float counter;    //経過時間カウンター(スローの影響を受ける)
+
 	int   font2;      //フォント.
+	int   font1;      //フォント.
+	int   font3;      //フォント.
 	IMG   imgLogo[2]; //タイトルロゴ画像.
 
 	BOOL  isSlow;     //スローモードかどうか.
@@ -169,6 +174,8 @@ struct GameData
 #define SLOW_MODE_TIME					(8)             //スローモード制限時間.
 #define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
 
+#define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
+
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(6)				//プレイヤー移動速度.
 #define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
@@ -176,7 +183,7 @@ struct GameData
 
 #define ITEM_SIZE						(20)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
-#define ITEM_RESPAWN_TIME				(300)           //アイテム復活時間.
+#define ITEM_RESPAWN_TIME				(200)           //アイテム復活時間.
 
 #define OBSTACLE2_SPAN					(80)			//障害物の発射間隔.
 #define OBSTACLE2_SPEED					(3.0)			//障害物の速度.
@@ -188,8 +195,8 @@ struct GameData
 #define OBSTACLE3_SPEED					(3)				//障害物の速度.
 
 #define OBSTACLE4_OUTER_MARGIN			(0)				//砲台の周回時の外側余白.
-#define OBSTACLE4_SHOT_RESET			(80)			//砲台の発射リセット時間.
-#define OBSTACLE4_SHOT_START			(30)			//砲台の発射開始時間.
+#define OBSTACLE4_SHOT_RESET			(200)			//砲台の発射リセット時間.
+#define OBSTACLE4_SHOT_START			(20)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN				(5)				//砲台の発射間隔時間.
 
 #define OBSTACLE4_FLASH_MAX				(30)            //最大フラッシュエフェクト数
@@ -211,6 +218,9 @@ struct GameData
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
 #define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 
+#define MGL_LASER_SPAWN_SPAN			(300)			//直線レーザーの出現間隔.
+#define MGL_LASER_PREDICTION_TIME		(60)			//直線レーザーの予測線の出る時間.
+
 //#define LASER_NOR_ROT_MAX				(0.1)			//レーザー(normal)   の曲がる限界角度.
 #define LASER_REF_ROT_MAX				(10)			//レーザー(reflected)の曲がる限界角度.
 #define LASER_REF_TRACK_ST_TM			(10)			//レーザー(reflected)の追尾開始時間.
@@ -222,7 +232,7 @@ struct GameData
 #define LASER_LINE_CNT_MAX				(10000)			//レーザーで描画する線の最大数.
 
 #define METEO_CNT_MAX					(256)			//隕石の最大出現数.
-#define METEO_SPAWN_SPAN				(60)			//隕石の出現時間間隔.
+#define METEO_SPAWN_SPAN				(150)			//隕石の出現時間間隔.
 #define METEO_SPEED						(2)				//移動速度.
 #define METEO_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
 #define METEO_DEST_TIME					(20)			//隕石の破壊時間.
@@ -242,3 +252,4 @@ struct GameData
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_ITEM						(GetColor(  0, 255,   0))
+#define COLOR_SCORE						(0x00FFA0)
