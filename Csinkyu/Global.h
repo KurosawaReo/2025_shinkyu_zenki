@@ -233,7 +233,7 @@ struct GameData
 #define METEO_LINE_DIS_MIN				(40)			//頂点の最短距離.
 #define METEO_LINE_DIS_MAX				(60)			//頂点の最大距離.
 
-#define EFFECT_MAX						(20)			//エフェクトの最大出現数.
+#define EFFECT_MAX						(10)			//エフェクトの最大出現数.
 
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.
 #define SCORE_BREAK_METEO				(500)			//隕石を壊した時のスコア.

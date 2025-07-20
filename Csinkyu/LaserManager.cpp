@@ -84,9 +84,6 @@ void LaserManager::UpdateLaser() {
 
 	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
-	// 反射モード中かどうかを一度だけ判定
-	bool isReflectionMode = p_player->IsReflectionMode();
-
 	//各レーザーの更新.
 	for (int i = 0; i < LASER_CNT_MAX; i++)
 	{

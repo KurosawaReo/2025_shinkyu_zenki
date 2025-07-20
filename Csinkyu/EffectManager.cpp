@@ -59,8 +59,6 @@ void EffectManager::Draw() {
 	for (int i = 0; i < EFFECT_MAX; i++) {
 		if (effect[i].active) {
 
-//			DrawCircle(effect[i].pos.x, effect[i].pos.y, 10, 0xFF0000);
-
 			//タイプ別.
 			switch (effect[i].type)
 			{
@@ -70,7 +68,7 @@ void EffectManager::Draw() {
 					STR_DRAW str = { _T("+100"), {}, 0x00FFA0 };
 					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
-					int pow = 100 * (1 - effect[i].counter/SCORE_ANIM_TIME);
+					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME);
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -85,7 +83,7 @@ void EffectManager::Draw() {
 					STR_DRAW str = { _T("+500"), {}, 0x00FFA0 };
 					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
-					int pow = 100 * (1 - effect[i].counter/SCORE_ANIM_TIME);
+					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME);
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -111,6 +109,7 @@ void EffectManager::SpawnEffect(EffectType type, DBL_XY pos) {
 			effect[i].pos     = pos; 
 			effect[i].counter = 0;    //0から開始. 
 			effect[i].active  = TRUE; //有効にする.
+			break;                    //召喚完了.
 		}
 	}
 }
