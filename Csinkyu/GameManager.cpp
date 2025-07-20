@@ -95,6 +95,9 @@ void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
 	
+	p_input = InputST::GetPtr();
+	p_sound = SoundST::GetPtr();
+	
 	//タイトル.
 	data.scene = SCENE_TITLE;
 	//フォント作成.
@@ -105,9 +108,14 @@ void GameManager::Init() {
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
 	//サウンド読み込み.
-	SoundST* sound = SoundST::GetPtr();
-	sound->LoadFile(_T("Resources/Sounds/audiostock_132563.mp3"),  _T("BGM1"));
-	sound->LoadFile(_T("Resources/Sounds/audiostock_1535055.mp3"), _T("BGM2"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_132563.mp3"),  _T("BGM1"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1175043.mp3"), _T("BGM2"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),    _T("PowerDown"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),   _T("Break"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_157393.mp3"),   _T("TakeItem1"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),   _T("TakeItem2"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_326830.mp3"),   _T("Laser1"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),   _T("Laser2"));
 
 	//Init処理
 	{
@@ -146,8 +154,8 @@ void GameManager::Reset() {
 	data.spawnRate = 1.0; //最初は100%
 	data.counter = 0;
 	//サウンド.
-	SoundST* sound = SoundST::GetPtr();
-	sound->FadeInPlay(_T("BGM1"), 80, 3, TRUE);
+	p_sound->Stop(_T("BGM2"));
+	p_sound->FadeInPlay(_T("BGM2"), 80, 3, TRUE);
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -177,12 +185,9 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	InputST* input = InputST::GetPtr(); //inputクラスを使えるように.
-	SoundST* sound = SoundST::GetPtr(); //soundクラスを使えるように.
-
-	input->UpdateKey();    //キー入力更新.
-	input->UpdatePadBtn(); //コントローラのボタン入力更新.
-	sound->Update();       //サウンド更新.
+	p_input->UpdateKey();    //キー入力更新.
+	p_input->UpdatePadBtn(); //コントローラのボタン入力更新.
+	p_sound->Update();       //サウンド更新.
 
 	//シーン別.
 	switch (data.scene) 
@@ -216,13 +221,11 @@ void GameManager::Draw() {
 //シーン別更新.
 void GameManager::UpdateTitle() 
 {
-	InputST* input = InputST::GetPtr();
-
 	//プレイヤーclass.
 	player.Update();
 
 	//特定の操作でゲーム開始.
-	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_X) == 1)
+	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_BTN_X) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
 		data.scene = SCENE_READY;     //準備シーンへ.
@@ -252,9 +255,13 @@ void GameManager::UpdateGame() {
 	if (tmSlowMode.GetIsMove()) {
 		//時間切れで解除.
 		if (tmSlowMode.GetPassTime() == 0) {
-			data.isSlow = FALSE;
+			
 			player.SetReflectionMode(FALSE); //反射モード終了.
+			p_sound->Play(_T("PowerDown"), FALSE); //サウンド.
+			
+			//リセット.
 			tmSlowMode.Reset();
+			data.isSlow = FALSE;
 		}
 	}
 
@@ -263,10 +270,8 @@ void GameManager::UpdateGame() {
 }
 void GameManager::UpdateEnd() {
 
-	InputST* input = InputST::GetPtr();
-
 	//特定の操作でタイトルへ.
-	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushPadBtnTime(PAD_BTN_A) == 1)
+	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_BTN_A) == 1)
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
@@ -371,7 +376,7 @@ void GameManager::DrawEnd() {
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeST(MODE_ALPHA, 128*anim);
-		DrawBoxST(&box, FALSE);
+		DrawBoxST(&box, FALSE); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
 	DrawUI();
@@ -516,8 +521,7 @@ void GameManager::GameEnd() {
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
 	//サウンド.
-	SoundST* sound = SoundST::GetPtr();
-	sound->FadeOutPlay(_T("BGM1"), 3);
+	p_sound->FadeOutPlay(_T("BGM2"), 3);
 }
 //アイテムを取った時.
 void GameManager::TakeItem() {
@@ -526,4 +530,8 @@ void GameManager::TakeItem() {
 	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	tmSlowMode.Start();             //スローモード計測開始.
 	player.SetReflectionMode(TRUE); //反射モード開始.
+
+	//サウンド.
+//	p_sound->Play(_T("TakeItem1"), FALSE);
+	p_sound->Play(_T("TakeItem2"), FALSE);
 }

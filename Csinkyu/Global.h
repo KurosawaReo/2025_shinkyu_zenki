@@ -251,5 +251,5 @@ struct GameData
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_ITEM						(GetColor(  0, 255,   0))
 #define COLOR_PRE_LINE					(GetColor(128, 128, 128)) //ó\ë™ê¸.
-#define COLOR_BEST_SCORE				(0x20f7de)
+#define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)

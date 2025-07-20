@@ -22,6 +22,9 @@ private: //データ.
 	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
+	InputST* p_input;
+	SoundST* p_sound;
+
 public:
 	//実体の取得.
 	static GameManager* GetPtr() {

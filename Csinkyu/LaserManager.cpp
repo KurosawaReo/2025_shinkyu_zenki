@@ -256,6 +256,9 @@ BOOL LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			laser[i].ValidFlag = 1;	// レーザーを有効化
 			laser[i].type = type;   // タイプの登録
 
+			SoundST* sound = SoundST::GetPtr();
+			sound->Play(_T("Laser1"), FALSE, 70); //サウンド.
+
 			return TRUE; //召喚成功.
 		}
 	}
@@ -296,6 +299,9 @@ void LaserManager::ReflectLaser(int idx)
 
 	laser[idx].type    = Laser_Reflected; //反射モードへ.
 	laser[idx].Counter = 0;               //カウンターをリセット.
+
+	SoundST* sound = SoundST::GetPtr();
+	sound->Play(_T("Laser2"), FALSE, 70); //サウンド.
 }
 
 #if false

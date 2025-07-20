@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/07/19
+   ver.2025/07/21
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -67,7 +67,6 @@ void SoundData::Play(BOOL isLoop, int volume) {
 		ChangeVolumeSoundMem(vol255, handle); //音量反映.
 		nowVol = aftVol = vol255;             //音量を保存.
 
-		Stop();
 		PlaySoundMem(handle, (isLoop ? DX_PLAYTYPE_LOOP : DX_PLAYTYPE_BACK));
 	}
 }
