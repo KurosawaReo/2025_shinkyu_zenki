@@ -174,7 +174,7 @@ void GameManager::Reset() {
 		obstacle4_2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
 		//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
 		//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
-		//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
+		obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
@@ -291,7 +291,7 @@ void GameManager::UpdateObjects() {
 	obstacle4_2.Update();
 	//obstacle4_3.Update();
 	//obstacle4_4.Update();
-	//obstacle5.Update();
+	obstacle5.Update();
 	//アイテムclass.
 	item.Update();
 }
@@ -302,18 +302,20 @@ void GameManager::DrawTitle() {
 	//プレイヤーclass.
 	player.Draw();
 
+	//アニメーション切り替わりポイント.
+	const float delay1 = 1;
+	const float delay2 = 2.5;
+
 	//画像の表示.
-	{
-		const int delay = 1; //切り替わりポイント.
-	
+	{	
 		//切り替え前.
-		if (tmScene[SCENE_TITLE].GetPassTime() < delay) {
+		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
-			float anim = CalcNumEaseIn(tmScene[SCENE_TITLE].GetPassTime()/delay);
+			float anim = CalcNumEaseIn(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//画像設定.
 			IMG_DRAW_EXTEND img = { 
 				data.imgLogo[0],
-				{WINDOW_WID/2, WINDOW_HEI/2}, 
+				{WINDOW_WID/2, WINDOW_HEI/2 - 50}, 
 				{data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2}
 			};
 			//ロゴ1枚目.
@@ -323,16 +325,16 @@ void GameManager::DrawTitle() {
 		//切り替え後.
 		else {
 			//アニメーション値.
-			float anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay)/2);
+			float anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/2);
 			//画像設定.
 			IMG_DRAW_EXTEND img1 = { 
 				data.imgLogo[0],
-				{WINDOW_WID/2, WINDOW_HEI/2-anim*100}, 
+				{WINDOW_WID/2, WINDOW_HEI/2 - 50 - anim*100}, 
 				{data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2}
 			};
 			IMG_DRAW_EXTEND img2 = {
 				data.imgLogo[1],
-				{WINDOW_WID/2, WINDOW_HEI/2 - anim * 100},
+				{WINDOW_WID/2, WINDOW_HEI/2 - 50 - anim*100},
 				{data.imgLogo[1].size.x/2, data.imgLogo[1].size.y/2}
 			};
 			//ロゴ1枚目.
@@ -347,13 +349,22 @@ void GameManager::DrawTitle() {
 	}
 
 	//テキストの表示.
-	{
-		STR_DRAW str  = { _T("PUSH SPACE"), {WINDOW_WID/2, 160}, 0xFFFFFF };
-		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2+300}, 0xFFFFFF };
-		swprintf(str2.text, _T("best score: %d"), data.bestScore); //ベストスコア.
+	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
 
-		DrawStringST(&str,  TRUE, data.font1);
-		DrawStringST(&str2, TRUE, data.font1);
+		//アニメーション値.
+		float anim1 = CalcNumCosLoop((tmScene[SCENE_TITLE].GetPassTime()-delay2)*2);
+		float anim2 = CalcNumEaseIn(tmScene[SCENE_TITLE].GetPassTime()-delay2);
+
+		STR_DRAW str1 = { _T("PUSH SPACE"), {WINDOW_WID/2, WINDOW_HEI/2+300}, 0xFFFFFF };
+		STR_DRAW str2 = { {},               {WINDOW_WID/2, WINDOW_HEI/2+100}, COLOR_BEST_SCORE };
+		swprintf(str2.text, _T("best score: %d"), data.bestScore); //ベストスコア.
+		tmScene[SCENE_TITLE].GetPassTime();
+
+		SetDrawBlendModeST(MODE_ADD, 255*anim1);
+		DrawStringST(&str1, TRUE, data.font1);
+		SetDrawBlendModeST(MODE_ADD, 255*anim2);
+		DrawStringST(&str2, TRUE, data.font2);
+		ResetDrawBlendMode();
 	}
 }
 void GameManager::DrawReady() {
@@ -393,7 +404,7 @@ void GameManager::DrawEnd() {
 			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
 		);
 		//画面中央に文字を表示.
-		DrawStringST(&str1, TRUE, data.font2);
+		DrawStringST(&str1, TRUE, data.font3);
 		DrawStringST(&str2, TRUE, data.font1);
 	}
 }
@@ -482,7 +493,7 @@ void GameManager::DrawObjects() {
 	obstacle4_2.Draw();
 	//obstacle4_3.Draw();
 	//obstacle4_4.Draw();
-	//obstacle5.Draw();
+	obstacle5.Draw();
 	//アイテムclass.
 	item.Draw();
 }

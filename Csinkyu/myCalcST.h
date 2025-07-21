@@ -1,6 +1,6 @@
 /*
    - myCalcST.h - (original)
-   ver.2025/07/20
+   ver.2025/07/21
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -32,6 +32,7 @@ DBL_XY CalcRadToPos	 (double rad);
 float  CalcNumEaseIn   (float time);
 float  CalcNumEaseOut  (float time);
 float  CalcNumEaseInOut(float time);
+float  CalcNumCosLoop  (float time);
 
 //値の操作.
 int    RndNum		 (int st, int ed, BOOL isDxRnd = FALSE);
