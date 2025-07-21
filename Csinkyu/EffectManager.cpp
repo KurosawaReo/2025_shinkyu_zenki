@@ -190,7 +190,7 @@ void EffectManager::Draw() {
 
 				case Effect_Level1:
 				{
-					STR_DRAW str = { _T("Level1"), _intXY(effect[i].pos), 0xFFFFFF};
+					STR_DRAW str = { _T("Level 1"), _intXY(effect[i].pos), 0xFFFFFF};
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
 					//アニメーション値.
 					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
@@ -205,7 +205,7 @@ void EffectManager::Draw() {
 
 				case Effect_Level2:
 				{
-					STR_DRAW str = { _T("Level2"), _intXY(effect[i].pos), 0xFFFFFF};
+					STR_DRAW str = { _T("Level 2"), _intXY(effect[i].pos), 0xFFFFFF};
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
 					//アニメーション値.
 					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
@@ -220,7 +220,7 @@ void EffectManager::Draw() {
 
 				case Effect_Level3:
 				{
-					STR_DRAW str = { _T("Level3"), _intXY(effect[i].pos), 0xFFFFFF };
+					STR_DRAW str = { _T("Level 3"), _intXY(effect[i].pos), 0xFFFFFF };
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
 					//アニメーション値.
 					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
@@ -235,7 +235,7 @@ void EffectManager::Draw() {
 
 				case Effect_Level4:
 				{
-					STR_DRAW str = { _T("Level4"), _intXY(effect[i].pos), 0xFFFFFF };
+					STR_DRAW str = { _T("Level 4"), _intXY(effect[i].pos), 0xFFFFFF };
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
 					//アニメーション値.
 					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);

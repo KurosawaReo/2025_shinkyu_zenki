@@ -22,6 +22,8 @@ private: //データ.
 	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
+	BOOL isTitleBreak; //タイトルアニメーション用.
+
 	InputST* p_input;
 	SoundST* p_sound;
 

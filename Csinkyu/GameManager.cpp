@@ -155,9 +155,10 @@ void GameManager::Reset() {
 	data.counter = 0;
 	data.spawnRate = 1.0; //最初は100%
 	data.level = 1; //最初はLv1
+	isTitleBreak = FALSE;
 	//サウンド.
 	p_sound->Stop(_T("BGM1"));
-	p_sound->FadeInPlay(_T("BGM1"), 68, 3, TRUE);
+	p_sound->Play(_T("BGM1"), FALSE, 68);
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -229,8 +230,8 @@ void GameManager::ResetNorLaser() {
 //シーン別更新.
 void GameManager::UpdateTitle() 
 {
-	//プレイヤーclass.
-	player.Update();
+	player.Update();    //プレイヤー.
+	effectMng.Update(); //エフェクト.
 
 	//特定の操作でゲーム開始.
 	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_BTN_X) == 1)
@@ -241,8 +242,8 @@ void GameManager::UpdateTitle()
 }
 void GameManager::UpdateReady() {
 
-	UpdateObjects(); //オブジェクト.
-	player.Update(); //プレイヤー.
+	player.Update();    //プレイヤー.
+	effectMng.Update(); //エフェクト.
 	
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
@@ -375,20 +376,21 @@ void GameManager::UpdateObjects() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	
-	//プレイヤーclass.
-	player.Draw();
+	player.Draw();    //プレイヤー. 
+	effectMng.Draw(); //エフェクト管理.
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
-	const float delay2 = 2.5;
-	const float delay3 = 2.5;
+	const float delay2 = 1.5;
+	const float delay3 = 3;
+	const float delay4 = 3;
 
 	//画像の表示.
 	{	
 		//切り替え前.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
-			float anim = CalcNumEaseIn(tmScene[SCENE_TITLE].GetPassTime()/delay1);
+			float anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//画像設定.
 			IMG_DRAW_EXTEND img = { 
 				data.imgLogo[0],
@@ -402,7 +404,7 @@ void GameManager::DrawTitle() {
 		//切り替え後.
 		else {
 			//アニメーション値.
-			float anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/2);
+			float anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
 			//画像設定.
 			IMG_DRAW_EXTEND img1 = { 
 				data.imgLogo[0],
@@ -451,10 +453,39 @@ void GameManager::DrawTitle() {
 		DrawCircleST(&cir, FALSE);            //Aボタンの円.
 		ResetDrawBlendMode();
 	}
+	//隕石破壊.
+	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
+		//まだ出してなければ.
+		if (!isTitleBreak) {
+			isTitleBreak = TRUE; //一度きり.
+
+			double dig = -130; //角度.
+
+			//エフェクトをいくつか出す.
+			for (int i = 0; i < 8; i++) {
+
+				double newDig = dig + (float)RndNum(-400, 400)/10; //少し角度をずらす.
+
+				EffectData data{}; 
+				data.type  = Effect_BreakMeteo;
+				data.pos   = { 595, 345 };
+				data.vec   = CalcDigToPos(newDig);            //ずらした角度を反映.
+				data.speed = ((float)RndNum(5, 40)  /10)*1.3; //速度抽選.
+				data.len   = ((float)RndNum(30, 180)/10)*1.3; //長さ抽選.
+				data.ang   = (float)RndNum(0, 3599)/10;       //角度抽選.
+				//エフェクト召喚.
+				effectMng.SpawnEffect(&data);
+			}
+			//サウンド.
+			SoundST* sound = SoundST::GetPtr();
+			sound->Play(_T("Break"), FALSE, 65);
+		}
+	}
 }
 void GameManager::DrawReady() {
 	
-	player.Draw(); //プレイヤー.
+	player.Draw();    //プレイヤー.
+	effectMng.Draw(); //エフェクト管理.
 	DrawUI();
 }
 void GameManager::DrawGame() {
