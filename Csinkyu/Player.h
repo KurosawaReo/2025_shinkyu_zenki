@@ -10,6 +10,14 @@ struct PlayerShield
 {
 	
 };
+struct ReflectEffect
+{
+	DBL_XY pos;           // エフェクト位置
+	float  scale;         // スケール
+	float  alpha;         // 透明度
+	int    timer;         // 表示時間
+	BOOL   active;        // 有効フラグ
+};
 
 class Player
 {
@@ -34,6 +42,9 @@ public:
 	DBL_XY  GetPos()   { return hit.pos; }
 	BOOL    GetActive(){ return active; }
 	Circle* GetHit()   { return &hit; }
+	static const int MAX_REFLECT_EFFECTS = 5;  // 最大エフェクト数
+	ReflectEffect reflectEffects[MAX_REFLECT_EFFECTS]{};  // エフェクト配列
+	int reflectEffectIndex{};  // 次に使用するエフェクトのインデックス
 
 	//その他.
 	void  Init  (GameData*, EffectManager*);
@@ -49,4 +60,8 @@ public:
 
 	BOOL  IsReflectionMode() const; //反射モードかどうかを返す.
 	void  SetReflectionMode(BOOL);	//反射モード設定.
+
+	void CreateReflectEffect(DBL_XY pos);
+	void UpdateReflectEffects();
+	void DrawReflectEffects();
 };
