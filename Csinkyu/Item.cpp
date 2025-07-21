@@ -66,18 +66,14 @@ BOOL Item::CheckHitPlayer()
 		return FALSE;
 	}
 
-	// プレイヤーの位置と当たり判定円を取得
-	Circle* playerHit = p_player->GetHit();
-
-	// アイテムの矩形とプレイヤーの円の当たり判定
-	double dx = pos.x - playerHit->pos.x;
-	double dy = pos.y - playerHit->pos.y;
-	double distance = sqrt(dx * dx + dy * dy);
-	// アイテムのサイズを考慮した当たり判定
-	double itemRadius = size.x / 2.0; // アイテムの半径として計算
-
-	if (distance < (playerHit->r + itemRadius)) {
-		// 当たった場合の処理
+	//プレイヤーの判定を取得.
+	Circle* plyHit = p_player->GetHit();
+	//当たり判定を四角形とする.
+	Box plyBox = { plyHit->pos, {PLAYER_SIZE, PLAYER_SIZE}, {} };
+	Box itemBox = { pos, size, {} };
+	
+	//当たった場合.
+	if (IsHitBox(&plyBox, &itemBox, TRUE)) {
 		OnHitPlayer();
 		return TRUE;
 	}
@@ -90,6 +86,9 @@ void Item::OnHitPlayer()
 {
 	//アイテムを取った処理.
 	GameManager::GetPtr()->TakeItem();
+	//サウンド.
+	SoundST* sound = SoundST::GetPtr();
+	sound->Play(_T("TakeItem"), FALSE, 76);
 	//エフェクト召喚.
 	EffectData data{};
 	data.type = Effect_Score100;

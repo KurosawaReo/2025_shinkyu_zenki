@@ -22,6 +22,9 @@ private: //データ.
 	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
+	BOOL isFinTitleAnim; //タイトルアニメーション用.
+	BOOL isFinScoreAnim; //最高スコアアニメーション用.
+
 	InputST* p_input;
 	SoundST* p_sound;
 
@@ -36,6 +39,9 @@ public:
 	void Reset();
 	void Update();
 	void Draw();
+
+	//Reset.
+	void ResetNorLaser();
 
 	//Update.
 	void UpdateTitle();

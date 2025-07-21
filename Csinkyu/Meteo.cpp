@@ -61,7 +61,7 @@ void Meteo::Draw() {
 	if (active) {
 		//îjâÛÉÇÅ[Éhå¿íË.
 		if (state == Meteo_Destroy) {
-			int pow = _int(min(255 * (float)(METEO_DEST_TIME-destroyCntr)/METEO_DEST_TIME, 255)); //è≠ÇµÇ∏Ç¬å∏è≠(255Å®0)
+			int pow = 255 * CalcNumEaseOut((METEO_DEST_TIME-destroyCntr)/METEO_DEST_TIME); //è≠ÇµÇ∏Ç¬å∏è≠(255Å®0)
 			SetDrawBlendModeST(MODE_ADD, pow);
 		}
 

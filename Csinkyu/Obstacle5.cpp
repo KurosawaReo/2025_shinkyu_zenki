@@ -8,8 +8,8 @@
 void Obstacle5::Init(GameData* data, Player* player)
 {
 	//実体のアドレスをもらう.
-	this->data = data;
-	this->player = player;
+	p_data = data;
+	p_player = player;
 
 	// フラッシュエフェクトの初期化
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {
@@ -21,12 +21,9 @@ void Obstacle5::Init(GameData* data, Player* player)
 		flashEffect[i].BaseSize = 0;
 	}
 }
-void Obstacle5::Reset(double x, double y, float speed, int direction)
+void Obstacle5::Reset()
 {
-	line.stPos.x = x;
-	line.stPos.y = y;
-	this->speed = speed;
-	// direction は必要に応じて使用
+	flashTimer = 80; //最初は少しだけ待機.
 
 	// リセット時に既存のフラッシュエフェクトをすべてクリア
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {
@@ -37,9 +34,6 @@ void Obstacle5::Reset(double x, double y, float speed, int direction)
 		flashEffect[i].y = 0.0;
 		flashEffect[i].BaseSize = 0;
 	}
-
-	// リセット時にフラッシュエフェクトを開始
-	StartFlashEffect(x, y);
 }
 
 void Obstacle5::GenerateRandomPosition(double& x, double& y)  // 参照渡しに修正
@@ -121,24 +115,33 @@ int Obstacle5::GetEffectState(int index)
 // 定期的にエフェクトを生成する関数を追加
 void Obstacle5::UpdateFlashGeneration()
 {
-	static int flashTimer = 120; // インターバル時間から開始（カウントダウン）
-	static int baseInterval = 120; // 基本インターバル（2秒間隔、60FPS想定）
-	static bool isFirstCall = true; // 初回呼び出しフラグ
-
-	// 初回呼び出し時やリセット後の処理
-	if (isFirstCall) {
-		flashTimer = baseInterval;
-		isFirstCall = false;
-	}
-
-	flashTimer--;  // 毎フレーム減少
-	if (flashTimer <= 0) {  // 0以下になったら実行
+	//タイマー減少.
+	flashTimer -= ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+	//0以下になったら実行.
+	if (flashTimer <= 0) {
 		// 新しいフラッシュエフェクトを生成
 		SpawnObstaclegroup();  // ランダム位置に複数生成するように変更
 
 		// GameDataのspawnRateを使用してインターバルを調整
-		int adjustedInterval = (int)(baseInterval * data->spawnRate);
-		flashTimer = adjustedInterval;  // 調整されたインターバル時間にリセット
+		flashTimer = OBSTACLE5_SPAWN_SPAN * p_data->spawnRate;
+	}
+
+	//全フラッシュ.
+	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++)
+	{
+		if (flashEffect[i].ValidFlag == 0)
+		{
+			continue;//無効なエフェクトをスキップ.
+		}
+
+		//カウントダウン.
+		flashEffect[i].Counter -= (p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
+		//エフェクト時間が終了したら無効化.
+		if (flashEffect[i].Counter <= 0)  // 0以下になったら終了
+		{
+			flashEffect[i].ValidFlag = 0;
+			flashEffect[i].AlreadyHit = false; //当たり判定のリセット.
+		}
 	}
 }
 //更新.
@@ -153,8 +156,11 @@ void Obstacle5::Draw()
 {
 	DrawObstFlash();
 }
+//当たり判定.
 void Obstacle5::Hitjudgment()
 {
+	BOOL isPlaySound = FALSE; //一度のみサウンドを流す用.
+
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {
 		if (flashEffect[i].ValidFlag == 0 || flashEffect[i].Counter <= 0) {
 			continue;
@@ -172,17 +178,25 @@ void Obstacle5::Hitjudgment()
 
 		// アクティブ状態になった直後だけ判定
 		if (effectState == OBSTACLE5_STATE_ACTIVE && !flashEffect[i].AlreadyHit) {
+
 			float sizeMultiplier = OBSTACLE5_FLASH_SIZE_INIT + (activeProgress * OBSTACLE5_FLASH_SIZE_SPREAD);
 			int effectSize = (int)(flashEffect[i].BaseSize * sizeMultiplier);
 
-			DBL_XY playerPos = player->GetPos();
+			DBL_XY playerPos = p_player->GetPos();
 			double dx = playerPos.x - flashEffect[i].x;
 			double dy = playerPos.y - flashEffect[i].y;
 			double distance = sqrt(dx * dx + dy * dy);
 			float playerRadius = 10.0f;
 
 			if (distance < (effectSize * 0.8f + playerRadius)) {
-				player->PlayerDeath();
+				p_player->PlayerDeath();
+			}
+
+			//サウンド.
+			if (!isPlaySound) {
+				SoundST* sound = SoundST::GetPtr();
+				sound->Play(_T("Ripples"), FALSE, 73);
+				isPlaySound = TRUE; //もう再生しない.
 			}
 
 			// 一度判定を行ったらフラグを立てて、以後は無効に
@@ -210,14 +224,6 @@ void Obstacle5::DrawObstFlash()
 		{
 			// アクティブ状態の描画（元のフラッシュエフェクト）
 			DrawActiveEffect(i);
-		}
-		// カウンタの更新を修正（カウントダウン）
-		flashEffect[i].Counter -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
-
-		//エフェクト時間が終了したら無効化.
-		if (flashEffect[i].Counter <= 0)  // 0以下になったら終了
-		{
-			flashEffect[i].ValidFlag = 0;
 		}
 	}
 	//通常の描画モードに戻す

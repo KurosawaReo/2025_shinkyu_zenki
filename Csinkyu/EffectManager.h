@@ -12,6 +12,10 @@ enum EffectType
 	Effect_PlayerDeath,  //プレイヤー死亡.
 	Effect_ReflectLaser, //レーザー反射.
 	Effect_BreakMeteo,   //隕石破壊.
+	Effect_Level1,		 //レベル1演出.
+	Effect_Level2,		 //レベル2演出.
+	Effect_Level3,		 //レベル3演出.
+	Effect_Level4,		 //レベル4演出.
 };
 //エフェクトデータ.
 struct EffectData

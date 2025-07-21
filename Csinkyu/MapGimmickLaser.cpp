@@ -31,11 +31,11 @@ void MapGimmickLaser::Init(GameData* _data, Player* _player, LaserManager* _lase
 /// </summary>
 void MapGimmickLaser::Reset()
 {
-	laserSpawnTimer = MGL_LASER_SPAWN_SPAN;
+	laserSpawnTimer = MGL_LASER_PREDICTION_TIME+80; //予測線が出るタイミングから開始.
 	nextLaserIndex = 0;
 	predictionTimer = 0;
 	showPrediction = false;
-	nextCenterPos = 0;  // 追加: 次のレーザー発射位置リセット
+	nextCenterPos = 0;  //次のレーザー発射位置リセット
 }
 /// <summary>
 /// 更新するぜ.

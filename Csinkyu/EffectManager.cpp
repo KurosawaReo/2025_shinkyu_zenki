@@ -22,15 +22,13 @@ void EffectManager::Update() {
 	for (int i = 0; i < EFFECT_MAX; i++) {
 		if (effect[i].active) {
 
-			//カウンター加算.
-			effect[i].counter++;
-//			effect[i].counter += ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-
 			//タイプ別.
 			switch (effect[i].type) 
 			{
 				case Effect_Score100:
 				{
+					effect[i].counter++;
+
 					//時間経過で消滅.
 					if (effect[i].counter >= SCORE_ANIM_TIME) {
 						DeleteEffect(i);
@@ -40,6 +38,8 @@ void EffectManager::Update() {
 
 				case Effect_Score500:
 				{
+					effect[i].counter++;
+
 					//時間経過で消滅.
 					if (effect[i].counter >= SCORE_ANIM_TIME) {
 						DeleteEffect(i);
@@ -49,6 +49,8 @@ void EffectManager::Update() {
 
 				case Effect_PlayerDeath:
 				{
+					effect[i].counter++;
+
 					//時間経過で消滅.
 					if (effect[i].counter >= PLAYER_DEATH_ANIM_TIME) {
 						DeleteEffect(i);
@@ -58,6 +60,8 @@ void EffectManager::Update() {
 
 				case Effect_ReflectLaser:
 				{
+					effect[i].counter++;
+
 					//時間経過で消滅.
 					if (effect[i].counter >= LASER_REF_ANIM_TIME) {
 						DeleteEffect(i);
@@ -67,13 +71,30 @@ void EffectManager::Update() {
 
 				case Effect_BreakMeteo:
 				{
-					effect[i].ang += 3; //回転.
+					//カウンター加算.
+					effect[i].counter += ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					//回転.
+					effect[i].ang += 3 * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 					//移動.
-					effect[i].pos.x += effect[i].vec.x * effect[i].speed;
-					effect[i].pos.y += effect[i].vec.y * effect[i].speed;
+					effect[i].pos.x += effect[i].vec.x * effect[i].speed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					effect[i].pos.y += effect[i].vec.y * effect[i].speed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 					//時間経過で消滅.
 					if (effect[i].counter >= METEO_BREAK_ANIM_TIME) {
+						DeleteEffect(i);
+					}
+				}
+				break;
+
+				case Effect_Level1:
+				case Effect_Level2:
+				case Effect_Level3:
+				case Effect_Level4:
+				{
+					effect[i].counter++;
+
+					//時間経過で消滅.
+					if (effect[i].counter >= LEVEL_UP_ANIM_TIME) {
 						DeleteEffect(i);
 					}
 				}
@@ -163,6 +184,66 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawLineST(&line);
+					ResetDrawBlendMode();
+				}
+				break;
+
+				case Effect_Level1:
+				{
+					STR_DRAW str = { _T("Level 1"), _intXY(effect[i].pos), 0xFFFFFF};
+					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					//アニメーション値.
+					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawStringST(&str, TRUE, p_data->font2);
+					DrawCircleST(&cir, FALSE);
+					ResetDrawBlendMode();
+				}
+				break;
+
+				case Effect_Level2:
+				{
+					STR_DRAW str = { _T("Level 2"), _intXY(effect[i].pos), 0xFFFFFF};
+					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					//アニメーション値.
+					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawStringST(&str, TRUE, p_data->font2);
+					DrawCircleST(&cir, FALSE);
+					ResetDrawBlendMode();
+				}
+				break;
+
+				case Effect_Level3:
+				{
+					STR_DRAW str = { _T("Level 3"), _intXY(effect[i].pos), 0xFFFFFF };
+					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					//アニメーション値.
+					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawStringST(&str, TRUE, p_data->font2);
+					DrawCircleST(&cir, FALSE);
+					ResetDrawBlendMode();
+				}
+				break;
+
+				case Effect_Level4:
+				{
+					STR_DRAW str = { _T("Level 4"), _intXY(effect[i].pos), 0xFFFFFF };
+					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					//アニメーション値.
+					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawStringST(&str, TRUE, p_data->font2);
+					DrawCircleST(&cir, FALSE);
 					ResetDrawBlendMode();
 				}
 				break;

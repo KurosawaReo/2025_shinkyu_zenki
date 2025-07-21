@@ -149,6 +149,7 @@ struct GameData
 	int   score;      //スコア.
 	int   scoreBef;   //スコア(時間加算前)
 	int   bestScore;  //ベストスコア.
+	int   level;	  //レベル.
 
 	float spawnRate;  //障害物の出現時間割合.
 	float counter;    //経過時間カウンター(スローの影響を受ける)
@@ -178,6 +179,8 @@ struct GameData
 
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 
+#define LEVEL_UP_ANIM_TIME				(120)			//レベルアップアニメーション時間.
+
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
@@ -194,7 +197,7 @@ struct GameData
 #define OBSTACLE2_LIM_F					(80)			//最大追跡フレーム数.
 
 #define OBSTACLE4_OUTER_MARGIN			(0)				//砲台の周回時の外側余白.
-#define OBSTACLE4_SHOT_RESET			(200)			//砲台の発射リセット時間.
+#define OBSTACLE4_SHOT_RESET			(300)			//砲台の発射リセット時間.
 #define OBSTACLE4_SHOT_START			(20)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN				(5)				//砲台の発射間隔時間.
 
@@ -213,11 +216,11 @@ struct GameData
 #define OBSTACLE5_STATE_ACTIVE			(1)				//アクティブ状態.
 #define OBSTACLE5_WARNING_DURATION		(120.0f)		//2秒間の予告.
 #define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//1秒間のアクティブ.
-#define OBSTACLE5_SPAWN_INTERVAL		(300)			//5秒間隔.
+#define OBSTACLE5_SPAWN_SPAN			(350)			//出現間隔.
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
 #define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 
-#define MGL_LASER_SPAWN_SPAN			(300)			//直線レーザーの出現間隔.
+#define MGL_LASER_SPAWN_SPAN			(350)			//直線レーザーの出現間隔.
 #define MGL_LASER_PREDICTION_TIME		(60)			//直線レーザーの予測線の出る時間.
 
 //#define LASER_NOR_ROT_MAX				(0.1)			//レーザー(normal)   の曲がる限界角度.
@@ -228,7 +231,7 @@ struct GameData
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
 #define LASER_CNT_MAX					(50)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(10000)			//レーザーで描画する線の最大数.
+#define LASER_LINE_CNT_MAX				(12000)			//レーザーで描画する線の最大数.
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
 #define METEO_CNT_MAX					(50)			//隕石の最大出現数.

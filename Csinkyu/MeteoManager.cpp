@@ -93,7 +93,7 @@ BOOL MeteoManager::IsHitMeteos(Circle* cir, BOOL isDestroy) {
 					p_effectMng->SpawnEffect(&data);
 					//ƒTƒEƒ“ƒh.
 					SoundST* sound = SoundST::GetPtr();
-					sound->Play(_T("Break"), FALSE, 80);
+					sound->Play(_T("Break"), FALSE, 74);
 				}
 			}
 			return TRUE; //1‚Â‚Å‚à“–‚½‚Á‚Ä‚¢‚é.
