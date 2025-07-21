@@ -159,6 +159,8 @@ void Obstacle5::Draw()
 //当たり判定.
 void Obstacle5::Hitjudgment()
 {
+	BOOL isPlaySound = FALSE; //一度のみサウンドを流す用.
+
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {
 		if (flashEffect[i].ValidFlag == 0 || flashEffect[i].Counter <= 0) {
 			continue;
@@ -191,8 +193,11 @@ void Obstacle5::Hitjudgment()
 			}
 
 			//サウンド.
-			SoundST* sound = SoundST::GetPtr();
-			sound->Play(_T("Ripples"), FALSE, 68);
+			if (!isPlaySound) {
+				SoundST* sound = SoundST::GetPtr();
+				sound->Play(_T("Ripples"), FALSE, 73);
+				isPlaySound = TRUE; //もう再生しない.
+			}
 
 			// 一度判定を行ったらフラグを立てて、以後は無効に
 			flashEffect[i].AlreadyHit = true;

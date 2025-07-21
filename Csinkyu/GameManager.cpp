@@ -113,11 +113,13 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),    _T("PowerDown"));	//アイテム解除.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),   _T("Break"));		//隕石破壊.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),   _T("TakeItem"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_326830.mp3"),   _T("Laser1"));		//レーザー(発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),   _T("Laser2"));		//レーザー(反射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1564424.mp3"),  _T("Ripples"));	//波紋.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),  _T("Laser1"));		//レーザー(発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),  _T("Laser2"));		//レーザー(強発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),   _T("Laser3"));		//レーザー(反射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),   _T("Ripples"));	//波紋.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),   _T("PlayerDeath"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),  _T("LevelUp"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),   _T("BestScore"));  //最高スコア更新.
 	//Init処理
 	{
 		//管理class.
@@ -155,7 +157,8 @@ void GameManager::Reset() {
 	data.counter = 0;
 	data.spawnRate = 1.0; //最初は100%
 	data.level = 1; //最初はLv1
-	isTitleBreak = FALSE;
+	isFinTitleAnim = FALSE;
+	isFinScoreAnim = FALSE;
 	//サウンド.
 	p_sound->Stop(_T("BGM1"));
 	p_sound->Play(_T("BGM1"), FALSE, 68);
@@ -284,7 +287,7 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 2:
-			if (data.spawnRate <= 0.70) { //70%以下.
+			if (data.spawnRate <= 0.65) { //65%以下.
 				data.level = 3; //Lv3へ.
 
 				//サウンド.
@@ -381,7 +384,7 @@ void GameManager::DrawTitle() {
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
-	const float delay2 = 1.5;
+	const float delay2 = 1.4;
 	const float delay3 = 3;
 	const float delay4 = 3;
 
@@ -456,8 +459,8 @@ void GameManager::DrawTitle() {
 	//隕石破壊.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
 		//まだ出してなければ.
-		if (!isTitleBreak) {
-			isTitleBreak = TRUE; //一度きり.
+		if (!isFinTitleAnim) {
+			isFinTitleAnim = TRUE; //一度きり.
 
 			double dig = -130; //角度.
 
@@ -477,8 +480,7 @@ void GameManager::DrawTitle() {
 				effectMng.SpawnEffect(&data);
 			}
 			//サウンド.
-			SoundST* sound = SoundST::GetPtr();
-			sound->Play(_T("Break"), FALSE, 65);
+			p_sound->Play(_T("Break"), FALSE, 65);
 		}
 	}
 }
@@ -516,19 +518,44 @@ void GameManager::DrawEnd() {
 		float anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
 		//テキストの設定.
-		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 440+30*anim}, 0xA000FF };
-		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2+80}, 0xFFFFFF };
+		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 400+30*anim}, 0xA0A0A0 };
+		STR_DRAW str2 = { _T("time bonus"),    {WINDOW_WID/2, WINDOW_HEI/2+10}, 0xFFFFFF };
+		STR_DRAW str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+50}, 0xFFFFFF };
 		//スコア表示.
 		swprintf(
-			str2.text, 
-			_T("[score] %d点 + %d点(time:%.3f)\n[total] %d点"),
+			str3.text, 
+			_T("%d + %d(%.3f秒) = %d点"),
 			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
 		);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str1, TRUE, data.font3);
 		DrawStringST(&str2, TRUE, data.font1);
+		DrawStringST(&str3, TRUE, data.font1);
 		ResetDrawBlendMode();
+	}
+
+	const float delay = 1.2;
+
+	//一定時間が経ったら.
+	if (tmScene[SCENE_END].GetPassTime() > delay) {
+		//ベストスコア更新.
+		if (data.score > data.bestScore) {
+
+			//アニメーション値.
+			float anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay)*2);
+			//テキスト.
+			STR_DRAW str = { _T("new record!"), {WINDOW_WID/2, WINDOW_HEI/2+120+anim*20}, 0xFFFF40 };
+			//描画.
+			SetDrawBlendModeST(MODE_ADD, 255*anim);
+			DrawStringST(&str, TRUE, data.font1);
+			ResetDrawBlendMode();
+			//サウンド.
+			if (!isFinScoreAnim) {
+				isFinScoreAnim = TRUE; //一度のみ.
+				p_sound->Play(_T("BestScore"), FALSE, 65);
+			}
+		}
 	}
 }
 

@@ -277,8 +277,14 @@ BOOL LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			laser[i].ValidFlag = 1;	// レーザーを有効化
 			laser[i].type = type;   // タイプの登録
 
+			//サウンド.
 			SoundST* sound = SoundST::GetPtr();
-			sound->Play(_T("Laser1"), FALSE, 55); //サウンド.
+			if (type == Laser_Normal){
+				sound->Play(_T("Laser1"), FALSE, 58); //通常レーザー.
+			}
+			if (type == Laser_Straight) {
+				sound->Play(_T("Laser2"), FALSE, 60); //直線レーザー.
+			}
 
 			return TRUE; //召喚成功.
 		}
@@ -328,7 +334,7 @@ void LaserManager::ReflectLaser(int idx)
 	p_effectMng->SpawnEffect(&data);
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("Laser2"), FALSE, 55);
+	sound->Play(_T("Laser3"), FALSE, 58);
 }
 
 #if false
