@@ -28,6 +28,16 @@ void Obstacle5::Reset(double x, double y, float speed, int direction)
 	this->speed = speed;
 	// direction は必要に応じて使用
 
+	// リセット時に既存のフラッシュエフェクトをすべてクリア
+	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {
+		flashEffect[i].ValidFlag = 0;
+		flashEffect[i].Counter = 0.0f;
+		flashEffect[i].Duration = 0.0f;
+		flashEffect[i].x = 0.0;
+		flashEffect[i].y = 0.0;
+		flashEffect[i].BaseSize = 0;
+	}
+
 	// リセット時にフラッシュエフェクトを開始
 	StartFlashEffect(x, y);
 }
@@ -66,8 +76,8 @@ void Obstacle5::StartFlashEffect(double x, double y)
 		if (flashEffect[i].ValidFlag == 0) {
 			flashEffect[i].x = x;
 			flashEffect[i].y = y;
-			flashEffect[i].Counter = 0.0f;
-			flashEffect[i].Duration = OBSTACLE5_WARNING_DURATION + OBSTACLE5_ACTIVE_DURATION;;  // 適切な持続時間に調整
+			flashEffect[i].Duration = OBSTACLE5_WARNING_DURATION + OBSTACLE5_ACTIVE_DURATION;
+			flashEffect[i].Counter = flashEffect[i].Duration;  // 持続時間から開始（カウントダウン）
 			flashEffect[i].BaseSize = 20;     // 適切な基本サイズに調整
 			flashEffect[i].ValidFlag = 1;
 			break;
@@ -98,7 +108,7 @@ void Obstacle5::SpawnObstaclegroup()
 }
 int Obstacle5::GetEffectState(int index)
 {
-	if (flashEffect[index].Counter < OBSTACLE5_WARNING_DURATION)  // 比較演算子に修正
+	if (flashEffect[index].Counter > OBSTACLE5_ACTIVE_DURATION)  // 残り時間がアクティブ時間より大きければ警告状態
 	{
 		return OBSTACLE5_STATE_WARNING;
 	}
@@ -106,22 +116,29 @@ int Obstacle5::GetEffectState(int index)
 	{
 		return OBSTACLE5_STATE_ACTIVE;
 	}
-
 }
-
-
 
 // 定期的にエフェクトを生成する関数を追加
 void Obstacle5::UpdateFlashGeneration()
 {
-	static int flashTimer = 0;
-	static int flashInterval = 120; // 2秒間隔（60FPS想定）
+	static int flashTimer = 120; // インターバル時間から開始（カウントダウン）
+	static int baseInterval = 120; // 基本インターバル（2秒間隔、60FPS想定）
+	static bool isFirstCall = true; // 初回呼び出しフラグ
 
-	flashTimer++;
-	if (flashTimer >= flashInterval) {
+	// 初回呼び出し時やリセット後の処理
+	if (isFirstCall) {
+		flashTimer = baseInterval;
+		isFirstCall = false;
+	}
+
+	flashTimer--;  // 毎フレーム減少
+	if (flashTimer <= 0) {  // 0以下になったら実行
 		// 新しいフラッシュエフェクトを生成
 		SpawnObstaclegroup();  // ランダム位置に複数生成するように変更
-		flashTimer = 0;
+
+		// GameDataのspawnRateを使用してインターバルを調整
+		int adjustedInterval = (int)(baseInterval * data->spawnRate);
+		flashTimer = adjustedInterval;  // 調整されたインターバル時間にリセット
 	}
 }
 //更新.
@@ -131,7 +148,6 @@ void Obstacle5::Update()
 	Hitjudgment();
 }
 
-
 //描画.
 void Obstacle5::Draw()
 {
@@ -139,7 +155,6 @@ void Obstacle5::Draw()
 }
 void Obstacle5::Hitjudgment()
 {
-
 	// フラッシュエフェクトとプレイヤーの当たり判定
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++)
 	{
@@ -157,10 +172,13 @@ void Obstacle5::Hitjudgment()
 			continue;
 		}
 
-		// エフェクトのサイズを時間に応じて拡大（描画と同じ計算）
-		float sizeMultiplier = OBSTACLE5_FLASH_SIZE_INIT + (
-			flashEffect[i].Counter * OBSTACLE5_FLASH_SIZE_SPREAD / flashEffect[i].Duration
-			);
+		// エフェクトのサイズを時間に応じて拡大
+		// 残り時間から経過時間を計算
+		float elapsedTime = flashEffect[i].Duration - flashEffect[i].Counter;
+		float activeElapsedTime = elapsedTime - OBSTACLE5_WARNING_DURATION;
+		float activeProgress = activeElapsedTime / OBSTACLE5_ACTIVE_DURATION;
+
+		float sizeMultiplier = OBSTACLE5_FLASH_SIZE_INIT + (activeProgress * OBSTACLE5_FLASH_SIZE_SPREAD);
 		int effectSize = (int)(flashEffect[i].BaseSize * sizeMultiplier);
 
 		// プレイヤーの位置を取得
@@ -181,8 +199,8 @@ void Obstacle5::Hitjudgment()
 			return; // 一度死んだら処理終了
 		}
 	}
-
 }
+
 void Obstacle5::DrawObstFlash()
 {
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++)
@@ -202,11 +220,11 @@ void Obstacle5::DrawObstFlash()
 			// アクティブ状態の描画（元のフラッシュエフェクト）
 			DrawActiveEffect(i);
 		}
-		// カウンタの更新を修正
-		flashEffect[i].Counter += (data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
+		// カウンタの更新を修正（カウントダウン）
+		flashEffect[i].Counter -= (data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
 
 		//エフェクト時間が終了したら無効化.
-		if (flashEffect[i].Counter >= flashEffect[i].Duration)
+		if (flashEffect[i].Counter <= 0)  // 0以下になったら終了
 		{
 			flashEffect[i].ValidFlag = 0;
 		}
@@ -214,30 +232,41 @@ void Obstacle5::DrawObstFlash()
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();
 }
+
 void Obstacle5::DrawWarningEffect(int index)
 {
+	// 残り時間から経過時間を計算
+	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
+
 	float blinkRate = 8.0f;
-	float blinkPhase = fmod(flashEffect[index].Counter * blinkRate, 60.0f);
+	float blinkPhase = fmod(elapsedTime * blinkRate, 60.0f);
 	float blinkAlpha = (sin(blinkPhase * 3.14f / 30.0f) + 1.0f) * 0.5f;
+
 	// 脈動効果
 	float pulseRate = 4.0f;
-	float pulseFactor = 1.0f + 0.4f * sin(flashEffect[index].Counter * pulseRate * 3.14159f / 60.0f);
+	float pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * 3.14159f / 60.0f);
 	int warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
 
 	int alphaValue = (int)(255 * blinkAlpha * 0.8f);
 
 	// 予告エフェクトを描画（赤色）
-	SetDrawBlendModeST(MODE_ADD, alphaValue);
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize, GetColor(255, 100, 100), FALSE);
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize / 2, GetColor(255, 150, 150), FALSE);
+	SetDrawBlendModeST(MODE_ADD, alphaValue);                                                 //150, 150, 150
+	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize, GetColor(150, 150, 150), FALSE);
+	                                                                                               //200, 200, 200              
+	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize / 2, GetColor(200, 200, 200), FALSE);
 
-	// 外周リング
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize + 5, GetColor(255, 50, 50), FALSE);
+	// 外周リング                                                                                   //120, 120, 120
+	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize + 5, GetColor(120, 120, 120), FALSE);
 }
+
 void Obstacle5::DrawActiveEffect(int index)
 {
+	// 残り時間から経過時間を計算
+	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
+	float activeElapsedTime = elapsedTime - OBSTACLE5_WARNING_DURATION;
+
 	// アクティブ状態での進行度
-	float activeProgress = (flashEffect[index].Counter - OBSTACLE5_WARNING_DURATION) / OBSTACLE5_ACTIVE_DURATION;
+	float activeProgress = activeElapsedTime / OBSTACLE5_ACTIVE_DURATION;
 
 	// 透明度を時間に応じて計算
 	float alpha = 1.0f - (activeProgress * OBSTACLE5_FLASH_ALPHA_TM);

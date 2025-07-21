@@ -128,8 +128,8 @@ void GameManager::Init() {
 		mgl[1].Init(&data, &player, &laserMng, &meteoMng);
 		obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
-		//obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
-		//obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
+		obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
+		obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle5.Init(&data, &player);
 		//アイテムclass.
 		item.Init(&data, &player, &effectMng);
@@ -172,9 +172,9 @@ void GameManager::Reset() {
 		mgl[1].Reset();
 		obstacle4_1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
 		obstacle4_2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
-		//obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
-		//obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
-		//obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
+		obstacle4_3.Reset(WINDOW_WID/2, 1070, 3, MOVE_RIGHT);
+		obstacle4_4.Reset(WINDOW_WID/2, 1070, 3, MOVE_LEFT);
+		obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0, 0); // 画面中央に配置.
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
@@ -289,9 +289,9 @@ void GameManager::UpdateObjects() {
 	mgl[1].Update();
 	obstacle4_1.Update();
 	obstacle4_2.Update();
-	//obstacle4_3.Update();
-	//obstacle4_4.Update();
-	//obstacle5.Update();
+	obstacle4_3.Update();
+	obstacle4_4.Update();
+	obstacle5.Update();
 	//アイテムclass.
 	item.Update();
 }
@@ -480,9 +480,9 @@ void GameManager::DrawObjects() {
 	mgl[1].Draw();
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
-	//obstacle4_3.Draw();
-	//obstacle4_4.Draw();
-	//obstacle5.Draw();
+	obstacle4_3.Draw();
+	obstacle4_4.Draw();
+	obstacle5.Draw();
 	//アイテムclass.
 	item.Draw();
 }

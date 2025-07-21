@@ -179,7 +179,7 @@ struct GameData
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
-#define PLAYER_MOVE_SPEED				(6)				//プレイヤー移動速度.
+#define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_AFT_IMG_NUM				(10)            //残像データの数.
 
