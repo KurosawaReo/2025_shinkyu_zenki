@@ -10,6 +10,7 @@ typedef struct tagFLASHEFFECT5
 	float Duration; // エフェクトの持続時間.
 	int BaseSize;   // 基本サイズ
 	int ValidFlag;  // 有効フラグ
+	bool AlreadyHit; // これを追加
 }FLASHEFFECT5;
 
 class Obstacle5
