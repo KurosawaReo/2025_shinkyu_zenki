@@ -86,6 +86,7 @@ void EffectManager::Update() {
 				}
 				break;
 
+				case Effect_Level1:
 				case Effect_Level2:
 				case Effect_Level3:
 				case Effect_Level4:
@@ -183,6 +184,21 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawLineST(&line);
+					ResetDrawBlendMode();
+				}
+				break;
+
+				case Effect_Level1:
+				{
+					STR_DRAW str = { _T("Level1"), _intXY(effect[i].pos), 0xFFFFFF};
+					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					//アニメーション値.
+					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawStringST(&str, TRUE, p_data->font2);
+					DrawCircleST(&cir, FALSE);
 					ResetDrawBlendMode();
 				}
 				break;

@@ -216,7 +216,7 @@ struct GameData
 #define OBSTACLE5_STATE_ACTIVE			(1)				//アクティブ状態.
 #define OBSTACLE5_WARNING_DURATION		(120.0f)		//2秒間の予告.
 #define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//1秒間のアクティブ.
-#define OBSTACLE5_SPAWN_SPAN			(300)			//出現間隔.
+#define OBSTACLE5_SPAWN_SPAN			(350)			//出現間隔.
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
 #define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 
@@ -231,7 +231,7 @@ struct GameData
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
 #define LASER_CNT_MAX					(50)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(10000)			//レーザーで描画する線の最大数.
+#define LASER_LINE_CNT_MAX				(12000)			//レーザーで描画する線の最大数.
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
 #define METEO_CNT_MAX					(50)			//隕石の最大出現数.

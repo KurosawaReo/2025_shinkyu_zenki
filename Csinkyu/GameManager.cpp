@@ -108,18 +108,16 @@ void GameManager::Init() {
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
 	//サウンド読み込み.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_132563.mp3"),  _T("BGM1"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1175043.mp3"), _T("BGM2"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"), _T("BGM3"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),   _T("BGM4"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),    _T("PowerDown"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),   _T("Break"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),   _T("BGM1"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"), _T("BGM2"));		//未使用(BGM候補)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),    _T("PowerDown"));	//アイテム解除.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),   _T("Break"));		//隕石破壊.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),   _T("TakeItem"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_326830.mp3"),   _T("Laser1"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),   _T("Laser2"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1564424.mp3"),  _T("Ripples")); //波紋.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_326830.mp3"),   _T("Laser1"));		//レーザー(発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),   _T("Laser2"));		//レーザー(反射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1564424.mp3"),  _T("Ripples"));	//波紋.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),   _T("PlayerDeath"));
-//	p_sound->LoadFile(_T("Resources/Sounds/se/.mp3"),   _T("LevelUp"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),  _T("LevelUp"));
 	//Init処理
 	{
 		//管理class.
@@ -158,8 +156,8 @@ void GameManager::Reset() {
 	data.spawnRate = 1.0; //最初は100%
 	data.level = 1; //最初はLv1
 	//サウンド.
-	p_sound->Stop(_T("BGM4"));
-	p_sound->FadeInPlay(_T("BGM4"), 80, 3, TRUE);
+	p_sound->Stop(_T("BGM1"));
+	p_sound->FadeInPlay(_T("BGM1"), 68, 3, TRUE);
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -175,7 +173,7 @@ void GameManager::Reset() {
 		mgl[0].Reset();
 		mgl[1].Reset();
 		ResetNorLaser();
-		obstacle5.Reset(WINDOW_WID/2, WINDOW_HEI/1, 0); // 画面中央に配置.
+		obstacle5.Reset();
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
@@ -250,6 +248,15 @@ void GameManager::UpdateReady() {
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
 		tmScene[SCENE_GAME].Start(); //ゲーム開始.
 		data.scene = SCENE_GAME;     //ゲームシーンへ.
+
+		//サウンド.
+		SoundST* sound = SoundST::GetPtr();
+		sound->Play(_T("LevelUp"), FALSE, 100);
+		//エフェクト.
+		EffectData data{};
+		data.type = Effect_Level1;
+		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
+		effectMng.SpawnEffect(&data);
 	}
 }
 void GameManager::UpdateGame() {
@@ -317,7 +324,7 @@ void GameManager::UpdateGame() {
 		if (tmSlowMode.GetPassTime() == 0) {
 			
 			player.SetReflectionMode(FALSE); //反射モード終了.
-			p_sound->Play(_T("PowerDown"), FALSE); //サウンド.
+			p_sound->Play(_T("PowerDown"), FALSE, 78); //サウンド.
 			
 			//リセット.
 			tmSlowMode.Reset();
@@ -436,10 +443,12 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		float anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
 		//テキスト.
-		STR_DRAW str = { _T("PUSH SPACE"), {WINDOW_WID/2, WINDOW_HEI/2+300}, 0xFFFFFF };
+		STR_DRAW str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+300}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+298}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		DrawStringST(&str, TRUE, data.font1);
+		DrawStringST(&str, TRUE, data.font1); //テキスト.
+		DrawCircleST(&cir, FALSE);            //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -476,7 +485,7 @@ void GameManager::DrawEnd() {
 		float anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
 		//テキストの設定.
-		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 440+30*anim}, 0xFF00FF };
+		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 440+30*anim}, 0xA000FF };
 		STR_DRAW str2 = { {}, {WINDOW_WID/2, WINDOW_HEI/2+80}, 0xFFFFFF };
 		//スコア表示.
 		swprintf(
@@ -625,7 +634,7 @@ void GameManager::GameEnd() {
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
 	//サウンド.
-	p_sound->FadeOutPlay(_T("BGM4"), 2);
+	p_sound->FadeOutPlay(_T("BGM1"), 2);
 }
 //アイテムを取った時.
 void GameManager::TakeItem() {
@@ -634,7 +643,4 @@ void GameManager::TakeItem() {
 	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	tmSlowMode.Start();             //スローモード計測開始.
 	player.SetReflectionMode(TRUE); //反射モード開始.
-
-	//サウンド.
-	p_sound->Play(_T("TakeItem"), FALSE);
 }

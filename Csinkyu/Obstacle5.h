@@ -18,16 +18,14 @@ class Obstacle5
 private:
 	FLASHEFFECT5 flashEffect[OBSTACLE5_FLASH_MAX]{}; // クラスのメンバ変数として追加
 
-    int  flashTimer;   // インターバル時間から開始（カウントダウン）
-	int  baseInterval; // 基本インターバル.
-	bool isFirstCall;  // 初回呼び出しフラグ
+    float flashTimer; //出現タイマー.
 
 	GameData* p_data{};
 	Player*   p_player{};
 
 public:
 	void Init(GameData*, Player*);  // ポインタのポインタから修正
-	void Reset(double x, double y, int direction);
+	void Reset();
 	void Update();
 	void Draw();
 	void Hitjudgment();

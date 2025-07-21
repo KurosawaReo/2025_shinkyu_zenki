@@ -278,7 +278,7 @@ BOOL LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			laser[i].type = type;   // タイプの登録
 
 			SoundST* sound = SoundST::GetPtr();
-			sound->Play(_T("Laser1"), FALSE, 70); //サウンド.
+			sound->Play(_T("Laser1"), FALSE, 55); //サウンド.
 
 			return TRUE; //召喚成功.
 		}
@@ -328,7 +328,7 @@ void LaserManager::ReflectLaser(int idx)
 	p_effectMng->SpawnEffect(&data);
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("Laser2"), FALSE, 70);
+	sound->Play(_T("Laser2"), FALSE, 55);
 }
 
 #if false

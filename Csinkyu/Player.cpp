@@ -304,7 +304,7 @@ void Player::PlayerDeath() {
 
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("PlayerDeath"), FALSE);
+	sound->Play(_T("PlayerDeath"), FALSE, 80);
 	//エフェクト.
 	EffectData data{};
 	data.type = Effect_PlayerDeath;
