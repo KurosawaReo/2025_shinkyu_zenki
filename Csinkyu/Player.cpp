@@ -1,4 +1,3 @@
-
 /*
    - Player.cpp -
    プレイヤー管理.
@@ -12,17 +11,28 @@
 void Player::Init(GameData* _data)
 {
 	p_data = _data;
+	isDebug = FALSE;  // デバッグフラグの初期化を追加
 }
 //リセット(何回でも行う)
-void Player::Reset(DBL_XY _pos, BOOL _active) 
+void Player::Reset(DBL_XY _pos, BOOL _active)
 {
-	hit       = {_pos, PLAYER_HIT_R, {} };
-	active    = _active;
+	hit = { _pos, PLAYER_HIT_R, {} };
+	active = _active;
 	isReflect = false;
+	afterCntr = 1;  // afterCntrの初期化を追加
 
 	//座標配列のリセット.
 	for (int i = 0; i < _countof(afterPos); i++) {
 		afterPos[i] = _pos;
+	}
+	// 反射エフェクト初期化を追加
+	reflectEffectIndex = 0;
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		reflectEffects[i].active = FALSE;
+		reflectEffects[i].timer = 0;
+		reflectEffects[i].alpha = 0.0f;
+		reflectEffects[i].scale = 1.0f;
+		reflectEffects[i].pos = _pos;
 	}
 }
 //更新.
@@ -35,9 +45,15 @@ void Player::Update()
 		isDebug = !isDebug;
 	}
 
+	// テスト用：Eキーで反射エフェクトを生成
+	if (input->IsPushKeyTime(KEY_E) == 1) {
+		CreateReflectEffect(hit.pos);
+	}
+
 	//有効なら.
 	if (active) {
 		UpdateAfterImage();
+		UpdateReflectEffects();
 		PlayerMove();
 	}
 }
@@ -47,14 +63,26 @@ void Player::Draw()
 	//デバッグ表示.
 	if (isDebug) {
 		DrawString(0, 430, _T("[Debug] 無敵モード"), 0xFFFFFF);
+
+		// エフェクトのデバッグ情報表示
+		for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+			if (reflectEffects[i].active) {
+				TCHAR debugStr[128];
+				_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
+					i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
+				DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
+			}
+		}
 	}
 
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
+		DrawReflectEffects();  // エフェクトを先に描画
+
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
-		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
+		Box box2 = { hit.pos, { PLAYER_SIZE - 2, PLAYER_SIZE - 2 }, 0xFFFFFF };
 
 		//反射モード中の色.
 		if (IsReflectionMode())
@@ -81,7 +109,7 @@ void Player::UpdateAfterImage()
 		afterCntr = 1;
 
 		//残像データを後ろにずらす.
-		for (int i = PLAYER_AFT_IMG_NUM-1; i > 0; i--)
+		for (int i = PLAYER_AFT_IMG_NUM - 1; i > 0; i--)
 		{
 			afterPos[i] = afterPos[i - 1];
 		}
@@ -98,13 +126,13 @@ void Player::DrawAfterImage()
 	//残像処理.
 	for (int i = PLAYER_AFT_IMG_NUM - 1; i >= 0; i -= 1)
 	{
-		int  alpha  = 105 - 105*i/PLAYER_AFT_IMG_NUM;
-		int  alpha2 =  50 -  50*i/PLAYER_AFT_IMG_NUM;
-		UINT color  = GetColor(alpha, alpha, alpha);
+		int  alpha = 105 - 105 * i / PLAYER_AFT_IMG_NUM;
+		int  alpha2 = 50 - 50 * i / PLAYER_AFT_IMG_NUM;
+		UINT color = GetColor(alpha, alpha, alpha);
 
 		if (IsReflectionMode())
 		{
-			color = GetColor(alpha2*255/50, alpha2/2, alpha2*255/50);
+			color = GetColor(alpha2 * 255 / 50, alpha2 / 2, alpha2 * 255 / 50);
 		}
 		else
 		{
@@ -135,6 +163,124 @@ void Player::PlayerMove()
 	}
 	//移動限界.
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+}
+
+// 反射エフェクト生成
+void Player::CreateReflectEffect(DBL_XY pos)
+{
+	ReflectEffect* effect = &reflectEffects[reflectEffectIndex];
+
+	effect->pos = pos;
+	effect->scale = 1.0f;
+	effect->alpha = 255.0f;
+	effect->timer = 30;  // 30フレーム表示
+	effect->active = TRUE;
+
+	// 次のインデックスに移動（循環）
+	reflectEffectIndex = (reflectEffectIndex + 1) % MAX_REFLECT_EFFECTS;
+}
+
+// 反射エフェクト更新
+void Player::UpdateReflectEffects()
+{
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		if (reflectEffects[i].active) {
+			reflectEffects[i].timer--;
+			reflectEffects[i].scale += 0.1f;      // 拡大速度を少し遅く
+			reflectEffects[i].alpha -= 6.0f;     // フェードアウト速度を少し遅く
+
+			// タイマーが0になったか透明度が0以下になったら非アクティブ
+			if (reflectEffects[i].timer <= 0 || reflectEffects[i].alpha <= 0) {
+				reflectEffects[i].active = FALSE;
+			}
+		}
+	}
+}
+
+// 反射エフェクト描画
+void Player::DrawReflectEffects()
+{
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		if (reflectEffects[i].active) {
+			ReflectEffect* effect = &reflectEffects[i];
+
+			// 点滅効果の計算（2フレームごとに点滅）
+			BOOL isFlashOn = ((effect->timer / 2) % 2) == 0;
+			if (!isFlashOn) continue;  // 点滅のOFFフレームなら描画しない
+
+			// エフェクトのサイズ計算
+			int baseSize = (int)(PLAYER_SIZE * effect->scale);
+			int alpha = (int)max(0, min(255, effect->alpha));
+
+			// アルファが0以下なら描画しない
+			if (alpha <= 0) continue;
+
+			// 点滅による輝度変化（強めの点滅）
+			float flashIntensity = (effect->timer % 4 < 2) ? 1.5f : 0.8f;
+			alpha = (int)(alpha * flashIntensity);
+			alpha = min(255, max(0, alpha));
+
+			// ピンク色の設定（より明るく、点滅で変化）
+			UINT color = GetColor(
+				min(255, (int)(alpha * flashIntensity)),
+				alpha * 80 / 255,
+				min(255, alpha * 150 / 255)
+			);
+
+			// アルファブレンドモード設定（エフェクトごとに設定）
+			SetDrawBlendModeST(MODE_ALPHA, alpha);
+
+			// 四角い波紋を描画
+			for (int wave = 0; wave < 3; wave++) {
+				int waveSize = baseSize + wave * 8;   // 各波紋のサイズ
+				int waveAlpha = alpha - wave * 50;    // 外側ほど薄く
+
+				if (waveAlpha > 0) {
+					// より明るいピンク色（点滅効果付き）
+					UINT waveColor = GetColor(
+						min(255, (int)(waveAlpha * 2 * flashIntensity)),
+						waveAlpha * 80 / 255,
+						min(255, (int)(waveAlpha * 150 / 255))
+					);
+
+					// 四角い枠線で波紋を描画（太い線）
+					Box waveBox = {
+						effect->pos,
+						{ waveSize, waveSize },
+						waveColor
+					};
+
+					// 枠線を太くするため複数回描画
+					for (int thickness = 0; thickness < 2; thickness++) {
+						Box thickBox = {
+							{ effect->pos.x - thickness, effect->pos.y - thickness },
+							{ waveSize + thickness * 2, waveSize + thickness * 2 },
+							waveColor
+						};
+						DrawBoxST(&thickBox, FALSE, FALSE);
+					}
+				}
+			}
+
+			// 中央の四角い光点（点滅で色と大きさが変化）
+			int centerSize = (int)(12 * flashIntensity);
+			UINT centerColor = GetColor(
+				min(255, (int)(255 * flashIntensity)),
+				min(255, (int)(150 * flashIntensity)),
+				min(255, (int)(255 * flashIntensity))
+			);
+
+			Box centerBox = {
+				effect->pos,
+				{ centerSize, centerSize },
+				centerColor
+			};
+			DrawBoxST(&centerBox, TRUE, FALSE);
+
+			// 描画モードリセット
+			ResetDrawBlendMode();
+		}
+	}
 }
 
 //反射モードかどうか.
