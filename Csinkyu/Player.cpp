@@ -8,9 +8,11 @@
 #include "Player.h"
 
 //初期化(一回のみ行う)
-void Player::Init(GameData* _data)
+void Player::Init(GameData* _data, EffectManager* _effectMng)
 {
 	p_data = _data;
+	p_effectMng = _effectMng;
+
 	isDebug = FALSE;  // デバッグフラグの初期化を追加
 }
 //リセット(何回でも行う)
@@ -300,7 +302,13 @@ void Player::PlayerDeath() {
 	//デバッグモード中は無敵.
 	if (isDebug) { return; }
 
-	active = FALSE;
+	//エフェクト.
+	EffectData data{};
+	data.type = Effect_PlayerDeath;
+	data.pos  = hit.pos;
+	p_effectMng->SpawnEffect(&data);
 	//GamaManagerの関数実行(includeだけすれば使える)
 	GameManager::GetPtr()->GameEnd(); //ゲーム終了.
+	
+	active = FALSE;
 }

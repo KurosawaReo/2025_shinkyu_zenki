@@ -83,12 +83,17 @@ BOOL MeteoManager::IsHitMeteos(Circle* cir, BOOL isDestroy) {
 				//壊れてない隕石であれば.
 				if (meteo[i].GetState() == Meteo_Normal) {
 
-					meteo[i].Destroy();                                  //隕石を破壊.
-					p_data->score += SCORE_BREAK_METEO;                  //スコア加算.
-					p_effectMng->SpawnEffect(Effect_Score500, cir->pos); //エフェクト召喚.
+					meteo[i].Destroy();                 //隕石を破壊.
+					p_data->score += SCORE_BREAK_METEO; //スコア加算.
 
+					//エフェクト.
+					EffectData data{};
+					data.type = Effect_Score500;
+					data.pos = cir->pos;
+					p_effectMng->SpawnEffect(&data);
+					//サウンド.
 					SoundST* sound = SoundST::GetPtr();
-					sound->Play(_T("Break"), FALSE, 80); //サウンド.
+					sound->Play(_T("Break"), FALSE, 80);
 				}
 			}
 			return TRUE; //1つでも当たっている.
