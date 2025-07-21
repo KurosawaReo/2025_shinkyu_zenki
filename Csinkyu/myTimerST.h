@@ -1,6 +1,6 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/06/20
+   ver.2025/07/19
 
    DxLib: オリジナルタイマー機能の追加.
 */
@@ -30,13 +30,12 @@ public:
 	{}
 
 	void Start() {
-		tmStart = clock(); //タイマー開始.
-		tmEnd = 0;
+		tmStart = clock(); //開始時刻の取得.
 		isMove = TRUE;     //計測中.
 	}
 	void Stop() {
 		if (isMove) {
-			tmEnd = clock(); //タイマー終了.
+			tmEnd = clock(); //終了時刻の取得.
 			isMove = FALSE;  //停止.
 		}
 	}
@@ -58,10 +57,10 @@ private:
 	TimerMode     mode{};    //計測モード.
 	BOOL          isMove{};  //計測中か.
 
-	LONGLONG      tmInit{};  //init     : 初期時刻.
-	LARGE_INTEGER tmStart{}; //start    : 開始時刻.
-	LARGE_INTEGER tmEnd{};   //end      : 終了時刻.
-	LARGE_INTEGER freq{};    //frequency: 頻度.
+	LONGLONG      tmInit{};  //init     : 初期時刻(マイクロ秒)
+	LARGE_INTEGER tmStart{}; //start    : 開始時刻(カウント)
+	LARGE_INTEGER tmEnd{};   //end      : 終了時刻(カウント)
+	LARGE_INTEGER freq{};    //frequency: 1秒で何カウント進むか.
 
 public:
 	//コンストラクタ.
@@ -75,13 +74,12 @@ public:
 		QueryPerformanceFrequency(&freq); //頻度の取得.
 	}
 	void Start() {
-		QueryPerformanceCounter(&tmStart); //タイマー開始.
-		tmEnd.QuadPart = 0;
+		QueryPerformanceCounter(&tmStart); //開始時刻の取得.
 		isMove = TRUE; //計測中.
 	}
 	void Stop() {
 		if (isMove) {
-			QueryPerformanceCounter(&tmEnd); //タイマー終了.
+			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.
 			isMove = FALSE; //停止.
 		}
 	}
@@ -94,6 +92,6 @@ public:
 		return isMove;
 	}
 
-	LONGLONG GetPassTime ();          //時間取得.
-	BOOL     IntervalTime(float sec); //一定時間ごとにTRUEを返す.
+	LONGLONG GetPassTime (); //時間取得.
+	BOOL     IntervalTime(); //一定時間ごとにTRUEを返す.
 };

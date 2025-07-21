@@ -21,12 +21,12 @@ void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoM
 //リセット.
 void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 {
-	Hx      = _Hx;                  // 砲台のX座標初期値（画面中央）
-	Hy      = _Hy;                  // 砲台のY座標初期値（画面上部）
-	Hm      = _Hm;                  // 砲台の移動速度
-	Hsc     = OBSTACLE4_SHOT_RESET; // 砲台の発射カウンタ初期値
-	HscTm   = OBSTACLE4_SHOT_START; // 砲台の発射タイミング初期値
-	moveDir = _moveDir;             // 初期方向を右に設定.
+	Hx      = _Hx;                     // 砲台のX座標初期値（画面中央）
+	Hy      = _Hy;                     // 砲台のY座標初期値（画面上部）
+	Hm      = _Hm;                     // 砲台の移動速度
+	Hsc     = OBSTACLE4_SHOT_START+80; // 砲台の発射カウンタ初期値 
+	HscTm   = OBSTACLE4_SHOT_START;    // 砲台の発射タイミング初期値
+	moveDir = _moveDir;                // 初期方向を右に設定.
 }
 //更新.
 void Obstacle4main::Update()
@@ -74,16 +74,20 @@ void Obstacle4main::DrawObstFlash() {
 		int effectSize = _int(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
 
+		/*
 		//エフェクトの位置を時間経過とともにプレイヤー方向に移動
 		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
-		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 60; // 30ピクセル分移動
+		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 60; // nピクセル分移動
 		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 60;
+		*/
 
-		////三角形の頂点を計算(プレイヤーの方向を向く).
+		double currentX = flashEffect[i].x;
+		double currentY = flashEffect[i].y;
+		//三角形の頂点を計算(プレイヤーの方向を向く).
 		double angle = flashEffect[i].angle;
 		double cos_a = cos(angle);
 		double sin_a = sin(angle);
-		////外側の三角形(大きい)(なんかすごくなっちゃった)
+		//外側の三角形(大きい)(なんかすごくなっちゃった)
 		int x1 = _int(currentX + cos_a * effectSize);//先端.
 		int y1 = _int(currentY + sin_a * effectSize);
 		int x2 = _int(currentX - cos_a * effectSize / 3 + sin_a * effectSize / 2);//左後.
@@ -127,7 +131,7 @@ void Obstacle4main::DrawObstFlash() {
 	}
 
 	//通常の描画モードに戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);  
 }
 
 // レーザー発射前の予告●を描画
@@ -136,15 +140,16 @@ void Obstacle4main::DrawPreLaserDots() {
 	if (Hsc <= HscTm + 60) { // 発射60フレーム前から表示
 		// 点滅効果を作成
 		float blinkProgress = (HscTm + 60 - Hsc) / 60.0f; // 0.0から1.0
-		int blinkAlpha = _int(128 + 127 * sin(blinkProgress * 3.14159f * 8)); // 点滅
+		int blinkAlpha = _int(128 + 127 * sin(blinkProgress * M_PI * 8)); // 点滅
 
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
-		// 砲台の位置に3つの●を描画
-		int dotSize = 3+ _int(blinkProgress * 10); // サイズも徐々に大きく
-		DrawCircle(_int(Hx - 10), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
+		// サイズを徐々に大きく.
+		int dotSize  = 3 + CalcNumEaseOut(blinkProgress) * 10;
+		int dotSize2 = 3 + CalcNumEaseOut(blinkProgress) * 25;
+		// 砲台の位置に●を描画
 		DrawCircle(_int(Hx), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
-		DrawCircle(_int(Hx + 10), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
+		DrawCircle(_int(Hx), _int(Hy), dotSize2, GetColor(0, 255, 255), FALSE);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
@@ -166,7 +171,14 @@ void Obstacle4main::enemy4Move()
 		// タイミングが来たらレーザー発射
 		if (Hsc <= HscTm)
 		{
-			BOOL ret = p_laserMng->SpawnLaser(Hx, Hy); //レーザー召喚.
+			//プレイヤー座標.
+			DBL_XY plyPos = p_player->GetPos();
+			//プレイヤー方向への初期角度計算.
+			double angle = atan2(plyPos.y - Hy, plyPos.x - Hx);
+			DBL_XY vel = {cos(angle), sin(angle)};
+
+			//通常レーザー召喚.
+			BOOL ret = p_laserMng->SpawnLaser({Hx, Hy}, vel, Laser_Normal);
 			//発射成功したら.
 			if (ret) {
 				CreateFlashEffect(Hx, Hy); //エフェクトを出す.
@@ -176,7 +188,9 @@ void Obstacle4main::enemy4Move()
 		}
 		//0秒を下回ったらもう一周.
 		if (Hsc <= 0) {
-			Hsc = OBSTACLE4_SHOT_RESET;  // 発射カウンタをリセット（次の発射までの待機時間）
+			//タイマー再開(徐々に短くなる)
+			//発射開始時間より短くならないよう時間を設定.
+			Hsc   = OBSTACLE4_SHOT_START + OBSTACLE4_SHOT_RESET * p_data->spawnRate;
 			HscTm = OBSTACLE4_SHOT_START;
 		}
 	}

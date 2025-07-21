@@ -38,3 +38,4 @@
 #include "myDrawST.h"
 #include "myInputST.h"
 #include "myTimerST.h"
+#include "mySoundST.h"

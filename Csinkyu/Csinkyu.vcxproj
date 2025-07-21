@@ -22,11 +22,11 @@
     <Image Include="image\enemy.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapGimmickLaser.cpp" />
-    <ClCompile Include="MapGimmickLaserManager.cpp" />
     <ClCompile Include="myCalcST.cpp" />
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myInputST.cpp" />
@@ -47,11 +47,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="MapGimmickLaser.h" />
-    <ClInclude Include="MapGimmickLaserManager.h" />
     <ClInclude Include="myCalcST.h" />
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myInputST.h" />
@@ -182,7 +182,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

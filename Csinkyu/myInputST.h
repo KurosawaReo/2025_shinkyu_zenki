@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/06/30
+   ver.2025/07/19
 
    DxLib: オリジナル入力機能の追加.
 */

@@ -4,13 +4,16 @@
 */
 #include "GameManager.h"
 #include "Player.h"
+#include "EffectManager.h"
+
 #include "Item.h"
 
 //初期化.
-void Item::Init(GameData* _gamedata, Player* _player)
+void Item::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
 {
-	p_gamedata = _gamedata;
-	p_player   = _player;
+	p_gamedata  = _gamedata;
+	p_player    = _player;
+	p_effectMng = _effectMng;
 }
 
 // アイテムのリセット（再生成用）
@@ -18,7 +21,7 @@ void Item::Reset()
 {
 	// 座標の初期化
 	pos.x = (double)RndNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
-	pos.y = -50;											  // 画面上部の少し上から開始
+	pos.y = -1000;											  // 画面上部の少し上から開始
 	// サイズと色の設定
 	size.x = ITEM_SIZE;
 	size.y = ITEM_SIZE;
@@ -85,15 +88,16 @@ BOOL Item::CheckHitPlayer()
 // プレイヤーと当たったときの処理
 void Item::OnHitPlayer()
 {
+	//アイテムを取った処理.
+	GameManager::GetPtr()->TakeItem();
+	//エフェクト召喚.
+	p_effectMng->SpawnEffect(Effect_Score100, pos);
+
 	// アイテムを削除（非アクティブにする）
 	active = FALSE;
 	itemCounter = 0;//カウンターをリセットして再生成タイマー開始.
-
 	// 座標を画面外に移動（念のため）
 	pos = {-100, -100}; 
-
-	//アイテムを取った処理.
-	GameManager::GetPtr()->TakeItem();
 }
 
 //描画.

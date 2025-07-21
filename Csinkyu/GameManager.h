@@ -13,8 +13,17 @@ private: //実体.
 private: //データ.
 	GameData data{}; //ゲームデータ.
 
-	Timer tmGame     = Timer(CountUp,   0);              //ゲーム時間.
+	//シーン別に経過時間を記録する.
+	Timer tmScene[SCENE_COUNT] = {
+		Timer(CountUp, 0), //Titleシーン.
+		Timer(CountUp, 0), //Readyシーン.
+		Timer(CountUp, 0), //Gameシーン.
+		Timer(CountUp, 0), //Endシーン.
+	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
+
+	InputST* p_input;
+	SoundST* p_sound;
 
 public:
 	//実体の取得.
@@ -30,15 +39,20 @@ public:
 
 	//Update.
 	void UpdateTitle();
+	void UpdateReady();
 	void UpdateGame();
 	void UpdateEnd();
 
+	void UpdateObjects();
+
 	//Draw.
 	void DrawTitle();
+	void DrawReady();
 	void DrawGame();
 	void DrawEnd();
 
 	void DrawBG();
+	void DrawUI();
 	void DrawObjects();
 	void DrawSlowMode();
 
