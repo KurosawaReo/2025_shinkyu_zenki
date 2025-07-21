@@ -194,7 +194,7 @@ struct GameData
 #define OBSTACLE2_LIM_F					(80)			//最大追跡フレーム数.
 
 #define OBSTACLE4_OUTER_MARGIN			(0)				//砲台の周回時の外側余白.
-#define OBSTACLE4_SHOT_RESET			(200)			//砲台の発射リセット時間.
+#define OBSTACLE4_SHOT_RESET			(300)			//砲台の発射リセット時間.
 #define OBSTACLE4_SHOT_START			(20)			//砲台の発射開始時間.
 #define OBSTACLE4_SHOT_SPAN				(5)				//砲台の発射間隔時間.
 
@@ -217,7 +217,7 @@ struct GameData
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
 #define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 
-#define MGL_LASER_SPAWN_SPAN			(300)			//直線レーザーの出現間隔.
+#define MGL_LASER_SPAWN_SPAN			(350)			//直線レーザーの出現間隔.
 #define MGL_LASER_PREDICTION_TIME		(60)			//直線レーザーの予測線の出る時間.
 
 //#define LASER_NOR_ROT_MAX				(0.1)			//レーザー(normal)   の曲がる限界角度.
