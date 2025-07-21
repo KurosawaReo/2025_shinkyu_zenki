@@ -37,6 +37,9 @@ public:
 	void Update();
 	void Draw();
 
+	//Reset.
+	void ResetNorLaser();
+
 	//Update.
 	void UpdateTitle();
 	void UpdateReady();

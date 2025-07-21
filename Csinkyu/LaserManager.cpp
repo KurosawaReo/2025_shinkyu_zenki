@@ -183,17 +183,17 @@ void LaserManager::UpdateLaser() {
 					double dig = _dig(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 
 					//エフェクトをいくつか出す.
-					for(int j = 0; j < 7; j++){
+					for(int j = 0; j < 8; j++){
 
-						double newDig = dig + (float)RndNum(-450, 450)/10; //少し角度をずらす.
+						double newDig = dig + (float)RndNum(-400, 400)/10; //少し角度をずらす.
 
 						EffectData data{};
 						data.type  = Effect_BreakMeteo;
 						data.pos   = { laser[i].x, laser[i].y };
-						data.vec   = CalcDigToPos(newDig);      //ずらした角度を反映.
-						data.speed = (float)RndNum(5, 40)  /10; //速度抽選.
-						data.len   = (float)RndNum(30, 150)/10; //長さ抽選.
-						data.ang   = (float)RndNum(0, 3599)/10; //角度抽選.
+						data.vec   = CalcDigToPos(newDig);       //ずらした角度を反映.
+						data.speed = (float)RndNum( 5,   40)/10; //速度抽選.
+						data.len   = (float)RndNum(30,  180)/10; //長さ抽選.
+						data.ang   = (float)RndNum( 0, 3599)/10; //角度抽選.
 						//エフェクト召喚.
 						p_effectMng->SpawnEffect(&data);
 					}

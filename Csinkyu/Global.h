@@ -149,6 +149,7 @@ struct GameData
 	int   score;      //スコア.
 	int   scoreBef;   //スコア(時間加算前)
 	int   bestScore;  //ベストスコア.
+	int   level;	  //レベル.
 
 	float spawnRate;  //障害物の出現時間割合.
 	float counter;    //経過時間カウンター(スローの影響を受ける)
@@ -177,6 +178,8 @@ struct GameData
 #define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
 
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
+
+#define LEVEL_UP_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
@@ -213,7 +216,7 @@ struct GameData
 #define OBSTACLE5_STATE_ACTIVE			(1)				//アクティブ状態.
 #define OBSTACLE5_WARNING_DURATION		(120.0f)		//2秒間の予告.
 #define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//1秒間のアクティブ.
-#define OBSTACLE5_SPAWN_INTERVAL		(300)			//5秒間隔.
+#define OBSTACLE5_SPAWN_SPAN			(300)			//出現間隔.
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
 #define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
 

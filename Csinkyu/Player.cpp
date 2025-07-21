@@ -302,6 +302,9 @@ void Player::PlayerDeath() {
 	//デバッグモード中は無敵.
 	if (isDebug) { return; }
 
+	//サウンド.
+	SoundST* sound = SoundST::GetPtr();
+	sound->Play(_T("PlayerDeath"), FALSE);
 	//エフェクト.
 	EffectData data{};
 	data.type = Effect_PlayerDeath;

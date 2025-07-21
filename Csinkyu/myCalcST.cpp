@@ -176,27 +176,27 @@ DBL_XY CalcRadToPos(double rad) {
 	return { cos(rad), sin(rad) };
 }
 
-//ease-int: だんだん加速.
+//ease-int: 徐々に加速.
 float CalcNumEaseIn(float time) {
 	time = min(time, 1.0f); //上限は1.0
 	time = max(time, 0.0f); //下限は0.0
 	return time * time;
 }
-//ease-out: だんだん減速.
+//ease-out: 徐々に減速.
 float CalcNumEaseOut(float time) {
 	time = min(time, 1.0f); //上限は1.0
 	time = max(time, 0.0f); //下限は0.0
 	return 1 - (1-time) * (1-time);
 }
-//ease-in-out: だんだん加速して減速.
+//ease-in-out: 徐々に加速して減速.
 float CalcNumEaseInOut(float time) {
 	time = min(time, 1.0f); //上限は1.0
 	time = max(time, 0.0f); //下限は0.0
 	return 0.5f * (1.0f - cosf(M_PI*time)); //cosの返り値は1.0 → -1.0
 }
-//cos loop: cos波のループ(0.0～1.0)
-float CalcNumCosLoop(float time) {
-	return 0.5f - cosf(time)/2;
+//wave loop: cos波のループ(0.0～1.0)
+float CalcNumWaveLoop(float time) {
+	return 0.5f - cosf(M_PI*time)/2;
 }
 
 //値の抽選.

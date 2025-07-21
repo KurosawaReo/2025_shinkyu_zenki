@@ -32,7 +32,7 @@ DBL_XY CalcRadToPos	 (double rad);
 float  CalcNumEaseIn   (float time);
 float  CalcNumEaseOut  (float time);
 float  CalcNumEaseInOut(float time);
-float  CalcNumCosLoop  (float time);
+float  CalcNumWaveLoop  (float time);
 
 //’l‚Ì‘€ì.
 int    RndNum		 (int st, int ed, BOOL isDxRnd = FALSE);
