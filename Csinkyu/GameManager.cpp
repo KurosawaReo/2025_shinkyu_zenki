@@ -110,6 +110,7 @@ void GameManager::Init() {
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_132563.mp3"),  _T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1175043.mp3"), _T("BGM2"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"), _T("BGM3"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),    _T("PowerDown"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),   _T("Break"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_157393.mp3"),   _T("TakeItem1"));
@@ -120,7 +121,7 @@ void GameManager::Init() {
 	//Init処理
 	{
 		//管理class.
-		laserMng.Init(&data, &player, &meteoMng);
+		laserMng.Init(&data, &player, &meteoMng, &effectMng);
 		meteoMng.Init(&data, &player, &effectMng);
 		effectMng.Init(&data);
 		//障害物class.
@@ -134,7 +135,7 @@ void GameManager::Init() {
 		//アイテムclass.
 		item.Init(&data, &player, &effectMng);
 		//プレイヤーclass.
-		player.Init(&data);
+		player.Init(&data, &effectMng);
 	}
 
 	Reset();
@@ -154,8 +155,8 @@ void GameManager::Reset() {
 	data.spawnRate = 1.0; //最初は100%
 	data.counter = 0;
 	//サウンド.
-	p_sound->Stop(_T("BGM2"));
-	p_sound->FadeInPlay(_T("BGM2"), 80, 3, TRUE);
+	p_sound->Stop(_T("BGM3"));
+	p_sound->FadeInPlay(_T("BGM3"), 80, 3, TRUE);
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -540,7 +541,7 @@ void GameManager::GameEnd() {
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
 	//サウンド.
-	p_sound->FadeOutPlay(_T("BGM2"), 3);
+	p_sound->FadeOutPlay(_T("BGM3"), 3);
 }
 //アイテムを取った時.
 void GameManager::TakeItem() {

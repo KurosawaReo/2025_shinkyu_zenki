@@ -9,14 +9,24 @@ enum EffectType
 {
 	Effect_Score100,
 	Effect_Score500,
+	Effect_PlayerDeath,  //プレイヤー死亡.
+	Effect_ReflectLaser, //レーザー反射.
+	Effect_BreakMeteo,   //隕石破壊.
 };
-
 //エフェクトデータ.
-struct EFFECT
+struct EffectData
 {
 	EffectType type;
 
 	DBL_XY     pos;     //座標.
+	DBL_XY     vec;     //方向.
+	float      speed;   //速さ.
+	float      ang;     //角度.
+	float      len;     //長さ.
+};
+//エフェクト.
+struct Effect : public EffectData
+{
 	float      counter; //時間計測用.
 	BOOL       active;
 };
@@ -25,7 +35,7 @@ struct EFFECT
 class EffectManager
 {
 private:
-	EFFECT effect[EFFECT_MAX]{};
+	Effect effect[EFFECT_MAX]{};
 
 	GameData* p_data{};
 
@@ -35,6 +45,6 @@ public:
 	void Update();
 	void Draw();
 
-	void SpawnEffect(EffectType type, DBL_XY pos); //エフェクト出現.
-	void DeleteEffect(int idx);                    //エフェクト消去.
+	void SpawnEffect(EffectData* data); //エフェクト出現.
+	void DeleteEffect(int idx);         //エフェクト消去.
 };

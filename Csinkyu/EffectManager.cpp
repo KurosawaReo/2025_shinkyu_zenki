@@ -47,6 +47,38 @@ void EffectManager::Update() {
 				}
 				break;
 
+				case Effect_PlayerDeath:
+				{
+					//時間経過で消滅.
+					if (effect[i].counter >= PLAYER_DEATH_ANIM_TIME) {
+						DeleteEffect(i);
+					}
+				}
+				break;
+
+				case Effect_ReflectLaser:
+				{
+					//時間経過で消滅.
+					if (effect[i].counter >= LASER_REF_ANIM_TIME) {
+						DeleteEffect(i);
+					}
+				}
+				break;
+
+				case Effect_BreakMeteo:
+				{
+					effect[i].ang += 3; //回転.
+					//移動.
+					effect[i].pos.x += effect[i].vec.x * effect[i].speed;
+					effect[i].pos.y += effect[i].vec.y * effect[i].speed;
+
+					//時間経過で消滅.
+					if (effect[i].counter >= METEO_BREAK_ANIM_TIME) {
+						DeleteEffect(i);
+					}
+				}
+				break;
+
 				default: assert(FALSE); break;
 			}
 		}
@@ -92,6 +124,49 @@ void EffectManager::Draw() {
 				}
 				break;
 
+				case Effect_PlayerDeath:
+				{
+					Box box = { effect[i].pos, { PLAYER_SIZE+effect[i].counter, PLAYER_SIZE+effect[i].counter }, 0xFFFFFF };
+					//アニメーション値.
+					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawBoxST(&box, TRUE, FALSE);
+					ResetDrawBlendMode();
+				}
+				break;
+
+				case Effect_ReflectLaser:
+				{
+					Box box = { effect[i].pos, { 10+effect[i].counter*2, 10+effect[i].counter*2 }, COLOR_PLY_REFLECT };
+					//アニメーション値.
+					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawBoxST(&box, TRUE, FALSE);
+					ResetDrawBlendMode();
+				}
+				break;
+
+				case Effect_BreakMeteo:
+				{
+					//飛ばす線のデータ.
+					Line line{};
+					line.stPos = CalcArcPos(effect[i].pos, effect[i].ang,     effect[i].len);
+					line.edPos = CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
+			        line.clr   = COLOR_METEO(effect[i].pos);
+					//アニメーション値.
+					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/METEO_BREAK_ANIM_TIME);
+
+					//描画.
+					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawLineST(&line);
+					ResetDrawBlendMode();
+				}
+				break;
+
 				default: assert(FALSE); break;
 			}
 		}
@@ -99,17 +174,22 @@ void EffectManager::Draw() {
 }
 
 //エフェクト出現.
-void EffectManager::SpawnEffect(EffectType type, DBL_XY pos) {
+void EffectManager::SpawnEffect(EffectData* data) {
 
 	//未使用のエフェクトを探す.
 	for (int i = 0; i < EFFECT_MAX; i++) {
 		if (!effect[i].active) {
 
-			effect[i].type    = type;
-			effect[i].pos     = pos; 
-			effect[i].counter = 0;    //0から開始. 
-			effect[i].active  = TRUE; //有効にする.
-			break;                    //召喚完了.
+			effect[i].type    = data->type;
+			effect[i].pos     = data->pos;
+			effect[i].vec     = data->vec;
+			effect[i].speed   = data->speed;
+			effect[i].ang     = data->ang;
+			effect[i].len     = data->len;
+			effect[i].counter = 0;         //0から開始. 
+			effect[i].active  = TRUE;      //有効にする.
+
+			break; //召喚完了.
 		}
 	}
 }

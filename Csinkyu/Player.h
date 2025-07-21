@@ -3,6 +3,7 @@
    プレイヤー管理.
 */
 #pragma once
+#include "EffectManager.h"
 
 //プレイヤーを囲うシールド.
 struct PlayerShield
@@ -20,7 +21,8 @@ private:
 	float  afterCntr{};					   //残像用時間カウンター.
 	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
-	GameData* p_data{}; //ゲームデータ.
+	GameData*      p_data{};      //ゲームデータ.
+	EffectManager* p_effectMng{}; //エフェクト管理.
 
 	BOOL   isDebug{};   //デバッグ用.
 
@@ -34,7 +36,7 @@ public:
 	Circle* GetHit()   { return &hit; }
 
 	//その他.
-	void  Init  (GameData*);
+	void  Init  (GameData*, EffectManager*);
 	void  Reset (DBL_XY _pos, BOOL _active);
 	void  Update();
 	void  Draw  ();

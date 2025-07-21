@@ -182,6 +182,7 @@ struct GameData
 #define PLAYER_MOVE_SPEED				(6)				//プレイヤー移動速度.
 #define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_AFT_IMG_NUM				(10)            //残像データの数.
+#define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 
 #define ITEM_SIZE						(20)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
@@ -228,6 +229,7 @@ struct GameData
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
 #define LASER_CNT_MAX					(50)			//レーザーの最大数.
 #define LASER_LINE_CNT_MAX				(10000)			//レーザーで描画する線の最大数.
+#define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
 #define METEO_CNT_MAX					(50)			//隕石の最大出現数.
 #define METEO_SPAWN_SPAN				(150)			//隕石の出現時間間隔.
@@ -235,13 +237,14 @@ struct GameData
 #define METEO_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
 #define METEO_DEST_TIME					(20)			//隕石の破壊時間.
 #define METEO_GOAL_RAND_RANGE			(500)			//隕石の目標地点の乱数範囲.
+#define METEO_BREAK_ANIM_TIME			(50)			//隕石破壊アニメーション時間.
 
 #define METEO_LINE_CNT_MIN				(5)				//最低n角形.
 #define METEO_LINE_CNT_MAX				(16)			//最大n角形.
 #define METEO_LINE_DIS_MIN				(40)			//頂点の最短距離.
 #define METEO_LINE_DIS_MAX				(60)			//頂点の最大距離.
 
-#define EFFECT_MAX						(10)			//エフェクトの最大出現数.
+#define EFFECT_MAX						(50)			//エフェクトの最大出現数.
 
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.
 #define SCORE_BREAK_METEO				(500)			//隕石を壊した時のスコア.
@@ -250,6 +253,7 @@ struct GameData
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_ITEM						(GetColor(  0, 255,   0))
-#define COLOR_PRE_LINE					(GetColor(128, 128, 128)) //予測線.
+#define COLOR_PRE_LINE					(GetColor(128, 128, 128))                            //予測線.
+#define COLOR_METEO(pos)				(GetColor(0, _int(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)

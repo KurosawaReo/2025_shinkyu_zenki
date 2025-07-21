@@ -8,12 +8,13 @@
 #include "LaserManager.h"
 
 //初期化.
-void LaserManager::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng) {
+void LaserManager::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng, EffectManager* _effectMng) {
 	
 	//実体取得.
-	p_data     = _data;
-	p_player   = _player;
-	p_meteoMng = _meteoMng;
+	p_data      = _data;
+	p_player    = _player;
+	p_meteoMng  = _meteoMng; 
+	p_effectMng = _effectMng;
 }
 //リセット.
 void LaserManager::Reset() {
@@ -178,17 +179,37 @@ void LaserManager::UpdateLaser() {
 
 				//隕石と当たっているなら.
 				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
-					DeleteLaser(i);
-					break;
-				}
-				//レーザーの追尾処理.
-				LaserRefTracking(i);
+					
+					double dig = _dig(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 
-				//速度(時間経過で速くなる)
-				double speed = laser[i].Counter * LASER_REF_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-				//レーザーの移動.
-				laser[i].x += laser[i].vx * speed;
-				laser[i].y += laser[i].vy * speed;
+					//エフェクトをいくつか出す.
+					for(int j = 0; j < 7; j++){
+
+						double newDig = dig + (float)RndNum(-450, 450)/10; //少し角度をずらす.
+
+						EffectData data{};
+						data.type  = Effect_BreakMeteo;
+						data.pos   = { laser[i].x, laser[i].y };
+						data.vec   = CalcDigToPos(newDig);      //ずらした角度を反映.
+						data.speed = (float)RndNum(5, 40)  /10; //速度抽選.
+						data.len   = (float)RndNum(30, 150)/10; //長さ抽選.
+						data.ang   = (float)RndNum(0, 3599)/10; //角度抽選.
+						//エフェクト召喚.
+						p_effectMng->SpawnEffect(&data);
+					}
+					//消去.
+					DeleteLaser(i);
+				}
+				else{
+					//レーザーの追尾処理.
+					LaserRefTracking(i);
+
+					//速度(時間経過で速くなる)
+					double speed = laser[i].Counter * LASER_REF_SPEED * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					//レーザーの移動.
+					laser[i].x += laser[i].vx * speed;
+					laser[i].y += laser[i].vy * speed;
+				}
 			}
 			break;
 
@@ -300,8 +321,14 @@ void LaserManager::ReflectLaser(int idx)
 	laser[idx].type    = Laser_Reflected; //反射モードへ.
 	laser[idx].Counter = 0;               //カウンターをリセット.
 
+	//エフェクト.
+	EffectData data{};
+	data.type = Effect_ReflectLaser;
+	data.pos = { laser[idx].x, laser[idx].y };
+	p_effectMng->SpawnEffect(&data);
+	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("Laser2"), FALSE, 70); //サウンド.
+	sound->Play(_T("Laser2"), FALSE, 70);
 }
 
 #if false

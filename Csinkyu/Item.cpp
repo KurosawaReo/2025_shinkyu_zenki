@@ -91,7 +91,10 @@ void Item::OnHitPlayer()
 	//アイテムを取った処理.
 	GameManager::GetPtr()->TakeItem();
 	//エフェクト召喚.
-	p_effectMng->SpawnEffect(Effect_Score100, pos);
+	EffectData data{};
+	data.type = Effect_Score100;
+	data.pos = pos;
+	p_effectMng->SpawnEffect(&data);
 
 	// アイテムを削除（非アクティブにする）
 	active = FALSE;

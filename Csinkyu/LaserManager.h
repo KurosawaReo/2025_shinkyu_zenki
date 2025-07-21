@@ -3,8 +3,8 @@
    元々Obstacle4mainとしてまとめられてたレーザー.
 */
 #pragma once
-
 #include "MeteoManager.h"
+#include "EffectManager.h"
 
 //レーザータイプ.
 enum LaserType
@@ -53,12 +53,13 @@ private:
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
-	GameData*     p_data{};
-	Player*       p_player{};
-	MeteoManager* p_meteoMng{};
+	GameData*      p_data{};
+	Player*        p_player{};
+	MeteoManager*  p_meteoMng{};
+	EffectManager* p_effectMng{};
 
 public:
-	void Init(GameData*, Player*, MeteoManager*);
+	void Init(GameData*, Player*, MeteoManager*, EffectManager*);
 	void Reset();
 	void Update();
 	void Draw();
