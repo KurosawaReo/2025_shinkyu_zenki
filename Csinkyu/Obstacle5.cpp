@@ -155,51 +155,42 @@ void Obstacle5::Draw()
 }
 void Obstacle5::Hitjudgment()
 {
-	// フラッシュエフェクトとプレイヤーの当たり判定
-	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++)
-	{
-		if (flashEffect[i].ValidFlag == 0)
-		{
-			continue; // 無効なエフェクトをスキップ
-		}
-
-		// エフェクトの状態を確認
-		int effectState = GetEffectState(i);
-
-		// 予告状態の場合は当たり判定をスキップ
-		if (effectState == OBSTACLE5_STATE_WARNING)
-		{
+	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {
+		if (flashEffect[i].ValidFlag == 0 || flashEffect[i].Counter <= 0) {
 			continue;
 		}
 
-		// エフェクトのサイズを時間に応じて拡大
-		// 残り時間から経過時間を計算
+		int effectState = GetEffectState(i);
+		if (effectState == OBSTACLE5_STATE_WARNING) {
+			continue;
+		}
+
+		// 経過時間の計算
 		float elapsedTime = flashEffect[i].Duration - flashEffect[i].Counter;
 		float activeElapsedTime = elapsedTime - OBSTACLE5_WARNING_DURATION;
 		float activeProgress = activeElapsedTime / OBSTACLE5_ACTIVE_DURATION;
 
-		float sizeMultiplier = OBSTACLE5_FLASH_SIZE_INIT + (activeProgress * OBSTACLE5_FLASH_SIZE_SPREAD);
-		int effectSize = (int)(flashEffect[i].BaseSize * sizeMultiplier);
+		// アクティブ状態になった直後だけ判定
+		if (effectState == OBSTACLE5_STATE_ACTIVE && !flashEffect[i].AlreadyHit) {
+			float sizeMultiplier = OBSTACLE5_FLASH_SIZE_INIT + (activeProgress * OBSTACLE5_FLASH_SIZE_SPREAD);
+			int effectSize = (int)(flashEffect[i].BaseSize * sizeMultiplier);
 
-		// プレイヤーの位置を取得
-		DBL_XY playerPos = player->GetPos();
+			DBL_XY playerPos = player->GetPos();
+			double dx = playerPos.x - flashEffect[i].x;
+			double dy = playerPos.y - flashEffect[i].y;
+			double distance = sqrt(dx * dx + dy * dy);
+			float playerRadius = 10.0f;
 
-		// プレイヤーとエフェクト円の距離を計算
-		double dx = playerPos.x - flashEffect[i].x;
-		double dy = playerPos.y - flashEffect[i].y;
-		double distance = sqrt(dx * dx + dy * dy);
+			if (distance < (effectSize * 0.8f + playerRadius)) {
+				player->PlayerDeath();
+			}
 
-		// プレイヤーの当たり判定半径（適切な値に調整してください）
-		float playerRadius = 10.0f; // または player->GetHitSize() など、実際のメソッドがあれば使用
-
-		// 円同士の当たり判定
-		if (distance < (effectSize * 0.8f + playerRadius))
-		{
-			player->PlayerDeath();
-			return; // 一度死んだら処理終了
+			// 一度判定を行ったらフラグを立てて、以後は無効に
+			flashEffect[i].AlreadyHit = true;
 		}
 	}
 }
+
 
 void Obstacle5::DrawObstFlash()
 {
@@ -252,7 +243,7 @@ void Obstacle5::DrawWarningEffect(int index)
 	// 予告エフェクトを描画（赤色）
 	SetDrawBlendModeST(MODE_ADD, alphaValue);                                                 //150, 150, 150
 	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize, GetColor(150, 150, 150), FALSE);
-	                                                                                               //200, 200, 200              
+	//200, 200, 200              
 	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize / 2, GetColor(200, 200, 200), FALSE);
 
 	// 外周リング                                                                                   //120, 120, 120
