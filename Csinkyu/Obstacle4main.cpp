@@ -150,8 +150,8 @@ void Obstacle4main::DrawPreLaserDots() {
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
 		// サイズを徐々に大きく.
-		int dotSize  = 3 + CalcNumEaseOut(blinkProgress) * 10;
-		int dotSize2 = 3 + CalcNumEaseOut(blinkProgress) * 25;
+		int dotSize  = 3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER1_SIZE;
+		int dotSize2 = 3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER2_SIZE;
 		// 砲台の位置に●を描画
 		DrawCircle(_int(Hx), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
 		DrawCircle(_int(Hx), _int(Hy), dotSize2, GetColor(0, 255, 255), FALSE);

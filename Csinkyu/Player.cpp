@@ -80,7 +80,7 @@ void Player::Draw()
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
-		DrawReflectEffects();  // エフェクトを先に描画
+//		DrawReflectEffects();  // エフェクトを先に描画
 
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
@@ -122,27 +122,27 @@ void Player::UpdateAfterImage()
 //残像描画.
 void Player::DrawAfterImage()
 {
-	//描画モード変更.
-	SetDrawBlendModeST(MODE_ADD, 255);
-
 	//残像処理.
-	for (int i = PLAYER_AFT_IMG_NUM - 1; i >= 0; i -= 1)
+	for (int i = 0; i < PLAYER_AFT_IMG_NUM; i++)
 	{
-		int  alpha = 105 - 105 * i / PLAYER_AFT_IMG_NUM;
-		int  alpha2 = 50 - 50 * i / PLAYER_AFT_IMG_NUM;
-		UINT color = GetColor(alpha, alpha, alpha);
+		//透明度の計算.
+		float alpha = (float)i/PLAYER_AFT_IMG_NUM;
+		//透明度反映.
+		SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
+		Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
+		//反射カラー.
 		if (IsReflectionMode())
 		{
-			color = GetColor(alpha2 * 255 / 50, alpha2 / 2, alpha2 * 255 / 50);
+			box.clr = COLOR_PLY_AFT_REF;
 		}
+		//通常カラー.
 		else
 		{
-			color = GetColor(alpha, alpha, alpha);
+			box.clr = COLOR_PLY_AFT_NOR;
 		}
 
-		Box box3 = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, color };
-		DrawBoxST(&box3, TRUE, FALSE);
+		DrawBoxST(&box, TRUE, FALSE);
 	}
 
 	//描画モードリセット.
@@ -157,11 +157,11 @@ void Player::PlayerMove()
 	//移動する.
 	if (p_data->isSlow) {
 		input->InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
-		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED); //コントローラ移動(仮)
+		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
 	}
 	else {
 		input->InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
-		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED); //コントローラ移動(仮)
+		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
@@ -234,8 +234,8 @@ void Player::DrawReflectEffects()
 
 			// 四角い波紋を描画
 			for (int wave = 0; wave < 3; wave++) {
-				int waveSize = baseSize + wave * 8;   // 各波紋のサイズ
-				int waveAlpha = alpha - wave * 50;    // 外側ほど薄く
+				int waveSize = baseSize + wave * 8; // 各波紋のサイズ
+				int waveAlpha = alpha - wave * 50;  // 外側ほど薄く
 
 				if (waveAlpha > 0) {
 					// より明るいピンク色（点滅効果付き）

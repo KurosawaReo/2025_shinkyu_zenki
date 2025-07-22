@@ -184,7 +184,7 @@ struct GameData
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
-#define PLAYER_AFT_IMG_NUM				(10)            //残像データの数.
+#define PLAYER_AFT_IMG_NUM				(7)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 
 #define ITEM_SIZE						(20)			//アイテムサイズ.
@@ -203,9 +203,11 @@ struct GameData
 
 #define OBSTACLE4_FLASH_MAX				(30)            //最大フラッシュエフェクト数
 #define OBSTACLE4_FLASH_SIZE_INIT		(3.0f)          //フラッシュエフェクトの初期サイズ.
-#define OBSTACLE4_FLASH_SIZE_SPREAD		(-5)             //フラッシュエフェクトの拡大量.
+#define OBSTACLE4_FLASH_SIZE_SPREAD		(-7)            //フラッシュエフェクトの拡大量.
 #define OBSTACLE4_FLASH_VALID_TM		(100)           //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE4_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
+#define OBSTACLE4_PRE_LASER1_SIZE		(20)            //発射前エフェクト1のサイズ.
+#define OBSTACLE4_PRE_LASER2_SIZE		(50)            //発射前エフェクト2のサイズ.
 
 #define OBSTACLE5_FLASH_MAX				(30)            //最大フラッシュエフェクト数
 #define OBSTACLE5_FLASH_SIZE_INIT		(5.0f)          //フラッシュエフェクトの初期サイズ.
@@ -255,6 +257,8 @@ struct GameData
 
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
+#define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105)) //プレイヤーの残像色(通常)
+#define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255)) //プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor(  0, 255,   0))
 #define COLOR_PRE_LINE					(GetColor(128, 128, 128))                            //予測線.
 #define COLOR_METEO(pos)				(GetColor(0, _int(255 * fabs(sin(pos.x/200))), 255)) //隕石.

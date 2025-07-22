@@ -161,7 +161,7 @@ void GameManager::Reset() {
 	isFinScoreAnim = FALSE;
 	//サウンド.
 	p_sound->Stop(_T("BGM1"));
-	p_sound->Play(_T("BGM1"), FALSE, 68);
+	p_sound->Play(_T("BGM1"), TRUE, 68);
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -437,7 +437,7 @@ void GameManager::DrawTitle() {
 		float anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
 		//テキスト.
 		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+100}, COLOR_BEST_SCORE };
-		swprintf(str.text, _T("best score: %d"), data.bestScore); //ベストスコア.
+		swprintf(str.text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font2);
@@ -471,10 +471,10 @@ void GameManager::DrawTitle() {
 
 				EffectData data{}; 
 				data.type  = Effect_BreakMeteo;
-				data.pos   = { 595, 345 };
+				data.pos   = { 600, 350 };
 				data.vec   = CalcDigToPos(newDig);            //ずらした角度を反映.
-				data.speed = ((float)RndNum(5, 40)  /10)*1.3; //速度抽選.
-				data.len   = ((float)RndNum(30, 180)/10)*1.3; //長さ抽選.
+				data.speed = ((float)RndNum(5, 40)  /10)*1.4; //速度抽選.
+				data.len   = ((float)RndNum(30, 180)/10)*1.4; //長さ抽選.
 				data.ang   = (float)RndNum(0, 3599)/10;       //角度抽選.
 				//エフェクト召喚.
 				effectMng.SpawnEffect(&data);
@@ -519,7 +519,7 @@ void GameManager::DrawEnd() {
 
 		//テキストの設定.
 		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 400+30*anim}, 0xA0A0A0 };
-		STR_DRAW str2 = { _T("time bonus"),    {WINDOW_WID/2, WINDOW_HEI/2+10}, 0xFFFFFF };
+		STR_DRAW str2 = { _T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2+10}, 0xFFFFFF };
 		STR_DRAW str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+50}, 0xFFFFFF };
 		//スコア表示.
 		swprintf(
@@ -546,7 +546,7 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			float anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-350+anim*20}, 0xB3FFF0 };
+			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-350+anim*20}, 0xEFFFB0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
 			DrawStringST(&str, TRUE, data.font2);
@@ -608,7 +608,7 @@ void GameManager::DrawUI() {
 
 	//ゲーム時間.
 	DrawFormatStringToHandle(
-		10, 10, 0xFFFFFF, data.font2, _T("time:%.3f"), tmScene[SCENE_GAME].GetPassTime()
+		10, 10, 0xFFFFFF, data.font2, _T("Time:%.3f"), tmScene[SCENE_GAME].GetPassTime()
 	);
 	//レベル.
 	DrawFormatStringToHandle(
@@ -630,8 +630,8 @@ void GameManager::DrawUI() {
 		//テキスト設定.
 		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_BEST_SCORE };
 		STR_DRAW str2 = { {}, {WINDOW_WID/2, 0+150}, COLOR_SCORE };
-		swprintf(str1.text, _T("best score: %d"), data.bestScore);
-		swprintf(str2.text, _T("score: %d"),      data.score);
+		swprintf(str1.text, _T("BEST SCORE: %d"), data.bestScore);
+		swprintf(str2.text, _T("SCORE: %d"),      data.score);
 		//テキスト(main)
 		SetDrawBlendModeST(MODE_ALPHA, 255 * anim1);
 		DrawStringST(&str1, TRUE, data.font3);
