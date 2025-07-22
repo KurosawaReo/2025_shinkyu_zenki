@@ -492,11 +492,11 @@ void GameManager::DrawReady() {
 }
 void GameManager::DrawGame() {
 
-	DrawObjects();    //オブジェクト.
-	player.Draw();    //プレイヤー.
-	effectMng.Draw(); //エフェクト.
+	DrawObjects();     //オブジェクト.
+	player.Draw();     //プレイヤー.
+	effectMng.Draw();  //エフェクト.
 	DrawUI();
-	DrawSlowMode();   //スローモード演出.
+	DrawReflectMode(); //反射モード演出.
 }
 void GameManager::DrawEnd() {
 	
@@ -672,23 +672,29 @@ void GameManager::DrawObjects() {
 		obstacle4_4.Draw();
 	}
 }
-//スローモード演出.
-void GameManager::DrawSlowMode() {
+//反射モード演出.
+void GameManager::DrawReflectMode() {
 
 	//カウントダウン中.
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
-		//テキストを入れる用.
-		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FF00 };
 		//テキストの設定.
-		swprintf(str.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+		STR_DRAW str1 = { _T("反射モード"), {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FF00};
+		STR_DRAW str2 = { {},               {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FF00 };
+		swprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.
 		{
 			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
-			DrawStringST(&str, TRUE, data.font3);              //fontあり.
-			ResetDrawBlendMode();                              //戻す.
+			//テキスト切り替え.
+			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
+				DrawStringST(&str1, TRUE, data.font2); //反射モード.
+			}
+			else {
+				DrawStringST(&str2, TRUE, data.font3); //数字.
+			}
+			ResetDrawBlendMode();
 		}
 	}
 }
