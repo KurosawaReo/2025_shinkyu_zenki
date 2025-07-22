@@ -546,7 +546,7 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			float anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-350+anim*20}, 0xEFFFB0 };
+			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-350+anim*20}, 0xEFFFA0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
 			DrawStringST(&str, TRUE, data.font2);
@@ -679,8 +679,8 @@ void GameManager::DrawReflectMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
-		STR_DRAW str1 = { _T("反射モード"), {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FF00};
-		STR_DRAW str2 = { {},               {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FF00 };
+		STR_DRAW str1 = { _T("反射モード"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+		STR_DRAW str2 = { {},               {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
 		swprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.
