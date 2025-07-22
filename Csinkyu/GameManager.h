@@ -60,7 +60,7 @@ public:
 	void DrawBG();
 	void DrawUI();
 	void DrawObjects();
-	void DrawSlowMode();
+	void DrawReflectMode();
 
 	//‚»‚Ì‘¼.
 	void GameEnd();
