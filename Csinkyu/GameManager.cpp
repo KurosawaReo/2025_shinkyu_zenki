@@ -448,12 +448,12 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		float anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
 		//テキスト.
-		STR_DRAW str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+300}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+298}, 18, 0xFFFFFF };
+		STR_DRAW str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+300}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+297}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE);            //Aボタンの円.
+		DrawCircleST(&cir, FALSE);            //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
@@ -535,20 +535,21 @@ void GameManager::DrawEnd() {
 		ResetDrawBlendMode();
 	}
 
-	const float delay = 1.2;
+	const float delay1 = 1.2;
+	const float delay2 = 1.5;
 
 	//一定時間が経ったら.
-	if (tmScene[SCENE_END].GetPassTime() > delay) {
+	if (tmScene[SCENE_END].GetPassTime() > delay1) {
 		//ベストスコア更新.
 		if (data.score > data.bestScore) {
 
 			//アニメーション値.
-			float anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay)*2);
+			float anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			STR_DRAW str = { _T("new record!"), {WINDOW_WID/2, WINDOW_HEI/2+120+anim*20}, 0xFFFF40 };
+			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-350+anim*20}, 0xB3FFF0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
-			DrawStringST(&str, TRUE, data.font1);
+			DrawStringST(&str, TRUE, data.font2);
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isFinScoreAnim) {
@@ -556,6 +557,20 @@ void GameManager::DrawEnd() {
 				p_sound->Play(_T("BestScore"), FALSE, 65);
 			}
 		}
+	}
+	//一定時間が経ったら.
+	if (tmScene[SCENE_END].GetPassTime() > delay2) {
+		
+		//アニメーション値.
+		float anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
+		//テキスト.
+		STR_DRAW str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+200}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+198}, 18, 0xFFFFFF };
+		
+		SetDrawBlendModeST(MODE_ADD, 255*anim);
+		DrawStringST(&str, TRUE, data.font1); //テキスト.
+		DrawCircleST(&cir, FALSE);            //Aボタンの円.
+		ResetDrawBlendMode();
 	}
 }
 
