@@ -69,7 +69,7 @@ void LaserManager::Draw() {
 		{
 			case Laser_Normal:    tmpLine.clr = GetColor(50, clr, 255); break;
 			case Laser_Straight:  tmpLine.clr = GetColor(50, clr, 255); break;
-			case Laser_Reflected: tmpLine.clr = GetColor(clr, 0, clr);  break;
+			case Laser_Reflected: tmpLine.clr = GetColor(clr/2+128, 0, 255); break;
 
 			default: assert(FALSE); break;
 		}

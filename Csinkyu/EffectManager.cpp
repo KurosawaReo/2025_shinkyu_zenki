@@ -121,7 +121,7 @@ void EffectManager::Draw() {
 					STR_DRAW str = { _T("+100"), {}, COLOR_SCORE };
 					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
-					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME);
+					int pow = _int(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -136,7 +136,7 @@ void EffectManager::Draw() {
 					STR_DRAW str = { _T("+500"), {}, COLOR_SCORE };
 					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
-					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME);
+					int pow = _int(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -149,7 +149,7 @@ void EffectManager::Draw() {
 				{
 					Box box = { effect[i].pos, { PLAYER_SIZE+effect[i].counter, PLAYER_SIZE+effect[i].counter }, 0xFFFFFF };
 					//アニメーション値.
-					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME);
+					int pow = _int(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -160,9 +160,9 @@ void EffectManager::Draw() {
 
 				case Effect_ReflectLaser:
 				{
-					Box box = { effect[i].pos, { 10+effect[i].counter*2, 10+effect[i].counter*2 }, COLOR_PLY_REFLECT };
+					Box box = { effect[i].pos, { 10+effect[i].counter*4, 10+effect[i].counter*4 }, COLOR_PLY_REFLECT };
 					//アニメーション値.
-					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME);
+					int pow = _int(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -179,7 +179,7 @@ void EffectManager::Draw() {
 					line.edPos = CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
 			        line.clr   = COLOR_METEO(effect[i].pos);
 					//アニメーション値.
-					int pow = 255 * CalcNumEaseOut(1 - effect[i].counter/METEO_BREAK_ANIM_TIME);
+					int pow = _int(255 * CalcNumEaseOut(1 - effect[i].counter/METEO_BREAK_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -190,60 +190,100 @@ void EffectManager::Draw() {
 
 				case Effect_Level1:
 				{
-					STR_DRAW str = { _T("Level 1"), _intXY(effect[i].pos), 0xFFFFFF};
+					STR_DRAW str = { _T("Level 1"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF};
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle   cirLevel[4] = {
+						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+45, effect[i].pos.y+20}, 10, 0xFFFFFF}
+					};
 					//アニメーション値.
-					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+					int pow = _int(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE);
+					DrawCircleST(&cirLevel[0], TRUE);  //●
+					DrawCircleST(&cirLevel[1], FALSE); //○
+					DrawCircleST(&cirLevel[2], FALSE); //○
+					DrawCircleST(&cirLevel[3], FALSE); //○
 					ResetDrawBlendMode();
 				}
 				break;
 
 				case Effect_Level2:
 				{
-					STR_DRAW str = { _T("Level 2"), _intXY(effect[i].pos), 0xFFFFFF};
+					STR_DRAW str = { _T("Level 2"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle   cirLevel[4] = {
+						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+45, effect[i].pos.y+20}, 10, 0xFFFFFF}
+					};
 					//アニメーション値.
-					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+					int pow = _int(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE);
+					DrawCircleST(&cirLevel[0], TRUE);  //●
+					DrawCircleST(&cirLevel[1], TRUE);  //●
+					DrawCircleST(&cirLevel[2], FALSE); //○
+					DrawCircleST(&cirLevel[3], FALSE); //○
 					ResetDrawBlendMode();
 				}
 				break;
 
 				case Effect_Level3:
 				{
-					STR_DRAW str = { _T("Level 3"), _intXY(effect[i].pos), 0xFFFFFF };
+					STR_DRAW str = { _T("Level 3"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle   cirLevel[4] = {
+						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+45, effect[i].pos.y+20}, 10, 0xFFFFFF}
+					};
 					//アニメーション値.
-					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+					int pow = _int(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE);
+					DrawCircleST(&cirLevel[0], TRUE);  //●
+					DrawCircleST(&cirLevel[1], TRUE);  //●
+					DrawCircleST(&cirLevel[2], TRUE);  //●
+					DrawCircleST(&cirLevel[3], FALSE); //○
 					ResetDrawBlendMode();
 				}
 				break;
 
 				case Effect_Level4:
 				{
-					STR_DRAW str = { _T("Level 4"), _intXY(effect[i].pos), 0xFFFFFF };
+					STR_DRAW str = { _T("Level 4"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
 					Circle   cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle   cirLevel[4] = {
+						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{effect[i].pos.x+45, effect[i].pos.y+20}, 10, 0xFFFFFF}
+					};
 					//アニメーション値.
-					int pow = 255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME);
+					int pow = _int(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE);
+					DrawCircleST(&cirLevel[0], TRUE); //●
+					DrawCircleST(&cirLevel[1], TRUE); //●
+					DrawCircleST(&cirLevel[2], TRUE); //●
+					DrawCircleST(&cirLevel[3], TRUE); //●
 					ResetDrawBlendMode();
 				}
 				break;
