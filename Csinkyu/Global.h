@@ -22,6 +22,7 @@
   #include <vector>
   #include <map>
   #include <string>
+  #include <cstdlib>
   using namespace std;
   //DxLib.
   #include "DxLib.h"
@@ -171,6 +172,8 @@ struct GameData
 #define WINDOW_WID						(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT				(32)			//ウィンドウのカラーbit数.
+
+#define FILE_DATA_PATH					("data.txt")	//データを保存するtxtファイル.
 
 #define FPS								(80)			//フレームレート.
 

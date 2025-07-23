@@ -140,6 +140,18 @@ void GameManager::Init() {
 		player.Init(&data, &effectMng);
 	}
 
+	//スコア読み込み.
+	{
+		FILE* fp = fopen(FILE_DATA_PATH, "r");
+		assert(fp != NULL); //読み込みエラー.
+
+		char str[256];              //文字列格納用.
+		fgets(str, 256, fp);        //ファイルから文字読み込み.
+		data.bestScore = atoi(str); //int型に変換して登録.
+
+		fclose(fp);
+	}
+
 	Reset();
 }
 
@@ -182,6 +194,18 @@ void GameManager::Reset() {
 		item.Reset();
 		//プレイヤーclass.
 		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, TRUE);
+	}
+
+	//スコア保存.
+	{
+		FILE* fp = fopen(FILE_DATA_PATH, "w");
+		assert(fp != NULL); //読み込みエラー.
+
+		char str[256];
+		_itoa(data.bestScore, str, 10); //10進数で最高スコアをchar型に変換.
+		fputs(str, fp);                //ファイルに文字書き込み.
+
+		fclose(fp);
 	}
 }
 
@@ -689,7 +713,7 @@ void GameManager::DrawReflectMode() {
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
 			//テキスト切り替え.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
-				DrawStringST(&str1, TRUE, data.font2); //反射モード.
+				DrawStringST(&str1, TRUE, data.font3); //反射モード.
 			}
 			else {
 				DrawStringST(&str2, TRUE, data.font3); //数字.

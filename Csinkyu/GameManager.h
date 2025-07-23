@@ -25,8 +25,6 @@ private: //データ.
 	BOOL isFinTitleAnim{}; //タイトルアニメーション用.
 	BOOL isFinScoreAnim{}; //最高スコアアニメーション用.
 
-	FILE* fileData; //スコア保存用.
-
 	InputST* p_input{};
 	SoundST* p_sound{};
 
@@ -34,10 +32,6 @@ public:
 	//実体の取得.
 	static GameManager* GetPtr() {
 		return &self;
-	}
-	//デストラクタ.
-	~GameManager() {
-		fclose(fileData); //ファイルを閉じる.
 	}
 
 	//メイン処理.
