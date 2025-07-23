@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/07/20
+   ver.2025/07/24
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -72,7 +72,7 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 }
 
 //LoadGraphの改造版.
-int LoadGraphST(IMG* img, const TCHAR fileName[]) {
+int LoadGraphST(Image* img, const TCHAR fileName[]) {
 
 	//画像読み込み.
 	img->handle = LoadGraph(fileName);
@@ -87,12 +87,12 @@ int LoadGraphST(IMG* img, const TCHAR fileName[]) {
 	return 0; //正常終了.
 }
 //LoadDivGraphの改造版.
-int LoadDivGraphST(vector<IMG>* img, const TCHAR fileName[], INT_XY size, INT_XY cnt) {
+int LoadDivGraphST(vector<Image>* img, const TCHAR fileName[], INT_XY size, INT_XY cnt) {
 
 	int ret = 0; //エラー値.
 
 	int* pHandle = new int[cnt.x*cnt.y]; //LoadDivGraphからハンドル取り出す用.
-	vector<IMG> tmpImg;                  //仮保存用.
+	vector<Image> tmpImg;                //仮保存用.
 
 	//画像分割読み込み.
 	int err = LoadDivGraph(fileName, cnt.x*cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
@@ -118,7 +118,7 @@ int LoadDivGraphST(vector<IMG>* img, const TCHAR fileName[], INT_XY size, INT_XY
 }
 
 //DrawGraphの改造版.
-int DrawGraphST(const IMG_DRAW* data, BOOL isCenter, BOOL isTrans) {
+int DrawGraphST(const DrawImg* data, BOOL isCenter, BOOL isTrans) {
 
 	int x = data->pos.x;
 	int y = data->pos.y;
@@ -137,7 +137,7 @@ int DrawGraphST(const IMG_DRAW* data, BOOL isCenter, BOOL isTrans) {
 }
 //DrawRectGraphの改造版.
 //Rect = 矩形(正方形や長方形のこと)
-int DrawRectGraphST(const IMG_DRAW_RECT* data, BOOL isTrans) {
+int DrawRectGraphST(const DrawImgRect* data, BOOL isTrans) {
 
 	if (data->img.handle == 0) {
 		return -2; //-2: handle未設定.
@@ -151,7 +151,7 @@ int DrawRectGraphST(const IMG_DRAW_RECT* data, BOOL isTrans) {
 	return err; //-1: DrawRectGraphエラー.
 }
 //DrawExtendGraphの改造版.
-int DrawExtendGraphST(const IMG_DRAW_EXTEND* data, BOOL isCenter, BOOL isTrans) {
+int DrawExtendGraphST(const DrawImgExtend* data, BOOL isCenter, BOOL isTrans) {
 
 	INT_XY pos1, pos2;
 
@@ -172,7 +172,7 @@ int DrawExtendGraphST(const IMG_DRAW_EXTEND* data, BOOL isCenter, BOOL isTrans) 
 	return err; //-1: DrawExtendGraphエラー.
 }
 //DrawRotaGraphの改造版.
-int DrawRotaGraphST(const IMG_DRAW_ROTA* data, BOOL isCenter, BOOL isTrans) {
+int DrawRotaGraphST(const DrawImgRota* data, BOOL isCenter, BOOL isTrans) {
 
 	int x = data->pos.x;
 	int y = data->pos.y;
@@ -191,7 +191,7 @@ int DrawRotaGraphST(const IMG_DRAW_ROTA* data, BOOL isCenter, BOOL isTrans) {
 }
 
 //DrawStringの改造版.
-int DrawStringST(const STR_DRAW* data, BOOL isCenter, int font) {
+int DrawStringST(const DrawStr* data, BOOL isCenter, int font) {
 	
 	int err = 0;
 	int x = data->pos.x;
@@ -219,7 +219,7 @@ int DrawStringST(const STR_DRAW* data, BOOL isCenter, int font) {
 	return err;
 }
 //DrawRotaStringの改造版.
-int DrawRotaStringST(const STR_DRAW_ROTA* data, BOOL isVertical, int font) {
+int DrawRotaStringST(const DrawStrRota* data, BOOL isVertical, int font) {
 
 	int err = 0;
 	double rad = data->ang * M_PI/180; //角度をラジアンに変換.
@@ -246,7 +246,7 @@ int DrawRotaStringST(const STR_DRAW_ROTA* data, BOOL isVertical, int font) {
 	return err;
 }
 //DrawModiStringの改造版.
-int DrawModiStringST(const STR_DRAW_MODI* data, BOOL isVertical, int font) {
+int DrawModiStringST(const DrawStrModi* data, BOOL isVertical, int font) {
 
 	int err = 0;
 
@@ -289,7 +289,7 @@ INT_XY GetTextSize(const TCHAR str[], int font) {
 }
 
 //フォント作成.
-int CreateFontH(int size, int thick, FONTTYPE_ID fontId) {
+int CreateFontH(int size, int thick, FontTypeID fontId) {
 	return CreateFontToHandle(NULL, size, thick, fontId);
 }
 
@@ -299,7 +299,7 @@ int DrawObjectGrid(const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize) {
 	int err = 0;
 
 	//画像設定.
-	IMG_DRAW draw = { data->img, {} };
+	DrawImg draw = { data->img, {} };
 	draw.pos.x = gridPos.x + data->pos.x * gridSize.x;
 	draw.pos.y = gridPos.y + data->pos.y * gridSize.y;
 	//画像描画.
@@ -315,7 +315,7 @@ int DrawObjectBox(const ObjectBox* data, BOOL isDrawHit) {
 	int err = 0;
 
 	//画像設定.
-	IMG_DRAW draw = { data->img, {} };
+	DrawImg draw = { data->img, {} };
 	draw.pos.x = _int(data->box.pos.x + data->offset.x);
 	draw.pos.y = _int(data->box.pos.y + data->offset.y);
 	//画像描画.
@@ -338,7 +338,7 @@ int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
 	int err = 0;
 
 	//画像設定.
-	IMG_DRAW draw = { data->img, {} };
+	DrawImg draw = { data->img, {} };
 	draw.pos.x = _int(data->cir.pos.x + data->offset.x);
 	draw.pos.y = _int(data->cir.pos.y + data->offset.y);
 	//画像描画.
@@ -357,8 +357,11 @@ int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
 }
 
 //描画モード変更.
-int SetDrawBlendModeST(BLENDMODE_ID id, int power) {
+int SetDrawBlendModeST(BlendModeID id, int power) {
 	return SetDrawBlendMode(id, power);
+}
+int SetDrawBlendModeST(BlendModeID id, double power) {
+	return SetDrawBlendMode(id, _int(power));
 }
 //描画モードリセット.
 int ResetDrawBlendMode() {

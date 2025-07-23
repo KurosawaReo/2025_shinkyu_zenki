@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/07/21
+   ver.2025/07/24
 
    DxLib: ƒIƒŠƒWƒiƒ‹ŒvZ‹@”\‚Ì’Ç‰Á.
 */
@@ -10,7 +10,7 @@
 #include "myCalcST.h"
 
 //“–‚½‚è”»’è(‰~‚Æ‰~)
-BOOL IsHitCircle(const Circle* cir1, const Circle* cir2) {
+BOOL HitCircle(const Circle* cir1, const Circle* cir2) {
 
 	//‹——£·.
 	double x = cir1->pos.x - cir2->pos.x;
@@ -25,7 +25,7 @@ BOOL IsHitCircle(const Circle* cir1, const Circle* cir2) {
     }
 }
 //“–‚½‚è”»’è(lŠp‚ÆlŠp)
-BOOL IsHitBox(const Box* box1, const Box* box2, BOOL isCenter) {
+BOOL HitBox(const Box* box1, const Box* box2, BOOL isCenter) {
 
     BOOL hit = FALSE;
 
@@ -48,7 +48,7 @@ BOOL IsHitBox(const Box* box1, const Box* box2, BOOL isCenter) {
     return hit;
 }
 //“–‚½‚è”»’è(ü‚Æ‰~)
-BOOL IsHitLine(const Line* line, const Circle* cir) {
+BOOL HitLine(const Line* line, const Circle* cir) {
 
 	//ü‚Ìn“_‚ÆI“_‚©‚çŒX‚«‚ğ‹‚ß‚é.
 	double katamuki;
@@ -86,8 +86,8 @@ BOOL IsHitLine(const Line* line, const Circle* cir) {
 	}
 
 	//hitğŒ.
-	if (dis1 <= cir->r &&                                    //ğŒ1:ü‚ÉG‚ê‚Ä‚¢‚é.
-		dis2 <= CalcDis(line->stPos, line->edPos)/2 + cir->r //ğŒ2:ü‚ğ’¼Œa‚Æ‚·‚é‰~‚ÉG‚ê‚Ä‚¢‚é.
+	if (dis1 <= cir->r &&                                     //ğŒ1:ü‚ÉG‚ê‚Ä‚¢‚é.
+		dis2 <= CalcDist(line->stPos, line->edPos)/2 + cir->r //ğŒ2:ü‚ğ’¼Œa‚Æ‚·‚é‰~‚ÉG‚ê‚Ä‚¢‚é.
 	){
 		return TRUE;
 	}
@@ -126,14 +126,14 @@ BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down,
 }
 
 //‹——£ŒvZ.
-double CalcDis(INT_XY pos1, INT_XY pos2) {
+double CalcDist(INT_XY pos1, INT_XY pos2) {
 
 	double x = pos1.x - pos2.x; //x‚Ì·.
     double y = pos1.y - pos2.y; //y‚Ì·.
 
 	return sqrt(x*x + y*y); //Î•Ó‚Ì’·‚³‚ğ•Ô‚·.
 }
-double CalcDis(DBL_XY pos1, DBL_XY pos2) {
+double CalcDist(DBL_XY pos1, DBL_XY pos2) {
 
 	double x = pos1.x - pos2.x; //x‚Ì·.
     double y = pos1.y - pos2.y; //y‚Ì·.
@@ -177,30 +177,30 @@ DBL_XY CalcRadToPos(double rad) {
 }
 
 //ease-int: ™X‚É‰Á‘¬.
-float CalcNumEaseIn(float time) {
-	time = min(time, 1.0f); //ãŒÀ‚Í1.0
-	time = max(time, 0.0f); //‰ºŒÀ‚Í0.0
+double CalcNumEaseIn(double time) {
+	time = min(time, 1.0); //ãŒÀ‚Í1.0
+	time = max(time, 0.0); //‰ºŒÀ‚Í0.0
 	return time * time;
 }
 //ease-out: ™X‚ÉŒ¸‘¬.
-float CalcNumEaseOut(float time) {
-	time = min(time, 1.0f); //ãŒÀ‚Í1.0
-	time = max(time, 0.0f); //‰ºŒÀ‚Í0.0
+double CalcNumEaseOut(double time) {
+	time = min(time, 1.0); //ãŒÀ‚Í1.0
+	time = max(time, 0.0); //‰ºŒÀ‚Í0.0
 	return 1 - (1-time) * (1-time);
 }
 //ease-in-out: ™X‚É‰Á‘¬‚µ‚ÄŒ¸‘¬.
-float CalcNumEaseInOut(float time) {
-	time = min(time, 1.0f); //ãŒÀ‚Í1.0
-	time = max(time, 0.0f); //‰ºŒÀ‚Í0.0
-	return 0.5f * (1.0f - cosf(M_PI*time)); //cos‚Ì•Ô‚è’l‚Í1.0 ¨ -1.0
+double CalcNumEaseInOut(double time) {
+	time = min(time, 1.0); //ãŒÀ‚Í1.0
+	time = max(time, 0.0); //‰ºŒÀ‚Í0.0
+	return 0.5 * (1.0 - cos(M_PI*time)); //cos‚Ì•Ô‚è’l‚Í1.0 ¨ -1.0
 }
 //wave loop: cos”g‚Ìƒ‹[ƒv(0.0`1.0)
-float CalcNumWaveLoop(float time) {
-	return 0.5f - cosf(M_PI*time)/2;
+double CalcNumWaveLoop(double time) {
+	return 0.5 - cos(M_PI*time)/2;
 }
 
 //’l‚Ì’Š‘I.
-int RndNum(int st, int ed, BOOL isDxRnd) {
+int RandNum(int st, int ed, BOOL isDxRnd) {
 
 	int rnd = 0;
 

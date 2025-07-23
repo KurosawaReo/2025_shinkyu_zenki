@@ -123,7 +123,7 @@ void MapGimmickLaser::DrawPredictionLine()
 
 	// —\‘ªü‚Ì“§–¾“x.
 	float alpha = CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255*(1-alpha));
+	SetDrawBlendModeST(MODE_ALPHA, 255*(1-alpha));
 
 	// ’†‰›‚Ì—\‘ªü‚Ì‚İ‚ğ•`‰æ
 	// ”­Ë•ûŒü‚É‰‚¶‚Ä—\‘ªü‚ğ•`‰æ

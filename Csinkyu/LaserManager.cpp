@@ -185,15 +185,15 @@ void LaserManager::UpdateLaser() {
 					//エフェクトをいくつか出す.
 					for(int j = 0; j < 8; j++){
 
-						double newDig = dig + (float)RndNum(-400, 400)/10; //少し角度をずらす.
+						double newDig = dig + (float)RandNum(-400, 400)/10; //少し角度をずらす.
 
 						EffectData data{};
 						data.type  = Effect_BreakMeteo;
 						data.pos   = { laser[i].x, laser[i].y };
 						data.vec   = CalcDigToPos(newDig);       //ずらした角度を反映.
-						data.speed = (float)RndNum( 5,   40)/10; //速度抽選.
-						data.len   = (float)RndNum(30,  180)/10; //長さ抽選.
-						data.ang   = (float)RndNum( 0, 3599)/10; //角度抽選.
+						data.speed = (float)RandNum( 5,   40)/10; //速度抽選.
+						data.len   = (float)RandNum(30,  180)/10; //長さ抽選.
+						data.ang   = (float)RandNum( 0, 3599)/10; //角度抽選.
 						//エフェクト召喚.
 						p_effectMng->SpawnEffect(&data);
 					}
@@ -319,7 +319,7 @@ void LaserManager::ReflectLaser(int idx)
 	//反射時の元の角度.
 	double ang = _dig(atan2(laser[idx].vy, laser[idx].vx));
 	//角度を逆方向へ(少しだけランダムでずれる)
-	ang += 180 + (float)RndNum(-200, 200)/10;
+	ang += 180 + (float)RandNum(-200, 200)/10;
 	//角度反映.
 	laser[idx].vx = cos(_rad(ang));
 	laser[idx].vy = sin(_rad(ang));
@@ -414,7 +414,7 @@ void LaserManager::LaserReflectRange(Circle* cir) {
 			Circle cir2 = { {laser[i].x, laser[i].y}, 1, {} };
 
 			//範囲内なら.
-			if (IsHitCircle(cir, &cir2)) {
+			if (HitCircle(cir, &cir2)) {
 				ReflectLaser(i); //その場で反射.
 			}
 		}

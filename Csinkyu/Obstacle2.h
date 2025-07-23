@@ -18,7 +18,7 @@ private:
 	double Ma[MAX_M]{};                //ミサイルの角度.
 	int    Mc[MAX_M]{};                //ミサイルの追尾カウンタ-
 
-	IMG img{};
+	Image img{};
 
 	GameData* data{};
 	Player* player{};

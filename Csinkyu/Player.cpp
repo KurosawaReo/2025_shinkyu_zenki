@@ -248,7 +248,7 @@ void Player::DrawReflectEffects()
 					// ŽlŠp‚¢˜gü‚Å”g–ä‚ð•`‰æi‘¾‚¢üj
 					Box waveBox = {
 						effect->pos,
-						{ waveSize, waveSize },
+						{ (double)waveSize, (double)waveSize },
 						waveColor
 					};
 
@@ -256,7 +256,7 @@ void Player::DrawReflectEffects()
 					for (int thickness = 0; thickness < 2; thickness++) {
 						Box thickBox = {
 							{ effect->pos.x - thickness, effect->pos.y - thickness },
-							{ waveSize + thickness * 2, waveSize + thickness * 2 },
+							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
 						DrawBoxST(&thickBox, FALSE, FALSE);
@@ -274,7 +274,7 @@ void Player::DrawReflectEffects()
 
 			Box centerBox = {
 				effect->pos,
-				{ centerSize, centerSize },
+				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
 			DrawBoxST(&centerBox, TRUE, FALSE);

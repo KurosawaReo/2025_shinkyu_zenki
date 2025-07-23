@@ -1,13 +1,13 @@
 /*
    - myInputST.h - (original)
-   ver.2025/07/23
+   ver.2025/07/24
 
    DxLib: オリジナル入力機能の追加.
 */
 #pragma once
 
 //キーID(入力しやすくする用)
-enum KEY_ID
+enum KeyID
 {
 	KEY_DOWN  = KEY_INPUT_DOWN,
 	KEY_LEFT  = KEY_INPUT_LEFT,
@@ -53,14 +53,14 @@ enum KEY_ID
 	KEY_ENTER = KEY_INPUT_RETURN, //Enterキー.
 };
 //マウスID(入力しやすくする用)
-enum MOUSE_ID
+enum MouseID
 {
 	MOUSE_L = MOUSE_INPUT_LEFT,   //Left.
 	MOUSE_R = MOUSE_INPUT_RIGHT,  //Right.
 	MOUSE_M = MOUSE_INPUT_MIDDLE, //Middle.
 };
 //コントローラボタンID(入力しやすくする用)
-enum PAD_BTN_ID
+enum PadBtnID
 {
 	//DxLibの定数とは違うため直指定(xboxコントローラ基準)
 	PAD_BTN_DOWN  = 0x0001,
@@ -105,12 +105,12 @@ public:
 	}
 
 	//判定.
-	BOOL   IsPushKey       (KEY_ID id);
-	int    IsPushKeyTime   (KEY_ID id);
-	BOOL   IsPushMouse     (MOUSE_ID id);
-	int    IsPushMouseTime (MOUSE_ID id);
-	BOOL   IsPushPadBtn    (PAD_BTN_ID id);
-	int    IsPushPadBtnTime(PAD_BTN_ID id);
+	BOOL   IsPushKey       (KeyID id);
+	int    IsPushKeyTime   (KeyID id);
+	BOOL   IsPushMouse     (MouseID id);
+	int    IsPushMouseTime (MouseID id);
+	BOOL   IsPushPadBtn    (PadBtnID id);
+	int    IsPushPadBtnTime(PadBtnID id);
 
 	//取得.
 	void   GetMousePos     (DBL_XY* pos, BOOL isValidX = TRUE, BOOL isValidY = TRUE);
@@ -121,9 +121,6 @@ public:
 	void   InputPad4Dir    (DBL_XY* pos, float speed);
 	void   InputPadStick   (DBL_XY* pos, float speed);
 	DBL_XY Move4Dir        (INT_XY  pow);
-
-	void   FixPosInArea    (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
-	BOOL   IsOutInArea     (DBL_XY  pos, INT_XY size, int left, int up, int right, int down);
 
 	//更新.
 	void   UpdateKey();

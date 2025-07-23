@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/07/21
+   ver.2025/07/24
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -88,7 +88,7 @@ void SoundData::ChangeVolume(int volume, float sec) {
 	
 	nowVol = GetVolumeSoundMem2(handle); //現在の音量.
 	aftVol = GetVolumeRange(volume);     //変化後の音量.
-	aftUS  = 1000000 * sec;              //変化時間.
+	aftUS  = (LONGLONG)(1000000 * sec);  //変化時間.
 	//変化時間があるなら.
 	if (aftUS > 0) {
 		timer.Start(); //タイマー開始.

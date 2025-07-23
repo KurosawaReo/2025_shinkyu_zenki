@@ -235,14 +235,14 @@ void Obstacle5::DrawWarningEffect(int index)
 	// Žc‚èŽžŠÔ‚©‚çŒo‰ßŽžŠÔ‚ðŒvŽZ
 	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
 
-	float blinkRate = 8.0f;
-	float blinkPhase = fmod(elapsedTime * blinkRate, 60.0f);
-	float blinkAlpha = (sin(blinkPhase * 3.14f / 30.0f) + 1.0f) * 0.5f;
+	float  blinkRate  = 8.0f;
+	double blinkPhase = fmod(elapsedTime * blinkRate, 60.0f);
+	double blinkAlpha = (sin(blinkPhase * 3.14f / 30.0f) + 1.0f) * 0.5f;
 
 	// –¬“®Œø‰Ê
-	float pulseRate = 4.0f;
-	float pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * 3.14159f / 60.0f);
-	int warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
+	float  pulseRate   = 4.0f;
+	double pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * 3.14159f / 60.0f);
+	int    warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
 
 	int alphaValue = (int)(255 * blinkAlpha * 0.8f);
 

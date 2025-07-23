@@ -113,8 +113,8 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 		//有効かつ、破壊されてないなら.
 		if (meteo[i].GetActive() && meteo[i].GetState() == Meteo_Normal) {
 
-			DBL_XY tmpPos = meteo[i].GetPos();          //1つずつ座標取得.
-			double tmpDis = CalcDis(tmpPos, _startPos); //距離を計算.
+			DBL_XY tmpPos = meteo[i].GetPos();           //1つずつ座標取得.
+			double tmpDis = CalcDist(tmpPos, _startPos); //距離を計算.
 
 			//初回限定.
 			if (shortest == -1) {

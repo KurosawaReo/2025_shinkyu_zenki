@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/07/16
+   ver.2025/07/24
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -9,43 +9,63 @@
 //このGlobal.hが定義されているか判別する用.
 #define DEF_GLOBAL_H
 
-//stdafxがあるならいらない.
-#if true
-  //c言語用.
-  #define _USE_MATH_DEFINES  //math定数を使うのに必要.
-  #define _CRT_SECURE_NO_WARNINGS
-  #include <assert.h>
-  #include <math.h>
-  #include <stdlib.h>
-  #include <time.h>
-  //c++用.
-  #include <vector>
-  #include <map>
-  #include <string>
-  using namespace std;
-  //DxLib.
-  #include "DxLib.h"
-#endif
+//c言語用.
+#define _USE_MATH_DEFINES  //math定数を使うのに必要.
+#define _CRT_SECURE_NO_WARNINGS
+#include <assert.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+//c++用.
+#include <vector>
+#include <map>
+#include <string>
+using namespace std;
+//DxLib.
+#include "DxLib.h"
 
-//int型の凝縮xy.
-struct INT_XY
+//xとyの凝縮.
+template<typename T> //型を<>で入力して使う.
+struct XY
 {
-	int x;
-	int y;
-};
-//double型の凝縮xy.
-struct DBL_XY
-{
-	double x;
-	double y;
-};
-//画像データ格納用.
-struct IMG
-{
-	int    handle;	 //ハンドル.
-	INT_XY size;	 //画像のサイズ.
-};
+	T x;
+	T y;
 
+	//演算子で計算できるように.
+	XY<T> operator+(XY<T>& xy) {       //+の右側が引数に入り、返り値が左側に入る.
+		return { x + xy.x, y + xy.y }; //xとyを加算して返す.
+	}
+	XY<T> operator-(XY<T>& xy) {
+		return { x - xy.x, y - xy.y };
+	}
+	XY<T> operator*(XY<T>& xy) {
+		return { x * xy.x, y * xy.y };
+	}
+	XY<T> operator*(int n) {
+		return { x * n, y * n };
+	}
+	XY<T> operator*(double n) {
+		return { x * n, y * n };
+	}
+	XY<T> operator/(XY<T>& xy) {
+		return { x / xy.x, y / xy.y };
+	}
+	XY<T> operator/(int n) {
+		return { x / n, y / n };
+	}
+	XY<T> operator/(double n) {
+		return { x / n, y / n };
+	}
+};
+typedef XY<int>    INT_XY; //int型.
+typedef XY<double> DBL_XY; //double型.
+
+//画像データ.
+struct Image
+{
+	int    handle; //ハンドル.
+	INT_XY size;   //画像のサイズ.
+};
 //円データ.
 struct Circle
 {
@@ -71,7 +91,7 @@ struct Line
 struct ObjectGrid
 {
 	INT_XY pos{};      //座標.
-	IMG    img{};      //画像.
+	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
@@ -87,7 +107,7 @@ struct ObjectBox
 {
 	Box    box{};      //当たり判定と座標.
 	DBL_XY offset{};   //画像をずらす量.
-	IMG    img{};      //画像.
+	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
@@ -104,7 +124,7 @@ struct ObjectCir
 {
 	Circle cir{};      //当たり判定と座標.
 	DBL_XY offset{};   //画像をずらす量.
-	IMG    img{};      //画像.
+	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
@@ -157,7 +177,7 @@ struct GameData
 	int   font2;      //フォント.
 	int   font1;      //フォント.
 	int   font3;      //フォント.
-	IMG   imgLogo[2]; //タイトルロゴ画像.
+	Image   imgLogo[2]; //タイトルロゴ画像.
 
 	BOOL  isSlow;     //スローモードかどうか.
 };

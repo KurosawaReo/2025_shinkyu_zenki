@@ -20,7 +20,7 @@ void Item::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
 void Item::Reset()
 {
 	// 座標の初期化
-	pos.x = (double)RndNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
+	pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
 	pos.y = -1000;											  // 画面上部の少し上から開始
 	// サイズと色の設定
 	size.x = ITEM_SIZE;
@@ -73,7 +73,7 @@ BOOL Item::CheckHitPlayer()
 	Box itemBox = { pos, size, {} };
 	
 	//当たった場合.
-	if (IsHitBox(&plyBox, &itemBox, TRUE)) {
+	if (HitBox(&plyBox, &itemBox, TRUE)) {
 		OnHitPlayer();
 		return TRUE;
 	}
