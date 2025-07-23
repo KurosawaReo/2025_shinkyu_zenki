@@ -41,7 +41,7 @@ void LaserManager::Draw() {
 
 #if defined DEBUG_LASER_ACTIVE
 	//デバッグ表示.
-	for (int i = 0; i < OBSTACLE4_LINE_MAX; i++)
+	for (int i = 0; i < LASER_LINE_CNT_MAX; i++)
 	{
 		int x =   0 +  8 * (i%200);
 		int y = 100 + 16 * (i/200);
