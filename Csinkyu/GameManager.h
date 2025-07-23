@@ -22,16 +22,22 @@ private: //データ.
 	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
-	BOOL isFinTitleAnim; //タイトルアニメーション用.
-	BOOL isFinScoreAnim; //最高スコアアニメーション用.
+	BOOL isFinTitleAnim{}; //タイトルアニメーション用.
+	BOOL isFinScoreAnim{}; //最高スコアアニメーション用.
 
-	InputST* p_input;
-	SoundST* p_sound;
+	FILE* fileData; //スコア保存用.
+
+	InputST* p_input{};
+	SoundST* p_sound{};
 
 public:
 	//実体の取得.
 	static GameManager* GetPtr() {
 		return &self;
+	}
+	//デストラクタ.
+	~GameManager() {
+		fclose(fileData); //ファイルを閉じる.
 	}
 
 	//メイン処理.

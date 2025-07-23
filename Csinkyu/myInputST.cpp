@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/07/19
+   ver.2025/07/23
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -50,11 +50,13 @@ void InputST::GetMousePos(DBL_XY* pos, BOOL isValidX, BOOL isValidY) {
 	}
 }
 //コントローラスティック操作取得.
-void InputST::GetPadStick() {
-
+void InputST::GetPadStickVec(DBL_XY* pos) {
+	//範囲-1000～1000を-1.0～1.0に変換.
+	pos->x = (double)stickVec.x/1000;
+	pos->y = (double)stickVec.y/1000;
 }
 
-//4方向移動(キー操作)
+//キーボード:十字キー操作.
 void InputST::InputKey4Dir(DBL_XY* pos, float speed) {
 
 	INT_XY pow{}; //移動力.
@@ -77,7 +79,7 @@ void InputST::InputKey4Dir(DBL_XY* pos, float speed) {
 	pos->x += Move4Dir(pow).x * speed;
 	pos->y += Move4Dir(pow).y * speed;
 }
-//4方向移動(コントローラ操作)
+//コントローラ:十字キー操作.
 void InputST::InputPad4Dir(DBL_XY* pos, float speed) {
 
 	INT_XY pow{};  //移動力.
@@ -99,6 +101,16 @@ void InputST::InputPad4Dir(DBL_XY* pos, float speed) {
 	//座標移動.
 	pos->x += Move4Dir(pow).x * speed;
 	pos->y += Move4Dir(pow).y * speed;
+}
+//コントローラ:スティック操作.
+void InputST::InputPadStick(DBL_XY* pos, float speed) {
+	
+	DBL_XY vec;
+	GetPadStickVec(&vec); //入力取得.
+
+	//座標移動.
+	pos->x += vec.x * speed;
+	pos->y += vec.y * speed;
 }
 //移動4方向処理(斜め計算)
 DBL_XY InputST::Move4Dir(INT_XY pow){
@@ -159,7 +171,8 @@ void InputST::UpdateKey() {
 //マウスの更新処理.
 void InputST::UpdateMouse() {
 
-	GetMousePoint(&mPos.x, &mPos.y); //マウス座標取得.
+	//マウス座標取得.
+	GetMousePoint(&mPos.x, &mPos.y);
 
 	for (int i = 0; i < MOUSE_MAX; i++) {
 		//押されているなら.
@@ -172,7 +185,10 @@ void InputST::UpdateMouse() {
 	}
 }
 //コントローラの更新処理.
-void InputST::UpdatePadBtn() {
+void InputST::UpdatePad() {
+
+	//スティック入力取得.
+	GetJoypadAnalogInput(&stickVec.x, &stickVec.y, DX_INPUT_PAD1);
 
 	for (int i = 0; i < PAD_BTN_MAX; i++) {
 		//押されているなら.

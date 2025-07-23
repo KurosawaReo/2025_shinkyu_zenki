@@ -188,9 +188,9 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	p_input->UpdateKey();    //キー入力更新.
-	p_input->UpdatePadBtn(); //コントローラのボタン入力更新.
-	p_sound->Update();       //サウンド更新.
+	p_input->UpdateKey(); //キー入力更新.
+	p_input->UpdatePad(); //コントローラ入力更新.
+	p_sound->Update();    //サウンド更新.
 
 	//シーン別.
 	switch (data.scene) 

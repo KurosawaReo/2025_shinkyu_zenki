@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/07/19
+   ver.2025/07/23
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -95,7 +95,8 @@ private: //データ.
 	int tmMouse [MOUSE_MAX];   //マウスを押下している時間.(bitフラグで管理)
 	int tmPadBtn[PAD_BTN_MAX]; //コントローラボタンを押下している時間.(bitフラグで管理)
 
-	INT_XY mPos; //マウス座標.
+	INT_XY mPos;     //マウス座標.
+	INT_XY stickVec; //スティック入力.
 
 public:
 	//実体の取得.
@@ -113,11 +114,12 @@ public:
 
 	//取得.
 	void   GetMousePos     (DBL_XY* pos, BOOL isValidX = TRUE, BOOL isValidY = TRUE);
-	void   GetPadStick     ();
+	void   GetPadStickVec  (DBL_XY* pos);
 
 	//移動系.
 	void   InputKey4Dir    (DBL_XY* pos, float speed);
 	void   InputPad4Dir    (DBL_XY* pos, float speed);
+	void   InputPadStick   (DBL_XY* pos, float speed);
 	DBL_XY Move4Dir        (INT_XY  pow);
 
 	void   FixPosInArea    (DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
@@ -126,5 +128,5 @@ public:
 	//更新.
 	void   UpdateKey();
 	void   UpdateMouse();
-	void   UpdatePadBtn();
+	void   UpdatePad();
 };

@@ -47,7 +47,7 @@ void Player::Update()
 		isDebug = !isDebug;
 	}
 
-	// テスト用：Eキーで反射エフェクトを生成
+	//テスト用：Eキーで反射エフェクトを生成
 	if (input->IsPushKeyTime(KEY_E) == 1) {
 		CreateReflectEffect(hit.pos);
 	}
@@ -156,12 +156,12 @@ void Player::PlayerMove()
 
 	//移動する.
 	if (p_data->isSlow) {
-		input->InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
-		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
+		input->InputKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
+		input->InputPadStick(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
 	}
 	else {
-		input->InputKey4Dir(&hit.pos, PLAYER_MOVE_SPEED);
-		input->InputPad4Dir(&hit.pos, PLAYER_MOVE_SPEED);
+		input->InputKey4Dir (&hit.pos, PLAYER_MOVE_SPEED);
+		input->InputPadStick(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
