@@ -724,8 +724,9 @@ void GameManager::GameEnd() {
 	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
-	//スコア保存.
-	{
+	//最高スコア更新なら保存.
+	if (data.score > data.bestScore) {
+
 		FILE* fp = fopen(FILE_DATA_PATH, "w");
 		assert(fp != NULL); //読み込みエラー.
 
