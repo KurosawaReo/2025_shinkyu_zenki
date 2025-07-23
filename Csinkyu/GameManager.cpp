@@ -195,18 +195,6 @@ void GameManager::Reset() {
 		//プレイヤーclass.
 		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, TRUE);
 	}
-
-	//スコア保存.
-	{
-		FILE* fp = fopen(FILE_DATA_PATH, "w");
-		assert(fp != NULL); //読み込みエラー.
-
-		char str[256];
-		_itoa(data.bestScore, str, 10); //10進数で最高スコアをchar型に変換.
-		fputs(str, fp);                //ファイルに文字書き込み.
-
-		fclose(fp);
-	}
 }
 
 //更新.
@@ -735,6 +723,18 @@ void GameManager::GameEnd() {
 
 	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
+
+	//スコア保存.
+	{
+		FILE* fp = fopen(FILE_DATA_PATH, "w");
+		assert(fp != NULL); //読み込みエラー.
+
+		char str[256];
+		_itoa(data.score, str, 10); //scoreをchar型に変換(10進数)
+		fputs(str, fp);             //ファイルに文字書き込み.
+
+		fclose(fp);
+	}
 
 	//サウンド.
 	p_sound->FadeOutPlay(_T("BGM1"), 2);

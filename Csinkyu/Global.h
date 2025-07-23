@@ -22,7 +22,6 @@
   #include <vector>
   #include <map>
   #include <string>
-  #include <cstdlib>
   using namespace std;
   //DxLib.
   #include "DxLib.h"
