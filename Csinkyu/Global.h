@@ -266,4 +266,4 @@ struct GameData
 #define COLOR_METEO(pos)				(GetColor(0, _int(255 * fabs(sin(pos.x/200))), 255)) //Ë¶êŒ.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
-#define COLOR_TIME						(0x84FA9E)
+#define COLOR_TIME						(0x80FF9C)
