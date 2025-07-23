@@ -172,6 +172,8 @@ struct GameData
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT				(32)			//ウィンドウのカラーbit数.
 
+#define FILE_DATA_PATH					("data.txt")	//データを保存するtxtファイル.
+
 #define FPS								(80)			//フレームレート.
 
 #define SLOW_MODE_TIME					(8)             //スローモード制限時間.
