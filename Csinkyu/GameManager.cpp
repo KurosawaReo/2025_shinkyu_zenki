@@ -530,9 +530,9 @@ void GameManager::DrawEnd() {
 		float anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
 		//テキストの設定.
-		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 400+30*anim}, 0xA0A0A0 };
-		STR_DRAW str2 = { _T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2+10}, 0xFFFFFF };
-		STR_DRAW str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+50}, 0xFFFFFF };
+		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 370+30*anim}, 0xA0A0A0 };
+		STR_DRAW str2 = { _T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF };
+		STR_DRAW str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF };
 		//スコア表示.
 		swprintf(
 			str3.text, 
@@ -558,7 +558,7 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			float anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-350+anim*20}, 0xEFFFA0 };
+			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-380+anim*20}, 0xEFFFA0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
 			DrawStringST(&str, TRUE, data.font2);
@@ -576,8 +576,8 @@ void GameManager::DrawEnd() {
 		//アニメーション値.
 		float anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
-		STR_DRAW str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+200}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+198}, 18, 0xFFFFFF };
+		STR_DRAW str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+143}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
@@ -618,44 +618,57 @@ void GameManager::DrawBG() {
 //UIの描画.
 void GameManager::DrawUI() {
 
-	//ゲーム時間.
-	DrawFormatStringToHandle(
-		10, 10, 0xFFFFFF, data.font2, _T("Time:%.3f"), tmScene[SCENE_GAME].GetPassTime()
-	);
-	//レベル.
+#if false
+	//レベル(debug)
 	DrawFormatStringToHandle(
 		10, WINDOW_HEI-75, 0xFFFFFF, data.font2, _T("Level: %d"), data.level
 	);
-	//出現間隔割合.
+	//出現間隔割合(debug)
 	DrawFormatStringToHandle(
 		10, WINDOW_HEI-40, 0xFFFFFF, data.font2, _T("Spawn: %.2f%%"), data.spawnRate*100
 	);
+#endif
 
 	//ハイスコア表示.
 	{
 		//アニメーション値.
-		float anim1    = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
-		float anim2    = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
-		float animSin1 = sin(M_PI*tmScene[SCENE_READY].GetPassTime());
-		float animSin2 = sin(M_PI*tmScene[SCENE_READY].GetPassTime()-1);
+		float alpha1   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
+		float alpha2   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.1);
+		float alpha3   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.2);
+		float animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime());
+		float animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.1));
+		float animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 
 		//テキスト設定.
+#if false
 		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_BEST_SCORE };
 		STR_DRAW str2 = { {}, {WINDOW_WID/2, 0+150}, COLOR_SCORE };
-		swprintf(str1.text, _T("BEST SCORE: %d"), data.bestScore);
-		swprintf(str2.text, _T("SCORE: %d"),      data.score);
+		STR_DRAW str3 = { {}, {WINDOW_WID/2, 0+200}, COLOR_TIME };
+#else
+		STR_DRAW str1 = { {}, {WINDOW_WID/2-380, 100}, COLOR_BEST_SCORE };
+		STR_DRAW str2 = { {}, {WINDOW_WID/2,     100}, COLOR_SCORE };
+		STR_DRAW str3 = { {}, {WINDOW_WID/2+380, 100}, COLOR_TIME };
+#endif
+		swprintf(str1.text, _T("BEST SCORE:%05d"), data.bestScore);
+		swprintf(str2.text, _T("SCORE:%05d"),      data.score);
+		swprintf(str3.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
 		//テキスト(main)
-		SetDrawBlendModeST(MODE_ALPHA, 255 * anim1);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 		DrawStringST(&str1, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 255 * anim2);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 		DrawStringST(&str2, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
+		DrawStringST(&str3, TRUE, data.font3);
 		//テキスト(光沢用)
 		str1.color = 0xFFFFFF;
 		str2.color = 0xFFFFFF;
-		SetDrawBlendModeST(MODE_ALPHA, 128 * animSin1);
+		str3.color = 0xFFFFFF;
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
 		DrawStringST(&str1, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 128 * animSin2);
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
 		DrawStringST(&str2, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
+		DrawStringST(&str3, TRUE, data.font3);
 		//描画モードリセット.
 		ResetDrawBlendMode();
 	}
@@ -691,8 +704,8 @@ void GameManager::DrawReflectMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
-		STR_DRAW str1 = { _T("反射モード"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-		STR_DRAW str2 = { {},               {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+		STR_DRAW str1 = { _T("Reflect"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+		STR_DRAW str2 = { {},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
 		swprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.

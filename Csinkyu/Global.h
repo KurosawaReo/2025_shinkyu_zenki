@@ -172,7 +172,7 @@ struct GameData
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT				(32)			//ウィンドウのカラーbit数.
 
-#define FILE_DATA_PATH					("data.txt")	//データを保存するtxtファイル.
+#define FILE_DATA_PATH					("score.data")	//データを保存するtxtファイル.
 
 #define FPS								(80)			//フレームレート.
 
@@ -266,3 +266,4 @@ struct GameData
 #define COLOR_METEO(pos)				(GetColor(0, _int(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
+#define COLOR_TIME						(0x84FA9E)
