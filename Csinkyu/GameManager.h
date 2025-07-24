@@ -24,6 +24,7 @@ private: //データ.
 
 	BOOL isFinTitleAnim{}; //タイトルアニメーション用.
 	BOOL isFinScoreAnim{}; //最高スコアアニメーション用.
+	BOOL isItem3Count{};   //アイテムカウントダウンの音を鳴らしたか.
 
 	InputST* p_input{};
 	SoundST* p_sound{};

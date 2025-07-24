@@ -88,7 +88,7 @@ void Item::OnHitPlayer()
 	GameManager::GetPtr()->TakeItem();
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("TakeItem"), FALSE, 76);
+	sound->Play(_T("TakeItem"),   FALSE, 76); //ポワーン.
 	//エフェクト召喚.
 	EffectData data{};
 	data.type = Effect_Score100;

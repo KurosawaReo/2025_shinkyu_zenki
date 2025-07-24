@@ -58,6 +58,10 @@
    2025/07/15:
    反射仮完成。このゲームの方針も見えてきた。
    「隕石を破壊するとスコアを得られ、そのスコアを競うゲーム」で行ける気がする。
+
+   前期発表会後: 変更内容
+   ・UIレイアウトの変更。"BEST SCORE","SCORE","TIME"の3つだけにした。
+   ・アイテムの終了が分かりやすくなるよう、数字を3秒だけ表示して音を足した。
 /--------------------------------------------------------*/
 
 #include "MeteoManager.h"
@@ -108,18 +112,19 @@ void GameManager::Init() {
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
 	//サウンド読み込み.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),   _T("BGM1"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"), _T("BGM2"));		//未使用(BGM候補)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),    _T("PowerDown"));	//アイテム解除.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),   _T("Break"));		//隕石破壊.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),   _T("TakeItem"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),  _T("Laser1"));		//レーザー(発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),  _T("Laser2"));		//レーザー(強発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),   _T("Laser3"));		//レーザー(反射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),   _T("Ripples"));	//波紋.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),   _T("PlayerDeath"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),  _T("LevelUp"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),   _T("BestScore"));  //最高スコア更新.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),    _T("BGM1"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),  _T("BGM2"));			//未使用(BGM候補)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),    _T("TakeItem"));		//アイテム取る.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927.mp3"),   _T("CountDown"));	//カウントダウン.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),     _T("PowerDown"));		//アイテム解除.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),   _T("Laser1"));		//レーザー(発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),   _T("Laser2"));		//レーザー(強発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),    _T("Laser3"));		//レーザー(反射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),    _T("Ripples"));		//波紋.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),    _T("Break"));			//隕石破壊.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),    _T("PlayerDeath"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),   _T("LevelUp"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),    _T("BestScore"));		//最高スコア更新.
 	//Init処理
 	{
 		//管理class.
@@ -336,15 +341,24 @@ void GameManager::UpdateGame() {
 
 	//スローモード.
 	if (tmSlowMode.GetIsMove()) {
+		//3秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 3){
+			if (!isItem3Count) {
+				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
+				isItem3Count = TRUE;
+			}
+		}
 		//時間切れで解除.
 		if (tmSlowMode.GetPassTime() == 0) {
 			
 			player.SetReflectionMode(FALSE); //反射モード終了.
-			p_sound->Play(_T("PowerDown"), FALSE, 78); //サウンド.
+			p_sound->Play(_T("PowerDown"), FALSE, 78); //再生.
+			p_sound->Stop(_T("CountDown"));            //停止.
 			
 			//リセット.
 			tmSlowMode.Reset();
 			data.isSlow = FALSE;
+			isItem3Count = FALSE;
 		}
 	}
 
@@ -712,11 +726,12 @@ void GameManager::DrawReflectMode() {
 		{
 			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
-			//テキスト切り替え.
+			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
 				DrawStringST(&str1, TRUE, data.font3); //反射モード.
 			}
-			else {
+			//最後の3秒.
+			if (tmSlowMode.GetPassTime() <= 3) {
 				DrawStringST(&str2, TRUE, data.font3); //数字.
 			}
 			ResetDrawBlendMode();
@@ -733,6 +748,10 @@ void GameManager::GameEnd() {
 	tmScene[SCENE_END].Start(); //開始.
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
+
+	//サウンド(再生途中なら停止)
+	p_sound->Stop(_T("CountDown"));
+	isItem3Count = FALSE;
 
 	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
