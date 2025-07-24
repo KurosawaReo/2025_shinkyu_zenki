@@ -193,7 +193,7 @@ void GameManager::Reset() {
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
-		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, TRUE);
+		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+180 }, TRUE);
 	}
 }
 
@@ -396,9 +396,11 @@ void GameManager::DrawTitle() {
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
-	const float delay2 = 1.4f;
+	const float delay2 = 1.6f;
 	const float delay3 = 3;
 	const float delay4 = 3;
+
+	const int logoY = WINDOW_HEI/2 - 70;
 
 	//画像の表示.
 	{	
@@ -409,7 +411,7 @@ void GameManager::DrawTitle() {
 			//画像設定.
 			DrawImgExtend draw;
 			draw.img  = data.imgLogo[0];
-			draw.pos  = {WINDOW_WID/2, WINDOW_HEI/2 - 50};
+			draw.pos  = {WINDOW_WID/2, logoY};
 			draw.size = {data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2};
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
@@ -422,11 +424,11 @@ void GameManager::DrawTitle() {
 			//画像設定.
 			DrawImgExtend img1; 
 			img1.img  = data.imgLogo[0];
-			img1.pos  = {WINDOW_WID/2, _int(WINDOW_HEI/2 - 50 - anim*100)};
+			img1.pos  = {WINDOW_WID/2, _int(logoY - anim*100)};
 			img1.size = data.imgLogo[0].size/2;
 			DrawImgExtend img2;
 			img2.img  = data.imgLogo[1];
-			img2.pos  = {WINDOW_WID/2, _int(WINDOW_HEI/2 - 50 - anim*100)};
+			img2.pos  = {WINDOW_WID/2, _int(logoY - anim*100)};
 			img2.size = data.imgLogo[1].size/2;
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
@@ -445,7 +447,7 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
 		//テキスト.
-		DrawStr str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+100}, COLOR_BEST_SCORE };
+		DrawStr str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+80}, COLOR_BEST_SCORE };
 		swprintf(str.text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
@@ -457,8 +459,8 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
 		//テキスト.
-		DrawStr str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+300}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+297}, 18, 0xFFFFFF };
+		DrawStr str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+280}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+277}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
@@ -555,7 +557,8 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-380+anim*20)}, 0xEFFFA0 };
+//			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-400+anim*20)}, 0xEFFFA0 };
+			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-400+anim*20)}, COLOR_SCORE };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
 			DrawStringST(&str, TRUE, data.font2);
@@ -642,9 +645,9 @@ void GameManager::DrawUI() {
 		STR_DRAW str2 = { {}, {WINDOW_WID/2, 0+150}, COLOR_SCORE };
 		STR_DRAW str3 = { {}, {WINDOW_WID/2, 0+200}, COLOR_TIME };
 #else
-		DrawStr str1 = { {}, {WINDOW_WID/2-380, 100}, COLOR_BEST_SCORE };
-		DrawStr str2 = { {}, {WINDOW_WID/2,     100}, COLOR_SCORE };
-		DrawStr str3 = { {}, {WINDOW_WID/2+380, 100}, COLOR_TIME };
+		DrawStr str1 = { {}, {WINDOW_WID/2-380, 90}, COLOR_BEST_SCORE };
+		DrawStr str2 = { {}, {WINDOW_WID/2,     90}, COLOR_SCORE };
+		DrawStr str3 = { {}, {WINDOW_WID/2+380, 90}, COLOR_TIME };
 #endif
 		swprintf(str1.text, _T("BEST SCORE:%05d"), data.bestScore);
 		swprintf(str2.text, _T("SCORE:%05d"),      data.score);
@@ -701,8 +704,8 @@ void GameManager::DrawReflectMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
-		DrawStr str1 = { _T("Reflect"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-		DrawStr str2 = { {},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+		DrawStr str1 = { _T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+		DrawStr str2 = { {},                 {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
 		swprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.
