@@ -19,12 +19,13 @@ private: //データ.
 		Timer(CountUp, 0), //Readyシーン.
 		Timer(CountUp, 0), //Gameシーン.
 		Timer(CountUp, 0), //Endシーン.
+		Timer(CountUp, 0), //Pauseシーン.
 	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
 	BOOL isFinTitleAnim{}; //タイトルアニメーション用.
 	BOOL isFinScoreAnim{}; //最高スコアアニメーション用.
-	BOOL isItem3Count{};   //アイテムカウントダウンの音を鳴らしたか.
+	BOOL isItemCount[3]{}; //アイテムカウントダウンの音を鳴らしたか.
 
 	InputST* p_input{};
 	SoundST* p_sound{};
@@ -49,6 +50,7 @@ public:
 	void UpdateReady();
 	void UpdateGame();
 	void UpdateEnd();
+	void UpdatePause();
 
 	void UpdateObjects();
 
@@ -57,6 +59,7 @@ public:
 	void DrawReady();
 	void DrawGame();
 	void DrawEnd();
+	void DrawPause();
 
 	void DrawBG();
 	void DrawUI();

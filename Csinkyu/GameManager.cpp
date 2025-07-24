@@ -115,7 +115,7 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),    _T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),  _T("BGM2"));			//未使用(BGM候補)
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),    _T("TakeItem"));		//アイテム取る.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927.mp3"),   _T("CountDown"));	//カウントダウン.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),   _T("CountDown"));	//カウントダウン.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),     _T("PowerDown"));		//アイテム解除.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),   _T("Laser1"));		//レーザー(発射)
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),   _T("Laser2"));		//レーザー(強発射)
@@ -213,9 +213,10 @@ void GameManager::Update() {
 	switch (data.scene) 
 	{
 		case SCENE_TITLE: UpdateTitle(); break;
-		case SCENE_READY: UpdateReady();  break;
+		case SCENE_READY: UpdateReady(); break;
 		case SCENE_GAME:  UpdateGame();  break;
 		case SCENE_END:   UpdateEnd();   break;
+		case SCENE_PAUSE: UpdatePause(); break;
 	
 		default: assert(FALSE); break;
 	}
@@ -233,6 +234,7 @@ void GameManager::Draw() {
 		case SCENE_READY: DrawReady(); break;
 		case SCENE_GAME:  DrawGame();  break;
 		case SCENE_END:   DrawEnd();   break;
+		case SCENE_PAUSE: DrawPause(); break;
 
 		default: assert(FALSE); break;
 	}
@@ -343,28 +345,50 @@ void GameManager::UpdateGame() {
 	if (tmSlowMode.GetIsMove()) {
 		//3秒以下になったばかりの時.
 		if (tmSlowMode.GetPassTime() <= 3){
-			if (!isItem3Count) {
+			if (!isItemCount[2]) {
 				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
-				isItem3Count = TRUE;
+				isItemCount[2] = TRUE;
+			}
+		}
+		//2秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 2) {
+			if (!isItemCount[1]) {
+				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
+				isItemCount[1] = TRUE;
+			}
+		}
+		//1秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 1) {
+			if (!isItemCount[0]) {
+				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
+				isItemCount[0] = TRUE;
 			}
 		}
 		//時間切れで解除.
-		if (tmSlowMode.GetPassTime() == 0) {
+		if (tmSlowMode.GetPassTime() <= 0) {
 			
 			player.SetReflectionMode(FALSE); //反射モード終了.
 			p_sound->Play(_T("PowerDown"), FALSE, 78); //再生.
-			p_sound->Stop(_T("CountDown"));            //停止.
 			
 			//リセット.
 			tmSlowMode.Reset();
 			data.isSlow = FALSE;
-			isItem3Count = FALSE;
+			for (int i = 0; i < _countof(isItemCount); i++) {
+				isItemCount[i] = FALSE;
+			}
 		}
 	}
 
 	UpdateObjects();    //オブジェクト.
 	player.Update();    //プレイヤー.
 	effectMng.Update(); //エフェクト.
+	
+	//ポーズする.
+	if(p_input->IsPushKeyTime(KEY_P) == 1){
+		data.scene = SCENE_PAUSE;
+		tmScene[SCENE_GAME].Stop(); //一時停止.
+		tmSlowMode.Stop();          //一時停止.
+	}
 }
 void GameManager::UpdateEnd() {
 
@@ -377,6 +401,20 @@ void GameManager::UpdateEnd() {
 		Reset();
 	}
 }
+void GameManager::UpdatePause() {
+
+	//ポーズ解除.
+	if (p_input->IsPushKeyTime(KEY_P) == 1) {
+
+		data.scene = SCENE_GAME;
+		tmScene[SCENE_GAME].Start(); //再開.
+		//スローモード中だったなら.
+		if (tmSlowMode.GetPassTime() < SLOW_MODE_TIME) {
+			tmSlowMode.Start(); //再開.
+		}
+	}
+}
+
 //オブジェクトの更新.
 void GameManager::UpdateObjects() {
 
@@ -599,6 +637,12 @@ void GameManager::DrawEnd() {
 		ResetDrawBlendMode();
 	}
 }
+void GameManager::DrawPause() {
+
+	player.Draw();     //プレイヤー.
+	DrawUI();
+	DrawReflectMode(); //反射モード演出.
+}
 
 //背景の描画.
 void GameManager::DrawBG() {
@@ -719,7 +763,7 @@ void GameManager::DrawReflectMode() {
 	{
 		//テキストの設定.
 		DrawStr str1 = { _T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-		DrawStr str2 = { {},                 {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+		DrawStr str2 = { {},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
 		swprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.
@@ -749,9 +793,9 @@ void GameManager::GameEnd() {
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
 
-	//サウンド(再生途中なら停止)
-	p_sound->Stop(_T("CountDown"));
-	isItem3Count = FALSE;
+	for (int i = 0; i < _countof(isItemCount); i++) {
+		isItemCount[i] = FALSE;
+	}
 
 	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.

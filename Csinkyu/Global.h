@@ -151,6 +151,7 @@ enum Scene
 	SCENE_READY,
 	SCENE_GAME,
 	SCENE_END,
+	SCENE_PAUSE, //É|Å[ÉYâÊñ .
 
 	SCENE_COUNT, //ëçêî.
 };
