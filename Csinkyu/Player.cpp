@@ -80,7 +80,7 @@ void Player::Draw()
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
-//		DrawReflectEffects();  // エフェクトを先に描画
+		DrawReflectEffects();  // エフェクトを先に描画
 
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
@@ -259,7 +259,7 @@ void Player::DrawReflectEffects()
 							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxST(&thickBox, FALSE, FALSE);
+						DrawBoxST(&thickBox, TRUE, FALSE);
 					}
 				}
 			}

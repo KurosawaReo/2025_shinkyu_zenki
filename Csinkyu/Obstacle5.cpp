@@ -254,6 +254,8 @@ void Obstacle5::DrawWarningEffect(int index)
 
 	// 外周リング                                                                                   //120, 120, 120
 	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize + 5, GetColor(120, 120, 120), FALSE);
+	//通常の描画モードに戻す
+	ResetDrawBlendMode();
 }
 
 void Obstacle5::DrawActiveEffect(int index)
@@ -278,4 +280,6 @@ void Obstacle5::DrawActiveEffect(int index)
 	SetDrawBlendModeST(MODE_ADD, alphaValue);
 	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), effectSize, GetColor(0, 255, 255), FALSE);
 	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), innerSize, GetColor(0, 255, 200), FALSE);
+	//通常の描画モードに戻す
+	ResetDrawBlendMode();
 }

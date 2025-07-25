@@ -62,6 +62,7 @@
    前期発表会後: 変更内容
    ・UIレイアウトの変更。"BEST SCORE","SCORE","TIME"の3つだけにした。
    ・アイテムの終了が分かりやすくなるよう、数字を3秒だけ表示して音を足した。
+   ・ポーズ仮追加(Pキー)
 /--------------------------------------------------------*/
 
 #include "MeteoManager.h"
@@ -114,6 +115,7 @@ void GameManager::Init() {
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),    _T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),  _T("BGM2"));			//未使用(BGM候補)
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/GB_Shooting_2025.0725.mp3"),  _T("BGM3"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),    _T("TakeItem"));		//アイテム取る.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),   _T("CountDown"));	//カウントダウン.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),     _T("PowerDown"));		//アイテム解除.
@@ -698,15 +700,10 @@ void GameManager::DrawUI() {
 		double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 
 		//テキスト設定.
-#if false
-		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_BEST_SCORE };
-		STR_DRAW str2 = { {}, {WINDOW_WID/2, 0+150}, COLOR_SCORE };
-		STR_DRAW str3 = { {}, {WINDOW_WID/2, 0+200}, COLOR_TIME };
-#else
 		DrawStr str1 = { {}, {WINDOW_WID/2-380, 90}, COLOR_BEST_SCORE };
 		DrawStr str2 = { {}, {WINDOW_WID/2,     90}, COLOR_SCORE };
 		DrawStr str3 = { {}, {WINDOW_WID/2+380, 90}, COLOR_TIME };
-#endif
+
 		swprintf(str1.text, _T("BEST SCORE:%05d"), data.bestScore);
 		swprintf(str2.text, _T("SCORE:%05d"),      data.score);
 		swprintf(str3.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
