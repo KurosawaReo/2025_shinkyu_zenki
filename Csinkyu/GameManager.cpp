@@ -113,20 +113,20 @@ void GameManager::Init() {
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
 	//サウンド読み込み.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),    _T("BGM1"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),  _T("BGM2"));			//未使用(BGM候補)
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/GB_Shooting_2025.0725.mp3"),  _T("BGM3"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),    _T("TakeItem"));		//アイテム取る.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),   _T("CountDown"));	//カウントダウン.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),     _T("PowerDown"));		//アイテム解除.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),   _T("Laser1"));		//レーザー(発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),   _T("Laser2"));		//レーザー(強発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),    _T("Laser3"));		//レーザー(反射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),    _T("Ripples"));		//波紋.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),    _T("Break"));			//隕石破壊.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),    _T("PlayerDeath"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),   _T("LevelUp"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),    _T("BestScore"));		//最高スコア更新.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));		//未使用(BGM候補)
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/GB_Shooting_2025.0725.mp3"),	_T("BGM3"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("TakeItem"));	//アイテム取る.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	//カウントダウン.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	//アイテム解除.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		//レーザー(発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),		_T("Laser2"));		//レーザー(強発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		_T("Laser3"));		//レーザー(反射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		_T("Ripples"));		//波紋.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		_T("Break"));		//隕石破壊.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		_T("PlayerDeath"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	//最高スコア更新.
 	//Init処理
 	{
 		//管理class.
@@ -175,7 +175,7 @@ void GameManager::Reset() {
 	data.isSlow = FALSE;
 	data.counter = 0;
 	data.spawnRate = 1.0; //最初は100%
-	data.level = 1; //最初はLv1
+	data.level = 0;       //最初はLv0
 	isFinTitleAnim = FALSE;
 	isFinScoreAnim = FALSE;
 	//サウンド.
@@ -271,8 +271,10 @@ void GameManager::UpdateReady() {
 	
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
+
 		tmScene[SCENE_GAME].Start(); //ゲーム開始.
 		data.scene = SCENE_GAME;     //ゲームシーンへ.
+		data.level = 1;              //Lv1にする.
 
 		//サウンド.
 		SoundST* sound = SoundST::GetPtr();
@@ -695,18 +697,20 @@ void GameManager::DrawUI() {
 		double alpha1   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
 		double alpha2   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.1);
 		double alpha3   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.2);
+		double alpha4   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.3);
 		double animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime());
 		double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.1));
 		double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 
 		//テキスト設定.
-		DrawStr str1 = { {}, {WINDOW_WID/2-380, 90}, COLOR_BEST_SCORE };
-		DrawStr str2 = { {}, {WINDOW_WID/2,     90}, COLOR_SCORE };
-		DrawStr str3 = { {}, {WINDOW_WID/2+380, 90}, COLOR_TIME };
-
-		swprintf(str1.text, _T("BEST SCORE:%05d"), data.bestScore);
-		swprintf(str2.text, _T("SCORE:%05d"),      data.score);
-		swprintf(str3.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
+		DrawStr str1 = { {}, {WINDOW_WID/2,      70}, 0xFFFFFF };
+		DrawStr str2 = { {}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE };
+		DrawStr str3 = { {}, {WINDOW_WID/2,     150}, COLOR_SCORE };
+		DrawStr str4 = { {}, {WINDOW_WID/2+380, 150}, COLOR_TIME };
+		swprintf(str1.text, _T("LEVEL:%d"),        data.level);
+		swprintf(str2.text, _T("BEST SCORE:%05d"), data.bestScore);
+		swprintf(str3.text, _T("SCORE:%05d"),      data.score);
+		swprintf(str4.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
 		//テキスト(main)
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 		DrawStringST(&str1, TRUE, data.font3);
@@ -714,6 +718,8 @@ void GameManager::DrawUI() {
 		DrawStringST(&str2, TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 		DrawStringST(&str3, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
+		DrawStringST(&str4, TRUE, data.font3);
 		//テキスト(光沢用)
 		str1.color = 0xFFFFFF;
 		str2.color = 0xFFFFFF;
@@ -761,7 +767,9 @@ void GameManager::DrawReflectMode() {
 		//テキストの設定.
 		DrawStr str1 = { _T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
 		DrawStr str2 = { {},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-		swprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+
+//		sprintf (str2.text,  "%d", (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
+		swprintf(str2.text, L"%d", (int)ceil(tmSlowMode.GetPassTime())); //wchar_t型に変数を代入.
 
 		//画面中央に数字を表示.
 		{

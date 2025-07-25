@@ -73,8 +73,8 @@ int    DrawLineST		 (const Line*   data, int  thick = 1);
 int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
 //画像.
-int    LoadGraphST		 (Image* img, const TCHAR fileName[]);
-int    LoadDivGraphST	 (vector<Image>* img, const TCHAR fileName[], INT_XY size, INT_XY cnt);
+int    LoadGraphST		 (Image* img, my_string fileName);
+int    LoadDivGraphST	 (vector<Image>* img, my_string fileName, INT_XY size, INT_XY cnt);
 int    DrawGraphST		 (const DrawImg*       data, BOOL isCenter, BOOL isTrans = TRUE);
 int    DrawRectGraphST	 (const DrawImgRect*   data, BOOL isTrans = TRUE);
 int    DrawExtendGraphST (const DrawImgExtend* data, BOOL isCenter, BOOL isTrans = TRUE);
@@ -84,15 +84,15 @@ int    DrawRotaGraphST	 (const DrawImgRota*   data, BOOL isCenter, BOOL isTrans 
 int    DrawStringST		 (const DrawStr*     data, BOOL isCenter,   int font = -1);
 int    DrawRotaStringST	 (const DrawStrRota* data, BOOL isVertical, int font = -1);
 int    DrawModiStringST	 (const DrawStrModi* data, BOOL isVertical, int font = -1);
-INT_XY GetTextSize		 (const TCHAR str[], int font = -1);
+INT_XY GetTextSize		 (my_string str, int font = -1);
 
 //フォント.
 int    CreateFontH		 (int size, int thick, FontTypeID fontId = FONT_NONE);
 
 //オブジェクト.
-int    DrawObjectGrid	 (const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize);
-int    DrawObjectBox	 (const ObjectBox*  data, BOOL isDrawHit = FALSE);
 int    DrawObjectCir	 (const ObjectCir*  data, BOOL isDrawHit = FALSE);
+int    DrawObjectBox	 (const ObjectBox*  data, BOOL isDrawHit = FALSE);
+int    DrawObjectGrid	 (const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize);
 
 //描画モード.
 int    SetDrawBlendModeST(BlendModeID id, int    power = 255);

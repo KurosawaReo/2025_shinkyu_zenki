@@ -72,10 +72,10 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 }
 
 //LoadGraphの改造版.
-int LoadGraphST(Image* img, const TCHAR fileName[]) {
+int LoadGraphST(Image* img, my_string fileName) {
 
 	//画像読み込み.
-	img->handle = LoadGraph(fileName);
+	img->handle = LoadGraph(fileName.c_str());
 	int err = GetGraphSize(img->handle, &img->size.x, &img->size.y);
 	
 	if (img->handle < 0) {
@@ -87,7 +87,7 @@ int LoadGraphST(Image* img, const TCHAR fileName[]) {
 	return 0; //正常終了.
 }
 //LoadDivGraphの改造版.
-int LoadDivGraphST(vector<Image>* img, const TCHAR fileName[], INT_XY size, INT_XY cnt) {
+int LoadDivGraphST(vector<Image>* img, my_string fileName, INT_XY size, INT_XY cnt) {
 
 	int ret = 0; //エラー値.
 
@@ -95,7 +95,7 @@ int LoadDivGraphST(vector<Image>* img, const TCHAR fileName[], INT_XY size, INT_
 	vector<Image> tmpImg;                //仮保存用.
 
 	//画像分割読み込み.
-	int err = LoadDivGraph(fileName, cnt.x*cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
+	int err = LoadDivGraph(fileName.c_str(), cnt.x * cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
 	if (err < 0) {
 		ret = -1; //-1: LoadDivGraphエラー.
 	}
@@ -271,18 +271,18 @@ int DrawModiStringST(const DrawStrModi* data, BOOL isVertical, int font) {
 }
 
 //テキストのサイズ取得.
-INT_XY GetTextSize(const TCHAR str[], int font) {
+INT_XY GetTextSize(my_string str, int font) {
 	
 	INT_XY size{};
 	int    line{}; //無視.
 
 	//デフォルトフォント.
 	if (font < 0) {
-		GetDrawStringSize(&size.x, &size.y, &line, str, 255);
+		GetDrawStringSize(&size.x, &size.y, &line, str.c_str(), 255);
 	}
 	//フォント設定あり.
 	else {
-		GetDrawStringSizeToHandle(&size.x, &size.y, &line, str, 255, font);
+		GetDrawStringSizeToHandle(&size.x, &size.y, &line, str.c_str(), 255, font);
 	}
 
 	return size;
@@ -293,19 +293,26 @@ int CreateFontH(int size, int thick, FontTypeID fontId) {
 	return CreateFontToHandle(NULL, size, thick, fontId);
 }
 
-//オブジェクト(ObjectGrid型)の描画.
-int DrawObjectGrid(const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize) {
+//オブジェクト(ObjectCir型)の描画.
+int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
 
 	int err = 0;
 
 	//画像設定.
 	DrawImg draw = { data->img, {} };
-	draw.pos.x = gridPos.x + data->pos.x * gridSize.x;
-	draw.pos.y = gridPos.y + data->pos.y * gridSize.y;
+	draw.pos.x = _int(data->cir.pos.x + data->offset.x);
+	draw.pos.y = _int(data->cir.pos.y + data->offset.y);
 	//画像描画.
-	err = DrawGraphST(&draw, FALSE);
+	err = DrawGraphST(&draw, TRUE);
 	if (err < 0) {
 		return -1; //-1: DrawGraphSTでエラー.
+	}
+	//当たり判定表示.
+	if (isDrawHit) {
+		err = DrawCircleST(&data->cir, FALSE);
+		if (err < 0) {
+			return -2; //-2: DrawBoxSTでエラー.
+		}
 	}
 	return 0; //正常終了.
 }
@@ -332,26 +339,19 @@ int DrawObjectBox(const ObjectBox* data, BOOL isDrawHit) {
 	}
 	return 0; //正常終了.
 }
-//オブジェクト(ObjectCir型)の描画.
-int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
+//オブジェクト(ObjectGrid型)の描画.
+int DrawObjectGrid(const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize) {
 
 	int err = 0;
 
 	//画像設定.
 	DrawImg draw = { data->img, {} };
-	draw.pos.x = _int(data->cir.pos.x + data->offset.x);
-	draw.pos.y = _int(data->cir.pos.y + data->offset.y);
+	draw.pos.x = gridPos.x + data->pos.x * gridSize.x;
+	draw.pos.y = gridPos.y + data->pos.y * gridSize.y;
 	//画像描画.
-	err = DrawGraphST(&draw, TRUE);
+	err = DrawGraphST(&draw, FALSE);
 	if (err < 0) {
 		return -1; //-1: DrawGraphSTでエラー.
-	}
-	//当たり判定表示.
-	if (isDrawHit) {
-		err = DrawCircleST(&data->cir, FALSE);
-		if (err < 0) {
-			return -2; //-2: DrawBoxSTでエラー.
-		}
 	}
 	return 0; //正常終了.
 }

@@ -46,7 +46,7 @@ private: //実体.
 	static SoundST self; //自身の実体.
 
 private: //データ.
-	map<TCHAR*, SoundData> sound;
+	map<my_string, SoundData> sound;
 
 public:
 	//実体の取得.
@@ -56,12 +56,12 @@ public:
 	//デストラクタ.
 	~SoundST();
 
-	int  LoadFile(const TCHAR fileName[], const TCHAR saveName[]);
-	void Play    (const TCHAR saveName[], BOOL isLoop, int volume = 100);
-	void Stop    (const TCHAR saveName[]);
+	int  LoadFile(my_string fileName, my_string saveName);
+	void Play    (my_string saveName, BOOL isLoop, int volume = 100);
+	void Stop    (my_string saveName);
 	void Update  ();
 
-	void ChangeVolume(const TCHAR saveName[], int volume, float sec = 0);	       //音量を変更.
-	void FadeInPlay  (const TCHAR saveName[], int volume, float sec, BOOL isLoop); //フェードイン再生.
-	void FadeOutPlay (const TCHAR saveName[], float sec);						   //フェードアウトする.
+	void ChangeVolume(my_string saveName, int volume, float sec = 0);	       //音量を変更.
+	void FadeInPlay  (my_string saveName, int volume, float sec, BOOL isLoop); //フェードイン再生.
+	void FadeOutPlay (my_string saveName, float sec);						   //フェードアウトする.
 };

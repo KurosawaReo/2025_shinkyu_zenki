@@ -24,6 +24,13 @@ using namespace std;
 //DxLib.
 #include "DxLib.h"
 
+//文字コードで切り替え.
+#if defined UNICODE
+  typedef wstring my_string; //wchar_t型.
+#else
+  typedef string  my_string; //char型.
+#endif
+
 //xとyの凝縮.
 template<typename T> //型を<>で入力して使う.
 struct XY
@@ -87,18 +94,20 @@ struct Line
 	DBL_XY edPos; //終点座標.
 	UINT   clr;   //色.
 };
-//オブジェクト(グリッド上専用)
-struct ObjectGrid
+//オブジェクト(円)
+struct ObjectCir
 {
-	INT_XY pos{};      //座標.
+	Circle cir{};      //当たり判定と座標.
+	DBL_XY offset{};   //画像をずらす量.
 	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
-	ObjectGrid(){}
+	ObjectCir(){}
 	//初期化用(引数あり)
-	ObjectGrid(INT_XY _pos, UINT _clr, BOOL _isActive) :
-		pos(_pos),
+	ObjectCir(DBL_XY _pos, float _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
+		cir     ({ _pos, _r, _clr }), 
+		offset  (_offset), 
 		isActive(_isActive)
 	{}
 };
@@ -119,20 +128,18 @@ struct ObjectBox
 		isActive(_isActive)
 	{}
 };
-//オブジェクト(円)
-struct ObjectCir
+//オブジェクト(グリッド上専用)
+struct ObjectGrid
 {
-	Circle cir{};      //当たり判定と座標.
-	DBL_XY offset{};   //画像をずらす量.
+	INT_XY pos{};      //座標.
 	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
-	ObjectCir(){}
+	ObjectGrid(){}
 	//初期化用(引数あり)
-	ObjectCir(DBL_XY _pos, float _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
-		cir     ({ _pos, _r, _clr }), 
-		offset  (_offset), 
+	ObjectGrid(INT_XY _pos, UINT _clr, BOOL _isActive) :
+		pos(_pos),
 		isActive(_isActive)
 	{}
 };
