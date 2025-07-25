@@ -69,7 +69,8 @@ void Meteo::Draw() {
 		for (int i = 0; i < shape.lineCnt; i++) {
 			
 			shape.line[i].clr = COLOR_METEO(pos);
-			DrawLineST(&shape.line[i]);
+			DrawLineST(&shape.line[i], TRUE, 2);
+//			DrawLineST(&shape.line[i], FALSE, 1);
 		}
 
 		ResetDrawBlendMode(); //描画モードリセット.

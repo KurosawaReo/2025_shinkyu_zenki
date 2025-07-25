@@ -96,8 +96,8 @@ void Player::Draw()
 			box1.clr = box2.clr = COLOR_PLY_DEBUG;
 		}
 
-		DrawBoxST(&box1, TRUE, FALSE);
-		DrawBoxST(&box2, TRUE, FALSE);
+		DrawBoxST(&box1, TRUE, FALSE, TRUE);
+		DrawBoxST(&box2, TRUE, FALSE, TRUE);
 	}
 }
 
@@ -142,7 +142,7 @@ void Player::DrawAfterImage()
 			box.clr = COLOR_PLY_AFT_NOR;
 		}
 
-		DrawBoxST(&box, TRUE, FALSE);
+		DrawBoxST(&box, TRUE, FALSE, TRUE);
 	}
 
 	//描画モードリセット.
@@ -259,7 +259,7 @@ void Player::DrawReflectEffects()
 							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxST(&thickBox, TRUE, FALSE);
+						DrawBoxST(&thickBox, TRUE, FALSE, TRUE);
 					}
 				}
 			}
@@ -277,7 +277,7 @@ void Player::DrawReflectEffects()
 				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
-			DrawBoxST(&centerBox, TRUE, FALSE);
+			DrawBoxST(&centerBox, TRUE, FALSE, TRUE);
 
 			// 描画モードリセット
 			ResetDrawBlendMode();

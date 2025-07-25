@@ -153,7 +153,7 @@ void EffectManager::Draw() {
 
 					//ï`âÊ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawBoxST(&box, TRUE, FALSE);
+					DrawBoxST(&box, TRUE, FALSE, TRUE);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -166,7 +166,7 @@ void EffectManager::Draw() {
 
 					//ï`âÊ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawBoxST(&box, TRUE, FALSE);
+					DrawBoxST(&box, TRUE, FALSE, TRUE);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -183,7 +183,7 @@ void EffectManager::Draw() {
 
 					//ï`âÊ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawLineST(&line);
+					DrawLineST(&line, TRUE);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -204,11 +204,11 @@ void EffectManager::Draw() {
 					//ï`âÊ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
-					DrawCircleST(&cir, FALSE);
-					DrawCircleST(&cirLevel[0], TRUE);  //Åú
-					DrawCircleST(&cirLevel[1], FALSE); //Åõ
-					DrawCircleST(&cirLevel[2], FALSE); //Åõ
-					DrawCircleST(&cirLevel[3], FALSE); //Åõ
+					DrawCircleST(&cir, FALSE, TRUE);
+					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //Åú
+					DrawCircleST(&cirLevel[1], FALSE, TRUE); //Åõ
+					DrawCircleST(&cirLevel[2], FALSE, TRUE); //Åõ
+					DrawCircleST(&cirLevel[3], FALSE, TRUE); //Åõ
 					ResetDrawBlendMode();
 				}
 				break;
@@ -229,11 +229,11 @@ void EffectManager::Draw() {
 					//ï`âÊ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
-					DrawCircleST(&cir, FALSE);
-					DrawCircleST(&cirLevel[0], TRUE);  //Åú
-					DrawCircleST(&cirLevel[1], TRUE);  //Åú
-					DrawCircleST(&cirLevel[2], FALSE); //Åõ
-					DrawCircleST(&cirLevel[3], FALSE); //Åõ
+					DrawCircleST(&cir, FALSE, TRUE);
+					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //Åú
+					DrawCircleST(&cirLevel[1], TRUE,  TRUE); //Åú
+					DrawCircleST(&cirLevel[2], FALSE, TRUE); //Åõ
+					DrawCircleST(&cirLevel[3], FALSE, TRUE); //Åõ
 					ResetDrawBlendMode();
 				}
 				break;
@@ -254,11 +254,11 @@ void EffectManager::Draw() {
 					//ï`âÊ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
-					DrawCircleST(&cir, FALSE);
-					DrawCircleST(&cirLevel[0], TRUE);  //Åú
-					DrawCircleST(&cirLevel[1], TRUE);  //Åú
-					DrawCircleST(&cirLevel[2], TRUE);  //Åú
-					DrawCircleST(&cirLevel[3], FALSE); //Åõ
+					DrawCircleST(&cir, FALSE, TRUE);
+					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //Åú
+					DrawCircleST(&cirLevel[1], TRUE,  TRUE); //Åú
+					DrawCircleST(&cirLevel[2], TRUE,  TRUE); //Åú
+					DrawCircleST(&cirLevel[3], FALSE, TRUE); //Åõ
 					ResetDrawBlendMode();
 				}
 				break;
@@ -279,11 +279,11 @@ void EffectManager::Draw() {
 					//ï`âÊ.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawStringST(&str, TRUE, p_data->font2);
-					DrawCircleST(&cir, FALSE);
-					DrawCircleST(&cirLevel[0], TRUE); //Åú
-					DrawCircleST(&cirLevel[1], TRUE); //Åú
-					DrawCircleST(&cirLevel[2], TRUE); //Åú
-					DrawCircleST(&cirLevel[3], TRUE); //Åú
+					DrawCircleST(&cir, FALSE, TRUE);
+					DrawCircleST(&cirLevel[0], TRUE, TRUE); //Åú
+					DrawCircleST(&cirLevel[1], TRUE, TRUE); //Åú
+					DrawCircleST(&cirLevel[2], TRUE, TRUE); //Åú
+					DrawCircleST(&cirLevel[3], TRUE, TRUE); //Åú
 					ResetDrawBlendMode();
 				}
 				break;

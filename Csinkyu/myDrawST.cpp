@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/07/24
+   ver.2025/07/26
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -10,14 +10,24 @@
 #include "myDrawST.h"
 
 //DrawCircleの改造版.
-int DrawCircleST(const Circle* data, BOOL isFill, int thick) {
+int DrawCircleST(const Circle* data, BOOL isFill, BOOL isAnti, float thick) {
 
-	int ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->clr, isFill, thick);
+	int ret;
+	//アンチエイリアスあり.
+	if (isAnti) {
+		//posnum(角形数)は60に設定する.
+		ret = DrawCircleAA((float)data->pos.x, (float)data->pos.y, data->r, 60, data->clr, isFill, thick);
+	}
+	//アンチエイリアスなし.
+	else{
+		ret = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->clr, isFill, (int)thick);
+	}
 	return ret;
 }
 //DrawBoxの改造版.
-int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill) {
+int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill, BOOL isAnti) {
 
+	int ret;
 	double x1, x2, y1, y2;
 
 	//中央基準かどうか.
@@ -34,16 +44,34 @@ int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill) {
 		y2 = data->pos.y + data->size.y;
 	}
 
-	int ret = DrawBox(_int(x1), _int(y1), _int(x2), _int(y2), data->clr, isFill);
+	//アンチエイリアスあり.
+	if (isAnti) {
+		ret = DrawBoxAA((float)x1, (float)y1, (float)x2, (float)y2, data->clr, isFill);
+	}
+	//アンチエイリアスなし.
+	else {
+		ret = DrawBox(_int(x1), _int(y1), _int(x2), _int(y2), data->clr, isFill);
+	}
 	return ret;
 }
 //DrawLineの改造版.
-int DrawLineST(const Line* data, int thick) {
+int DrawLineST(const Line* data, BOOL isAnti, float thick) {
 
-	int ret = DrawLine(
-		_int(data->stPos.x), _int(data->stPos.y), 
-		_int(data->edPos.x), _int(data->edPos.y), data->clr, thick
-	);
+	int ret;
+	//アンチエイリアスあり.
+	if (isAnti) {
+		ret = DrawLineAA(
+			(float)data->stPos.x, (float)data->stPos.y,
+			(float)data->edPos.x, (float)data->edPos.y, data->clr, thick
+		);
+	}
+	//アンチエイリアスなし.
+	else {
+		ret = DrawLine(
+			_int(data->stPos.x), _int(data->stPos.y), 
+			_int(data->edPos.x), _int(data->edPos.y), data->clr, (int)thick
+		);
+	}
 	return ret;
 }
 //画面全体にグリッド線を描画.
@@ -95,7 +123,7 @@ int LoadDivGraphST(vector<Image>* img, my_string fileName, INT_XY size, INT_XY c
 	vector<Image> tmpImg;                //仮保存用.
 
 	//画像分割読み込み.
-	int err = LoadDivGraph(fileName.c_str(), cnt.x * cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
+	int err = LoadDivGraph(fileName.c_str(), cnt.x*cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
 	if (err < 0) {
 		ret = -1; //-1: LoadDivGraphエラー.
 	}
@@ -104,8 +132,8 @@ int LoadDivGraphST(vector<Image>* img, my_string fileName, INT_XY size, INT_XY c
 	//分割数だけループ.
 	for (int i = 0; i < cnt.y; i++) {
 		for (int j = 0; j < cnt.x; j++) {
-			tmpImg[j+i*cnt.x].handle = pHandle[j + i * cnt.x]; //ハンドル保存.
-			tmpImg[j+i*cnt.x].size   = size;                   //サイズ保存.
+			tmpImg[j+i*cnt.x].handle = pHandle[j+i*cnt.x]; //ハンドル保存.
+			tmpImg[j+i*cnt.x].size   = size;               //サイズ保存.
 		}
 	}
 
@@ -309,9 +337,9 @@ int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
-		err = DrawCircleST(&data->cir, FALSE);
+		err = DrawCircleST(&data->cir, FALSE, TRUE);
 		if (err < 0) {
-			return -2; //-2: DrawBoxSTでエラー.
+			return -2; //-2: DrawCircleSTでエラー.
 		}
 	}
 	return 0; //正常終了.
@@ -332,7 +360,7 @@ int DrawObjectBox(const ObjectBox* data, BOOL isDrawHit) {
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
-		err = DrawBoxST(&data->box, TRUE, FALSE);
+		err = DrawBoxST(&data->box, TRUE, FALSE, TRUE);
 		if (err < 0) {
 			return -2; //-2: DrawBoxSTでエラー.
 		}

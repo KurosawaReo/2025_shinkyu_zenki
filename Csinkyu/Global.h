@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/07/24
+   ver.2025/07/26
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -200,7 +200,7 @@ struct GameData
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT				(32)			//ウィンドウのカラーbit数.
 
-#define FILE_DATA_PATH					("score.data")	//データを保存するtxtファイル.
+#define FILE_DATA_PATH					(_T("score.data"))	//データを保存するtxtファイル.
 
 #define FPS								(80)			//フレームレート.
 

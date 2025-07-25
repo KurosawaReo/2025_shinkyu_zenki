@@ -149,14 +149,9 @@ void GameManager::Init() {
 
 	//スコア読み込み.
 	{
-		FILE* fp = fopen(FILE_DATA_PATH, "r");
-		assert(fp != NULL); //読み込みエラー.
-
-		char str[256];              //文字列格納用.
-		fgets(str, 256, fp);        //ファイルから文字読み込み.
-		data.bestScore = atoi(str); //int型に変換して登録.
-
-		fclose(fp);
+		FileST file;
+		int ret = file.Open(FILE_DATA_PATH, _T("r")); //ファイルを開く.
+		data.bestScore = file.ReadInt();    //数字を読み込んで登録.
 	}
 
 	Reset();
@@ -200,7 +195,7 @@ void GameManager::Reset() {
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
-		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+180 }, TRUE);
+		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+185 }, TRUE);
 	}
 }
 
@@ -503,8 +498,8 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
 		//テキスト.
-		DrawStr str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+80}, COLOR_BEST_SCORE };
-		swprintf(str.text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
+		DrawStr str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+85}, COLOR_BEST_SCORE };
+		_stprintf(str.text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font2);
@@ -515,12 +510,12 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
 		//テキスト.
-		DrawStr str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+280}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+277}, 18, 0xFFFFFF };
+		DrawStr str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-3}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE);            //Xボタンの円.
+		DrawCircleST(&cir, FALSE, FALSE);     //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
@@ -589,7 +584,7 @@ void GameManager::DrawEnd() {
 		DrawStr str2 = { _T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF };
 		DrawStr str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF };
 		//スコア表示.
-		swprintf(
+		_stprintf(
 			str3.text, 
 			_T("%d + %d(%.3f秒) = %d点"),
 			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
@@ -637,7 +632,7 @@ void GameManager::DrawEnd() {
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE);            //Aボタンの円.
+		DrawCircleST(&cir, FALSE, FALSE);      //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -656,7 +651,7 @@ void GameManager::DrawBG() {
 
 		int clr = _int(20 * fabs(sin((double)x / 200))); //色の変化.
 		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
-		DrawLineST(&line, 5);
+		DrawLineST(&line, FALSE, 5);
 	}
 	//背景(スローモード).
 	if (data.isSlow) {
@@ -673,7 +668,7 @@ void GameManager::DrawBG() {
 		//枠線.
 		{
 			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-			DrawBoxST(&box, TRUE, FALSE);
+			DrawBoxST(&box, TRUE, FALSE, TRUE);
 		}
 	}
 }
@@ -707,10 +702,10 @@ void GameManager::DrawUI() {
 		DrawStr str2 = { {}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE };
 		DrawStr str3 = { {}, {WINDOW_WID/2,     150}, COLOR_SCORE };
 		DrawStr str4 = { {}, {WINDOW_WID/2+380, 150}, COLOR_TIME };
-		swprintf(str1.text, _T("LEVEL:%d"),        data.level);
-		swprintf(str2.text, _T("BEST SCORE:%05d"), data.bestScore);
-		swprintf(str3.text, _T("SCORE:%05d"),      data.score);
-		swprintf(str4.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
+		_stprintf(str1.text, _T("LEVEL:%d"),        data.level);
+		_stprintf(str2.text, _T("BEST SCORE:%05d"), data.bestScore);
+		_stprintf(str3.text, _T("SCORE:%05d"),      data.score);
+		_stprintf(str4.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
 		//テキスト(main)
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 		DrawStringST(&str1, TRUE, data.font3);
@@ -768,8 +763,9 @@ void GameManager::DrawReflectMode() {
 		DrawStr str1 = { _T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
 		DrawStr str2 = { {},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
 
-//		sprintf (str2.text,  "%d", (int)ceil(tmSlowMode.GetPassTime())); //char型に変数を代入.
-		swprintf(str2.text, L"%d", (int)ceil(tmSlowMode.GetPassTime())); //wchar_t型に変数を代入.
+//		sprintf  (str2.text,    "%d",  (int)ceil(tmSlowMode.GetPassTime())); //char  型に変数を代入.
+//		swprintf (str2.text,   L"%d",  (int)ceil(tmSlowMode.GetPassTime())); //wchar_t型に変数を代入.
+		_stprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR  型に変数を代入.
 
 		//画面中央に数字を表示.
 		{
@@ -808,14 +804,9 @@ void GameManager::GameEnd() {
 	//最高スコア更新なら保存.
 	if (data.score > data.bestScore) {
 
-		FILE* fp = fopen(FILE_DATA_PATH, "w");
-		assert(fp != NULL); //読み込みエラー.
-
-		char str[256];
-		_itoa(data.score, str, 10); //scoreをchar型に変換(10進数)
-		fputs(str, fp);             //ファイルに文字書き込み.
-
-		fclose(fp);
+		FileST file;
+		file.Open(FILE_DATA_PATH, _T("w")); //ファイルを開く.
+		file.WriteInt(data.score);          //スコアを保存.
 	}
 
 	//サウンド.

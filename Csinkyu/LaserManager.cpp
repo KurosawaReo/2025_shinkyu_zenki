@@ -73,7 +73,22 @@ void LaserManager::Draw() {
 
 			default: assert(FALSE); break;
 		}
-		DrawLineST(&tmpLine); //描画.
+
+#if false
+		DrawLineST(&tmpLine, FALSE); //描画.
+#else
+		DrawLineST(&tmpLine, TRUE); //描画.
+		
+		//アンチエイリアスアリの時、線が短いと描画されない問題の対策をしたかったやつ.
+		DBL_XY pos1 = { line[i].x1, line[i].y1 };
+		DBL_XY pos2 = { line[i].x2, line[i].y2 };
+		double dis = CalcDist(pos1, pos2);
+		if(dis < 1){
+			double ang = CalcFacingAng(pos1, pos2);
+			tmpLine.edPos = CalcArcPos(pos1, ang, 2);
+			DrawLineST(&tmpLine, TRUE); //描画.
+		}
+#endif
 	}
 
 	//通常の描画モードに戻す

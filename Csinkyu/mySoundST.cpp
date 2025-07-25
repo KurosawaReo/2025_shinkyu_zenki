@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/07/24
+   ver.2025/07/26
 
    DxLib: オリジナルサウンド機能の追加.
 */

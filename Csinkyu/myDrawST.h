@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/07/24
+   ver.2025/07/26
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -67,9 +67,9 @@ struct DrawStrModi : public DrawStr
 };
 
 //図形.
-int    DrawCircleST		 (const Circle* data, BOOL isFill = TRUE, int thick = 1);
-int    DrawBoxST		 (const Box*    data, BOOL isCenter, BOOL isFill = TRUE);
-int    DrawLineST		 (const Line*   data, int  thick = 1);
+int    DrawCircleST		 (const Circle* data, BOOL isFill = TRUE, BOOL isAnti = FALSE, float thick = 1);
+int    DrawBoxST		 (const Box*    data, BOOL isCenter, BOOL isFill = TRUE, BOOL isAnti = FALSE);
+int    DrawLineST		 (const Line*   data, BOOL isAnti = FALSE, float thick = 1.0f);
 int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
 //画像.

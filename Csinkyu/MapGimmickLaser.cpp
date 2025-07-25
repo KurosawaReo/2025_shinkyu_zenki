@@ -122,7 +122,7 @@ void MapGimmickLaser::DrawPredictionLine()
 #endif
 
 	// ó\ë™ê¸ÇÃìßñæìx.
-	float alpha = CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0Å`1.0ÇÃîÕàÕ.
+	double alpha = CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0Å`1.0ÇÃîÕàÕ.
 	SetDrawBlendModeST(MODE_ALPHA, 255*(1-alpha));
 
 	// íÜâõÇÃó\ë™ê¸ÇÃÇ›Çï`âÊ
@@ -135,7 +135,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
 			predictionLine.clr = COLOR_PRE_LINE;
-			DrawLineST(&predictionLine);
+			DrawLineST(&predictionLine, TRUE);
 		}
 		break;
 	case 1: // âEÇ©ÇÁç∂Ç÷
@@ -144,7 +144,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
 			predictionLine.clr = COLOR_PRE_LINE;
-			DrawLineST(&predictionLine);
+			DrawLineST(&predictionLine, TRUE);
 		}
 		break;
 	case 2: // è„Ç©ÇÁâ∫Ç÷
@@ -153,7 +153,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
 			predictionLine.clr = COLOR_PRE_LINE;
-			DrawLineST(&predictionLine);
+			DrawLineST(&predictionLine, TRUE);
 		}
 		break;
 	case 3: // â∫Ç©ÇÁè„Ç÷
@@ -162,7 +162,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
 			predictionLine.clr = COLOR_PRE_LINE;
-			DrawLineST(&predictionLine);
+			DrawLineST(&predictionLine, TRUE);
 		}
 		break;
 	}
