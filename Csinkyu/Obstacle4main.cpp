@@ -38,25 +38,42 @@ void Obstacle4main::Update()
 {
 //	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
 	if (p_data->scene == SCENE_GAME) {  // ゲーム中のみ
-		enemy4Move();					// 障害物の移動処理を実行
+		
+		//発射カウンタを減少.
+		Hsc -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+
+		//エフェクトのカウンタを更新.
+		for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++) {
+			//有効なら.
+			if (flashEffect[i].ValidFlag)
+			{
+				flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+			}
+		}
+
+		enemy4Move();					// 障害物の移動処理
+		UpdateObstFlash();              // 発射エフェクトの更新.
 	}
 }
 //描画.
 void Obstacle4main::Draw()
 {
-	DrawObstFlash(); // 発射エフェクトの処理.
+	DrawObstFlash(); // 発射エフェクトの描画.
 	
 	// 動く砲台を描画.
 	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
 	//DrawBoxST(&box, TRUE, FALSE);
 }
 
-// 発射エフェクトの処理.
+//発射エフェクトの更新.
+void Obstacle4main::UpdateObstFlash() {
+
+}
+//発射エフェクトの描画.
 void Obstacle4main::DrawObstFlash() {
 
 	// レーザー発射前の予告●を描画
 	DrawPreLaserDots();
-
 
 	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
 	{
@@ -79,55 +96,45 @@ void Obstacle4main::DrawObstFlash() {
 		int effectSize = _int(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
 
-		/*
-		//エフェクトの位置を時間経過とともにプレイヤー方向に移動
-		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
-		double currentX = flashEffect[i].x + cos(flashEffect[i].angle) * progress * 60; // nピクセル分移動
-		double currentY = flashEffect[i].y + sin(flashEffect[i].angle) * progress * 60;
-		*/
-
-		double currentX = flashEffect[i].x;
-		double currentY = flashEffect[i].y;
-		//三角形の頂点を計算(プレイヤーの方向を向く).
+		//プレイヤーの方向を計算.
 		double angle = flashEffect[i].angle;
 		double cos_a = cos(angle);
 		double sin_a = sin(angle);
-		//外側の三角形(大きい)(なんかすごくなっちゃった)
-		int x1 = _int(currentX + cos_a * effectSize);//先端.
-		int y1 = _int(currentY + sin_a * effectSize);
-		int x2 = _int(currentX - cos_a * effectSize / 3 + sin_a * effectSize / 2);//左後.
-		int y2 = _int(currentY - sin_a * effectSize / 3 - cos_a * effectSize / 2);
-		int x3 = _int(currentX - cos_a * effectSize / 3 - sin_a * effectSize / 2);//右後.
-		int y3 = _int(currentY - sin_a * effectSize / 3 + cos_a * effectSize / 2);
-		//内側の三角形(小さい)
-		int ix1 = _int(currentX + cos_a * effectSize);//先端.
-		int iy1 = _int(currentY + sin_a * effectSize);
-		int ix2 = _int(currentX - cos_a * effectSize / 3 + sin_a * effectSize / 2);
-		int iy2 = _int(currentY - sin_a * effectSize / 3 - cos_a * effectSize / 2);
-		int ix3 = _int(currentX - cos_a * effectSize / 3 - sin_a * effectSize / 2);
-		int iy3 = _int(currentY - sin_a * effectSize / 3 + cos_a * effectSize / 2);
 
-		//発射エフェクトを円形で描画(白く光る)
+#if false
+		//エフェクトを時間経過でプレイヤーの方へ進ませる.
+		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
+		double currentX = flashEffect[i].x + cos_a * progress * 1000; // nピクセル分移動
+		double currentY = flashEffect[i].y + sin_a * progress * 1000;
+#else
+		double currentX = flashEffect[i].x;
+		double currentY = flashEffect[i].y;
+#endif
+
+		Triangle tri;
+		//三角形の3点(なんかすごくなっちゃった)
+		tri.pos[0].x = currentX + cos_a * effectSize; //先端.
+		tri.pos[0].y = currentY + sin_a * effectSize;
+		tri.pos[1].x = currentX - cos_a * effectSize/3 + sin_a * effectSize/2; //左後.
+		tri.pos[1].y = currentY - sin_a * effectSize/3 - cos_a * effectSize/2;
+		tri.pos[2].x = currentX - cos_a * effectSize/3 - sin_a * effectSize/2; //右後.
+		tri.pos[2].y = currentY - sin_a * effectSize/3 + cos_a * effectSize/2;
+
+		Line line1, line2;
+		//三角形の2辺を線にする.
+		line1.stPos = tri.pos[1];
+		line1.edPos = tri.pos[0];
+		line2.stPos = tri.pos[0];
+		line2.edPos = tri.pos[2];
+		line1.clr = GetColor(0, 255, 255);
+		line2.clr = GetColor(0, 255, 255);
+
+		//描画モード設定(光る)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
 
-		//外側の三角形.
-		DrawTriangle(x1, y1, x2, y2, x3, y3, GetColor(0, 255, 255), FALSE);
+		DrawLineST(&line1, TRUE);
+		DrawLineST(&line2, TRUE);
 
-		//内側により明るい三角形を描画.
-		DrawTriangle(ix1, iy1, ix2, iy2, ix3, iy3, GetColor(0, 255, 200), FALSE);
-
-		//エフェクト内に3つの●を描画
-		//int dotSize = effectSize / 10; // 三角形のサイズに応じて●のサイズを調整
-		//int dotAlpha = alphaValue / 1; // 少し透明度を下げる
-		//SetDrawBlendMode(DX_BLENDMODE_ADD, dotAlpha);
-
-		// 3つの●を三角形の内部に配置
-		//DrawCircle(_int(currentX + cos_a * effectSize / 3), _int(currentY + sin_a * effectSize / 3), dotSize, GetColor(0, 255, 255), FALSE);
-		//DrawCircle(_int(currentX - cos_a * effectSize / 6 + sin_a * effectSize / 4), _int(currentY - sin_a * effectSize / 6 - cos_a * effectSize / 4), dotSize, GetColor(0, 255, 255), FALSE);
-		//DrawCircle(_int(currentX - cos_a * effectSize / 6 - sin_a * effectSize / 4), _int(currentY - sin_a * effectSize / 6 + cos_a * effectSize / 4), dotSize, GetColor(0, 255, 255), FALSE);
-
-		//エフェクトのカウンタを更新
-		flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		//エフェクト時間が終了したら無効化
 		if (flashEffect[i].Counter >= flashEffect[i].Duration)
 		{
@@ -141,20 +148,24 @@ void Obstacle4main::DrawObstFlash() {
 
 // レーザー発射前の予告●を描画
 void Obstacle4main::DrawPreLaserDots() {
+
 	// 発射タイミングが近づいている場合のみ●を表示
 	if (Hsc <= HscTm + 60) { // 発射60フレーム前から表示
 		// 点滅効果を作成
 		float blinkProgress = (HscTm + 60 - Hsc) / 60.0f; // 0.0から1.0
 		int blinkAlpha = _int(128 + 127 * sin(blinkProgress * M_PI * 8)); // 点滅
 
+		//サイズを徐々に大きく.
+		float dotSize  = (float)(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER1_SIZE);
+		float dotSize2 = (float)(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER2_SIZE);
+		//円情報.
+		Circle cir = {{Hx, Hy}, dotSize, GetColor(0, 255, 255)};
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
-		// サイズを徐々に大きく.
-		int dotSize  = _int(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER1_SIZE);
-		int dotSize2 = _int(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER2_SIZE);
 		// 砲台の位置に●を描画
-		DrawCircle(_int(Hx), _int(Hy), dotSize, GetColor(0, 255, 255), FALSE);
-		DrawCircle(_int(Hx), _int(Hy), dotSize2, GetColor(0, 255, 255), FALSE);
+		DrawCircleST(&cir, FALSE, TRUE);
+		cir.r = dotSize2;
+		DrawCircleST(&cir, FALSE, TRUE);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
@@ -171,8 +182,6 @@ void Obstacle4main::enemy4Move()
 		//移動処理.
 		Move();
 
-		// 発射カウンタを減少
-		Hsc -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		// タイミングが来たらレーザー発射
 		if (Hsc <= HscTm)
 		{

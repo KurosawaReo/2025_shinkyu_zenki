@@ -20,6 +20,7 @@ typedef struct tagLASER_DATA
 	LaserType type;      //レーザータイプ.
 
 	double    x,  y;     //現在の座標.
+	double    bx, by;    //前回描画した時にいた座標.
 	double    vx, vy;    //進行方向ベクトル.
 
 	DBL_XY    goalPos;   //目標地点の座標.

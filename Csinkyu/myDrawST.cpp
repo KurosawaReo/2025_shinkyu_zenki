@@ -54,6 +54,28 @@ int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill, BOOL isAnti) {
 	}
 	return ret;
 }
+//DrawTriangleの改造版.
+int DrawTriangleST(const Triangle* data, BOOL isFill, BOOL isAnti) {
+
+	int ret;
+	//アンチエイリアスあり.
+	if (isAnti) {
+		ret = DrawTriangleAA(
+			data->pos[0].x, data->pos[0].y,
+			data->pos[1].x, data->pos[1].y,
+			data->pos[2].x, data->pos[2].y, data->clr, isFill
+		);
+	}
+	//アンチエイリアスなし.
+	else {
+		ret = DrawTriangle(
+			data->pos[0].x, data->pos[0].y,
+			data->pos[1].x, data->pos[1].y,
+			data->pos[2].x, data->pos[2].y, data->clr, isFill
+		);
+	}
+	return ret;
+}
 //DrawLineの改造版.
 int DrawLineST(const Line* data, BOOL isAnti, float thick) {
 

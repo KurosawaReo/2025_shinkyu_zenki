@@ -42,6 +42,8 @@ public:
 	void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
 	void Update();
 	void Draw  ();
+	//XVŒn.
+	void UpdateObstFlash();
 	//•`‰æŒn.
 	void DrawObstFlash();
 	void DrawPreLaserDots();

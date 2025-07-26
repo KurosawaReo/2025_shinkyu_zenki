@@ -87,6 +87,12 @@ struct Box
 	DBL_XY size; //サイズ.
 	UINT   clr;  //色.
 };
+//三角形データ.
+struct Triangle
+{
+	DBL_XY pos[3]; //3点の座標.
+	UINT   clr;    //色.
+};
 //線データ.
 struct Line
 {
@@ -236,8 +242,8 @@ struct GameData
 #define OBSTACLE4_FLASH_SIZE_SPREAD		(-7)            //フラッシュエフェクトの拡大量.
 #define OBSTACLE4_FLASH_VALID_TM		(100)           //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE4_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
-#define OBSTACLE4_PRE_LASER1_SIZE		(20)            //発射前エフェクト1のサイズ.
-#define OBSTACLE4_PRE_LASER2_SIZE		(50)            //発射前エフェクト2のサイズ.
+#define OBSTACLE4_PRE_LASER1_SIZE		(50)            //発射前エフェクト1のサイズ.
+#define OBSTACLE4_PRE_LASER2_SIZE		(20)            //発射前エフェクト2のサイズ.
 
 #define OBSTACLE5_FLASH_MAX				(30)            //最大フラッシュエフェクト数
 #define OBSTACLE5_FLASH_SIZE_INIT		(5.0f)          //フラッシュエフェクトの初期サイズ.
@@ -263,7 +269,8 @@ struct GameData
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
 #define LASER_CNT_MAX					(50)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(12000)			//レーザーで描画する線の最大数.
+#define LASER_LINE_CNT_MAX				(12000)			//レーザー描画線の最大数.
+#define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
 #define METEO_CNT_MAX					(50)			//隕石の最大出現数.

@@ -63,7 +63,7 @@ void LaserManager::Draw() {
 		SetDrawBlendMode(DX_BLENDMODE_ADD, clr);
 
 		//軌跡の線設定.
-		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, {} };
+		Line tmpLine = { {line[i].x2, line[i].y2}, {line[i].x1, line[i].y1}, {} };
 		//線の色(時間経過で色が変化)
 		switch (line[i].type)
 		{
@@ -74,21 +74,7 @@ void LaserManager::Draw() {
 			default: assert(FALSE); break;
 		}
 
-#if false
-		DrawLineST(&tmpLine, FALSE); //描画.
-#else
 		DrawLineST(&tmpLine, TRUE); //描画.
-		
-		//アンチエイリアスアリの時、線が短いと描画されない問題の対策をしたかったやつ.
-		DBL_XY pos1 = { line[i].x1, line[i].y1 };
-		DBL_XY pos2 = { line[i].x2, line[i].y2 };
-		double dis = CalcDist(pos1, pos2);
-		if(dis < 1){
-			double ang = CalcFacingAng(pos1, pos2);
-			tmpLine.edPos = CalcArcPos(pos1, ang, 2);
-			DrawLineST(&tmpLine, TRUE); //描画.
-		}
-#endif
 	}
 
 	//通常の描画モードに戻す
@@ -104,9 +90,6 @@ void LaserManager::UpdateLaser() {
 	for (int i = 0; i < LASER_CNT_MAX; i++)
 	{
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
-
-		//移動前の座標を保存.
-		DBL_XY befPos = { laser[i].x, laser[i].y };
 
 		//レーザータイプ別.
 		switch (laser[i].type)
@@ -135,9 +118,6 @@ void LaserManager::UpdateLaser() {
 					//レーザーの移動.
 					laser[i].x += laser[i].vx * speed;
 					laser[i].y += laser[i].vy * speed;
-				
-					//レーザーの追尾処理.
-					//LaserNorTracking(i);
 				}
 			}
 			break;
@@ -232,24 +212,31 @@ void LaserManager::UpdateLaser() {
 			default: assert(FALSE); break;
 		}
 
-		// レーザーの経過時間カウンタを増加
-		laser[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-
-		// レーザーの軌跡を生成
-		for (int j = 0; j < LASER_LINE_CNT_MAX; j++)
-		{
-			if (line[j].ValidFlag == 0)  // 未使用の軌跡スロットを探す
+		//前回描画した位置からの距離.
+		DBL_XY pos1 = {laser[i].x,  laser[i].y};
+		DBL_XY pos2 = {laser[i].bx, laser[i].by};
+		double dis = CalcDist(pos1, pos2);
+		//長さが一定以上あれば描画する(DrawLineAAの関係上)
+		if (dis >= LASER_LINE_DRAW_LEN) {
+			//レーザーの軌跡を生成.
+			for (int j = 0; j < LASER_LINE_CNT_MAX; j++)
 			{
-				// 軌跡データの設定
-				line[j].x1 = befPos.x;		  // 開始点X座標
-				line[j].y1 = befPos.y;		  // 開始点Y座標
-				line[j].x2 = laser[i].x;	  // 終了点X座標
-				line[j].y2 = laser[i].y;	  // 終了点Y座標
-				line[j].Counter = 0;		  // 経過時間カウンタ初期化
-				line[j].ValidFlag = 1;		  // 軌跡を有効化
-				line[j].type = laser[i].type; //レーザーのタイプに合わせる.
-				break;
+				if (line[j].ValidFlag == 0)  //未使用の軌跡スロットを探す.
+				{
+					// 軌跡データの設定
+					line[j].x1 = laser[i].bx;	  //開始点X座標.
+					line[j].y1 = laser[i].by;	  //開始点Y座標.
+					line[j].x2 = laser[i].x;	  //終了点X座標.
+					line[j].y2 = laser[i].y;	  //終了点Y座標.
+					line[j].Counter = 0;		  //経過時間カウンタ初期化.
+					line[j].ValidFlag = 1;		  //軌跡を有効化.
+					line[j].type = laser[i].type; //レーザーのタイプに合わせる.
+					break;
+				}
 			}
+			//座標を記録.
+			laser[i].bx = laser[i].x;
+			laser[i].by = laser[i].y;
 		}
 
 		//画面外判定.
@@ -260,6 +247,9 @@ void LaserManager::UpdateLaser() {
 		{
 			DeleteLaser(i);
 		}
+
+		// レーザーの経過時間カウンタを増加
+		laser[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 	}
 }
 //各レーザー描画線の更新.
@@ -283,8 +273,10 @@ BOOL LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 		if (laser[i].ValidFlag == 0)  // 未使用のレーザースロットを探す
 		{
 			// レーザーデータの初期化
-			laser[i].x = pos.x;	    // 初期座標x
-			laser[i].y = pos.y;     // 初期座標y
+			laser[i].x  = pos.x;	// 初期座標x
+			laser[i].y  = pos.y;    // 初期座標y
+			laser[i].bx = pos.x;    // 初期座標y
+			laser[i].by = pos.y;    // 初期座標y
 			laser[i].vx = vel.x;    // 初期方向x
 			laser[i].vy = vel.y;    // 初期方向y
 			laser[i].Counter = 0;	// 経過時間カウンタ初期化

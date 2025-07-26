@@ -39,9 +39,3 @@ class Obstacle4_4 : public Obstacle4main
 public:
 	void Move() override;
 };
-
-//Œp³æƒNƒ‰ƒX(—\‘ªü)
-class Obstacle4_yosoku :public Obstacle4main
-{
-public:
-};

@@ -67,9 +67,10 @@ struct DrawStrModi : public DrawStr
 };
 
 //ê}å`.
-int    DrawCircleST		 (const Circle* data, BOOL isFill = TRUE, BOOL isAnti = FALSE, float thick = 1);
-int    DrawBoxST		 (const Box*    data, BOOL isCenter, BOOL isFill = TRUE, BOOL isAnti = FALSE);
-int    DrawLineST		 (const Line*   data, BOOL isAnti = FALSE, float thick = 1.0f);
+int    DrawCircleST		 (const Circle*   data, BOOL isFill = TRUE, BOOL isAnti = FALSE, float thick = 1);
+int    DrawBoxST		 (const Box*      data, BOOL isCenter, BOOL isFill = TRUE, BOOL isAnti = FALSE);
+int    DrawTriangleST	 (const Triangle* data, BOOL isFill = TRUE, BOOL isAnti = FALSE);
+int    DrawLineST		 (const Line*     data, BOOL isAnti = FALSE, float thick = 1.0f);
 int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
 //âÊëú.

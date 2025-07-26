@@ -62,7 +62,9 @@
    前期発表会後: 変更内容
    ・UIレイアウトの変更。"BEST SCORE","SCORE","TIME"の3つだけにした。
    ・アイテムの終了が分かりやすくなるよう、数字を3秒だけ表示して音を足した。
-   ・ポーズ仮追加(Pキー)
+   ・ポーズ機能仮追加。(Pキー)
+   ・図形や線のアンチエイリアス導入, より滑らかな描画が可能に。
+   ・レーザーで短すぎる線を描画しないように。(処理軽減に繋がる)
 /--------------------------------------------------------*/
 
 #include "MeteoManager.h"
@@ -638,7 +640,9 @@ void GameManager::DrawEnd() {
 }
 void GameManager::DrawPause() {
 
+	DrawObjects();     //オブジェクト.
 	player.Draw();     //プレイヤー.
+	effectMng.Draw();  //エフェクト.
 	DrawUI();
 	DrawReflectMode(); //反射モード演出.
 }
