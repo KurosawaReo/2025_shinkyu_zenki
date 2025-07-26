@@ -98,6 +98,7 @@ void Player::Draw()
 
 		DrawBoxST(&box1, TRUE, FALSE, TRUE);
 		DrawBoxST(&box2, TRUE, FALSE, TRUE);
+		DrawCircle(hit.pos.x, hit.pos.y, 10, 0xFF0000);
 	}
 }
 

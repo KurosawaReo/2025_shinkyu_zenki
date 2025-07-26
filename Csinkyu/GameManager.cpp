@@ -702,11 +702,11 @@ void GameManager::DrawUI() {
 		double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 		double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.3));
 
-#if false
+#if true
 		//test.
 		DrawImgExtend img;
 		img.img      = data.imgUI;
-		img.sizeRate = {0.3, 0.3};
+		img.sizeRate = {0.6, 0.3};
 
 		img.pos = {WINDOW_WID/2, 70};
 		DrawExtendGraphST(&img, TRUE, TRUE);
@@ -716,6 +716,7 @@ void GameManager::DrawUI() {
 		DrawExtendGraphST(&img, TRUE, TRUE);
 		img.pos = {WINDOW_WID/2+380, 150};
 		DrawExtendGraphST(&img, TRUE, TRUE);
+		DrawCircle(WINDOW_WID / 2, 150, 10, 0xFF0000);
 #endif
 
 		//テキスト設定.

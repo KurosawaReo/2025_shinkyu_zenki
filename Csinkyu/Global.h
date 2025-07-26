@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/07/26
+   ver.2025/07/27
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -71,7 +71,7 @@ typedef XY<double> DBL_XY; //double型.
 struct Image
 {
 	int    handle; //ハンドル.
-	INT_XY size;   //画像のサイズ.
+	INT_XY size;   //画像のサイズ. //<<<<< TODO: sizeを変更できないようオブジェクト指向にする. 
 };
 //円データ.
 struct Circle
