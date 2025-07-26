@@ -28,22 +28,22 @@ enum BlendModeID
 //画像描画に使う用.
 struct DrawImg
 {
-	Image  img;    //画像データ.
-	INT_XY pos;    //画面のどこに描画するか.
+	Image  img;      //画像データ.
+	INT_XY pos;      //画面のどこに描画するか.
 };
 struct DrawImgRect : public DrawImg
 {
-	INT_XY stPxl;  //始点pixel.
-	INT_XY size;   //切り取るサイズ.
+	INT_XY stPxl;    //始点pixel.
+	INT_XY size;     //切り取るサイズ.
 };
 struct DrawImgExtend : public DrawImg
 {
-	INT_XY size;   //描画するサイズ.
+	DBL_XY sizeRate; //描画するサイズ率.
 };
 struct DrawImgRota : public DrawImg
 {
-	double extend; //サイズ倍率.
-	double ang;    //角度.
+	double extend;   //サイズ倍率.
+	double ang;      //角度.
 };
 //文字描画に使う用.
 struct DrawStr

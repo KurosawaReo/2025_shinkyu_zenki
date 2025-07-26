@@ -207,15 +207,15 @@ int DrawExtendGraphST(const DrawImgExtend* data, BOOL isCenter, BOOL isTrans) {
 
 	//’†‰›Šî€‚©‚Ç‚¤‚©.
 	if (isCenter) {
-		pos1.x = data->pos.x - data->size.x/2;
-		pos1.y = data->pos.y - data->size.y/2;
-		pos2.x = data->pos.x + data->size.x/2;
-		pos2.y = data->pos.y + data->size.y/2;
+		pos1.x = data->pos.x - data->img.size.x/2 * data->sizeRate.x;
+		pos1.y = data->pos.y - data->img.size.y/2 * data->sizeRate.y;
+		pos2.x = data->pos.x + data->img.size.x/2 * data->sizeRate.x;
+		pos2.y = data->pos.y + data->img.size.y/2 * data->sizeRate.y;
 	}
 	else {
 		pos1   = data->pos;
-		pos2.x = data->pos.x + data->size.x;
-		pos2.y = data->pos.y + data->size.y;
+		pos2.x = data->pos.x + data->img.size.x * data->sizeRate.x;
+		pos2.y = data->pos.y + data->img.size.y * data->sizeRate.y;
 	}
 
 	int err = DrawExtendGraph(pos1.x, pos1.y, pos2.x, pos2.y, data->img.handle, isTrans);

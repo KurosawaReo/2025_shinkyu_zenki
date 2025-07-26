@@ -191,7 +191,8 @@ struct GameData
 	int   font2;      //フォント.
 	int   font1;      //フォント.
 	int   font3;      //フォント.
-	Image   imgLogo[2]; //タイトルロゴ画像.
+	Image imgLogo[2]; //タイトルロゴ画像.
+	Image imgUI;      //UI画像.
 
 	BOOL  isSlow;     //スローモードかどうか.
 };

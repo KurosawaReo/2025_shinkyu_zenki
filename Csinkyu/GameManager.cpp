@@ -114,6 +114,7 @@ void GameManager::Init() {
 	//画像読み込み.
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
+	LoadGraphST(&data.imgUI,      _T("Resources/Images/testUI.png"));
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));		//未使用(BGM候補)
@@ -172,7 +173,7 @@ void GameManager::Reset() {
 	data.isSlow = FALSE;
 	data.counter = 0;
 	data.spawnRate = 1.0; //最初は100%
-	data.level = 0;       //最初はLv0
+	data.level = 1;       //最初はLv1
 	isFinTitleAnim = FALSE;
 	isFinScoreAnim = FALSE;
 	//サウンド.
@@ -271,7 +272,7 @@ void GameManager::UpdateReady() {
 
 		tmScene[SCENE_GAME].Start(); //ゲーム開始.
 		data.scene = SCENE_GAME;     //ゲームシーンへ.
-		data.level = 1;              //Lv1にする.
+//		data.level = 1;              //Lv1にする.
 
 		//サウンド.
 		SoundST* sound = SoundST::GetPtr();
@@ -463,9 +464,9 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//画像設定.
 			DrawImgExtend draw;
-			draw.img  = data.imgLogo[0];
-			draw.pos  = {WINDOW_WID/2, logoY};
-			draw.size = {data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2};
+			draw.img      = data.imgLogo[0];
+			draw.pos      = {WINDOW_WID/2, logoY};
+			draw.sizeRate = {0.5, 0.5};
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
 			DrawExtendGraphST(&draw, TRUE);
@@ -476,13 +477,13 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
 			//画像設定.
 			DrawImgExtend img1; 
-			img1.img  = data.imgLogo[0];
-			img1.pos  = {WINDOW_WID/2, _int(logoY - anim*100)};
-			img1.size = data.imgLogo[0].size/2;
+			img1.img      = data.imgLogo[0];
+			img1.pos      = {WINDOW_WID/2, _int(logoY - anim*100)};
+			img1.sizeRate = {0.5, 0.5};
 			DrawImgExtend img2;
-			img2.img  = data.imgLogo[1];
-			img2.pos  = {WINDOW_WID/2, _int(logoY - anim*100)};
-			img2.size = data.imgLogo[1].size/2;
+			img2.img      = data.imgLogo[1];
+			img2.pos      = {WINDOW_WID/2, _int(logoY - anim*100)};
+			img2.sizeRate = {0.5, 0.5};
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
 			DrawExtendGraphST(&img2, TRUE);
@@ -610,8 +611,8 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-//			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-400+anim*20)}, 0xEFFFA0 };
-			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-400+anim*20)}, COLOR_SCORE };
+			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-350+anim*20)}, 0xEFFFA0 };
+//			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-350+anim*20)}, COLOR_SCORE };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
 			DrawStringST(&str, TRUE, data.font2);
@@ -693,14 +694,28 @@ void GameManager::DrawUI() {
 	//ハイスコア表示.
 	{
 		//アニメーション値.
-		double alpha1   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
-		double alpha2   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.1);
-		double alpha3   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.2);
-		double alpha4   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.3);
-		double animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime());
-		double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.1));
-		double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
+		double alpha1   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.1);
+		double alpha2   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.2);
+		double alpha3   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.3);
+		double alpha4   = CalcNumEaseInOut((tmScene[SCENE_READY].GetPassTime()-1.0)*2);
+		double animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime()-0.1);
+		double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
+		double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.3));
 
+		//test.
+		DrawImgExtend img;
+		img.img      = data.imgUI;
+		img.sizeRate = {0.3, 0.3};
+
+		img.pos = {WINDOW_WID/2, 70};
+		DrawExtendGraphST(&img, TRUE, TRUE);
+		img.pos = {WINDOW_WID/2-380, 150};
+		DrawExtendGraphST(&img, TRUE, TRUE);
+		img.pos = {WINDOW_WID/2, 150};
+		DrawExtendGraphST(&img, TRUE, TRUE);
+		img.pos = {WINDOW_WID/2+380, 150};
+		DrawExtendGraphST(&img, TRUE, TRUE);
+		
 		//テキスト設定.
 		DrawStr str1 = { {}, {WINDOW_WID/2,      70}, 0xFFFFFF };
 		DrawStr str2 = { {}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE };
@@ -711,24 +726,24 @@ void GameManager::DrawUI() {
 		_stprintf(str3.text, _T("SCORE:%05d"),      data.score);
 		_stprintf(str4.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
 		//テキスト(main)
-		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
-		DrawStringST(&str1, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
-		DrawStringST(&str2, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
-		DrawStringST(&str3, TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
+		DrawStringST(&str1, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
+		DrawStringST(&str2, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
+		DrawStringST(&str3, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 		DrawStringST(&str4, TRUE, data.font3);
 		//テキスト(光沢用)
-		str1.color = 0xFFFFFF;
 		str2.color = 0xFFFFFF;
 		str3.color = 0xFFFFFF;
+		str4.color = 0xFFFFFF;
 		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
-		DrawStringST(&str1, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
 		DrawStringST(&str2, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
 		DrawStringST(&str3, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
+		DrawStringST(&str4, TRUE, data.font3);
 		//描画モードリセット.
 		ResetDrawBlendMode();
 	}
