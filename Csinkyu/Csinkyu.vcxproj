@@ -29,6 +29,7 @@
     <ClCompile Include="MapGimmickLaser.cpp" />
     <ClCompile Include="myCalcST.cpp" />
     <ClCompile Include="myDrawST.cpp" />
+    <ClCompile Include="myFileST.cpp" />
     <ClCompile Include="myInputST.cpp" />
     <ClCompile Include="mySoundST.cpp" />
     <ClCompile Include="myTimerST.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="MapGimmickLaser.h" />
     <ClInclude Include="myCalcST.h" />
     <ClInclude Include="myDrawST.h" />
+    <ClInclude Include="myFileST.h" />
     <ClInclude Include="myInputST.h" />
     <ClInclude Include="mySoundST.h" />
     <ClInclude Include="myTimerST.h" />

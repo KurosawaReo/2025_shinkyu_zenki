@@ -24,7 +24,7 @@ void Obstacle::Update() {
 	line.edPos = CalcArcPos(line.stPos, ang, len);
 
 	//“–‚½‚Á‚½‚çŽ€–S.
-	if (IsHitLine(&line, player->GetHit())) {
+	if (HitLine(&line, player->GetHit())) {
 		player->PlayerDeath();
 	}
 }

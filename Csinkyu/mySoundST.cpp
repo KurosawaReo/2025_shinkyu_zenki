@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/07/21
+   ver.2025/07/26
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -88,7 +88,7 @@ void SoundData::ChangeVolume(int volume, float sec) {
 	
 	nowVol = GetVolumeSoundMem2(handle); //現在の音量.
 	aftVol = GetVolumeRange(volume);     //変化後の音量.
-	aftUS  = 1000000 * sec;              //変化時間.
+	aftUS  = (LONGLONG)(1000000 * sec);  //変化時間.
 	//変化時間があるなら.
 	if (aftUS > 0) {
 		timer.Start(); //タイマー開始.
@@ -112,30 +112,30 @@ SoundST::~SoundST() {
 	sound.clear(); //データを空にする.
 }
 //サウンド読み込み.
-int SoundST::LoadFile(const TCHAR fileName[], const TCHAR saveName[]) {
+int SoundST::LoadFile(my_string fileName, my_string saveName) {
 	
 	//読み込み.
-	int load = LoadSoundMem(fileName);
+	int load = LoadSoundMem(fileName.c_str());
 	if (load < 0) {
 		return -1; //-1: 読み込み失敗.
 	}
 	//ハンドルを保存.
-	sound[(TCHAR*)saveName].SetHandle(load);
+	sound[saveName].SetHandle(load);
 
 	return 0; //正常終了.
 }
 //サウンド再生.
-void SoundST::Play(const TCHAR saveName[], BOOL isLoop, int volume) {
+void SoundST::Play(my_string saveName, BOOL isLoop, int volume) {
 	//存在すれば.
-	if (sound.count((TCHAR*)saveName) > 0) {
-		sound[(TCHAR*)saveName].Play(isLoop, volume); //再生.
+	if (sound.count(saveName) > 0) {
+		sound[saveName].Play(isLoop, volume); //再生.
 	}
 }
 //サウンド停止.
-void SoundST::Stop(const TCHAR saveName[]) {
+void SoundST::Stop(my_string saveName) {
 	//存在すれば.
-	if (sound.count((TCHAR*)saveName) > 0) {
-		sound[(TCHAR*)saveName].Stop(); //停止.
+	if (sound.count(saveName) > 0) {
+		sound[saveName].Stop(); //停止.
 	}
 }
 //サウンド更新.
@@ -148,19 +148,19 @@ void SoundST::Update() {
 }
 
 //音量を変更.
-void SoundST::ChangeVolume(const TCHAR saveName[], int volume, float sec) {
+void SoundST::ChangeVolume(my_string saveName, int volume, float sec) {
 	
-	sound[(TCHAR*)saveName].ChangeVolume(volume, sec); //変更設定.
+	sound[saveName].ChangeVolume(volume, sec); //変更設定.
 }
 //フェードイン再生.
-void SoundST::FadeInPlay(const TCHAR saveName[], int volume, float sec, BOOL isLoop) {
+void SoundST::FadeInPlay(my_string saveName, int volume, float sec, BOOL isLoop) {
 
-	sound[(TCHAR*)saveName].Play(isLoop, 0);           //最初は音量0で再生.
-	sound[(TCHAR*)saveName].ChangeVolume(volume, sec); //徐々に大きく.
+	sound[saveName].Play(isLoop, 0);           //最初は音量0で再生.
+	sound[saveName].ChangeVolume(volume, sec); //徐々に大きく.
 }
 //フェードアウトする.
-void SoundST::FadeOutPlay(const TCHAR saveName[], float sec) {
+void SoundST::FadeOutPlay(my_string saveName, float sec) {
 
-	sound[(TCHAR*)saveName].ChangeVolume(0, sec); //徐々に小さく.
-	sound[(TCHAR*)saveName].SetIsFadeOut(TRUE);   //フェードアウトモードに.
+	sound[saveName].ChangeVolume(0, sec); //徐々に小さく.
+	sound[saveName].SetIsFadeOut(TRUE);   //フェードアウトモードに.
 }

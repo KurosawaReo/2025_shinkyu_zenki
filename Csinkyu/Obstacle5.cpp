@@ -235,25 +235,30 @@ void Obstacle5::DrawWarningEffect(int index)
 	// 残り時間から経過時間を計算
 	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
 
-	float blinkRate = 8.0f;
-	float blinkPhase = fmod(elapsedTime * blinkRate, 60.0f);
-	float blinkAlpha = (sin(blinkPhase * 3.14f / 30.0f) + 1.0f) * 0.5f;
+	float  blinkRate  = 8.0f;
+	double blinkPhase = fmod(elapsedTime * blinkRate, 60.0f);
+	double blinkAlpha = (sin(blinkPhase * 3.14f / 30.0f) + 1.0f) * 0.5f;
 
 	// 脈動効果
-	float pulseRate = 4.0f;
-	float pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * 3.14159f / 60.0f);
-	int warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
+	float  pulseRate   = 4.0f;
+	double pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * 3.14159f / 60.0f);
+	int    warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
 
 	int alphaValue = (int)(255 * blinkAlpha * 0.8f);
 
-	// 予告エフェクトを描画（赤色）
-	SetDrawBlendModeST(MODE_ADD, alphaValue);                                                 //150, 150, 150
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize, GetColor(150, 150, 150), FALSE);
-	//200, 200, 200              
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize / 2, GetColor(200, 200, 200), FALSE);
+	// 予告エフェクトを描画.
+	SetDrawBlendModeST(MODE_ADD, alphaValue);
 
-	// 外周リング                                                                                   //120, 120, 120
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), warningSize + 5, GetColor(120, 120, 120), FALSE);
+	Circle cir;
+	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize,   GetColor(150, 150, 150) };
+	DrawCircleST(&cir, FALSE, TRUE);
+	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize/2, GetColor(200, 200, 200) };
+	DrawCircleST(&cir, FALSE, TRUE);
+	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize+5, GetColor(120, 120, 120) }; // 外周リング
+	DrawCircleST(&cir, FALSE, TRUE);
+
+	//通常の描画モードに戻す
+	ResetDrawBlendMode();
 }
 
 void Obstacle5::DrawActiveEffect(int index)
@@ -276,6 +281,13 @@ void Obstacle5::DrawActiveEffect(int index)
 
 	// アクティブエフェクトを円形で描画（シアン色で光る）
 	SetDrawBlendModeST(MODE_ADD, alphaValue);
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), effectSize, GetColor(0, 255, 255), FALSE);
-	DrawCircle((int)(flashEffect[index].x), (int)(flashEffect[index].y), innerSize, GetColor(0, 255, 200), FALSE);
+
+	Circle cir;
+	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)effectSize, GetColor(0, 255, 255)};
+	DrawCircleST(&cir, FALSE, TRUE);
+	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)innerSize,  GetColor(0, 255, 200)};
+	DrawCircleST(&cir, FALSE, TRUE);
+
+	//通常の描画モードに戻す
+	ResetDrawBlendMode();
 }

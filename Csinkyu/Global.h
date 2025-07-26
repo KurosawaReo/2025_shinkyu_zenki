@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/07/16
+   ver.2025/07/26
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -9,43 +9,70 @@
 //このGlobal.hが定義されているか判別する用.
 #define DEF_GLOBAL_H
 
-//stdafxがあるならいらない.
-#if true
-  //c言語用.
-  #define _USE_MATH_DEFINES  //math定数を使うのに必要.
-  #define _CRT_SECURE_NO_WARNINGS
-  #include <assert.h>
-  #include <math.h>
-  #include <stdlib.h>
-  #include <time.h>
-  //c++用.
-  #include <vector>
-  #include <map>
-  #include <string>
-  using namespace std;
-  //DxLib.
-  #include "DxLib.h"
+//c言語用.
+#define _USE_MATH_DEFINES  //math定数を使うのに必要.
+#define _CRT_SECURE_NO_WARNINGS
+#include <assert.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+//c++用.
+#include <vector>
+#include <map>
+#include <string>
+using namespace std;
+//DxLib.
+#include "DxLib.h"
+
+//文字コードで切り替え.
+#if defined UNICODE
+  typedef wstring my_string; //wchar_t型.
+#else
+  typedef string  my_string; //char型.
 #endif
 
-//int型の凝縮xy.
-struct INT_XY
+//xとyの凝縮.
+template<typename T> //型を<>で入力して使う.
+struct XY
 {
-	int x;
-	int y;
-};
-//double型の凝縮xy.
-struct DBL_XY
-{
-	double x;
-	double y;
-};
-//画像データ格納用.
-struct IMG
-{
-	int    handle;	 //ハンドル.
-	INT_XY size;	 //画像のサイズ.
-};
+	T x;
+	T y;
 
+	//演算子で計算できるように.
+	XY<T> operator+(XY<T>& xy) {       //+の右側が引数に入り、返り値が左側に入る.
+		return { x + xy.x, y + xy.y }; //xとyを加算して返す.
+	}
+	XY<T> operator-(XY<T>& xy) {
+		return { x - xy.x, y - xy.y };
+	}
+	XY<T> operator*(XY<T>& xy) {
+		return { x * xy.x, y * xy.y };
+	}
+	XY<T> operator*(int n) {
+		return { x * n, y * n };
+	}
+	XY<T> operator*(double n) {
+		return { x * n, y * n };
+	}
+	XY<T> operator/(XY<T>& xy) {
+		return { x / xy.x, y / xy.y };
+	}
+	XY<T> operator/(int n) {
+		return { x / n, y / n };
+	}
+	XY<T> operator/(double n) {
+		return { x / n, y / n };
+	}
+};
+typedef XY<int>    INT_XY; //int型.
+typedef XY<double> DBL_XY; //double型.
+
+//画像データ.
+struct Image
+{
+	int    handle; //ハンドル.
+	INT_XY size;   //画像のサイズ.
+};
 //円データ.
 struct Circle
 {
@@ -60,6 +87,12 @@ struct Box
 	DBL_XY size; //サイズ.
 	UINT   clr;  //色.
 };
+//三角形データ.
+struct Triangle
+{
+	DBL_XY pos[3]; //3点の座標.
+	UINT   clr;    //色.
+};
 //線データ.
 struct Line
 {
@@ -67,18 +100,20 @@ struct Line
 	DBL_XY edPos; //終点座標.
 	UINT   clr;   //色.
 };
-//オブジェクト(グリッド上専用)
-struct ObjectGrid
+//オブジェクト(円)
+struct ObjectCir
 {
-	INT_XY pos{};      //座標.
-	IMG    img{};      //画像.
+	Circle cir{};      //当たり判定と座標.
+	DBL_XY offset{};   //画像をずらす量.
+	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
-	ObjectGrid(){}
+	ObjectCir(){}
 	//初期化用(引数あり)
-	ObjectGrid(INT_XY _pos, UINT _clr, BOOL _isActive) :
-		pos(_pos),
+	ObjectCir(DBL_XY _pos, float _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
+		cir     ({ _pos, _r, _clr }), 
+		offset  (_offset), 
 		isActive(_isActive)
 	{}
 };
@@ -87,7 +122,7 @@ struct ObjectBox
 {
 	Box    box{};      //当たり判定と座標.
 	DBL_XY offset{};   //画像をずらす量.
-	IMG    img{};      //画像.
+	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
@@ -99,20 +134,18 @@ struct ObjectBox
 		isActive(_isActive)
 	{}
 };
-//オブジェクト(円)
-struct ObjectCir
+//オブジェクト(グリッド上専用)
+struct ObjectGrid
 {
-	Circle cir{};      //当たり判定と座標.
-	DBL_XY offset{};   //画像をずらす量.
-	IMG    img{};      //画像.
+	INT_XY pos{};      //座標.
+	Image  img{};      //画像.
 	BOOL   isActive{}; //有効かどうか.
 
 	//初期化用.
-	ObjectCir(){}
+	ObjectGrid(){}
 	//初期化用(引数あり)
-	ObjectCir(DBL_XY _pos, float _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
-		cir     ({ _pos, _r, _clr }), 
-		offset  (_offset), 
+	ObjectGrid(INT_XY _pos, UINT _clr, BOOL _isActive) :
+		pos(_pos),
 		isActive(_isActive)
 	{}
 };
@@ -131,6 +164,7 @@ enum Scene
 	SCENE_READY,
 	SCENE_GAME,
 	SCENE_END,
+	SCENE_PAUSE, //ポーズ画面.
 
 	SCENE_COUNT, //総数.
 };
@@ -157,7 +191,7 @@ struct GameData
 	int   font2;      //フォント.
 	int   font1;      //フォント.
 	int   font3;      //フォント.
-	IMG   imgLogo[2]; //タイトルロゴ画像.
+	Image   imgLogo[2]; //タイトルロゴ画像.
 
 	BOOL  isSlow;     //スローモードかどうか.
 };
@@ -172,7 +206,7 @@ struct GameData
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT				(32)			//ウィンドウのカラーbit数.
 
-#define FILE_DATA_PATH					("data.txt")	//データを保存するtxtファイル.
+#define FILE_DATA_PATH					(_T("score.data"))	//データを保存するtxtファイル.
 
 #define FPS								(80)			//フレームレート.
 
@@ -208,8 +242,8 @@ struct GameData
 #define OBSTACLE4_FLASH_SIZE_SPREAD		(-7)            //フラッシュエフェクトの拡大量.
 #define OBSTACLE4_FLASH_VALID_TM		(100)           //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE4_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
-#define OBSTACLE4_PRE_LASER1_SIZE		(20)            //発射前エフェクト1のサイズ.
-#define OBSTACLE4_PRE_LASER2_SIZE		(50)            //発射前エフェクト2のサイズ.
+#define OBSTACLE4_PRE_LASER1_SIZE		(50)            //発射前エフェクト1のサイズ.
+#define OBSTACLE4_PRE_LASER2_SIZE		(20)            //発射前エフェクト2のサイズ.
 
 #define OBSTACLE5_FLASH_MAX				(30)            //最大フラッシュエフェクト数
 #define OBSTACLE5_FLASH_SIZE_INIT		(5.0f)          //フラッシュエフェクトの初期サイズ.
@@ -235,7 +269,8 @@ struct GameData
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
 #define LASER_CNT_MAX					(50)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(12000)			//レーザーで描画する線の最大数.
+#define LASER_LINE_CNT_MAX				(12000)			//レーザー描画線の最大数.
+#define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
 #define METEO_CNT_MAX					(50)			//隕石の最大出現数.
@@ -266,3 +301,4 @@ struct GameData
 #define COLOR_METEO(pos)				(GetColor(0, _int(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
+#define COLOR_TIME						(0x80FF9C)

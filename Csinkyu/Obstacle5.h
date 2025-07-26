@@ -18,7 +18,7 @@ class Obstacle5
 private:
 	FLASHEFFECT5 flashEffect[OBSTACLE5_FLASH_MAX]{}; // クラスのメンバ変数として追加
 
-    float flashTimer; //出現タイマー.
+	float flashTimer{}; //出現タイマー.
 
 	GameData* p_data{};
 	Player*   p_player{};

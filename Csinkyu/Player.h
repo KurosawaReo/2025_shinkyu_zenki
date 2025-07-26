@@ -5,11 +5,7 @@
 #pragma once
 #include "EffectManager.h"
 
-//プレイヤーを囲うシールド.
-struct PlayerShield
-{
-	
-};
+//ダッシュエフェクト.
 struct ReflectEffect
 {
 	DBL_XY pos;           // エフェクト位置

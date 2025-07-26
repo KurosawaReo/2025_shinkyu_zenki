@@ -61,7 +61,7 @@ void Meteo::Draw() {
 	if (active) {
 		//破壊モード限定.
 		if (state == Meteo_Destroy) {
-			int pow = 255 * (1-destroyCntr/METEO_DEST_TIME); //少しずつ減少(255→0)
+			int pow = _int(255 * (1-destroyCntr/METEO_DEST_TIME)); //少しずつ減少(255→0)
 			SetDrawBlendModeST(MODE_ADD, pow);
 		}
 
@@ -69,7 +69,8 @@ void Meteo::Draw() {
 		for (int i = 0; i < shape.lineCnt; i++) {
 			
 			shape.line[i].clr = COLOR_METEO(pos);
-			DrawLineST(&shape.line[i]);
+			DrawLineST(&shape.line[i], TRUE, 2);
+//			DrawLineST(&shape.line[i], FALSE, 1);
 		}
 
 		ResetDrawBlendMode(); //描画モードリセット.
@@ -79,26 +80,26 @@ void Meteo::Draw() {
 //隕石出現.
 void Meteo::Spawn() {
 
-	int rnd1 = RndNum(0, 99);
-	int rnd2 = RndNum(0, 99);
+	int rnd1 = RandNum(0, 99);
+	int rnd2 = RandNum(0, 99);
 
 	INT_XY goalPos{}; //目標座標.
 
 	//50%:上下端から出現.
 	if (rnd1 < 50) {
-		pos.x = RndNum(0, WINDOW_WID);                                                  //xの設定.
+		pos.x = RandNum(0, WINDOW_WID);                                                  //xの設定.
 		pos.y = (rnd2 < 50) ? 0 - METEO_LINE_DIS_MAX : WINDOW_HEI + METEO_LINE_DIS_MAX; //yの設定.
 	}
 	//50%:左右端から出現.
 	else {
 		pos.x = (rnd2 < 50) ? 0 - METEO_LINE_DIS_MAX : WINDOW_WID + METEO_LINE_DIS_MAX; //xの設定.
-		pos.y = RndNum(0, WINDOW_HEI);                                                  //yの設定.
+		pos.y = RandNum(0, WINDOW_HEI);                                                  //yの設定.
 	}
 
 	//目標地点の抽選.
 	{
-		goalPos.x = RndNum(WINDOW_WID/2 - METEO_GOAL_RAND_RANGE, WINDOW_WID/2 + METEO_GOAL_RAND_RANGE);
-		goalPos.y = RndNum(WINDOW_HEI/2 - METEO_GOAL_RAND_RANGE, WINDOW_HEI/2 + METEO_GOAL_RAND_RANGE);
+		goalPos.x = RandNum(WINDOW_WID/2 - METEO_GOAL_RAND_RANGE, WINDOW_WID/2 + METEO_GOAL_RAND_RANGE);
+		goalPos.y = RandNum(WINDOW_HEI/2 - METEO_GOAL_RAND_RANGE, WINDOW_HEI/2 + METEO_GOAL_RAND_RANGE);
 		//目標地点までの角度を求める.
 		double rad = atan2(goalPos.y - pos.y, goalPos.x - pos.x);
 		//xとyのvectorに分解.
@@ -108,10 +109,10 @@ void Meteo::Spawn() {
 	//隕石の設定.
 	{
 		//何角形にするか.
-		shape.lineCnt = RndNum(METEO_LINE_CNT_MIN, METEO_LINE_CNT_MAX);
+		shape.lineCnt = RandNum(METEO_LINE_CNT_MIN, METEO_LINE_CNT_MAX);
 		//頂点の位置を抽選.
 		for (int i = 0; i < shape.lineCnt; i++) {
-			shape.lineDis[i] = (float)RndNum(METEO_LINE_DIS_MIN*10, METEO_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
+			shape.lineDis[i] = (float)RandNum(METEO_LINE_DIS_MIN*10, METEO_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
 		}
 	}
 
@@ -132,7 +133,7 @@ BOOL Meteo::IsHitMeteo(Circle* pos) {
 		//全ての線で判定.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			//線とプレイヤーが当たったら.
-			if (IsHitLine(&shape.line[i], pos)) {
+			if (HitLine(&shape.line[i], pos)) {
 				return TRUE; //当たった.
 			}
 		}
@@ -161,10 +162,10 @@ void Meteo::UpdateMeteoLine() {
 
 			//①隕石を構成する線の情報.
 			DBL_XY lineMidPos = CalcMidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
-			double lineLen    = CalcDis(shape.line[i].stPos, lineMidPos);             //長さの半分.
+			double lineLen    = CalcDist(shape.line[i].stPos, lineMidPos);            //長さの半分.
 			double lineAng    = CalcFacingAng(lineMidPos, shape.line[i].stPos);       //角度.
 			//②隕石の中央からどんどん離していく.
-			double pivotDis   = CalcDis(pos, lineMidPos);                             //隕石の中央からの距離.
+			double pivotDis   = CalcDist(pos, lineMidPos);                            //隕石の中央からの距離.
 			double pivotAng   = CalcFacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.
 			DBL_XY newPos     = CalcArcPos(pos, pivotAng, pivotDis+destroyCntr);      //距離を増やす.
 			//③新たな線の始点と終点.

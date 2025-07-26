@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/07/23
+   ver.2025/07/24
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -12,27 +12,27 @@
 InputST InputST::self; //実体の宣言.
 
 //キー入力の判定.
-BOOL InputST::IsPushKey(KEY_ID id) {
+BOOL InputST::IsPushKey(KeyID id) {
 	return (tmKey[id] > 0);     //押してるならTRUE.
 }
-int  InputST::IsPushKeyTime(KEY_ID id) {
+int  InputST::IsPushKeyTime(KeyID id) {
 	return tmKey[id];           //押している時間.
 }
 //マウス入力の判定.
-BOOL InputST::IsPushMouse(MOUSE_ID id) {
+BOOL InputST::IsPushMouse(MouseID id) {
 	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return (tmMouse[num] > 0);  //押してるならTRUE.
 }
-int  InputST::IsPushMouseTime(MOUSE_ID id) {
+int  InputST::IsPushMouseTime(MouseID id) {
 	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return tmMouse[num];        //押している時間.
 }
 //コントローラ入力の判定.
-BOOL InputST::IsPushPadBtn(PAD_BTN_ID id) {
+BOOL InputST::IsPushPadBtn(PadBtnID id) {
 	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return (tmPadBtn[num] > 0); //押している時間.
 }
-int  InputST::IsPushPadBtnTime(PAD_BTN_ID id) {
+int  InputST::IsPushPadBtnTime(PadBtnID id) {
 	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
 	return tmPadBtn[num];       //押している時間.
 }
@@ -129,27 +129,6 @@ DBL_XY InputST::Move4Dir(INT_XY pow){
 	}
 
 	return move;
-}
-
-//移動可能範囲内に補正する.
-void InputST::FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
-
-	if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
-	if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
-	if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
-	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
-}
-
-//範囲外かどうか.
-BOOL InputST::IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down) {
-
-	//範囲外.
-	if (pos.x < left  + size.x/2) { return TRUE; }
-	if (pos.y < up    + size.y/2) { return TRUE; }
-	if (pos.x > right - size.x/2) { return TRUE; }
-	if (pos.y > down  - size.y/2) { return TRUE; }
-
-	return FALSE; //範囲内.
 }
 
 //ボタンの更新処理.

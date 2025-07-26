@@ -20,7 +20,7 @@ void Item::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
 void Item::Reset()
 {
 	// 座標の初期化
-	pos.x = (double)RndNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
+	pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
 	pos.y = -1000;											  // 画面上部の少し上から開始
 	// サイズと色の設定
 	size.x = ITEM_SIZE;
@@ -73,7 +73,7 @@ BOOL Item::CheckHitPlayer()
 	Box itemBox = { pos, size, {} };
 	
 	//当たった場合.
-	if (IsHitBox(&plyBox, &itemBox, TRUE)) {
+	if (HitBox(&plyBox, &itemBox, TRUE)) {
 		OnHitPlayer();
 		return TRUE;
 	}
@@ -88,7 +88,7 @@ void Item::OnHitPlayer()
 	GameManager::GetPtr()->TakeItem();
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("TakeItem"), FALSE, 76);
+	sound->Play(_T("TakeItem"),   FALSE, 76); //ポワーン.
 	//エフェクト召喚.
 	EffectData data{};
 	data.type = Effect_Score100;
@@ -111,8 +111,8 @@ void Item::Draw()
 		Box box1 = { pos, {size.x,   size.y  }, COLOR_ITEM }; //{pos}, {size}, color.
 		Box box2 = { pos, {size.x-2, size.y-2}, COLOR_ITEM }; //{pos}, {size}, color.
 
-		DrawBoxST(&box1, TRUE, FALSE);
-		DrawBoxST(&box2, TRUE, FALSE);
+		DrawBoxST(&box1, TRUE, FALSE, TRUE);
+		DrawBoxST(&box2, TRUE, FALSE, TRUE);
 
 		// 画像を使用する場合のコード例
 		// if (itemGraph != -1) {

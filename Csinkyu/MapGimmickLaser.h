@@ -20,9 +20,9 @@ private:
 	MeteoManager* p_meteoMng{};
 
 	float  laserSpawnTimer{};  // レーザー発射タイマー.
-	int    nextLaserIndex{};   // 次の発射するレーザーのインデックス.
-	int    predictionTimer{};  // 予測線タイマー
+	float  predictionTimer{};  // 予測線タイマー.
 	bool   showPrediction{};   // 予測線表示フラグ
+	int    nextLaserIndex{};   // 次の発射するレーザーのインデックス.
 	int    currentDirection{}; // 現在の発射方向
 	int    nextDirection{};    // 次の発射方向
 	double nextCenterPos{};    // 次のレーザー発射位置（予測線用）

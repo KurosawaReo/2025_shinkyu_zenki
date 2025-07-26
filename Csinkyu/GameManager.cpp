@@ -58,6 +58,13 @@
    2025/07/15:
    反射仮完成。このゲームの方針も見えてきた。
    「隕石を破壊するとスコアを得られ、そのスコアを競うゲーム」で行ける気がする。
+
+   前期発表会後: 変更内容
+   ・UIレイアウトの変更。"BEST SCORE","SCORE","TIME"の3つだけにした。
+   ・アイテムの終了が分かりやすくなるよう、数字を3秒だけ表示して音を足した。
+   ・ポーズ機能仮追加。(Pキー)
+   ・図形や線のアンチエイリアス導入, より滑らかな描画が可能に。
+   ・レーザーで短すぎる線を描画しないように。(処理軽減に繋がる)
 /--------------------------------------------------------*/
 
 #include "MeteoManager.h"
@@ -108,18 +115,20 @@ void GameManager::Init() {
 	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
 	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
 	//サウンド読み込み.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),   _T("BGM1"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"), _T("BGM2"));		//未使用(BGM候補)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),    _T("PowerDown"));	//アイテム解除.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),   _T("Break"));		//隕石破壊.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),   _T("TakeItem"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),  _T("Laser1"));		//レーザー(発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),  _T("Laser2"));		//レーザー(強発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),   _T("Laser3"));		//レーザー(反射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),   _T("Ripples"));	//波紋.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),   _T("PlayerDeath"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),  _T("LevelUp"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),   _T("BestScore"));  //最高スコア更新.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));		//未使用(BGM候補)
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/GB_Shooting_2025.0725.mp3"),	_T("BGM3"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("TakeItem"));	//アイテム取る.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	//カウントダウン.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	//アイテム解除.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		//レーザー(発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),		_T("Laser2"));		//レーザー(強発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		_T("Laser3"));		//レーザー(反射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		_T("Ripples"));		//波紋.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		_T("Break"));		//隕石破壊.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		_T("PlayerDeath"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	//最高スコア更新.
 	//Init処理
 	{
 		//管理class.
@@ -142,14 +151,9 @@ void GameManager::Init() {
 
 	//スコア読み込み.
 	{
-		FILE* fp = fopen(FILE_DATA_PATH, "r");
-		assert(fp != NULL); //読み込みエラー.
-
-		char str[256];              //文字列格納用.
-		fgets(str, 256, fp);        //ファイルから文字読み込み.
-		data.bestScore = atoi(str); //int型に変換して登録.
-
-		fclose(fp);
+		FileST file;
+		int ret = file.Open(FILE_DATA_PATH, _T("r")); //ファイルを開く.
+		data.bestScore = file.ReadInt();    //数字を読み込んで登録.
 	}
 
 	Reset();
@@ -168,7 +172,7 @@ void GameManager::Reset() {
 	data.isSlow = FALSE;
 	data.counter = 0;
 	data.spawnRate = 1.0; //最初は100%
-	data.level = 1; //最初はLv1
+	data.level = 0;       //最初はLv0
 	isFinTitleAnim = FALSE;
 	isFinScoreAnim = FALSE;
 	//サウンド.
@@ -193,7 +197,7 @@ void GameManager::Reset() {
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
-		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, TRUE);
+		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+185 }, TRUE);
 	}
 }
 
@@ -208,9 +212,10 @@ void GameManager::Update() {
 	switch (data.scene) 
 	{
 		case SCENE_TITLE: UpdateTitle(); break;
-		case SCENE_READY: UpdateReady();  break;
+		case SCENE_READY: UpdateReady(); break;
 		case SCENE_GAME:  UpdateGame();  break;
 		case SCENE_END:   UpdateEnd();   break;
+		case SCENE_PAUSE: UpdatePause(); break;
 	
 		default: assert(FALSE); break;
 	}
@@ -228,6 +233,7 @@ void GameManager::Draw() {
 		case SCENE_READY: DrawReady(); break;
 		case SCENE_GAME:  DrawGame();  break;
 		case SCENE_END:   DrawEnd();   break;
+		case SCENE_PAUSE: DrawPause(); break;
 
 		default: assert(FALSE); break;
 	}
@@ -262,8 +268,10 @@ void GameManager::UpdateReady() {
 	
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
+
 		tmScene[SCENE_GAME].Start(); //ゲーム開始.
 		data.scene = SCENE_GAME;     //ゲームシーンへ.
+		data.level = 1;              //Lv1にする.
 
 		//サウンド.
 		SoundST* sound = SoundST::GetPtr();
@@ -280,7 +288,7 @@ void GameManager::UpdateGame() {
 	//カウンター増加.
 	data.counter += ((data.isSlow) ? SLOW_MODE_SPEED : 1);
 	//出現間隔.
-	data.spawnRate = 1.0/(1 + (data.counter/8000)); //100%から少しずつ減少.
+	data.spawnRate = 1.0f/(1 + (data.counter/8000)); //100%から少しずつ減少.
 	//レベル管理.
 	switch (data.level) 
 	{
@@ -336,21 +344,52 @@ void GameManager::UpdateGame() {
 
 	//スローモード.
 	if (tmSlowMode.GetIsMove()) {
+		//3秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 3){
+			if (!isItemCount[2]) {
+				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
+				isItemCount[2] = TRUE;
+			}
+		}
+		//2秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 2) {
+			if (!isItemCount[1]) {
+				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
+				isItemCount[1] = TRUE;
+			}
+		}
+		//1秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 1) {
+			if (!isItemCount[0]) {
+				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
+				isItemCount[0] = TRUE;
+			}
+		}
 		//時間切れで解除.
-		if (tmSlowMode.GetPassTime() == 0) {
+		if (tmSlowMode.GetPassTime() <= 0) {
 			
 			player.SetReflectionMode(FALSE); //反射モード終了.
-			p_sound->Play(_T("PowerDown"), FALSE, 78); //サウンド.
+			p_sound->Play(_T("PowerDown"), FALSE, 78); //再生.
 			
 			//リセット.
 			tmSlowMode.Reset();
 			data.isSlow = FALSE;
+			for (int i = 0; i < _countof(isItemCount); i++) {
+				isItemCount[i] = FALSE;
+			}
 		}
 	}
 
 	UpdateObjects();    //オブジェクト.
 	player.Update();    //プレイヤー.
 	effectMng.Update(); //エフェクト.
+	
+	//ポーズする.
+	if(p_input->IsPushKeyTime(KEY_P) == 1){
+		data.scene = SCENE_PAUSE;
+		tmScene[SCENE_GAME].Stop(); //一時停止.
+		tmSlowMode.Stop();          //一時停止.
+	}
 }
 void GameManager::UpdateEnd() {
 
@@ -363,6 +402,20 @@ void GameManager::UpdateEnd() {
 		Reset();
 	}
 }
+void GameManager::UpdatePause() {
+
+	//ポーズ解除.
+	if (p_input->IsPushKeyTime(KEY_P) == 1) {
+
+		data.scene = SCENE_GAME;
+		tmScene[SCENE_GAME].Start(); //再開.
+		//スローモード中だったなら.
+		if (tmSlowMode.GetPassTime() < SLOW_MODE_TIME) {
+			tmSlowMode.Start(); //再開.
+		}
+	}
+}
+
 //オブジェクトの更新.
 void GameManager::UpdateObjects() {
 
@@ -396,41 +449,40 @@ void GameManager::DrawTitle() {
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
-	const float delay2 = 1.4;
+	const float delay2 = 1.6f;
 	const float delay3 = 3;
 	const float delay4 = 3;
+
+	const int logoY = WINDOW_HEI/2 - 70;
 
 	//画像の表示.
 	{	
 		//切り替え前.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
-			float anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
+			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//画像設定.
-			IMG_DRAW_EXTEND img = { 
-				data.imgLogo[0],
-				{WINDOW_WID/2, WINDOW_HEI/2 - 50}, 
-				{data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2}
-			};
+			DrawImgExtend draw;
+			draw.img  = data.imgLogo[0];
+			draw.pos  = {WINDOW_WID/2, logoY};
+			draw.size = {data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2};
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
-			DrawExtendGraphST(&img, TRUE);
+			DrawExtendGraphST(&draw, TRUE);
 		}
 		//切り替え後.
 		else {
 			//アニメーション値.
-			float anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
+			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
 			//画像設定.
-			IMG_DRAW_EXTEND img1 = { 
-				data.imgLogo[0],
-				{WINDOW_WID/2, WINDOW_HEI/2 - 50 - anim*100}, 
-				{data.imgLogo[0].size.x/2, data.imgLogo[0].size.y/2}
-			};
-			IMG_DRAW_EXTEND img2 = {
-				data.imgLogo[1],
-				{WINDOW_WID/2, WINDOW_HEI/2 - 50 - anim*100},
-				{data.imgLogo[1].size.x/2, data.imgLogo[1].size.y/2}
-			};
+			DrawImgExtend img1; 
+			img1.img  = data.imgLogo[0];
+			img1.pos  = {WINDOW_WID/2, _int(logoY - anim*100)};
+			img1.size = data.imgLogo[0].size/2;
+			DrawImgExtend img2;
+			img2.img  = data.imgLogo[1];
+			img2.pos  = {WINDOW_WID/2, _int(logoY - anim*100)};
+			img2.size = data.imgLogo[1].size/2;
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
 			DrawExtendGraphST(&img2, TRUE);
@@ -446,10 +498,10 @@ void GameManager::DrawTitle() {
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
 
 		//アニメーション値.
-		float anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
+		double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
 		//テキスト.
-		STR_DRAW str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+100}, COLOR_BEST_SCORE };
-		swprintf(str.text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
+		DrawStr str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+85}, COLOR_BEST_SCORE };
+		_stprintf(str.text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font2);
@@ -458,14 +510,14 @@ void GameManager::DrawTitle() {
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay3) {
 		//アニメーション値.
-		float anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
+		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
 		//テキスト.
-		STR_DRAW str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+300}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+297}, 18, 0xFFFFFF };
+		DrawStr str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-3}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE);            //Xボタンの円.
+		DrawCircleST(&cir, FALSE, FALSE);     //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
@@ -479,15 +531,15 @@ void GameManager::DrawTitle() {
 			//エフェクトをいくつか出す.
 			for (int i = 0; i < 8; i++) {
 
-				double newDig = dig + (float)RndNum(-400, 400)/10; //少し角度をずらす.
+				double newDig = dig + (float)RandNum(-400, 400)/10; //少し角度をずらす.
 
 				EffectData data{}; 
 				data.type  = Effect_BreakMeteo;
 				data.pos   = { 600, 350 };
-				data.vec   = CalcDigToPos(newDig);            //ずらした角度を反映.
-				data.speed = ((float)RndNum(5, 40)  /10)*1.4; //速度抽選.
-				data.len   = ((float)RndNum(30, 180)/10)*1.4; //長さ抽選.
-				data.ang   = (float)RndNum(0, 3599)/10;       //角度抽選.
+				data.vec   = CalcDigToPos(newDig);              //ずらした角度を反映.
+				data.speed = ((float)RandNum(5, 40)  /10)*1.4f; //速度抽選.
+				data.len   = ((float)RandNum(30, 180)/10)*1.4f; //長さ抽選.
+				data.ang   =  (float)RandNum(0, 3599)/10;       //角度抽選.
 				//エフェクト召喚.
 				effectMng.SpawnEffect(&data);
 			}
@@ -527,14 +579,14 @@ void GameManager::DrawEnd() {
 	//終了案内.
 	{
 		//アニメーション値.
-		float anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
+		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
 		//テキストの設定.
-		STR_DRAW str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, 400+30*anim}, 0xA0A0A0 };
-		STR_DRAW str2 = { _T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2+10}, 0xFFFFFF };
-		STR_DRAW str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+50}, 0xFFFFFF };
+		DrawStr str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, _int(370+30*anim)}, 0xA0A0A0 };
+		DrawStr str2 = { _T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF };
+		DrawStr str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF };
 		//スコア表示.
-		swprintf(
+		_stprintf(
 			str3.text, 
 			_T("%d + %d(%.3f秒) = %d点"),
 			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
@@ -547,8 +599,8 @@ void GameManager::DrawEnd() {
 		ResetDrawBlendMode();
 	}
 
-	const float delay1 = 1.2;
-	const float delay2 = 1.5;
+	const float delay1 = 1.2f;
+	const float delay2 = 1.5f;
 
 	//一定時間が経ったら.
 	if (tmScene[SCENE_END].GetPassTime() > delay1) {
@@ -556,9 +608,10 @@ void GameManager::DrawEnd() {
 		if (data.score > data.bestScore) {
 
 			//アニメーション値.
-			float anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
+			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			STR_DRAW str = { _T("NEW RECORD!"), {WINDOW_WID/2, WINDOW_HEI/2-350+anim*20}, 0xEFFFA0 };
+//			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-400+anim*20)}, 0xEFFFA0 };
+			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-400+anim*20)}, COLOR_SCORE };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
 			DrawStringST(&str, TRUE, data.font2);
@@ -574,16 +627,24 @@ void GameManager::DrawEnd() {
 	if (tmScene[SCENE_END].GetPassTime() > delay2) {
 		
 		//アニメーション値.
-		float anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
+		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
-		STR_DRAW str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+200}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+198}, 18, 0xFFFFFF };
+		DrawStr str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+143}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE);            //Aボタンの円.
+		DrawCircleST(&cir, FALSE, FALSE);      //Aボタンの円.
 		ResetDrawBlendMode();
 	}
+}
+void GameManager::DrawPause() {
+
+	DrawObjects();     //オブジェクト.
+	player.Draw();     //プレイヤー.
+	effectMng.Draw();  //エフェクト.
+	DrawUI();
+	DrawReflectMode(); //反射モード演出.
 }
 
 //背景の描画.
@@ -594,12 +655,12 @@ void GameManager::DrawBG() {
 
 		int clr = _int(20 * fabs(sin((double)x / 200))); //色の変化.
 		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
-		DrawLineST(&line, 5);
+		DrawLineST(&line, FALSE, 5);
 	}
 	//背景(スローモード).
 	if (data.isSlow) {
 		//最初の0.5秒
-		float time = 0.5f-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5f));
+		double time = 0.5-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5));
 		time = CalcNumEaseOut(time); //値の曲線変動.
 		//背景色.
 		{
@@ -611,51 +672,63 @@ void GameManager::DrawBG() {
 		//枠線.
 		{
 			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-			DrawBoxST(&box, TRUE, FALSE);
+			DrawBoxST(&box, TRUE, FALSE, TRUE);
 		}
 	}
 }
 //UIの描画.
 void GameManager::DrawUI() {
 
-	//ゲーム時間.
-	DrawFormatStringToHandle(
-		10, 10, 0xFFFFFF, data.font2, _T("Time:%.3f"), tmScene[SCENE_GAME].GetPassTime()
-	);
-	//レベル.
+#if false
+	//レベル(debug)
 	DrawFormatStringToHandle(
 		10, WINDOW_HEI-75, 0xFFFFFF, data.font2, _T("Level: %d"), data.level
 	);
-	//出現間隔割合.
+	//出現間隔割合(debug)
 	DrawFormatStringToHandle(
 		10, WINDOW_HEI-40, 0xFFFFFF, data.font2, _T("Spawn: %.2f%%"), data.spawnRate*100
 	);
+#endif
 
 	//ハイスコア表示.
 	{
 		//アニメーション値.
-		float anim1    = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
-		float anim2    = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
-		float animSin1 = sin(M_PI*tmScene[SCENE_READY].GetPassTime());
-		float animSin2 = sin(M_PI*tmScene[SCENE_READY].GetPassTime()-1);
+		double alpha1   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime());
+		double alpha2   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.1);
+		double alpha3   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.2);
+		double alpha4   = CalcNumEaseInOut(tmScene[SCENE_READY].GetPassTime()-0.3);
+		double animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime());
+		double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.1));
+		double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 
 		//テキスト設定.
-		STR_DRAW str1 = { {}, {WINDOW_WID/2, 0+100}, COLOR_BEST_SCORE };
-		STR_DRAW str2 = { {}, {WINDOW_WID/2, 0+150}, COLOR_SCORE };
-		swprintf(str1.text, _T("BEST SCORE: %d"), data.bestScore);
-		swprintf(str2.text, _T("SCORE: %d"),      data.score);
+		DrawStr str1 = { {}, {WINDOW_WID/2,      70}, 0xFFFFFF };
+		DrawStr str2 = { {}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE };
+		DrawStr str3 = { {}, {WINDOW_WID/2,     150}, COLOR_SCORE };
+		DrawStr str4 = { {}, {WINDOW_WID/2+380, 150}, COLOR_TIME };
+		_stprintf(str1.text, _T("LEVEL:%d"),        data.level);
+		_stprintf(str2.text, _T("BEST SCORE:%05d"), data.bestScore);
+		_stprintf(str3.text, _T("SCORE:%05d"),      data.score);
+		_stprintf(str4.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
 		//テキスト(main)
-		SetDrawBlendModeST(MODE_ALPHA, 255 * anim1);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 		DrawStringST(&str1, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 255 * anim2);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 		DrawStringST(&str2, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
+		DrawStringST(&str3, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
+		DrawStringST(&str4, TRUE, data.font3);
 		//テキスト(光沢用)
 		str1.color = 0xFFFFFF;
 		str2.color = 0xFFFFFF;
-		SetDrawBlendModeST(MODE_ALPHA, 128 * animSin1);
+		str3.color = 0xFFFFFF;
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
 		DrawStringST(&str1, TRUE, data.font3);
-		SetDrawBlendModeST(MODE_ALPHA, 128 * animSin2);
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
 		DrawStringST(&str2, TRUE, data.font3);
+		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
+		DrawStringST(&str3, TRUE, data.font3);
 		//描画モードリセット.
 		ResetDrawBlendMode();
 	}
@@ -691,19 +764,23 @@ void GameManager::DrawReflectMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
-		STR_DRAW str1 = { _T("反射モード"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-		STR_DRAW str2 = { {},               {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-		swprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+		DrawStr str1 = { _T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+		DrawStr str2 = { {},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
+
+//		sprintf  (str2.text,    "%d",  (int)ceil(tmSlowMode.GetPassTime())); //char  型に変数を代入.
+//		swprintf (str2.text,   L"%d",  (int)ceil(tmSlowMode.GetPassTime())); //wchar_t型に変数を代入.
+		_stprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR  型に変数を代入.
 
 		//画面中央に数字を表示.
 		{
 			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
-			//テキスト切り替え.
+			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
 				DrawStringST(&str1, TRUE, data.font3); //反射モード.
 			}
-			else {
+			//最後の3秒.
+			if (tmSlowMode.GetPassTime() <= 3) {
 				DrawStringST(&str2, TRUE, data.font3); //数字.
 			}
 			ResetDrawBlendMode();
@@ -721,20 +798,19 @@ void GameManager::GameEnd() {
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
 
+	for (int i = 0; i < _countof(isItemCount); i++) {
+		isItemCount[i] = FALSE;
+	}
+
 	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
 	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
 	//最高スコア更新なら保存.
 	if (data.score > data.bestScore) {
 
-		FILE* fp = fopen(FILE_DATA_PATH, "w");
-		assert(fp != NULL); //読み込みエラー.
-
-		char str[256];
-		_itoa(data.score, str, 10); //scoreをchar型に変換(10進数)
-		fputs(str, fp);             //ファイルに文字書き込み.
-
-		fclose(fp);
+		FileST file;
+		file.Open(FILE_DATA_PATH, _T("w")); //ファイルを開く.
+		file.WriteInt(data.score);          //スコアを保存.
 	}
 
 	//サウンド.

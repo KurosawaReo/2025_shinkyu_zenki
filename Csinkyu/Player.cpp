@@ -80,7 +80,7 @@ void Player::Draw()
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
-//		DrawReflectEffects();  // エフェクトを先に描画
+		DrawReflectEffects();  // エフェクトを先に描画
 
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
@@ -96,8 +96,8 @@ void Player::Draw()
 			box1.clr = box2.clr = COLOR_PLY_DEBUG;
 		}
 
-		DrawBoxST(&box1, TRUE, FALSE);
-		DrawBoxST(&box2, TRUE, FALSE);
+		DrawBoxST(&box1, TRUE, FALSE, TRUE);
+		DrawBoxST(&box2, TRUE, FALSE, TRUE);
 	}
 }
 
@@ -142,7 +142,7 @@ void Player::DrawAfterImage()
 			box.clr = COLOR_PLY_AFT_NOR;
 		}
 
-		DrawBoxST(&box, TRUE, FALSE);
+		DrawBoxST(&box, TRUE, FALSE, TRUE);
 	}
 
 	//描画モードリセット.
@@ -248,7 +248,7 @@ void Player::DrawReflectEffects()
 					// 四角い枠線で波紋を描画（太い線）
 					Box waveBox = {
 						effect->pos,
-						{ waveSize, waveSize },
+						{ (double)waveSize, (double)waveSize },
 						waveColor
 					};
 
@@ -256,10 +256,10 @@ void Player::DrawReflectEffects()
 					for (int thickness = 0; thickness < 2; thickness++) {
 						Box thickBox = {
 							{ effect->pos.x - thickness, effect->pos.y - thickness },
-							{ waveSize + thickness * 2, waveSize + thickness * 2 },
+							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxST(&thickBox, FALSE, FALSE);
+						DrawBoxST(&thickBox, TRUE, FALSE, TRUE);
 					}
 				}
 			}
@@ -274,10 +274,10 @@ void Player::DrawReflectEffects()
 
 			Box centerBox = {
 				effect->pos,
-				{ centerSize, centerSize },
+				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
-			DrawBoxST(&centerBox, TRUE, FALSE);
+			DrawBoxST(&centerBox, TRUE, FALSE, TRUE);
 
 			// 描画モードリセット
 			ResetDrawBlendMode();
