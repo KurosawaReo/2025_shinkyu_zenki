@@ -23,6 +23,9 @@ private: //データ.
 	};
 	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
 
+	DrawImage imgLogo[2]; //タイトルロゴ画像.
+	DrawImage imgUI;      //UI画像.
+
 	BOOL isFinTitleAnim{}; //タイトルアニメーション用.
 	BOOL isFinScoreAnim{}; //最高スコアアニメーション用.
 	BOOL isItemCount[3]{}; //アイテムカウントダウンの音を鳴らしたか.

@@ -25,26 +25,13 @@ enum BlendModeID
 	MODE_MUL   = DX_BLENDMODE_MUL      //乗算ブレンド.
 };
 
-//画像描画に使う用.
-struct DrawImg
+//画像データ.
+struct Image
 {
-	Image  img;      //画像データ.
-	INT_XY pos;      //画面のどこに描画するか.
+	int    handle; //ハンドル.
+	INT_XY size;   //画像のサイズ.
 };
-struct DrawImgRect : public DrawImg
-{
-	INT_XY stPxl;    //始点pixel.
-	INT_XY size;     //切り取るサイズ.
-};
-struct DrawImgExtend : public DrawImg
-{
-	DBL_XY sizeRate; //描画するサイズ率.
-};
-struct DrawImgRota : public DrawImg
-{
-	double extend;   //サイズ倍率.
-	double ang;      //角度.
-};
+
 //文字描画に使う用.
 struct DrawStr
 {
@@ -66,20 +53,29 @@ struct DrawStrModi : public DrawStr
 	INT_XY ldPos;            //テキストの左下座標.
 };
 
+//画像管理クラス.
+class DrawImage
+{
+private:
+	vector<Image> image; //画像データ.
+
+public:
+	//画像読み込み.
+	int LoadGraphST   (my_string fileName);
+	int LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt);
+	//画像描画.
+	int DrawGraphST      (int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans = TRUE);
+	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPxl, INT_XY size, BOOL isTrans = TRUE);
+	int DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans = TRUE);
+	int DrawRotaGraphST  (int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans = TRUE);
+};
+
 //図形.
 int    DrawCircleST		 (const Circle*   data, BOOL isFill = TRUE, BOOL isAnti = FALSE, float thick = 1);
 int    DrawBoxST		 (const Box*      data, BOOL isCenter, BOOL isFill = TRUE, BOOL isAnti = FALSE);
 int    DrawTriangleST	 (const Triangle* data, BOOL isFill = TRUE, BOOL isAnti = FALSE);
 int    DrawLineST		 (const Line*     data, BOOL isAnti = FALSE, float thick = 1.0f);
 int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
-
-//画像.
-int    LoadGraphST		 (Image* img, my_string fileName);
-int    LoadDivGraphST	 (vector<Image>* img, my_string fileName, INT_XY size, INT_XY cnt);
-int    DrawGraphST		 (const DrawImg*       data, BOOL isCenter, BOOL isTrans = TRUE);
-int    DrawRectGraphST	 (const DrawImgRect*   data, BOOL isTrans = TRUE);
-int    DrawExtendGraphST (const DrawImgExtend* data, BOOL isCenter, BOOL isTrans = TRUE);
-int    DrawRotaGraphST	 (const DrawImgRota*   data, BOOL isCenter, BOOL isTrans = TRUE);
 
 //テキスト.
 int    DrawStringST		 (const DrawStr*     data, BOOL isCenter,   int font = -1);
@@ -89,11 +85,6 @@ INT_XY GetTextSize		 (my_string str, int font = -1);
 
 //フォント.
 int    CreateFontH		 (int size, int thick, FontTypeID fontId = FONT_NONE);
-
-//オブジェクト.
-int    DrawObjectCir	 (const ObjectCir*  data, BOOL isDrawHit = FALSE);
-int    DrawObjectBox	 (const ObjectBox*  data, BOOL isDrawHit = FALSE);
-int    DrawObjectGrid	 (const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize);
 
 //描画モード.
 int    SetDrawBlendModeST(BlendModeID id, int    power = 255);

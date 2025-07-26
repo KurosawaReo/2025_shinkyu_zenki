@@ -31,6 +31,7 @@
     <ClCompile Include="myDrawST.cpp" />
     <ClCompile Include="myFileST.cpp" />
     <ClCompile Include="myInputST.cpp" />
+    <ClCompile Include="myObjectST.cpp" />
     <ClCompile Include="mySoundST.cpp" />
     <ClCompile Include="myTimerST.cpp" />
     <ClCompile Include="LaserManager.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="myDrawST.h" />
     <ClInclude Include="myFileST.h" />
     <ClInclude Include="myInputST.h" />
+    <ClInclude Include="myObjectST.h" />
     <ClInclude Include="mySoundST.h" />
     <ClInclude Include="myTimerST.h" />
     <ClInclude Include="LaserManager.h" />

@@ -158,13 +158,15 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 }
 
 //LoadGraphの改造版.
-int LoadGraphST(Image* img, my_string fileName) {
+int DrawImage::LoadGraphST(my_string fileName) {
+
+	image.resize(1); //サイズを設定.
 
 	//画像読み込み.
-	img->handle = LoadGraph(fileName.c_str());
-	int err = GetGraphSize(img->handle, &img->size.x, &img->size.y);
+	image[0].handle = LoadGraph(fileName.c_str());
+	int err = GetGraphSize(image[0].handle, &image[0].size.x, &image[0].size.y);
 	
-	if (img->handle < 0) {
+	if (image[0].handle < 0) {
 		return -1; //-1: LoadGraphエラー.
 	}
 	if (err < 0) {
@@ -173,10 +175,9 @@ int LoadGraphST(Image* img, my_string fileName) {
 	return 0; //正常終了.
 }
 //LoadDivGraphの改造版.
-int LoadDivGraphST(vector<Image>* img, my_string fileName, INT_XY size, INT_XY cnt) {
+int DrawImage::LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt) {
 
 	int* pHandle = new int[cnt.x*cnt.y]; //LoadDivGraphからハンドル取り出す用.
-	vector<Image> tmpImg;                //仮保存用.
 
 	//画像分割読み込み.
 	int err = LoadDivGraph(fileName.c_str(), cnt.x*cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
@@ -184,94 +185,89 @@ int LoadDivGraphST(vector<Image>* img, my_string fileName, INT_XY size, INT_XY c
 		return -1; //-1: LoadDivGraphエラー.
 	}
 	//IMG型配列のサイズを分割数に合わせる.
-	tmpImg.resize(cnt.x*cnt.y);
+	image.resize(cnt.x*cnt.y);
 	//分割数だけループ.
 	for (int i = 0; i < cnt.y; i++) {
 		for (int j = 0; j < cnt.x; j++) {
-			tmpImg[j+i*cnt.x].handle = pHandle[j+i*cnt.x]; //ハンドル保存.
-			tmpImg[j+i*cnt.x].size   = size;               //サイズ保存.
+			image[j+i*cnt.x].handle = pHandle[j+i*cnt.x]; //ハンドル保存.
+			image[j+i*cnt.x].size   = size;               //サイズ保存.
 		}
 	}
 
-	//引数のIMG型配列にデータを渡す.
-	*img = tmpImg;
 	//配列破棄.
 	delete[] pHandle; pHandle = nullptr;
 
 	return 0; //正常終了.
 }
-
 //DrawGraphの改造版.
-int DrawGraphST(const DrawImg* data, BOOL isCenter, BOOL isTrans) {
+int DrawImage::DrawGraphST(int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans) {
 
-	float x = (float)data->pos.x;
-	float y = (float)data->pos.y;
+	float x = (float)pos.x;
+	float y = (float)pos.y;
 
 	//中央座標モード.
 	if (isCenter) {
-		x -= (float)(data->img.size.x-1)/2;
-		y -= (float)(data->img.size.y-1)/2;
+		x -= (float)(image[imgNo].size.x-1)/2;
+		y -= (float)(image[imgNo].size.y-1)/2;
 	}
 
-	if (data->img.handle == 0) {
+	if (image[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawGraph(_int(x), _int(y), data->img.handle, isTrans);
+	int err = DrawGraph(_int(x), _int(y), image[imgNo].handle, isTrans);
 	return err; //-1: DrawGraphエラー.
 }
 //DrawRectGraphの改造版.
 //Rect = 矩形(正方形や長方形のこと)
-int DrawRectGraphST(const DrawImgRect* data, BOOL isTrans) {
+int DrawImage::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPxl, INT_XY size, BOOL isTrans) {
 
-	if (data->img.handle == 0) {
+	if (image[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
 	int err = DrawRectGraph(
-		data->pos.x,      data->pos.y,
-		data->stPxl.x,    data->stPxl.y,
-		data->size.x,     data->size.y,
-		data->img.handle, isTrans
+		pos.x, pos.y, stPxl.x, stPxl.y, size.x, size.y,
+		image[imgNo].handle, isTrans
 	);
 	return err; //-1: DrawRectGraphエラー.
 }
 //DrawExtendGraphの改造版.
-int DrawExtendGraphST(const DrawImgExtend* data, BOOL isCenter, BOOL isTrans) {
+int DrawImage::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans) {
 
 	float x1, y1, x2, y2;
 
 	//中央基準かどうか.
 	if (isCenter) {
-		x1 = (float)(data->pos.x - (float)(data->img.size.x-1)/2 * data->sizeRate.x);
-		y1 = (float)(data->pos.y - (float)(data->img.size.y-1)/2 * data->sizeRate.y);
-		x2 = (float)(data->pos.x + (float)(data->img.size.x-1)/2 * data->sizeRate.x);
-		y2 = (float)(data->pos.y + (float)(data->img.size.y-1)/2 * data->sizeRate.y);
+		x1 = (float)(pos.x - (float)(image[imgNo].size.x-1)/2 * sizeRate.x);
+		y1 = (float)(pos.y - (float)(image[imgNo].size.y-1)/2 * sizeRate.y);
+		x2 = (float)(pos.x + (float)(image[imgNo].size.x-1)/2 * sizeRate.x);
+		y2 = (float)(pos.y + (float)(image[imgNo].size.y-1)/2 * sizeRate.y);
 	}
 	else {
-		x1 = (float)data->pos.x;
-		y1 = (float)data->pos.y;
-		x2 = (float)(data->pos.x + (data->img.size.x-1) * data->sizeRate.x);
-		y2 = (float)(data->pos.y + (data->img.size.y-1) * data->sizeRate.y);
+		x1 = (float)pos.x;
+		y1 = (float)pos.y;
+		x2 = (float)(pos.x + (image[imgNo].size.x-1) * sizeRate.x);
+		y2 = (float)(pos.y + (image[imgNo].size.y-1) * sizeRate.y);
 	}
 
-	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data->img.handle, isTrans);
+	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), image[imgNo].handle, isTrans);
 	return err; //-1: DrawExtendGraphエラー.
 }
 //DrawRotaGraphの改造版.
-int DrawRotaGraphST(const DrawImgRota* data, BOOL isCenter, BOOL isTrans) {
+int DrawImage::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans) {
 
-	float x = (float)data->pos.x;
-	float y = (float)data->pos.y;
+	float x = (float)pos.x;
+	float y = (float)pos.y;
 
 	//中央座標モード.
 	if (isCenter) {
-		x -= (float)(data->img.size.x-1)/2;
-		y -= (float)(data->img.size.y-1)/2;
+		x -= (float)(image[imgNo].size.x-1)/2;
+		y -= (float)(image[imgNo].size.y-1)/2;
 	}
 
-	if (data->img.handle == 0) {
+	if (image[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawRotaGraph(_int(x), _int(y), data->extend, data->ang, data->img.handle, isTrans);
+	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, image[imgNo].handle, isTrans);
 	return err; //-1: DrawRotaGraphエラー.
 }
 
@@ -390,60 +386,6 @@ INT_XY GetTextSize(my_string str, int font) {
 //フォント作成.
 int CreateFontH(int size, int thick, FontTypeID fontId) {
 	return CreateFontToHandle(NULL, size, thick, fontId);
-}
-
-//オブジェクト(ObjectCir型)の描画.
-int DrawObjectCir(const ObjectCir* data, BOOL isDrawHit) {
-
-	//画像設定.
-	DrawImg draw = { data->img, {} };
-	draw.pos.x = _int(data->cir.pos.x + data->offset.x);
-	draw.pos.y = _int(data->cir.pos.y + data->offset.y);
-	//画像描画.
-	int err = DrawGraphST(&draw, TRUE);
-	if (err < 0) {
-		return -1; //-1: DrawGraphSTでエラー.
-	}
-	//当たり判定表示.
-	if (isDrawHit) {
-		int err = DrawCircleST(&data->cir, FALSE, TRUE);
-		if (err < 0) {
-			return -2; //-2: DrawCircleSTでエラー.
-		}
-	}
-	return 0; //正常終了.
-}
-//オブジェクト(ObjectBox型)の描画.
-int DrawObjectBox(const ObjectBox* data, BOOL isDrawHit) {
-
-	//画像設定.
-	DrawImg draw = { data->img, {} };
-	draw.pos.x = _int(data->box.pos.x + data->offset.x);
-	draw.pos.y = _int(data->box.pos.y + data->offset.y);
-	//画像描画.
-	int err = DrawGraphST(&draw, TRUE);
-	if (err < 0) {
-		return -1; //-1: DrawGraphSTでエラー.
-	}
-	//当たり判定表示.
-	if (isDrawHit) {
-		int err = DrawBoxST(&data->box, TRUE, FALSE, TRUE);
-		if (err < 0) {
-			return -2; //-2: DrawBoxSTでエラー.
-		}
-	}
-	return 0; //正常終了.
-}
-//オブジェクト(ObjectGrid型)の描画.
-int DrawObjectGrid(const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize) {
-
-	//画像設定.
-	DrawImg draw = { data->img, {} };
-	draw.pos.x = gridPos.x + data->pos.x * gridSize.x;
-	draw.pos.y = gridPos.y + data->pos.y * gridSize.y;
-	//画像描画.
-	int err = DrawGraphST(&draw, FALSE);
-	return err; //-1: DrawGraphSTでエラー.
 }
 
 //描画モード変更.

@@ -112,9 +112,9 @@ void GameManager::Init() {
 	data.font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
 	data.font3 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
-	LoadGraphST(&data.imgLogo[0], _T("Resources/Images/REFLINEロゴ_一部.png"));
-	LoadGraphST(&data.imgLogo[1], _T("Resources/Images/REFLINEロゴ.png"));
-	LoadGraphST(&data.imgUI,      _T("Resources/Images/testUI.png"));
+	imgLogo[0].LoadGraphST(_T("Resources/Images/REFLINEロゴ_一部.png"));
+	imgLogo[1].LoadGraphST(_T("Resources/Images/REFLINEロゴ.png"));
+	imgUI.     LoadGraphST(_T("Resources/Images/testUI.png"));
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));		//未使用(BGM候補)
@@ -462,34 +462,20 @@ void GameManager::DrawTitle() {
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
-			//画像設定.
-			DrawImgExtend draw;
-			draw.img      = data.imgLogo[0];
-			draw.pos      = {WINDOW_WID/2, logoY};
-			draw.sizeRate = {0.5, 0.5};
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
-			DrawExtendGraphST(&draw, TRUE);
+			imgLogo[0].DrawExtendGraphST(0, {WINDOW_WID/2, logoY}, {0.5, 0.5}, TRUE);
 		}
 		//切り替え後.
 		else {
 			//アニメーション値.
 			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
-			//画像設定.
-			DrawImgExtend img1; 
-			img1.img      = data.imgLogo[0];
-			img1.pos      = {WINDOW_WID/2, _int(logoY - anim*100)};
-			img1.sizeRate = {0.5, 0.5};
-			DrawImgExtend img2;
-			img2.img      = data.imgLogo[1];
-			img2.pos      = {WINDOW_WID/2, _int(logoY - anim*100)};
-			img2.sizeRate = {0.5, 0.5};
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
-			DrawExtendGraphST(&img2, TRUE);
+			imgLogo[1].DrawExtendGraphST(0, {WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
 			//ロゴ2枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * (1-anim));
-			DrawExtendGraphST(&img1, TRUE);
+			imgLogo[0].DrawExtendGraphST(0, {WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -704,18 +690,10 @@ void GameManager::DrawUI() {
 
 #if true
 		//test.
-		DrawImgExtend img;
-		img.img      = data.imgUI;
-		img.sizeRate = {0.6, 0.3};
-
-		img.pos = {WINDOW_WID/2, 70};
-		DrawExtendGraphST(&img, TRUE, TRUE);
-		img.pos = {WINDOW_WID/2-380, 150};
-		DrawExtendGraphST(&img, TRUE, TRUE);
-		img.pos = {WINDOW_WID/2, 150};
-		DrawExtendGraphST(&img, TRUE, TRUE);
-		img.pos = {WINDOW_WID/2+380, 150};
-		DrawExtendGraphST(&img, TRUE, TRUE);
+		imgUI.DrawExtendGraphST(0, {WINDOW_WID/2,      70}, {0.6, 0.3}, TRUE, TRUE);
+		imgUI.DrawExtendGraphST(0, {WINDOW_WID/2-380, 150}, {0.6, 0.3}, TRUE, TRUE);
+		imgUI.DrawExtendGraphST(0, {WINDOW_WID/2,     150}, {0.6, 0.3}, TRUE, TRUE);
+		imgUI.DrawExtendGraphST(0, {WINDOW_WID/2+380, 150}, {0.6, 0.3}, TRUE, TRUE);
 		DrawCircle(WINDOW_WID / 2, 150, 10, 0xFF0000);
 #endif
 
