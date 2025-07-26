@@ -118,14 +118,14 @@ void EffectManager::Draw() {
 				case Effect_Score100:
 				{
 					//テキスト設定.
-					DrawStr str = { _T("+100"), {}, COLOR_SCORE };
-					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
+					DrawStrST str = { _T("+100"), {}, COLOR_SCORE };
+					str.SetPos(_int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30));
 					//アニメーション値.
 					int pow = _int(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE, p_data->font1);
+					str.DrawStringST(TRUE, p_data->font1);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -133,14 +133,14 @@ void EffectManager::Draw() {
 				case Effect_Score500:
 				{
 					//テキスト設定.
-					DrawStr str = { _T("+500"), {}, COLOR_SCORE };
-					str.pos = { _int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
+					DrawStrST str = { _T("+500"), {}, COLOR_SCORE };
+					str.SetPos(_int(effect[i].pos.x), _int(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30));
 					//アニメーション値.
 					int pow = _int(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE, p_data->font1);
+					str.DrawStringST(TRUE, p_data->font1);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -190,9 +190,9 @@ void EffectManager::Draw() {
 
 				case Effect_Level1:
 				{
-					DrawStr str = { _T("Level 1"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF};
-					Circle  cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle  cirLevel[4] = {
+					DrawStrST str = { _T("Level 1"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF};
+					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle cirLevel[4] = {
 						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
@@ -203,7 +203,7 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE, p_data->font2);
+					str.DrawStringST(TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE, TRUE);
 					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //●
 					DrawCircleST(&cirLevel[1], FALSE, TRUE); //○
@@ -215,9 +215,9 @@ void EffectManager::Draw() {
 
 				case Effect_Level2:
 				{
-					DrawStr str = { _T("Level 2"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
-					Circle  cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle  cirLevel[4] = {
+					DrawStrST str = { _T("Level 2"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
+					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle cirLevel[4] = {
 						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
@@ -228,7 +228,7 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE, p_data->font2);
+					str.DrawStringST(TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE, TRUE);
 					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //●
 					DrawCircleST(&cirLevel[1], TRUE,  TRUE); //●
@@ -240,9 +240,9 @@ void EffectManager::Draw() {
 
 				case Effect_Level3:
 				{
-					DrawStr str = { _T("Level 3"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
-					Circle  cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle  cirLevel[4] = {
+					DrawStrST str = { _T("Level 3"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
+					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle cirLevel[4] = {
 						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
@@ -253,7 +253,7 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE, p_data->font2);
+					str.DrawStringST(TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE, TRUE);
 					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //●
 					DrawCircleST(&cirLevel[1], TRUE,  TRUE); //●
@@ -265,9 +265,9 @@ void EffectManager::Draw() {
 
 				case Effect_Level4:
 				{
-					DrawStr str = { _T("Level 4"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
-					Circle  cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle  cirLevel[4] = {
+					DrawStrST str = { _T("Level 4"), {_int(effect[i].pos.x), _int(effect[i].pos.y-20)}, 0xFFFFFF };
+					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle cirLevel[4] = {
 						{{effect[i].pos.x-45, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x-15, effect[i].pos.y+20}, 10, 0xFFFFFF},
 						{{effect[i].pos.x+15, effect[i].pos.y+20}, 10, 0xFFFFFF},
@@ -278,7 +278,7 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawStringST(&str, TRUE, p_data->font2);
+					str.DrawStringST(TRUE, p_data->font2);
 					DrawCircleST(&cir, FALSE, TRUE);
 					DrawCircleST(&cirLevel[0], TRUE, TRUE); //●
 					DrawCircleST(&cirLevel[1], TRUE, TRUE); //●

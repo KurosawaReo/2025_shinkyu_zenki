@@ -40,3 +40,4 @@
 #include "myTimerST.h"
 #include "mySoundST.h"
 #include "myFileST.h"
+#include "myObjectST.h"

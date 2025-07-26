@@ -122,7 +122,7 @@ enum MoveDir
 	MOVE_UP
 };
 // - ゲームデータ -
-class DrawImage; //前方宣言.
+class DrawImageST; //前方宣言.
 
 struct GameData
 {

@@ -487,11 +487,11 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
 		//テキスト.
-		DrawStr str = { {}, {WINDOW_WID/2, WINDOW_HEI/2+85}, COLOR_BEST_SCORE };
-		_stprintf(str.text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
+		DrawStrST str({}, {WINDOW_WID/2, WINDOW_HEI/2+85}, COLOR_BEST_SCORE);
+		_stprintf(str.GetTextPtr(), _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		DrawStringST(&str, TRUE, data.font2);
+		str.DrawStringST(TRUE, data.font2);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -499,12 +499,12 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
 		//テキスト.
-		DrawStr str = { _T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-3}, 18, 0xFFFFFF };
+		DrawStrST str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE, FALSE);     //Xボタンの円.
+		str.DrawStringST(TRUE, data.font1); //テキスト.
+		DrawCircleST(&cir, FALSE, FALSE);   //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
@@ -569,20 +569,20 @@ void GameManager::DrawEnd() {
 		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
 		//テキストの設定.
-		DrawStr str1 = { _T("- GAME OVER -"), {WINDOW_WID/2, _int(370+30*anim)}, 0xA0A0A0 };
-		DrawStr str2 = { _T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF };
-		DrawStr str3 = { {},                  {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF };
+		DrawStrST str1(_T("- GAME OVER -"), {WINDOW_WID/2, _int(370+30*anim)}, 0xA0A0A0);
+		DrawStrST str2(_T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2-20},   0xFFFFFF);
+		DrawStrST str3({},                  {WINDOW_WID/2, WINDOW_HEI/2+20},   0xFFFFFF);
 		//スコア表示.
 		_stprintf(
-			str3.text, 
+			str3.GetTextPtr(),
 			_T("%d + %d(%.3f秒) = %d点"),
 			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
 		);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		DrawStringST(&str1, TRUE, data.font3);
-		DrawStringST(&str2, TRUE, data.font1);
-		DrawStringST(&str3, TRUE, data.font1);
+		str1.DrawStringST(TRUE, data.font3);
+		str2.DrawStringST(TRUE, data.font1);
+		str3.DrawStringST(TRUE, data.font1);
 		ResetDrawBlendMode();
 	}
 
@@ -597,11 +597,10 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-350+anim*20)}, 0xEFFFA0 };
-//			DrawStr str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-350+anim*20)}, COLOR_SCORE };
+			DrawStrST str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-350+anim*20)}, 0xEFFFA0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
-			DrawStringST(&str, TRUE, data.font2);
+			str.DrawStringST(TRUE, data.font2);
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isFinScoreAnim) {
@@ -616,12 +615,12 @@ void GameManager::DrawEnd() {
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
-		DrawStr str = { _T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF };
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+143}, 18, 0xFFFFFF };
+		DrawStrST str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
+		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE, FALSE);     //Aボタンの円.
+		str.DrawStringST(TRUE, data.font1); //テキスト.
+		DrawCircleST(&cir, FALSE, FALSE);   //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -640,7 +639,7 @@ void GameManager::DrawBG() {
 	//背景デザイン.
 	for (int x = 0; x < WINDOW_WID; x += 5) {
 
-		int clr = _int(20 * fabs(sin((double)x / 200))); //色の変化.
+		int clr = _int(20 * fabs(sin((double)x/200))); //色の変化.
 		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
 		DrawLineST(&line, FALSE, 5);
 	}
@@ -698,33 +697,33 @@ void GameManager::DrawUI() {
 #endif
 
 		//テキスト設定.
-		DrawStr str1 = { {}, {WINDOW_WID/2,      70}, 0xFFFFFF };
-		DrawStr str2 = { {}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE };
-		DrawStr str3 = { {}, {WINDOW_WID/2,     150}, COLOR_SCORE };
-		DrawStr str4 = { {}, {WINDOW_WID/2+380, 150}, COLOR_TIME };
-		_stprintf(str1.text, _T("LEVEL:%d"),        data.level);
-		_stprintf(str2.text, _T("BEST SCORE:%05d"), data.bestScore);
-		_stprintf(str3.text, _T("SCORE:%05d"),      data.score);
-		_stprintf(str4.text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
+		DrawStrST str1({}, {WINDOW_WID/2,      70}, 0xFFFFFF);
+		DrawStrST str2({}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE);
+		DrawStrST str3({}, {WINDOW_WID/2,     150}, COLOR_SCORE);
+		DrawStrST str4({}, {WINDOW_WID/2+380, 150}, COLOR_TIME);
+		_stprintf(str1.GetTextPtr(), _T("LEVEL:%d"),        data.level);
+		_stprintf(str2.GetTextPtr(), _T("BEST SCORE:%05d"), data.bestScore);
+		_stprintf(str3.GetTextPtr(), _T("SCORE:%05d"),      data.score);
+		_stprintf(str4.GetTextPtr(), _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
 		//テキスト(main)
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
-		DrawStringST(&str1, TRUE, data.font3);
+		str1.DrawStringST(TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
-		DrawStringST(&str2, TRUE, data.font3);
+		str2.DrawStringST(TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
-		DrawStringST(&str3, TRUE, data.font3);
+		str3.DrawStringST(TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
-		DrawStringST(&str4, TRUE, data.font3);
+		str4.DrawStringST(TRUE, data.font3);
 		//テキスト(光沢用)
-		str2.color = 0xFFFFFF;
-		str3.color = 0xFFFFFF;
-		str4.color = 0xFFFFFF;
+		str2.SetColor(0xFFFFFF);
+		str3.SetColor(0xFFFFFF);
+		str4.SetColor(0xFFFFFF);
 		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
-		DrawStringST(&str2, TRUE, data.font3);
+		str2.DrawStringST(TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
-		DrawStringST(&str3, TRUE, data.font3);
+		str3.DrawStringST(TRUE, data.font3);
 		SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
-		DrawStringST(&str4, TRUE, data.font3);
+		str4.DrawStringST(TRUE, data.font3);
 		//描画モードリセット.
 		ResetDrawBlendMode();
 	}
@@ -760,12 +759,9 @@ void GameManager::DrawReflectMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
-		DrawStr str1 = { _T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-		DrawStr str2 = { {},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM };
-
-//		sprintf  (str2.text,    "%d",  (int)ceil(tmSlowMode.GetPassTime())); //char  型に変数を代入.
-//		swprintf (str2.text,   L"%d",  (int)ceil(tmSlowMode.GetPassTime())); //wchar_t型に変数を代入.
-		_stprintf(str2.text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR  型に変数を代入.
+		DrawStrST str1(_T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
+		DrawStrST str2({},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
+		_stprintf(str2.GetTextPtr(), _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 
 		//画面中央に数字を表示.
 		{
@@ -773,11 +769,11 @@ void GameManager::DrawReflectMode() {
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
-				DrawStringST(&str1, TRUE, data.font3); //反射モード.
+				str1.DrawStringST(TRUE, data.font3); //反射モード.
 			}
 			//最後の3秒.
 			if (tmSlowMode.GetPassTime() <= 3) {
-				DrawStringST(&str2, TRUE, data.font3); //数字.
+				str2.DrawStringST(TRUE, data.font3); //数字.
 			}
 			ResetDrawBlendMode();
 		}

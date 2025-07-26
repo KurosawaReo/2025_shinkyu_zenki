@@ -10,7 +10,7 @@
 class Object
 {
 protected:
-	DrawImage img{};      //‰æ‘œ.
+	DrawImgST img{};      //‰æ‘œ.
 	DBL_XY    offset{};   //‰æ‘œ‚ð‚¸‚ç‚·—Ê.
 	BOOL      isActive{}; //—LŒø‚©‚Ç‚¤‚©.
 

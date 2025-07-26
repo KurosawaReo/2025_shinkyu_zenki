@@ -31,43 +31,58 @@ struct Image
 	int    handle; //ハンドル.
 	INT_XY size;   //画像のサイズ.
 };
-
-//文字描画に使う用.
-struct DrawStr
+//文字列データ.
+struct String
 {
-	TCHAR  text[256]{};      //テキスト.
-	INT_XY pos;              //画面のどこに描画するか.
-	UINT   color = 0xFFFFFF; //文字の色.
-};
-struct DrawStrRota : public DrawStr
-{
-	INT_XY extend = {1, 1};  //伸縮倍率.
-	INT_XY pivot  = {0, 0};  //回転基準点.
-	double ang    = 0;       //回転度.
-};
-struct DrawStrModi : public DrawStr
-{
-	INT_XY luPos;            //テキストの左上座標.
-	INT_XY ruPos;            //テキストの右上座標.
-	INT_XY rdPos;            //テキストの右下座標.
-	INT_XY ldPos;            //テキストの左下座標.
+	my_string text; //テキスト.
+	INT_XY    pos;  //画面のどこに描画するか.
+	UINT      clr;  //文字の色.
 };
 
-//画像管理クラス.
-class DrawImage
+//画像描画クラス.
+class DrawImgST
 {
 private:
-	vector<Image> image; //画像データ.
+	vector<Image> img; //画像データ.
 
 public:
-	//画像読み込み.
+	//読み込み.
 	int LoadGraphST   (my_string fileName);
 	int LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt);
-	//画像描画.
+	//描画.
 	int DrawGraphST      (int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans = TRUE);
 	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPxl, INT_XY size, BOOL isTrans = TRUE);
 	int DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans = TRUE);
 	int DrawRotaGraphST  (int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans = TRUE);
+};
+
+//テキスト描画クラス.
+class DrawStrST
+{
+private:
+	String str; //文字列データ.
+
+public:
+	//初期化用.
+	DrawStrST(my_string _str, INT_XY _pos, UINT _clr) :
+		str{_str, _pos, _clr}
+	{}
+	//get.
+	TCHAR* GetTextPtr() {
+		return (TCHAR*)str.text.c_str();
+	}
+	//set.
+	void SetPos(int _x, int _y) {
+		str.pos = {_x, _y};
+	}
+	void SetColor(UINT _color) {
+		str.clr = _color;
+	}
+	//描画.
+	int    DrawStringST	   (BOOL isCenter, int font = -1);
+	int    DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL isVertical, int font = -1);
+	int    DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, BOOL isVertical, int font = -1);
+	INT_XY GetTextSize 	   (my_string str, int font = -1);
 };
 
 //図形.
@@ -77,14 +92,8 @@ int    DrawTriangleST	 (const Triangle* data, BOOL isFill = TRUE, BOOL isAnti = 
 int    DrawLineST		 (const Line*     data, BOOL isAnti = FALSE, float thick = 1.0f);
 int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
-//テキスト.
-int    DrawStringST		 (const DrawStr*     data, BOOL isCenter,   int font = -1);
-int    DrawRotaStringST	 (const DrawStrRota* data, BOOL isVertical, int font = -1);
-int    DrawModiStringST	 (const DrawStrModi* data, BOOL isVertical, int font = -1);
-INT_XY GetTextSize		 (my_string str, int font = -1);
-
 //フォント.
-int    CreateFontH		 (int size, int thick, FontTypeID fontId = FONT_NONE);
+int    CreateFontH       (int size, int thick, FontTypeID fontId = FONT_NONE);
 
 //描画モード.
 int    SetDrawBlendModeST(BlendModeID id, int    power = 255);
