@@ -64,14 +64,13 @@ private:
 
 public:
 	//èâä˙âªóp.
-	DrawStrST(my_string _str, INT_XY _pos, UINT _clr) :
-		str{_str, _pos, _clr}
+	DrawStrST(my_string _text, INT_XY _pos, UINT _clr) :
+		str{_text, _pos, _clr}
 	{}
-	//get.
-	TCHAR* GetTextPtr() {
-		return (TCHAR*)str.text.c_str();
-	}
 	//set.
+	void SetText(my_string _text) {
+		str.text = _text;
+	}
 	void SetPos(int _x, int _y) {
 		str.pos = {_x, _y};
 	}

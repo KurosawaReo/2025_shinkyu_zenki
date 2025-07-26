@@ -87,9 +87,9 @@ int DrawTriangleST(const Triangle* data, BOOL isFill, BOOL isAnti) {
 	//アンチエイリアスあり.
 	if (isAnti) {
 		int err = DrawTriangleAA(
-			data->pos[0].x, data->pos[0].y,
-			data->pos[1].x, data->pos[1].y,
-			data->pos[2].x, data->pos[2].y, data->clr, isFill
+			(float)data->pos[0].x, (float)data->pos[0].y,
+			(float)data->pos[1].x, (float)data->pos[1].y,
+			(float)data->pos[2].x, (float)data->pos[2].y, data->clr, isFill
 		);
 		if (err < 0) {
 			return -1; //-1: DrawTriangleAAでエラー.
@@ -98,9 +98,9 @@ int DrawTriangleST(const Triangle* data, BOOL isFill, BOOL isAnti) {
 	//アンチエイリアスなし.
 	else {
 		int err = DrawTriangle(
-			data->pos[0].x, data->pos[0].y,
-			data->pos[1].x, data->pos[1].y,
-			data->pos[2].x, data->pos[2].y, data->clr, isFill
+			_int(data->pos[0].x), _int(data->pos[0].y),
+			_int(data->pos[1].x), _int(data->pos[1].y),
+			_int(data->pos[2].x), _int(data->pos[2].y), data->clr, isFill
 		);
 		if (err < 0) {
 			return -2; //-2: DrawTriangleでエラー.
@@ -279,8 +279,8 @@ int DrawStrST::DrawStringST(BOOL isCenter, int font) {
 
 	//中央座標モード.
 	if (isCenter) {
-		x -= (float)(GetTextSize(str.text).x-1, font)/2;
-		y -= (float)(GetTextSize(str.text).y-1, font)/2;
+		x -= (float)(GetTextSize(str.text, font).x-1)/2;
+		y -= (float)(GetTextSize(str.text, font).y-1)/2;
 	}
 
 	//デフォルトフォント.

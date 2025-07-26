@@ -487,8 +487,9 @@ void GameManager::DrawTitle() {
 		//アニメーション値.
 		double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
 		//テキスト.
-		DrawStrST str({}, {WINDOW_WID/2, WINDOW_HEI/2+85}, COLOR_BEST_SCORE);
-		_stprintf(str.GetTextPtr(), _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
+		TCHAR text[256];
+		_stprintf(text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
+		DrawStrST str(text, {WINDOW_WID/2, WINDOW_HEI/2+85}, COLOR_BEST_SCORE);
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str.DrawStringST(TRUE, data.font2);
@@ -500,7 +501,7 @@ void GameManager::DrawTitle() {
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
 		//テキスト.
 		DrawStrST str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285}, 18, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+93, WINDOW_HEI/2+285-1}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str.DrawStringST(TRUE, data.font1); //テキスト.
@@ -568,16 +569,16 @@ void GameManager::DrawEnd() {
 		//アニメーション値.
 		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
+		//スコア表示.
+		TCHAR text[256];
+		_stprintf(
+			text, _T("%d + %d(%.3f秒) = %d点"),
+			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
+		);
 		//テキストの設定.
 		DrawStrST str1(_T("- GAME OVER -"), {WINDOW_WID/2, _int(370+30*anim)}, 0xA0A0A0);
 		DrawStrST str2(_T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2-20},   0xFFFFFF);
-		DrawStrST str3({},                  {WINDOW_WID/2, WINDOW_HEI/2+20},   0xFFFFFF);
-		//スコア表示.
-		_stprintf(
-			str3.GetTextPtr(),
-			_T("%d + %d(%.3f秒) = %d点"),
-			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
-		);
+		DrawStrST str3(text,                {WINDOW_WID/2, WINDOW_HEI/2+20},   0xFFFFFF);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str1.DrawStringST(TRUE, data.font3);
@@ -616,7 +617,7 @@ void GameManager::DrawEnd() {
 		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
 		DrawStrST str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145}, 18, 0xFFFFFF };
+		Circle cir = { {WINDOW_WID/2+93, WINDOW_HEI/2+145}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str.DrawStringST(TRUE, data.font1); //テキスト.
@@ -693,18 +694,18 @@ void GameManager::DrawUI() {
 		imgUI.DrawExtendGraphST(0, {WINDOW_WID/2-380, 150}, {0.6, 0.3}, TRUE, TRUE);
 		imgUI.DrawExtendGraphST(0, {WINDOW_WID/2,     150}, {0.6, 0.3}, TRUE, TRUE);
 		imgUI.DrawExtendGraphST(0, {WINDOW_WID/2+380, 150}, {0.6, 0.3}, TRUE, TRUE);
-		DrawCircle(WINDOW_WID / 2, 150, 10, 0xFF0000);
 #endif
 
 		//テキスト設定.
-		DrawStrST str1({}, {WINDOW_WID/2,      70}, 0xFFFFFF);
-		DrawStrST str2({}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE);
-		DrawStrST str3({}, {WINDOW_WID/2,     150}, COLOR_SCORE);
-		DrawStrST str4({}, {WINDOW_WID/2+380, 150}, COLOR_TIME);
-		_stprintf(str1.GetTextPtr(), _T("LEVEL:%d"),        data.level);
-		_stprintf(str2.GetTextPtr(), _T("BEST SCORE:%05d"), data.bestScore);
-		_stprintf(str3.GetTextPtr(), _T("SCORE:%05d"),      data.score);
-		_stprintf(str4.GetTextPtr(), _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
+		TCHAR text[256];
+		_stprintf(text, _T("LEVEL:%d"),        data.level);
+		DrawStrST str1(text, {WINDOW_WID/2,      70}, 0xFFFFFF);
+		_stprintf(text, _T("BEST SCORE:%05d"), data.bestScore);
+		DrawStrST str2(text, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE);
+		_stprintf(text, _T("SCORE:%05d"),      data.score);
+		DrawStrST str3(text, {WINDOW_WID/2,     150}, COLOR_SCORE);
+		_stprintf(text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
+		DrawStrST str4(text, {WINDOW_WID/2+380, 150}, COLOR_TIME);
 		//テキスト(main)
 		SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
 		str1.DrawStringST(TRUE, data.font3);
@@ -759,9 +760,10 @@ void GameManager::DrawReflectMode() {
 	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
+		TCHAR text[256];
+		_stprintf(text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
 		DrawStrST str1(_T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
-		DrawStrST str2({},            {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
-		_stprintf(str2.GetTextPtr(), _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+		DrawStrST str2(text,          {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
 
 		//画面中央に数字を表示.
 		{
