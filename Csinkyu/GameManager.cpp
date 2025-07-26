@@ -635,7 +635,7 @@ void GameManager::DrawEnd() {
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		DrawStringST(&str, TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE, FALSE);      //Aボタンの円.
+		DrawCircleST(&cir, FALSE, FALSE);     //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -702,6 +702,7 @@ void GameManager::DrawUI() {
 		double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 		double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.3));
 
+#if false
 		//test.
 		DrawImgExtend img;
 		img.img      = data.imgUI;
@@ -715,7 +716,8 @@ void GameManager::DrawUI() {
 		DrawExtendGraphST(&img, TRUE, TRUE);
 		img.pos = {WINDOW_WID/2+380, 150};
 		DrawExtendGraphST(&img, TRUE, TRUE);
-		
+#endif
+
 		//テキスト設定.
 		DrawStr str1 = { {}, {WINDOW_WID/2,      70}, 0xFFFFFF };
 		DrawStr str2 = { {}, {WINDOW_WID/2-380, 150}, COLOR_BEST_SCORE };
