@@ -47,6 +47,7 @@ public:
 
 	//Reset.
 	void ResetNorLaser();
+	void ResetStrLaser();
 
 	//Update.
 	void UpdateTitle();

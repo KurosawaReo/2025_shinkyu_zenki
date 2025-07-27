@@ -16,6 +16,7 @@ enum EffectType
 	Effect_Level2,		 //レベル2演出.
 	Effect_Level3,		 //レベル3演出.
 	Effect_Level4,		 //レベル4演出.
+	Effect_Level5,		 //レベル5演出.
 };
 //エフェクトデータ.
 struct EffectData

@@ -93,7 +93,7 @@ Obstacle4_2 obstacle4_2;
 Obstacle4_3 obstacle4_3;
 Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
-MapGimmickLaser mgl[2];
+MapGimmickLaser mgl[4];
 //アイテムの実体.
 Item item;
 //プレイヤーの実体.
@@ -139,8 +139,9 @@ void GameManager::Init() {
 		meteoMng.Init(&data, &player, &effectMng);
 		effectMng.Init(&data);
 		//障害物class.
-		mgl[0].Init(&data, &player, &laserMng, &meteoMng);
-		mgl[1].Init(&data, &player, &laserMng, &meteoMng);
+		for (int i = 0; i < _countof(mgl); i++) {
+			mgl[i].Init(&data, &player, &laserMng, &meteoMng);
+		}
 		obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
@@ -193,8 +194,7 @@ void GameManager::Reset() {
 		meteoMng.Reset();
 		effectMng.Reset();
 		//障害物class.
-		mgl[0].Reset();
-		mgl[1].Reset();
+		ResetStrLaser();
 		ResetNorLaser();
 		obstacle5.Reset();
 		//アイテムclass.
@@ -250,6 +250,13 @@ void GameManager::ResetNorLaser() {
 	obstacle4_3.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_RIGHT);
 	obstacle4_4.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_LEFT);
 }
+//直線レーザーのリセット.
+void GameManager::ResetStrLaser() {
+
+	for (int i = 0; i < _countof(mgl); i++) {
+		mgl[i].Reset();
+	}
+}
 
 //シーン別更新.
 void GameManager::UpdateTitle() 
@@ -287,16 +294,21 @@ void GameManager::UpdateReady() {
 	}
 }
 void GameManager::UpdateGame() {
+	
+	//レベルスキップ(Debug)
+	if (p_input->IsPushKeyTime(KEY_L) == 1) {
+		data.counter = 10000;
+	}
 
 	//カウンター増加.
 	data.counter += ((data.isSlow) ? SLOW_MODE_SPEED : 1);
 	//出現間隔.
 	data.spawnRate = 1.0f/(1 + (data.counter/8000)); //100%から少しずつ減少.
 	//レベル管理.
-	switch (data.level) 
+	switch (data.level)
 	{
 		case 1:
-			if (data.spawnRate <= 0.85) { //85%以下.
+			if (data.counter >= 1500) { //出現間隔約??%地点.
 				data.level = 2; //Lv2へ.
 
 				//サウンド.
@@ -310,7 +322,7 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 2:
-			if (data.spawnRate <= 0.65) { //65%以下.
+			if (data.counter >= 4000) { //出現間隔約??%地点.
 				data.level = 3; //Lv3へ.
 
 				//サウンド.
@@ -324,9 +336,9 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 3:
-			if (data.spawnRate <= 0.5) { //50%以下.
+			if (data.counter >= 7000) { //出現間隔約??%地点.
 				data.level = 4; //Lv4へ.
-				ResetNorLaser();
+				ResetStrLaser();
 
 				//サウンド.
 				SoundST* sound = SoundST::GetPtr();
@@ -339,6 +351,20 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 4:
+			if (data.counter >= 10000) { //出現間隔約??%地点.
+				data.level = 5; //Lv5へ.
+				ResetNorLaser();
+
+				//サウンド.
+				SoundST* sound = SoundST::GetPtr();
+				sound->Play(_T("LevelUp"), FALSE, 100);
+				//エフェクト.
+				EffectData data{};
+				data.type = Effect_Level5;
+				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
+				effectMng.SpawnEffect(&data);
+			}
+			break;
 		case 5:
 			//最終レベル.
 			break;
@@ -440,6 +466,11 @@ void GameManager::UpdateObjects() {
 	}
 	//Lv4以上.
 	if (data.level >= 4) {
+		mgl[2].Update();
+		mgl[3].Update();
+	}
+	//Lv5以上.
+	if (data.level >= 5) {
 		obstacle4_3.Update();
 		obstacle4_4.Update();
 	}
@@ -669,14 +700,14 @@ void GameManager::DrawBG() {
 //UIの描画.
 void GameManager::DrawUI() {
 
-#if false
-	//レベル(debug)
+#if defined DEBUG_SPAWN_RATE
+	//カウンター.
 	DrawFormatStringToHandle(
-		10, WINDOW_HEI-75, 0xFFFFFF, data.font2, _T("Level: %d"), data.level
+		10, WINDOW_HEI-75, 0xFFFFFF, data.font2, _T("Counter: %.2f"), data.counter
 	);
-	//出現間隔割合(debug)
+	//出現間隔割合.
 	DrawFormatStringToHandle(
-		10, WINDOW_HEI-40, 0xFFFFFF, data.font2, _T("Spawn: %.2f%%"), data.spawnRate*100
+		10, WINDOW_HEI-40, 0xFFFFFF, data.font2, _T("Spawn  : %.2f%%"), data.spawnRate*100
 	);
 #endif
 
@@ -752,6 +783,11 @@ void GameManager::DrawObjects() {
 	}
 	//Lv4以上.
 	if (data.level >= 4) {
+		mgl[2].Draw();
+		mgl[3].Draw();
+	}
+	//Lv5以上.
+	if (data.level >= 5){
 		obstacle4_3.Draw();
 		obstacle4_4.Draw();
 	}
@@ -820,4 +856,7 @@ void GameManager::TakeItem() {
 	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	tmSlowMode.Start();             //スローモード計測開始.
 	player.SetReflectionMode(TRUE); //反射モード開始.
+
+	Circle cir = {player.GetPos(), 1000, {}};
+	laserMng.LaserReflectRange(&cir);
 }
