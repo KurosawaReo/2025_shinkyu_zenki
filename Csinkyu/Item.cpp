@@ -110,8 +110,8 @@ void Item::Draw()
 		Box box1 = { pos, {size.x,   size.y  }, COLOR_ITEM }; //{pos}, {size}, color.
 		Box box2 = { pos, {size.x-2, size.y-2}, COLOR_ITEM }; //{pos}, {size}, color.
 
-		DrawBoxST(&box1, TRUE, FALSE, TRUE);
-		DrawBoxST(&box2, TRUE, FALSE, TRUE);
+		DrawBoxST(&box1, TRUE, FALSE);
+		DrawBoxST(&box2, TRUE, FALSE);
 
 		// 画像を使用する場合のコード例
 		// if (itemGraph != -1) {

@@ -192,8 +192,8 @@ void LaserManager::UpdateLaser() {
 						//エフェクト召喚.
 						p_effectMng->SpawnEffect(&data);
 					}
-					//消去.
-					DeleteLaser(i);
+//					DeleteLaser(i);  //消去.
+					ReflectLaser(i); //再反射.
 				}
 				else{
 					//レーザーの追尾処理.
@@ -331,8 +331,14 @@ void LaserManager::ReflectLaser(int idx)
 	laser[idx].vx = cos(_rad(ang));
 	laser[idx].vy = sin(_rad(ang));
 
-	laser[idx].type    = Laser_Reflected; //反射モードへ.
-	laser[idx].Counter = 0;               //カウンターをリセット.
+	//まだ反射モードじゃないなら.
+	if(laser[idx].type != Laser_Reflected){
+		laser[idx].type    = Laser_Reflected; //反射モードへ.
+		laser[idx].Counter = 0;               //カウンターをリセット.
+	}
+	else {
+		laser[idx].Counter = LASER_REF_TRACK_ED_TM; //再反射後は追尾しない.
+	}
 
 	//エフェクト.
 	EffectData data{};

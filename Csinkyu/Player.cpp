@@ -66,15 +66,14 @@ void Player::Draw()
 	if (isDebug) {
 		DrawStrST str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
 		str.DrawStringST(TRUE, p_data->font1);
-
-		// エフェクトのデバッグ情報表示
-		for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
-			if (reflectEffects[i].active) {
-				TCHAR debugStr[128];
-				_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
-					i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
-				DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
-			}
+	}
+	// エフェクトのデバッグ情報表示
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		if (reflectEffects[i].active) {
+			TCHAR debugStr[128];
+			_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
+				i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
+			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
 		}
 	}
 
