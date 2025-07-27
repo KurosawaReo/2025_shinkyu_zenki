@@ -7,34 +7,42 @@ enum ItemType
 	Item_Normal, //通常.
 	Item_Super,  //強化版.
 };
-class Item
+//アイテムデータ.
+struct ItemData
 {
-private:
 	ItemType type{};   //タイプ.
-
 	DBL_XY   pos{};    //座標.
-	DBL_XY   size{};   //サイズ.
 	BOOL     active{}; //有効か.
 
-	int      itemGraph{};
-	float    itemCounter{};
+	float    counter{};
+};
+
+//アイテム管理クラス.
+class ItemManager
+{
+private:
+	ItemData data[2];
+	int      itemCnt; //出すアイテムの数.
 
 	GameData*      p_gamedata{}; //ゲームデータ.
 	Player*        p_player{};   //プレイヤーデータ.
 	EffectManager* p_effectMng{};
 
 public:
+	//add.
+	void AddItemCnt() { itemCnt++; }
+
 	void Init(GameData*, Player*, EffectManager*);
 	void Reset();
 	void Update();
 	void Draw();
 
-	void ItemMove();  //移動.
-	void ItemSpawn(); //アイテム召喚.
+	void ItemSpawn(int idx); //アイテム召喚.
+	void ItemErase(int idx); //アイテム消滅.
 
 	//当たり判定関連.
-	BOOL CheckHitPlayer(); // プレイヤーとの当たり判定
-	void OnHitPlayer();    // 当たったときの処理
+	void CheckHitPlayer(int idx); // プレイヤーとの当たり判定
+	void OnHitPlayer   (int idx); // 当たったときの処理
 
-	BOOL IsActive() const { return active; }
+//	BOOL IsActive() const { return active; }
 };

@@ -96,7 +96,7 @@ Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
 MapGimmickLaser mgl[4];
 //アイテムの実体.
-Item item;
+ItemManager item;
 //プレイヤーの実体.
 Player player;
 
@@ -266,7 +266,7 @@ void GameManager::UpdateTitle()
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でゲーム開始.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_BTN_X) == 1)
+	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_XBOX_X) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
 		data.scene = SCENE_READY;     //準備シーンへ.
@@ -309,7 +309,7 @@ void GameManager::UpdateGame() {
 	switch (data.level)
 	{
 		case 1:
-			if (data.counter >= 1500) { //出現間隔約??%地点.
+			if (data.counter >= 1500) { //1500 = 出現間隔約??%地点.
 				data.level = 2; //Lv2へ.
 
 				//サウンド.
@@ -323,7 +323,7 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 2:
-			if (data.counter >= 4000) { //出現間隔約??%地点.
+			if (data.counter >= 4000) { //4000 = 出現間隔約??%地点.
 				data.level = 3; //Lv3へ.
 
 				//サウンド.
@@ -337,9 +337,11 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 3:
-			if (data.counter >= 7000) { //出現間隔約??%地点.
+			if (data.counter >= 7000) { //7000 = 出現間隔約??%地点.
 				data.level = 4; //Lv4へ.
+
 				ResetStrLaser();
+				item.AddItemCnt(); //アイテムを増やす.
 
 				//サウンド.
 				SoundST* sound = SoundST::GetPtr();
@@ -352,8 +354,9 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 4:
-			if (data.counter >= 10000) { //出現間隔約??%地点.
+			if (data.counter >= 10000) { //10000 = 出現間隔約??%地点.
 				data.level = 5; //Lv5へ.
+
 				ResetNorLaser();
 
 				//サウンド.
@@ -427,7 +430,7 @@ void GameManager::UpdateEnd() {
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でタイトルへ.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_BTN_A) == 1)
+	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_XBOX_A) == 1)
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
@@ -584,6 +587,8 @@ void GameManager::DrawGame() {
 	effectMng.Draw();  //エフェクト.
 	DrawUI();
 	DrawReflectMode(); //反射モード演出.
+
+	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
 }
 void GameManager::DrawEnd() {
 	

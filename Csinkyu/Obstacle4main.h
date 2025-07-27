@@ -7,16 +7,16 @@
 
 #include "LaserManager.h" //レーザー管理のヘッダーファイル.
 
-typedef struct tagFLASHEFFECT
+struct FlashEffect
 {
 	double x, y;    // エフェクト位置.
 	float Counter;  // 経過時間.
 	float Duration; // エフェクトの持続時間.
 	int BaseSize;   // 基本サイズ
-	int ValidFlag; // 有効フラグ
+	int ValidFlag;  // 有効フラグ
 
 	double angle;
-}FLASHEFFECT;
+};
 
 //継承元となるクラス(親)
 class Obstacle4main
@@ -29,7 +29,7 @@ protected:
 	MoveDir moveDir{};   //現在の移動方向.
 
 //	IMG         img{};
-	FLASHEFFECT flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
+	FlashEffect flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
 	GameData*     p_data{};
 	Player*       p_player{};

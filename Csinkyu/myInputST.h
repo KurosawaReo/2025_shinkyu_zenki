@@ -1,12 +1,12 @@
 /*
    - myInputST.h - (original)
-   ver.2025/07/24
+   ver.2025/07/28
 
    DxLib: オリジナル入力機能の追加.
 */
 #pragma once
 
-//キーID(入力しやすくする用)
+//キーボードID.
 enum KeyID
 {
 	KEY_DOWN  = KEY_INPUT_DOWN,
@@ -52,31 +52,52 @@ enum KeyID
 	KEY_SPACE = KEY_INPUT_SPACE,
 	KEY_ENTER = KEY_INPUT_RETURN, //Enterキー.
 };
-//マウスID(入力しやすくする用)
+//マウスID.
 enum MouseID
 {
-	MOUSE_L = MOUSE_INPUT_LEFT,   //Left.
-	MOUSE_R = MOUSE_INPUT_RIGHT,  //Right.
-	MOUSE_M = MOUSE_INPUT_MIDDLE, //Middle.
+	MOUSE_L, //0x0001: Left.
+	MOUSE_R, //0x0002: Right.
+	MOUSE_M, //0x0004: Middle.
 };
-//コントローラボタンID(入力しやすくする用)
-enum PadBtnID
+//コントローラボタンID(xbox基準)
+enum PadXboxID
 {
-	//DxLibの定数とは違うため直指定(xboxコントローラ基準)
-	PAD_BTN_DOWN  = 0x0001,
-	PAD_BTN_LEFT  = 0x0002,
-	PAD_BTN_RIGHT = 0x0004,
-	PAD_BTN_UP    = 0x0008,
-	PAD_BTN_A     = 0x0010,
-	PAD_BTN_B     = 0x0020,
-	PAD_BTN_X     = 0x0040,
-	PAD_BTN_Y     = 0x0080,
-	PAD_BTN_L     = 0x0100,
-	PAD_BTN_R     = 0x0200,
-	PAD_BTN_VIEW  = 0x0400,
-	PAD_BTN_MENU  = 0x0800,
-	PAD_STICK_L   = 0x1000, //左スティック押し込み.
-	PAD_STICK_R   = 0x2000, //右スティック押し込み.
+	PAD_XBOX_DOWN,		//0x0001
+	PAD_XBOX_LEFT,		//0x0002
+	PAD_XBOX_RIGHT,		//0x0004
+	PAD_XBOX_UP,		//0x0008
+	PAD_XBOX_A,			//0x0010: 下のボタン.
+	PAD_XBOX_B,			//0x0020: 右のボタン.
+	PAD_XBOX_X,			//0x0040: 左のボタン.
+	PAD_XBOX_Y,			//0x0080: 上のボタン.
+	PAD_XBOX_L,			//0x0100
+	PAD_XBOX_R,			//0x0200
+	PAD_XBOX_VIEW,		//0x0400
+	PAD_XBOX_MENU,		//0x0800
+	PAD_XBOX_STICK_L,   //0x1000: 左スティック押し込み.
+	PAD_XBOX_STICK_R,   //0x2000: 右スティック押し込み.
+};
+//コントローラボタンID(switch基準)
+enum PadSwitchID
+{
+	PAD_SWT_DOWN,		//0x00001
+	PAD_SWT_LEFT,		//0x00002
+	PAD_SWT_RIGHT,		//0x00004
+	PAD_SWT_UP,			//0x00008
+	PAD_SWT_B,			//0x00010: 下のボタン.
+	PAD_SWT_A,			//0x00020: 右のボタン.
+	PAD_SWT_Y,			//0x00040: 左のボタン.
+	PAD_SWT_X,			//0x00080: 上のボタン.
+	PAD_SWT_L,			//0x00100
+	PAD_SWT_R,			//0x00200
+	PAD_SWT_ZL,			//0x00400
+	PAD_SWT_ZR,			//0x00800
+	PAD_SWT_MINUS,		//0x01000: -ボタン.
+	PAD_SWT_PLUS,		//0x02000: +ボタン.
+	PAD_SWT_STICK_L,	//0x04000: 左スティック押し込み.
+	PAD_SWT_STICK_R,	//0x08000: 右スティック押し込み.
+	PAD_SWT_HOME,		//0x10000: ホームボタン.
+	PAD_SWT_CAPTURE,	//0x20000: キャプチャーボタン.
 };
 
 //キーやボタンの種類の最大数(変更禁止)
@@ -109,8 +130,10 @@ public:
 	int    IsPushKeyTime   (KeyID id);
 	BOOL   IsPushMouse     (MouseID id);
 	int    IsPushMouseTime (MouseID id);
-	BOOL   IsPushPadBtn    (PadBtnID id);
-	int    IsPushPadBtnTime(PadBtnID id);
+	BOOL   IsPushPadBtn    (PadXboxID   id);
+	BOOL   IsPushPadBtn    (PadSwitchID id);
+	int    IsPushPadBtnTime(PadXboxID   id);
+	int    IsPushPadBtnTime(PadSwitchID id);
 
 	//取得.
 	void   GetMousePos     (DBL_XY* pos, BOOL isValidX = TRUE, BOOL isValidY = TRUE);

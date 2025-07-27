@@ -16,7 +16,7 @@ enum LaserType
 };
 
 //レーザー本体データ.
-typedef struct tagLASER_DATA
+struct LaserData
 {
 	LaserType type;      //レーザータイプ.
 
@@ -32,10 +32,10 @@ typedef struct tagLASER_DATA
 
 	int       ValidFlag; //このデータが使用中かフラグ.
 
-}LASER_DATA, *LPLASER_DATA;
+};
 
 //レーザーが描く軌道ラインデータ.
-typedef struct tagLINE_DATA
+struct LaserLineData
 {
 	LaserType type;         //レーザータイプ.
 
@@ -44,14 +44,14 @@ typedef struct tagLINE_DATA
 
 	int    ValidFlag;       //このデータが使用中かフラグ
 
-}LINE_DATA, *LPLINE_DATA;
+};
 
 //レーザー管理用.
 class LaserManager
 {
 private:
-	LASER_DATA laser[LASER_CNT_MAX]{};      //ホーミングレーザーのデータ.
-	LINE_DATA  line [LASER_LINE_CNT_MAX]{}; //ライン描画用データ.
+	LaserData     laser[LASER_CNT_MAX]{};      //ホーミングレーザーのデータ.
+	LaserLineData line [LASER_LINE_CNT_MAX]{}; //ライン描画用データ.
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
