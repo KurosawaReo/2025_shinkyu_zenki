@@ -65,6 +65,7 @@
    ・ポーズ機能仮追加。(Pキー)
    ・図形や線のアンチエイリアス導入, より滑らかな描画が可能に。
    ・レーザーで短すぎる線を描画しないように。(処理軽減に繋がる)
+   ・隕石の破壊演出を少し変更
 /--------------------------------------------------------*/
 
 #include "MeteoManager.h"
@@ -519,15 +520,15 @@ void GameManager::DrawTitle() {
 			//エフェクトをいくつか出す.
 			for (int i = 0; i < 8; i++) {
 
-				double newDig = dig + (float)RandNum(-400, 400)/10; //少し角度をずらす.
+				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
 
 				EffectData data{}; 
 				data.type  = Effect_BreakMeteo;
-				data.pos   = { 600, 350 };
-				data.vec   = CalcDigToPos(newDig);              //ずらした角度を反映.
-				data.speed = ((float)RandNum(5, 40)  /10)*1.4f; //速度抽選.
-				data.len   = ((float)RandNum(30, 180)/10)*1.4f; //長さ抽選.
-				data.ang   =  (float)RandNum(0, 3599)/10;       //角度抽選.
+				data.pos   = { 600, 338 };
+				data.vec   = CalcDigToPos(newDig);                //ずらした角度を反映.
+				data.speed = ((float)RandNum( 60,  100)/10)*1.4f; //速度抽選.
+				data.len   = ((float)RandNum( 30,  150)/10)*1.4f; //長さ抽選.
+				data.ang   =  (float)RandNum(  0, 3599)/10;       //角度抽選.
 				//エフェクト召喚.
 				effectMng.SpawnEffect(&data);
 			}

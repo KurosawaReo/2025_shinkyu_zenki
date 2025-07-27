@@ -180,15 +180,15 @@ void LaserManager::UpdateLaser() {
 					//エフェクトをいくつか出す.
 					for(int j = 0; j < 8; j++){
 
-						double newDig = dig + (float)RandNum(-400, 400)/10; //少し角度をずらす.
+						double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
 
 						EffectData data{};
 						data.type  = Effect_BreakMeteo;
 						data.pos   = { laser[i].x, laser[i].y };
-						data.vec   = CalcDigToPos(newDig);       //ずらした角度を反映.
-						data.speed = (float)RandNum( 5,   40)/10; //速度抽選.
-						data.len   = (float)RandNum(30,  180)/10; //長さ抽選.
-						data.ang   = (float)RandNum( 0, 3599)/10; //角度抽選.
+						data.vec   = CalcDigToPos(newDig);         //ずらした角度を反映.
+						data.speed = (float)RandNum( 40,  100)/10; //速度抽選.
+						data.len   = (float)RandNum( 30,  150)/10; //長さ抽選.
+						data.ang   = (float)RandNum(  0, 3599)/10; //角度抽選.
 						//エフェクト召喚.
 						p_effectMng->SpawnEffect(&data);
 					}

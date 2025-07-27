@@ -20,7 +20,7 @@ void Item::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
 void Item::Reset()
 {
 	// 座標の初期化
-	pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
+	pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
 	pos.y = -1000;											  // 画面上部の少し上から開始
 	// サイズと色の設定
 	size.x = ITEM_SIZE;
@@ -107,7 +107,6 @@ void Item::Draw()
 {
 	if (active) {
 
-		// 描画（既存のコードを活用）
 		Box box1 = { pos, {size.x,   size.y  }, COLOR_ITEM }; //{pos}, {size}, color.
 		Box box2 = { pos, {size.x-2, size.y-2}, COLOR_ITEM }; //{pos}, {size}, color.
 

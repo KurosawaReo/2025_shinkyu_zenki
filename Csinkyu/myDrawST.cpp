@@ -160,13 +160,13 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 //LoadGraphの改造版.
 int DrawImgST::LoadGraphST(my_string fileName) {
 
-	img.resize(1); //サイズを設定.
+	data.resize(1); //サイズを設定.
 
 	//画像読み込み.
-	img[0].handle = LoadGraph(fileName.c_str());
-	int err = GetGraphSize(img[0].handle, &img[0].size.x, &img[0].size.y);
+	data[0].handle = LoadGraph(fileName.c_str());
+	int err = GetGraphSize(data[0].handle, &data[0].size.x, &data[0].size.y);
 	
-	if (img[0].handle < 0) {
+	if (data[0].handle < 0) {
 		return -1; //-1: LoadGraphエラー.
 	}
 	if (err < 0) {
@@ -185,12 +185,12 @@ int DrawImgST::LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt) {
 		return -1; //-1: LoadDivGraphエラー.
 	}
 	//IMG型配列のサイズを分割数に合わせる.
-	img.resize(cnt.x*cnt.y);
+	data.resize(cnt.x*cnt.y);
 	//分割数だけループ.
 	for (int i = 0; i < cnt.y; i++) {
 		for (int j = 0; j < cnt.x; j++) {
-			img[j+i*cnt.x].handle = pHandle[j+i*cnt.x]; //ハンドル保存.
-			img[j+i*cnt.x].size   = size;               //サイズ保存.
+			data[j+i*cnt.x].handle = pHandle[j+i*cnt.x]; //ハンドル保存.
+			data[j+i*cnt.x].size   = size;               //サイズ保存.
 		}
 	}
 
@@ -207,26 +207,26 @@ int DrawImgST::DrawGraphST(int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans) {
 
 	//中央座標モード.
 	if (isCenter) {
-		x -= (float)(img[imgNo].size.x-1)/2;
-		y -= (float)(img[imgNo].size.y-1)/2;
+		x -= (float)(data[imgNo].size.x-1)/2;
+		y -= (float)(data[imgNo].size.y-1)/2;
 	}
 
-	if (img[imgNo].handle == 0) {
+	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawGraph(_int(x), _int(y), img[imgNo].handle, isTrans);
+	int err = DrawGraph(_int(x), _int(y), data[imgNo].handle, isTrans);
 	return err; //-1: DrawGraphエラー.
 }
 //DrawRectGraphの改造版.
 //Rect = 矩形(正方形や長方形のこと)
-int DrawImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPxl, INT_XY size, BOOL isTrans) {
+int DrawImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans) {
 
-	if (img[imgNo].handle == 0) {
+	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
 	int err = DrawRectGraph(
-		pos.x, pos.y, stPxl.x, stPxl.y, size.x, size.y,
-		img[imgNo].handle, isTrans
+		pos.x, pos.y, stPos.x, stPos.y, size.x, size.y,
+		data[imgNo].handle, isTrans
 	);
 	return err; //-1: DrawRectGraphエラー.
 }
@@ -237,19 +237,19 @@ int DrawImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL is
 
 	//中央基準かどうか.
 	if (isCenter) {
-		x1 = (float)(pos.x - (float)(img[imgNo].size.x-1)/2 * sizeRate.x);
-		y1 = (float)(pos.y - (float)(img[imgNo].size.y-1)/2 * sizeRate.y);
-		x2 = (float)(pos.x + (float)(img[imgNo].size.x-1)/2 * sizeRate.x);
-		y2 = (float)(pos.y + (float)(img[imgNo].size.y-1)/2 * sizeRate.y);
+		x1 = (float)(pos.x - (float)(data[imgNo].size.x-1)/2 * sizeRate.x);
+		y1 = (float)(pos.y - (float)(data[imgNo].size.y-1)/2 * sizeRate.y);
+		x2 = (float)(pos.x + (float)(data[imgNo].size.x-1)/2 * sizeRate.x);
+		y2 = (float)(pos.y + (float)(data[imgNo].size.y-1)/2 * sizeRate.y);
 	}
 	else {
 		x1 = (float)pos.x;
 		y1 = (float)pos.y;
-		x2 = (float)(pos.x + (img[imgNo].size.x-1) * sizeRate.x);
-		y2 = (float)(pos.y + (img[imgNo].size.y-1) * sizeRate.y);
+		x2 = (float)(pos.x + (data[imgNo].size.x-1) * sizeRate.x);
+		y2 = (float)(pos.y + (data[imgNo].size.y-1) * sizeRate.y);
 	}
 
-	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), img[imgNo].handle, isTrans);
+	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data[imgNo].handle, isTrans);
 	return err; //-1: DrawExtendGraphエラー.
 }
 //DrawRotaGraphの改造版.
@@ -260,39 +260,39 @@ int DrawImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang,
 
 	//中央座標モード.
 	if (isCenter) {
-		x -= (float)(img[imgNo].size.x-1)/2;
-		y -= (float)(img[imgNo].size.y-1)/2;
+		x -= (float)(data[imgNo].size.x-1)/2;
+		y -= (float)(data[imgNo].size.y-1)/2;
 	}
 
-	if (img[imgNo].handle == 0) {
+	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, img[imgNo].handle, isTrans);
+	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, data[imgNo].handle, isTrans);
 	return err; //-1: DrawRotaGraphエラー.
 }
 
 //DrawStringの改造版.
 int DrawStrST::DrawStringST(BOOL isCenter, int font) {
 	
-	float x = (float)str.pos.x;
-	float y = (float)str.pos.y;
+	float x = (float)data.pos.x;
+	float y = (float)data.pos.y;
 
 	//中央座標モード.
 	if (isCenter) {
-		x -= (float)(GetTextSize(str.text, font).x-1)/2;
-		y -= (float)(GetTextSize(str.text, font).y-1)/2;
+		x -= (float)(GetTextSize(data.text, font).x-1)/2;
+		y -= (float)(GetTextSize(data.text, font).y-1)/2;
 	}
 
 	//デフォルトフォント.
 	if (font < 0) {
-		int err = DrawString(_int(x), _int(y), str.text.c_str(), str.clr);
+		int err = DrawString(_int(x), _int(y), data.text.c_str(), data.clr);
 		if (err < 0) {
 			return -1; //-1: DrawStringでエラー.
 		}
 	}
 	//フォント設定あり.
 	else {
-		int err = DrawStringToHandle(_int(x), _int(y), str.text.c_str(), str.clr, font);
+		int err = DrawStringToHandle(_int(x), _int(y), data.text.c_str(), data.clr, font);
 		if (err < 0) {
 			return -2; //-2: DrawStringToHandleでエラー.
 		}
@@ -307,8 +307,8 @@ int DrawStrST::DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL is
 	//デフォルトフォント.
 	if (font < 0) {
 		int err = DrawRotaString(
-			str.pos.x, str.pos.y, extend.x, extend.y, pivot.x, pivot.y,
-			rad, str.clr, 0, isVertical, str.text.c_str()
+			data.pos.x, data.pos.y, extend.x, extend.y, pivot.x, pivot.y,
+			rad, data.clr, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -1; //-1: DrawRotaStringでエラー.
@@ -317,8 +317,8 @@ int DrawStrST::DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL is
 	//フォント設定あり.
 	else {
 		int err = DrawRotaStringToHandle(
-			str.pos.x, str.pos.y, extend.x, extend.y, pivot.x, pivot.y,
-			rad, str.clr, font, 0, isVertical, str.text.c_str()
+			data.pos.x, data.pos.y, extend.x, extend.y, pivot.x, pivot.y,
+			rad, data.clr, font, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -2; //-2: DrawRotaStringToHandleでエラー.
@@ -334,7 +334,7 @@ int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY
 		int err = DrawModiString(
 			luPos.x, luPos.y, ruPos.x, ruPos.y,
 			rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-			str.clr, 0, isVertical, str.text.c_str()
+			data.clr, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -1; //-1: DrawModiStringでエラー.
@@ -345,7 +345,7 @@ int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY
 		int err = DrawModiStringToHandle(
 			luPos.x, luPos.y, ruPos.x, ruPos.y,
 			rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-			str.clr, font, 0, isVertical, str.text.c_str()
+			data.clr, font, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -2; //-2: DrawModiStringToHandleでエラー.

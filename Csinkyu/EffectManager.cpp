@@ -75,9 +75,11 @@ void EffectManager::Update() {
 					effect[i].counter += ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 					//‰ñ“].
 					effect[i].ang += 3 * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					//Œ¸‘¬.
+					float newSpeed = effect[i].speed/(1+(effect[i].counter/10));
 					//ˆÚ“®.
-					effect[i].pos.x += effect[i].vec.x * effect[i].speed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-					effect[i].pos.y += effect[i].vec.y * effect[i].speed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					effect[i].pos.x += effect[i].vec.x * newSpeed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					effect[i].pos.y += effect[i].vec.y * newSpeed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 					//ŽžŠÔŒo‰ß‚ÅÁ–Å.
 					if (effect[i].counter >= METEO_BREAK_ANIM_TIME) {

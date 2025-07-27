@@ -43,7 +43,7 @@ struct String
 class DrawImgST
 {
 private:
-	vector<Image> img; //画像データ.
+	vector<Image> data; //画像データ.
 
 public:
 	//読み込み.
@@ -51,7 +51,7 @@ public:
 	int LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt);
 	//描画.
 	int DrawGraphST      (int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans = TRUE);
-	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPxl, INT_XY size, BOOL isTrans = TRUE);
+	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans = TRUE);
 	int DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans = TRUE);
 	int DrawRotaGraphST  (int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans = TRUE);
 };
@@ -60,22 +60,22 @@ public:
 class DrawStrST
 {
 private:
-	String str; //文字列データ.
+	String data; //文字列データ.
 
 public:
 	//初期化用.
 	DrawStrST(my_string _text, INT_XY _pos, UINT _clr) :
-		str{_text, _pos, _clr}
+		data{_text, _pos, _clr}
 	{}
 	//set.
 	void SetText(my_string _text) {
-		str.text = _text;
+		data.text = _text;
 	}
 	void SetPos(int _x, int _y) {
-		str.pos = {_x, _y};
+		data.pos = {_x, _y};
 	}
 	void SetColor(UINT _color) {
-		str.clr = _color;
+		data.clr = _color;
 	}
 	//描画.
 	int    DrawStringST	   (BOOL isCenter, int font = -1);

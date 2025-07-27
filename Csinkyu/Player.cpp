@@ -64,7 +64,8 @@ void Player::Draw()
 {
 	//デバッグ表示.
 	if (isDebug) {
-		DrawString(0, 430, _T("[Debug] 無敵モード"), 0xFFFFFF);
+		DrawStrST str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
+		str.DrawStringST(TRUE, p_data->font1);
 
 		// エフェクトのデバッグ情報表示
 		for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
