@@ -65,8 +65,9 @@
    ・ポーズ機能仮追加。(Pキー)
    ・図形や線のアンチエイリアス導入, より滑らかな描画が可能に。
    ・レーザーで短すぎる線を描画しないように。(処理軽減に繋がる)
-   ・隕石の破片の飛び散り方を調整
-   ・反射レーザーが隕石に当たっても反射するように
+   ・隕石の破片の飛び散り方がよりリアルになるよう調整。
+   ・Level5の追加。
+   ・強化アイテム追加。強化版では反射レーザーが隕石に当たっても反射する。
 /--------------------------------------------------------*/
 
 #include "MeteoManager.h"
@@ -398,7 +399,7 @@ void GameManager::UpdateGame() {
 		//時間切れで解除.
 		if (tmSlowMode.GetPassTime() <= 0) {
 			
-			player.SetReflectionMode(FALSE); //反射モード終了.
+			player.SetMode(Player_Normal); //反射モード終了.
 			p_sound->Play(_T("PowerDown"), FALSE, 78); //再生.
 			
 			//リセット.
@@ -855,8 +856,4 @@ void GameManager::TakeItem() {
 	data.isSlow = TRUE;             //スローモードにする.
 	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	tmSlowMode.Start();             //スローモード計測開始.
-	player.SetReflectionMode(TRUE); //反射モード開始.
-
-	Circle cir = {player.GetPos(), 1000, {}};
-	laserMng.LaserReflectRange(&cir);
 }

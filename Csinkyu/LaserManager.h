@@ -9,9 +9,10 @@
 //レーザータイプ.
 enum LaserType
 {
-	Laser_Normal,    //通常レーザー.
-	Laser_Straight,  //直線レーザー.
-	Laser_Reflected, //反射レーザー.
+	Laser_Normal,       //通常レーザー.
+	Laser_Straight,     //直線レーザー.
+	Laser_Reflect,      //反射レーザー.
+	Laser_SuperReflect, //反射レーザー強化版.
 };
 
 //レーザー本体データ.
@@ -70,7 +71,7 @@ public:
 	
 	BOOL SpawnLaser      (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
 	void DeleteLaser     (int idx);                                //消去.
-	void ReflectLaser    (int idx);			                       //反射.
+	void ReflectLaser    (int idx);               	               //反射.
 
 //  void LaserNorTracking(int idx);                                //レーザー(normal)   の隕石追尾.
 	void LaserRefTracking(int idx);                                //レーザー(reflected)の隕石追尾.

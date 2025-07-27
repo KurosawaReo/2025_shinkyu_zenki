@@ -18,9 +18,9 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, BOOL _active)
 {
-	hit = { _pos, PLAYER_HIT_R, {} };
-	active = _active;
-	isReflect = false;
+	hit       = { _pos, PLAYER_HIT_R, {} };
+	active    = _active;
+	mode      = Player_Normal;
 	afterCntr = 1;  // afterCntrの初期化を追加
 
 	//座標配列のリセット.
@@ -87,8 +87,9 @@ void Player::Draw()
 		Box box2 = { hit.pos, { PLAYER_SIZE - 2, PLAYER_SIZE - 2 }, 0xFFFFFF };
 
 		//反射モード中の色.
-		if (IsReflectionMode())
-		{
+		if (mode == Player_Reflect || 
+			mode == Player_SuperReflect
+		){
 			box1.clr = box2.clr = COLOR_PLY_REFLECT;
 		}
 		//デバッグモード中.
@@ -132,8 +133,9 @@ void Player::DrawAfterImage()
 
 		Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
 		//反射カラー.
-		if (IsReflectionMode())
-		{
+		if (mode == Player_Reflect ||
+			mode == Player_SuperReflect
+		){
 			box.clr = COLOR_PLY_AFT_REF;
 		}
 		//通常カラー.
@@ -283,17 +285,6 @@ void Player::DrawReflectEffects()
 			ResetDrawBlendMode();
 		}
 	}
-}
-
-//反射モードかどうか.
-BOOL Player::IsReflectionMode() const
-{
-	return isReflect;
-}
-//反射モード設定.
-void Player::SetReflectionMode(BOOL tf)
-{
-	isReflect = tf;
 }
 
 //死亡処理.
