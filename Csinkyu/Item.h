@@ -15,6 +15,7 @@ struct ItemData
 	BOOL     active{}; //有効か.
 
 	float    counter{};
+	float    spawnCounter{};
 };
 
 //アイテム管理クラス.

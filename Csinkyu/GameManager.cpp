@@ -60,14 +60,25 @@
    「隕石を破壊するとスコアを得られ、そのスコアを競うゲーム」で行ける気がする。
 
    前期発表会後: 変更内容
-   ・UIレイアウトの変更。"BEST SCORE","SCORE","TIME"の3つだけにした。
-   ・アイテムの終了が分かりやすくなるよう、数字を3秒だけ表示して音を足した。
+   ・UIのレイアウト変更。「TIME」と「LEVEL」を見やすくした。
+   ・アイテムの終了タイミングが分かるよう、数字を3秒だけ出すように。(音も追加)
    ・ポーズ機能仮追加。(Pキー)
-   ・図形や線のアンチエイリアス導入, より滑らかな描画が可能に。
+   ・図形や線のアンチエイリアス導入。滑らかで綺麗な描画になった。
    ・レーザーで短すぎる線を描画しないように。(処理軽減に繋がる)
-   ・隕石の破片の飛び散り方がよりリアルになるよう調整。
-   ・Level5の追加。
-   ・強化アイテム追加。強化版では反射レーザーが隕石に当たっても反射する。
+   ・隕石の破片の飛び散り方をリアルになるよう少し調整。
+   ・強化アイテム追加。反射レーザーが隕石に当たっても反射する。
+
+   [現在のLevel配分]
+   Level1:
+   　通常レーザー×2, 隕石
+   Level2:
+     直線レーザー×2
+   Level3:
+     波紋
+   Level4:
+     直線レーザー×4, アイテム×2
+   Level5:
+     通常レーザー×4, アイテムが強化
 /--------------------------------------------------------*/
 
 #include "MeteoManager.h"
@@ -296,9 +307,9 @@ void GameManager::UpdateReady() {
 }
 void GameManager::UpdateGame() {
 	
-	//レベルスキップ(Debug)
-	if (p_input->IsPushKeyTime(KEY_L) == 1) {
-		data.counter = 10000;
+	//タイマー加速(Debug)
+	if (p_input->IsPushKey(KEY_L) == 1) {
+		data.counter += 10;
 	}
 
 	//カウンター増加.
@@ -323,7 +334,7 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 2:
-			if (data.counter >= 4000) { //4000 = 出現間隔約??%地点.
+			if (data.counter >= 3500) { //3500 = 出現間隔約??%地点.
 				data.level = 3; //Lv3へ.
 
 				//サウンド.
@@ -337,7 +348,7 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 3:
-			if (data.counter >= 7000) { //7000 = 出現間隔約??%地点.
+			if (data.counter >= 6000) { //6000 = 出現間隔約??%地点.
 				data.level = 4; //Lv4へ.
 
 				ResetStrLaser();
@@ -354,7 +365,7 @@ void GameManager::UpdateGame() {
 			}
 			break;
 		case 4:
-			if (data.counter >= 10000) { //10000 = 出現間隔約??%地点.
+			if (data.counter >= 9000) { //9000 = 出現間隔約??%地点.
 				data.level = 5; //Lv5へ.
 
 				ResetNorLaser();
@@ -588,7 +599,7 @@ void GameManager::DrawGame() {
 	DrawUI();
 	DrawReflectMode(); //反射モード演出.
 
-	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
+//	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
 }
 void GameManager::DrawEnd() {
 	

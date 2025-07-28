@@ -32,6 +32,8 @@ void ItemManager::Update()
 
 		if (data[i].active) {
 
+			//カウンター.
+			data[i].counter += ((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
 			//落下.
 			data[i].pos.y += ITEM_SPEED * (double)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
 			//当たり判定.
@@ -46,11 +48,11 @@ void ItemManager::Update()
 			//召喚可能なら.
 			if (itemCnt >= i+1) {
 				//スローモード中は加算しない.
-				data[i].counter += (p_gamedata->isSlow) ? 0 : 1;
+				data[i].spawnCounter += (p_gamedata->isSlow) ? 0 : 1;
 				//一定時間で再生成.
-				if (data[i].counter > ITEM_RESPAWN_TIME)
+				if (data[i].spawnCounter > ITEM_RESPAWN_TIME)
 				{
-					data[i].counter = 0; //リセット.
+					data[i].spawnCounter = 0; //リセット.
 					ItemSpawn(i);
 				}
 			}
@@ -104,11 +106,13 @@ void ItemManager::ItemSpawn(int idx) {
 	}
 	// アイテムの状態設定
 	data[idx].active = TRUE; //アクティブフラグ
+	data[idx].counter = 0;
 }
 //アイテム消滅.
 void ItemManager::ItemErase(int idx) {
-	data[idx].active  = FALSE;
+	data[idx].active = FALSE;
 	data[idx].counter = 0;
+	data[idx].spawnCounter = 0;
 }
 
 // プレイヤーとの当たり判定

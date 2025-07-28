@@ -213,11 +213,11 @@ void MapGimmickLaser::SpawnStraightLaser()
 		if (direction == 0 || direction == 1) // êÖïΩî≠éÀ
 		{
 			tmpPos.x = startPos.x;
-			tmpPos.y = centerPos + (i - 1) * spacing; // -spacing, 0, +spacing
+			tmpPos.y = centerPos + (i-1) * spacing; // -spacing, 0, +spacing
 		}
 		else // êÇíºî≠éÀ
 		{
-			tmpPos.x = centerPos + (i - 1) * spacing; // -spacing, 0, +spacing
+			tmpPos.x = centerPos + (i-1) * spacing; // -spacing, 0, +spacing
 			tmpPos.y = startPos.y;
 		}
 
