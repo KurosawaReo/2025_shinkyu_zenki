@@ -573,7 +573,7 @@ void GameManager::DrawTitle() {
 				EffectData data{}; 
 				data.type  = Effect_BreakMeteo;
 				data.pos   = { 600, 338 };
-				data.vec   = CalcDigToPos(newDig);                //‚¸‚ç‚µ‚½Šp“x‚ð”½‰f.
+				data.vec   = CalcDegToPos(newDig);                //‚¸‚ç‚µ‚½Šp“x‚ð”½‰f.
 				data.speed = ((float)RandNum( 60,  100)/10)*1.4f; //‘¬“x’Š‘I.
 				data.len   = ((float)RandNum( 30,  150)/10)*1.4f; //’·‚³’Š‘I.
 				data.ang   =  (float)RandNum(  0, 3599)/10;       //Šp“x’Š‘I.
