@@ -518,7 +518,7 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
-			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY}, {0.5, 0.5}, TRUE);
+			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY}, {0.5, 0.5});
 		}
 		//切り替え後.
 		else {
@@ -526,10 +526,10 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
-			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
+			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5});
 			//ロゴ2枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * (1-anim));
-			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
+			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5});
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -546,8 +546,8 @@ void GameManager::DrawTitle() {
 		DrawStrST str(text, {WINDOW_WID/2, WINDOW_HEI/2+60}, COLOR_BEST_SCORE);
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		str.DrawStringST(TRUE, data.font2);
-		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+60+30}, {0.4, 0.4}, TRUE, TRUE);
+		str.DrawStringST(ANC_MID, data.font2);
+		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+60+30}, {0.4, 0.4});
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -559,8 +559,8 @@ void GameManager::DrawTitle() {
 		Circle cir = { {WINDOW_WID/2+93, WINDOW_HEI/2+285-1}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		str.DrawStringST(TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE, FALSE);   //Xボタンの円.
+		str.DrawStringST(ANC_MID, data.font1); //テキスト.
+		DrawCircleST(&cir, FALSE, FALSE);      //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
@@ -616,7 +616,7 @@ void GameManager::DrawEnd() {
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeST(MODE_ALPHA, 128*anim);
-		DrawBoxST(&box, FALSE); //画面を暗くする(UI以外)
+		DrawBoxST(&box, ANC_LU); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
 	DrawUI();
@@ -638,9 +638,9 @@ void GameManager::DrawEnd() {
 		DrawStrST str3(text,                {WINDOW_WID/2, WINDOW_HEI/2+20},   0xFFFFFF);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		str1.DrawStringST(TRUE, data.font4);
-		str2.DrawStringST(TRUE, data.font1);
-		str3.DrawStringST(TRUE, data.font1);
+		str1.DrawStringST(ANC_MID, data.font4);
+		str2.DrawStringST(ANC_MID, data.font1);
+		str3.DrawStringST(ANC_MID, data.font1);
 		ResetDrawBlendMode();
 	}
 
@@ -658,7 +658,7 @@ void GameManager::DrawEnd() {
 			DrawStrST str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-350+anim*20)}, 0xEFFFA0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ADD, 255*anim);
-			str.DrawStringST(TRUE, data.font2);
+			str.DrawStringST(ANC_MID, data.font2);
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isBestScoreSound) {
@@ -677,8 +677,8 @@ void GameManager::DrawEnd() {
 		Circle cir = { {WINDOW_WID/2+93, WINDOW_HEI/2+145}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
-		str.DrawStringST(TRUE, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE, FALSE);   //Aボタンの円.
+		str.DrawStringST(ANC_MID, data.font1); //テキスト.
+		DrawCircleST(&cir, FALSE, FALSE);      //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -710,13 +710,13 @@ void GameManager::DrawBG() {
 		{
 			Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
 			SetDrawBlendModeST(MODE_ADD, 100*time);
-			DrawBoxST(&box, FALSE);
+			DrawBoxST(&box, ANC_LU);
 			ResetDrawBlendMode();
 		}
 		//枠線.
 		{
 			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-			DrawBoxST(&box, TRUE, FALSE, TRUE);
+			DrawBoxST(&box, ANC_MID, FALSE, TRUE);
 		}
 	}
 }
@@ -761,29 +761,29 @@ void GameManager::DrawUI() {
 	str[3].SetText(text);
 		
 	//背景画像.
-	imgUI[0].DrawExtendGraphST(str[0].GetPos(), {0.4, 0.35}, TRUE, TRUE);
+	imgUI[0].DrawExtendGraphST(str[0].GetPos(), {0.4, 0.35});
 	//テキスト(main)
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
-	str[0].DrawStringST(TRUE, data.font4);
+	str[0].DrawStringST(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
-	str[1].DrawStringST(TRUE, data.font3);
-	imgUI[1].DrawExtendGraphST({str[1].GetPos().x, str[1].GetPos().y+30}, {0.4, 0.4}, TRUE, TRUE);
+	str[1].DrawStringST(ANC_MID, data.font3);
+	imgUI[1].DrawExtendGraphST({str[1].GetPos().x, str[1].GetPos().y+30}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
-	str[2].DrawStringST(TRUE, data.font3);
-	imgUI[2].DrawExtendGraphST({str[2].GetPos().x, str[2].GetPos().y+30}, {0.4, 0.4}, TRUE, TRUE);
+	str[2].DrawStringST(ANC_MID, data.font3);
+	imgUI[2].DrawExtendGraphST({str[2].GetPos().x, str[2].GetPos().y+30}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
-	str[3].DrawStringST(TRUE, data.font3);
-	imgUI[3].DrawExtendGraphST({str[3].GetPos().x, str[3].GetPos().y+30}, {0.4, 0.4}, TRUE, TRUE);
+	str[3].DrawStringST(ANC_MID, data.font3);
+	imgUI[3].DrawExtendGraphST({str[3].GetPos().x, str[3].GetPos().y+30}, {0.4, 0.4});
 	//テキスト(光沢用)
 	str[1].SetColor(0xFFFFFF);
 	str[2].SetColor(0xFFFFFF);
 	str[3].SetColor(0xFFFFFF);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
-	str[1].DrawStringST(TRUE, data.font3);
+	str[1].DrawStringST(ANC_MID, data.font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
-	str[2].DrawStringST(TRUE, data.font3);
+	str[2].DrawStringST(ANC_MID, data.font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
-	str[3].DrawStringST(TRUE, data.font3);
+	str[3].DrawStringST(ANC_MID, data.font3);
 
 	//描画モードリセット.
 	ResetDrawBlendMode();
@@ -835,11 +835,11 @@ void GameManager::DrawReflectMode() {
 			SetDrawBlendModeST(MODE_ADD, _int(255 * dec));     //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
-				str1.DrawStringST(TRUE, data.font4); //反射モード.
+				str1.DrawStringST(ANC_MID, data.font4); //反射モード.
 			}
 			//最後の3秒.
 			if (tmSlowMode.GetPassTime() <= 3) {
-				str2.DrawStringST(TRUE, data.font4); //数字.
+				str2.DrawStringST(ANC_MID, data.font4); //数字.
 			}
 			ResetDrawBlendMode();
 		}
@@ -856,6 +856,7 @@ void GameManager::GameEnd() {
 	data.isSlow = FALSE;
 	tmSlowMode.Reset();
 
+	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 		isItemCountDownSound[i] = FALSE;
 	}
@@ -880,4 +881,9 @@ void GameManager::TakeItem() {
 	data.isSlow = TRUE;             //スローモードにする.
 	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	tmSlowMode.Start();             //スローモード計測開始.
+
+	//記録リセット.
+	for (int i = 0; i < _countof(isItemCountDownSound); i++) {
+		isItemCountDownSound[i] = FALSE;
+	}
 }

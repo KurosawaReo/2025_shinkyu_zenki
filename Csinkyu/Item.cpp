@@ -79,8 +79,8 @@ void ItemManager::Draw()
 			{
 				Box box1 = { data[i].pos, {ITEM_SIZE,   ITEM_SIZE  }, COLOR_ITEM }; //{pos}, {size}, color.
 				Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
-				DrawBoxST(&box1, TRUE, FALSE);
-				DrawBoxST(&box2, TRUE, FALSE);
+				DrawBoxST(&box1, ANC_MID, FALSE);
+				DrawBoxST(&box2, ANC_MID, FALSE);
 			}
 		
 			// 画像を使用する場合のコード例
@@ -130,7 +130,7 @@ void ItemManager::CheckHitPlayer(int idx)
 	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//当たった場合.
-	if (HitBox(&plyBox, &itemBox, TRUE)) {
+	if (HitBox(&plyBox, &itemBox)) {
 		OnHitPlayer(idx);
 	}
 }

@@ -1,6 +1,6 @@
 /*
    - myObjectST.cpp - (original)
-   ver.2025/08/02
+   ver.2025/08/03
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
@@ -19,7 +19,7 @@ int ObjectCir::Draw(BOOL isDrawHit) {
 		_int(cir.pos.y + offset.y)
 	};
 	//画像描画.
-	int err = img.DrawGraphST(pos, TRUE);
+	int err = img.DrawGraphST(pos);
 	if (err < 0) {
 		return -1; //-1: DrawGraphSTでエラー.
 	}
@@ -41,13 +41,13 @@ int ObjectBox::Draw(BOOL isDrawHit) {
 		_int(box.pos.y + offset.y)
 	};
 	//画像描画.
-	int err = img.DrawGraphST(pos, TRUE);
+	int err = img.DrawGraphST(pos);
 	if (err < 0) {
 		return -1; //-1: DrawGraphSTでエラー.
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
-		int err = DrawBoxST(&box, TRUE, FALSE, TRUE);
+		int err = DrawBoxST(&box, ANC_MID, FALSE, TRUE);
 		if (err < 0) {
 			return -2; //-2: DrawBoxSTでエラー.
 		}
@@ -64,6 +64,6 @@ int ObjectGrid::Draw(INT_XY gridPos, INT_XY gridSize) {
 		gridPos.y + pos.y * gridSize.y
 	};
 	//画像描画.
-	int err = img.DrawGraphST(pos, FALSE);
+	int err = img.DrawGraphST(pos, ANC_LU);
 	return err; //-1: DrawGraphSTでエラー.
 }

@@ -1,6 +1,6 @@
 /*
    - myObjectST.h - (original)
-   ver.2025/08/02
+   ver.2025/08/03
 
    DxLib: オリジナルオブジェクト機能の追加.
 */

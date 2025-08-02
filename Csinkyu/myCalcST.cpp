@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/07/29
+   ver.2025/08/03
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -25,27 +25,17 @@ BOOL HitCircle(const Circle* cir1, const Circle* cir2) {
     }
 }
 //当たり判定(四角と四角)
-BOOL HitBox(const Box* box1, const Box* box2, BOOL isCenter) {
-
-    BOOL hit = FALSE;
+BOOL HitBox(const Box* box1, const Box* box2) {
 
     //中央基準座標での判定.
-    if (isCenter) {
-        if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
-            fabs(box1->pos.y - box2->pos.y) <= (box1->size.y + box2->size.y)/2)
-        {
-            hit = TRUE;
-        }
-    }
-    //左上基準座標での判定.
-    else {
-        if (box1->pos.x + box1->size.x >= box2->pos.x && box2->pos.x + box2->size.x >= box1->pos.x &&
-            box1->pos.y + box1->size.y >= box2->pos.y && box2->pos.y + box2->size.y >= box1->pos.y)
-        {
-            hit = TRUE;
-        }
-    }
-    return hit;
+	if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
+		fabs(box1->pos.y - box2->pos.y) <= (box1->size.y + box2->size.y)/2
+	){
+		return TRUE;
+	}
+	else {
+	    return FALSE;
+	}
 }
 //当たり判定(線と円)
 BOOL HitLine(const Line* line, const Circle* cir) {

@@ -65,7 +65,7 @@ void Player::Draw()
 	//デバッグ表示.
 	if (isDebug) {
 		DrawStrST str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.DrawStringST(TRUE, p_data->font1);
+		str.DrawStringST(ANC_MID, p_data->font1);
 	}
 	// エフェクトのデバッグ情報表示
 	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
@@ -97,8 +97,8 @@ void Player::Draw()
 			box1.clr = box2.clr = COLOR_PLY_DEBUG;
 		}
 
-		DrawBoxST(&box1, TRUE, FALSE, TRUE);
-		DrawBoxST(&box2, TRUE, FALSE, TRUE);
+		DrawBoxST(&box1, ANC_MID, FALSE, TRUE);
+		DrawBoxST(&box2, ANC_MID, FALSE, TRUE);
 	}
 }
 
@@ -144,7 +144,7 @@ void Player::DrawAfterImage()
 			box.clr = COLOR_PLY_AFT_NOR;
 		}
 
-		DrawBoxST(&box, TRUE, FALSE, TRUE);
+		DrawBoxST(&box, ANC_MID, FALSE, TRUE);
 	}
 
 	//描画モードリセット.
@@ -261,7 +261,7 @@ void Player::DrawReflectEffects()
 							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxST(&thickBox, TRUE, FALSE, TRUE);
+						DrawBoxST(&thickBox, ANC_MID, FALSE, TRUE);
 					}
 				}
 			}
@@ -279,7 +279,7 @@ void Player::DrawReflectEffects()
 				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
-			DrawBoxST(&centerBox, TRUE, FALSE, TRUE);
+			DrawBoxST(&centerBox, ANC_MID, FALSE, TRUE);
 
 			// 描画モードリセット
 			ResetDrawBlendMode();

@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/08/02
+   ver.2025/08/03
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -21,6 +21,13 @@
    ■　　■
    ■■■■
 */
+
+//アンカー座標.
+static const DBL_XY anchorPos[9] = {
+	{0.0, 0.0}, {0.5, 0.0}, {1.0, 0.0},
+	{0.0, 0.5}, {0.5, 0.5}, {1.0, 0.5},
+	{0.0, 1.0}, {0.5, 1.0}, {1.0, 1.0}
+};
 
 //DrawCircleの改造版.
 int DrawCircleST(const Circle* data, BOOL isFill, BOOL isAnti, float thick) {
@@ -43,31 +50,22 @@ int DrawCircleST(const Circle* data, BOOL isFill, BOOL isAnti, float thick) {
 	return 0; //正常終了.
 }
 //DrawBoxの改造版.
-int DrawBoxST(const Box* data, BOOL isCenter, BOOL isFill, BOOL isAnti) {
+int DrawBoxST(const Box* data, Anchor anc, BOOL isFill, BOOL isAnti) {
 
 	if (data->size.x <= 0 || data->size.y <= 0) {
 		return -3; //-3: サイズが0以下.
 	}
 
-	double x1, x2, y1, y2;
-
-	//中央基準かどうか.
-	if (isCenter) {
-		x1 = data->pos.x - (data->size.x-1)/2;
-		y1 = data->pos.y - (data->size.y-1)/2;
-		x2 = data->pos.x + (data->size.x-1)/2;
-		y2 = data->pos.y + (data->size.y-1)/2;
-	}
-	else {
-		x1 = data->pos.x;
-		y1 = data->pos.y;
-		x2 = data->pos.x + (data->size.x-1);
-		y2 = data->pos.y + (data->size.y-1);
-	}
+	//始点を求める.
+	float x1 = (float)(data->pos.x - (data->size.x-1) * anchorPos[anc].x);
+	float y1 = (float)(data->pos.y - (data->size.y-1) * anchorPos[anc].y);
+	//終点を求める.
+	float x2 = (float)(data->pos.x + (data->size.x-1) * (1-anchorPos[anc].x));
+	float y2 = (float)(data->pos.y + (data->size.y-1) * (1-anchorPos[anc].y));
 
 	//アンチエイリアスあり.
 	if (isAnti) {
-		int err = DrawBoxAA((float)x1, (float)y1, (float)x2, (float)y2, data->clr, isFill);
+		int err = DrawBoxAA(x1, y1, x2, y2, data->clr, isFill);
 		if (err < 0) {
 			return -1; //-1: DrawBoxAAでエラー.
 		}
@@ -182,7 +180,7 @@ int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 	if (err < 0) {
 		return -1; //-1: LoadDivGraphエラー.
 	}
-	//IMG型配列のサイズを分割数に合わせる.
+	//Image型配列のサイズを分割数に合わせる.
 	data.resize(cnt.x*cnt.y);
 	//分割数だけループ.
 	for (int i = 0; i < cnt.y; i++) {
@@ -199,16 +197,11 @@ int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 }
 
 //DrawGraphの改造版.
-int DrawImgST::DrawGraphST(INT_XY pos, BOOL isCenter, BOOL isTrans) {
+int DrawImgST::DrawGraphST(INT_XY pos, Anchor anc, BOOL isTrans) {
 
-	float x = (float)pos.x;
-	float y = (float)pos.y;
-
-	//中央座標モード.
-	if (isCenter) {
-		x -= (float)(data.size.x-1)/2;
-		y -= (float)(data.size.y-1)/2;
-	}
+	//基準点に座標をずらす.
+	float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
+	float y = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y);
 
 	if (data.handle == 0) {
 		return -2; //-2: handle未設定.
@@ -216,16 +209,11 @@ int DrawImgST::DrawGraphST(INT_XY pos, BOOL isCenter, BOOL isTrans) {
 	int err = DrawGraph(_int(x), _int(y), data.handle, isTrans);
 	return err; //-1: DrawGraphエラー.
 }
-int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans) {
+int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, Anchor anc, BOOL isTrans) {
 
-	float x = (float)pos.x;
-	float y = (float)pos.y;
-
-	//中央座標モード.
-	if (isCenter) {
-		x -= (float)(data[imgNo].size.x-1)/2;
-		y -= (float)(data[imgNo].size.y-1)/2;
-	}
+	//基準点に座標をずらす.
+	float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+	float y = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
 
 	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
@@ -258,59 +246,36 @@ int DrawDivImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY si
 	return err; //-1: DrawRectGraphエラー.
 }
 //DrawExtendGraphの改造版.
-int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans) {
+int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, Anchor anc, BOOL isTrans) {
 
-	float x1, y1, x2, y2;
-
-	//中央基準かどうか.
-	if (isCenter) {
-		x1 = (float)(pos.x - (float)(data.size.x-1)/2 * sizeRate.x);
-		y1 = (float)(pos.y - (float)(data.size.y-1)/2 * sizeRate.y);
-		x2 = (float)(pos.x + (float)(data.size.x-1)/2 * sizeRate.x);
-		y2 = (float)(pos.y + (float)(data.size.y-1)/2 * sizeRate.y);
-	}
-	else {
-		x1 = (float)pos.x;
-		y1 = (float)pos.y;
-		x2 = (float)(pos.x + (data.size.x-1) * sizeRate.x);
-		y2 = (float)(pos.y + (data.size.y-1) * sizeRate.y);
-	}
+	//始点を求める.
+	float x1 = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x * sizeRate.x);
+	float y1 = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y * sizeRate.y);
+	//終点を求める.
+	float x2 = (float)(pos.x + (data.size.x-1) * (1-anchorPos[anc].x) * sizeRate.x);
+	float y2 = (float)(pos.y + (data.size.y-1) * (1-anchorPos[anc].y) * sizeRate.y);
 
 	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data.handle, isTrans);
 	return err; //-1: DrawExtendGraphエラー.
 }
-int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans) {
+int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, Anchor anc, BOOL isTrans) {
 
-	float x1, y1, x2, y2;
-
-	//中央基準かどうか.
-	if (isCenter) {
-		x1 = (float)(pos.x - (float)(data[imgNo].size.x-1)/2 * sizeRate.x);
-		y1 = (float)(pos.y - (float)(data[imgNo].size.y-1)/2 * sizeRate.y);
-		x2 = (float)(pos.x + (float)(data[imgNo].size.x-1)/2 * sizeRate.x);
-		y2 = (float)(pos.y + (float)(data[imgNo].size.y-1)/2 * sizeRate.y);
-	}
-	else {
-		x1 = (float)pos.x;
-		y1 = (float)pos.y;
-		x2 = (float)(pos.x + (data[imgNo].size.x-1) * sizeRate.x);
-		y2 = (float)(pos.y + (data[imgNo].size.y-1) * sizeRate.y);
-	}
+	//始点を求める.
+	float x1 = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x * sizeRate.x);
+	float y1 = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y * sizeRate.y);
+	//終点を求める.
+	float x2 = (float)(pos.x + (data[imgNo].size.x-1) * (1-anchorPos[anc].x) * sizeRate.x);
+	float y2 = (float)(pos.y + (data[imgNo].size.y-1) * (1-anchorPos[anc].y) * sizeRate.y);
 
 	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data[imgNo].handle, isTrans);
 	return err; //-1: DrawExtendGraphエラー.
 }
 //DrawRotaGraphの改造版.
-int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans) {
+int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, Anchor anc, BOOL isTrans) {
 
-	float x = (float)pos.x;
-	float y = (float)pos.y;
-
-	//中央座標モード.
-	if (isCenter) {
-		x -= (float)(data.size.x-1)/2;
-		y -= (float)(data.size.y-1)/2;
-	}
+	//基準点に座標をずらす.
+	float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
+	float y = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y);
 
 	if (data.handle == 0) {
 		return -2; //-2: handle未設定.
@@ -318,16 +283,11 @@ int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, BOOL isCen
 	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, data.handle, isTrans);
 	return err; //-1: DrawRotaGraphエラー.
 }
-int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans) {
+int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, Anchor anc, BOOL isTrans) {
 
-	float x = (float)pos.x;
-	float y = (float)pos.y;
-
-	//中央座標モード.
-	if (isCenter) {
-		x -= (float)(data[imgNo].size.x-1)/2;
-		y -= (float)(data[imgNo].size.y-1)/2;
-	}
+	//基準点に座標をずらす.
+	float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+	float y = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
 
 	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
@@ -337,16 +297,11 @@ int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double a
 }
 
 //DrawStringの改造版.
-int DrawStrST::DrawStringST(BOOL isCenter, int font) {
+int DrawStrST::DrawStringST(Anchor anc, int font) {
 	
-	float x = (float)data.pos.x;
-	float y = (float)data.pos.y;
-
-	//中央座標モード.
-	if (isCenter) {
-		x -= (float)(GetTextSize(data.text, font).x-1)/2;
-		y -= (float)(GetTextSize(data.text, font).y-1)/2;
-	}
+	//基準点に座標をずらす.
+	float x = (float)(data.pos.x - (GetTextSize(data.text, font).x-1) * anchorPos[anc].x);
+	float y = (float)(data.pos.y - (GetTextSize(data.text, font).y-1) * anchorPos[anc].y);
 
 	//デフォルトフォント.
 	if (font < 0) {

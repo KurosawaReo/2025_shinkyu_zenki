@@ -1,6 +1,6 @@
 /*
    - myCalcST.h - (original)
-   ver.2025/07/29
+   ver.2025/08/03
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -12,7 +12,7 @@
 
 //当たり判定.
 BOOL   HitCircle		(const Circle* cir1, const Circle* cir2);
-BOOL   HitBox			(const Box*    box1, const Box*    box2,  BOOL isCenter);
+BOOL   HitBox			(const Box*    box1, const Box*    box2);
 BOOL   HitLine			(const Line*   line, const Circle* cir);
 
 //移動限界.
