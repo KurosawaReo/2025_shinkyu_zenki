@@ -43,12 +43,43 @@ struct String
 class DrawImgST
 {
 private:
+	Image data; //画像データ.
+
+public:
+	//set, get.
+	void   SetImage(Image* _data) { data = *_data; }
+	Image* GetImage()             { return &data; }
+	//読み込み.
+	int LoadGraphST      (MY_STRING fileName);
+	//描画.
+	int DrawGraphST      (INT_XY pos, BOOL isCenter, BOOL isTrans = TRUE);
+	int DrawRectGraphST  (INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans = TRUE);
+	int DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans = TRUE);
+	int DrawRotaGraphST  (INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans = TRUE);
+};
+
+//画像描画クラス(分割読み込み)
+class DrawDivImgST
+{
+private:
 	vector<Image> data; //画像データ.
 
 public:
+	//set, get.
+	void SetImage(Image* _data, int imgNo) {
+		//サイズオーバーしてなければ.
+		if (imgNo >= 0 && imgNo < data.size()) {
+			data[imgNo] = *_data;
+		}
+	}
+	Image* GetImage(int imgNo) {
+		//サイズオーバーしてなければ.
+		if (imgNo >= 0 && imgNo < data.size()) {
+			return &data[imgNo];
+		}
+	}
 	//読み込み.
-	int LoadGraphST   (MY_STRING fileName);
-	int LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt);
+	int LoadDivGraphST   (MY_STRING fileName, INT_XY size, INT_XY cnt);
 	//描画.
 	int DrawGraphST      (int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans = TRUE);
 	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans = TRUE);

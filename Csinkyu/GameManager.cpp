@@ -59,8 +59,12 @@
    反射仮完成。このゲームの方針も見えてきた。
    「隕石を破壊するとスコアを得られ、そのスコアを競うゲーム」で行ける気がする。
 
+   2025/08/02:
+   UIに背景画像を仮で追加したが、端の方を透過させたい。
+
    前期発表会後: 変更内容
-   ・UIのレイアウト変更。「TIME」と「LEVEL」を見やすくした。
+   ・UIのレイアウト変更。「TIME」や「LEVEL」をまとめた。
+   ・UIに背景画像を追加。
    ・アイテムの終了タイミングが分かるよう、数字を3秒だけ出すように。(音も追加)
    ・ポーズ機能仮追加。(Pキー)
    ・図形や線のアンチエイリアス導入。滑らかで綺麗な描画になった。
@@ -514,7 +518,7 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
-			imgLogo[0].DrawExtendGraphST(0, {WINDOW_WID/2, logoY}, {0.5, 0.5}, TRUE);
+			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY}, {0.5, 0.5}, TRUE);
 		}
 		//切り替え後.
 		else {
@@ -522,10 +526,10 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * anim);
-			imgLogo[1].DrawExtendGraphST(0, {WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
+			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
 			//ロゴ2枚目.
 			SetDrawBlendModeST(MODE_ADD, 255 * (1-anim));
-			imgLogo[0].DrawExtendGraphST(0, {WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
+			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5}, TRUE);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -543,7 +547,7 @@ void GameManager::DrawTitle() {
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str.DrawStringST(TRUE, data.font2);
-		imgUI[1].DrawExtendGraphST(0, str.GetPos(), {0.4, 0.35}, TRUE, TRUE);
+		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+60+30}, {0.4, 0.4}, TRUE, TRUE);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -747,7 +751,7 @@ void GameManager::DrawUI() {
 		DrawStrST({}, {WINDOW_WID/2+350, 150}, COLOR_TIME),
 	};
 	TCHAR text[256];
-	_stprintf(text, _T("LEVEL:%d"),        data.level);
+	_stprintf(text, _T("LEVEL %d"),        data.level);
 	str[0].SetText(text);
 	_stprintf(text, _T("BEST SCORE:%05d"), data.bestScore);
 	str[1].SetText(text);
@@ -757,19 +761,19 @@ void GameManager::DrawUI() {
 	str[3].SetText(text);
 		
 	//背景画像.
-	imgUI[0].DrawExtendGraphST(0, str[0].GetPos(), {0.4, 0.35}, TRUE, TRUE);
+	imgUI[0].DrawExtendGraphST(str[0].GetPos(), {0.4, 0.35}, TRUE, TRUE);
 	//テキスト(main)
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
 	str[0].DrawStringST(TRUE, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].DrawStringST(TRUE, data.font3);
-	imgUI[1].DrawExtendGraphST(0, str[1].GetPos(), {0.4, 0.35}, TRUE, TRUE);
+	imgUI[1].DrawExtendGraphST({str[1].GetPos().x, str[1].GetPos().y+30}, {0.4, 0.4}, TRUE, TRUE);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].DrawStringST(TRUE, data.font3);
-	imgUI[2].DrawExtendGraphST(0, str[2].GetPos(), {0.4, 0.35}, TRUE, TRUE);
+	imgUI[2].DrawExtendGraphST({str[2].GetPos().x, str[2].GetPos().y+30}, {0.4, 0.4}, TRUE, TRUE);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].DrawStringST(TRUE, data.font3);
-	imgUI[3].DrawExtendGraphST(0, str[3].GetPos(), {0.4, 0.35}, TRUE, TRUE);
+	imgUI[3].DrawExtendGraphST({str[3].GetPos().x, str[3].GetPos().y+30}, {0.4, 0.4}, TRUE, TRUE);
 	//テキスト(光沢用)
 	str[1].SetColor(0xFFFFFF);
 	str[2].SetColor(0xFFFFFF);

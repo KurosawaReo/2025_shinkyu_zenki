@@ -121,9 +121,8 @@ enum MoveDir
 	MOVE_LEFT,
 	MOVE_UP
 };
-// - ゲームデータ -
-class DrawImageST; //前方宣言.
 
+// - ゲームデータ -
 struct GameData
 {
 	Scene scene;      //シーンの記録用.
@@ -146,7 +145,7 @@ struct GameData
 // - Debug -
 //定義するとデバッグ表示ON.
 //#define DEBUG_LASER_ACTIVE
-#define DEBUG_SPAWN_RATE
+//#define DEBUG_SPAWN_RATE
 
 // - 定数 -
 #define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.

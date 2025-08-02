@@ -160,13 +160,11 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 //LoadGraphの改造版.
 int DrawImgST::LoadGraphST(MY_STRING fileName) {
 
-	data.resize(1); //サイズを設定.
-
 	//画像読み込み.
-	data[0].handle = LoadGraph(fileName.c_str());
-	int err = GetGraphSize(data[0].handle, &data[0].size.x, &data[0].size.y);
+	data.handle = LoadGraph(fileName.c_str());
+	int err = GetGraphSize(data.handle, &data.size.x, &data.size.y);
 	
-	if (data[0].handle < 0) {
+	if (data.handle < 0) {
 		return -1; //-1: LoadGraphエラー.
 	}
 	if (err < 0) {
@@ -175,7 +173,7 @@ int DrawImgST::LoadGraphST(MY_STRING fileName) {
 	return 0; //正常終了.
 }
 //LoadDivGraphの改造版.
-int DrawImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
+int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 
 	int* pHandle = new int[cnt.x*cnt.y]; //LoadDivGraphからハンドル取り出す用.
 
@@ -199,8 +197,26 @@ int DrawImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 
 	return 0; //正常終了.
 }
+
 //DrawGraphの改造版.
-int DrawImgST::DrawGraphST(int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans) {
+int DrawImgST::DrawGraphST(INT_XY pos, BOOL isCenter, BOOL isTrans) {
+
+	float x = (float)pos.x;
+	float y = (float)pos.y;
+
+	//中央座標モード.
+	if (isCenter) {
+		x -= (float)(data.size.x-1)/2;
+		y -= (float)(data.size.y-1)/2;
+	}
+
+	if (data.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
+	int err = DrawGraph(_int(x), _int(y), data.handle, isTrans);
+	return err; //-1: DrawGraphエラー.
+}
+int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans) {
 
 	float x = (float)pos.x;
 	float y = (float)pos.y;
@@ -219,7 +235,18 @@ int DrawImgST::DrawGraphST(int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans) {
 }
 //DrawRectGraphの改造版.
 //Rect = 矩形(正方形や長方形のこと)
-int DrawImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans) {
+int DrawImgST::DrawRectGraphST(INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans) {
+
+	if (data.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
+	int err = DrawRectGraph(
+		pos.x, pos.y, stPos.x, stPos.y, size.x, size.y,
+		data.handle, isTrans
+	);
+	return err; //-1: DrawRectGraphエラー.
+}
+int DrawDivImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans) {
 
 	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
@@ -231,7 +258,28 @@ int DrawImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY size,
 	return err; //-1: DrawRectGraphエラー.
 }
 //DrawExtendGraphの改造版.
-int DrawImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans) {
+int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans) {
+
+	float x1, y1, x2, y2;
+
+	//中央基準かどうか.
+	if (isCenter) {
+		x1 = (float)(pos.x - (float)(data.size.x-1)/2 * sizeRate.x);
+		y1 = (float)(pos.y - (float)(data.size.y-1)/2 * sizeRate.y);
+		x2 = (float)(pos.x + (float)(data.size.x-1)/2 * sizeRate.x);
+		y2 = (float)(pos.y + (float)(data.size.y-1)/2 * sizeRate.y);
+	}
+	else {
+		x1 = (float)pos.x;
+		y1 = (float)pos.y;
+		x2 = (float)(pos.x + (data.size.x-1) * sizeRate.x);
+		y2 = (float)(pos.y + (data.size.y-1) * sizeRate.y);
+	}
+
+	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data.handle, isTrans);
+	return err; //-1: DrawExtendGraphエラー.
+}
+int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans) {
 
 	float x1, y1, x2, y2;
 
@@ -253,7 +301,24 @@ int DrawImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL is
 	return err; //-1: DrawExtendGraphエラー.
 }
 //DrawRotaGraphの改造版.
-int DrawImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans) {
+int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans) {
+
+	float x = (float)pos.x;
+	float y = (float)pos.y;
+
+	//中央座標モード.
+	if (isCenter) {
+		x -= (float)(data.size.x-1)/2;
+		y -= (float)(data.size.y-1)/2;
+	}
+
+	if (data.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
+	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, data.handle, isTrans);
+	return err; //-1: DrawRotaGraphエラー.
+}
+int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans) {
 
 	float x = (float)pos.x;
 	float y = (float)pos.y;

@@ -10,16 +10,8 @@
 #endif
 #include "myObjectST.h"
 
-//画像読み込み.
-int Object::LoadGraphST(MY_STRING fileName) {
-	return img.LoadGraphST(fileName);
-}
-int Object::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
-	return img.LoadDivGraphST(fileName, size, cnt);
-}
-
 //オブジェクト(ObjectCir型)の描画.
-int ObjectCir::Draw(int imgNo, BOOL isDrawHit) {
+int ObjectCir::Draw(BOOL isDrawHit) {
 
 	//座標.
 	INT_XY pos = {
@@ -27,7 +19,7 @@ int ObjectCir::Draw(int imgNo, BOOL isDrawHit) {
 		_int(cir.pos.y + offset.y)
 	};
 	//画像描画.
-	int err = img.DrawGraphST(imgNo, pos, TRUE);
+	int err = img.DrawGraphST(pos, TRUE);
 	if (err < 0) {
 		return -1; //-1: DrawGraphSTでエラー.
 	}
@@ -41,7 +33,7 @@ int ObjectCir::Draw(int imgNo, BOOL isDrawHit) {
 	return 0; //正常終了.
 }
 //オブジェクト(ObjectBox型)の描画.
-int ObjectBox::Draw(int imgNo, BOOL isDrawHit) {
+int ObjectBox::Draw(BOOL isDrawHit) {
 
 	//座標.
 	INT_XY pos = {
@@ -49,7 +41,7 @@ int ObjectBox::Draw(int imgNo, BOOL isDrawHit) {
 		_int(box.pos.y + offset.y)
 	};
 	//画像描画.
-	int err = img.DrawGraphST(imgNo, pos, TRUE);
+	int err = img.DrawGraphST(pos, TRUE);
 	if (err < 0) {
 		return -1; //-1: DrawGraphSTでエラー.
 	}
@@ -63,7 +55,7 @@ int ObjectBox::Draw(int imgNo, BOOL isDrawHit) {
 	return 0; //正常終了.
 }
 //オブジェクト(ObjectGrid型)の描画.
-int ObjectGrid::Draw(int imgNo, INT_XY gridPos, INT_XY gridSize) {
+int ObjectGrid::Draw(INT_XY gridPos, INT_XY gridSize) {
 
 	//座標.
 	INT_XY pos{};
@@ -72,6 +64,6 @@ int ObjectGrid::Draw(int imgNo, INT_XY gridPos, INT_XY gridSize) {
 		gridPos.y + pos.y * gridSize.y
 	};
 	//画像描画.
-	int err = img.DrawGraphST(imgNo, pos, FALSE);
+	int err = img.DrawGraphST(pos, FALSE);
 	return err; //-1: DrawGraphSTでエラー.
 }
