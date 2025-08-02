@@ -1,6 +1,6 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/07/25
+   ver.2025/08/02
 
    DxLib: オリジナルタイマー機能の追加.
 */
@@ -18,7 +18,7 @@ void Timer::Stop() {
 		float elapsed = (float)(clock() - tmStart)/1000; //時間差.
 
 		//経過時間を更新.
-		if (mode == CountUp) {
+		if (mode == COUNT_UP) {
 			tmSavePass += elapsed;           //タイマー増加.
 		}
 		else {
@@ -36,7 +36,7 @@ float Timer::GetPassTime() {
 		float elapsed = (float)(clock() - tmStart)/1000; //時間差.
 		float pass = 0; //経過時間.
 
-		if (mode == CountUp) {
+		if (mode == COUNT_UP) {
 			pass = tmSavePass + elapsed; //タイマー増加.
 		}
 		else {
@@ -61,7 +61,7 @@ void TimerMicro::Stop() {
 		LONGLONG elapsed = (tmEnd.QuadPart - tmStart.QuadPart) * 1000000/freq.QuadPart;
 
 		//経過時間を更新.
-		if (mode == CountUp) {
+		if (mode == COUNT_UP) {
 			tmSavePass += elapsed;           //タイマー増加.
 		}
 		else {
@@ -85,7 +85,7 @@ LONGLONG TimerMicro::GetPassTime() {
 		//経過時間.
 		LONGLONG pass;
 
-		if (mode == CountUp) {
+		if (mode == COUNT_UP) {
 			pass = tmSavePass + elapsed; //タイマー増加.
 		}
 		else{
@@ -102,7 +102,7 @@ LONGLONG TimerMicro::GetPassTime() {
 BOOL TimerMicro::IntervalTime() {
 
 	//CountDownじゃない場合はFALSEを返し続ける.
-	if (mode != CountDown) {
+	if (mode != COUNT_DOWN) {
 		return FALSE;
 	}
 

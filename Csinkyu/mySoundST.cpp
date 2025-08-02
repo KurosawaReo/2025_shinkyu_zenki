@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/07/26
+   ver.2025/08/02
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -112,7 +112,7 @@ SoundST::~SoundST() {
 	sound.clear(); //データを空にする.
 }
 //サウンド読み込み.
-int SoundST::LoadFile(my_string fileName, my_string saveName) {
+int SoundST::LoadFile(MY_STRING fileName, MY_STRING saveName) {
 	
 	//読み込み.
 	int load = LoadSoundMem(fileName.c_str());
@@ -125,14 +125,14 @@ int SoundST::LoadFile(my_string fileName, my_string saveName) {
 	return 0; //正常終了.
 }
 //サウンド再生.
-void SoundST::Play(my_string saveName, BOOL isLoop, int volume) {
+void SoundST::Play(MY_STRING saveName, BOOL isLoop, int volume) {
 	//存在すれば.
 	if (sound.count(saveName) > 0) {
 		sound[saveName].Play(isLoop, volume); //再生.
 	}
 }
 //サウンド停止.
-void SoundST::Stop(my_string saveName) {
+void SoundST::Stop(MY_STRING saveName) {
 	//存在すれば.
 	if (sound.count(saveName) > 0) {
 		sound[saveName].Stop(); //停止.
@@ -148,18 +148,18 @@ void SoundST::Update() {
 }
 
 //音量を変更.
-void SoundST::ChangeVolume(my_string saveName, int volume, float sec) {
+void SoundST::ChangeVolume(MY_STRING saveName, int volume, float sec) {
 	
 	sound[saveName].ChangeVolume(volume, sec); //変更設定.
 }
 //フェードイン再生.
-void SoundST::FadeInPlay(my_string saveName, int volume, float sec, BOOL isLoop) {
+void SoundST::FadeInPlay(MY_STRING saveName, int volume, float sec, BOOL isLoop) {
 
 	sound[saveName].Play(isLoop, 0);           //最初は音量0で再生.
 	sound[saveName].ChangeVolume(volume, sec); //徐々に大きく.
 }
 //フェードアウトする.
-void SoundST::FadeOutPlay(my_string saveName, float sec) {
+void SoundST::FadeOutPlay(MY_STRING saveName, float sec) {
 
 	sound[saveName].ChangeVolume(0, sec); //徐々に小さく.
 	sound[saveName].SetIsFadeOut(TRUE);   //フェードアウトモードに.

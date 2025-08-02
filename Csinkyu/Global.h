@@ -26,9 +26,9 @@ using namespace std;
 
 //文字コードで切り替え.
 #if defined UNICODE
-  typedef wstring my_string; //wchar_t型.
+  typedef wstring MY_STRING; //wchar_t型.
 #else
-  typedef string  my_string; //char型.
+  typedef string  MY_STRING; //char型.
 #endif
 
 //xとyの凝縮.
@@ -135,9 +135,10 @@ struct GameData
 	float spawnRate;  //障害物の出現時間割合.
 	float counter;    //経過時間カウンター(スローの影響を受ける)
 
-	int   font2;      //フォント.
 	int   font1;      //フォント.
+	int   font2;      //フォント.
 	int   font3;      //フォント.
+	int   font4;      //フォント.
 
 	BOOL  isSlow;     //スローモードかどうか.
 };

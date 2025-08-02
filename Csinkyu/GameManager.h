@@ -15,20 +15,20 @@ private: //データ.
 
 	//シーン別に経過時間を記録する.
 	Timer tmScene[SCENE_COUNT] = {
-		Timer(CountUp, 0), //Titleシーン.
-		Timer(CountUp, 0), //Readyシーン.
-		Timer(CountUp, 0), //Gameシーン.
-		Timer(CountUp, 0), //Endシーン.
-		Timer(CountUp, 0), //Pauseシーン.
+		Timer(COUNT_UP, 0), //Titleシーン.
+		Timer(COUNT_UP, 0), //Readyシーン.
+		Timer(COUNT_UP, 0), //Gameシーン.
+		Timer(COUNT_UP, 0), //Endシーン.
+		Timer(COUNT_UP, 0), //Pauseシーン.
 	};
-	Timer tmSlowMode = Timer(CountDown, SLOW_MODE_TIME); //スロー継続時間.
+	Timer tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME); //スロー継続時間.
 
 	DrawImgST imgLogo[2]; //タイトルロゴ画像.
-	DrawImgST imgUI;      //UI画像.
+	DrawImgST imgUI[4];   //UI画像.
 
-	BOOL isFinTitleAnim{}; //タイトルアニメーション用.
-	BOOL isFinScoreAnim{}; //最高スコアアニメーション用.
-	BOOL isItemCount[3]{}; //アイテムカウントダウンの音を鳴らしたか.
+	BOOL isTitleAnim{};             //Title:     破片アニメーションを出したか.
+	BOOL isBestScoreSound{};        //BestScore: 音を鳴らしたか.
+	BOOL isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
 	InputST* p_input{};
 	SoundST* p_sound{};

@@ -1,6 +1,6 @@
 /*
    - myObjectST.cpp - (original)
-   ver.2025/07/27
+   ver.2025/08/02
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
@@ -11,10 +11,10 @@
 #include "myObjectST.h"
 
 //画像読み込み.
-int Object::LoadGraphST(my_string fileName) {
+int Object::LoadGraphST(MY_STRING fileName) {
 	return img.LoadGraphST(fileName);
 }
-int Object::LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt) {
+int Object::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 	return img.LoadDivGraphST(fileName, size, cnt);
 }
 

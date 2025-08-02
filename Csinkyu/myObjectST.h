@@ -1,6 +1,6 @@
 /*
    - myObjectST.h - (original)
-   ver.2025/07/27
+   ver.2025/08/02
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
@@ -22,8 +22,8 @@ public:
 	{}
 
 	//画像読み込み.
-	int LoadGraphST   (my_string fileName);
-	int LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt);
+	int LoadGraphST   (MY_STRING fileName);
+	int LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt);
 };
 
 //オブジェクト(円)

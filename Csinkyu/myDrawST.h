@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/07/27
+   ver.2025/08/02
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -19,9 +19,9 @@ enum FontTypeID
 enum BlendModeID
 {
 	MODE_NONE  = DX_BLENDMODE_NOBLEND, //デフォルト.
-	MODE_ALPHA = DX_BLENDMODE_ALPHA,   //αブレンド.
-	MODE_ADD   = DX_BLENDMODE_ADD,     //加算ブレンド.
-	MODE_SUB   = DX_BLENDMODE_SUB,     //減算ブレンド.
+	MODE_ALPHA = DX_BLENDMODE_ALPHA,   //αブレンド.  (重なると透過する)
+	MODE_ADD   = DX_BLENDMODE_ADD,     //加算ブレンド.(重なると明度が明るくなる)
+	MODE_SUB   = DX_BLENDMODE_SUB,     //減算ブレンド.(重なると明度が暗くなる)
 	MODE_MUL   = DX_BLENDMODE_MUL      //乗算ブレンド.
 };
 
@@ -34,7 +34,7 @@ struct Image
 //文字列データ.
 struct String
 {
-	my_string text; //テキスト.
+	MY_STRING text; //テキスト.
 	INT_XY    pos;  //画面のどこに描画するか.
 	UINT      clr;  //文字の色.
 };
@@ -47,8 +47,8 @@ private:
 
 public:
 	//読み込み.
-	int LoadGraphST   (my_string fileName);
-	int LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt);
+	int LoadGraphST   (MY_STRING fileName);
+	int LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt);
 	//描画.
 	int DrawGraphST      (int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans = TRUE);
 	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans = TRUE);
@@ -64,11 +64,11 @@ private:
 
 public:
 	//初期化用.
-	DrawStrST(my_string _text, INT_XY _pos, UINT _clr) :
+	DrawStrST(MY_STRING _text, INT_XY _pos, UINT _clr) :
 		data{_text, _pos, _clr}
 	{}
 	//set.
-	void SetText(my_string _text) {
+	void SetText(MY_STRING _text) {
 		data.text = _text;
 	}
 	void SetPos(int _x, int _y) {
@@ -77,11 +77,15 @@ public:
 	void SetColor(UINT _color) {
 		data.clr = _color;
 	}
+	//get.
+	INT_XY GetPos() {
+		return data.pos;
+	}
 	//描画.
 	int    DrawStringST	   (BOOL isCenter, int font = -1);
 	int    DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL isVertical, int font = -1);
 	int    DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, BOOL isVertical, int font = -1);
-	INT_XY GetTextSize 	   (my_string str, int font = -1);
+	INT_XY GetTextSize 	   (MY_STRING str, int font = -1);
 };
 
 //図形.

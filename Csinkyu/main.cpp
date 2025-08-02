@@ -12,7 +12,7 @@
 GameManager GameManager::self; //static変数の宣言.
 GameManager* gm;               //実体を入れる用.
 
-TimerMicro tmFps(CountDown, 1000000/FPS); //fps計測用タイマー.
+TimerMicro tmFps(COUNT_DOWN, 1000000/FPS); //fps計測用タイマー.
 
 void Init() {
 	gm = GameManager::GetPtr(); //GameManagerから実体取得.

@@ -1,6 +1,6 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/07/25
+   ver.2025/08/02
 
    DxLib: オリジナルタイマー機能の追加.
 */
@@ -9,8 +9,8 @@
 //タイマーモード.
 enum TimerMode
 {
-	CountUp,
-	CountDown,
+	COUNT_UP,
+	COUNT_DOWN,
 };
 //タイマー機能.
 class Timer

@@ -23,7 +23,7 @@ class ItemManager
 {
 private:
 	ItemData data[2];
-	int      itemCnt; //出すアイテムの数.
+	int      itemCnt{}; //出すアイテムの数.
 
 	GameData*      p_gamedata{}; //ゲームデータ.
 	Player*        p_player{};   //プレイヤーデータ.

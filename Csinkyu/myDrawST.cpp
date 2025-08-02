@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/07/27
+   ver.2025/08/02
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -158,7 +158,7 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 }
 
 //LoadGraphの改造版.
-int DrawImgST::LoadGraphST(my_string fileName) {
+int DrawImgST::LoadGraphST(MY_STRING fileName) {
 
 	data.resize(1); //サイズを設定.
 
@@ -175,7 +175,7 @@ int DrawImgST::LoadGraphST(my_string fileName) {
 	return 0; //正常終了.
 }
 //LoadDivGraphの改造版.
-int DrawImgST::LoadDivGraphST(my_string fileName, INT_XY size, INT_XY cnt) {
+int DrawImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 
 	int* pHandle = new int[cnt.x*cnt.y]; //LoadDivGraphからハンドル取り出す用.
 
@@ -355,7 +355,7 @@ int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY
 }
 
 //テキストのサイズ取得.
-INT_XY DrawStrST::GetTextSize(my_string str, int font) {
+INT_XY DrawStrST::GetTextSize(MY_STRING str, int font) {
 	
 	INT_XY size{};
 	int    line{}; //無視.

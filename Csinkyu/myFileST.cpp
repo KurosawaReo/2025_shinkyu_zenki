@@ -1,13 +1,13 @@
 /*
    - myFileST.cpp - (original)
-   ver.2025/07/26
+   ver.2025/08/02
 
    DxLib: オリジナルファイル機能の追加.
 */
 #include "myFileST.h"
 
 //ファイルを開く.
-int FileST::Open(my_string fileName, my_string mode) {
+int FileST::Open(MY_STRING fileName, MY_STRING mode) {
 
 	//先にファイルを閉じる.
 	Close();
@@ -29,7 +29,7 @@ void FileST::Close() {
 }
 
 //読み込み(文字列)
-my_string FileST::ReadString() {
+MY_STRING FileST::ReadString() {
 
 	//既に開いているファイルがあるなら.
 	if (fp != nullptr) {
@@ -55,7 +55,7 @@ int FileST::ReadInt() {
 	}
 }
 //書き込み(文字列)
-void FileST::WriteString(my_string data) {
+void FileST::WriteString(MY_STRING data) {
 
 	//既に開いているファイルがあるなら.
 	if (fp != nullptr) {
