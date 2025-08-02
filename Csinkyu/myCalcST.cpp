@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/07/24
+   ver.2025/07/29
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -163,12 +163,12 @@ double CalcFacingAng(DBL_XY stPos, DBL_XY targetPos) {
     double disX = targetPos.x - stPos.x;
 	double disY = targetPos.y - stPos.y;
 	//radをdigにして返す.
-	return _dig(atan2(disY, disX));
+	return _deg(atan2(disY, disX));
 }
 //角度から座標を求める.
-DBL_XY CalcDigToPos(double dig) {
+DBL_XY CalcDegToPos(double deg) {
 	//座標vector(値が-1～+1になる)を返す.
-	return { cos(_rad(dig)), sin(_rad(dig)) };
+	return { cos(_rad(deg)), sin(_rad(deg)) };
 }
 //角度から座標を求める.
 DBL_XY CalcRadToPos(double rad) {

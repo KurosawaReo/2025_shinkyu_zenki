@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/07/26
+   ver.2025/07/27
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -26,9 +26,9 @@ using namespace std;
 
 //文字コードで切り替え.
 #if defined UNICODE
-  typedef wstring my_string; //wchar_t型.
+  typedef wstring MY_STRING; //wchar_t型.
 #else
-  typedef string  my_string; //char型.
+  typedef string  MY_STRING; //char型.
 #endif
 
 //xとyの凝縮.
@@ -67,12 +67,6 @@ struct XY
 typedef XY<int>    INT_XY; //int型.
 typedef XY<double> DBL_XY; //double型.
 
-//画像データ.
-struct Image
-{
-	int    handle; //ハンドル.
-	INT_XY size;   //画像のサイズ.
-};
 //円データ.
 struct Circle
 {
@@ -99,55 +93,6 @@ struct Line
 	DBL_XY stPos; //始点座標.
 	DBL_XY edPos; //終点座標.
 	UINT   clr;   //色.
-};
-//オブジェクト(円)
-struct ObjectCir
-{
-	Circle cir{};      //当たり判定と座標.
-	DBL_XY offset{};   //画像をずらす量.
-	Image  img{};      //画像.
-	BOOL   isActive{}; //有効かどうか.
-
-	//初期化用.
-	ObjectCir(){}
-	//初期化用(引数あり)
-	ObjectCir(DBL_XY _pos, float _r, DBL_XY _offset, UINT _clr, BOOL _isActive) :
-		cir     ({ _pos, _r, _clr }), 
-		offset  (_offset), 
-		isActive(_isActive)
-	{}
-};
-//オブジェクト(四角形)
-struct ObjectBox
-{
-	Box    box{};      //当たり判定と座標.
-	DBL_XY offset{};   //画像をずらす量.
-	Image  img{};      //画像.
-	BOOL   isActive{}; //有効かどうか.
-
-	//初期化用.
-	ObjectBox(){}
-	//初期化用(引数あり)
-	ObjectBox(DBL_XY _pos, DBL_XY _size, DBL_XY _offset, UINT _clr, BOOL _isActive) :
-		box     ({_pos, _size, _clr}), 
-		offset  (_offset), 
-		isActive(_isActive)
-	{}
-};
-//オブジェクト(グリッド上専用)
-struct ObjectGrid
-{
-	INT_XY pos{};      //座標.
-	Image  img{};      //画像.
-	BOOL   isActive{}; //有効かどうか.
-
-	//初期化用.
-	ObjectGrid(){}
-	//初期化用(引数あり)
-	ObjectGrid(INT_XY _pos, UINT _clr, BOOL _isActive) :
-		pos(_pos),
-		isActive(_isActive)
-	{}
 };
 
 //型変換マクロ.
@@ -177,6 +122,8 @@ enum MoveDir
 	MOVE_UP
 };
 // - ゲームデータ -
+class DrawImageST; //前方宣言.
+
 struct GameData
 {
 	Scene scene;      //シーンの記録用.
@@ -188,16 +135,18 @@ struct GameData
 	float spawnRate;  //障害物の出現時間割合.
 	float counter;    //経過時間カウンター(スローの影響を受ける)
 
-	int   font2;      //フォント.
 	int   font1;      //フォント.
+	int   font2;      //フォント.
 	int   font3;      //フォント.
-	Image   imgLogo[2]; //タイトルロゴ画像.
+	int   font4;      //フォント.
 
 	BOOL  isSlow;     //スローモードかどうか.
 };
 
 // - Debug -
-//#define DEBUG_LASER_ACTIVE //定義するとデバッグ表示ON.
+//定義するとデバッグ表示ON.
+//#define DEBUG_LASER_ACTIVE
+#define DEBUG_SPAWN_RATE
 
 // - 定数 -
 #define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
@@ -225,7 +174,7 @@ struct GameData
 
 #define ITEM_SIZE						(20)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
-#define ITEM_RESPAWN_TIME				(200)           //アイテム復活時間.
+#define ITEM_RESPAWN_TIME				(400)           //アイテム復活時間.
 
 #define OBSTACLE2_SPAN					(80)			//障害物の発射間隔.
 #define OBSTACLE2_SPEED					(3.0)			//障害物の速度.

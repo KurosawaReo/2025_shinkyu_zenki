@@ -67,9 +67,10 @@ void LaserManager::Draw() {
 		//線の色(時間経過で色が変化)
 		switch (line[i].type)
 		{
-			case Laser_Normal:    tmpLine.clr = GetColor(50, clr, 255); break;
-			case Laser_Straight:  tmpLine.clr = GetColor(50, clr, 255); break;
-			case Laser_Reflected: tmpLine.clr = GetColor(clr/2+128, 0, 255); break;
+			case Laser_Normal:       tmpLine.clr = GetColor(50, clr, 255);      break;
+			case Laser_Straight:     tmpLine.clr = GetColor(50, clr, 255);      break;
+			case Laser_Reflect:      tmpLine.clr = GetColor(clr/2+128, 0, 255); break;
+			case Laser_SuperReflect: tmpLine.clr = GetColor(clr/2+128, 0, 255); break;
 
 			default: assert(FALSE); break;
 		}
@@ -101,9 +102,18 @@ void LaserManager::UpdateLaser() {
 					(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
 				{
 					//反射あり.
-					if (p_player->IsReflectionMode())
+					if (p_player->GetMode() == Player_Reflect)
 					{
-						ReflectLaser(i); //レーザーを反射.		
+						laser[i].type = Laser_Reflect; //反射モードへ.
+						laser[i].Counter = 0;          //リセット.
+						ReflectLaser(i);               //レーザーを反射.
+					}
+					//反射あり(強化版)
+					else if (p_player->GetMode() == Player_SuperReflect)
+					{
+						laser[i].type = Laser_SuperReflect; //反射モードへ.
+						laser[i].Counter = 0;               //リセット.
+						ReflectLaser(i);                    //レーザーを反射.		
 					}
 					//反射なし.
 					else
@@ -129,9 +139,18 @@ void LaserManager::UpdateLaser() {
 					(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
 				{
 					//反射あり.
-					if (p_player->IsReflectionMode())
+					if (p_player->GetMode() == Player_Reflect)
 					{
-						ReflectLaser(i); //レーザーを反射.		
+						laser[i].type = Laser_Reflect; //反射モードへ.
+						laser[i].Counter = 0;          //リセット.
+						ReflectLaser(i);               //レーザーを反射.
+					}
+					//反射あり(強化版)
+					else if (p_player->GetMode() == Player_SuperReflect)
+					{
+						laser[i].type = Laser_SuperReflect; //反射モードへ.
+						laser[i].Counter = 0;               //リセット.
+						ReflectLaser(i);                    //レーザーを反射.		
 					}
 					//反射なし.
 					else
@@ -151,7 +170,8 @@ void LaserManager::UpdateLaser() {
 			}
 			break;
 
-			case Laser_Reflected:
+			case Laser_Reflect:
+			case Laser_SuperReflect:
 			{
 				//一定時間で目標地点を決める.
 				if (laser[i].Counter >= LASER_REF_TRACK_ST_TM) {
@@ -175,25 +195,32 @@ void LaserManager::UpdateLaser() {
 				//隕石と当たっているなら.
 				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
 					
-					double dig = _dig(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
+					double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 
 					//エフェクトをいくつか出す.
 					for(int j = 0; j < 8; j++){
 
-						double newDig = dig + (float)RandNum(-400, 400)/10; //少し角度をずらす.
+						double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
 
 						EffectData data{};
 						data.type  = Effect_BreakMeteo;
 						data.pos   = { laser[i].x, laser[i].y };
-						data.vec   = CalcDigToPos(newDig);       //ずらした角度を反映.
-						data.speed = (float)RandNum( 5,   40)/10; //速度抽選.
-						data.len   = (float)RandNum(30,  180)/10; //長さ抽選.
-						data.ang   = (float)RandNum( 0, 3599)/10; //角度抽選.
+						data.vec   = CalcDegToPos(newDig);         //ずらした角度を反映.
+						data.speed = (float)RandNum( 40,  100)/10; //速度抽選.
+						data.len   = (float)RandNum( 30,  150)/10; //長さ抽選.
+						data.ang   = (float)RandNum(  0, 3599)/10; //角度抽選.
 						//エフェクト召喚.
 						p_effectMng->SpawnEffect(&data);
 					}
-					//消去.
-					DeleteLaser(i);
+
+					//どっちのタイプかで切り替え.
+					if (laser[i].type == Laser_Reflect) {
+						DeleteLaser(i);  //消去.
+					}
+					else{
+						laser[i].Counter = LASER_REF_TRACK_ED_TM; //再反射後は追尾しない.
+						ReflectLaser(i); //再反射.
+					}
 				}
 				else{
 					//レーザーの追尾処理.
@@ -324,15 +351,12 @@ void LaserManager::ReflectLaser(int idx)
 	}
 
 	//反射時の元の角度.
-	double ang = _dig(atan2(laser[idx].vy, laser[idx].vx));
+	double ang = _deg(atan2(laser[idx].vy, laser[idx].vx));
 	//角度を逆方向へ(少しだけランダムでずれる)
 	ang += 180 + (float)RandNum(-200, 200)/10;
 	//角度反映.
 	laser[idx].vx = cos(_rad(ang));
 	laser[idx].vy = sin(_rad(ang));
-
-	laser[idx].type    = Laser_Reflected; //反射モードへ.
-	laser[idx].Counter = 0;               //カウンターをリセット.
 
 	//エフェクト.
 	EffectData data{};

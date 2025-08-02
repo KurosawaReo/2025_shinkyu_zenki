@@ -15,7 +15,7 @@ private:
 	int        nowVol{};                       //現在の音量.
 	int        aftVol{};                       //変化後の音量.
 	LONGLONG   aftUS{};                        //変化時間(マイクロ秒)
-	TimerMicro timer = TimerMicro(CountUp, 0); //タイマー計測用.
+	TimerMicro timer = TimerMicro(COUNT_UP, 0); //タイマー計測用.
 	BOOL       isFadeOut{};                    //フェードアウトかどうか.
 
 public:
@@ -46,7 +46,7 @@ private: //実体.
 	static SoundST self; //自身の実体.
 
 private: //データ.
-	map<my_string, SoundData> sound;
+	map<MY_STRING, SoundData> sound;
 
 public:
 	//実体の取得.
@@ -56,12 +56,12 @@ public:
 	//デストラクタ.
 	~SoundST();
 
-	int  LoadFile(my_string fileName, my_string saveName);
-	void Play    (my_string saveName, BOOL isLoop, int volume = 100);
-	void Stop    (my_string saveName);
+	int  LoadFile(MY_STRING fileName, MY_STRING saveName);
+	void Play    (MY_STRING saveName, BOOL isLoop, int volume = 100);
+	void Stop    (MY_STRING saveName);
 	void Update  ();
 
-	void ChangeVolume(my_string saveName, int volume, float sec = 0);	       //音量を変更.
-	void FadeInPlay  (my_string saveName, int volume, float sec, BOOL isLoop); //フェードイン再生.
-	void FadeOutPlay (my_string saveName, float sec);						   //フェードアウトする.
+	void ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	       //音量を変更.
+	void FadeInPlay  (MY_STRING saveName, int volume, float sec, BOOL isLoop); //フェードイン再生.
+	void FadeOutPlay (MY_STRING saveName, float sec);						   //フェードアウトする.
 };

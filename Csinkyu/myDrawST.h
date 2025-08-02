@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/07/26
+   ver.2025/08/02
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -19,51 +19,73 @@ enum FontTypeID
 enum BlendModeID
 {
 	MODE_NONE  = DX_BLENDMODE_NOBLEND, //デフォルト.
-	MODE_ALPHA = DX_BLENDMODE_ALPHA,   //αブレンド.
-	MODE_ADD   = DX_BLENDMODE_ADD,     //加算ブレンド.
-	MODE_SUB   = DX_BLENDMODE_SUB,     //減算ブレンド.
+	MODE_ALPHA = DX_BLENDMODE_ALPHA,   //αブレンド.  (重なると透過する)
+	MODE_ADD   = DX_BLENDMODE_ADD,     //加算ブレンド.(重なると明度が明るくなる)
+	MODE_SUB   = DX_BLENDMODE_SUB,     //減算ブレンド.(重なると明度が暗くなる)
 	MODE_MUL   = DX_BLENDMODE_MUL      //乗算ブレンド.
 };
 
-//画像描画に使う用.
-struct DrawImg
+//画像データ.
+struct Image
 {
-	Image  img;    //画像データ.
-	INT_XY pos;    //画面のどこに描画するか.
+	int    handle; //ハンドル.
+	INT_XY size;   //画像のサイズ.
 };
-struct DrawImgRect : public DrawImg
+//文字列データ.
+struct String
 {
-	INT_XY stPxl;  //始点pixel.
-	INT_XY size;   //切り取るサイズ.
+	MY_STRING text; //テキスト.
+	INT_XY    pos;  //画面のどこに描画するか.
+	UINT      clr;  //文字の色.
 };
-struct DrawImgExtend : public DrawImg
+
+//画像描画クラス.
+class DrawImgST
 {
-	INT_XY size;   //描画するサイズ.
+private:
+	vector<Image> data; //画像データ.
+
+public:
+	//読み込み.
+	int LoadGraphST   (MY_STRING fileName);
+	int LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt);
+	//描画.
+	int DrawGraphST      (int imgNo, INT_XY pos, BOOL isCenter, BOOL isTrans = TRUE);
+	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans = TRUE);
+	int DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, BOOL isCenter, BOOL isTrans = TRUE);
+	int DrawRotaGraphST  (int imgNo, INT_XY pos, double extend, double ang, BOOL isCenter, BOOL isTrans = TRUE);
 };
-struct DrawImgRota : public DrawImg
+
+//テキスト描画クラス.
+class DrawStrST
 {
-	double extend; //サイズ倍率.
-	double ang;    //角度.
-};
-//文字描画に使う用.
-struct DrawStr
-{
-	TCHAR  text[256]{};      //テキスト.
-	INT_XY pos;              //画面のどこに描画するか.
-	UINT   color = 0xFFFFFF; //文字の色.
-};
-struct DrawStrRota : public DrawStr
-{
-	INT_XY extend = {1, 1};  //伸縮倍率.
-	INT_XY pivot  = {0, 0};  //回転基準点.
-	double ang    = 0;       //回転度.
-};
-struct DrawStrModi : public DrawStr
-{
-	INT_XY luPos;            //テキストの左上座標.
-	INT_XY ruPos;            //テキストの右上座標.
-	INT_XY rdPos;            //テキストの右下座標.
-	INT_XY ldPos;            //テキストの左下座標.
+private:
+	String data; //文字列データ.
+
+public:
+	//初期化用.
+	DrawStrST(MY_STRING _text, INT_XY _pos, UINT _clr) :
+		data{_text, _pos, _clr}
+	{}
+	//set.
+	void SetText(MY_STRING _text) {
+		data.text = _text;
+	}
+	void SetPos(int _x, int _y) {
+		data.pos = {_x, _y};
+	}
+	void SetColor(UINT _color) {
+		data.clr = _color;
+	}
+	//get.
+	INT_XY GetPos() {
+		return data.pos;
+	}
+	//描画.
+	int    DrawStringST	   (BOOL isCenter, int font = -1);
+	int    DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL isVertical, int font = -1);
+	int    DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, BOOL isVertical, int font = -1);
+	INT_XY GetTextSize 	   (MY_STRING str, int font = -1);
 };
 
 //図形.
@@ -73,27 +95,8 @@ int    DrawTriangleST	 (const Triangle* data, BOOL isFill = TRUE, BOOL isAnti = 
 int    DrawLineST		 (const Line*     data, BOOL isAnti = FALSE, float thick = 1.0f);
 int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
-//画像.
-int    LoadGraphST		 (Image* img, my_string fileName);
-int    LoadDivGraphST	 (vector<Image>* img, my_string fileName, INT_XY size, INT_XY cnt);
-int    DrawGraphST		 (const DrawImg*       data, BOOL isCenter, BOOL isTrans = TRUE);
-int    DrawRectGraphST	 (const DrawImgRect*   data, BOOL isTrans = TRUE);
-int    DrawExtendGraphST (const DrawImgExtend* data, BOOL isCenter, BOOL isTrans = TRUE);
-int    DrawRotaGraphST	 (const DrawImgRota*   data, BOOL isCenter, BOOL isTrans = TRUE);
-
-//テキスト.
-int    DrawStringST		 (const DrawStr*     data, BOOL isCenter,   int font = -1);
-int    DrawRotaStringST	 (const DrawStrRota* data, BOOL isVertical, int font = -1);
-int    DrawModiStringST	 (const DrawStrModi* data, BOOL isVertical, int font = -1);
-INT_XY GetTextSize		 (my_string str, int font = -1);
-
 //フォント.
-int    CreateFontH		 (int size, int thick, FontTypeID fontId = FONT_NONE);
-
-//オブジェクト.
-int    DrawObjectCir	 (const ObjectCir*  data, BOOL isDrawHit = FALSE);
-int    DrawObjectBox	 (const ObjectBox*  data, BOOL isDrawHit = FALSE);
-int    DrawObjectGrid	 (const ObjectGrid* data, INT_XY gridPos, INT_XY gridSize);
+int    CreateFontH       (int size, int thick, FontTypeID fontId = FONT_NONE);
 
 //描画モード.
 int    SetDrawBlendModeST(BlendModeID id, int    power = 255);

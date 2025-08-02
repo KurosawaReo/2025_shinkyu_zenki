@@ -9,80 +9,134 @@
 #include "Item.h"
 
 //初期化.
-void Item::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
+void ItemManager::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
 {
 	p_gamedata  = _gamedata;
 	p_player    = _player;
 	p_effectMng = _effectMng;
 }
-
-// アイテムのリセット（再生成用）
-void Item::Reset()
+//リセット.
+void ItemManager::Reset()
 {
-	// 座標の初期化
-	pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID- ITEM_SIZE); // X座標をランダムに設定
-	pos.y = -1000;											  // 画面上部の少し上から開始
-	// サイズと色の設定
-	size.x = ITEM_SIZE;
-	size.y = ITEM_SIZE;
+	//全て消滅.
+	for (int i = 0; i < _countof(data); i++) {
+		ItemErase(i);
+	}
+	//最初はアイテム1つ.
+	itemCnt = 1;
+}
+//更新.
+void ItemManager::Update()
+{
+	for (int i = 0; i < _countof(data); i++) {
 
-	// アイテムの状態設定
-	active = TRUE;						  // アクティブフラグ
-	itemCounter = 0;                      // カウンター初期化
-	// itemGraph = LoadGraph("item.png"); // 画像を使用する場合
+		if (data[i].active) {
+
+			//カウンター.
+			data[i].counter += ((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
+			//落下.
+			data[i].pos.y += ITEM_SPEED * (double)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
+			//当たり判定.
+			CheckHitPlayer(i);
+
+			//画面下部を超えたら消滅.
+			if (data[i].pos.y > WINDOW_HEI + ITEM_SIZE) {
+				ItemErase(i);
+			}
+		}
+		else {
+			//召喚可能なら.
+			if (itemCnt >= i+1) {
+				//スローモード中は加算しない.
+				data[i].spawnCounter += (p_gamedata->isSlow) ? 0 : 1;
+				//一定時間で再生成.
+				if (data[i].spawnCounter > ITEM_RESPAWN_TIME)
+				{
+					data[i].spawnCounter = 0; //リセット.
+					ItemSpawn(i);
+				}
+			}
+		}
+	}
+}
+//描画.
+void ItemManager::Draw()
+{
+	for (int i = 0; i < _countof(data); i++) {
+
+		//有効なアイテムを描画.
+		if (data[i].active) {
+			//強化演出.
+			if (data[i].type == Item_Super) {
+
+				Circle cir = { data[i].pos, 30, COLOR_PLY_REFLECT };
+
+				SetDrawBlendModeST(MODE_ADD, 128 + 127*CalcNumWaveLoop(data[i].counter/20)); //点滅.
+				DrawCircleST(&cir, FALSE, TRUE);
+				ResetDrawBlendMode();
+			}
+			//アイテム本体.
+			{
+				Box box1 = { data[i].pos, {ITEM_SIZE,   ITEM_SIZE  }, COLOR_ITEM }; //{pos}, {size}, color.
+				Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
+				DrawBoxST(&box1, TRUE, FALSE);
+				DrawBoxST(&box2, TRUE, FALSE);
+			}
+		
+			// 画像を使用する場合のコード例
+			// if (itemGraph != -1) {
+			//     DrawGraph((int)itemX, (int)itemY, itemGraph, TRUE);
+			// }
+		}
+	}
 }
 
-//更新.
-void Item::Update()
-{
-	//カウンタ.
-	itemCounter += (float)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
+//アイテム召喚.
+void ItemManager::ItemSpawn(int idx) {
 
-	if (active) {
-		ItemMove();
-
-		// 画面下部を超えたら再生成
-		if (pos.y > WINDOW_HEI + size.y) {
-			Reset(); // 新しいアイテムとして再生成
-		}
+	//座標の設定.
+	data[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
+	data[idx].pos.y = -ITEM_SIZE;	 								    // 画面上部の少し上から開始
+	//タイプを決める.
+	if (p_gamedata->level <= 4) {
+		data[idx].type = Item_Normal;
 	}
-	else
-	{
-		//アイテムが生成されてない時でもチェック.
-		if (itemCounter > ITEM_RESPAWN_TIME)//フレーム1秒に生成.
-		{
-			Reset();
-		}
+	else {
+		data[idx].type = Item_Super; //Lv4からは強化版へ.
 	}
-
-	CheckHitPlayer(); //当たり判定.
+	// アイテムの状態設定
+	data[idx].active = TRUE; //アクティブフラグ
+	data[idx].counter = 0;
+}
+//アイテム消滅.
+void ItemManager::ItemErase(int idx) {
+	data[idx].active = FALSE;
+	data[idx].counter = 0;
+	data[idx].spawnCounter = 0;
 }
 
 // プレイヤーとの当たり判定
-BOOL Item::CheckHitPlayer()
+void ItemManager::CheckHitPlayer(int idx)
 {
 	//アイテムが無効orプレイヤーがいないなら処理しない.
-	if (!active || !p_player->GetActive()) {
-		return FALSE;
+	if (!data[idx].active || !p_player->GetActive()) {
+		return;
 	}
 
 	//プレイヤーの判定を取得.
 	Circle* plyHit = p_player->GetHit();
 	//当たり判定を四角形とする.
-	Box plyBox = { plyHit->pos, {PLAYER_SIZE, PLAYER_SIZE}, {} };
-	Box itemBox = { pos, size, {} };
+	Box plyBox  = { plyHit->pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
+	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//当たった場合.
 	if (HitBox(&plyBox, &itemBox, TRUE)) {
-		OnHitPlayer();
-		return TRUE;
+		OnHitPlayer(idx);
 	}
-
-	return FALSE;
 }
 
 // プレイヤーと当たったときの処理
-void Item::OnHitPlayer()
+void ItemManager::OnHitPlayer(int idx)
 {
 	//アイテムを取った処理.
 	GameManager::GetPtr()->TakeItem();
@@ -90,51 +144,29 @@ void Item::OnHitPlayer()
 	SoundST* sound = SoundST::GetPtr();
 	sound->Play(_T("TakeItem"),   FALSE, 76); //ポワーン.
 	//エフェクト召喚.
-	EffectData data{};
-	data.type = Effect_Score100;
-	data.pos = pos;
-	p_effectMng->SpawnEffect(&data);
+	EffectData effect{};
+	effect.type = Effect_Score100;
+	effect.pos = data[idx].pos;
+	p_effectMng->SpawnEffect(&effect);
 
-	// アイテムを削除（非アクティブにする）
-	active = FALSE;
-	itemCounter = 0;//カウンターをリセットして再生成タイマー開始.
-	// 座標を画面外に移動（念のため）
-	pos = {-100, -100}; 
-}
+	/*Circle cir = { p_player.GetPos(), 1000, {} };
+	p_laserMng.LaserReflectRange(&cir);*/
 
-//描画.
-void Item::Draw()
-{
-	if (active) {
+	//プレイヤーのモード設定.
+	switch (data[idx].type)
+	{
+		case Item_Normal:
+			p_player->SetMode(Player_Reflect);
+			break;
+		case Item_Super:
+			p_player->SetMode(Player_SuperReflect);
+			break;
 
-		// 描画（既存のコードを活用）
-		Box box1 = { pos, {size.x,   size.y  }, COLOR_ITEM }; //{pos}, {size}, color.
-		Box box2 = { pos, {size.x-2, size.y-2}, COLOR_ITEM }; //{pos}, {size}, color.
-
-		DrawBoxST(&box1, TRUE, FALSE, TRUE);
-		DrawBoxST(&box2, TRUE, FALSE, TRUE);
-
-		// 画像を使用する場合のコード例
-		// if (itemGraph != -1) {
-		//     DrawGraph((int)itemX, (int)itemY, itemGraph, TRUE);
-		// }
+		default: assert(FALSE); break;
 	}
-}
-
-void Item::ItemMove()
-{
-	//落下.
-	pos.y += ITEM_SPEED * (double)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
-
-#if false //よく分からん機能.
-	// 左右にも少しランダムな動きを追加（オプション）
-	if ((int)itemCounter % 20 == 0) {  // 一定間隔で左右に移動
-		double moveX = ((rand() % 3) - 1) * 0.5;  // -0.5, 0, 0.5のいずれか
-		itemX += moveX;
-
-		// 画面外に出ないように制限
-		if (itemX < 0)   itemX = 0;
-		if (itemX > 620) itemX = 620;
-	}
-#endif
+	//アイテムを削除（非アクティブにする）
+	data[idx].active = FALSE;
+	data[idx].counter = 0; //カウンターをリセットして再生成タイマー開始.
+	//座標を画面外に移動（念のため）
+	data[idx].pos = {-100, -100};
 }

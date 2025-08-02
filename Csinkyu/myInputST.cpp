@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/07/24
+   ver.2025/07/28
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -13,28 +13,30 @@ InputST InputST::self; //実体の宣言.
 
 //キー入力の判定.
 BOOL InputST::IsPushKey(KeyID id) {
-	return (tmKey[id] > 0);     //押してるならTRUE.
+	return (tmKey[id] > 0);    //押してるならTRUE.
 }
 int  InputST::IsPushKeyTime(KeyID id) {
-	return tmKey[id];           //押している時間.
+	return tmKey[id];          //押している時間.
 }
 //マウス入力の判定.
 BOOL InputST::IsPushMouse(MouseID id) {
-	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
-	return (tmMouse[num] > 0);  //押してるならTRUE.
+	return (tmMouse[id] > 0);  //押してるならTRUE.
 }
 int  InputST::IsPushMouseTime(MouseID id) {
-	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
-	return tmMouse[num];        //押している時間.
+	return tmMouse[id];        //押している時間.
 }
 //コントローラ入力の判定.
-BOOL InputST::IsPushPadBtn(PadBtnID id) {
-	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
-	return (tmPadBtn[num] > 0); //押している時間.
+BOOL InputST::IsPushPadBtn(PadXboxID id) {
+	return (tmPadBtn[id] > 0); //押してるならTRUE.
 }
-int  InputST::IsPushPadBtnTime(PadBtnID id) {
-	int num = (int)log2(id);    //2進数bitを何桁目かに変換.
-	return tmPadBtn[num];       //押している時間.
+BOOL InputST::IsPushPadBtn(PadSwitchID id) {
+	return (tmPadBtn[id] > 0); //押してるならTRUE.
+}
+int  InputST::IsPushPadBtnTime(PadXboxID id) {
+	return tmPadBtn[id];       //押している時間.
+}
+int  InputST::IsPushPadBtnTime(PadSwitchID id) {
+	return tmPadBtn[id];       //押している時間.
 }
 
 //マウス座標取得.
@@ -85,16 +87,16 @@ void InputST::InputPad4Dir(DBL_XY* pos, float speed) {
 	INT_XY pow{};  //移動力.
 
 	//キー入力に応じて移動力を与える.
-	if (IsPushPadBtn(PAD_BTN_UP)) {
+	if (IsPushPadBtn(PAD_XBOX_UP)) {
 		pow.y += -1;
 	}
-	if (IsPushPadBtn(PAD_BTN_DOWN)) {
+	if (IsPushPadBtn(PAD_XBOX_DOWN)) {
 		pow.y += +1;
 	}
-	if (IsPushPadBtn(PAD_BTN_LEFT)) {
+	if (IsPushPadBtn(PAD_XBOX_LEFT)) {
 		pow.x += -1;
 	}
-	if (IsPushPadBtn(PAD_BTN_RIGHT)) {
+	if (IsPushPadBtn(PAD_XBOX_RIGHT)) {
 		pow.x += +1;
 	}
 

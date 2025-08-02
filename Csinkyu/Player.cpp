@@ -18,9 +18,9 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, BOOL _active)
 {
-	hit = { _pos, PLAYER_HIT_R, {} };
-	active = _active;
-	isReflect = false;
+	hit       = { _pos, PLAYER_HIT_R, {} };
+	active    = _active;
+	mode      = Player_Normal;
 	afterCntr = 1;  // afterCntrの初期化を追加
 
 	//座標配列のリセット.
@@ -64,16 +64,16 @@ void Player::Draw()
 {
 	//デバッグ表示.
 	if (isDebug) {
-		DrawString(0, 430, _T("[Debug] 無敵モード"), 0xFFFFFF);
-
-		// エフェクトのデバッグ情報表示
-		for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
-			if (reflectEffects[i].active) {
-				TCHAR debugStr[128];
-				_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
-					i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
-				DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
-			}
+		DrawStrST str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
+		str.DrawStringST(TRUE, p_data->font1);
+	}
+	// エフェクトのデバッグ情報表示
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		if (reflectEffects[i].active) {
+			TCHAR debugStr[128];
+			_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
+				i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
+			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
 		}
 	}
 
@@ -84,11 +84,12 @@ void Player::Draw()
 
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
-		Box box2 = { hit.pos, { PLAYER_SIZE - 2, PLAYER_SIZE - 2 }, 0xFFFFFF };
+		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
 
 		//反射モード中の色.
-		if (IsReflectionMode())
-		{
+		if (mode == Player_Reflect || 
+			mode == Player_SuperReflect
+		){
 			box1.clr = box2.clr = COLOR_PLY_REFLECT;
 		}
 		//デバッグモード中.
@@ -132,8 +133,9 @@ void Player::DrawAfterImage()
 
 		Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
 		//反射カラー.
-		if (IsReflectionMode())
-		{
+		if (mode == Player_Reflect ||
+			mode == Player_SuperReflect
+		){
 			box.clr = COLOR_PLY_AFT_REF;
 		}
 		//通常カラー.
@@ -283,17 +285,6 @@ void Player::DrawReflectEffects()
 			ResetDrawBlendMode();
 		}
 	}
-}
-
-//反射モードかどうか.
-BOOL Player::IsReflectionMode() const
-{
-	return isReflect;
-}
-//反射モード設定.
-void Player::SetReflectionMode(BOOL tf)
-{
-	isReflect = tf;
 }
 
 //死亡処理.

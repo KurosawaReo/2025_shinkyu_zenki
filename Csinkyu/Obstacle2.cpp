@@ -11,12 +11,6 @@ void Obstacle2::Init(GameData* _data, Player* _player)
 {
 	data   = _data;
 	player = _player; // プレイヤーのポインタを保存
-
-	// 敵の画像を読み込む.
-	LoadGraphST(&img, _T("image/enemy.png"));
-	// img.handle;  読み込んだ画像.
-	// img.size.x;  画像の幅
-	// img.size.y;/ 画像の高さ
 }
 
 // リセット

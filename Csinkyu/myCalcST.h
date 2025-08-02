@@ -1,6 +1,6 @@
 /*
    - myCalcST.h - (original)
-   ver.2025/07/24
+   ver.2025/07/29
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -8,7 +8,7 @@
 
 //角度変換用.
 #define _rad(x) (x)*(M_PI/180)
-#define _dig(x) (x)*(180/M_PI)
+#define _deg(x) (x)*(180/M_PI)
 
 //当たり判定.
 BOOL   HitCircle		(const Circle* cir1, const Circle* cir2);
@@ -25,7 +25,7 @@ double CalcDist			(DBL_XY pos1,  DBL_XY pos2);
 DBL_XY CalcMidPos		(DBL_XY pos1,  DBL_XY pos2);
 DBL_XY CalcArcPos		(DBL_XY stPos, double ang, double len);
 double CalcFacingAng	(DBL_XY stPos, DBL_XY targetPos);
-DBL_XY CalcDigToPos		(double dig);
+DBL_XY CalcDegToPos		(double deg);
 DBL_XY CalcRadToPos		(double rad);
 
 //値の曲線変動(アニメーション用)
