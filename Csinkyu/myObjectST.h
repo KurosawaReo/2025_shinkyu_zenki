@@ -20,10 +20,10 @@ public:
 		offset  (_offset),
 		isActive(_isActive)
 	{}
-
-	//画像読み込み.
-	int LoadGraphST   (MY_STRING fileName);
-	int LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt);
+	//set.
+	void SetImage(Image* _data) {
+		img.SetImage(_data);
+	}
 };
 
 //オブジェクト(円)
@@ -39,7 +39,7 @@ public:
 		Object(_offset, _isActive)
 	{}
 	//描画.
-	int Draw(int imgNo, BOOL isDrawHit = FALSE);
+	int Draw(BOOL isDrawHit = FALSE);
 };
 
 //オブジェクト(四角形)
@@ -55,7 +55,7 @@ public:
 		Object(_offset, _isActive)
 	{}
 	//描画.
-	int Draw(int imgNo, BOOL isDrawHit = FALSE);
+	int Draw(BOOL isDrawHit = FALSE);
 };
 
 //オブジェクト(グリッド上専用)
@@ -71,5 +71,5 @@ public:
 		Object(_offset, _isActive)
 	{}
 	//描画.
-	int Draw(int imgNo, INT_XY gridPos, INT_XY gridSize);
+	int Draw(INT_XY gridPos, INT_XY gridSize);
 };
