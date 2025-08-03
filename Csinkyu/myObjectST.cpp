@@ -11,7 +11,11 @@
 #include "myObjectST.h"
 
 //オブジェクト(ObjectCir型)の描画.
-int ObjectCir::Draw(BOOL isDrawHit) {
+int ObjectCir::Draw(bool isDrawHit) {
+
+	if (!isActive) {
+		return 0; //非アクティブなら描画しない.
+	}
 
 	//座標.
 	INT_XY pos = {
@@ -25,7 +29,7 @@ int ObjectCir::Draw(BOOL isDrawHit) {
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
-		int err = DrawCircleST(&cir, FALSE, TRUE);
+		int err = DrawCircleST(&cir, false, true);
 		if (err < 0) {
 			return -2; //-2: DrawCircleSTでエラー.
 		}
@@ -33,7 +37,11 @@ int ObjectCir::Draw(BOOL isDrawHit) {
 	return 0; //正常終了.
 }
 //オブジェクト(ObjectBox型)の描画.
-int ObjectBox::Draw(BOOL isDrawHit) {
+int ObjectBox::Draw(bool isDrawHit) {
+
+	if (!isActive) {
+		return 0; //非アクティブなら描画しない.
+	}
 
 	//座標.
 	INT_XY pos = {
@@ -47,7 +55,7 @@ int ObjectBox::Draw(BOOL isDrawHit) {
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
-		int err = DrawBoxST(&box, ANC_MID, FALSE, TRUE);
+		int err = DrawBoxST(&box, ANC_MID, false, true);
 		if (err < 0) {
 			return -2; //-2: DrawBoxSTでエラー.
 		}
@@ -57,13 +65,16 @@ int ObjectBox::Draw(BOOL isDrawHit) {
 //オブジェクト(ObjectGrid型)の描画.
 int ObjectGrid::Draw(INT_XY gridPos, INT_XY gridSize) {
 
+	if (!isActive) {
+		return 0; //非アクティブなら描画しない.
+	}
+
 	//座標.
-	INT_XY pos{};
-	pos = {
+	INT_XY newPos = {
 		gridPos.x + pos.x * gridSize.x,
 		gridPos.y + pos.y * gridSize.y
 	};
 	//画像描画.
-	int err = img.DrawGraphST(pos, ANC_LU);
+	int err = img.DrawGraphST(newPos, ANC_LU);
 	return err; //-1: DrawGraphSTでエラー.
 }

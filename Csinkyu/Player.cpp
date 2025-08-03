@@ -13,10 +13,10 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 	p_data = _data;
 	p_effectMng = _effectMng;
 
-	isDebug = FALSE;  // デバッグフラグの初期化を追加
+	isDebug = false;  // デバッグフラグの初期化を追加
 }
 //リセット(何回でも行う)
-void Player::Reset(DBL_XY _pos, BOOL _active)
+void Player::Reset(DBL_XY _pos, bool _active)
 {
 	hit       = { _pos, PLAYER_HIT_R, {} };
 	active    = _active;
@@ -30,7 +30,7 @@ void Player::Reset(DBL_XY _pos, BOOL _active)
 	// 反射エフェクト初期化を追加
 	reflectEffectIndex = 0;
 	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
-		reflectEffects[i].active = FALSE;
+		reflectEffects[i].active = false;
 		reflectEffects[i].timer = 0;
 		reflectEffects[i].alpha = 0.0f;
 		reflectEffects[i].scale = 1.0f;
@@ -97,8 +97,8 @@ void Player::Draw()
 			box1.clr = box2.clr = COLOR_PLY_DEBUG;
 		}
 
-		DrawBoxST(&box1, ANC_MID, FALSE, TRUE);
-		DrawBoxST(&box2, ANC_MID, FALSE, TRUE);
+		DrawBoxST(&box1, ANC_MID, false, true);
+		DrawBoxST(&box2, ANC_MID, false, true);
 	}
 }
 
@@ -144,7 +144,7 @@ void Player::DrawAfterImage()
 			box.clr = COLOR_PLY_AFT_NOR;
 		}
 
-		DrawBoxST(&box, ANC_MID, FALSE, TRUE);
+		DrawBoxST(&box, ANC_MID, false, true);
 	}
 
 	//描画モードリセット.
@@ -178,7 +178,7 @@ void Player::CreateReflectEffect(DBL_XY pos)
 	effect->scale = 1.0f;
 	effect->alpha = 255.0f;
 	effect->timer = 30;  // 30フレーム表示
-	effect->active = TRUE;
+	effect->active = true;
 
 	// 次のインデックスに移動（循環）
 	reflectEffectIndex = (reflectEffectIndex + 1) % MAX_REFLECT_EFFECTS;
@@ -195,7 +195,7 @@ void Player::UpdateReflectEffects()
 
 			// タイマーが0になったか透明度が0以下になったら非アクティブ
 			if (reflectEffects[i].timer <= 0 || reflectEffects[i].alpha <= 0) {
-				reflectEffects[i].active = FALSE;
+				reflectEffects[i].active = false;
 			}
 		}
 	}
@@ -209,7 +209,7 @@ void Player::DrawReflectEffects()
 			ReflectEffect* effect = &reflectEffects[i];
 
 			// 点滅効果の計算（2フレームごとに点滅）
-			BOOL isFlashOn = ((effect->timer / 2) % 2) == 0;
+			bool isFlashOn = ((effect->timer / 2) % 2) == 0;
 			if (!isFlashOn) continue;  // 点滅のOFFフレームなら描画しない
 
 			// エフェクトのサイズ計算
@@ -261,7 +261,7 @@ void Player::DrawReflectEffects()
 							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxST(&thickBox, ANC_MID, FALSE, TRUE);
+						DrawBoxST(&thickBox, ANC_MID, false, true);
 					}
 				}
 			}
@@ -279,7 +279,7 @@ void Player::DrawReflectEffects()
 				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
-			DrawBoxST(&centerBox, ANC_MID, FALSE, TRUE);
+			DrawBoxST(&centerBox, ANC_MID, false, true);
 
 			// 描画モードリセット
 			ResetDrawBlendMode();
@@ -295,7 +295,7 @@ void Player::PlayerDeath() {
 
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("PlayerDeath"), FALSE, 80);
+	sound->Play(_T("PlayerDeath"), false, 80);
 	//エフェクト.
 	EffectData data{};
 	data.type = Effect_PlayerDeath;
@@ -304,5 +304,5 @@ void Player::PlayerDeath() {
 	//GamaManagerの関数実行(includeだけすれば使える)
 	GameManager::GetPtr()->GameEnd(); //ゲーム終了.
 	
-	active = FALSE;
+	active = false;
 }

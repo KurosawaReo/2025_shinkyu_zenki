@@ -10,7 +10,7 @@
 #include "myCalcST.h"
 
 //当たり判定(円と円)
-BOOL HitCircle(const Circle* cir1, const Circle* cir2) {
+bool HitCircle(const Circle* cir1, const Circle* cir2) {
 
 	//距離差.
 	double x = cir1->pos.x - cir2->pos.x;
@@ -18,27 +18,27 @@ BOOL HitCircle(const Circle* cir1, const Circle* cir2) {
     //距離が半径の合計より短ければ当たっている.
 	//(√を削減するために2乗して計算)
     if (x*x + y*y <= pow(cir1->r+cir2->r, 2)) {
-        return TRUE;
+        return true;
     }
     else {
-        return FALSE;
+        return false;
     }
 }
 //当たり判定(四角と四角)
-BOOL HitBox(const Box* box1, const Box* box2) {
+bool HitBox(const Box* box1, const Box* box2) {
 
     //中央基準座標での判定.
 	if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
 		fabs(box1->pos.y - box2->pos.y) <= (box1->size.y + box2->size.y)/2
 	){
-		return TRUE;
+		return true;
 	}
 	else {
-	    return FALSE;
+	    return false;
 	}
 }
 //当たり判定(線と円)
-BOOL HitLine(const Line* line, const Circle* cir) {
+bool HitLine(const Line* line, const Circle* cir) {
 
 	//線の始点と終点から傾きを求める.
 	double katamuki;
@@ -79,10 +79,10 @@ BOOL HitLine(const Line* line, const Circle* cir) {
 	if (dis1 <= cir->r &&                                     //条件1:線に触れている.
 		dis2 <= CalcDist(line->stPos, line->edPos)/2 + cir->r //条件2:線を直径とする円に触れている.
 	){
-		return TRUE;
+		return true;
 	}
 	else {
-		return FALSE;
+		return false;
 	}
 }
 
@@ -95,24 +95,24 @@ void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int dow
 	if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
 }
 //範囲外かどうか.
-BOOL IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down, BOOL isCompOut) {
+bool IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down, bool isCompOut) {
 
 	//完全に出たら範囲外とする.
 	if (isCompOut) {
-		if (pos.x < left  - size.x/2) { return TRUE; }
-		if (pos.y < up    - size.y/2) { return TRUE; }
-		if (pos.x > right + size.x/2) { return TRUE; }
-		if (pos.y > down  + size.y/2) { return TRUE; }
+		if (pos.x < left  - size.x/2) { return true; }
+		if (pos.y < up    - size.y/2) { return true; }
+		if (pos.x > right + size.x/2) { return true; }
+		if (pos.y > down  + size.y/2) { return true; }
 	}
 	//触れた瞬間に範囲外とする.
 	else {
-		if (pos.x < left  + size.x/2) { return TRUE; }
-		if (pos.y < up    + size.y/2) { return TRUE; }
-		if (pos.x > right - size.x/2) { return TRUE; }
-		if (pos.y > down  - size.y/2) { return TRUE; }
+		if (pos.x < left  + size.x/2) { return true; }
+		if (pos.y < up    + size.y/2) { return true; }
+		if (pos.x > right - size.x/2) { return true; }
+		if (pos.y > down  - size.y/2) { return true; }
 	}
 
-	return FALSE; //範囲内.
+	return false; //範囲内.
 }
 
 //距離計算.
@@ -190,7 +190,7 @@ double CalcNumWaveLoop(double time) {
 }
 
 //値の抽選.
-int RandNum(int st, int ed, BOOL isDxRnd) {
+int RandNum(int st, int ed, bool isDxRnd) {
 
 	int rnd = 0;
 
@@ -206,6 +206,37 @@ int RandNum(int st, int ed, BOOL isDxRnd) {
 		}
 	}
 	return st + rnd;
+}
+//値の抽選(重複なし複数)
+vector<int> RandNums(int st, int ed, int count, bool isDxRnd) {
+
+	int unUsedCnt = (ed-st)+1;      //未使用数字はいくつあるか.
+	vector<bool> isUsed((ed-st)+1); //各数字が使用済かどうか.
+	vector<int>  ret   (count);     //抽選結果を入れる用.
+	
+	//抽選する回数分ループ.
+	for (int i = 0; i < count; i++) {
+
+		//未使用数字から何番目を選ぶか抽選.
+		int cnt = RandNum(1, unUsedCnt, isDxRnd);
+		
+		//st～edの中で数字を選ぶ.
+		for (int j = 0; j <= ed-st; j++) {
+			//未使用数字なら.
+			if (!isUsed[j]) {
+				cnt--; //カウント-1
+				if (cnt == 0) {
+					ret[i] = st+j;    //この数字を抽選結果に保存.
+					isUsed[j] = true; //この数字は使用済.
+					unUsedCnt--;      //未使用枠-1.
+					break;
+				}
+			}
+		}
+	}
+
+	//抽選結果を返す.
+	return ret;
 }
 //値から小数だけ取り出す.
 double GetDecimal(double num) {

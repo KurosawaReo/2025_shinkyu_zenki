@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/08/02
+   ver.2025/08/03
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -26,9 +26,9 @@ using namespace std;
 
 //文字コードで切り替え.
 #if defined UNICODE
-  typedef wstring MY_STRING; //wchar_t型.
+typedef wstring MY_STRING; //wchar_t型.
 #else
-  typedef string  MY_STRING; //char型.
+typedef string  MY_STRING; //char型.
 #endif
 
 //xとyの凝縮.
@@ -48,20 +48,49 @@ struct XY
 	XY<T> operator*(XY<T>& xy) {
 		return { x * xy.x, y * xy.y };
 	}
-	XY<T> operator*(int n) {
-		return { x * n, y * n };
-	}
-	XY<T> operator*(double n) {
-		return { x * n, y * n };
-	}
 	XY<T> operator/(XY<T>& xy) {
 		return { x / xy.x, y / xy.y };
 	}
-	XY<T> operator/(int n) {
-		return { x / n, y / n };
+
+	XY<T>& operator+=(XY<T>& xy) {
+		x += xy.x;
+		y += xy.y;
+		return *this; //自信の実体.
 	}
-	XY<T> operator/(double n) {
-		return { x / n, y / n };
+	XY<T> operator-=(XY<T>& xy) {
+		x -= xy.x;
+		y -= xy.y;
+		return *this;
+	}
+	XY<T> operator*=(XY<T>& xy) {
+		x *= xy.x;
+		y *= xy.y;
+		return *this;
+	}
+	XY<T> operator/=(XY<T>& xy) {
+		x /= xy.x;
+		y /= xy.y;
+		return *this;
+	}
+	XY<T> operator*=(int n) {
+		x *= n;
+		y *= n;
+		return *this;
+	}
+	XY<T> operator*=(double n) {
+		x *= n;
+		y *= n;
+		return *this;
+	}
+	XY<T> operator/=(int n) {
+		x /= n;
+		y /= n;
+		return *this;
+	}
+	XY<T> operator/=(double n) {
+		x /= n;
+		y /= n;
+		return *this;
 	}
 };
 typedef XY<int>    INT_XY; //int型.
@@ -139,7 +168,7 @@ struct GameData
 	int   font3;      //フォント.
 	int   font4;      //フォント.
 
-	BOOL  isSlow;     //スローモードかどうか.
+	bool  isSlow;     //スローモードかどうか.
 };
 
 // - Debug -
@@ -148,7 +177,7 @@ struct GameData
 //#define DEBUG_SPAWN_RATE
 
 // - 定数 -
-#define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE					(false)			//ウィンドウモードにするか.
 
 #define WINDOW_WID						(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.

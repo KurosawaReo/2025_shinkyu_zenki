@@ -1,6 +1,6 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/08/02
+   ver.2025/08/03
 
    DxLib: オリジナルタイマー機能の追加.
 */
@@ -25,7 +25,7 @@ void Timer::Stop() {
 			tmSavePass -= elapsed;           //タイマー減少.
 			tmSavePass = max(tmSavePass, 0); //下限は0秒.
 		}
-		isMove = FALSE; //停止.
+		isMove = false; //停止.
 	}
 }
 //経過時間取得.
@@ -68,7 +68,7 @@ void TimerMicro::Stop() {
 			tmSavePass -= elapsed;           //タイマー減少.
 			tmSavePass = max(tmSavePass, 0); //下限は0秒.
 		}
-		isMove = FALSE; //停止.
+		isMove = false; //停止.
 	}
 }
 //経過時間取得(マイクロ秒)
@@ -98,18 +98,18 @@ LONGLONG TimerMicro::GetPassTime() {
 		return tmSavePass; //保存時間を返す.
 	}
 }
-//一定時間ごとにTRUEを返す(CountDown専用)
-BOOL TimerMicro::IntervalTime() {
+//一定時間ごとにtrueを返す(CountDown専用)
+bool TimerMicro::IntervalTime() {
 
-	//CountDownじゃない場合はFALSEを返し続ける.
+	//CountDownじゃない場合はfalseを返し続ける.
 	if (mode != COUNT_DOWN) {
-		return FALSE;
+		return false;
 	}
 
 	//タイマーが0になるまで.
 	if (GetPassTime() > 0) {
-		return FALSE; //FALSEを返す.
+		return false; //falseを返す.
 	}
 	Start();     //時間リセット.
-	return TRUE; //TRUEを返す.
+	return true; //trueを返す.
 }

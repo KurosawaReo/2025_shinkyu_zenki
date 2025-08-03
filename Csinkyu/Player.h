@@ -12,7 +12,7 @@ struct ReflectEffect
 	float  scale;         // スケール
 	float  alpha;         // 透明度
 	int    timer;         // 表示時間
-	BOOL   active;        // 有効フラグ
+	bool   active;        // 有効フラグ
 };
 
 //プレイヤーモード.
@@ -29,8 +29,8 @@ private:
 	PlayerMode mode{}; //モード.
 	
 	Circle hit{};      //プレイヤーの当たり判定円.
-	BOOL   active{};   //有効か.
-	BOOL   isDebug{};  //デバッグ用.
+	bool   active{};   //有効か.
+	bool   isDebug{};  //デバッグ用.
 
 	float  afterCntr{};					   //残像用時間カウンター.
 	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
@@ -46,18 +46,18 @@ public:
 	int reflectEffectIndex{};  // 次に使用するエフェクトのインデックス
 
 	//set.
-	void       SetActive(BOOL _active)     { active = _active; }
+	void       SetActive(bool _active)     { active = _active; }
 	void       SetMode  (PlayerMode _mode) { mode   = _mode;   } //モード設定.
 	//get. 
 	DBL_XY     GetPos()   { return hit.pos; }
-	BOOL       GetActive(){ return active; }
+	bool       GetActive(){ return active; }
 	PlayerMode GetMode()  { return mode; }
 	Circle*    GetHit()   { return &hit; }
 
 
 	//その他.
 	void Init  (GameData*, EffectManager*);
-	void Reset (DBL_XY _pos, BOOL _active);
+	void Reset (DBL_XY _pos, bool _active);
 	void Update();
 	void Draw  ();
 

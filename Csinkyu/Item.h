@@ -12,7 +12,7 @@ struct ItemData
 {
 	ItemType type{};   //タイプ.
 	DBL_XY   pos{};    //座標.
-	BOOL     active{}; //有効か.
+	bool     active{}; //有効か.
 
 	float    counter{};
 	float    spawnCounter{};
@@ -45,5 +45,5 @@ public:
 	void CheckHitPlayer(int idx); // プレイヤーとの当たり判定
 	void OnHitPlayer   (int idx); // 当たったときの処理
 
-//	BOOL IsActive() const { return active; }
+//	bool IsActive() const { return active; }
 };

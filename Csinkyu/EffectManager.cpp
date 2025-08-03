@@ -12,7 +12,7 @@ void EffectManager::Init(GameData* _data) {
 void EffectManager::Reset() {
 	//全てのエフェクトをリセット.
 	for (int i = 0; i < EFFECT_MAX; i++) {
-		effect[i].active = FALSE;
+		effect[i].active = false;
 	}
 }
 
@@ -103,7 +103,7 @@ void EffectManager::Update() {
 				}
 				break;
 
-				default: assert(FALSE); break;
+				default: assert(false); break;
 			}
 		}
 	}
@@ -156,7 +156,7 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawBoxST(&box, ANC_MID, FALSE, TRUE);
+					DrawBoxST(&box, ANC_MID, false, true);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -169,7 +169,7 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawBoxST(&box, ANC_MID, FALSE, TRUE);
+					DrawBoxST(&box, ANC_MID, false, true);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -186,7 +186,7 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawLineST(&line, TRUE);
+					DrawLineST(&line, true);
 					ResetDrawBlendMode();
 				}
 				break;
@@ -208,12 +208,12 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					str.DrawStringST(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, FALSE, TRUE);
-					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[1], FALSE, TRUE); //○
-					DrawCircleST(&cirLevel[2], FALSE, TRUE); //○
-					DrawCircleST(&cirLevel[3], FALSE, TRUE); //○
-					DrawCircleST(&cirLevel[4], FALSE, TRUE); //○
+					DrawCircleST(&cir, false, true);
+					DrawCircleST(&cirLevel[0], true,  true); //●
+					DrawCircleST(&cirLevel[1], false, true); //○
+					DrawCircleST(&cirLevel[2], false, true); //○
+					DrawCircleST(&cirLevel[3], false, true); //○
+					DrawCircleST(&cirLevel[4], false, true); //○
 					ResetDrawBlendMode();
 				}
 				break;
@@ -235,12 +235,12 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					str.DrawStringST(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, FALSE, TRUE);
-					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[1], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[2], FALSE, TRUE); //○
-					DrawCircleST(&cirLevel[3], FALSE, TRUE); //○
-					DrawCircleST(&cirLevel[4], FALSE, TRUE); //○
+					DrawCircleST(&cir, false, true);
+					DrawCircleST(&cirLevel[0], true,  true); //●
+					DrawCircleST(&cirLevel[1], true,  true); //●
+					DrawCircleST(&cirLevel[2], false, true); //○
+					DrawCircleST(&cirLevel[3], false, true); //○
+					DrawCircleST(&cirLevel[4], false, true); //○
 					ResetDrawBlendMode();
 				}
 				break;
@@ -262,12 +262,12 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					str.DrawStringST(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, FALSE, TRUE);
-					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[1], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[2], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[3], FALSE, TRUE); //○
-					DrawCircleST(&cirLevel[4], FALSE, TRUE); //○
+					DrawCircleST(&cir, false, true);
+					DrawCircleST(&cirLevel[0], true,  true); //●
+					DrawCircleST(&cirLevel[1], true,  true); //●
+					DrawCircleST(&cirLevel[2], true,  true); //●
+					DrawCircleST(&cirLevel[3], false, true); //○
+					DrawCircleST(&cirLevel[4], false, true); //○
 					ResetDrawBlendMode();
 				}
 				break;
@@ -289,12 +289,12 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					str.DrawStringST(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, FALSE, TRUE);
-					DrawCircleST(&cirLevel[0], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[1], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[2], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[3], TRUE,  TRUE); //●
-					DrawCircleST(&cirLevel[4], FALSE, TRUE); //○
+					DrawCircleST(&cir, false, true);
+					DrawCircleST(&cirLevel[0], true,  true); //●
+					DrawCircleST(&cirLevel[1], true,  true); //●
+					DrawCircleST(&cirLevel[2], true,  true); //●
+					DrawCircleST(&cirLevel[3], true,  true); //●
+					DrawCircleST(&cirLevel[4], false, true); //○
 					ResetDrawBlendMode();
 				}
 				break;
@@ -316,17 +316,17 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					str.DrawStringST(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, FALSE, TRUE);
-					DrawCircleST(&cirLevel[0], TRUE, TRUE); //●
-					DrawCircleST(&cirLevel[1], TRUE, TRUE); //●
-					DrawCircleST(&cirLevel[2], TRUE, TRUE); //●
-					DrawCircleST(&cirLevel[3], TRUE, TRUE); //●
-					DrawCircleST(&cirLevel[4], TRUE, TRUE); //●
+					DrawCircleST(&cir, false, true);
+					DrawCircleST(&cirLevel[0], true, true); //●
+					DrawCircleST(&cirLevel[1], true, true); //●
+					DrawCircleST(&cirLevel[2], true, true); //●
+					DrawCircleST(&cirLevel[3], true, true); //●
+					DrawCircleST(&cirLevel[4], true, true); //●
 					ResetDrawBlendMode();
 				}
 				break;
 
-				default: assert(FALSE); break;
+				default: assert(false); break;
 			}
 		}
 	}
@@ -346,7 +346,7 @@ void EffectManager::SpawnEffect(EffectData* data) {
 			effect[i].ang     = data->ang;
 			effect[i].len     = data->len;
 			effect[i].counter = 0;         //0から開始. 
-			effect[i].active  = TRUE;      //有効にする.
+			effect[i].active  = true;      //有効にする.
 
 			break; //召喚完了.
 		}
@@ -355,5 +355,5 @@ void EffectManager::SpawnEffect(EffectData* data) {
 //エフェクト消去.
 void EffectManager::DeleteEffect(int idx) {
 
-	effect[idx].active = FALSE;
+	effect[idx].active = false;
 }

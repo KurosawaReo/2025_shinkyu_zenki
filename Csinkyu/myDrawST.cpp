@@ -30,7 +30,7 @@ static const DBL_XY anchorPos[9] = {
 };
 
 //DrawCircleの改造版.
-int DrawCircleST(const Circle* data, BOOL isFill, BOOL isAnti, float thick) {
+int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
 
 	//アンチエイリアスあり.
 	if (isAnti) {
@@ -50,7 +50,7 @@ int DrawCircleST(const Circle* data, BOOL isFill, BOOL isAnti, float thick) {
 	return 0; //正常終了.
 }
 //DrawBoxの改造版.
-int DrawBoxST(const Box* data, Anchor anc, BOOL isFill, BOOL isAnti) {
+int DrawBoxST(const Box* data, Anchor anc, bool isFill, bool isAnti) {
 
 	if (data->size.x <= 0 || data->size.y <= 0) {
 		return -3; //-3: サイズが0以下.
@@ -80,7 +80,7 @@ int DrawBoxST(const Box* data, Anchor anc, BOOL isFill, BOOL isAnti) {
 	return 0; //正常終了.
 }
 //DrawTriangleの改造版.
-int DrawTriangleST(const Triangle* data, BOOL isFill, BOOL isAnti) {
+int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
 
 	//アンチエイリアスあり.
 	if (isAnti) {
@@ -107,7 +107,7 @@ int DrawTriangleST(const Triangle* data, BOOL isFill, BOOL isAnti) {
 	return 0; //正常終了.
 }
 //DrawLineの改造版.
-int DrawLineST(const Line* data, BOOL isAnti, float thick) {
+int DrawLineST(const Line* data, bool isAnti, float thick) {
 
 	//アンチエイリアスあり.
 	if (isAnti) {
@@ -197,7 +197,7 @@ int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 }
 
 //DrawGraphの改造版.
-int DrawImgST::DrawGraphST(INT_XY pos, Anchor anc, BOOL isTrans) {
+int DrawImgST::DrawGraphST(INT_XY pos, Anchor anc, bool isTrans) {
 
 	//基準点に座標をずらす.
 	float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
@@ -209,7 +209,7 @@ int DrawImgST::DrawGraphST(INT_XY pos, Anchor anc, BOOL isTrans) {
 	int err = DrawGraph(_int(x), _int(y), data.handle, isTrans);
 	return err; //-1: DrawGraphエラー.
 }
-int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, Anchor anc, BOOL isTrans) {
+int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, Anchor anc, bool isTrans) {
 
 	//基準点に座標をずらす.
 	float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
@@ -223,7 +223,7 @@ int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, Anchor anc, BOOL isTrans) {
 }
 //DrawRectGraphの改造版.
 //Rect = 矩形(正方形や長方形のこと)
-int DrawImgST::DrawRectGraphST(INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans) {
+int DrawImgST::DrawRectGraphST(INT_XY pos, INT_XY stPos, INT_XY size, bool isTrans) {
 
 	if (data.handle == 0) {
 		return -2; //-2: handle未設定.
@@ -234,7 +234,7 @@ int DrawImgST::DrawRectGraphST(INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTra
 	);
 	return err; //-1: DrawRectGraphエラー.
 }
-int DrawDivImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, BOOL isTrans) {
+int DrawDivImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, bool isTrans) {
 
 	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
@@ -246,7 +246,7 @@ int DrawDivImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY si
 	return err; //-1: DrawRectGraphエラー.
 }
 //DrawExtendGraphの改造版.
-int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, Anchor anc, BOOL isTrans) {
+int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans) {
 
 	//始点を求める.
 	float x1 = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x * sizeRate.x);
@@ -258,7 +258,7 @@ int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, Anchor anc, BOOL i
 	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data.handle, isTrans);
 	return err; //-1: DrawExtendGraphエラー.
 }
-int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, Anchor anc, BOOL isTrans) {
+int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans) {
 
 	//始点を求める.
 	float x1 = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x * sizeRate.x);
@@ -271,7 +271,7 @@ int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, Anch
 	return err; //-1: DrawExtendGraphエラー.
 }
 //DrawRotaGraphの改造版.
-int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, Anchor anc, BOOL isTrans) {
+int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, Anchor anc, bool isTrans) {
 
 	//基準点に座標をずらす.
 	float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
@@ -283,7 +283,7 @@ int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, Anchor anc
 	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, data.handle, isTrans);
 	return err; //-1: DrawRotaGraphエラー.
 }
-int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, Anchor anc, BOOL isTrans) {
+int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, Anchor anc, bool isTrans) {
 
 	//基準点に座標をずらす.
 	float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
@@ -320,9 +320,9 @@ int DrawStrST::DrawStringST(Anchor anc, int font) {
 	return 0; //正常終了.
 }
 //DrawRotaStringの改造版.
-int DrawStrST::DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL isVertical, int font) {
+int DrawStrST::DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font) {
 
-	double rad = _rad(ang); //角度をラジアンに変換.
+	double rad = M_PI/180 * ang; //角度をラジアンに変換.
 
 	//デフォルトフォント.
 	if (font < 0) {
@@ -347,7 +347,7 @@ int DrawStrST::DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL is
 	return 0; //正常終了.
 }
 //DrawModiStringの改造版.
-int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, BOOL isVertical, int font) {
+int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font) {
 
 	//デフォルトフォント.
 	if (font < 0) {

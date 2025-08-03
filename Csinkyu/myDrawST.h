@@ -59,10 +59,10 @@ public:
 	//読み込み.
 	int LoadGraphST      (MY_STRING fileName);
 	//描画.
-	int DrawGraphST      (INT_XY pos,                            Anchor anc = ANC_MID, BOOL isTrans = TRUE);
-	int DrawRectGraphST  (INT_XY pos, INT_XY stPos, INT_XY size,                       BOOL isTrans = TRUE);
-	int DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate,           Anchor anc = ANC_MID, BOOL isTrans = TRUE);
-	int DrawRotaGraphST  (INT_XY pos, double extend, double ang, Anchor anc = ANC_MID, BOOL isTrans = TRUE);
+	int DrawGraphST      (INT_XY pos,                            Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRectGraphST  (INT_XY pos, INT_XY stPos, INT_XY size,                       bool isTrans = true);
+	int DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate,           Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRotaGraphST  (INT_XY pos, double extend, double ang, Anchor anc = ANC_MID, bool isTrans = true);
 };
 
 //画像描画クラス(分割読み込み)
@@ -74,24 +74,25 @@ private:
 public:
 	//set, get.
 	void SetImage(Image* _data, int imgNo) {
-		//サイズオーバーしてなければ.
+		//サイズをオーバーしてないなら.
 		if (imgNo >= 0 && imgNo < data.size()) {
 			data[imgNo] = *_data;
 		}
 	}
 	Image* GetImage(int imgNo) {
-		//サイズオーバーしてなければ.
+		//サイズをオーバーしてないなら.
 		if (imgNo >= 0 && imgNo < data.size()) {
 			return &data[imgNo];
 		}
+		return nullptr; //nullを返す.
 	}
 	//読み込み.
 	int LoadDivGraphST   (MY_STRING fileName, INT_XY size, INT_XY cnt);
 	//描画.
-	int DrawGraphST      (int imgNo, INT_XY pos,                            Anchor anc = ANC_MID, BOOL isTrans = TRUE);
-	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPos, INT_XY size,                       BOOL isTrans = TRUE);
-	int DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate,           Anchor anc = ANC_MID, BOOL isTrans = TRUE);
-	int DrawRotaGraphST  (int imgNo, INT_XY pos, double extend, double ang, Anchor anc = ANC_MID, BOOL isTrans = TRUE);
+	int DrawGraphST      (int imgNo, INT_XY pos,                            Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPos, INT_XY size,                       bool isTrans = true);
+	int DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate,           Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRotaGraphST  (int imgNo, INT_XY pos, double extend, double ang, Anchor anc = ANC_MID, bool isTrans = true);
 };
 
 //テキスト描画クラス.
@@ -121,16 +122,16 @@ public:
 	}
 	//描画.
 	int    DrawStringST	   (Anchor anc = ANC_MID, int font = -1);
-	int    DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, BOOL isVertical, int font = -1);
-	int    DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, BOOL isVertical, int font = -1);
+	int    DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font = -1);
+	int    DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font = -1);
 	INT_XY GetTextSize 	   (MY_STRING str, int font = -1);
 };
 
 //図形.
-int    DrawCircleST		 (const Circle*   data,                       BOOL isFill = TRUE, BOOL isAnti = FALSE, float thick = 1);
-int    DrawBoxST		 (const Box*      data, Anchor anc = ANC_MID, BOOL isFill = TRUE, BOOL isAnti = FALSE);
-int    DrawTriangleST	 (const Triangle* data,                       BOOL isFill = TRUE, BOOL isAnti = FALSE);
-int    DrawLineST		 (const Line*     data,                                 BOOL isAnti = FALSE, float thick = 1.0f);
+int    DrawCircleST		 (const Circle*   data,                       bool isFill = true, bool isAnti = false, float thick = 1);
+int    DrawBoxST		 (const Box*      data, Anchor anc = ANC_MID, bool isFill = true, bool isAnti = false);
+int    DrawTriangleST	 (const Triangle* data,                       bool isFill = true, bool isAnti = false);
+int    DrawLineST		 (const Line*     data,                                           bool isAnti = false, float thick = 1.0f);
 int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
 
 //フォント.

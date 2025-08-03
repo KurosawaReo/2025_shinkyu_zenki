@@ -25,7 +25,7 @@ struct LaserData
 	double    vx, vy;    //進行方向ベクトル.
 
 	DBL_XY    goalPos;   //目標地点の座標.
-	BOOL      isGoGoal;  //目標地点に向かって進むか.
+	bool      isGoGoal;  //目標地点に向かって進むか.
 
 	int       LogNum;    //記録した軌跡の数.
 	float     Counter;   //追尾を初めてから通過した時間.
@@ -69,7 +69,7 @@ public:
 	void UpdateLaser();                                            //各レーザーの更新.
 	void UpdateLaserLine();                                        //各レーザー描画線の更新.
 	
-	BOOL SpawnLaser      (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
+	bool SpawnLaser      (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
 	void DeleteLaser     (int idx);                                //消去.
 	void ReflectLaser    (int idx);               	               //反射.
 

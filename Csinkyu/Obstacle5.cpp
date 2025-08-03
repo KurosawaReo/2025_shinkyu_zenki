@@ -159,7 +159,7 @@ void Obstacle5::Draw()
 //当たり判定.
 void Obstacle5::Hitjudgment()
 {
-	BOOL isPlaySound = FALSE; //一度のみサウンドを流す用.
+	bool isPlaySound = false; //一度のみサウンドを流す用.
 
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {
 		if (flashEffect[i].ValidFlag == 0 || flashEffect[i].Counter <= 0) {
@@ -195,8 +195,8 @@ void Obstacle5::Hitjudgment()
 			//サウンド.
 			if (!isPlaySound) {
 				SoundST* sound = SoundST::GetPtr();
-				sound->Play(_T("Ripples"), FALSE, 73);
-				isPlaySound = TRUE; //もう再生しない.
+				sound->Play(_T("Ripples"), false, 73);
+				isPlaySound = true; //もう再生しない.
 			}
 
 			// 一度判定を行ったらフラグを立てて、以後は無効に
@@ -251,11 +251,11 @@ void Obstacle5::DrawWarningEffect(int index)
 
 	Circle cir;
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize,   GetColor(150, 150, 150) };
-	DrawCircleST(&cir, FALSE, TRUE);
+	DrawCircleST(&cir, false, true);
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize/2, GetColor(200, 200, 200) };
-	DrawCircleST(&cir, FALSE, TRUE);
+	DrawCircleST(&cir, false, true);
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize+5, GetColor(120, 120, 120) }; // 外周リング
-	DrawCircleST(&cir, FALSE, TRUE);
+	DrawCircleST(&cir, false, true);
 
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();
@@ -284,9 +284,9 @@ void Obstacle5::DrawActiveEffect(int index)
 
 	Circle cir;
 	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)effectSize, GetColor(0, 255, 255)};
-	DrawCircleST(&cir, FALSE, TRUE);
+	DrawCircleST(&cir, false, true);
 	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)innerSize,  GetColor(0, 255, 200)};
-	DrawCircleST(&cir, FALSE, TRUE);
+	DrawCircleST(&cir, false, true);
 
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();

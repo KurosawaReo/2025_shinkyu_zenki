@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/07/28
+   ver.2025/08/03
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -126,17 +126,17 @@ public:
 	}
 
 	//判定.
-	BOOL   IsPushKey       (KeyID id);
+	bool   IsPushKey       (KeyID id);
 	int    IsPushKeyTime   (KeyID id);
-	BOOL   IsPushMouse     (MouseID id);
+	bool   IsPushMouse     (MouseID id);
 	int    IsPushMouseTime (MouseID id);
-	BOOL   IsPushPadBtn    (PadXboxID   id);
-	BOOL   IsPushPadBtn    (PadSwitchID id);
+	bool   IsPushPadBtn    (PadXboxID   id);
+	bool   IsPushPadBtn    (PadSwitchID id);
 	int    IsPushPadBtnTime(PadXboxID   id);
 	int    IsPushPadBtnTime(PadSwitchID id);
 
 	//取得.
-	void   GetMousePos     (DBL_XY* pos, BOOL isValidX = TRUE, BOOL isValidY = TRUE);
+	void   GetMousePos     (DBL_XY* pos, bool isValidX = true, bool isValidY = true);
 	void   GetPadStickVec  (DBL_XY* pos);
 
 	//移動系.

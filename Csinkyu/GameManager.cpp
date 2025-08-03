@@ -195,15 +195,15 @@ void GameManager::Reset() {
 	//リセット.
 	data.scoreBef = 0;
 	data.score = 0;
-	data.isSlow = FALSE;
+	data.isSlow = false;
 	data.counter = 0;
 	data.spawnRate = 1.0; //最初は100%
 	data.level = 1;       //最初はLv1
-	isTitleAnim = FALSE;
-	isBestScoreSound = FALSE;
+	isTitleAnim = false;
+	isBestScoreSound = false;
 	//サウンド.
 	p_sound->Stop(_T("BGM1"));
-	p_sound->Play(_T("BGM1"), TRUE, 68);
+	p_sound->Play(_T("BGM1"), true, 68);
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -222,7 +222,7 @@ void GameManager::Reset() {
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
-		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+185 }, TRUE);
+		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+185 }, true);
 	}
 }
 
@@ -242,7 +242,7 @@ void GameManager::Update() {
 		case SCENE_END:   UpdateEnd();   break;
 		case SCENE_PAUSE: UpdatePause(); break;
 	
-		default: assert(FALSE); break;
+		default: assert(false); break;
 	}
 }
 
@@ -260,7 +260,7 @@ void GameManager::Draw() {
 		case SCENE_END:   DrawEnd();   break;
 		case SCENE_PAUSE: DrawPause(); break;
 
-		default: assert(FALSE); break;
+		default: assert(false); break;
 	}
 }
 
@@ -306,7 +306,7 @@ void GameManager::UpdateReady() {
 //		data.level = 1;              //Lv1にする.
 
 		//サウンド.
-		p_sound->Play(_T("LevelUp"), FALSE, 100);
+		p_sound->Play(_T("LevelUp"), false, 100);
 		//エフェクト.
 		EffectData data{};
 		data.type = Effect_Level1;
@@ -333,7 +333,7 @@ void GameManager::UpdateGame() {
 				data.level = 2; //Lv2へ.
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), FALSE, 100);
+				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Level2;
@@ -346,7 +346,7 @@ void GameManager::UpdateGame() {
 				data.level = 3; //Lv3へ.
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), FALSE, 100);
+				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Level3;
@@ -362,7 +362,7 @@ void GameManager::UpdateGame() {
 				item.AddItemCnt(); //アイテムを増やす.
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), FALSE, 100);
+				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Level4;
@@ -377,7 +377,7 @@ void GameManager::UpdateGame() {
 				ResetNorLaser();
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), FALSE, 100);
+				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Level5;
@@ -389,7 +389,7 @@ void GameManager::UpdateGame() {
 			//最終レベル.
 			break;
 
-		default: assert(FALSE); break;
+		default: assert(false); break;
 	}
 
 	//スローモード.
@@ -397,35 +397,35 @@ void GameManager::UpdateGame() {
 		//3秒以下になったばかりの時.
 		if (tmSlowMode.GetPassTime() <= 3){
 			if (!isItemCountDownSound[2]) {
-				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
-				isItemCountDownSound[2] = TRUE;
+				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				isItemCountDownSound[2] = true;
 			}
 		}
 		//2秒以下になったばかりの時.
 		if (tmSlowMode.GetPassTime() <= 2) {
 			if (!isItemCountDownSound[1]) {
-				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
-				isItemCountDownSound[1] = TRUE;
+				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				isItemCountDownSound[1] = true;
 			}
 		}
 		//1秒以下になったばかりの時.
 		if (tmSlowMode.GetPassTime() <= 1) {
 			if (!isItemCountDownSound[0]) {
-				p_sound->Play(_T("CountDown"), FALSE, 78); //再生.
-				isItemCountDownSound[0] = TRUE;
+				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				isItemCountDownSound[0] = true;
 			}
 		}
 		//時間切れで解除.
 		if (tmSlowMode.GetPassTime() <= 0) {
 			
 			player.SetMode(Player_Normal); //反射モード終了.
-			p_sound->Play(_T("PowerDown"), FALSE, 78); //再生.
+			p_sound->Play(_T("PowerDown"), false, 78); //再生.
 			
 			//リセット.
 			tmSlowMode.Reset();
-			data.isSlow = FALSE;
+			data.isSlow = false;
 			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
-				isItemCountDownSound[i] = FALSE;
+				isItemCountDownSound[i] = false;
 			}
 		}
 	}
@@ -560,14 +560,14 @@ void GameManager::DrawTitle() {
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str.DrawStringST(ANC_MID, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE, FALSE);      //Xボタンの円.
+		DrawCircleST(&cir, false, false);      //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
 		//まだ出してなければ.
 		if (!isTitleAnim) {
-			isTitleAnim = TRUE; //一度きり.
+			isTitleAnim = true; //一度きり.
 
 			double dig = -130; //角度.
 
@@ -587,7 +587,7 @@ void GameManager::DrawTitle() {
 				effectMng.SpawnEffect(&data);
 			}
 			//サウンド.
-			p_sound->Play(_T("Break"), FALSE, 65);
+			p_sound->Play(_T("Break"), false, 65);
 		}
 	}
 }
@@ -662,8 +662,8 @@ void GameManager::DrawEnd() {
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isBestScoreSound) {
-				p_sound->Play(_T("BestScore"), FALSE, 65);
-				isBestScoreSound = TRUE; //一度のみ.
+				p_sound->Play(_T("BestScore"), false, 65);
+				isBestScoreSound = true; //一度のみ.
 			}
 		}
 	}
@@ -678,7 +678,7 @@ void GameManager::DrawEnd() {
 		
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str.DrawStringST(ANC_MID, data.font1); //テキスト.
-		DrawCircleST(&cir, FALSE, FALSE);      //Aボタンの円.
+		DrawCircleST(&cir, false, false);      //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -699,7 +699,7 @@ void GameManager::DrawBG() {
 
 		int clr = _int(20 * fabs(sin((double)x/200))); //色の変化.
 		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
-		DrawLineST(&line, FALSE, 5);
+		DrawLineST(&line, false, 5);
 	}
 	//背景(スローモード).
 	if (data.isSlow) {
@@ -716,7 +716,7 @@ void GameManager::DrawBG() {
 		//枠線.
 		{
 			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-			DrawBoxST(&box, ANC_MID, FALSE, TRUE);
+			DrawBoxST(&box, ANC_MID, false, true);
 		}
 	}
 }
@@ -853,12 +853,12 @@ void GameManager::GameEnd() {
 	
 	tmScene[SCENE_GAME].Stop(); //停止.
 	tmScene[SCENE_END].Start(); //開始.
-	data.isSlow = FALSE;
+	data.isSlow = false;
 	tmSlowMode.Reset();
 
 	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {
-		isItemCountDownSound[i] = FALSE;
+		isItemCountDownSound[i] = false;
 	}
 
 	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
@@ -878,12 +878,12 @@ void GameManager::GameEnd() {
 //アイテムを取った時.
 void GameManager::TakeItem() {
 
-	data.isSlow = TRUE;             //スローモードにする.
+	data.isSlow = true;             //スローモードにする.
 	data.score += SCORE_TAKE_ITEM;  //スコア加算.
 	tmSlowMode.Start();             //スローモード計測開始.
 
 	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {
-		isItemCountDownSound[i] = FALSE;
+		isItemCountDownSound[i] = false;
 	}
 }
