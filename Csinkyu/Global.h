@@ -177,7 +177,7 @@ struct GameData
 //#define DEBUG_SPAWN_RATE
 
 // - 定数 -
-#define IS_WINDOW_MODE					(false)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
 
 #define WINDOW_WID						(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
