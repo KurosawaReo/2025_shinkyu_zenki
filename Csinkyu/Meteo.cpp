@@ -13,7 +13,7 @@ void Meteo::Reset() {
 	state       = Meteo_Normal;
 	pos         = {0, 0};
 	vel         = {0, 0};
-	active      = FALSE;
+	active      = false;
 	destroyCntr = 0;
 }
 
@@ -33,8 +33,8 @@ void Meteo::Update() {
 		{
 			case Meteo_Normal:
 				//画面外で消去.
-				if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, TRUE)){
-					active = FALSE; //無効にする.
+				if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, true)){
+					active = false; //無効にする.
 				}
 				break;
 
@@ -44,11 +44,11 @@ void Meteo::Update() {
 				//時間が終了したら.
 				if (destroyCntr >= METEO_DEST_TIME) {
 					state  = Meteo_Normal; //元に戻す.
-					active = FALSE;        //消滅.
+					active = false;        //消滅.
 				}
 				break;
 
-			default: assert(FALSE); break;
+			default: assert(false); break;
 		}
 		//隕石構成線の更新.
 		UpdateMeteoLine();
@@ -69,8 +69,8 @@ void Meteo::Draw() {
 		for (int i = 0; i < shape.lineCnt; i++) {
 			
 			shape.line[i].clr = COLOR_METEO(pos);
-			DrawLineST(&shape.line[i], TRUE, 2);
-//			DrawLineST(&shape.line[i], FALSE, 1);
+			DrawLineST(&shape.line[i], true, 2);
+//			DrawLineST(&shape.line[i], false, 1);
 		}
 
 		ResetDrawBlendMode(); //描画モードリセット.
@@ -116,7 +116,7 @@ void Meteo::Spawn() {
 		}
 	}
 
-	active = TRUE; //隕石を有効にする.
+	active = true; //隕石を有効にする.
 }
 
 //隕石破壊.
@@ -126,7 +126,7 @@ void Meteo::Destroy() {
 }
 
 //隕石の当たり判定.
-BOOL Meteo::IsHitMeteo(Circle* pos) {
+bool Meteo::IsHitMeteo(Circle* pos) {
 
 	//有効な隕石なら.
 	if (active && state == Meteo_Normal) {
@@ -134,12 +134,12 @@ BOOL Meteo::IsHitMeteo(Circle* pos) {
 		for (int i = 0; i < shape.lineCnt; i++) {
 			//線とプレイヤーが当たったら.
 			if (HitLine(&shape.line[i], pos)) {
-				return TRUE; //当たった.
+				return true; //当たった.
 			}
 		}
 	}
 
-	return FALSE; //当たっていない.
+	return false; //当たっていない.
 }
 
 //隕石を構成する線の更新.

@@ -25,6 +25,6 @@ public:
 
 	void SpawnMeteo(); //и¦ђОђ¶ђ¬.
 
-	BOOL IsHitMeteos(Circle* cir, BOOL isDestroy); //и¦ђО‚М‚З‚к‚©1‚В‚Е‚а“–‚Ѕ‚Б‚Д‚ў‚й‚©.
-	BOOL GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //ЌЕЉс‚и‚Ми¦ђОЌА•W‚р’T‚·.
+	bool IsHitMeteos(Circle* cir, bool isDestroy); //и¦ђО‚М‚З‚к‚©1‚В‚Е‚а“–‚Ѕ‚Б‚Д‚ў‚й‚©.
+	bool GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //ЌЕЉс‚и‚Ми¦ђОЌА•W‚р’T‚·.
 };

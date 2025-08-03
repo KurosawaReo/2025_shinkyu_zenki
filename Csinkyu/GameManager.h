@@ -26,9 +26,9 @@ private: //データ.
 	DrawImgST imgLogo[2]; //タイトルロゴ画像.
 	DrawImgST imgUI[4];   //UI画像.
 
-	BOOL isTitleAnim{};             //Title:     破片アニメーションを出したか.
-	BOOL isBestScoreSound{};        //BestScore: 音を鳴らしたか.
-	BOOL isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
+	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
+	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
+	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
 	InputST* p_input{};
 	SoundST* p_sound{};

@@ -72,10 +72,10 @@ void LaserManager::Draw() {
 			case Laser_Reflect:      tmpLine.clr = GetColor(clr/2+128, 0, 255); break;
 			case Laser_SuperReflect: tmpLine.clr = GetColor(clr/2+128, 0, 255); break;
 
-			default: assert(FALSE); break;
+			default: assert(false); break;
 		}
 
-		DrawLineST(&tmpLine, TRUE); //描画.
+		DrawLineST(&tmpLine, true); //描画.
 	}
 
 	//通常の描画モードに戻す
@@ -193,7 +193,7 @@ void LaserManager::UpdateLaser() {
 				Circle hit = { {laser[i].x, laser[i].y}, 10, {} }; //当たり判定円(仮)
 
 				//隕石と当たっているなら.
-				if (p_meteoMng->IsHitMeteos(&hit, TRUE)) {
+				if (p_meteoMng->IsHitMeteos(&hit, true)) {
 					
 					double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 
@@ -236,7 +236,7 @@ void LaserManager::UpdateLaser() {
 			break;
 
 			//想定外の値エラー.
-			default: assert(FALSE); break;
+			default: assert(false); break;
 		}
 
 		//前回描画した位置からの距離.
@@ -292,7 +292,7 @@ void LaserManager::UpdateLaserLine() {
 }
 
 //レーザー召喚.
-BOOL LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
+bool LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 
 	// 未使用のレーザースロットを探してレーザーを発射
 	for (int i = 0; i < LASER_CNT_MAX; i++)
@@ -314,16 +314,16 @@ BOOL LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			//サウンド.
 			SoundST* sound = SoundST::GetPtr();
 			if (type == Laser_Normal){
-				sound->Play(_T("Laser1"), FALSE, 58); //通常レーザー.
+				sound->Play(_T("Laser1"), false, 58); //通常レーザー.
 			}
 			if (type == Laser_Straight) {
-				sound->Play(_T("Laser2"), FALSE, 60); //直線レーザー.
+				sound->Play(_T("Laser2"), false, 60); //直線レーザー.
 			}
 
-			return TRUE; //召喚成功.
+			return true; //召喚成功.
 		}
 	}
-	return FALSE; //召喚失敗.
+	return false; //召喚失敗.
 }
 //レーザー消去.
 void LaserManager::DeleteLaser(int idx) {
@@ -365,7 +365,7 @@ void LaserManager::ReflectLaser(int idx)
 	p_effectMng->SpawnEffect(&data);
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("Laser3"), FALSE, 58);
+	sound->Play(_T("Laser3"), false, 58);
 }
 
 #if false

@@ -72,20 +72,20 @@ void ItemManager::Draw()
 				Circle cir = { data[i].pos, 30, COLOR_PLY_REFLECT };
 
 				SetDrawBlendModeST(MODE_ADD, 128 + 127*CalcNumWaveLoop(data[i].counter/20)); //点滅.
-				DrawCircleST(&cir, FALSE, TRUE);
+				DrawCircleST(&cir, false, true);
 				ResetDrawBlendMode();
 			}
 			//アイテム本体.
 			{
 				Box box1 = { data[i].pos, {ITEM_SIZE,   ITEM_SIZE  }, COLOR_ITEM }; //{pos}, {size}, color.
 				Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
-				DrawBoxST(&box1, TRUE, FALSE);
-				DrawBoxST(&box2, TRUE, FALSE);
+				DrawBoxST(&box1, ANC_MID, false);
+				DrawBoxST(&box2, ANC_MID, false);
 			}
 		
 			// 画像を使用する場合のコード例
 			// if (itemGraph != -1) {
-			//     DrawGraph((int)itemX, (int)itemY, itemGraph, TRUE);
+			//     DrawGraph((int)itemX, (int)itemY, itemGraph, true);
 			// }
 		}
 	}
@@ -105,12 +105,12 @@ void ItemManager::ItemSpawn(int idx) {
 		data[idx].type = Item_Super; //Lv4からは強化版へ.
 	}
 	// アイテムの状態設定
-	data[idx].active = TRUE; //アクティブフラグ
+	data[idx].active = true; //アクティブフラグ
 	data[idx].counter = 0;
 }
 //アイテム消滅.
 void ItemManager::ItemErase(int idx) {
-	data[idx].active = FALSE;
+	data[idx].active = false;
 	data[idx].counter = 0;
 	data[idx].spawnCounter = 0;
 }
@@ -130,7 +130,7 @@ void ItemManager::CheckHitPlayer(int idx)
 	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//当たった場合.
-	if (HitBox(&plyBox, &itemBox, TRUE)) {
+	if (HitBox(&plyBox, &itemBox)) {
 		OnHitPlayer(idx);
 	}
 }
@@ -142,7 +142,7 @@ void ItemManager::OnHitPlayer(int idx)
 	GameManager::GetPtr()->TakeItem();
 	//サウンド.
 	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("TakeItem"),   FALSE, 76); //ポワーン.
+	sound->Play(_T("TakeItem"),   false, 76); //ポワーン.
 	//エフェクト召喚.
 	EffectData effect{};
 	effect.type = Effect_Score100;
@@ -162,10 +162,10 @@ void ItemManager::OnHitPlayer(int idx)
 			p_player->SetMode(Player_SuperReflect);
 			break;
 
-		default: assert(FALSE); break;
+		default: assert(false); break;
 	}
 	//アイテムを削除（非アクティブにする）
-	data[idx].active = FALSE;
+	data[idx].active = false;
 	data[idx].counter = 0; //カウンターをリセットして再生成タイマー開始.
 	//座標を画面外に移動（念のため）
 	data[idx].pos = {-100, -100};

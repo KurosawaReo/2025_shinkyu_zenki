@@ -62,7 +62,7 @@ void Obstacle4main::Draw()
 	
 	// 動く砲台を描画.
 	//Box box = { {Hx, Hy}, {10, 10}, GetColor(100, 100, 100) }; //{pos}, {size}, color.
-	//DrawBoxST(&box, TRUE, FALSE);
+	//DrawBoxST(&box, true, false);
 }
 
 //発射エフェクトの更新.
@@ -132,8 +132,8 @@ void Obstacle4main::DrawObstFlash() {
 		//描画モード設定(光る)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
 
-		DrawLineST(&line1, TRUE);
-		DrawLineST(&line2, TRUE);
+		DrawLineST(&line1, true);
+		DrawLineST(&line2, true);
 
 		//エフェクト時間が終了したら無効化
 		if (flashEffect[i].Counter >= flashEffect[i].Duration)
@@ -163,9 +163,9 @@ void Obstacle4main::DrawPreLaserDots() {
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
 		// 砲台の位置に●を描画
-		DrawCircleST(&cir, FALSE, TRUE);
+		DrawCircleST(&cir, false, true);
 		cir.r = dotSize2;
-		DrawCircleST(&cir, FALSE, TRUE);
+		DrawCircleST(&cir, false, true);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
@@ -192,7 +192,7 @@ void Obstacle4main::enemy4Move()
 			DBL_XY vel = {cos(angle), sin(angle)};
 
 			//通常レーザー召喚.
-			BOOL ret = p_laserMng->SpawnLaser({Hx, Hy}, vel, Laser_Normal);
+			bool ret = p_laserMng->SpawnLaser({Hx, Hy}, vel, Laser_Normal);
 			//発射成功したら.
 			if (ret) {
 				CreateFlashEffect(Hx, Hy); //エフェクトを出す.

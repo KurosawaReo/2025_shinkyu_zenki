@@ -43,7 +43,7 @@ void MeteoManager::Update() {
 		meteo[i].Update(); //更新.
 	}
 	//プレイヤーとの当たり判定.
-	if (IsHitMeteos(p_player->GetHit(), FALSE)) {
+	if (IsHitMeteos(p_player->GetHit(), false)) {
 		p_player->PlayerDeath(); //死亡.
 	}
 }
@@ -70,9 +70,9 @@ void MeteoManager::SpawnMeteo(){
 }
 
 //隕石のどれか1つでも当たっているか.
-BOOL MeteoManager::IsHitMeteos(Circle* cir, BOOL isDestroy) {
+bool MeteoManager::IsHitMeteos(Circle* cir, bool isDestroy) {
 
-	BOOL hit;
+	bool hit;
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
@@ -93,19 +93,19 @@ BOOL MeteoManager::IsHitMeteos(Circle* cir, BOOL isDestroy) {
 					p_effectMng->SpawnEffect(&data);
 					//サウンド.
 					SoundST* sound = SoundST::GetPtr();
-					sound->Play(_T("Break"), FALSE, 74);
+					sound->Play(_T("Break"), false, 74);
 				}
 			}
-			return TRUE; //1つでも当たっている.
+			return true; //1つでも当たっている.
 		}
 	}
-	return FALSE; //どれも当たっていない.
+	return false; //どれも当たっていない.
 }
 
 //最寄りの隕石座標を探す.
-BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
+bool MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 
-	BOOL isExistMeteo = FALSE; //1つでも隕石があるか.
+	bool isExistMeteo = false; //1つでも隕石があるか.
 	double shortest = -1; //暫定の最短距離.
 
 	//全隕石ループ.
@@ -127,7 +127,7 @@ BOOL MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 				*_nearPos = tmpPos;
 			}
 
-			isExistMeteo = TRUE; //隕石がある.
+			isExistMeteo = true; //隕石がある.
 		}
 	}
 

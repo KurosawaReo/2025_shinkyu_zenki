@@ -38,11 +38,11 @@ int WINAPI WinMain(
 ){
 #endif
 
-	ChangeWindowMode(IS_WINDOW_MODE);						//TRUEでwindow, FALSEで全画面にする.
+	ChangeWindowMode(IS_WINDOW_MODE);						//trueでwindow, falseで全画面にする.
 	SetWindowSize(WINDOW_WID, WINDOW_HEI);					//ウィンドウサイズの設定.
 	SetGraphMode(WINDOW_WID, WINDOW_HEI, WINDOW_COLOR_BIT);	//解像度の設定.
 	SetDrawScreen(DX_SCREEN_BACK);							//裏画面へ描画(ダブルバッファ)
-	SetWaitVSyncFlag(FALSE);                                //VSyncを無効化(FPS制限なし)
+	SetWaitVSyncFlag(false);                                //VSyncを無効化(FPS制限なし)
 
 	//DxLibの初期化.
 	if (DxLib_Init() == -1) {

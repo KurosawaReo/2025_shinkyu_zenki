@@ -1,6 +1,6 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/08/02
+   ver.2025/08/03
 
    DxLib: オリジナルタイマー機能の追加.
 */
@@ -17,7 +17,7 @@ class Timer
 {
 private:
 	TimerMode mode{};       //計測モード.
-	BOOL      isMove{};     //計測中か.
+	bool      isMove{};     //計測中か.
 
 	float     tmInit{};     //init : 初期時刻.
 	clock_t   tmStart{};    //start: 開始時刻.
@@ -32,15 +32,15 @@ public:
 
 	void Start() {
 		tmStart = clock(); //開始時刻の取得.
-		isMove = TRUE;     //計測中.
+		isMove = true;     //計測中.
 	}
 	void Stop();
 	void Reset() {
 		tmStart = 0;
 		tmSavePass = tmInit; //初期時刻.
-		isMove = FALSE;
+		isMove = false;
 	}
-	BOOL GetIsMove() {
+	bool GetIsMove() {
 		return isMove;
 	}
 
@@ -51,7 +51,7 @@ class TimerMicro
 {
 private:
 	TimerMode     mode{};       //計測モード.
-	BOOL          isMove{};     //計測中か.
+	bool          isMove{};     //計測中か.
 
 	LONGLONG      tmInit{};     //init     : 初期時刻(マイクロ秒)
 	LARGE_INTEGER tmStart{};    //start    : 開始時刻(カウント)
@@ -72,18 +72,18 @@ public:
 	}
 	void Start() {
 		QueryPerformanceCounter(&tmStart); //開始時刻の取得.
-		isMove = TRUE; //計測中.
+		isMove = true; //計測中.
 	}
 	void Stop();
 	void Reset() {
 		tmStart.QuadPart = 0;
 		tmSavePass = tmInit; //初期時刻.
-		isMove = FALSE;
+		isMove = false;
 	}
-	BOOL GetIsMove() {
+	bool GetIsMove() {
 		return isMove;
 	}
 
 	LONGLONG GetPassTime (); //時間取得.
-	BOOL     IntervalTime(); //一定時間ごとにTRUEを返す.
+	bool     IntervalTime(); //一定時間ごとにtrueを返す.
 };

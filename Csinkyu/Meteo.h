@@ -30,7 +30,7 @@ private:
 	DBL_XY     pos{};	      //中心座標.
 	float      ang{};	      //角度.
 	DBL_XY     vel{};         //速度.
-	BOOL       active{};      //有効かどうか.
+	bool       active{};      //有効かどうか.
 
 	float      destroyCntr{}; //破壊量の度合.
 
@@ -38,12 +38,12 @@ private:
 
 public:
 	//set.
-	void SetActive(BOOL _active) { 
+	void SetActive(bool _active) { 
 		active = _active; 
 	}
 	//get.
 	DBL_XY     GetPos()    { return pos; }
-	BOOL       GetActive() { return active; }
+	bool       GetActive() { return active; }
 	MeteoState GetState()  { return state; }
 
 	//その他.
@@ -54,7 +54,7 @@ public:
 
 	void Spawn();				//隕石出現. 
 	void Destroy();				//隕石破壊.
-	BOOL IsHitMeteo(Circle*);	//隕石の当たり判定.
+	bool IsHitMeteo(Circle*);	//隕石の当たり判定.
 
 	void UpdateMeteoLine();		//隕石を構成する線の更新.
 };

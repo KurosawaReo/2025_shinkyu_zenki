@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/07/28
+   ver.2025/08/03
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -12,25 +12,25 @@
 InputST InputST::self; //実体の宣言.
 
 //キー入力の判定.
-BOOL InputST::IsPushKey(KeyID id) {
-	return (tmKey[id] > 0);    //押してるならTRUE.
+bool InputST::IsPushKey(KeyID id) {
+	return (tmKey[id] > 0);    //押してるならtrue.
 }
 int  InputST::IsPushKeyTime(KeyID id) {
 	return tmKey[id];          //押している時間.
 }
 //マウス入力の判定.
-BOOL InputST::IsPushMouse(MouseID id) {
-	return (tmMouse[id] > 0);  //押してるならTRUE.
+bool InputST::IsPushMouse(MouseID id) {
+	return (tmMouse[id] > 0);  //押してるならtrue.
 }
 int  InputST::IsPushMouseTime(MouseID id) {
 	return tmMouse[id];        //押している時間.
 }
 //コントローラ入力の判定.
-BOOL InputST::IsPushPadBtn(PadXboxID id) {
-	return (tmPadBtn[id] > 0); //押してるならTRUE.
+bool InputST::IsPushPadBtn(PadXboxID id) {
+	return (tmPadBtn[id] > 0); //押してるならtrue.
 }
-BOOL InputST::IsPushPadBtn(PadSwitchID id) {
-	return (tmPadBtn[id] > 0); //押してるならTRUE.
+bool InputST::IsPushPadBtn(PadSwitchID id) {
+	return (tmPadBtn[id] > 0); //押してるならtrue.
 }
 int  InputST::IsPushPadBtnTime(PadXboxID id) {
 	return tmPadBtn[id];       //押している時間.
@@ -40,7 +40,7 @@ int  InputST::IsPushPadBtnTime(PadSwitchID id) {
 }
 
 //マウス座標取得.
-void InputST::GetMousePos(DBL_XY* pos, BOOL isValidX, BOOL isValidY) {
+void InputST::GetMousePos(DBL_XY* pos, bool isValidX, bool isValidY) {
 	
 	//xを反映させる.
 	if (isValidX) {

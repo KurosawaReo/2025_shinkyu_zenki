@@ -33,7 +33,7 @@ struct EffectData
 struct Effect : public EffectData
 {
 	float      counter; //時間計測用.
-	BOOL       active;
+	bool       active;
 };
 
 //エフェクト管理クラス.
