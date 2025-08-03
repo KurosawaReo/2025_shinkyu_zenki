@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/08/03
+   ver.2025/08/04
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -10,16 +10,19 @@
 #include "myDrawST.h"
 
 /*
-   [sizeについて]
-   端から端までの長さをsizeとする.
-   この時、始点座標+(size-1)と計算することに注意.
-   中央基準の場合、(size-1)/2ずらせばok.
+   [終点の注意]
 
-   １２３４
-   ■■■■
-   ■　　■
-   ■　　■
-   ■■■■
+   DrawBox, DrawLine, DrawExtendGraphなどの終点を設定するものは
+   始点から終点-1まで描画される仕様(その方が直感的だと作者は判断したそう)
+
+   例: DrawBox(1, 1, 5, 5, color, FALSE)とした場合
+
+   　１２３４５
+   １■■■■
+   ２■　　■
+   ３■　　■
+   ４■■■■
+   ５
 */
 
 //アンカー座標.
@@ -52,27 +55,27 @@ int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
 //DrawBoxの改造版.
 int DrawBoxST(const Box* data, Anchor anc, bool isFill, bool isAnti) {
 
-	if (data->size.x <= 0 || data->size.y <= 0) {
-		return -3; //-3: サイズが0以下.
+	if (data->size.x <= 0.0 || data->size.y <= 0.0) {
+		return -3; //-3: サイズが0.0以下.
 	}
 
 	//始点を求める.
 	float x1 = (float)(data->pos.x - (data->size.x-1) * anchorPos[anc].x);
 	float y1 = (float)(data->pos.y - (data->size.y-1) * anchorPos[anc].y);
 	//終点を求める.
-	float x2 = (float)(data->pos.x + (data->size.x-1) * (1-anchorPos[anc].x));
-	float y2 = (float)(data->pos.y + (data->size.y-1) * (1-anchorPos[anc].y));
+	float x2 = (float)(x1 + data->size.x-1);
+	float y2 = (float)(y1 + data->size.y-1);
 
 	//アンチエイリアスあり.
 	if (isAnti) {
-		int err = DrawBoxAA(x1, y1, x2, y2, data->clr, isFill);
+		int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->clr, isFill);
 		if (err < 0) {
 			return -1; //-1: DrawBoxAAでエラー.
 		}
 	}
 	//アンチエイリアスなし.
 	else {
-		int err = DrawBox(_int(x1), _int(y1), _int(x2), _int(y2), data->clr, isFill);
+		int err = DrawBox((int)x1, (int)y1, (int)x2+1, (int)y2+1, data->clr, isFill);
 		if (err < 0) {
 			return -2; //-2: DrawBoxでエラー.
 		}
@@ -206,7 +209,7 @@ int DrawImgST::DrawGraphST(INT_XY pos, Anchor anc, bool isTrans) {
 	if (data.handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawGraph(_int(x), _int(y), data.handle, isTrans);
+	int err = DrawGraph((int)x, (int)y, data.handle, isTrans);
 	return err; //-1: DrawGraphエラー.
 }
 int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, Anchor anc, bool isTrans) {
@@ -218,7 +221,7 @@ int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, Anchor anc, bool isTrans) {
 	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawGraph(_int(x), _int(y), data[imgNo].handle, isTrans);
+	int err = DrawGraph((int)x, (int)y, data[imgNo].handle, isTrans);
 	return err; //-1: DrawGraphエラー.
 }
 //DrawRectGraphの改造版.
@@ -249,25 +252,25 @@ int DrawDivImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY si
 int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans) {
 
 	//始点を求める.
-	float x1 = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x * sizeRate.x);
-	float y1 = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y * sizeRate.y);
+	float x1 = (float)(pos.x - ((data.size.x * sizeRate.x)-1) * anchorPos[anc].x);
+	float y1 = (float)(pos.y - ((data.size.y * sizeRate.y)-1) * anchorPos[anc].y);
 	//終点を求める.
-	float x2 = (float)(pos.x + (data.size.x-1) * (1-anchorPos[anc].x) * sizeRate.x);
-	float y2 = (float)(pos.y + (data.size.y-1) * (1-anchorPos[anc].y) * sizeRate.y);
+	float x2 = (float)(x1 + ((data.size.x * sizeRate.x)-1));
+	float y2 = (float)(y1 + ((data.size.y * sizeRate.y)-1));
 
-	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data.handle, isTrans);
+	int err = DrawExtendGraph((int)x1, (int)y1, (int)x2+1, (int)y2+1, data.handle, isTrans);
 	return err; //-1: DrawExtendGraphエラー.
 }
 int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans) {
 
 	//始点を求める.
-	float x1 = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x * sizeRate.x);
-	float y1 = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y * sizeRate.y);
+	float x1 = (float)(pos.x - ((data[imgNo].size.x * sizeRate.x)-1) * anchorPos[anc].x);
+	float y1 = (float)(pos.y - ((data[imgNo].size.y * sizeRate.y)-1) * anchorPos[anc].y);
 	//終点を求める.
-	float x2 = (float)(pos.x + (data[imgNo].size.x-1) * (1-anchorPos[anc].x) * sizeRate.x);
-	float y2 = (float)(pos.y + (data[imgNo].size.y-1) * (1-anchorPos[anc].y) * sizeRate.y);
+	float x2 = (float)(x1 + ((data[imgNo].size.x * sizeRate.x)-1));
+	float y2 = (float)(y1 + ((data[imgNo].size.y * sizeRate.y)-1));
 
-	int err = DrawExtendGraph(_int(x1), _int(y1), _int(x2), _int(y2), data[imgNo].handle, isTrans);
+	int err = DrawExtendGraph((int)x1, (int)y1, (int)x2+1, (int)y2+1, data[imgNo].handle, isTrans);
 	return err; //-1: DrawExtendGraphエラー.
 }
 //DrawRotaGraphの改造版.
@@ -280,7 +283,7 @@ int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, Anchor anc
 	if (data.handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, data.handle, isTrans);
+	int err = DrawRotaGraph((int)x, (int)y, extend, ang, data.handle, isTrans);
 	return err; //-1: DrawRotaGraphエラー.
 }
 int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, Anchor anc, bool isTrans) {
@@ -292,7 +295,7 @@ int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double a
 	if (data[imgNo].handle == 0) {
 		return -2; //-2: handle未設定.
 	}
-	int err = DrawRotaGraph(_int(x), _int(y),extend, ang, data[imgNo].handle, isTrans);
+	int err = DrawRotaGraph((int)x, (int)y, extend, ang, data[imgNo].handle, isTrans);
 	return err; //-1: DrawRotaGraphエラー.
 }
 
@@ -305,14 +308,14 @@ int DrawStrST::DrawStringST(Anchor anc, int font) {
 
 	//デフォルトフォント.
 	if (font < 0) {
-		int err = DrawString(_int(x), _int(y), data.text.c_str(), data.clr);
+		int err = DrawString((int)x, (int)y, data.text.c_str(), data.clr);
 		if (err < 0) {
 			return -1; //-1: DrawStringでエラー.
 		}
 	}
 	//フォント設定あり.
 	else {
-		int err = DrawStringToHandle(_int(x), _int(y), data.text.c_str(), data.clr, font);
+		int err = DrawStringToHandle((int)x, (int)y, data.text.c_str(), data.clr, font);
 		if (err < 0) {
 			return -2; //-2: DrawStringToHandleでエラー.
 		}
@@ -378,7 +381,10 @@ int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY
 INT_XY DrawStrST::GetTextSize(MY_STRING str, int font) {
 	
 	INT_XY size{};
-	int    line{}; //無視.
+
+	TCHAR name[256]{}; //無視.
+	int   line{};      //無視.
+	int   thick{};     //無視.
 
 	//デフォルトフォント.
 	if (font < 0) {
@@ -387,8 +393,8 @@ INT_XY DrawStrST::GetTextSize(MY_STRING str, int font) {
 	//フォント設定あり.
 	else {
 		GetDrawStringSizeToHandle(&size.x, &size.y, &line, str.c_str(), 255, font);
+		GetFontStateToHandle(name, &size.y, &thick, font); //size.yはフォントから取得.
 	}
-	size.y -= 2; //2pixelのずれがあるため調整.
 
 	return size;
 }

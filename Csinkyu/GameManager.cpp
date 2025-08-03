@@ -138,6 +138,7 @@ void GameManager::Init() {
 	imgUI[1].  LoadGraphST(_T("Resources/Images/ui_back_best_score.png"));
 	imgUI[2].  LoadGraphST(_T("Resources/Images/ui_back_score.png"));
 	imgUI[3].  LoadGraphST(_T("Resources/Images/ui_back_time.png"));
+	imgBG.     LoadGraphST(_T("Resources/Images/test.png"));
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));		//未使用(BGM候補)
@@ -694,6 +695,7 @@ void GameManager::DrawPause() {
 //背景の描画.
 void GameManager::DrawBG() {
 
+#if false
 	//背景デザイン.
 	for (int x = 0; x < WINDOW_WID; x += 5) {
 
@@ -701,6 +703,16 @@ void GameManager::DrawBG() {
 		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
 		DrawLineST(&line, false, 5);
 	}
+#endif
+
+	//背景画像.
+	INT_XY size = imgBG.GetImage()->size;
+	for (int x = 0; x < WINDOW_WID; x += size.x*1) {
+		for (int y = 0; y < WINDOW_HEI; y += size.y*1) {
+			imgBG.DrawExtendGraphST({x+size.x/2, y+size.y/2}, {1, 1}, ANC_MID);
+		}
+	}
+
 	//背景(スローモード).
 	if (data.isSlow) {
 		//最初の0.5秒
@@ -745,10 +757,10 @@ void GameManager::DrawUI() {
 
 	//テキスト設定.
 	DrawStrST str[4] = {
-		DrawStrST({}, {WINDOW_WID/2,      70}, 0xFFFFFF),
-		DrawStrST({}, {WINDOW_WID/2-350, 150}, COLOR_BEST_SCORE),
-		DrawStrST({}, {WINDOW_WID/2,     150}, COLOR_SCORE),
-		DrawStrST({}, {WINDOW_WID/2+350, 150}, COLOR_TIME),
+		DrawStrST({}, {WINDOW_WID/2,      70+1}, 0xFFFFFF),
+		DrawStrST({}, {WINDOW_WID/2-350, 150  }, COLOR_BEST_SCORE),
+		DrawStrST({}, {WINDOW_WID/2,     150  }, COLOR_SCORE),
+		DrawStrST({}, {WINDOW_WID/2+350, 150  }, COLOR_TIME),
 	};
 	TCHAR text[256];
 	_stprintf(text, _T("LEVEL %d"),        data.level);
@@ -761,7 +773,7 @@ void GameManager::DrawUI() {
 	str[3].SetText(text);
 		
 	//背景画像.
-	imgUI[0].DrawExtendGraphST(str[0].GetPos(), {0.4, 0.35});
+	imgUI[0].DrawExtendGraphST({WINDOW_WID/2, 70}, {0.4, 0.35});
 	//テキスト(main)
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
 	str[0].DrawStringST(ANC_MID, data.font4);

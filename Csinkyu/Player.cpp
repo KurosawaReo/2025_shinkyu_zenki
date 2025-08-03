@@ -166,7 +166,7 @@ void Player::PlayerMove()
 		input->InputPadStick(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
-	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
 }
 
 // 反射エフェクト生成

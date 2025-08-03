@@ -25,6 +25,7 @@ private: //データ.
 
 	DrawImgST imgLogo[2]; //タイトルロゴ画像.
 	DrawImgST imgUI[4];   //UI画像.
+	DrawImgST imgBG;      //背景画像.
 
 	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
