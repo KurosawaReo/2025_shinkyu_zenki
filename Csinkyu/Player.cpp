@@ -126,25 +126,29 @@ void Player::DrawAfterImage()
 	//残像処理.
 	for (int i = 0; i < PLAYER_AFT_IMG_NUM; i++)
 	{
-		//透明度の計算.
-		float alpha = (float)i/PLAYER_AFT_IMG_NUM;
-		//透明度反映.
-		SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
+		//プレイヤーの位置と同じじゃなければ.
+		if (afterPos[i].x != hit.pos.x || afterPos[i].y != hit.pos.y) {
 
-		Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
-		//反射カラー.
-		if (mode == Player_Reflect ||
-			mode == Player_SuperReflect
-		){
-			box.clr = COLOR_PLY_AFT_REF;
-		}
-		//通常カラー.
-		else
-		{
-			box.clr = COLOR_PLY_AFT_NOR;
-		}
+			//透明度の計算.
+			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
+			//透明度反映.
+			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-		DrawBoxST(&box, ANC_MID, false, true);
+			Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
+			//反射カラー.
+			if (mode == Player_Reflect ||
+				mode == Player_SuperReflect
+			){
+				box.clr = COLOR_PLY_AFT_REF;
+			}
+			//通常カラー.
+			else
+			{
+				box.clr = COLOR_PLY_AFT_NOR;
+			}
+
+			DrawBoxST(&box, ANC_MID, false, true);
+		}
 	}
 
 	//描画モードリセット.

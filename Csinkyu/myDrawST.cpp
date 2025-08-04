@@ -298,6 +298,31 @@ int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double a
 	int err = DrawRotaGraph((int)x, (int)y, extend, ang, data[imgNo].handle, isTrans);
 	return err; //-1: DrawRotaGraphエラー.
 }
+//DrawModiGraphの改造版.
+int DrawImgST::DrawModiGraphST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isTrans) {
+	
+	if (data.handle == 0) {
+		return -2; //-2: handle未設定.
+	}
+	int err = DrawModiGraph(
+		luPos.x, luPos.y, ruPos.x, ruPos.y, 
+		rdPos.x, rdPos.y, ldPos.x, ldPos.y, 
+		data.handle, isTrans
+	);
+	return err; //-1: DrawModiGraphエラー.
+}
+int DrawDivImgST::DrawModiGraphST(int imgNo, INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isTrans) {
+
+	if (data[imgNo].handle == 0) {
+		return -2; //-2: handle未設定.
+	}
+	int err = DrawModiGraph(
+		luPos.x, luPos.y, ruPos.x, ruPos.y,
+		rdPos.x, rdPos.y, ldPos.x, ldPos.y,
+		data[imgNo].handle, isTrans
+	);
+	return err; //-1: DrawModiGraphエラー.
+}
 
 //DrawStringの改造版.
 int DrawStrST::DrawStringST(Anchor anc, int font) {

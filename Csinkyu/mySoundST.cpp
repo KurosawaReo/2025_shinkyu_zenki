@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/08/03
+   ver.2025/08/04
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -31,7 +31,7 @@ void SoundData::Update() {
 
 			//現在のボリュームを求める.
 			assert(aftUS != 0);                                            //0割対策.
-			int vol = (int)(nowVol - (nowVol - aftVol) * (float)us/aftUS); //now + 変化量 * 変化時間割合.
+			int vol = (int)(nowVol - (nowVol - aftVol) * (float)us/aftUS); //now - 変化量 * 変化時間割合.
 
 			//変化し終わったら.
 			if (us >= aftUS) {
@@ -153,7 +153,7 @@ void SoundST::ChangeVolume(MY_STRING saveName, int volume, float sec) {
 	sound[saveName].ChangeVolume(volume, sec); //変更設定.
 }
 //フェードイン再生.
-void SoundST::FadeInPlay(MY_STRING saveName, int volume, float sec, bool isLoop) {
+void SoundST::FadeInPlay(MY_STRING saveName, bool isLoop, int volume, float sec) {
 
 	sound[saveName].Play(isLoop, 0);           //最初は音量0で再生.
 	sound[saveName].ChangeVolume(volume, sec); //徐々に大きく.

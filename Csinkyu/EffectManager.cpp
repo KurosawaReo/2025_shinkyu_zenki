@@ -103,7 +103,8 @@ void EffectManager::Update() {
 				}
 				break;
 
-				default: assert(false); break;
+				default: 
+					; break;
 			}
 		}
 	}

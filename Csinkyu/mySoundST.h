@@ -1,6 +1,6 @@
 /*
    - mySoundST.h - (original)
-   ver.2025/08/03
+   ver.2025/08/04
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -62,6 +62,6 @@ public:
 	void Update  ();
 
 	void ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	       //音量を変更.
-	void FadeInPlay  (MY_STRING saveName, int volume, float sec, bool isLoop); //フェードイン再生.
+	void FadeInPlay  (MY_STRING saveName, bool isLoop, int volume, float sec); //フェードイン再生.
 	void FadeOutPlay (MY_STRING saveName, float sec);						   //フェードアウトする.
 };

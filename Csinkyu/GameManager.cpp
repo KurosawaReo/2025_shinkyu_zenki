@@ -3,7 +3,8 @@
    ゲーム全体管理.
 */
 /*--------------------------------------------------------/
-   [TODO]
+   TODOメモ
+
    2025/05/20:
    仮でスローモードを実装したが、レーザーの動きが怪しい。
    
@@ -62,14 +63,22 @@
    2025/08/02:
    UIに背景画像を仮で追加したが、端の方を透過させたい。
 
-   前期発表会後: 変更内容
-   ・UIのレイアウト変更。「TIME」や「LEVEL」をまとめた。
-   ・UIに背景画像を追加。
-   ・アイテムの終了タイミングが分かるよう、数字を3秒だけ出すように。(音も追加)
+   2025/08/04:
+   Exステージ実装してもいいかも。
+   特定の条件で行くことができて、特別なルールがある感じで。
+   特別感のあるBGMや背景に変える。
+
+/---------------------------------------------------------/
+   前期発表会後 変更内容
+
+   ・UIのレイアウト変更、装飾の追加。「TIME」や「LEVEL」をまとめた。
+   ・背景画像を仮で用意。
+   ・アイテムの終了タイミングが分かるよう、最後の3秒だけ表示し、音も追加。
+   ・波紋の爆発するタイミングが分かるよう、演出を調整。
+   ・隕石の破片の飛び散り方がリアルっぽくなるよう調整。
    ・ポーズ機能仮追加。(Pキー)
    ・図形や線のアンチエイリアス導入。滑らかで綺麗な描画になった。
    ・レーザーで短すぎる線を描画しないように。(処理軽減に繋がる)
-   ・隕石の破片の飛び散り方をリアルになるよう少し調整。
    ・強化アイテム追加。反射レーザーが隕石に当たっても反射する。
 
    [現在のLevel配分]
@@ -138,11 +147,11 @@ void GameManager::Init() {
 	imgUI[1].  LoadGraphST(_T("Resources/Images/ui_back_best_score.png"));
 	imgUI[2].  LoadGraphST(_T("Resources/Images/ui_back_score.png"));
 	imgUI[3].  LoadGraphST(_T("Resources/Images/ui_back_time.png"));
-	imgBG.     LoadGraphST(_T("Resources/Images/test.png"));
+	imgBG[0].  LoadGraphST(_T("Resources/Images/bg_normal.png"));
+	imgBG[1].  LoadGraphST(_T("Resources/Images/bg_reflect.png"));
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));		//未使用(BGM候補)
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/GB_Shooting_2025.0725.mp3"),	_T("BGM3"));
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("TakeItem"));	//アイテム取る.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	//カウントダウン.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	//アイテム解除.
@@ -182,6 +191,8 @@ void GameManager::Init() {
 		int ret = file.Open(FILE_DATA_PATH, _T("r")); //ファイルを開く.
 		data.bestScore = file.ReadInt();              //数字を読み込んで登録.
 	}
+	
+	data.stage = 2; //test: 仮で1にする.
 
 	Reset();
 }
@@ -203,8 +214,19 @@ void GameManager::Reset() {
 	isTitleAnim = false;
 	isBestScoreSound = false;
 	//サウンド.
-	p_sound->Stop(_T("BGM1"));
-	p_sound->Play(_T("BGM1"), true, 68);
+	switch (data.stage) 
+	{
+		case 1:
+			p_sound->Stop(_T("BGM1"));
+			p_sound->Play(_T("BGM1"), true, 68);
+			break;
+		case 2:
+			p_sound->Stop(_T("BGM2"));
+			p_sound->FadeInPlay(_T("BGM2"), true, 68, 3);
+			break;
+
+		default: assert(false); break;
+	}
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -548,7 +570,7 @@ void GameManager::DrawTitle() {
 
 		SetDrawBlendModeST(MODE_ADD, 255*anim);
 		str.DrawStringST(ANC_MID, data.font2);
-		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+60+30}, {0.4, 0.4});
+		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+60+28}, {0.4, 0.4});
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -699,32 +721,40 @@ void GameManager::DrawBG() {
 	//背景デザイン.
 	for (int x = 0; x < WINDOW_WID; x += 5) {
 
-		int clr = _int(20 * fabs(sin((double)x/200))); //色の変化.
+		int clr = _int(20 * fabs(sin((double)(x+data.counter)/200))); //色の変化.
 		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
 		DrawLineST(&line, false, 5);
 	}
 #endif
 
+	//最初の0.5秒
+	double time = 0.5-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5));
+	time = CalcNumEaseOut(time); //値の曲線変動.
+
 	//背景画像.
-	INT_XY size = imgBG.GetImage()->size;
-	for (int x = 0; x < WINDOW_WID; x += size.x*1) {
-		for (int y = 0; y < WINDOW_HEI; y += size.y*1) {
-			imgBG.DrawExtendGraphST({x+size.x/2, y+size.y/2}, {1, 1}, ANC_MID);
+	{
+		INT_XY imgSize = imgBG[0].GetImage()->size; //画像サイズ取得.
+		DBL_XY sizeRate = {0.2, 0.2};            //サイズ倍率.
+
+		INT_XY size = {_int(imgSize.x * sizeRate.x), _int(imgSize.y * sizeRate.y)};
+		
+		//タイルのように貼り付ける.
+		for (int x = 0; x < WINDOW_WID+size.x; x += size.x) {
+			for (int y = -size.y; y < WINDOW_HEI; y += size.y) {
+				//通常モード.
+				SetDrawBlendModeST(MODE_ALPHA, 255*(1-time));
+				imgBG[0].DrawExtendGraphST({_int(x - fmod(data.counter, size.x)), _int(y + fmod(data.counter, size.y))}, sizeRate, ANC_LU);
+				//反射モード.
+				SetDrawBlendModeST(MODE_ALPHA, 255*time);
+				imgBG[1].DrawExtendGraphST({_int(x - fmod(data.counter, size.x)), _int(y + fmod(data.counter, size.y))}, sizeRate, ANC_LU);
+			}
 		}
+
+		ResetDrawBlendMode(); //描画モードリセット.
 	}
 
 	//背景(スローモード).
 	if (data.isSlow) {
-		//最初の0.5秒
-		double time = 0.5-(tmSlowMode.GetPassTime()-(SLOW_MODE_TIME-0.5));
-		time = CalcNumEaseOut(time); //値の曲線変動.
-		//背景色.
-		{
-			Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x303030 };
-			SetDrawBlendModeST(MODE_ADD, 100*time);
-			DrawBoxST(&box, ANC_LU);
-			ResetDrawBlendMode();
-		}
 		//枠線.
 		{
 			Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
@@ -757,7 +787,7 @@ void GameManager::DrawUI() {
 
 	//テキスト設定.
 	DrawStrST str[4] = {
-		DrawStrST({}, {WINDOW_WID/2,      70+1}, 0xFFFFFF),
+		DrawStrST({}, {WINDOW_WID/2,      70+2}, 0xFFFFFF),
 		DrawStrST({}, {WINDOW_WID/2-350, 150  }, COLOR_BEST_SCORE),
 		DrawStrST({}, {WINDOW_WID/2,     150  }, COLOR_SCORE),
 		DrawStrST({}, {WINDOW_WID/2+350, 150  }, COLOR_TIME),
@@ -779,13 +809,13 @@ void GameManager::DrawUI() {
 	str[0].DrawStringST(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].DrawStringST(ANC_MID, data.font3);
-	imgUI[1].DrawExtendGraphST({str[1].GetPos().x, str[1].GetPos().y+30}, {0.4, 0.4});
+	imgUI[1].DrawExtendGraphST({str[1].GetPos().x, str[1].GetPos().y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].DrawStringST(ANC_MID, data.font3);
-	imgUI[2].DrawExtendGraphST({str[2].GetPos().x, str[2].GetPos().y+30}, {0.4, 0.4});
+	imgUI[2].DrawExtendGraphST({str[2].GetPos().x, str[2].GetPos().y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].DrawStringST(ANC_MID, data.font3);
-	imgUI[3].DrawExtendGraphST({str[3].GetPos().x, str[3].GetPos().y+30}, {0.4, 0.4});
+	imgUI[3].DrawExtendGraphST({str[3].GetPos().x, str[3].GetPos().y+28}, {0.4, 0.4});
 	//テキスト(光沢用)
 	str[1].SetColor(0xFFFFFF);
 	str[2].SetColor(0xFFFFFF);
@@ -885,7 +915,17 @@ void GameManager::GameEnd() {
 	}
 
 	//サウンド.
-	p_sound->FadeOutPlay(_T("BGM1"), 2);
+	switch (data.stage) 
+	{
+		case 1:
+			p_sound->FadeOutPlay(_T("BGM1"), 2);
+			break;
+		case 2:
+			p_sound->FadeOutPlay(_T("BGM2"), 2);
+			break;
+
+		default: assert(false); break;
+	}
 }
 //アイテムを取った時.
 void GameManager::TakeItem() {

@@ -155,6 +155,8 @@ enum MoveDir
 struct GameData
 {
 	Scene scene;      //シーンの記録用.
+	int   stage;      //ステージ数.
+
 	int   score;      //スコア.
 	int   scoreBef;   //スコア(時間加算前)
 	int   bestScore;  //ベストスコア.
@@ -225,12 +227,13 @@ struct GameData
 #define OBSTACLE5_FLASH_MAX				(30)            //最大フラッシュエフェクト数
 #define OBSTACLE5_FLASH_SIZE_INIT		(5.0f)          //フラッシュエフェクトの初期サイズ.
 #define OBSTACLE5_FLASH_SIZE_SPREAD		(3)             //フラッシュエフェクトの拡大量.
+#define OBSTACLE5_FLASH_BLINK_TM		(15.0f)         //フラッシュエフェクトの点滅時間.
 #define OBSTACLE5_FLASH_VALID_TM		(50)            //フラッシュエフェクトの持続フレーム.
 #define OBSTACLE5_FLASH_ALPHA_TM		(2)             //フラッシュエフェクトの透明化速度.
 #define OBSTACLE5_STATE_WARNING			(0)				//予告状態.
 #define OBSTACLE5_STATE_ACTIVE			(1)				//アクティブ状態.
-#define OBSTACLE5_WARNING_DURATION		(120.0f)		//2秒間の予告.
-#define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//1秒間のアクティブ.
+#define OBSTACLE5_WARNING_DURATION		(120.0f)		//予告の時間.
+#define OBSTACLE5_ACTIVE_DURATION		(60.0f)			//アクティブの時間.
 #define OBSTACLE5_SPAWN_SPAN			(350)			//出現間隔.
 #define OBSTACLE5_MAX_SIMULTANEOUS		(3)				//最大同時出現数.
 #define OBSTACLE5_MIN_DISTANCE			(100)			//最小距離.
