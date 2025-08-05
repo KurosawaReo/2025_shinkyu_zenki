@@ -31,7 +31,6 @@ struct LaserData
 	float     Counter;   //追尾を初めてから通過した時間.
 
 	int       ValidFlag; //このデータが使用中かフラグ.
-
 };
 
 //レーザーが描く軌道ラインデータ.
@@ -43,7 +42,6 @@ struct LaserLineData
 	float  Counter;         //描くラインの色決定用値.
 
 	int    ValidFlag;       //このデータが使用中かフラグ
-
 };
 
 //レーザー管理用.

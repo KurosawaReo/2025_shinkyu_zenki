@@ -1,6 +1,6 @@
 /*
    - myTimerST.cpp - (original)
-   ver.2025/08/03
+   ver.2025/08/05
 
    DxLib: オリジナルタイマー機能の追加.
 */
@@ -8,6 +8,8 @@
   #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 #include "myTimerST.h"
+
+// ▼*---=[ Timer ]=---*▼ //
 
 //タイマー停止.
 void Timer::Stop() {
@@ -49,6 +51,8 @@ float Timer::GetPassTime() {
 		return tmSavePass; //保存時間を返す.
 	}	
 }
+
+// ▼*---=[ TimerMicro ]=---*▼ //
 
 void TimerMicro::Stop() {
 

@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/08/04
+   ver.2025/08/05
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -32,131 +32,7 @@ static const DBL_XY anchorPos[9] = {
 	{0.0, 1.0}, {0.5, 1.0}, {1.0, 1.0}
 };
 
-//DrawCircleの改造版.
-int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
-
-	//アンチエイリアスあり.
-	if (isAnti) {
-		//posnum(角形数)は60に設定する.
-		int err = DrawCircleAA((float)data->pos.x, (float)data->pos.y, data->r, 60, data->clr, isFill, thick);
-		if (err < 0) {
-			return -1; //-1: DrawCircleAAでエラー.
-		}
-	}
-	//アンチエイリアスなし.
-	else{
-		int err = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->clr, isFill, (int)thick);
-		if (err < 0) {
-			return -2; //-2: DrawCircleでエラー.
-		}
-	}
-	return 0; //正常終了.
-}
-//DrawBoxの改造版.
-int DrawBoxST(const Box* data, Anchor anc, bool isFill, bool isAnti) {
-
-	if (data->size.x <= 0.0 || data->size.y <= 0.0) {
-		return -3; //-3: サイズが0.0以下.
-	}
-
-	//始点を求める.
-	float x1 = (float)(data->pos.x - (data->size.x-1) * anchorPos[anc].x);
-	float y1 = (float)(data->pos.y - (data->size.y-1) * anchorPos[anc].y);
-	//終点を求める.
-	float x2 = (float)(x1 + data->size.x-1);
-	float y2 = (float)(y1 + data->size.y-1);
-
-	//アンチエイリアスあり.
-	if (isAnti) {
-		int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->clr, isFill);
-		if (err < 0) {
-			return -1; //-1: DrawBoxAAでエラー.
-		}
-	}
-	//アンチエイリアスなし.
-	else {
-		int err = DrawBox((int)x1, (int)y1, (int)x2+1, (int)y2+1, data->clr, isFill);
-		if (err < 0) {
-			return -2; //-2: DrawBoxでエラー.
-		}
-	}
-	return 0; //正常終了.
-}
-//DrawTriangleの改造版.
-int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
-
-	//アンチエイリアスあり.
-	if (isAnti) {
-		int err = DrawTriangleAA(
-			(float)data->pos[0].x, (float)data->pos[0].y,
-			(float)data->pos[1].x, (float)data->pos[1].y,
-			(float)data->pos[2].x, (float)data->pos[2].y, data->clr, isFill
-		);
-		if (err < 0) {
-			return -1; //-1: DrawTriangleAAでエラー.
-		}
-	}
-	//アンチエイリアスなし.
-	else {
-		int err = DrawTriangle(
-			_int(data->pos[0].x), _int(data->pos[0].y),
-			_int(data->pos[1].x), _int(data->pos[1].y),
-			_int(data->pos[2].x), _int(data->pos[2].y), data->clr, isFill
-		);
-		if (err < 0) {
-			return -2; //-2: DrawTriangleでエラー.
-		}
-	}
-	return 0; //正常終了.
-}
-//DrawLineの改造版.
-int DrawLineST(const Line* data, bool isAnti, float thick) {
-
-	//アンチエイリアスあり.
-	if (isAnti) {
-		int err = DrawLineAA(
-			(float)data->stPos.x, (float)data->stPos.y,
-			(float)data->edPos.x, (float)data->edPos.y, data->clr, thick
-		);
-		if (err < 0) {
-			return -1; //-1: DrawLineAAでエラー.
-		}
-	}
-	//アンチエイリアスなし.
-	else {
-		int err = DrawLine(
-			_int(data->stPos.x), _int(data->stPos.y), 
-			_int(data->edPos.x), _int(data->edPos.y), data->clr, (int)thick
-		);
-		if (err < 0) {
-			return -2; //-2: DrawLineでエラー.
-		}
-	}
-	return 0; //正常終了.
-}
-//画面全体にグリッド線を描画.
-int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
-
-	//縦線の描画.
-	for (int x = 0; x < wid; x += size) {
-
-		Line line = { {(double)x, 0}, {(double)x, (double)hei}, clrHei };
-		int err = DrawLineST(&line);
-		if (err < 0) {
-			return -1; //-1: 縦線でエラー.
-		}
-	}
-	//横線の描画.
-	for (int y = 0; y < hei; y += size) {
-
-		Line line = { {0, (double)y}, {(double)wid, (double)y}, clrWid };
-		int err = DrawLineST(&line);
-		if (err < 0) {
-			return -2; //-2: 横線でエラー.
-		}
-	}
-	return 0; //正常終了.
-}
+// ▼*---=[ DrawImgST / DrawDivImgST ]=---*▼ //
 
 //LoadGraphの改造版.
 int DrawImgST::LoadGraphST(MY_STRING fileName) {
@@ -422,6 +298,134 @@ INT_XY DrawStrST::GetTextSize(MY_STRING str, int font) {
 	}
 
 	return size;
+}
+
+// ▼*---=[ function ]=---*▼ //
+
+//DrawCircleの改造版.
+int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
+
+	//アンチエイリアスあり.
+	if (isAnti) {
+		//posnum(角形数)は60に設定する.
+		int err = DrawCircleAA((float)data->pos.x, (float)data->pos.y, data->r, 60, data->clr, isFill, thick);
+		if (err < 0) {
+			return -1; //-1: DrawCircleAAでエラー.
+		}
+	}
+	//アンチエイリアスなし.
+	else{
+		int err = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->clr, isFill, (int)thick);
+		if (err < 0) {
+			return -2; //-2: DrawCircleでエラー.
+		}
+	}
+	return 0; //正常終了.
+}
+//DrawBoxの改造版.
+int DrawBoxST(const Box* data, Anchor anc, bool isFill, bool isAnti) {
+
+	if (data->size.x <= 0.0 || data->size.y <= 0.0) {
+		return -3; //-3: サイズが0.0以下.
+	}
+
+	//始点を求める.
+	float x1 = (float)(data->pos.x - (data->size.x-1) * anchorPos[anc].x);
+	float y1 = (float)(data->pos.y - (data->size.y-1) * anchorPos[anc].y);
+	//終点を求める.
+	float x2 = (float)(x1 + data->size.x-1);
+	float y2 = (float)(y1 + data->size.y-1);
+
+	//アンチエイリアスあり.
+	if (isAnti) {
+		int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->clr, isFill);
+		if (err < 0) {
+			return -1; //-1: DrawBoxAAでエラー.
+		}
+	}
+	//アンチエイリアスなし.
+	else {
+		int err = DrawBox((int)x1, (int)y1, (int)x2+1, (int)y2+1, data->clr, isFill);
+		if (err < 0) {
+			return -2; //-2: DrawBoxでエラー.
+		}
+	}
+	return 0; //正常終了.
+}
+//DrawTriangleの改造版.
+int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
+
+	//アンチエイリアスあり.
+	if (isAnti) {
+		int err = DrawTriangleAA(
+			(float)data->pos[0].x, (float)data->pos[0].y,
+			(float)data->pos[1].x, (float)data->pos[1].y,
+			(float)data->pos[2].x, (float)data->pos[2].y, data->clr, isFill
+		);
+		if (err < 0) {
+			return -1; //-1: DrawTriangleAAでエラー.
+		}
+	}
+	//アンチエイリアスなし.
+	else {
+		int err = DrawTriangle(
+			_int(data->pos[0].x), _int(data->pos[0].y),
+			_int(data->pos[1].x), _int(data->pos[1].y),
+			_int(data->pos[2].x), _int(data->pos[2].y), data->clr, isFill
+		);
+		if (err < 0) {
+			return -2; //-2: DrawTriangleでエラー.
+		}
+	}
+	return 0; //正常終了.
+}
+//DrawLineの改造版.
+int DrawLineST(const Line* data, bool isAnti, float thick) {
+
+	//アンチエイリアスあり.
+	if (isAnti) {
+		int err = DrawLineAA(
+			(float)data->stPos.x, (float)data->stPos.y,
+			(float)data->edPos.x, (float)data->edPos.y, data->clr, thick
+		);
+		if (err < 0) {
+			return -1; //-1: DrawLineAAでエラー.
+		}
+	}
+	//アンチエイリアスなし.
+	else {
+		int err = DrawLine(
+			_int(data->stPos.x), _int(data->stPos.y), 
+			_int(data->edPos.x), _int(data->edPos.y), data->clr, (int)thick
+		);
+		if (err < 0) {
+			return -2; //-2: DrawLineでエラー.
+		}
+	}
+	return 0; //正常終了.
+}
+//画面全体にグリッド線を描画.
+int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
+
+	//縦線の描画.
+	for (int x = 0; x < wid; x += size) {
+
+		Line line = { {(double)x, 0}, {(double)x, (double)hei}, clrHei };
+		int err = DrawLineST(&line);
+		if (err < 0) {
+			return -1; //-1: 縦線でエラー.
+		}
+	}
+	//横線の描画.
+	for (int y = 0; y < hei; y += size) {
+
+		Line line = { {0, (double)y}, {(double)wid, (double)y}, clrWid };
+		int err = DrawLineST(&line);
+		if (err < 0) {
+			return -2; //-2: 横線でエラー.
+		}
+	}
+	return 0; //正常終了.
 }
 
 //フォント作成.

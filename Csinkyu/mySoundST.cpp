@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/08/04
+   ver.2025/08/05
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -10,6 +10,8 @@
 #include "mySoundST.h"
 
 SoundST SoundST::self; //実体の宣言.
+
+// ▼*---=[ SoundData ]=---*▼ //
 
 //サウンド解放.
 void SoundData::Release() {
@@ -101,6 +103,8 @@ int SoundData::GetVolumeRange(int volume) {
 	assert(0 <= vol255 && vol255 <= 255); //範囲内チェック.
 	return vol255;
 }
+
+// ▼*---=[ SoundST ]=---*▼ //
 
 //デストラクタ.
 SoundST::~SoundST() {

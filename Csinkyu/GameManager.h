@@ -25,7 +25,6 @@ private: //データ.
 
 	DrawImgST imgLogo[2]; //タイトルロゴ画像.
 	DrawImgST imgUI[4];   //UI画像.
-	DrawImgST imgBG[2];   //背景画像.
 
 	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
@@ -38,6 +37,10 @@ public:
 	//実体の取得.
 	static GameManager* GetPtr() {
 		return &self;
+	}
+	//get.
+	float GetSlowModeTime() {
+		return tmSlowMode.GetPassTime();
 	}
 
 	//メイン処理.
@@ -66,7 +69,6 @@ public:
 	void DrawEnd();
 	void DrawPause();
 
-	void DrawBG();
 	void DrawUI();
 	void DrawObjects();
 	void DrawReflectMode();

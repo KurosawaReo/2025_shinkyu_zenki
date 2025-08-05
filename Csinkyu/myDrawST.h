@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/08/04
+   ver.2025/08/05
 
    DxLib: オリジナル描画機能の追加.
 */

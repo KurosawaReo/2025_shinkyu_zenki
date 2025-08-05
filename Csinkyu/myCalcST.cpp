@@ -1,6 +1,6 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/08/03
+   ver.2025/08/04
 
    DxLib: オリジナル計算機能の追加.
 */
@@ -240,10 +240,5 @@ vector<int> RandNums(int st, int ed, int count, bool isDxRnd) {
 }
 //値から小数だけ取り出す.
 double GetDecimal(double num) {
-
-	double n = 0; //整数部.
-	double f = 0; //小数部.
-	f = modf(num, &n); //小数だけ取り出す.
-
-	return f;
+	return fmod(num, 1.0); //1.0で割った余り.
 }
