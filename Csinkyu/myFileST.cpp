@@ -1,10 +1,11 @@
 /*
    - myFileST.cpp - (original)
-   ver.2025/08/02
+   ver.2025/08/05
 
    DxLib: オリジナルファイル機能の追加.
 */
 #include "myFileST.h"
+#include <direct.h> //フォルダ作成のため導入.
 
 //ファイルを開く.
 int FileST::Open(MY_STRING fileName, MY_STRING mode) {
@@ -26,6 +27,10 @@ void FileST::Close() {
 		fclose(fp); //ファイルを閉じる.
 		fp = nullptr;
 	}
+}
+//フォルダを作成(なければ)
+int FileST::MakeDir(MY_STRING folderName) {
+	return _tmkdir(folderName.c_str()); //_mkdirマクロのTCHAR版.
 }
 
 //読み込み(文字列)
