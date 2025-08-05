@@ -126,25 +126,29 @@ void Player::DrawAfterImage()
 	//残像処理.
 	for (int i = 0; i < PLAYER_AFT_IMG_NUM; i++)
 	{
-		//透明度の計算.
-		float alpha = (float)i/PLAYER_AFT_IMG_NUM;
-		//透明度反映.
-		SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
+		//プレイヤーの位置と同じじゃなければ.
+		if (afterPos[i].x != hit.pos.x || afterPos[i].y != hit.pos.y) {
 
-		Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
-		//反射カラー.
-		if (mode == Player_Reflect ||
-			mode == Player_SuperReflect
-		){
-			box.clr = COLOR_PLY_AFT_REF;
-		}
-		//通常カラー.
-		else
-		{
-			box.clr = COLOR_PLY_AFT_NOR;
-		}
+			//透明度の計算.
+			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
+			//透明度反映.
+			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-		DrawBoxST(&box, ANC_MID, false, true);
+			Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
+			//反射カラー.
+			if (mode == Player_Reflect ||
+				mode == Player_SuperReflect
+			){
+				box.clr = COLOR_PLY_AFT_REF;
+			}
+			//通常カラー.
+			else
+			{
+				box.clr = COLOR_PLY_AFT_NOR;
+			}
+
+			DrawBoxST(&box, ANC_MID, false, true);
+		}
 	}
 
 	//描画モードリセット.
@@ -166,7 +170,7 @@ void Player::PlayerMove()
 		input->InputPadStick(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
-	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID, WINDOW_HEI);
+	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
 }
 
 // 反射エフェクト生成

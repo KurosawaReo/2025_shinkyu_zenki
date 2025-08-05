@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/08/03
+   ver.2025/08/05
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -59,10 +59,11 @@ public:
 	//読み込み.
 	int LoadGraphST      (MY_STRING fileName);
 	//描画.
-	int DrawGraphST      (INT_XY pos,                            Anchor anc = ANC_MID, bool isTrans = true);
-	int DrawRectGraphST  (INT_XY pos, INT_XY stPos, INT_XY size,                       bool isTrans = true);
-	int DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate,           Anchor anc = ANC_MID, bool isTrans = true);
-	int DrawRotaGraphST  (INT_XY pos, double extend, double ang, Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawGraphST      (INT_XY pos,                                              Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRectGraphST  (INT_XY pos,   INT_XY stPos,  INT_XY size,                                      bool isTrans = true);
+	int DrawExtendGraphST(INT_XY pos,   DBL_XY sizeRate,                           Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRotaGraphST  (INT_XY pos,   double extend, double ang,                 Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawModiGraphST  (INT_XY luPos, INT_XY ruPos,  INT_XY rdPos, INT_XY ldPos,                       bool isTrans = true);
 };
 
 //画像描画クラス(分割読み込み)
@@ -89,10 +90,11 @@ public:
 	//読み込み.
 	int LoadDivGraphST   (MY_STRING fileName, INT_XY size, INT_XY cnt);
 	//描画.
-	int DrawGraphST      (int imgNo, INT_XY pos,                            Anchor anc = ANC_MID, bool isTrans = true);
-	int DrawRectGraphST  (int imgNo, INT_XY pos, INT_XY stPos, INT_XY size,                       bool isTrans = true);
-	int DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate,           Anchor anc = ANC_MID, bool isTrans = true);
-	int DrawRotaGraphST  (int imgNo, INT_XY pos, double extend, double ang, Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawGraphST      (int imgNo, INT_XY pos,                                              Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRectGraphST  (int imgNo, INT_XY pos,   INT_XY stPos , INT_XY size,                                      bool isTrans = true);
+	int DrawExtendGraphST(int imgNo, INT_XY pos,   DBL_XY sizeRate,                           Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawRotaGraphST  (int imgNo, INT_XY pos,   double extend, double ang,                 Anchor anc = ANC_MID, bool isTrans = true);
+	int DrawModiGraphST  (int imgNo, INT_XY luPos, INT_XY ruPos,  INT_XY rdPos, INT_XY ldPos,                       bool isTrans = true);
 };
 
 //テキスト描画クラス.

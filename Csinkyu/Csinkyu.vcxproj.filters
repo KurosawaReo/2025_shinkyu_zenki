@@ -22,7 +22,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="mySoundST.cpp" />
-    <ClCompile Include="MapGimmickLaserManager.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="MapGimmickLaser.cpp" />
+    <ClCompile Include="myFileST.cpp" />
+    <ClCompile Include="myObjectST.cpp" />
+    <ClCompile Include="BackGround.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
@@ -43,6 +47,10 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="mySoundST.h" />
-    <ClInclude Include="MapGimmickLaserManager.h" />
+    <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="MapGimmickLaser.h" />
+    <ClInclude Include="myFileST.h" />
+    <ClInclude Include="myObjectST.h" />
+    <ClInclude Include="BackGround.h" />
   </ItemGroup>
 </Project>

@@ -205,7 +205,6 @@ void Obstacle5::Hitjudgment()
 	}
 }
 
-
 void Obstacle5::DrawObstFlash()
 {
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++)
@@ -232,22 +231,35 @@ void Obstacle5::DrawObstFlash()
 
 void Obstacle5::DrawWarningEffect(int index)
 {
-	// 残り時間から経過時間を計算
+	//残り時間から経過時間を計算.
 	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
 
-	float  blinkRate  = 8.0f;
-	double blinkPhase = fmod(elapsedTime * blinkRate, 60.0f);
-	double blinkAlpha = (sin(blinkPhase * 3.14f / 30.0f) + 1.0f) * 0.5f;
+	//1: 透明度の計算(点滅)
+	int alphaValue;
+	//攻撃前になるまで点滅.
+	if (elapsedTime < 90) {
+		double blinkPhase = fmod(elapsedTime, OBSTACLE5_FLASH_BLINK_TM);
+		double blinkAlpha = sin(blinkPhase * M_PI/OBSTACLE5_FLASH_BLINK_TM); //0.0～1.0を往復するっぽい.
+		alphaValue = (int)(255 - 200*blinkAlpha);
+	}
+	else {
+		alphaValue = 255; //最大値.
+	}
 
-	// 脈動効果
-	float  pulseRate   = 4.0f;
-	double pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * 3.14159f / 60.0f);
-	int    warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
-
-	int alphaValue = (int)(255 * blinkAlpha * 0.8f);
+	//2: サイズの計算.
+	int warningSize;
+	//攻撃前になったら脈動開始.
+	if (elapsedTime >= 90) {
+		const float pulseRate = 4.0f;
+		double pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * M_PI/60.0f);
+		warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
+	}
+	else {
+		warningSize = flashEffect[index].BaseSize; //固定サイズ.
+	}
 
 	// 予告エフェクトを描画.
-	SetDrawBlendModeST(MODE_ADD, alphaValue);
+	SetDrawBlendModeST(MODE_ALPHA, alphaValue);
 
 	Circle cir;
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize,   GetColor(150, 150, 150) };

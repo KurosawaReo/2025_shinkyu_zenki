@@ -38,6 +38,10 @@ public:
 	static GameManager* GetPtr() {
 		return &self;
 	}
+	//get.
+	float GetSlowModeTime() {
+		return tmSlowMode.GetPassTime();
+	}
 
 	//ƒƒCƒ“ˆ—.
 	void Init();
@@ -65,7 +69,6 @@ public:
 	void DrawEnd();
 	void DrawPause();
 
-	void DrawBG();
 	void DrawUI();
 	void DrawObjects();
 	void DrawReflectMode();
