@@ -42,8 +42,8 @@ int WINAPI WinMain(
 	SetWindowSize(WINDOW_WID, WINDOW_HEI);					//ウィンドウサイズの設定.
 	SetGraphMode(WINDOW_WID, WINDOW_HEI, WINDOW_COLOR_BIT);	//解像度の設定.
 	SetDrawScreen(DX_SCREEN_BACK);							//裏画面へ描画(ダブルバッファ)
-	SetOutApplicationLogValidFlag(FALSE);                   //Log.txtを出さない.
-	SetWaitVSyncFlag(FALSE);                                //VSyncを無効化(FPS制限なし)
+	SetOutApplicationLogValidFlag(FALSE);                   //FALSEでLog.txtにログを書き込まない.
+	SetWaitVSyncFlag(FALSE);                                //FALSEでVSyncを無効化(FPS制限なし)
 
 	//DxLibの初期化.
 	if (DxLib_Init() == -1) {
@@ -58,13 +58,15 @@ int WINAPI WinMain(
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
 		//一定時間ごとに処理.
 		if (tmFps.IntervalTime()) {
-			ClearDrawScreen(); // 画面クリア
-			Update();          // 更新処理
-			Draw();			   // 描画処理
-			ScreenFlip();      // 表画面へ描画
+			ClearDrawScreen(); //画面クリア.
+			Update();          //更新処理.
+			Draw();			   //描画処理.
+			ScreenFlip();      //表画面へ描画.
 		}
 	}
 
-	DxLib_End(); //DXライブラリの終了処理
-	return 0;    //終了
+	DxLib_End();                //DxLibの終了処理.
+	DeleteFileW(_T("Log.txt")); //Log.txtが生成されるので消去する.
+
+	return 0;
 }
