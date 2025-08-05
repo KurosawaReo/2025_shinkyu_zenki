@@ -179,13 +179,14 @@ struct GameData
 //#define DEBUG_SPAWN_RATE
 
 // - 定数 -
+#define FILE_DATA_PATH	(_T("Data"))					//データを保存する場所.
+#define FILE_DATA		(_T("Data/score.data"))			//データを保存するファイル.
+
 #define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
 
 #define WINDOW_WID						(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
 #define WINDOW_COLOR_BIT				(32)			//ウィンドウのカラーbit数.
-
-#define FILE_DATA_PATH					(_T("score.data"))	//データを保存するtxtファイル.
 
 #define FPS								(80)			//フレームレート.
 
@@ -274,8 +275,8 @@ struct GameData
 
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
-#define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105)) //プレイヤーの残像色(通常)
-#define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255)) //プレイヤーの残像色(反射)
+#define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
+#define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor( 60, 255,  60))
 #define COLOR_PRE_LINE					(GetColor(128, 128, 128))                            //予測線.
 #define COLOR_METEO(pos)				(GetColor(0, _int(255 * fabs(sin(pos.x/200))), 255)) //隕石.

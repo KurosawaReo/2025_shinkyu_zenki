@@ -189,8 +189,8 @@ void GameManager::Init() {
 	//スコア読み込み.
 	{
 		FileST file;
-		int ret = file.Open(FILE_DATA_PATH, _T("r")); //ファイルを開く.
-		data.bestScore = file.ReadInt();              //数字を読み込んで登録.
+		file.Open(FILE_DATA, _T("r"));   //ファイルを開く.
+		data.bestScore = file.ReadInt(); //数字を読み込んで登録.
 	}
 	
 	data.stage = 2; //test
@@ -872,8 +872,9 @@ void GameManager::GameEnd() {
 	if (data.score > data.bestScore) {
 
 		FileST file;
-		file.Open(FILE_DATA_PATH, _T("w")); //ファイルを開く.
-		file.WriteInt(data.score);          //スコアを保存.
+		file.MakeDir (FILE_DATA_PATH);     //ファイルを開く.
+		file.Open    (FILE_DATA, _T("w")); //ファイルを開く.
+		file.WriteInt(data.score);         //スコアを保存.
 	}
 
 	//サウンド.
