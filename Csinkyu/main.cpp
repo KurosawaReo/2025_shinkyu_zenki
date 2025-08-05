@@ -42,6 +42,7 @@ int WINAPI WinMain(
 	SetWindowSize(WINDOW_WID, WINDOW_HEI);					//ウィンドウサイズの設定.
 	SetGraphMode(WINDOW_WID, WINDOW_HEI, WINDOW_COLOR_BIT);	//解像度の設定.
 	SetDrawScreen(DX_SCREEN_BACK);							//裏画面へ描画(ダブルバッファ)
+	SetOutApplicationLogValidFlag(FALSE);                   //Log.txtを出さない.
 	SetWaitVSyncFlag(FALSE);                                //VSyncを無効化(FPS制限なし)
 
 	//DxLibの初期化.
