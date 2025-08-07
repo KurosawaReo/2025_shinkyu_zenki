@@ -28,22 +28,22 @@ void BackGround::Update() {
 //描画.
 void BackGround::Draw() {
 
-#if false
-	//背景デザイン.
-	for (int x = 0; x < WINDOW_WID; x += 5) {
-
-		int clr = _int(20 * fabs(sin((double)(x+data.counter)/200))); //色の変化.
-		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
-		DrawLineST(&line, false, 5);
-	}
-#endif
-
 	//スローモード経過時間.
 	float pass = GameManager::GetPtr()->GetSlowModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(SLOW_MODE_TIME-0.5));
 	time = CalcNumEaseOut(time); //値の曲線変動.
 
+#if false
+	//背景デザイン.
+	for (int x = 0; x < WINDOW_WID; x += 5) {
+
+		int clr = _int(20 * fabs(sin((double)(x+p_data->counter)/200))); //色の変化.
+		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
+		DrawLineST(&line, false, 5);
+	}
+
+#else
 	//背景画像.
 	{
 		INT_XY imgSize = imgBG[0].GetImage()->size; //画像サイズ取得.
@@ -79,6 +79,7 @@ void BackGround::Draw() {
 
 		ResetDrawBlendMode(); //描画モードリセット.
 	}
+#endif         
 
 	//スローモード中.
 	if (p_data->isSlow) {

@@ -193,7 +193,7 @@ void GameManager::Init() {
 		data.bestScore = file.ReadInt(); //”š‚ğ“Ç‚İ‚ñ‚Å“o˜^.
 	}
 	
-	data.stage = 2; //test
+	data.stage = 1; //test
 
 	Reset();
 }
