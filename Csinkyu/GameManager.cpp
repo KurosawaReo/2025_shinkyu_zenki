@@ -259,6 +259,8 @@ void GameManager::Update() {
 	p_input->UpdatePad(); //コントローラ入力更新.
 	p_sound->Update();    //サウンド更新.
 
+	bg.Update(); //背景.
+
 	//シーン別.
 	switch (data.scene) 
 	{
