@@ -17,10 +17,10 @@ private:
 
 public:
 	//コンストラクタ.
-	Obstacle(float _len, float _speed, UINT _clr) {
+	Obstacle(float _len, float _speed, UINT _color) {
 		len        = _len;
 		speed      = _speed;
-		line.clr   = _clr;
+		line.color = _color;
 	}
 
 	void Init  (GameData*, Player*);

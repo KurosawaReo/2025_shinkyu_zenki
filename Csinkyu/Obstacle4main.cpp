@@ -126,8 +126,8 @@ void Obstacle4main::DrawObstFlash() {
 		line1.edPos = tri.pos[0];
 		line2.stPos = tri.pos[0];
 		line2.edPos = tri.pos[2];
-		line1.clr = GetColor(0, 255, 255);
-		line2.clr = GetColor(0, 255, 255);
+		line1.color = GetColor(0, 255, 255);
+		line2.color = GetColor(0, 255, 255);
 
 		//ï`âÊÉÇÅ[Éhê›íË(åıÇÈ)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);

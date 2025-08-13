@@ -1,6 +1,6 @@
 /*
    - myObjectST.cpp - (original)
-   ver.2025/08/03
+   ver.2025/08/14
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
@@ -17,15 +17,20 @@ int ObjectCir::Draw(bool isDrawHit) {
 		return 0; //非アクティブなら描画しない.
 	}
 
-	//座標.
-	INT_XY pos = {
-		_int(cir.pos.x + offset.x),
-		_int(cir.pos.y + offset.y)
+	//座標にoffsetを足す.
+	Circle tmpCir = {
+		cir.pos+offset, cir.r, cir.color
 	};
+	//画像がないなら円を描画.
+	if (img.GetImage()->handle == 0) {
+		DrawCircleST(&tmpCir);
+	}
 	//画像描画.
-	int err = img.DrawGraphST(pos);
-	if (err < 0) {
-		return -1; //-1: DrawGraphSTでエラー.
+	else {
+		int err = img.DrawGraphST(_intXY(tmpCir.pos));
+		if (err < 0) {
+			return -1; //-1: DrawGraphSTでエラー.
+		}
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
@@ -43,15 +48,20 @@ int ObjectBox::Draw(bool isDrawHit) {
 		return 0; //非アクティブなら描画しない.
 	}
 
-	//座標.
-	INT_XY pos = {
-		_int(box.pos.x + offset.x),
-		_int(box.pos.y + offset.y)
+	//座標にoffsetを足す.
+	Box tmpBox = {
+		box.pos+offset, box.size, box.color
 	};
+	//画像がないなら四角を描画.
+	if (img.GetImage()->handle == 0) {
+		DrawBoxST(&tmpBox);
+	}
 	//画像描画.
-	int err = img.DrawGraphST(pos);
-	if (err < 0) {
-		return -1; //-1: DrawGraphSTでエラー.
+	else {
+		int err = img.DrawGraphST(_intXY(tmpBox.pos));
+		if (err < 0) {
+			return -1; //-1: DrawGraphSTでエラー.
+		}
 	}
 	//当たり判定表示.
 	if (isDrawHit) {

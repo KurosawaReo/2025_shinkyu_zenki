@@ -90,11 +90,11 @@ void Player::Draw()
 		if (mode == Player_Reflect || 
 			mode == Player_SuperReflect
 		){
-			box1.clr = box2.clr = COLOR_PLY_REFLECT;
+			box1.color = box2.color = COLOR_PLY_REFLECT;
 		}
 		//デバッグモード中.
 		if (isDebug) {
-			box1.clr = box2.clr = COLOR_PLY_DEBUG;
+			box1.color = box2.color = COLOR_PLY_DEBUG;
 		}
 
 		DrawBoxST(&box1, ANC_MID, false, true);
@@ -139,12 +139,12 @@ void Player::DrawAfterImage()
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
 			){
-				box.clr = COLOR_PLY_AFT_REF;
+				box.color = COLOR_PLY_AFT_REF;
 			}
 			//通常カラー.
 			else
 			{
-				box.clr = COLOR_PLY_AFT_NOR;
+				box.color = COLOR_PLY_AFT_NOR;
 			}
 
 			DrawBoxST(&box, ANC_MID, false, true);
@@ -297,16 +297,20 @@ void Player::PlayerDeath() {
 	//デバッグモード中は無敵.
 	if (isDebug) { return; }
 
-	//サウンド.
-	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("PlayerDeath"), false, 80);
-	//エフェクト.
-	EffectData data{};
-	data.type = Effect_PlayerDeath;
-	data.pos  = hit.pos;
-	p_effectMng->SpawnEffect(&data);
-	//GamaManagerの関数実行(includeだけすれば使える)
-	GameManager::GetPtr()->GameEnd(); //ゲーム終了.
+	//まだ生存してるなら.
+	if (active) {
+
+		//サウンド.
+		SoundST* sound = SoundST::GetPtr();
+		sound->Play(_T("PlayerDeath"), false, 80);
+		//エフェクト.
+		EffectData data{};
+		data.type = Effect_PlayerDeath;
+		data.pos  = hit.pos;
+		p_effectMng->SpawnEffect(&data);
+		//GamaManagerの関数実行(includeだけすれば使える)
+		GameManager::GetPtr()->GameEnd(); //ゲーム終了.
 	
-	active = false;
+		active = false;
+	}
 }
