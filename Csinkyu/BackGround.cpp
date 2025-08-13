@@ -64,13 +64,13 @@ void BackGround::Draw() {
 					//通常モード.
 					{
 						double alpha = (1-time) * (sin(M_PI*(double)(newPos.x-newPos.y)/(WINDOW_WID/4))+1)/2;
-						SetDrawBlendModeST(MODE_ALPHA, 200*alpha);
+						SetDrawBlendModeST(MODE_ALPHA, 100*alpha);
 						imgBG[0].DrawExtendGraphST(newPos, sizeRate, ANC_MID);
 					}
 					//反射モード.
 					if (p_data->isSlow) {
 						double alpha = time * (sin(M_PI*(double)(newPos.x-newPos.y)/(WINDOW_WID/4))+1)/2;
-						SetDrawBlendModeST(MODE_ALPHA, 200*alpha);
+						SetDrawBlendModeST(MODE_ALPHA, 100*alpha);
 						imgBG[1].DrawExtendGraphST(newPos, sizeRate, ANC_MID);
 					}
 				}

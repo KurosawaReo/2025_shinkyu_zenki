@@ -143,12 +143,14 @@ void GameManager::Init() {
 	data.font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
 	data.font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
-	imgLogo[0].LoadGraphST(_T("Resources/Images/REFLINEロゴ_一部.png"));
-	imgLogo[1].LoadGraphST(_T("Resources/Images/REFLINEロゴ.png"));
-	imgUI[0].  LoadGraphST(_T("Resources/Images/ui_back_level.png"));
-	imgUI[1].  LoadGraphST(_T("Resources/Images/ui_back_best_score.png"));
-	imgUI[2].  LoadGraphST(_T("Resources/Images/ui_back_score.png"));
-	imgUI[3].  LoadGraphST(_T("Resources/Images/ui_back_time.png"));
+	imgLogo[0].  LoadGraphST(_T("Resources/Images/REFLINEロゴ_一部.png"));
+	imgLogo[1].  LoadGraphST(_T("Resources/Images/REFLINEロゴ.png"));
+	imgUI[0].    LoadGraphST(_T("Resources/Images/ui_back_level.png"));
+	imgUI[1].    LoadGraphST(_T("Resources/Images/ui_back_best_score.png"));
+	imgUI[2].    LoadGraphST(_T("Resources/Images/ui_back_score.png"));
+	imgUI[3].    LoadGraphST(_T("Resources/Images/ui_back_time.png"));
+	imgNewRecord.LoadGraphST(_T("Resources/Images/new_record.png"));
+	imgGameOver. LoadGraphST(_T("Resources/Images/gameover.png"));
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));
@@ -670,14 +672,13 @@ void GameManager::DrawEnd() {
 			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
 		);
 		//テキストの設定.
-		DrawStrST str1(_T("- GAME OVER -"), {WINDOW_WID/2, _int(370+30*anim)}, 0xA0A0A0);
-		DrawStrST str2(_T("Time Bonus"),    {WINDOW_WID/2, WINDOW_HEI/2-20},   0xFFFFFF);
-		DrawStrST str3(text,                {WINDOW_WID/2, WINDOW_HEI/2+20},   0xFFFFFF);
+		DrawStrST str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
+		DrawStrST str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str1.DrawStringST(ANC_MID, data.font4);
+		imgGameOver.DrawExtendGraphST({WINDOW_WID/2, _int(370+30*anim)}, {0.5, 0.5});
+		str1.DrawStringST(ANC_MID, data.font1);
 		str2.DrawStringST(ANC_MID, data.font1);
-		str3.DrawStringST(ANC_MID, data.font1);
 		ResetDrawBlendMode();
 	}
 
@@ -691,11 +692,9 @@ void GameManager::DrawEnd() {
 
 			//アニメーション値.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
-			//テキスト.
-			DrawStrST str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-300+anim*20)}, 0xEFFFA0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-			str.DrawStringST(ANC_MID, data.font2);
+			imgNewRecord.DrawExtendGraphST({WINDOW_WID/2, _int(WINDOW_HEI/2-330+anim*20)}, {0.4, 0.4});
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isBestScoreSound) {
