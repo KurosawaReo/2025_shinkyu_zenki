@@ -68,7 +68,7 @@ void Meteo::Draw() {
 		//—LŒø‚Èü‚ğ‘S‚Ä•`‰æ.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			
-			shape.line[i].clr = COLOR_METEO(pos);
+			shape.line[i].color = COLOR_METEO(pos);
 			DrawLineST(&shape.line[i], true, 2);
 //			DrawLineST(&shape.line[i], false, 1);
 		}

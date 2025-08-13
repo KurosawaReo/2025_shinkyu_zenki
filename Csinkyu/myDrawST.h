@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/08/05
+   ver.2025/08/14
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -34,9 +34,9 @@ struct Image
 //文字列データ.
 struct String
 {
-	MY_STRING text; //テキスト.
-	INT_XY    pos;  //画面のどこに描画するか.
-	UINT      clr;  //文字の色.
+	MY_STRING text;  //テキスト.
+	INT_XY    pos;   //画面のどこに描画するか.
+	UINT      color; //文字の色.
 };
 //アンカー(描画の基準点)
 enum Anchor
@@ -105,8 +105,8 @@ private:
 
 public:
 	//初期化用.
-	DrawStrST(MY_STRING _text, INT_XY _pos, UINT _clr) :
-		data{_text, _pos, _clr}
+	DrawStrST(MY_STRING _text, INT_XY _pos, UINT _color) :
+		data{_text, _pos, _color}
 	{}
 	//set.
 	void SetText(MY_STRING _text) {
@@ -116,7 +116,7 @@ public:
 		data.pos = {_x, _y};
 	}
 	void SetColor(UINT _color) {
-		data.clr = _color;
+		data.color = _color;
 	}
 	//get.
 	INT_XY GetPos() {

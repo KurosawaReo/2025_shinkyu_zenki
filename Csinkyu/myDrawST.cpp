@@ -1,6 +1,6 @@
 /*
    - myDrawST.cpp - (original)
-   ver.2025/08/05
+   ver.2025/08/14
    
    DxLib: オリジナル描画機能の追加.
 */
@@ -209,14 +209,14 @@ int DrawStrST::DrawStringST(Anchor anc, int font) {
 
 	//デフォルトフォント.
 	if (font < 0) {
-		int err = DrawString((int)x, (int)y, data.text.c_str(), data.clr);
+		int err = DrawString((int)x, (int)y, data.text.c_str(), data.color);
 		if (err < 0) {
 			return -1; //-1: DrawStringでエラー.
 		}
 	}
 	//フォント設定あり.
 	else {
-		int err = DrawStringToHandle((int)x, (int)y, data.text.c_str(), data.clr, font);
+		int err = DrawStringToHandle((int)x, (int)y, data.text.c_str(), data.color, font);
 		if (err < 0) {
 			return -2; //-2: DrawStringToHandleでエラー.
 		}
@@ -232,7 +232,7 @@ int DrawStrST::DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, bool is
 	if (font < 0) {
 		int err = DrawRotaString(
 			data.pos.x, data.pos.y, extend.x, extend.y, pivot.x, pivot.y,
-			rad, data.clr, 0, isVertical, data.text.c_str()
+			rad, data.color, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -1; //-1: DrawRotaStringでエラー.
@@ -242,7 +242,7 @@ int DrawStrST::DrawRotaStringST(INT_XY extend, INT_XY pivot, double ang, bool is
 	else {
 		int err = DrawRotaStringToHandle(
 			data.pos.x, data.pos.y, extend.x, extend.y, pivot.x, pivot.y,
-			rad, data.clr, font, 0, isVertical, data.text.c_str()
+			rad, data.color, font, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -2; //-2: DrawRotaStringToHandleでエラー.
@@ -258,7 +258,7 @@ int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY
 		int err = DrawModiString(
 			luPos.x, luPos.y, ruPos.x, ruPos.y,
 			rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-			data.clr, 0, isVertical, data.text.c_str()
+			data.color, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -1; //-1: DrawModiStringでエラー.
@@ -269,7 +269,7 @@ int DrawStrST::DrawModiStringST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY
 		int err = DrawModiStringToHandle(
 			luPos.x, luPos.y, ruPos.x, ruPos.y,
 			rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-			data.clr, font, 0, isVertical, data.text.c_str()
+			data.color, font, 0, isVertical, data.text.c_str()
 		);
 		if (err < 0) {
 			return -2; //-2: DrawModiStringToHandleでエラー.
@@ -308,14 +308,14 @@ int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
 	//アンチエイリアスあり.
 	if (isAnti) {
 		//posnum(角形数)は60に設定する.
-		int err = DrawCircleAA((float)data->pos.x, (float)data->pos.y, data->r, 60, data->clr, isFill, thick);
+		int err = DrawCircleAA((float)data->pos.x, (float)data->pos.y, data->r, 60, data->color, isFill, thick);
 		if (err < 0) {
 			return -1; //-1: DrawCircleAAでエラー.
 		}
 	}
 	//アンチエイリアスなし.
 	else{
-		int err = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->clr, isFill, (int)thick);
+		int err = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->color, isFill, (int)thick);
 		if (err < 0) {
 			return -2; //-2: DrawCircleでエラー.
 		}
@@ -338,14 +338,14 @@ int DrawBoxST(const Box* data, Anchor anc, bool isFill, bool isAnti) {
 
 	//アンチエイリアスあり.
 	if (isAnti) {
-		int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->clr, isFill);
+		int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->color, isFill);
 		if (err < 0) {
 			return -1; //-1: DrawBoxAAでエラー.
 		}
 	}
 	//アンチエイリアスなし.
 	else {
-		int err = DrawBox((int)x1, (int)y1, (int)x2+1, (int)y2+1, data->clr, isFill);
+		int err = DrawBox((int)x1, (int)y1, (int)x2+1, (int)y2+1, data->color, isFill);
 		if (err < 0) {
 			return -2; //-2: DrawBoxでエラー.
 		}
@@ -360,7 +360,7 @@ int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
 		int err = DrawTriangleAA(
 			(float)data->pos[0].x, (float)data->pos[0].y,
 			(float)data->pos[1].x, (float)data->pos[1].y,
-			(float)data->pos[2].x, (float)data->pos[2].y, data->clr, isFill
+			(float)data->pos[2].x, (float)data->pos[2].y, data->color, isFill
 		);
 		if (err < 0) {
 			return -1; //-1: DrawTriangleAAでエラー.
@@ -371,7 +371,7 @@ int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
 		int err = DrawTriangle(
 			_int(data->pos[0].x), _int(data->pos[0].y),
 			_int(data->pos[1].x), _int(data->pos[1].y),
-			_int(data->pos[2].x), _int(data->pos[2].y), data->clr, isFill
+			_int(data->pos[2].x), _int(data->pos[2].y), data->color, isFill
 		);
 		if (err < 0) {
 			return -2; //-2: DrawTriangleでエラー.
@@ -386,7 +386,7 @@ int DrawLineST(const Line* data, bool isAnti, float thick) {
 	if (isAnti) {
 		int err = DrawLineAA(
 			(float)data->stPos.x, (float)data->stPos.y,
-			(float)data->edPos.x, (float)data->edPos.y, data->clr, thick
+			(float)data->edPos.x, (float)data->edPos.y, data->color, thick
 		);
 		if (err < 0) {
 			return -1; //-1: DrawLineAAでエラー.
@@ -396,7 +396,7 @@ int DrawLineST(const Line* data, bool isAnti, float thick) {
 	else {
 		int err = DrawLine(
 			_int(data->stPos.x), _int(data->stPos.y), 
-			_int(data->edPos.x), _int(data->edPos.y), data->clr, (int)thick
+			_int(data->edPos.x), _int(data->edPos.y), data->color, (int)thick
 		);
 		if (err < 0) {
 			return -2; //-2: DrawLineでエラー.

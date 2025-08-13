@@ -1,6 +1,6 @@
 /*
    - myObjectST.h - (original)
-   ver.2025/08/03
+   ver.2025/08/14
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
@@ -39,8 +39,8 @@ public:
 	//初期化用.
 	ObjectCir() : Object() {
 	}
-	ObjectCir(DBL_XY _pos, float _r, UINT _clr, DBL_XY _offset, bool _isActive) :
-		cir   ({ _pos, _r, _clr }), 
+	ObjectCir(DBL_XY _pos, float _r, UINT _color, DBL_XY _offset, bool _isActive) :
+		cir   ({ _pos, _r, _color }), 
 		Object(_offset, _isActive)
 	{}
 	//set, add, get.
@@ -52,6 +52,9 @@ public:
 	}
 	DBL_XY GetPos() {
 		return cir.pos;
+	}
+	float GetR() {
+		return cir.r;
 	}
 	//描画.
 	int Draw(bool isDrawHit = false);
@@ -67,8 +70,8 @@ public:
 	//初期化用.
 	ObjectBox() : Object() {
 	}
-	ObjectBox(DBL_XY _pos, DBL_XY _size, UINT _clr, DBL_XY _offset, bool _isActive) :
-		box   ({_pos, _size, _clr}), 
+	ObjectBox(DBL_XY _pos, DBL_XY _size, UINT _color, DBL_XY _offset, bool _isActive) :
+		box   ({_pos, _size, _color}), 
 		Object(_offset, _isActive)
 	{}
 	//set, add, get.
@@ -80,6 +83,9 @@ public:
 	}
 	DBL_XY GetPos() {
 		return box.pos;
+	}
+	DBL_XY GetSize() {
+		return box.size;
 	}
 	//描画.
 	int Draw(bool isDrawHit = false);

@@ -134,7 +134,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endX = WINDOW_WID + 50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.clr = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -143,7 +143,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endX = -50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.clr = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -152,7 +152,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endY = WINDOW_HEI + 50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.clr = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -161,7 +161,7 @@ void MapGimmickLaser::DrawPredictionLine()
 		endY = -50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.clr = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_LINE;
 			DrawLineST(&predictionLine, true);
 		}
 		break;

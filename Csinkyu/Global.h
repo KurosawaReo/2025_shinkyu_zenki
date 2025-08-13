@@ -99,29 +99,29 @@ typedef XY<double> DBL_XY; //double型.
 //円データ.
 struct Circle
 {
-	DBL_XY pos;  //座標.
-	float  r;    //半径.
-	UINT   clr;  //色.
+	DBL_XY pos;   //座標.
+	float  r;     //半径.
+	UINT   color; //色.
 };
 //四角形データ.
 struct Box
 {
-	DBL_XY pos;  //座標.
-	DBL_XY size; //サイズ.
-	UINT   clr;  //色.
+	DBL_XY pos;   //座標.
+	DBL_XY size;  //サイズ.
+	UINT   color; //色.
 };
 //三角形データ.
 struct Triangle
 {
 	DBL_XY pos[3]; //3点の座標.
-	UINT   clr;    //色.
+	UINT   color;  //色.
 };
 //線データ.
 struct Line
 {
 	DBL_XY stPos; //始点座標.
 	DBL_XY edPos; //終点座標.
-	UINT   clr;   //色.
+	UINT   color; //色.
 };
 
 //型変換マクロ.

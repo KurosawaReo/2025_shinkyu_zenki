@@ -90,11 +90,11 @@ void Player::Draw()
 		if (mode == Player_Reflect || 
 			mode == Player_SuperReflect
 		){
-			box1.clr = box2.clr = COLOR_PLY_REFLECT;
+			box1.color = box2.color = COLOR_PLY_REFLECT;
 		}
 		//デバッグモード中.
 		if (isDebug) {
-			box1.clr = box2.clr = COLOR_PLY_DEBUG;
+			box1.color = box2.color = COLOR_PLY_DEBUG;
 		}
 
 		DrawBoxST(&box1, ANC_MID, false, true);
@@ -139,12 +139,12 @@ void Player::DrawAfterImage()
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
 			){
-				box.clr = COLOR_PLY_AFT_REF;
+				box.color = COLOR_PLY_AFT_REF;
 			}
 			//通常カラー.
 			else
 			{
-				box.clr = COLOR_PLY_AFT_NOR;
+				box.color = COLOR_PLY_AFT_NOR;
 			}
 
 			DrawBoxST(&box, ANC_MID, false, true);
