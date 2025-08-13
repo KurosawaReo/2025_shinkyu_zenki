@@ -692,7 +692,7 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//テキスト.
-			DrawStrST str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-350+anim*20)}, 0xEFFFA0 };
+			DrawStrST str = { _T("NEW RECORD!"), {WINDOW_WID/2, _int(WINDOW_HEI/2-300+anim*20)}, 0xEFFFA0 };
 			//描画.
 			SetDrawBlendModeST(MODE_ALPHA, 255*anim);
 			str.DrawStringST(ANC_MID, data.font2);
@@ -853,41 +853,45 @@ void GameManager::DrawReflectMode() {
 //ゲーム終了.
 void GameManager::GameEnd() {
 	
-	data.scene = SCENE_END; //ゲーム終了へ.
+	//まだ終わってないなら(念のため2重実行されることを防ぐ)
+	if (data.scene != SCENE_END) {
+
+		data.scene = SCENE_END; //ゲーム終了へ.
 	
-	tmScene[SCENE_GAME].Stop(); //停止.
-	tmScene[SCENE_END].Start(); //開始.
-	data.isSlow = false;
-	tmSlowMode.Reset();
+		tmScene[SCENE_GAME].Stop(); //停止.
+		tmScene[SCENE_END].Start(); //開始.
+		data.isSlow = false;
+		tmSlowMode.Reset();
 
-	//記録リセット.
-	for (int i = 0; i < _countof(isItemCountDownSound); i++) {
-		isItemCountDownSound[i] = false;
-	}
+		//記録リセット.
+		for (int i = 0; i < _countof(isItemCountDownSound); i++) {
+			isItemCountDownSound[i] = false;
+		}
 
-	data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
-	data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
+		data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
+		data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
-	//最高スコア更新なら保存.
-	if (data.score > data.bestScore) {
+		//最高スコア更新なら保存.
+		if (data.score > data.bestScore) {
 
-		FileST file;
-		file.MakeDir (FILE_DATA_PATH);     //ファイルを開く.
-		file.Open    (FILE_DATA, _T("w")); //ファイルを開く.
-		file.WriteInt(data.score);         //スコアを保存.
-	}
+			FileST file;
+			file.MakeDir(FILE_DATA_PATH);  //フォルダ作成.
+			file.Open(FILE_DATA, _T("w")); //ファイルを開く.
+			file.WriteInt(data.score);     //スコアを保存.
+		}
 
-	//サウンド.
-	switch (data.stage) 
-	{
-		case 1:
-			p_sound->FadeOutPlay(_T("BGM1"), 2);
-			break;
-		case 2:
-			p_sound->FadeOutPlay(_T("BGM2"), 2);
-			break;
+		//サウンド.
+		switch (data.stage) 
+		{
+			case 1:
+				p_sound->FadeOutPlay(_T("BGM1"), 2);
+				break;
+			case 2:
+				p_sound->FadeOutPlay(_T("BGM2"), 2);
+				break;
 
-		default: assert(false); break;
+			default: assert(false); break;
+		}
 	}
 }
 //アイテムを取った時.

@@ -297,16 +297,20 @@ void Player::PlayerDeath() {
 	//デバッグモード中は無敵.
 	if (isDebug) { return; }
 
-	//サウンド.
-	SoundST* sound = SoundST::GetPtr();
-	sound->Play(_T("PlayerDeath"), false, 80);
-	//エフェクト.
-	EffectData data{};
-	data.type = Effect_PlayerDeath;
-	data.pos  = hit.pos;
-	p_effectMng->SpawnEffect(&data);
-	//GamaManagerの関数実行(includeだけすれば使える)
-	GameManager::GetPtr()->GameEnd(); //ゲーム終了.
+	//まだ生存してるなら.
+	if (active) {
+
+		//サウンド.
+		SoundST* sound = SoundST::GetPtr();
+		sound->Play(_T("PlayerDeath"), false, 80);
+		//エフェクト.
+		EffectData data{};
+		data.type = Effect_PlayerDeath;
+		data.pos  = hit.pos;
+		p_effectMng->SpawnEffect(&data);
+		//GamaManagerの関数実行(includeだけすれば使える)
+		GameManager::GetPtr()->GameEnd(); //ゲーム終了.
 	
-	active = false;
+		active = false;
+	}
 }
