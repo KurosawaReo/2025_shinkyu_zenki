@@ -27,7 +27,7 @@ int ObjectCir::Draw(bool isDrawHit) {
 	}
 	//‰æ‘œ•`‰æ.
 	else {
-		int err = img.DrawGraphST(_intXY(tmpCir.pos));
+		int err = img.DrawGraphST(tmpCir.pos);
 		if (err < 0) {
 			return -1; //-1: DrawGraphST‚ÅƒGƒ‰[.
 		}
@@ -58,7 +58,7 @@ int ObjectBox::Draw(bool isDrawHit) {
 	}
 	//‰æ‘œ•`‰æ.
 	else {
-		int err = img.DrawGraphST(_intXY(tmpBox.pos));
+		int err = img.DrawGraphST(tmpBox.pos);
 		if (err < 0) {
 			return -1; //-1: DrawGraphST‚ÅƒGƒ‰[.
 		}
@@ -85,6 +85,6 @@ int ObjectGrid::Draw(INT_XY gridPos, INT_XY gridSize) {
 		gridPos.y + pos.y * gridSize.y
 	};
 	//‰æ‘œ•`‰æ.
-	int err = img.DrawGraphST(newPos, ANC_LU);
+	int err = img.DrawGraphST(_dblXY(newPos), ANC_LU);
 	return err; //-1: DrawGraphST‚ÅƒGƒ‰[.
 }

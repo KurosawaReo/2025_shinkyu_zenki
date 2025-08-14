@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/08/03
+   ver.2025/08/14
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -128,8 +128,9 @@ struct Line
 #define _int(n)   (int)(round(n))            //int型変換マクロ.
 #define _intXY(n) {_int(n.x), _int(n.y)}     //INT_XY型変換マクロ.
 #define _dblXY(n) {(double)n.x, (double)n.y} //DBL_XY型変換マクロ.
-
-#define _if_check(n) assert(n); if(n)        //if文の前に同条件のassertを挟む.
+//便利マクロ.
+#define _if_check(n)       assert(n); if(n)          //if文の前に同条件のassertを挟む.
+#define _return(num, cond) if (cond) { return num; } //条件に合うならreturnする.
 
 // - 列挙体 -
 enum Scene

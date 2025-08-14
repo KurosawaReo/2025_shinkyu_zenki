@@ -532,9 +532,10 @@ void GameManager::DrawTitle() {
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
-	const float delay2 = 1.6f;
-	const float delay3 = 3;
+	const float delay2 = 1.4f;
+	const float delay3 = 1.6f;
 	const float delay4 = 3;
+	const float delay5 = 3;
 
 	const int logoY = WINDOW_HEI/2 - 70;
 
@@ -554,10 +555,10 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
-			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5});
+			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, logoY - anim*100}, {0.5, 0.5});
 			//ロゴ2枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * (1-anim));
-			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5});
+			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY - anim*100}, {0.5, 0.5});
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -567,21 +568,24 @@ void GameManager::DrawTitle() {
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
 
 		//アニメーション値.
-		double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
+		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
+		double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
-		DrawStrST str(text, {WINDOW_WID/2, WINDOW_HEI/2+60}, COLOR_BEST_SCORE);
+		DrawStrST str(text, {WINDOW_WID/2, WINDOW_HEI/2+50}, COLOR_BEST_SCORE);
 
-		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
+		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
 		str.DrawStringST(ANC_MID, data.font2);
-		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+60+28}, {0.4, 0.4});
+		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
+		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+50 + (10+19*anim2)}, {0.5, 0.4});
+		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+50 - (10+19*anim2)}, {0.5, 0.4});
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
-	if (tmScene[SCENE_TITLE].GetPassTime() > delay3) {
+	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
 		//アニメーション値.
-		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
+		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
 		DrawStrST str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-2}, 18, 0xFFFFFF };
@@ -592,7 +596,7 @@ void GameManager::DrawTitle() {
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
-	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
+	if (tmScene[SCENE_TITLE].GetPassTime() > delay5) {
 		//まだ出してなければ.
 		if (!isTitleAnim) {
 			isTitleAnim = true; //一度きり.
@@ -678,7 +682,7 @@ void GameManager::DrawEnd() {
 		DrawStrST str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		imgGameOver.DrawExtendGraphST({WINDOW_WID/2, _int(370+30*anim)}, {0.5, 0.5});
+		imgGameOver.DrawExtendGraphST({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5});
 		str1.DrawStringST(ANC_MID, data.font1);
 		str2.DrawStringST(ANC_MID, data.font1);
 		ResetDrawBlendMode();
@@ -696,7 +700,7 @@ void GameManager::DrawEnd() {
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//描画.
 			SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-			imgNewRecord.DrawExtendGraphST({WINDOW_WID/2, _int(WINDOW_HEI/2-330+anim*20)}, {0.4, 0.4});
+			imgNewRecord.DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4});
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isBestScoreSound) {
@@ -772,13 +776,13 @@ void GameManager::DrawUI() {
 	str[0].DrawStringST(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].DrawStringST(ANC_MID, data.font3);
-	imgUI[1].DrawExtendGraphST({str[1].GetPos().x, str[1].GetPos().y+28}, {0.4, 0.4});
+	imgUI[1].DrawExtendGraphST({(double)str[1].GetPos().x, (double)str[1].GetPos().y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].DrawStringST(ANC_MID, data.font3);
-	imgUI[2].DrawExtendGraphST({str[2].GetPos().x, str[2].GetPos().y+28}, {0.4, 0.4});
+	imgUI[2].DrawExtendGraphST({(double)str[2].GetPos().x, (double)str[2].GetPos().y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].DrawStringST(ANC_MID, data.font3);
-	imgUI[3].DrawExtendGraphST({str[3].GetPos().x, str[3].GetPos().y+28}, {0.4, 0.4});
+	imgUI[3].DrawExtendGraphST({(double)str[3].GetPos().x, (double)str[3].GetPos().y+28}, {0.4, 0.4});
 	//テキスト(光沢用)
 	str[1].SetColor(0xFFFFFF);
 	str[2].SetColor(0xFFFFFF);

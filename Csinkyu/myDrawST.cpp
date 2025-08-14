@@ -41,13 +41,9 @@ int DrawImgST::LoadGraphST(MY_STRING fileName) {
 	data.handle = LoadGraph(fileName.c_str());
 	int err = GetGraphSize(data.handle, &data.size.x, &data.size.y);
 	
-	if (data.handle < 0) {
-		return -1; //-1: LoadGraphエラー.
-	}
-	if (err < 0) {
-		return -2; //-2: GetGraphSizeエラー.
-	}
-	return 0; //正常終了.
+	_return(-1, data.handle < 0) //-1: LoadGraphエラー.
+	_return(-2, err < 0)         //-2: GetGraphSizeエラー.
+	return 0;                    // 0: 正常終了.
 }
 //LoadDivGraphの改造版.
 int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
@@ -56,9 +52,7 @@ int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 
 	//画像分割読み込み.
 	int err = LoadDivGraph(fileName.c_str(), cnt.x*cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
-	if (err < 0) {
-		return -1; //-1: LoadDivGraphエラー.
-	}
+	_return(-1, err < 0) //-1: LoadDivGraphエラー.
 	//Image型配列のサイズを分割数に合わせる.
 	data.resize(cnt.x*cnt.y);
 	//分割数だけループ.
@@ -76,128 +70,244 @@ int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
 }
 
 //DrawGraphの改造版.
-int DrawImgST::DrawGraphST(INT_XY pos, Anchor anc, bool isTrans) {
+int DrawImgST::DrawGraphST(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat) {
 
-	//基準点に座標をずらす.
-	float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
-	float y = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y);
+	_return(-3, data.handle == 0) //-3: handle未設定.
 
-	if (data.handle == 0) {
-		return -2; //-2: handle未設定.
+	//float型かどうか.
+	if (isFloat) {
+		//基準点に座標をずらす.
+		float x = (float)(pos.x - (data.size.x) * anchorPos[anc].x);
+		float y = (float)(pos.y - (data.size.y) * anchorPos[anc].y);
+		//描画.
+		int err = DrawGraphF(x, y, data.handle, isTrans);
+		_return(-1, err < 0) //-1: DrawGraphFエラー.
 	}
-	int err = DrawGraph((int)x, (int)y, data.handle, isTrans);
-	return err; //-1: DrawGraphエラー.
-}
-int DrawDivImgST::DrawGraphST(int imgNo, INT_XY pos, Anchor anc, bool isTrans) {
-
-	//基準点に座標をずらす.
-	float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
-	float y = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
-
-	if (data[imgNo].handle == 0) {
-		return -2; //-2: handle未設定.
+	else {
+		//基準点に座標をずらす.
+		int x = (int)(pos.x - (data.size.x-1) * anchorPos[anc].x);
+		int y = (int)(pos.y - (data.size.y-1) * anchorPos[anc].y);
+		//描画.
+		int err = DrawGraph(x, y, data.handle, isTrans);
+		_return(-2, err < 0) //-2: DrawGraphエラー.
 	}
-	int err = DrawGraph((int)x, (int)y, data[imgNo].handle, isTrans);
-	return err; //-1: DrawGraphエラー.
+	return 0; //正常終了.
 }
+int DrawDivImgST::DrawGraphST(int imgNo, DBL_XY pos, Anchor anc, bool isTrans, bool isFloat) {
+
+	_return(-3, data[imgNo].handle == 0) //-3: handle未設定.
+
+	//float型かどうか.
+	if (isFloat) {
+		//基準点に座標をずらす.
+		float x = (float)(pos.x - (data[imgNo].size.x) * anchorPos[anc].x);
+		float y = (float)(pos.y - (data[imgNo].size.y) * anchorPos[anc].y);
+		//描画.
+		int err = DrawGraphF(x, y, data[imgNo].handle, isTrans);
+		_return(-1, err < 0) //-1: DrawGraphFエラー.
+	}
+	else {
+		//基準点に座標をずらす.
+		int x = (int)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+		int y = (int)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
+		//描画.
+		int err = DrawGraph(x, y, data[imgNo].handle, isTrans);
+		_return(-2, err < 0) //-2: DrawGraphエラー.
+	}
+	return 0; //正常終了.
+}
+
 //DrawRectGraphの改造版.
 //Rect = 矩形(正方形や長方形のこと)
-int DrawImgST::DrawRectGraphST(INT_XY pos, INT_XY stPos, INT_XY size, bool isTrans) {
+int DrawImgST::DrawRectGraphST(DBL_XY pos, INT_XY stPixel, INT_XY size, bool isTrans, bool isFloat) {
 
-	if (data.handle == 0) {
-		return -2; //-2: handle未設定.
-	}
-	int err = DrawRectGraph(
-		pos.x, pos.y, stPos.x, stPos.y, size.x, size.y,
-		data.handle, isTrans
-	);
-	return err; //-1: DrawRectGraphエラー.
-}
-int DrawDivImgST::DrawRectGraphST(int imgNo, INT_XY pos, INT_XY stPos, INT_XY size, bool isTrans) {
+	_return(-3, data.handle == 0) //-3: handle未設定.
 
-	if (data[imgNo].handle == 0) {
-		return -2; //-2: handle未設定.
+	//float型かどうか.
+	if (isFloat) {
+		int err = DrawRectGraphF(
+			(float)pos.x, (float)pos.y,	stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
+		);
+		_return(-1, err < 0) //-1: DrawRectGraphFエラー.
 	}
-	int err = DrawRectGraph(
-		pos.x, pos.y, stPos.x, stPos.y, size.x, size.y,
-		data[imgNo].handle, isTrans
-	);
-	return err; //-1: DrawRectGraphエラー.
+	else {
+		int err = DrawRectGraph(
+			_int(pos.x), _int(pos.y), stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
+		);
+		_return(-2, err < 0) //-2: DrawRectGraphエラー.
+	}
+	return 0; //正常終了.
 }
+int DrawDivImgST::DrawRectGraphST(int imgNo, DBL_XY pos, INT_XY stPixel, INT_XY size, bool isTrans, bool isFloat) {
+
+	_return(-3, data[imgNo].handle == 0) //-3: handle未設定.
+
+	//float型かどうか.
+	if (isFloat) {
+		int err = DrawRectGraphF(
+			(float)pos.x, (float)pos.y,	stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
+		);
+		_return(-1, err < 0) //-1: DrawRectGraphFエラー.
+	}
+	else {
+		int err = DrawRectGraph(
+			_int(pos.x), _int(pos.y), stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
+		);
+		_return(-2, err < 0) //-2: DrawRectGraphエラー.
+	}
+	return 0; //正常終了.
+}
+
 //DrawExtendGraphの改造版.
-int DrawImgST::DrawExtendGraphST(INT_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans) {
+int DrawImgST::DrawExtendGraphST(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat) {
 
-	//始点を求める.
-	float x1 = (float)(pos.x - ((data.size.x * sizeRate.x)-1) * anchorPos[anc].x);
-	float y1 = (float)(pos.y - ((data.size.y * sizeRate.y)-1) * anchorPos[anc].y);
-	//終点を求める.
-	float x2 = (float)(x1 + ((data.size.x * sizeRate.x)-1));
-	float y2 = (float)(y1 + ((data.size.y * sizeRate.y)-1));
+	_return(-3, data.handle == 0) //-3: handle未設定.
 
-	int err = DrawExtendGraph((int)x1, (int)y1, (int)x2+1, (int)y2+1, data.handle, isTrans);
-	return err; //-1: DrawExtendGraphエラー.
+	//float型かどうか.
+	if (isFloat) {
+		//始点を求める.
+		float x1 = (float)(pos.x - (data.size.x * sizeRate.x) * anchorPos[anc].x);
+		float y1 = (float)(pos.y - (data.size.y * sizeRate.y) * anchorPos[anc].y);
+		//終点を求める.
+		float x2 = (float)(x1 + data.size.x * sizeRate.x);
+		float y2 = (float)(y1 + data.size.y * sizeRate.y);
+
+		int err = DrawExtendGraphF(x1, y1, x2+1, y2+1, data.handle, isTrans);
+		_return(-1, err < 0) //-1: DrawExtendGraphFエラー.
+	}
+	else {
+		//始点を求める.
+		int x1 = (int)(pos.x - ((data.size.x * sizeRate.x)-1) * anchorPos[anc].x);
+		int y1 = (int)(pos.y - ((data.size.y * sizeRate.y)-1) * anchorPos[anc].y);
+		//終点を求める.
+		int x2 = (int)(x1 + ((data.size.x * sizeRate.x)-1));
+		int y2 = (int)(y1 + ((data.size.y * sizeRate.y)-1));
+
+		int err = DrawExtendGraph(x1, y1, x2+1, y2+1, data.handle, isTrans);
+		_return(-2, err < 0) //-2: DrawExtendGraphエラー.
+	}
+	return 0; //正常終了.
 }
-int DrawDivImgST::DrawExtendGraphST(int imgNo, INT_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans) {
+int DrawDivImgST::DrawExtendGraphST(int imgNo, DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat) {
 
-	//始点を求める.
-	float x1 = (float)(pos.x - ((data[imgNo].size.x * sizeRate.x)-1) * anchorPos[anc].x);
-	float y1 = (float)(pos.y - ((data[imgNo].size.y * sizeRate.y)-1) * anchorPos[anc].y);
-	//終点を求める.
-	float x2 = (float)(x1 + ((data[imgNo].size.x * sizeRate.x)-1));
-	float y2 = (float)(y1 + ((data[imgNo].size.y * sizeRate.y)-1));
+	_return(-3, data[imgNo].handle == 0) //-3: handle未設定.
 
-	int err = DrawExtendGraph((int)x1, (int)y1, (int)x2+1, (int)y2+1, data[imgNo].handle, isTrans);
-	return err; //-1: DrawExtendGraphエラー.
+	//float型かどうか.
+	if (isFloat) {
+		//始点を求める.
+		float x1 = (float)(pos.x - (data[imgNo].size.x * sizeRate.x) * anchorPos[anc].x);
+		float y1 = (float)(pos.y - (data[imgNo].size.y * sizeRate.y) * anchorPos[anc].y);
+		//終点を求める.
+		float x2 = (float)(x1 + data[imgNo].size.x * sizeRate.x);
+		float y2 = (float)(y1 + data[imgNo].size.y * sizeRate.y);
+
+		int err = DrawExtendGraphF(x1, y1, x2+1, y2+1, data[imgNo].handle, isTrans);
+		_return(-1, err < 0) //-1: DrawExtendGraphFエラー.
+	}
+	else {
+		//始点を求める.
+		int x1 = (int)(pos.x - ((data[imgNo].size.x * sizeRate.x)-1) * anchorPos[anc].x);
+		int y1 = (int)(pos.y - ((data[imgNo].size.y * sizeRate.y)-1) * anchorPos[anc].y);
+		//終点を求める.
+		int x2 = (int)(x1 + ((data[imgNo].size.x * sizeRate.x)-1));
+		int y2 = (int)(y1 + ((data[imgNo].size.y * sizeRate.y)-1));
+
+		int err = DrawExtendGraph(x1, y1, x2+1, y2+1, data[imgNo].handle, isTrans);
+		_return(-2, err < 0) //-2: DrawExtendGraphエラー.
+	}
+	return 0; //正常終了.
 }
+
 //DrawRotaGraphの改造版.
-int DrawImgST::DrawRotaGraphST(INT_XY pos, double extend, double ang, Anchor anc, bool isTrans) {
+int DrawImgST::DrawRotaGraphST(DBL_XY pos, double extend, double ang, Anchor anc, bool isTrans, bool isFloat) {
 
-	//基準点に座標をずらす.
-	float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
-	float y = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y);
+	_return(-3, data.handle == 0) //-3: handle未設定.
 
-	if (data.handle == 0) {
-		return -2; //-2: handle未設定.
-	}
-	int err = DrawRotaGraph((int)x, (int)y, extend, ang, data.handle, isTrans);
-	return err; //-1: DrawRotaGraphエラー.
-}
-int DrawDivImgST::DrawRotaGraphST(int imgNo, INT_XY pos, double extend, double ang, Anchor anc, bool isTrans) {
-
-	//基準点に座標をずらす.
-	float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
-	float y = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
-
-	if (data[imgNo].handle == 0) {
-		return -2; //-2: handle未設定.
-	}
-	int err = DrawRotaGraph((int)x, (int)y, extend, ang, data[imgNo].handle, isTrans);
-	return err; //-1: DrawRotaGraphエラー.
-}
-//DrawModiGraphの改造版.
-int DrawImgST::DrawModiGraphST(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isTrans) {
+	//float型かどうか.
+	if (isFloat) {
+		//基準点に座標をずらす.
+		float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
+		float y = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y);
 	
-	if (data.handle == 0) {
-		return -2; //-2: handle未設定.
+		int err = DrawRotaGraphF(x, y, extend, ang, data.handle, isTrans);
+		_return(-1, err < 0) //-1: DrawRotaGraphFエラー.
 	}
-	int err = DrawModiGraph(
-		luPos.x, luPos.y, ruPos.x, ruPos.y, 
-		rdPos.x, rdPos.y, ldPos.x, ldPos.y, 
-		data.handle, isTrans
-	);
-	return err; //-1: DrawModiGraphエラー.
+	else {
+		//基準点に座標をずらす.
+		int x = (int)(pos.x - (data.size.x-1) * anchorPos[anc].x);
+		int y = (int)(pos.y - (data.size.y-1) * anchorPos[anc].y);
+	
+		int err = DrawRotaGraph(x, y, extend, ang, data.handle, isTrans);
+		_return(-2, err < 0) //-2: DrawRotaGraphエラー.
+	}
+	return 0; //正常終了.
 }
-int DrawDivImgST::DrawModiGraphST(int imgNo, INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isTrans) {
+int DrawDivImgST::DrawRotaGraphST(int imgNo, DBL_XY pos, double extend, double ang, Anchor anc, bool isTrans, bool isFloat) {
 
-	if (data[imgNo].handle == 0) {
-		return -2; //-2: handle未設定.
+	_return(-3, data[imgNo].handle == 0) //-3: handle未設定.
+
+	//float型かどうか.
+	if (isFloat) {
+		//基準点に座標をずらす.
+		float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+		float y = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
+	
+		int err = DrawRotaGraphF(x, y, extend, ang, data[imgNo].handle, isTrans);
+		_return(-1, err < 0) //-1: DrawRotaGraphFエラー.
 	}
-	int err = DrawModiGraph(
-		luPos.x, luPos.y, ruPos.x, ruPos.y,
-		rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-		data[imgNo].handle, isTrans
-	);
-	return err; //-1: DrawModiGraphエラー.
+	else {
+		//基準点に座標をずらす.
+		int x = (int)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+		int y = (int)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
+	
+		int err = DrawRotaGraph(x, y, extend, ang, data[imgNo].handle, isTrans);
+		_return(-2, err < 0) //-2: DrawRotaGraphエラー.
+	}
+	return 0; //正常終了.
+}
+
+//DrawModiGraphの改造版.
+int DrawImgST::DrawModiGraphST(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat) {
+	
+	_return(-3, data.handle == 0) //-3: handle未設定.
+
+	//float型かどうか.
+	if (isFloat) {
+		int err = DrawModiGraphF(
+			(float)luPos.x, (float)luPos.y, (float)ruPos.x, (float)ruPos.y, 
+			(float)rdPos.x, (float)rdPos.y, (float)ldPos.x, (float)ldPos.y, data.handle, isTrans
+		);
+		_return(-1, err < 0) //-1: DrawModiGraphFエラー.
+	}
+	else {
+		int err = DrawModiGraph(
+			_int(luPos.x), _int(luPos.y), _int(ruPos.x), _int(ruPos.y),
+			_int(rdPos.x), _int(rdPos.y), _int(ldPos.x), _int(ldPos.y), data.handle, isTrans
+		);
+		_return(-2, err < 0) //-2: DrawModiGraphエラー.
+	}
+	return 0; //正常終了.
+}
+int DrawDivImgST::DrawModiGraphST(int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat) {
+
+	_return(-3, data[imgNo].handle == 0) //-3: handle未設定.
+
+	//float型かどうか.
+	if (isFloat) {
+		int err = DrawModiGraphF(
+			(float)luPos.x, (float)luPos.y, (float)ruPos.x, (float)ruPos.y, 
+			(float)rdPos.x, (float)rdPos.y, (float)ldPos.x, (float)ldPos.y, data[imgNo].handle, isTrans
+		);
+		_return(-1, err < 0) //-1: DrawModiGraphFエラー.
+	}
+	else {
+		int err = DrawModiGraph(
+			_int(luPos.x), _int(luPos.y), _int(ruPos.x), _int(ruPos.y),
+			_int(rdPos.x), _int(rdPos.y), _int(ldPos.x), _int(ldPos.y), data[imgNo].handle, isTrans
+		);
+		_return(-2, err < 0) //-2: DrawModiGraphエラー.
+	}
+	return 0; //正常終了.
 }
 
 //DrawStringの改造版.

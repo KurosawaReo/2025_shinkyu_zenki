@@ -28,8 +28,8 @@ public:
 class BackGround
 {
 private:
-	vector<BG_Tile> tiles;    //背景タイルデータ.
-	DrawImgST       imgBG[2]; //背景画像.
+	vector<BG_Tile> tiles;      //背景タイルデータ.
+	DrawImgST       imgBG[2]{}; //背景画像.
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 
