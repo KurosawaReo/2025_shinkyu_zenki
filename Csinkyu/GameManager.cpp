@@ -547,18 +547,18 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
-			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY}, {0.5, 0.5});
+			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY}, {0.5, 0.5}, ANC_MID, true, true);
 		}
 		//切り替え後.
 		else {
 			//アニメーション値.
 			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
 			//ロゴ1枚目.
-			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
-			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, logoY - anim*100}, {0.5, 0.5});
-			//ロゴ2枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * (1-anim));
-			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY - anim*100}, {0.5, 0.5});
+			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY - anim*100}, {0.5, 0.5}, ANC_MID, true, true);
+			//ロゴ2枚目.
+			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
+			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, logoY - anim*100}, {0.5, 0.5}, ANC_MID, true, true);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -573,13 +573,13 @@ void GameManager::DrawTitle() {
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
-		DrawStrST str(text, {WINDOW_WID/2, WINDOW_HEI/2+50}, COLOR_BEST_SCORE);
+		DrawStrST str(text, {WINDOW_WID/2, WINDOW_HEI/2+50+1}, COLOR_BEST_SCORE);
 
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
-		str.DrawStringST(ANC_MID, data.font2);
+		str.DrawStringST(ANC_MID, data.font2);     //スコア値.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
-		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+50 + (10+19*anim2)}, {0.5, 0.4});
-		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+50 - (10+19*anim2)}, {0.5, 0.4});
+		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+50 + (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+50 - (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -682,7 +682,7 @@ void GameManager::DrawEnd() {
 		DrawStrST str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		imgGameOver.DrawExtendGraphST({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5});
+		imgGameOver.DrawExtendGraphST({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true); //GAME OVER
 		str1.DrawStringST(ANC_MID, data.font1);
 		str2.DrawStringST(ANC_MID, data.font1);
 		ResetDrawBlendMode();
@@ -700,7 +700,7 @@ void GameManager::DrawEnd() {
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//描画.
 			SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-			imgNewRecord.DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4});
+			imgNewRecord.DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isBestScoreSound) {
