@@ -23,13 +23,13 @@ void BG_Tile::Draw(bool isSlow, double slowTime) {
 
 	//通常モード.
 	{
-		double alpha = 100 + 100 * sin(M_PI * timer.GetPassTime()/3);
+		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
 		img[0].DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
 	}
 	//反射モード.
 	if (isSlow) {
-		double alpha = 100 + 100 * sin(M_PI * timer.GetPassTime()/3);
+		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
 		img[1].DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
 	}
