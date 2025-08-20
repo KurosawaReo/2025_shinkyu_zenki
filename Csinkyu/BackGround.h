@@ -8,9 +8,9 @@ class BG_Tile
 {
 	friend class BackGround; //アクセス許可.
 private:
-	INT_XY    pos{};
-	DBL_XY    sizeRate{};
-	DrawImgST img[2]{};
+	INT_XY     pos{};
+	DBL_XY     sizeRate{};
+	DrawImgST* img[2]{};
 
 	Timer timer = Timer(COUNT_DOWN, 3); //発光する時間.
 

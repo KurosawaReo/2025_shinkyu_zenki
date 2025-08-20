@@ -133,7 +133,7 @@ bool Meteo::IsHitMeteo(Circle* pos) {
 		//全ての線で判定.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			//線とプレイヤーが当たったら.
-			if (HitLine(&shape.line[i], pos)) {
+			if (HitCheckLine(&shape.line[i], pos)) {
 				return true; //当たった.
 			}
 		}

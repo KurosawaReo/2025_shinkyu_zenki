@@ -15,18 +15,18 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="myCalcST.cpp" />
-    <ClCompile Include="myDrawST.cpp" />
-    <ClCompile Include="myInputST.cpp" />
     <ClCompile Include="myTimerST.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="mySoundST.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="MapGimmickLaser.cpp" />
-    <ClCompile Include="myFileST.cpp" />
-    <ClCompile Include="myObjectST.cpp" />
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="myCalcST.cpp" />
+    <ClCompile Include="myDrawST.cpp" />
+    <ClCompile Include="myFileST.cpp" />
+    <ClCompile Include="myInputST.cpp" />
+    <ClCompile Include="myObjectST.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
@@ -40,17 +40,17 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="myCalcST.h" />
-    <ClInclude Include="myDrawST.h" />
-    <ClInclude Include="myInputST.h" />
     <ClInclude Include="myTimerST.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="mySoundST.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="MapGimmickLaser.h" />
-    <ClInclude Include="myFileST.h" />
-    <ClInclude Include="myObjectST.h" />
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="myCalcST.h" />
+    <ClInclude Include="myDrawST.h" />
+    <ClInclude Include="myFileST.h" />
+    <ClInclude Include="myInputST.h" />
+    <ClInclude Include="myObjectST.h" />
   </ItemGroup>
 </Project>

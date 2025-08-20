@@ -4,7 +4,7 @@
    
    DxLib: オリジナル描画機能の追加.
 */
-#if !defined DEF_GLOBAL_H
+#if !defined DEF_MYLIB_GLOBAL
   #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 #include "myDrawST.h"
@@ -37,6 +37,11 @@ static const DBL_XY anchorPos[9] = {
 //LoadGraphの改造版.
 int DrawImgST::LoadGraphST(MY_STRING fileName) {
 
+	//過去に読み込んだ画像は解放.
+	if (data.handle != 0) {
+		DeleteGraph(data.handle);
+		data.handle = 0;
+	}
 	//画像読み込み.
 	data.handle = LoadGraph(fileName.c_str());
 	int err = GetGraphSize(data.handle, &data.size.x, &data.size.y);
@@ -47,6 +52,12 @@ int DrawImgST::LoadGraphST(MY_STRING fileName) {
 }
 //LoadDivGraphの改造版.
 int DrawDivImgST::LoadDivGraphST(MY_STRING fileName, INT_XY size, INT_XY cnt) {
+
+	//過去に読み込んだ画像は解放.
+	for (auto& i : data) {
+		DeleteGraph(i.handle); //画像解放.
+		i.handle = 0;
+	}
 
 	int* pHandle = new int[cnt.x*cnt.y]; //LoadDivGraphからハンドル取り出す用.
 

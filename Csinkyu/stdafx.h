@@ -34,6 +34,7 @@
 #include "DxLib.h"
 
 #include "Global.h"
+using namespace MyLib;
 #include "myCalcST.h"
 #include "myDrawST.h"
 #include "myInputST.h"

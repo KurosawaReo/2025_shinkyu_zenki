@@ -68,6 +68,9 @@ public:
 	int DrawExtendGraphST(DBL_XY pos,   DBL_XY sizeRate,                           Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
 	int DrawRotaGraphST  (DBL_XY pos,   double extend, double ang,                 Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
 	int DrawModiGraphST  (DBL_XY luPos, DBL_XY ruPos,  DBL_XY rdPos, DBL_XY ldPos,                       bool isTrans = true, bool isFloat = false);
+
+	//使用禁止(意図しないDeleteGraphを防ぐため)
+	DrawImgST& operator=(const DrawImgST&) = delete;
 };
 
 //画像描画クラス(分割読み込み)
@@ -79,7 +82,7 @@ private:
 public:
 	//デストラクタ.
 	~DrawDivImgST() {
-		for (const auto& i : data) {
+		for (auto& i : data) {
 			DeleteGraph(i.handle); //画像解放.
 		}
 	}
@@ -105,6 +108,9 @@ public:
 	int DrawExtendGraphST(int imgNo, DBL_XY pos,   DBL_XY sizeRate,                           Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
 	int DrawRotaGraphST  (int imgNo, DBL_XY pos,   double extend, double ang,                 Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
 	int DrawModiGraphST  (int imgNo, DBL_XY luPos, DBL_XY ruPos,  DBL_XY rdPos, DBL_XY ldPos,                       bool isTrans = true, bool isFloat = false);
+
+	//使用禁止(意図しないDeleteGraphを防ぐため)
+	DrawDivImgST& operator=(const DrawDivImgST&) = delete;
 };
 
 //テキスト描画クラス.

@@ -1,16 +1,16 @@
 /*
    - myCalcST.cpp - (original)
-   ver.2025/08/04
+   ver.2025/08/20
 
    DxLib: オリジナル計算機能の追加.
 */
-#if !defined DEF_GLOBAL_H
+#if !defined DEF_MYLIB_GLOBAL
   #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 #include "myCalcST.h"
 
 //当たり判定(円と円)
-bool HitCircle(const Circle* cir1, const Circle* cir2) {
+bool HitCheckCircle(const Circle* cir1, const Circle* cir2) {
 
 	//距離差.
 	double x = cir1->pos.x - cir2->pos.x;
@@ -25,7 +25,7 @@ bool HitCircle(const Circle* cir1, const Circle* cir2) {
     }
 }
 //当たり判定(四角と四角)
-bool HitBox(const Box* box1, const Box* box2) {
+bool HitCheckBox(const Box* box1, const Box* box2) {
 
     //中央基準座標での判定.
 	if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
@@ -38,7 +38,7 @@ bool HitBox(const Box* box1, const Box* box2) {
 	}
 }
 //当たり判定(線と円)
-bool HitLine(const Line* line, const Circle* cir) {
+bool HitCheckLine(const Line* line, const Circle* cir) {
 
 	//線の始点と終点から傾きを求める.
 	double katamuki;

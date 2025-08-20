@@ -25,13 +25,13 @@ void BG_Tile::Draw(bool isSlow, double slowTime) {
 	{
 		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
-		img[0].DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
+		img[0]->DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
 	}
 	//反射モード.
 	if (isSlow) {
 		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
-		img[1].DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
+		img[1]->DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
 	}
 	ResetDrawBlendMode(); //描画モードリセット.
 }
@@ -68,8 +68,8 @@ void BackGround::Init(GameData* _data) {
 				tile.pos.x = x; 
 				tile.pos.y = y;
 				tile.sizeRate = sizeRate;
-				tile.img[0] = imgBG[0];
-				tile.img[1] = imgBG[1];
+				tile.img[0] = &imgBG[0];
+				tile.img[1] = &imgBG[1];
 				tile.Init(p_data);
  				tiles.push_back(tile); //配列に追加.
 			}

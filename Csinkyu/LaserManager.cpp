@@ -445,7 +445,7 @@ void LaserManager::LaserReflectRange(Circle* cir) {
 			Circle cir2 = { {laser[i].x, laser[i].y}, 1, {} };
 
 			//”ÍˆÍ“à‚È‚ç.
-			if (HitCircle(cir, &cir2)) {
+			if (HitCheckCircle(cir, &cir2)) {
 				ReflectLaser(i); //‚»‚Ìê‚Å”½Ë.
 			}
 		}

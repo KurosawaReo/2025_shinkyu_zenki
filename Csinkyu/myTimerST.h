@@ -1,6 +1,6 @@
 /*
    - myTimerST.h - (original)
-   ver.2025/08/05
+   ver.2025/08/20
 
    DxLib: オリジナルタイマー機能の追加.
 */

@@ -1,10 +1,10 @@
 /*
    - myObjectST.cpp - (original)
-   ver.2025/08/15
+   ver.2025/08/20
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
-#if !defined DEF_GLOBAL_H
+#if !defined DEF_MYLIB_GLOBAL
   #include "Global.h" //stdafx等に入ってなければここで導入.
   #include "myDrawST.h"
 #endif

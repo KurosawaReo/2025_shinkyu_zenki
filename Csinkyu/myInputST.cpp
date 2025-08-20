@@ -4,7 +4,7 @@
 
    DxLib: オリジナル入力機能の追加.
 */
-#if !defined DEF_GLOBAL_H
+#if !defined DEF_MYLIB_GLOBAL
   #include "Global.h" //stdafx等に入ってなければここで導入.
 #endif
 #include "myInputST.h"
