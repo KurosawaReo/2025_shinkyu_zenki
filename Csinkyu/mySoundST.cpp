@@ -1,6 +1,6 @@
 /*
    - mySoundST.cpp - (original)
-   ver.2025/08/05
+   ver.2025/08/20
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -9,7 +9,7 @@
 #endif
 #include "mySoundST.h"
 
-SoundST SoundST::self; //実体の宣言.
+SoundST SoundST::inst; //インスタンスを生成.
 
 // ▼*---=[ SoundData ]=---*▼ //
 

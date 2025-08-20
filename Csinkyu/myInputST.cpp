@@ -1,6 +1,6 @@
 /*
    - myInputST.cpp - (original)
-   ver.2025/08/03
+   ver.2025/08/20
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -9,7 +9,7 @@
 #endif
 #include "myInputST.h"
 
-InputST InputST::self; //実体の宣言.
+InputST InputST::inst; //インスタンスを生成.
 
 //キー入力の判定.
 bool InputST::IsPushKey(KeyID id) {

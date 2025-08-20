@@ -1,6 +1,6 @@
 /*
    - myInputST.h - (original)
-   ver.2025/08/03
+   ver.2025/08/20
 
    DxLib: オリジナル入力機能の追加.
 */
@@ -109,7 +109,7 @@ enum PadSwitchID
 class InputST
 {
 private: //実体.
-	static InputST self; //自身の実体.
+	static InputST inst; //自身のインスタンス.
 
 private: //データ.
 	int tmKey   [KEY_MAX];     //キーを押している時間.
@@ -122,7 +122,7 @@ private: //データ.
 public:
 	//実体の取得.
 	static InputST* GetPtr() {
-		return &self;
+		return &inst;
 	}
 
 	//判定.

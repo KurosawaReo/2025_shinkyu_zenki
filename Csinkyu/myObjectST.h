@@ -1,28 +1,25 @@
 /*
    - myObjectST.h - (original)
-   ver.2025/08/14
+   ver.2025/08/15
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
 #pragma once
 
-//オブジェクト(基本)
+//オブジェクト(基底)
 class Object
 {
+//▼変数.
 protected:
 	DrawImgST img{};      //画像.
+public:
 	DBL_XY    offset{};   //画像をずらす量.
 	bool      isActive{}; //有効かどうか.
 
+//▼関数.
 public:
-	//初期化用.
-	Object() :
-		isActive(true)
-	{}
-	Object(DBL_XY _offset, bool _isActive) :
-		offset  (_offset),
-		isActive(_isActive)
-	{}
+	//コンストラクタ.
+	Object() : isActive(true) {}
 	//set.
 	void SetImage(Image* _data) {
 		img.SetImage(_data);
@@ -32,30 +29,14 @@ public:
 //オブジェクト(円)
 class ObjectCir : public Object
 {
-protected:
+//▼変数.
+public:
 	Circle cir{}; //当たり判定と座標.
 
+//▼関数.
 public:
-	//初期化用.
-	ObjectCir() : Object() {
-	}
-	ObjectCir(DBL_XY _pos, float _r, UINT _color, DBL_XY _offset, bool _isActive) :
-		cir   ({ _pos, _r, _color }), 
-		Object(_offset, _isActive)
-	{}
-	//set, add, get.
-	void SetPos(DBL_XY _pos) {
-		cir.pos = _pos;
-	}
-	void AddPos(DBL_XY _pos) {
-		cir.pos += _pos;
-	}
-	DBL_XY GetPos() {
-		return cir.pos;
-	}
-	float GetR() {
-		return cir.r;
-	}
+	//コンストラクタ.
+	ObjectCir() : Object() {}
 	//描画.
 	int Draw(bool isDrawHit = false);
 };
@@ -63,30 +44,14 @@ public:
 //オブジェクト(四角形)
 class ObjectBox : public Object
 {
-protected:
+//▼変数.
+public:
 	Box box{}; //当たり判定と座標.
 
+//▼関数.
 public:
-	//初期化用.
-	ObjectBox() : Object() {
-	}
-	ObjectBox(DBL_XY _pos, DBL_XY _size, UINT _color, DBL_XY _offset, bool _isActive) :
-		box   ({_pos, _size, _color}), 
-		Object(_offset, _isActive)
-	{}
-	//set, add, get.
-	void SetPos(DBL_XY _pos) {
-		box.pos = _pos;
-	}
-	void AddPos(DBL_XY _pos) {
-		box.pos += _pos;
-	}
-	DBL_XY GetPos() {
-		return box.pos;
-	}
-	DBL_XY GetSize() {
-		return box.size;
-	}
+	//コンストラクタ.
+	ObjectBox() : Object() {}
 	//描画.
 	int Draw(bool isDrawHit = false);
 };
@@ -94,27 +59,14 @@ public:
 //オブジェクト(グリッド上専用)
 class ObjectGrid : public Object
 {
-protected:
+//▼変数.
+public:
 	INT_XY pos{}; //座標.
 
+//▼関数.
 public:
-	//初期化用.
-	ObjectGrid() : Object()	{
-	}
-	ObjectGrid(INT_XY _pos, DBL_XY _offset, bool _isActive) :
-		pos   (_pos),
-		Object(_offset, _isActive)
-	{}
-	//set, add, get.
-	void SetPos(INT_XY _pos) {
-		pos = _pos;
-	}
-	void AddPos(INT_XY _pos) {
-		pos += _pos;
-	}
-	INT_XY GetPos() {
-		return pos;
-	}
+	//コンストラクタ.
+	ObjectGrid() : Object()	{}
 	//描画.
 	int Draw(INT_XY gridPos, INT_XY gridSize);
 };

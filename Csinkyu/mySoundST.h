@@ -1,6 +1,6 @@
 /*
    - mySoundST.h - (original)
-   ver.2025/08/05
+   ver.2025/08/20
 
    DxLib: オリジナルサウンド機能の追加.
 */
@@ -43,7 +43,7 @@ public:
 class SoundST
 {
 private: //実体.
-	static SoundST self; //自身の実体.
+	static SoundST inst; //自身のインスタンス.
 
 private: //データ.
 	map<MY_STRING, SoundData> sound;
@@ -51,7 +51,7 @@ private: //データ.
 public:
 	//実体の取得.
 	static SoundST* GetPtr() {
-		return &self;
+		return &inst;
 	}
 	//デストラクタ.
 	~SoundST();

@@ -1,6 +1,6 @@
 /*
    - myObjectST.cpp - (original)
-   ver.2025/08/14
+   ver.2025/08/15
 
    DxLib: オリジナルオブジェクト機能の追加.
 */
@@ -13,9 +13,7 @@
 //オブジェクト(ObjectCir型)の描画.
 int ObjectCir::Draw(bool isDrawHit) {
 
-	if (!isActive) {
-		return 0; //非アクティブなら描画しない.
-	}
+	_return(0, !isActive); //非アクティブなら描画しない.
 
 	//座標にoffsetを足す.
 	Circle tmpCir = {
@@ -28,25 +26,19 @@ int ObjectCir::Draw(bool isDrawHit) {
 	//画像描画.
 	else {
 		int err = img.DrawGraphST(tmpCir.pos);
-		if (err < 0) {
-			return -1; //-1: DrawGraphSTでエラー.
-		}
+		_return(-1, err < 0); //-1: DrawGraphSTでエラー.
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
 		int err = DrawCircleST(&cir, false, true);
-		if (err < 0) {
-			return -2; //-2: DrawCircleSTでエラー.
-		}
+		_return(-2, err < 0); //-2: DrawCircleSTでエラー.
 	}
 	return 0; //正常終了.
 }
 //オブジェクト(ObjectBox型)の描画.
 int ObjectBox::Draw(bool isDrawHit) {
 
-	if (!isActive) {
-		return 0; //非アクティブなら描画しない.
-	}
+	_return(0, !isActive); //非アクティブなら描画しない.
 
 	//座標にoffsetを足す.
 	Box tmpBox = {
@@ -59,25 +51,19 @@ int ObjectBox::Draw(bool isDrawHit) {
 	//画像描画.
 	else {
 		int err = img.DrawGraphST(tmpBox.pos);
-		if (err < 0) {
-			return -1; //-1: DrawGraphSTでエラー.
-		}
+		_return(-1, err < 0); //-1: DrawGraphSTでエラー.
 	}
 	//当たり判定表示.
 	if (isDrawHit) {
 		int err = DrawBoxST(&box, ANC_MID, false, true);
-		if (err < 0) {
-			return -2; //-2: DrawBoxSTでエラー.
-		}
+		_return(-2, err < 0); //-2: DrawBoxSTでエラー.
 	}
 	return 0; //正常終了.
 }
 //オブジェクト(ObjectGrid型)の描画.
 int ObjectGrid::Draw(INT_XY gridPos, INT_XY gridSize) {
 
-	if (!isActive) {
-		return 0; //非アクティブなら描画しない.
-	}
+	_return(0, !isActive); //非アクティブなら描画しない.
 
 	//座標.
 	INT_XY newPos = {

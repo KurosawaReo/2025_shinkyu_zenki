@@ -8,7 +8,7 @@
 class GameManager 
 {
 private: //実体.
-	static GameManager self; //自身の実体.
+	static GameManager inst; //自身のインスタンス.
 
 private: //データ.
 	GameData data{}; //ゲームデータ.
@@ -38,7 +38,7 @@ private: //データ.
 public:
 	//実体の取得.
 	static GameManager* GetPtr() {
-		return &self;
+		return &inst;
 	}
 	//get.
 	float GetSlowModeTime() {

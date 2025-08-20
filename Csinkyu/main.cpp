@@ -4,12 +4,7 @@
 */
 #include "GameManager.h"
 
-//stdafxがあるならいらない.
-#if false
-  #include "myTimerST.h"
-#endif
-
-GameManager GameManager::self; //static変数の宣言.
+GameManager GameManager::inst; //インスタンスを生成.
 GameManager* gm;               //実体を入れる用.
 
 TimerMicro tmFps(COUNT_DOWN, 1000000/FPS); //fps計測用タイマー.

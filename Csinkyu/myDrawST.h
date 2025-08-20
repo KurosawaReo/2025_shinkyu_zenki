@@ -1,6 +1,6 @@
 /*
    - myDrawST.h - (original)
-   ver.2025/08/14
+   ver.2025/08/20
 
    DxLib: オリジナル描画機能の追加.
 */
@@ -53,6 +53,10 @@ private:
 	Image data; //画像データ.
 
 public:
+	//デストラクタ.
+	~DrawImgST() {
+		DeleteGraph(data.handle); //画像解放.
+	}
 	//set, get.
 	void   SetImage(Image* _data) { data = *_data; }
 	Image* GetImage()             { return &data; }
@@ -73,6 +77,12 @@ private:
 	vector<Image> data; //画像データ.
 
 public:
+	//デストラクタ.
+	~DrawDivImgST() {
+		for (const auto& i : data) {
+			DeleteGraph(i.handle); //画像解放.
+		}
+	}
 	//set, get.
 	void SetImage(Image* _data, int imgNo) {
 		//サイズをオーバーしてないなら.
