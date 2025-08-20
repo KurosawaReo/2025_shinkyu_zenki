@@ -32,8 +32,8 @@ void SoundData::Update() {
 			LONGLONG us = timer.GetPassTime(); //経過時間入手.
 
 			//現在のボリュームを求める.
-			assert(aftUS != 0);                                            //0割対策.
-			int vol = (int)(nowVol - (nowVol - aftVol) * (float)us/aftUS); //now - 変化量 * 変化時間割合.
+			assert(aftUS != 0);                                          //0割対策.
+			int vol = _int(nowVol - (nowVol - aftVol) * _flt(us)/aftUS); //now - 変化量 * 変化時間割合.
 
 			//変化し終わったら.
 			if (us >= aftUS) {

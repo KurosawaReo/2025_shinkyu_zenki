@@ -88,16 +88,16 @@ int DrawImgST::DrawGraphST(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat) {
 	//float型かどうか.
 	if (isFloat) {
 		//基準点に座標をずらす.
-		float x = (float)(pos.x - (data.size.x) * anchorPos[anc].x);
-		float y = (float)(pos.y - (data.size.y) * anchorPos[anc].y);
+		float x = _flt(pos.x - (data.size.x) * anchorPos[anc].x);
+		float y = _flt(pos.y - (data.size.y) * anchorPos[anc].y);
 		//描画.
 		int err = DrawGraphF(x, y, data.handle, isTrans);
 		_return(-1, err < 0) //-1: DrawGraphFエラー.
 	}
 	else {
 		//基準点に座標をずらす.
-		int x = (int)(pos.x - (data.size.x-1) * anchorPos[anc].x);
-		int y = (int)(pos.y - (data.size.y-1) * anchorPos[anc].y);
+		int x = _int(pos.x - (data.size.x-1) * anchorPos[anc].x);
+		int y = _int(pos.y - (data.size.y-1) * anchorPos[anc].y);
 		//描画.
 		int err = DrawGraph(x, y, data.handle, isTrans);
 		_return(-2, err < 0) //-2: DrawGraphエラー.
@@ -111,16 +111,16 @@ int DrawDivImgST::DrawGraphST(int imgNo, DBL_XY pos, Anchor anc, bool isTrans, b
 	//float型かどうか.
 	if (isFloat) {
 		//基準点に座標をずらす.
-		float x = (float)(pos.x - (data[imgNo].size.x) * anchorPos[anc].x);
-		float y = (float)(pos.y - (data[imgNo].size.y) * anchorPos[anc].y);
+		float x = _flt(pos.x - (data[imgNo].size.x) * anchorPos[anc].x);
+		float y = _flt(pos.y - (data[imgNo].size.y) * anchorPos[anc].y);
 		//描画.
 		int err = DrawGraphF(x, y, data[imgNo].handle, isTrans);
 		_return(-1, err < 0) //-1: DrawGraphFエラー.
 	}
 	else {
 		//基準点に座標をずらす.
-		int x = (int)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
-		int y = (int)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
+		int x = _int(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+		int y = _int(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
 		//描画.
 		int err = DrawGraph(x, y, data[imgNo].handle, isTrans);
 		_return(-2, err < 0) //-2: DrawGraphエラー.
@@ -137,13 +137,13 @@ int DrawImgST::DrawRectGraphST(DBL_XY pos, INT_XY stPixel, INT_XY size, bool isT
 	//float型かどうか.
 	if (isFloat) {
 		int err = DrawRectGraphF(
-			(float)pos.x, (float)pos.y,	stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
+			_flt(pos.x), _flt(pos.y), stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
 		);
 		_return(-1, err < 0) //-1: DrawRectGraphFエラー.
 	}
 	else {
 		int err = DrawRectGraph(
-			_int(pos.x), _int(pos.y), stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
+			_int45(pos.x), _int45(pos.y), stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawRectGraphエラー.
 	}
@@ -156,13 +156,13 @@ int DrawDivImgST::DrawRectGraphST(int imgNo, DBL_XY pos, INT_XY stPixel, INT_XY 
 	//float型かどうか.
 	if (isFloat) {
 		int err = DrawRectGraphF(
-			(float)pos.x, (float)pos.y,	stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
+			_flt(pos.x), _flt(pos.y), stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
 		);
 		_return(-1, err < 0) //-1: DrawRectGraphFエラー.
 	}
 	else {
 		int err = DrawRectGraph(
-			_int(pos.x), _int(pos.y), stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
+			_int45(pos.x), _int45(pos.y), stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawRectGraphエラー.
 	}
@@ -177,22 +177,22 @@ int DrawImgST::DrawExtendGraphST(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool i
 	//float型かどうか.
 	if (isFloat) {
 		//始点を求める.
-		float x1 = (float)(pos.x - (data.size.x * sizeRate.x) * anchorPos[anc].x);
-		float y1 = (float)(pos.y - (data.size.y * sizeRate.y) * anchorPos[anc].y);
+		float x1 = _flt(pos.x - (data.size.x * sizeRate.x) * anchorPos[anc].x);
+		float y1 = _flt(pos.y - (data.size.y * sizeRate.y) * anchorPos[anc].y);
 		//終点を求める.
-		float x2 = (float)(x1 + data.size.x * sizeRate.x);
-		float y2 = (float)(y1 + data.size.y * sizeRate.y);
+		float x2 = _flt(x1 + data.size.x * sizeRate.x);
+		float y2 = _flt(y1 + data.size.y * sizeRate.y);
 
 		int err = DrawExtendGraphF(x1, y1, x2+1, y2+1, data.handle, isTrans);
 		_return(-1, err < 0) //-1: DrawExtendGraphFエラー.
 	}
 	else {
 		//始点を求める.
-		int x1 = (int)(pos.x - ((data.size.x * sizeRate.x)-1) * anchorPos[anc].x);
-		int y1 = (int)(pos.y - ((data.size.y * sizeRate.y)-1) * anchorPos[anc].y);
+		int x1 = _int(pos.x - ((data.size.x * sizeRate.x)-1) * anchorPos[anc].x);
+		int y1 = _int(pos.y - ((data.size.y * sizeRate.y)-1) * anchorPos[anc].y);
 		//終点を求める.
-		int x2 = (int)(x1 + ((data.size.x * sizeRate.x)-1));
-		int y2 = (int)(y1 + ((data.size.y * sizeRate.y)-1));
+		int x2 = _int(x1 + ((data.size.x * sizeRate.x)-1));
+		int y2 = _int(y1 + ((data.size.y * sizeRate.y)-1));
 
 		int err = DrawExtendGraph(x1, y1, x2+1, y2+1, data.handle, isTrans);
 		_return(-2, err < 0) //-2: DrawExtendGraphエラー.
@@ -206,22 +206,22 @@ int DrawDivImgST::DrawExtendGraphST(int imgNo, DBL_XY pos, DBL_XY sizeRate, Anch
 	//float型かどうか.
 	if (isFloat) {
 		//始点を求める.
-		float x1 = (float)(pos.x - (data[imgNo].size.x * sizeRate.x) * anchorPos[anc].x);
-		float y1 = (float)(pos.y - (data[imgNo].size.y * sizeRate.y) * anchorPos[anc].y);
+		float x1 = _flt(pos.x - (data[imgNo].size.x * sizeRate.x) * anchorPos[anc].x);
+		float y1 = _flt(pos.y - (data[imgNo].size.y * sizeRate.y) * anchorPos[anc].y);
 		//終点を求める.
-		float x2 = (float)(x1 + data[imgNo].size.x * sizeRate.x);
-		float y2 = (float)(y1 + data[imgNo].size.y * sizeRate.y);
+		float x2 = _flt(x1 + data[imgNo].size.x * sizeRate.x);
+		float y2 = _flt(y1 + data[imgNo].size.y * sizeRate.y);
 
 		int err = DrawExtendGraphF(x1, y1, x2+1, y2+1, data[imgNo].handle, isTrans);
 		_return(-1, err < 0) //-1: DrawExtendGraphFエラー.
 	}
 	else {
 		//始点を求める.
-		int x1 = (int)(pos.x - ((data[imgNo].size.x * sizeRate.x)-1) * anchorPos[anc].x);
-		int y1 = (int)(pos.y - ((data[imgNo].size.y * sizeRate.y)-1) * anchorPos[anc].y);
+		int x1 = _int(pos.x - ((data[imgNo].size.x * sizeRate.x)-1) * anchorPos[anc].x);
+		int y1 = _int(pos.y - ((data[imgNo].size.y * sizeRate.y)-1) * anchorPos[anc].y);
 		//終点を求める.
-		int x2 = (int)(x1 + ((data[imgNo].size.x * sizeRate.x)-1));
-		int y2 = (int)(y1 + ((data[imgNo].size.y * sizeRate.y)-1));
+		int x2 = _int(x1 + ((data[imgNo].size.x * sizeRate.x)-1));
+		int y2 = _int(y1 + ((data[imgNo].size.y * sizeRate.y)-1));
 
 		int err = DrawExtendGraph(x1, y1, x2+1, y2+1, data[imgNo].handle, isTrans);
 		_return(-2, err < 0) //-2: DrawExtendGraphエラー.
@@ -237,16 +237,16 @@ int DrawImgST::DrawRotaGraphST(DBL_XY pos, double extend, double ang, Anchor anc
 	//float型かどうか.
 	if (isFloat) {
 		//基準点に座標をずらす.
-		float x = (float)(pos.x - (data.size.x-1) * anchorPos[anc].x);
-		float y = (float)(pos.y - (data.size.y-1) * anchorPos[anc].y);
+		float x = _flt(pos.x - (data.size.x-1) * anchorPos[anc].x);
+		float y = _flt(pos.y - (data.size.y-1) * anchorPos[anc].y);
 	
 		int err = DrawRotaGraphF(x, y, extend, ang, data.handle, isTrans);
 		_return(-1, err < 0) //-1: DrawRotaGraphFエラー.
 	}
 	else {
 		//基準点に座標をずらす.
-		int x = (int)(pos.x - (data.size.x-1) * anchorPos[anc].x);
-		int y = (int)(pos.y - (data.size.y-1) * anchorPos[anc].y);
+		int x = _int(pos.x - (data.size.x-1) * anchorPos[anc].x);
+		int y = _int(pos.y - (data.size.y-1) * anchorPos[anc].y);
 	
 		int err = DrawRotaGraph(x, y, extend, ang, data.handle, isTrans);
 		_return(-2, err < 0) //-2: DrawRotaGraphエラー.
@@ -260,16 +260,16 @@ int DrawDivImgST::DrawRotaGraphST(int imgNo, DBL_XY pos, double extend, double a
 	//float型かどうか.
 	if (isFloat) {
 		//基準点に座標をずらす.
-		float x = (float)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
-		float y = (float)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
+		float x = _flt(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+		float y = _flt(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
 	
 		int err = DrawRotaGraphF(x, y, extend, ang, data[imgNo].handle, isTrans);
 		_return(-1, err < 0) //-1: DrawRotaGraphFエラー.
 	}
 	else {
 		//基準点に座標をずらす.
-		int x = (int)(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
-		int y = (int)(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
+		int x = _int(pos.x - (data[imgNo].size.x-1) * anchorPos[anc].x);
+		int y = _int(pos.y - (data[imgNo].size.y-1) * anchorPos[anc].y);
 	
 		int err = DrawRotaGraph(x, y, extend, ang, data[imgNo].handle, isTrans);
 		_return(-2, err < 0) //-2: DrawRotaGraphエラー.
@@ -285,15 +285,15 @@ int DrawImgST::DrawModiGraphST(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY 
 	//float型かどうか.
 	if (isFloat) {
 		int err = DrawModiGraphF(
-			(float)luPos.x, (float)luPos.y, (float)ruPos.x, (float)ruPos.y, 
-			(float)rdPos.x, (float)rdPos.y, (float)ldPos.x, (float)ldPos.y, data.handle, isTrans
+			_flt(luPos.x), _flt(luPos.y), _flt(ruPos.x), _flt(ruPos.y), 
+			_flt(rdPos.x), _flt(rdPos.y), _flt(ldPos.x), _flt(ldPos.y), data.handle, isTrans
 		);
 		_return(-1, err < 0) //-1: DrawModiGraphFエラー.
 	}
 	else {
 		int err = DrawModiGraph(
-			_int(luPos.x), _int(luPos.y), _int(ruPos.x), _int(ruPos.y),
-			_int(rdPos.x), _int(rdPos.y), _int(ldPos.x), _int(ldPos.y), data.handle, isTrans
+			_int45(luPos.x), _int45(luPos.y), _int45(ruPos.x), _int45(ruPos.y),
+			_int45(rdPos.x), _int45(rdPos.y), _int45(ldPos.x), _int45(ldPos.y), data.handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawModiGraphエラー.
 	}
@@ -306,15 +306,15 @@ int DrawDivImgST::DrawModiGraphST(int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY 
 	//float型かどうか.
 	if (isFloat) {
 		int err = DrawModiGraphF(
-			(float)luPos.x, (float)luPos.y, (float)ruPos.x, (float)ruPos.y, 
-			(float)rdPos.x, (float)rdPos.y, (float)ldPos.x, (float)ldPos.y, data[imgNo].handle, isTrans
+			_flt(luPos.x), _flt(luPos.y), _flt(ruPos.x), _flt(ruPos.y),
+			_flt(rdPos.x), _flt(rdPos.y), _flt(ldPos.x), _flt(ldPos.y), data[imgNo] .handle, isTrans
 		);
 		_return(-1, err < 0) //-1: DrawModiGraphFエラー.
 	}
 	else {
 		int err = DrawModiGraph(
-			_int(luPos.x), _int(luPos.y), _int(ruPos.x), _int(ruPos.y),
-			_int(rdPos.x), _int(rdPos.y), _int(ldPos.x), _int(ldPos.y), data[imgNo].handle, isTrans
+			_int45(luPos.x), _int45(luPos.y), _int45(ruPos.x), _int45(ruPos.y),
+			_int45(rdPos.x), _int45(rdPos.y), _int45(ldPos.x), _int45(ldPos.y), data[imgNo].handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawModiGraphエラー.
 	}
@@ -325,17 +325,17 @@ int DrawDivImgST::DrawModiGraphST(int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY 
 int DrawStrST::DrawStringST(Anchor anc, int font) {
 	
 	//基準点に座標をずらす.
-	float x = (float)(data.pos.x - (GetTextSize(data.text, font).x-1) * anchorPos[anc].x);
-	float y = (float)(data.pos.y - (GetTextSize(data.text, font).y-1) * anchorPos[anc].y);
+	float x = _flt(data.pos.x - (GetTextSize(data.text, font).x-1) * anchorPos[anc].x);
+	float y = _flt(data.pos.y - (GetTextSize(data.text, font).y-1) * anchorPos[anc].y);
 
 	//デフォルトフォント.
 	if (font < 0) {
-		int err = DrawString((int)x, (int)y, data.text.c_str(), data.color);
+		int err = DrawString(_int(x), _int(y), data.text.c_str(), data.color);
 		_return(-1, err < 0) //-1: DrawStringエラー.
 	}
 	//フォント設定あり.
 	else {
-		int err = DrawStringToHandle((int)x, (int)y, data.text.c_str(), data.color, font);
+		int err = DrawStringToHandle(_int(x), _int(y), data.text.c_str(), data.color, font);
 		_return(-2, err < 0) //-2: DrawStringToHandleエラー.
 	}
 	return 0; //正常終了.
@@ -417,12 +417,12 @@ int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
 	//アンチエイリアスあり.
 	if (isAnti) {
 		//posnum(角形数)は60に設定する.
-		int err = DrawCircleAA((float)data->pos.x, (float)data->pos.y, data->r, 60, data->color, isFill, thick);
+		int err = DrawCircleAA(_flt(data->pos.x), _flt(data->pos.y), data->r, 60, data->color, isFill, thick);
 		_return(-1, err < 0) //-1: DrawCircleAAエラー.
 	}
 	//アンチエイリアスなし.
 	else{
-		int err = DrawCircle(_int(data->pos.x), _int(data->pos.y), _int(data->r), data->color, isFill, (int)thick);
+		int err = DrawCircle(_int45(data->pos.x), _int45(data->pos.y), _int45(data->r), data->color, isFill, _int45(thick));
 		_return(-2, err < 0) //-2: DrawCircleエラー.
 	}
 	return 0; //正常終了.
@@ -433,11 +433,11 @@ int DrawBoxST(const Box* data, Anchor anc, bool isFill, bool isAnti) {
 	_return(-3, data->size.x <= 0.0 || data->size.y <= 0.0) //-3: サイズが0.0以下.
 
 	//始点を求める.
-	float x1 = (float)(data->pos.x - (data->size.x-1) * anchorPos[anc].x);
-	float y1 = (float)(data->pos.y - (data->size.y-1) * anchorPos[anc].y);
+	float x1 = _flt(data->pos.x - (data->size.x-1) * anchorPos[anc].x);
+	float y1 = _flt(data->pos.y - (data->size.y-1) * anchorPos[anc].y);
 	//終点を求める.
-	float x2 = (float)(x1 + data->size.x-1);
-	float y2 = (float)(y1 + data->size.y-1);
+	float x2 = _flt(x1 + data->size.x-1);
+	float y2 = _flt(y1 + data->size.y-1);
 
 	//アンチエイリアスあり.
 	if (isAnti) {
@@ -457,18 +457,18 @@ int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
 	//アンチエイリアスあり.
 	if (isAnti) {
 		int err = DrawTriangleAA(
-			(float)data->pos[0].x, (float)data->pos[0].y,
-			(float)data->pos[1].x, (float)data->pos[1].y,
-			(float)data->pos[2].x, (float)data->pos[2].y, data->color, isFill
+			_flt(data->pos[0].x), _flt(data->pos[0].y),
+			_flt(data->pos[1].x), _flt(data->pos[1].y),
+			_flt(data->pos[2].x), _flt(data->pos[2].y), data->color, isFill
 		);
 		_return(-1, err < 0) //-1: DrawTriangleAAエラー.
 	}
 	//アンチエイリアスなし.
 	else {
 		int err = DrawTriangle(
-			_int(data->pos[0].x), _int(data->pos[0].y),
-			_int(data->pos[1].x), _int(data->pos[1].y),
-			_int(data->pos[2].x), _int(data->pos[2].y), data->color, isFill
+			_int45(data->pos[0].x), _int45(data->pos[0].y),
+			_int45(data->pos[1].x), _int45(data->pos[1].y),
+			_int45(data->pos[2].x), _int45(data->pos[2].y), data->color, isFill
 		);
 		_return(-2, err < 0) //-2: DrawTriangleエラー.
 	}
@@ -480,16 +480,16 @@ int DrawLineST(const Line* data, bool isAnti, float thick) {
 	//アンチエイリアスあり.
 	if (isAnti) {
 		int err = DrawLineAA(
-			(float)data->stPos.x, (float)data->stPos.y,
-			(float)data->edPos.x, (float)data->edPos.y, data->color, thick
+			_flt(data->stPos.x), _flt(data->stPos.y),
+			_flt(data->edPos.x), _flt(data->edPos.y), data->color, thick
 		);
 		_return(-1, err < 0) //-1: DrawLineAAエラー.
 	}
 	//アンチエイリアスなし.
 	else {
 		int err = DrawLine(
-			_int(data->stPos.x), _int(data->stPos.y), 
-			_int(data->edPos.x), _int(data->edPos.y), data->color, (int)thick
+			_int45(data->stPos.x), _int45(data->stPos.y), 
+			_int45(data->edPos.x), _int45(data->edPos.y), data->color, (int)thick
 		);
 		_return(-2, err < 0) //-2: DrawLineエラー.
 	}
@@ -501,14 +501,14 @@ int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
 	//縦線の描画.
 	for (int x = 0; x < wid; x += size) {
 
-		Line line = { {(double)x, 0}, {(double)x, (double)hei}, clrHei };
+		Line line = { {_dbl(x), 0}, {_dbl(x), _dbl(hei)}, clrHei};
 		int err = DrawLineST(&line);
 		_return(-1, err < 0) //-1: 縦線でエラー.
 	}
 	//横線の描画.
 	for (int y = 0; y < hei; y += size) {
 
-		Line line = { {0, (double)y}, {(double)wid, (double)y}, clrWid };
+		Line line = { {0, _dbl(y)}, {_dbl(wid), _dbl(y)}, clrWid };
 		int err = DrawLineST(&line);
 		_return(-2, err < 0) //-2: 横線でエラー.
 	}
@@ -525,7 +525,7 @@ int SetDrawBlendModeST(BlendModeID id, int power) {
 	return SetDrawBlendMode(id, power);
 }
 int SetDrawBlendModeST(BlendModeID id, double power) {
-	return SetDrawBlendMode(id, _int(power));
+	return SetDrawBlendMode(id, _int45(power));
 }
 //描画モードリセット.
 int ResetDrawBlendMode() {

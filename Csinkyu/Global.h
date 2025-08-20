@@ -25,11 +25,12 @@ using namespace std;
 #include "DxLib.h"
 
 //型変換マクロ.
-#define _int(n)   static_cast<int>   (round(n)) //int型変換マクロ.
+#define _int(n)   static_cast<int>   (n)        //int型変換マクロ.
+#define _int45(n) static_cast<int>   (round(n)) //int型変換マクロ(45 = 四捨五入)
 #define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
 #define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
-#define _intXY(n) {_int(n.x), _int(n.y)}        //INT_XY型変換マクロ.
-#define _dblXY(n) {_dbl(n.x), _dbl(n.y)}        //DBL_XY型変換マクロ.
+#define _intXY(n) {_int45(n.x), _int45(n.y)}    //INT_XY型変換マクロ.
+#define _dblXY(n) {_dbl  (n.x), _dbl  (n.y)}    //DBL_XY型変換マクロ.
 //便利マクロ.
 #define _if_check(n)       assert(n); if(n)          //if文の前に同条件のassertを挟む.
 #define _return(num, cond) if (cond) { return num; } //条件に合うならreturnする.
@@ -284,8 +285,8 @@ struct GameData
 #define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
 #define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor( 60, 255,  60))
-#define COLOR_PRE_LINE					(GetColor(128, 128, 128))                            //予測線.
-#define COLOR_METEO(pos)				(GetColor(0, _int(255 * fabs(sin(pos.x/200))), 255)) //隕石.
+#define COLOR_PRE_LINE					(GetColor(128, 128, 128))                              //予測線.
+#define COLOR_METEO(pos)				(GetColor(0, _int45(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)

@@ -23,10 +23,10 @@ private: //データ.
 	};
 	Timer tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME); //スロー継続時間.
 
-	DrawImgST imgLogo[2];   //タイトルロゴ画像.
-	DrawImgST imgUI[4];     //UI画像.
-	DrawImgST imgNewRecord; //new record.
-	DrawImgST imgGameOver;  //gameover.
+	DrawImgST imgLogo[2]{};   //タイトルロゴ画像.
+	DrawImgST imgUI[4]{};     //UI画像.
+	DrawImgST imgNewRecord{}; //new record.
+	DrawImgST imgGameOver{};  //gameover.
 
 	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.

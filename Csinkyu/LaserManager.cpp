@@ -56,7 +56,7 @@ void LaserManager::Draw() {
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
 		//時間経過で徐々に薄くする.
-		int clr = _int(255 - line[i].Counter * 4);
+		int clr = _int45(255 - line[i].Counter * 4);
 		clr = max(clr, 0); //最低値を0にする.
 
 		//加算合成モードで軌跡を描画（発光エフェクト）

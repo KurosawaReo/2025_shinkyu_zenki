@@ -69,7 +69,7 @@ public:
 	int DrawRotaGraphST  (DBL_XY pos,   double extend, double ang,                 Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
 	int DrawModiGraphST  (DBL_XY luPos, DBL_XY ruPos,  DBL_XY rdPos, DBL_XY ldPos,                       bool isTrans = true, bool isFloat = false);
 
-	//使用禁止(意図しないDeleteGraphを防ぐため)
+	//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 	DrawImgST& operator=(const DrawImgST&) = delete;
 };
 
@@ -109,7 +109,7 @@ public:
 	int DrawRotaGraphST  (int imgNo, DBL_XY pos,   double extend, double ang,                 Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
 	int DrawModiGraphST  (int imgNo, DBL_XY luPos, DBL_XY ruPos,  DBL_XY rdPos, DBL_XY ldPos,                       bool isTrans = true, bool isFloat = false);
 
-	//使用禁止(意図しないDeleteGraphを防ぐため)
+	//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 	DrawDivImgST& operator=(const DrawDivImgST&) = delete;
 };
 

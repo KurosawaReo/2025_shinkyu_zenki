@@ -17,7 +17,7 @@ void Timer::Stop() {
 	//計測中なら.
 	if (isMove) {
 
-		float elapsed = (float)(clock() - tmStart)/1000; //時間差.
+		float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 
 		//経過時間を更新.
 		if (mode == COUNT_UP) {
@@ -35,7 +35,7 @@ float Timer::GetPassTime() {
 
 	//計測中なら.
 	if (isMove) { 
-		float elapsed = (float)(clock() - tmStart)/1000; //時間差.
+		float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 		float pass = 0; //経過時間.
 
 		if (mode == COUNT_UP) {
