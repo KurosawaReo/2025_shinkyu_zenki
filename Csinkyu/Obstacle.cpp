@@ -35,7 +35,7 @@ void Obstacle::Draw() {
 	if (CheckHitKey(KEY_INPUT_0)) {
 		
 		DBL_XY mdPos = CalcMidPos(line.stPos, line.edPos);
-		DrawCircle(_int45(mdPos.x), _int45(mdPos.y), _int45(len/2), 0x303030);
+		DrawCircle(_intR(mdPos.x), _intR(mdPos.y), _intR(len/2), 0x303030);
 
 		Line debugLine1 = {line.stPos, CalcArcPos(line.stPos, ang, 1000),       0x303030};
 		Line debugLine2 = {line.stPos, CalcArcPos(line.stPos, ang + 180, 1000), 0x303030};

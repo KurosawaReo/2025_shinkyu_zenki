@@ -43,7 +43,7 @@ void Obstacle2::Draw()
 
 		double size = 0.1; // 描画サイズ仮の値
 		// ミサイルを回転させて描画する位置、サイズ、角度、画像ハンドル、透過フラグ
-		DrawRotaGraph(_int45(Mx[i]), _int45(My[i]), size, Ma[i], img.handle, true);
+		DrawRotaGraph(_intR(Mx[i]), _intR(My[i]), size, Ma[i], img.handle, true);
 	}
 }
 

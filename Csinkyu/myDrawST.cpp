@@ -143,7 +143,7 @@ int DrawImgST::DrawRectGraphST(DBL_XY pos, INT_XY stPixel, INT_XY size, bool isT
 	}
 	else {
 		int err = DrawRectGraph(
-			_int45(pos.x), _int45(pos.y), stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
+			_intR(pos.x), _intR(pos.y), stPixel.x, stPixel.y, size.x, size.y, data.handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawRectGraphエラー.
 	}
@@ -162,7 +162,7 @@ int DrawDivImgST::DrawRectGraphST(int imgNo, DBL_XY pos, INT_XY stPixel, INT_XY 
 	}
 	else {
 		int err = DrawRectGraph(
-			_int45(pos.x), _int45(pos.y), stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
+			_intR(pos.x), _intR(pos.y), stPixel.x, stPixel.y, size.x, size.y, data[imgNo].handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawRectGraphエラー.
 	}
@@ -292,8 +292,8 @@ int DrawImgST::DrawModiGraphST(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY 
 	}
 	else {
 		int err = DrawModiGraph(
-			_int45(luPos.x), _int45(luPos.y), _int45(ruPos.x), _int45(ruPos.y),
-			_int45(rdPos.x), _int45(rdPos.y), _int45(ldPos.x), _int45(ldPos.y), data.handle, isTrans
+			_intR(luPos.x), _intR(luPos.y), _intR(ruPos.x), _intR(ruPos.y),
+			_intR(rdPos.x), _intR(rdPos.y), _intR(ldPos.x), _intR(ldPos.y), data.handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawModiGraphエラー.
 	}
@@ -313,8 +313,8 @@ int DrawDivImgST::DrawModiGraphST(int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY 
 	}
 	else {
 		int err = DrawModiGraph(
-			_int45(luPos.x), _int45(luPos.y), _int45(ruPos.x), _int45(ruPos.y),
-			_int45(rdPos.x), _int45(rdPos.y), _int45(ldPos.x), _int45(ldPos.y), data[imgNo].handle, isTrans
+			_intR(luPos.x), _intR(luPos.y), _intR(ruPos.x), _intR(ruPos.y),
+			_intR(rdPos.x), _intR(rdPos.y), _intR(ldPos.x), _intR(ldPos.y), data[imgNo].handle, isTrans
 		);
 		_return(-2, err < 0) //-2: DrawModiGraphエラー.
 	}
@@ -422,7 +422,7 @@ int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
 	}
 	//アンチエイリアスなし.
 	else{
-		int err = DrawCircle(_int45(data->pos.x), _int45(data->pos.y), _int45(data->r), data->color, isFill, _int45(thick));
+		int err = DrawCircle(_intR(data->pos.x), _intR(data->pos.y), _intR(data->r), data->color, isFill, _intR(thick));
 		_return(-2, err < 0) //-2: DrawCircleエラー.
 	}
 	return 0; //正常終了.
@@ -466,9 +466,9 @@ int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
 	//アンチエイリアスなし.
 	else {
 		int err = DrawTriangle(
-			_int45(data->pos[0].x), _int45(data->pos[0].y),
-			_int45(data->pos[1].x), _int45(data->pos[1].y),
-			_int45(data->pos[2].x), _int45(data->pos[2].y), data->color, isFill
+			_intR(data->pos[0].x), _intR(data->pos[0].y),
+			_intR(data->pos[1].x), _intR(data->pos[1].y),
+			_intR(data->pos[2].x), _intR(data->pos[2].y), data->color, isFill
 		);
 		_return(-2, err < 0) //-2: DrawTriangleエラー.
 	}
@@ -488,8 +488,8 @@ int DrawLineST(const Line* data, bool isAnti, float thick) {
 	//アンチエイリアスなし.
 	else {
 		int err = DrawLine(
-			_int45(data->stPos.x), _int45(data->stPos.y), 
-			_int45(data->edPos.x), _int45(data->edPos.y), data->color, (int)thick
+			_intR(data->stPos.x), _intR(data->stPos.y), 
+			_intR(data->edPos.x), _intR(data->edPos.y), data->color, (int)thick
 		);
 		_return(-2, err < 0) //-2: DrawLineエラー.
 	}
@@ -525,7 +525,7 @@ int SetDrawBlendModeST(BlendModeID id, int power) {
 	return SetDrawBlendMode(id, power);
 }
 int SetDrawBlendModeST(BlendModeID id, double power) {
-	return SetDrawBlendMode(id, _int45(power));
+	return SetDrawBlendMode(id, _intR(power));
 }
 //描画モードリセット.
 int ResetDrawBlendMode() {

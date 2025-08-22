@@ -851,7 +851,7 @@ void GameManager::DrawReflectMode() {
 		//画面中央に数字を表示.
 		{
 			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
-			SetDrawBlendModeST(MODE_ALPHA, _int45(255 * dec));   //1秒ごとに薄くなる演出.
+			SetDrawBlendModeST(MODE_ALPHA, _intR(255 * dec));  //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
 				str1.DrawStringST(ANC_MID, data.font4); //反射モード.

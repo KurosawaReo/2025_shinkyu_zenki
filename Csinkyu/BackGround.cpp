@@ -57,7 +57,7 @@ void BackGround::Init(GameData* _data) {
 		INT_XY imgSize  = imgBG[0].GetImage()->size; //画像サイズ取得.
 		DBL_XY sizeRate = { 0.1, 0.1 };              //サイズ倍率.
 
-		INT_XY size = { _int45(imgSize.x * sizeRate.x), _int45(imgSize.y * sizeRate.y) };
+		INT_XY size = { _intR(imgSize.x * sizeRate.x), _intR(imgSize.y * sizeRate.y) };
 
 		//タイルのように貼り付ける.
 		for (int x = 0; x < WINDOW_WID + size.x; x += size.x) {
@@ -99,7 +99,7 @@ void BackGround::Draw() {
 	//背景デザイン.
 	for (int x = 0; x < WINDOW_WID; x += 5) {
 
-		int clr = _int4s5n(20 * fabs(sin((double)(x+p_data->counter)/200))); //色の変化.
+		int clr = _int45(20 * fabs(sin((double)(x+p_data->counter)/200))); //色の変化.
 		Line line = { {(double)x, 0},{(double)x, WINDOW_HEI}, GetColor(0, clr, clr) };
 		DrawLineST(&line, false, 5);
 	}
@@ -110,7 +110,7 @@ void BackGround::Draw() {
 		INT_XY imgSize = imgBG[0].GetImage()->size; //画像サイズ取得.
 		DBL_XY sizeRate = {0.1, 0.1};               //サイズ倍率.
 
-		INT_XY size = {_int4s5n(imgSize.x * sizeRate.x), _int4s5n(imgSize.y * sizeRate.y)};
+		INT_XY size = {_int45(imgSize.x * sizeRate.x), _int45(imgSize.y * sizeRate.y)};
 		
 		//タイルのように貼り付ける.
 		for (int x = 0; x < WINDOW_WID+size.x; x += size.x) {
@@ -118,8 +118,8 @@ void BackGround::Draw() {
 				
 				//座標を少しずつずらす.
 				INT_XY newPos = {
-					_int4s5n(x - fmod(p_data->counter, size.x)), //sizeで割った余り.
-					_int4s5n(y + fmod(p_data->counter, size.y))
+					_int45(x - fmod(p_data->counter, size.x)), //sizeで割った余り.
+					_int45(y + fmod(p_data->counter, size.y))
 				};
 				//通常モード.
 				{

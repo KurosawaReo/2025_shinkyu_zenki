@@ -56,7 +56,7 @@ void LaserManager::Draw() {
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
 		//時間経過で徐々に薄くする.
-		int clr = _int45(255 - line[i].Counter * 4);
+		int clr = _intR(255 - line[i].Counter * 4);
 		clr = max(clr, 0); //最低値を0にする.
 
 		//加算合成モードで軌跡を描画（発光エフェクト）
@@ -85,7 +85,7 @@ void LaserManager::Draw() {
 //各レーザーの更新.
 void LaserManager::UpdateLaser() {
 
-	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
+//	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
 
 	//各レーザーの更新.
 	for (int i = 0; i < LASER_CNT_MAX; i++)
@@ -97,10 +97,10 @@ void LaserManager::UpdateLaser() {
 		{
 			case Laser_Normal:
 			{
+				Line line = {{laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if ((laser[i].x > plyPos.x - pSizeHalf && laser[i].x < plyPos.x + pSizeHalf) &&
-					(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
-				{
+				if (HitCheckLine(&line, p_player->GetHit())) {
+
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
 					{
@@ -134,10 +134,10 @@ void LaserManager::UpdateLaser() {
 
 			case Laser_Straight:
 			{
+				Line line = {{laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if ((laser[i].x > plyPos.x - pSizeHalf && laser[i].x < plyPos.x + pSizeHalf) &&
-					(laser[i].y > plyPos.y - pSizeHalf && laser[i].y < plyPos.y + pSizeHalf))
-				{
+				if (HitCheckLine(&line, p_player->GetHit())) {
+
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
 					{

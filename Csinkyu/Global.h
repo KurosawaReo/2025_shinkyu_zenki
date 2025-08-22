@@ -1,6 +1,6 @@
 /*
    - Global.h -
-   ver.2025/08/20
+   ver.2025/08/21
 
    DxLib: 共通で使う型や定数を入れる所.
 */
@@ -26,10 +26,10 @@ using namespace std;
 
 //型変換マクロ.
 #define _int(n)   static_cast<int>   (n)        //int型変換マクロ.
-#define _int45(n) static_cast<int>   (round(n)) //int型変換マクロ(45 = 四捨五入)
+#define _intR(n)  static_cast<int>   (round(n)) //int型変換マクロ(四捨五入)
 #define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
 #define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
-#define _intXY(n) {_int45(n.x), _int45(n.y)}    //INT_XY型変換マクロ.
+#define _intXY(n) {_intR(n.x), _intR(n.y)}      //INT_XY型変換マクロ.
 #define _dblXY(n) {_dbl  (n.x), _dbl  (n.y)}    //DBL_XY型変換マクロ.
 //便利マクロ.
 #define _if_check(n)       assert(n); if(n)          //if文の前に同条件のassertを挟む.
@@ -38,12 +38,12 @@ using namespace std;
 //MyLib用の型.
 namespace MyLib
 {
-	//文字コードで切り替え.
-	#if defined UNICODE
-	  typedef wstring MY_STRING; //wchar_t型.
-	#else
-	  typedef string  MY_STRING; //char型.
-	#endif
+//文字コードで切り替え.
+#if defined UNICODE
+	typedef wstring MY_STRING; //wchar_t型.
+#else
+	typedef string  MY_STRING; //char型.
+#endif
 
 	//xとyの凝縮.
 	template<typename T> //型を<>で入力して使う.
@@ -286,7 +286,7 @@ struct GameData
 #define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor( 60, 255,  60))
 #define COLOR_PRE_LINE					(GetColor(128, 128, 128))                              //予測線.
-#define COLOR_METEO(pos)				(GetColor(0, _int45(255 * fabs(sin(pos.x/200))), 255)) //隕石.
+#define COLOR_METEO(pos)				(GetColor(0, _intR(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)

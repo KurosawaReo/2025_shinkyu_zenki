@@ -86,14 +86,14 @@ void Obstacle4main::DrawObstFlash() {
 		float alpha = 1.0f - (
 			flashEffect[i].Counter * OBSTACLE4_FLASH_ALPHA_TM / flashEffect[i].Duration
 		);
-		int alphaValue = _int45(255 * alpha);
+		int alphaValue = _intR(255 * alpha);
 		alphaValue = max(alphaValue, 0); //下限は0.
 
 		//エフェクトのサイズを時間に応じて拡大.
 		float sizeMultiplier = OBSTACLE4_FLASH_SIZE_INIT + (
 			flashEffect[i].Counter * OBSTACLE4_FLASH_SIZE_SPREAD / flashEffect[i].Duration
 		);
-		int effectSize = _int45(flashEffect[i].BaseSize * sizeMultiplier);
+		int effectSize = _intR(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
 
 		//プレイヤーの方向を計算.
@@ -153,7 +153,7 @@ void Obstacle4main::DrawPreLaserDots() {
 	if (Hsc <= HscTm + 60) { // 発射60フレーム前から表示
 		// 点滅効果を作成
 		float blinkProgress = (HscTm + 60 - Hsc) / 60.0f; // 0.0から1.0
-		int blinkAlpha = _int45(128 + 127 * sin(blinkProgress * M_PI * 8)); // 点滅
+		int blinkAlpha = _intR(128 + 127 * sin(blinkProgress * M_PI * 8)); // 点滅
 
 		//サイズを徐々に大きく.
 		float dotSize  = (float)(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER1_SIZE);
