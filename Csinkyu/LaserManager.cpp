@@ -56,7 +56,7 @@ void LaserManager::Draw() {
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
 		//時間経過で徐々に薄くする.
-		int clr = _intR(255 - line[i].Counter * 4);
+		int clr = _int_r(255 - line[i].Counter * 4);
 		clr = max(clr, 0); //最低値を0にする.
 
 		//加算合成モードで軌跡を描画（発光エフェクト）
@@ -312,7 +312,7 @@ bool LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			laser[i].type = type;   // タイプの登録
 
 			//サウンド.
-			SoundST* sound = SoundST::GetPtr();
+			Sound* sound = Sound::GetPtr();
 			if (type == Laser_Normal){
 				sound->Play(_T("Laser1"), false, 58); //通常レーザー.
 			}
@@ -364,7 +364,7 @@ void LaserManager::ReflectLaser(int idx)
 	data.pos = { laser[idx].x, laser[idx].y };
 	p_effectMng->SpawnEffect(&data);
 	//サウンド.
-	SoundST* sound = SoundST::GetPtr();
+	Sound* sound = Sound::GetPtr();
 	sound->Play(_T("Laser3"), false, 58);
 }
 

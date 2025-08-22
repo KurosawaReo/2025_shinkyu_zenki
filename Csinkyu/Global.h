@@ -1,142 +1,16 @@
 /*
    - Global.h -
-   ver.2025/08/21
 
-   DxLib: 共通で使う型や定数を入れる所.
+   REFLINE用のグローバル.
+   KR_Library用のグローバルは分類済み.
 */
 #pragma once
 
-//このGlobal.hが定義されているか判別する用.
-#define DEF_MYLIB_GLOBAL
+//再定義防止用(TODO:なぜかこれを外すと再定義エラーになる)
+#if !defined GLOBAL
+#define GLOBAL
 
-//c言語用.
-#define _USE_MATH_DEFINES  //math定数を使うのに必要.
-#define _CRT_SECURE_NO_WARNINGS
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
-//c++用.
-#include <vector>
-#include <map>
-#include <string>
-using namespace std;
-//DxLib.
-#include "DxLib.h"
-
-//型変換マクロ.
-#define _int(n)   static_cast<int>   (n)        //int型変換マクロ.
-#define _intR(n)  static_cast<int>   (round(n)) //int型変換マクロ(四捨五入)
-#define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
-#define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
-#define _intXY(n) {_intR(n.x), _intR(n.y)}      //INT_XY型変換マクロ.
-#define _dblXY(n) {_dbl  (n.x), _dbl  (n.y)}    //DBL_XY型変換マクロ.
-//便利マクロ.
-#define _if_check(n)       assert(n); if(n)          //if文の前に同条件のassertを挟む.
-#define _return(num, cond) if (cond) { return num; } //条件に合うならreturnする.
-
-//MyLib用の型.
-namespace MyLib
-{
-//文字コードで切り替え.
-#if defined UNICODE
-	typedef wstring MY_STRING; //wchar_t型.
-#else
-	typedef string  MY_STRING; //char型.
-#endif
-
-	//xとyの凝縮.
-	template<typename T> //型を<>で入力して使う.
-	struct XY
-	{
-		T x, y;
-
-		//演算子で計算できるように.
-		XY<T> operator+(XY<T>& xy) {       //+の右側が引数に入り、返り値が左側に入る.
-			return { x + xy.x, y + xy.y }; //xとyを加算して返す.
-		}
-		XY<T> operator-(XY<T>& xy) {
-			return { x - xy.x, y - xy.y };
-		}
-		XY<T> operator*(XY<T>& xy) {
-			return { x * xy.x, y * xy.y };
-		}
-		XY<T> operator/(XY<T>& xy) {
-			return { x / xy.x, y / xy.y };
-		}
-
-		XY<T>& operator+=(XY<T>& xy) {
-			x += xy.x;
-			y += xy.y;
-			return *this; //自身の実体.
-		}
-		XY<T> operator-=(XY<T>& xy) {
-			x -= xy.x;
-			y -= xy.y;
-			return *this;
-		}
-		XY<T> operator*=(XY<T>& xy) {
-			x *= xy.x;
-			y *= xy.y;
-			return *this;
-		}
-		XY<T> operator/=(XY<T>& xy) {
-			x /= xy.x;
-			y /= xy.y;
-			return *this;
-		}
-		XY<T> operator*=(int n) {
-			x *= n;
-			y *= n;
-			return *this;
-		}
-		XY<T> operator*=(double n) {
-			x *= n;
-			y *= n;
-			return *this;
-		}
-		XY<T> operator/=(int n) {
-			x /= n;
-			y /= n;
-			return *this;
-		}
-		XY<T> operator/=(double n) {
-			x /= n;
-			y /= n;
-			return *this;
-		}
-	};
-	typedef XY<int>    INT_XY; //int型.
-	typedef XY<double> DBL_XY; //double型.
-
-	//円データ.
-	struct Circle
-	{
-		DBL_XY pos;   //座標.
-		float  r;     //半径.
-		UINT   color; //色.
-	};
-	//四角形データ.
-	struct Box
-	{
-		DBL_XY pos;   //座標.
-		DBL_XY size;  //サイズ.
-		UINT   color; //色.
-	};
-	//三角形データ.
-	struct Triangle
-	{
-		DBL_XY pos[3]; //3点の座標.
-		UINT   color;  //色.
-	};
-	//線データ.
-	struct Line
-	{
-		DBL_XY stPos; //始点座標.
-		DBL_XY edPos; //終点座標.
-		UINT   color; //色.
-	};
-}
+using namespace KR_Lib;
 
 // - 列挙体 -
 enum Scene
@@ -150,12 +24,12 @@ enum Scene
 	SCENE_COUNT, //総数.
 };
 //レーザー移動列挙.
-enum MoveDir 
+enum MoveDir
 {
-	MOVE_RIGHT,
-	MOVE_DOWN,
 	MOVE_LEFT,
-	MOVE_UP
+	MOVE_RIGHT,
+	MOVE_UP,
+	MOVE_DOWN
 };
 
 // - ゲームデータ -
@@ -286,7 +160,9 @@ struct GameData
 #define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor( 60, 255,  60))
 #define COLOR_PRE_LINE					(GetColor(128, 128, 128))                              //予測線.
-#define COLOR_METEO(pos)				(GetColor(0, _intR(255 * fabs(sin(pos.x/200))), 255)) //隕石.
+#define COLOR_METEO(pos)				(GetColor(0, _int_r(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)
+
+#endif

@@ -21,19 +21,19 @@ enum EffectType
 //エフェクトデータ.
 struct EffectData
 {
-	EffectType type;
+	EffectType type{};
 
-	DBL_XY     pos;     //座標.
-	DBL_XY     vec;     //方向.
-	float      speed;   //速さ.
-	float      ang;     //角度.
-	float      len;     //長さ.
+	DBL_XY     pos{};     //座標.
+	DBL_XY     vec{};     //方向.
+	float      speed{};   //速さ.
+	float      ang{};     //角度.
+	float      len{};     //長さ.
 };
 //エフェクト.
 struct Effect : public EffectData
 {
-	float      counter; //時間計測用.
-	bool       active;
+	float      counter{}; //時間計測用.
+	bool       active{};
 };
 
 //エフェクト管理クラス.

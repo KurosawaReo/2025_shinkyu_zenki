@@ -10,7 +10,7 @@ class BG_Tile
 private:
 	INT_XY     pos{};
 	DBL_XY     sizeRate{};
-	DrawImgST* img[2]{};
+	DrawImg* img[2]{};
 
 	Timer timer = Timer(COUNT_DOWN, 3); //”­Œõ‚·‚éŠÔ.
 
@@ -29,7 +29,7 @@ class BackGround
 {
 private:
 	vector<BG_Tile> tiles;      //”wŒiƒ^ƒCƒ‹ƒf[ƒ^.
-	DrawImgST       imgBG[2]{}; //”wŒi‰æ‘œ.
+	DrawImg       imgBG[2]{}; //”wŒi‰æ‘œ.
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //Œõ‚éŠÔŠu.
 

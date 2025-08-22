@@ -25,13 +25,13 @@ void BG_Tile::Draw(bool isSlow, double slowTime) {
 	{
 		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
-		img[0]->DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
+		img[0]->DrawExtend(_dblXY(pos), sizeRate, ANC_MID);
 	}
 	//反射モード.
 	if (isSlow) {
 		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
-		img[1]->DrawExtendGraphST(_dblXY(pos), sizeRate, ANC_MID);
+		img[1]->DrawExtend(_dblXY(pos), sizeRate, ANC_MID);
 	}
 	ResetDrawBlendMode(); //描画モードリセット.
 }
@@ -50,14 +50,14 @@ void BackGround::Init(GameData* _data) {
 
 	p_data = _data;
 
-	imgBG[0].LoadGraphST(_T("Resources/Images/bg_normal.png"));
-	imgBG[1].LoadGraphST(_T("Resources/Images/bg_reflect.png"));
+	imgBG[0].LoadFile(_T("Resources/Images/bg_normal.png"));
+	imgBG[1].LoadFile(_T("Resources/Images/bg_reflect.png"));
 
 	{
 		INT_XY imgSize  = imgBG[0].GetImage()->size; //画像サイズ取得.
 		DBL_XY sizeRate = { 0.1, 0.1 };              //サイズ倍率.
 
-		INT_XY size = { _intR(imgSize.x * sizeRate.x), _intR(imgSize.y * sizeRate.y) };
+		INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
 
 		//タイルのように貼り付ける.
 		for (int x = 0; x < WINDOW_WID + size.x; x += size.x) {
