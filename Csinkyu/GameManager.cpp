@@ -68,6 +68,13 @@
    特定の条件で行くことができて、特別なルールがある感じで。
    特別感のあるBGMや背景に変える。
 
+   2025/08/15:
+   配列をvectorに変えたい。
+   push_backという関数で要素の追加ができるため、生成するときはこれで追加する。
+
+   最大サイズの定数はそのまま残していい気がする
+   例: if (size() < MAX_SIZE) {}
+
 /---------------------------------------------------------/
    前期発表会後 変更内容
 
@@ -132,8 +139,8 @@ void GameManager::Init() {
 	srand((unsigned)time(NULL)); //乱数初期化.
 	
 	//実体取得.
-	p_input = InputST::GetPtr();
-	p_sound = SoundST::GetPtr();
+	p_input = Input::GetPtr();
+	p_sound = Sound::GetPtr();
 
 	//タイトル.
 	data.scene = SCENE_TITLE;
@@ -143,14 +150,14 @@ void GameManager::Init() {
 	data.font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
 	data.font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
-	imgLogo[0].  LoadGraphST(_T("Resources/Images/REFLINEロゴ_一部.png"));
-	imgLogo[1].  LoadGraphST(_T("Resources/Images/REFLINEロゴ.png"));
-	imgUI[0].    LoadGraphST(_T("Resources/Images/ui_back_level.png"));
-	imgUI[1].    LoadGraphST(_T("Resources/Images/ui_back_best_score.png"));
-	imgUI[2].    LoadGraphST(_T("Resources/Images/ui_back_score.png"));
-	imgUI[3].    LoadGraphST(_T("Resources/Images/ui_back_time.png"));
-	imgNewRecord.LoadGraphST(_T("Resources/Images/new_record.png"));
-	imgGameOver. LoadGraphST(_T("Resources/Images/gameover.png"));
+	imgLogo[0].  LoadFile(_T("Resources/Images/REFLINEロゴ_一部.png"));
+	imgLogo[1].  LoadFile(_T("Resources/Images/REFLINEロゴ.png"));
+	imgUI[0].    LoadFile(_T("Resources/Images/ui_back_level.png"));
+	imgUI[1].    LoadFile(_T("Resources/Images/ui_back_best_score.png"));
+	imgUI[2].    LoadFile(_T("Resources/Images/ui_back_score.png"));
+	imgUI[3].    LoadFile(_T("Resources/Images/ui_back_time.png"));
+	imgNewRecord.LoadFile(_T("Resources/Images/new_record.png"));
+	imgGameOver. LoadFile(_T("Resources/Images/gameover.png"));
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));
@@ -190,7 +197,7 @@ void GameManager::Init() {
 
 	//スコア読み込み.
 	{
-		FileST file;
+		File file;
 		file.Open(FILE_DATA, _T("r"));   //ファイルを開く.
 		data.bestScore = file.ReadInt(); //数字を読み込んで登録.
 	}
@@ -270,7 +277,7 @@ void GameManager::Update() {
 		case SCENE_END:   UpdateEnd();   break;
 		case SCENE_PAUSE: UpdatePause(); break;
 	
-		default: assert(false); break;
+		default: assert(FALSE); break;
 	}
 }
 
@@ -288,7 +295,7 @@ void GameManager::Draw() {
 		case SCENE_END:   DrawEnd();   break;
 		case SCENE_PAUSE: DrawPause(); break;
 
-		default: assert(false); break;
+		default: assert(FALSE); break;
 	}
 }
 
@@ -532,32 +539,34 @@ void GameManager::DrawTitle() {
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
-	const float delay2 = 1.6f;
-	const float delay3 = 3;
+	const float delay2 = 1.4f;
+	const float delay3 = 1.6f;
 	const float delay4 = 3;
-
-	const int logoY = WINDOW_HEI/2 - 70;
+	const float delay5 = 3;
 
 	//画像の表示.
 	{
+		const int logoY = WINDOW_HEI/2 - 75;
+	
 		//切り替え前.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
-			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, logoY}, {0.5, 0.5});
+			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, {0.5, 0.5}, ANC_MID, true, true);
 		}
 		//切り替え後.
 		else {
 			//アニメーション値.
-			double anim = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1)/1.8);
+			double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
+			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
-			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
-			imgLogo[1].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5});
+			SetDrawBlendModeST(MODE_ALPHA, 255 * (1-anim2));
+			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, {0.5, 0.5}, ANC_MID, true, true);
 			//ロゴ2枚目.
-			SetDrawBlendModeST(MODE_ALPHA, 255 * (1-anim));
-			imgLogo[0].DrawExtendGraphST({WINDOW_WID/2, _int(logoY - anim*100)}, {0.5, 0.5});
+			SetDrawBlendModeST(MODE_ALPHA, 255 * anim1);
+			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, {0.5, 0.5}, ANC_MID, true, true);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -566,33 +575,38 @@ void GameManager::DrawTitle() {
 	//best score.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
 
+		const int scoreY = WINDOW_HEI/2 + 60;
+
 		//アニメーション値.
-		double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()-delay2);
+		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
+		double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
-		DrawStrST str(text, {WINDOW_WID/2, WINDOW_HEI/2+60}, COLOR_BEST_SCORE);
+		DrawStr str(text, {WINDOW_WID/2, scoreY+1}, COLOR_BEST_SCORE);
 
-		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str.DrawStringST(ANC_MID, data.font2);
-		imgUI[1].DrawExtendGraphST({WINDOW_WID/2, WINDOW_HEI/2+60+28}, {0.4, 0.4});
+		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
+		str.Draw(ANC_MID, data.font2); //スコア値.
+		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
+		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY + (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY - (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
-	if (tmScene[SCENE_TITLE].GetPassTime() > delay3) {
+	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
 		//アニメーション値.
-		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay3);
+		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
-		DrawStrST str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
+		DrawStr str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-2}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str.DrawStringST(ANC_MID, data.font1); //テキスト.
-		DrawCircleST(&cir, false, false);      //Xボタンの円.
+		str.Draw(ANC_MID, data.font1);    //テキスト.
+		DrawCircleST(&cir, false, false); //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊.
-	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
+	if (tmScene[SCENE_TITLE].GetPassTime() > delay5) {
 		//まだ出してなければ.
 		if (!isTitleAnim) {
 			isTitleAnim = true; //一度きり.
@@ -674,13 +688,13 @@ void GameManager::DrawEnd() {
 			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
 		);
 		//テキストの設定.
-		DrawStrST str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
-		DrawStrST str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
+		DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
+		DrawStr str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		imgGameOver.DrawExtendGraphST({WINDOW_WID/2, _int(370+30*anim)}, {0.5, 0.5});
-		str1.DrawStringST(ANC_MID, data.font1);
-		str2.DrawStringST(ANC_MID, data.font1);
+		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true); //GAME OVER
+		str1.Draw(ANC_MID, data.font1);
+		str2.Draw(ANC_MID, data.font1);
 		ResetDrawBlendMode();
 	}
 
@@ -696,7 +710,7 @@ void GameManager::DrawEnd() {
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//描画.
 			SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-			imgNewRecord.DrawExtendGraphST({WINDOW_WID/2, _int(WINDOW_HEI/2-330+anim*20)}, {0.4, 0.4});
+			imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
 			ResetDrawBlendMode();
 			//サウンド.
 			if (!isBestScoreSound) {
@@ -711,12 +725,12 @@ void GameManager::DrawEnd() {
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
-		DrawStrST str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
+		DrawStr str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str.DrawStringST(ANC_MID, data.font1); //テキスト.
-		DrawCircleST(&cir, false, false);      //Aボタンの円.
+		str.Draw(ANC_MID, data.font1);    //テキスト.
+		DrawCircleST(&cir, false, false); //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -749,11 +763,11 @@ void GameManager::DrawUI() {
 	double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.3));
 
 	//テキスト設定.
-	DrawStrST str[4] = {
-		DrawStrST({}, {WINDOW_WID/2,      70+2}, 0xFFFFFF),
-		DrawStrST({}, {WINDOW_WID/2-350, 150  }, COLOR_BEST_SCORE),
-		DrawStrST({}, {WINDOW_WID/2,     150  }, COLOR_SCORE),
-		DrawStrST({}, {WINDOW_WID/2+350, 150  }, COLOR_TIME),
+	DrawStr str[4] = {
+		DrawStr({}, {WINDOW_WID/2,      70+2}, 0xFFFFFF),
+		DrawStr({}, {WINDOW_WID/2-350, 150  }, COLOR_BEST_SCORE),
+		DrawStr({}, {WINDOW_WID/2,     150  }, COLOR_SCORE),
+		DrawStr({}, {WINDOW_WID/2+350, 150  }, COLOR_TIME),
 	};
 	TCHAR text[256];
 	_stprintf(text, _T("LEVEL %d"),        data.level);
@@ -766,29 +780,29 @@ void GameManager::DrawUI() {
 	str[3].SetText(text);
 		
 	//背景画像.
-	imgUI[0].DrawExtendGraphST({WINDOW_WID/2, 70}, {0.4, 0.35});
+	imgUI[0].DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
 	//テキスト(main)
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
-	str[0].DrawStringST(ANC_MID, data.font4);
+	str[0].Draw(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
-	str[1].DrawStringST(ANC_MID, data.font3);
-	imgUI[1].DrawExtendGraphST({str[1].GetPos().x, str[1].GetPos().y+28}, {0.4, 0.4});
+	str[1].Draw(ANC_MID, data.font3);
+	imgUI[1].DrawExtend({(double)str[1].GetPos().x, (double)str[1].GetPos().y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
-	str[2].DrawStringST(ANC_MID, data.font3);
-	imgUI[2].DrawExtendGraphST({str[2].GetPos().x, str[2].GetPos().y+28}, {0.4, 0.4});
+	str[2].Draw(ANC_MID, data.font3);
+	imgUI[2].DrawExtend({(double)str[2].GetPos().x, (double)str[2].GetPos().y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
-	str[3].DrawStringST(ANC_MID, data.font3);
-	imgUI[3].DrawExtendGraphST({str[3].GetPos().x, str[3].GetPos().y+28}, {0.4, 0.4});
+	str[3].Draw(ANC_MID, data.font3);
+	imgUI[3].DrawExtend({(double)str[3].GetPos().x, (double)str[3].GetPos().y+28}, {0.4, 0.4});
 	//テキスト(光沢用)
 	str[1].SetColor(0xFFFFFF);
 	str[2].SetColor(0xFFFFFF);
 	str[3].SetColor(0xFFFFFF);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
-	str[1].DrawStringST(ANC_MID, data.font3);
+	str[1].Draw(ANC_MID, data.font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
-	str[2].DrawStringST(ANC_MID, data.font3);
+	str[2].Draw(ANC_MID, data.font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
-	str[3].DrawStringST(ANC_MID, data.font3);
+	str[3].Draw(ANC_MID, data.font3);
 
 	//描画モードリセット.
 	ResetDrawBlendMode();
@@ -831,20 +845,20 @@ void GameManager::DrawReflectMode() {
 		//テキストの設定.
 		TCHAR text[256];
 		_stprintf(text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
-		DrawStrST str1(_T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
-		DrawStrST str2(text,          {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
+		DrawStr str1(_T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
+		DrawStr str2(text,          {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
 
 		//画面中央に数字を表示.
 		{
 			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
-			SetDrawBlendModeST(MODE_ALPHA, _int(255 * dec));   //1秒ごとに薄くなる演出.
+			SetDrawBlendModeST(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
-				str1.DrawStringST(ANC_MID, data.font4); //反射モード.
+				str1.Draw(ANC_MID, data.font4); //反射モード.
 			}
 			//最後の3秒.
 			if (tmSlowMode.GetPassTime() <= 3) {
-				str2.DrawStringST(ANC_MID, data.font4); //数字.
+				str2.Draw(ANC_MID, data.font4); //数字.
 			}
 			ResetDrawBlendMode();
 		}
@@ -875,7 +889,7 @@ void GameManager::GameEnd() {
 		//最高スコア更新なら保存.
 		if (data.score > data.bestScore) {
 
-			FileST file;
+			File file;
 			file.MakeDir(FILE_DATA_PATH);  //フォルダ作成.
 			file.Open(FILE_DATA, _T("w")); //ファイルを開く.
 			file.WriteInt(data.score);     //スコアを保存.

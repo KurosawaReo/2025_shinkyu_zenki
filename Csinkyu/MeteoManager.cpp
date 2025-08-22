@@ -92,7 +92,7 @@ bool MeteoManager::IsHitMeteos(Circle* cir, bool isDestroy) {
 					data.pos = cir->pos;
 					p_effectMng->SpawnEffect(&data);
 					//ƒTƒEƒ“ƒh.
-					SoundST* sound = SoundST::GetPtr();
+					Sound* sound = Sound::GetPtr();
 					sound->Play(_T("Break"), false, 74);
 				}
 			}

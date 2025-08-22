@@ -14,30 +14,28 @@
    自作のものでも可だが、中身があまり変更されないものだけを入れる.
    (頻繁に変えるものを入れると、逆にビルドが遅くなる)
 
-   <stdio.h>などのc標準のライブラリはここに入れて
-   他のcppファイルから、このstdafx.hを通してstdio.hなどを導入する流れ.
+   <cstdio>などの標準ライブラリはここに入れて
+   他のcppファイルから、このstdafx.hを通してライブラリを導入する流れ.
 
    参考
    https://www.isus.jp/products/c-compilers/stdafxh/
 /---------------------------------------------------------------------*/
 #pragma once
 
+//エラー回避用.
 #define _CRT_SECURE_NO_WARNINGS
-#define _CRT_NON_CONFORMING_SWPRINTFS //swprintf関数用.
-#define _USE_MATH_DEFINES
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
-#include <assert.h>
-#include "DxLib.h"
+#define _CRT_NON_CONFORMING_SWPRINTFS
+
+#include <cstdio>
+#include <cstring>
+
+#include "KR_Lib/KR_Global.h"
+#include "KR_Lib/KR_Calc.h"
+#include "KR_Lib/KR_Draw.h"
+#include "KR_Lib/KR_File.h"
+#include "KR_Lib/KR_Input.h"
+#include "KR_Lib/KR_Object.h"
+#include "KR_Lib/KR_Sound.h"
+#include "KR_Lib/KR_Timer.h"
 
 #include "Global.h"
-#include "myCalcST.h"
-#include "myDrawST.h"
-#include "myInputST.h"
-#include "myTimerST.h"
-#include "mySoundST.h"
-#include "myFileST.h"
-#include "myObjectST.h"

@@ -61,7 +61,7 @@ void Meteo::Draw() {
 	if (active) {
 		//破壊モード限定.
 		if (state == Meteo_Destroy) {
-			int pow = _int(255 * (1-destroyCntr/METEO_DEST_TIME)); //少しずつ減少(255→0)
+			int pow = _int_r(255 * (1-destroyCntr/METEO_DEST_TIME)); //少しずつ減少(255→0)
 			SetDrawBlendModeST(MODE_ADD, pow);
 		}
 
@@ -133,7 +133,7 @@ bool Meteo::IsHitMeteo(Circle* pos) {
 		//全ての線で判定.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			//線とプレイヤーが当たったら.
-			if (HitLine(&shape.line[i], pos)) {
+			if (HitCheckLine(&shape.line[i], pos)) {
 				return true; //当たった.
 			}
 		}

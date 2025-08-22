@@ -40,7 +40,7 @@ void Player::Reset(DBL_XY _pos, bool _active)
 //更新.
 void Player::Update()
 {
-	InputST* input = InputST::GetPtr();
+	Input* input = Input::GetPtr();
 
 	//デバッグモード切り替え.
 	if (input->IsPushKeyTime(KEY_M) == 1) {
@@ -64,8 +64,8 @@ void Player::Draw()
 {
 	//デバッグ表示.
 	if (isDebug) {
-		DrawStrST str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.DrawStringST(ANC_MID, p_data->font1);
+		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
+		str.Draw(ANC_MID, p_data->font1);
 	}
 	// エフェクトのデバッグ情報表示
 	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
@@ -158,7 +158,7 @@ void Player::DrawAfterImage()
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	InputST* input = InputST::GetPtr();
+	Input* input = Input::GetPtr();
 
 	//移動する.
 	if (p_data->isSlow) {
@@ -301,7 +301,7 @@ void Player::PlayerDeath() {
 	if (active) {
 
 		//サウンド.
-		SoundST* sound = SoundST::GetPtr();
+		Sound* sound = Sound::GetPtr();
 		sound->Play(_T("PlayerDeath"), false, 80);
 		//エフェクト.
 		EffectData data{};

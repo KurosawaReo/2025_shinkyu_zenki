@@ -24,7 +24,7 @@ void Obstacle::Update() {
 	line.edPos = CalcArcPos(line.stPos, ang, len);
 
 	//“–‚½‚Á‚½‚çŽ€–S.
-	if (HitLine(&line, player->GetHit())) {
+	if (HitCheckLine(&line, player->GetHit())) {
 		player->PlayerDeath();
 	}
 }
@@ -35,7 +35,7 @@ void Obstacle::Draw() {
 	if (CheckHitKey(KEY_INPUT_0)) {
 		
 		DBL_XY mdPos = CalcMidPos(line.stPos, line.edPos);
-		DrawCircle(_int(mdPos.x), _int(mdPos.y), _int(len/2), 0x303030);
+		DrawCircle(_int_r(mdPos.x), _int_r(mdPos.y), _int_r(len/2), 0x303030);
 
 		Line debugLine1 = {line.stPos, CalcArcPos(line.stPos, ang, 1000),       0x303030};
 		Line debugLine2 = {line.stPos, CalcArcPos(line.stPos, ang + 180, 1000), 0x303030};

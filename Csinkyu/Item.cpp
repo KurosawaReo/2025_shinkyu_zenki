@@ -130,7 +130,7 @@ void ItemManager::CheckHitPlayer(int idx)
 	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//当たった場合.
-	if (HitBox(&plyBox, &itemBox)) {
+	if (HitCheckBox(&plyBox, &itemBox)) {
 		OnHitPlayer(idx);
 	}
 }
@@ -141,7 +141,7 @@ void ItemManager::OnHitPlayer(int idx)
 	//アイテムを取った処理.
 	GameManager::GetPtr()->TakeItem();
 	//サウンド.
-	SoundST* sound = SoundST::GetPtr();
+	Sound* sound = Sound::GetPtr();
 	sound->Play(_T("TakeItem"),   false, 76); //ポワーン.
 	//エフェクト召喚.
 	EffectData effect{};
