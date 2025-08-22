@@ -13,7 +13,7 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 	p_data = _data;
 	p_effectMng = _effectMng;
 
-	isDebug = false;  // デバッグフラグの初期化を追加
+	isDebug = false;
 }
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
@@ -21,7 +21,7 @@ void Player::Reset(DBL_XY _pos, bool _active)
 	hit       = { _pos, PLAYER_SIZE/2, {} };
 	active    = _active;
 	mode      = Player_Normal;
-	afterCntr = 1;  // afterCntrの初期化を追加
+	afterCntr = 1;
 
 	//座標配列のリセット.
 	for (int i = 0; i < _countof(afterPos); i++) {
