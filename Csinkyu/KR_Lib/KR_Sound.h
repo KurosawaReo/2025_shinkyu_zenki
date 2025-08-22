@@ -1,6 +1,6 @@
 /*
    - KR_Sound.h - (kurosawa original)
-   ver: 2025/08/22
+   ver: 2025/08/23
 
    DxLib用のサウンド機能.
 */
