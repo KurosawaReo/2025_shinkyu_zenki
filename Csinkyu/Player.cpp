@@ -18,7 +18,7 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit       = { _pos, PLAYER_HIT_R, {} };
+	hit       = { _pos, PLAYER_SIZE/2, {} };
 	active    = _active;
 	mode      = Player_Normal;
 	afterCntr = 1;  // afterCntrの初期化を追加

@@ -80,7 +80,6 @@ struct GameData
 
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
-#define PLAYER_HIT_R					(10)			//プレイヤーの当たり判定円の半径.
 #define PLAYER_AFT_IMG_NUM				(7)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 
