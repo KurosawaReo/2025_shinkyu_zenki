@@ -1,6 +1,6 @@
 /*
    - KR_Timer.cpp - (kurosawa original)
-   ver: 2025/08/22
+   ver: 2025/08/23
 
    DxLib用のタイマー機能.
 */
