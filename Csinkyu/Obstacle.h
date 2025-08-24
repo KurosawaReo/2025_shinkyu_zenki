@@ -4,6 +4,7 @@
 */
 #pragma once
 
+#if false
 class Obstacle
 {
 private:
@@ -28,3 +29,4 @@ public:
 	void Update();
 	void Draw  ();
 };
+#endif

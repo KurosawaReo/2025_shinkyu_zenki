@@ -57,6 +57,7 @@ private:
 	Player*        p_player{};
 	MeteoManager*  p_meteoMng{};
 	EffectManager* p_effectMng{};
+	Calc*          p_calc{};
 
 public:
 	void Init(GameData*, Player*, MeteoManager*, EffectManager*);

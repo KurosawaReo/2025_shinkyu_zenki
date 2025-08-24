@@ -1,8 +1,8 @@
 /*
-   - KR_Global.h - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Global.h - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用のKR_Lib全体に使う汎用機能.
+   KR_Lib全体で使う汎用機能を追加します.
 */
 #pragma once
 
@@ -11,6 +11,7 @@
 
 //C言語用.
 #define _USE_MATH_DEFINES
+#define _CRT_SECURE_NO_WARNINGS
 //C++用.
 #include <vector>
 #include <map>
@@ -28,12 +29,11 @@ using namespace std;
 #define _int_r(n) static_cast<int>   (round(n)) //int型変換マクロ(四捨五入)
 #define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
 #define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
-#define _intXY(n) {_int_r(n.x), _int_r(n.y)}    //INT_XY型変換マクロ.
-#define _dblXY(n) {_dbl  (n.x), _dbl  (n.y)}    //DBL_XY型変換マクロ.
 //便利マクロ.
-#define _if_check(n)              assert(n); if(n)          //if文の前に同条件のassertを挟む.
-#define _return(num, cond)        if (cond) { return num; } //条件に合うならreturnする.
-#define _is_in_range(num, n1, n2) (n1 <= num && num <= n2)  //範囲内に数値があるかどうか.
+#define _if_check(n)              assert(n); if(n)                    //if文の前に同条件のassertを挟む.
+#define _return(num, cond)        if (cond) { return num; }           //条件に合うならreturnする.(cond = 条件)
+#define _is_in_range(num, n1, n2) (n1 <= num && num <= n2)            //範囲内に数値があるかどうか.
+#define _debug_log(var)           printfDx(_T("%s:%d\n"), #var, var); //変数名と値を表示する.
 
 //KR_Libに使う用.
 namespace KR_Lib
@@ -55,36 +55,45 @@ namespace KR_Lib
 		XY(){}
 		XY(T _x, T _y) : x(_x), y(_y) {}
 
-		//演算子で計算できるように.
-		XY<T> operator+(XY<T>& xy) {       //+の右側が引数に入り、返り値が左側に入る.
-			return { x + xy.x, y + xy.y }; //xとyを加算して返す.
+		//INT_XY型に変換.
+		XY<int> ToIntXY() const {
+			return {_int_r(x), _int_r(y)};
 		}
-		XY<T> operator-(XY<T>& xy) {
+		//DBL_XY型に変換.
+		XY<double> ToDblXY() const {
+			return {_dbl(x), _dbl(y)};
+		}
+
+		//演算子で計算できるように.
+		XY<T> operator+(const XY<T>& xy) {  //+の右側が引数に入り、返り値が左側に入る.
+			return { x + xy.x, y + xy.y };  //xとyを加算して返す.
+		}
+		XY<T> operator-(const XY<T>& xy) {
 			return { x - xy.x, y - xy.y };
 		}
-		XY<T> operator*(XY<T>& xy) {
+		XY<T> operator*(const XY<T>& xy) {
 			return { x * xy.x, y * xy.y };
 		}
-		XY<T> operator/(XY<T>& xy) {
+		XY<T> operator/(const XY<T>& xy) {
 			return { x / xy.x, y / xy.y };
 		}
 
-		XY<T>& operator+=(XY<T>& xy) {
+		XY<T>& operator+=(const XY<T>& xy) {
 			x += xy.x;
 			y += xy.y;
 			return *this; //自身の実体.
 		}
-		XY<T> operator-=(XY<T>& xy) {
+		XY<T> operator-=(const XY<T>& xy) {
 			x -= xy.x;
 			y -= xy.y;
 			return *this;
 		}
-		XY<T> operator*=(XY<T>& xy) {
+		XY<T> operator*=(const XY<T>& xy) {
 			x *= xy.x;
 			y *= xy.y;
 			return *this;
 		}
-		XY<T> operator/=(XY<T>& xy) {
+		XY<T> operator/=(const XY<T>& xy) {
 			x /= xy.x;
 			y /= xy.y;
 			return *this;

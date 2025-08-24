@@ -1,8 +1,9 @@
 /*
-   - KR_Calc.cpp - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Calc.cpp - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用の計算機能.
+   計算機能を追加します.
+   (オブジェクト指向ver → KR_Object)
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -13,8 +14,10 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
+	Calc Calc::inst; //インスタンスを生成.
+
 	//当たり判定(円と円)
-	bool HitCheckCircle(const Circle* cir1, const Circle* cir2) {
+	bool Calc::HitCheckCircle(const Circle* cir1, const Circle* cir2) {
 
 		//距離差.
 		double x = cir1->pos.x - cir2->pos.x;
@@ -29,7 +32,7 @@ namespace KR_Lib
 		}
 	}
 	//当たり判定(四角と四角)
-	bool HitCheckBox(const Box* box1, const Box* box2) {
+	bool Calc::HitCheckBox(const Box* box1, const Box* box2) {
 
 		//中央基準座標での判定.
 		if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
@@ -42,7 +45,7 @@ namespace KR_Lib
 		}
 	}
 	//当たり判定(線と円)
-	bool HitCheckLine(const Line* line, const Circle* cir) {
+	bool Calc::HitCheckLine(const Line* line, const Circle* cir) {
 
 		//線の始点と終点から傾きを求める.
 		double katamuki;
@@ -90,16 +93,16 @@ namespace KR_Lib
 		}
 	}
 
-	//移動可能範囲内に補正する.
-	void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
+	//範囲内に座標を補正する.
+	void Calc::FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
 
 		if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
 		if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
 		if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
 		if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
 	}
-	//範囲外かどうか.
-	bool IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down, bool isCompOut) {
+	//エリアの範囲外かどうか.
+	bool Calc::IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down, bool isCompOut) {
 
 		//完全に出たら範囲外とする.
 		if (isCompOut) {
@@ -108,7 +111,7 @@ namespace KR_Lib
 			if (pos.x > right + size.x/2) { return true; }
 			if (pos.y > down  + size.y/2) { return true; }
 		}
-		//触れた瞬間に範囲外とする.
+		//ちょっとでも出たら範囲外とする.
 		else {
 			if (pos.x < left  + size.x/2) { return true; }
 			if (pos.y < up    + size.y/2) { return true; }
@@ -119,40 +122,44 @@ namespace KR_Lib
 		return false; //範囲内.
 	}
 
-	//距離計算.
-	double CalcDist(INT_XY pos1, INT_XY pos2) {
+	//距離を求める.
+	//[座標1,座標2 → 長さ]
+	double Calc::CalcDist(INT_XY pos1, INT_XY pos2) {
 
 		double x = pos1.x - pos2.x; //xの差.
 		double y = pos1.y - pos2.y; //yの差.
 
 		return sqrt(x*x + y*y); //斜辺の長さを返す.
 	}
-	double CalcDist(DBL_XY pos1, DBL_XY pos2) {
+	double Calc::CalcDist(DBL_XY pos1, DBL_XY pos2) {
 
 		double x = pos1.x - pos2.x; //xの差.
 		double y = pos1.y - pos2.y; //yの差.
 
 		return sqrt(x*x + y*y); //斜辺の長さを返す.
 	}
-	//2つの座標の中点を計算.
-	DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
+	//中点座標を求める.
+	//[座標1,座標2 → 中点座標]
+	DBL_XY Calc::CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
 
 		double x = (pos1.x + pos2.x)/2; //xの平均.
 		double y = (pos1.y + pos2.y)/2; //yの平均.
 
 		return { x, y };
 	}
-	//始点から角度と長さを入れた座標を計算.
-	DBL_XY CalcArcPos(DBL_XY stPos, double ang, double len) {
+	//角度と長さから円周上の座標を求める.
+	//[座標1,角度,長さ → 座標2]
+	DBL_XY Calc::CalcArcPos(DBL_XY stPos, double ang, double len) {
 
 		//角度をradに変換し、座標の計算.
-		double y = sin(_rad(ang)) * len;
 		double x = cos(_rad(ang)) * len;
+		double y = sin(_rad(ang)) * len;
 
 		return { stPos.x+x, stPos.y+y }; //終点座標を返す.
 	}
-	//始点から目標を見た時の角度を計算.
-	double CalcFacingAng(DBL_XY stPos, DBL_XY targetPos) {
+	//始点座標から対象座標への方向を求める.
+	//[座標1,座標2 → 角度]
+	double Calc::CalcFacingAng(DBL_XY stPos, DBL_XY targetPos) {
 		//座標差.
 		double disX = targetPos.x - stPos.x;
 		double disY = targetPos.y - stPos.y;
@@ -160,41 +167,41 @@ namespace KR_Lib
 		return _deg(atan2(disY, disX));
 	}
 	//角度から座標を求める.
-	DBL_XY CalcDegToPos(double deg) {
-		//座標vector(値が-1～+1になる)を返す.
+	DBL_XY Calc::CalcVectorDeg(double deg) {
+		//座標vector(-1.0～+1.0)を返す.
 		return { cos(_rad(deg)), sin(_rad(deg)) };
 	}
 	//角度から座標を求める.
-	DBL_XY CalcRadToPos(double rad) {
-		//座標vector(値が-1～+1になる)を返す.
+	DBL_XY Calc::CalcVectorRad(double rad) {
+		//座標vector(-1.0～+1.0)を返す.
 		return { cos(rad), sin(rad) };
 	}
 
 	//ease-int: 徐々に加速.
-	double CalcNumEaseIn(double time) {
+	double Calc::CalcNumEaseIn(double time) {
 		time = min(time, 1.0); //上限は1.0
 		time = max(time, 0.0); //下限は0.0
 		return time * time;
 	}
 	//ease-out: 徐々に減速.
-	double CalcNumEaseOut(double time) {
+	double Calc::CalcNumEaseOut(double time) {
 		time = min(time, 1.0); //上限は1.0
 		time = max(time, 0.0); //下限は0.0
 		return 1 - (1-time) * (1-time);
 	}
 	//ease-in-out: 徐々に加速して減速.
-	double CalcNumEaseInOut(double time) {
+	double Calc::CalcNumEaseInOut(double time) {
 		time = min(time, 1.0); //上限は1.0
 		time = max(time, 0.0); //下限は0.0
 		return 0.5 * (1.0 - cos(M_PI*time)); //cosの返り値は1.0 → -1.0
 	}
 	//wave loop: cos波のループ(0.0～1.0)
-	double CalcNumWaveLoop(double time) {
+	double Calc::CalcNumWaveLoop(double time) {
 		return 0.5 - cos(M_PI*time)/2;
 	}
 
 	//値の抽選.
-	int RandNum(int st, int ed, bool isDxRnd) {
+	int Calc::RandNum(int st, int ed, bool isDxRnd) {
 
 		int rnd = 0;
 
@@ -212,7 +219,7 @@ namespace KR_Lib
 		return st + rnd;
 	}
 	//値の抽選(重複なし複数)
-	vector<int> RandNums(int st, int ed, int count, bool isDxRnd) {
+	vector<int> Calc::RandNums(int st, int ed, int count, bool isDxRnd) {
 
 		int unUsedCnt = (ed-st)+1;      //未使用数字はいくつあるか.
 		vector<bool> isUsed((ed-st)+1); //各数字が使用済かどうか.
@@ -243,7 +250,7 @@ namespace KR_Lib
 		return ret;
 	}
 	//値から小数だけ取り出す.
-	double GetDecimal(double num) {
+	double Calc::GetDecimal(double num) {
 		return fmod(num, 1.0); //1.0で割った余り.
 	}
 }

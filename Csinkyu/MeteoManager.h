@@ -16,6 +16,7 @@ private:
 	GameData*      p_data{};      //ゲームデータ.
 	Player*        p_player{};	  //プレイヤーデータ.
 	EffectManager* p_effectMng{};
+	Calc*          p_calc{};
 
 public:
 	void Init(GameData*, Player*, EffectManager*);

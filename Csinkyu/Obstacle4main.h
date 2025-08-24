@@ -35,6 +35,7 @@ protected:
 	Player*       p_player{};
 	MeteoManager* p_meteoMng{};
 	LaserManager* p_laserMng{};
+	Calc*         p_calc{};
 
 public:
 	//Šî–{ˆ—.

@@ -43,6 +43,7 @@ private:
 	Effect effect[EFFECT_MAX]{};
 
 	GameData* p_data{};
+	Calc*     p_calc{};
 
 public:
 	void Init(GameData*);

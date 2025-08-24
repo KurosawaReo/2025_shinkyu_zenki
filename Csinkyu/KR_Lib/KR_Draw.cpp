@@ -1,8 +1,9 @@
 /*
-   - KR_Draw.cpp - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Draw.cpp - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用の描画機能.
+   描画機能を追加します.
+   (オブジェクト指向ver → KR_Object)
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -58,20 +59,6 @@ namespace KR_Lib
 		for (auto& i : data) {
 			DeleteGraph(i.handle); //画像解放.
 		}
-	}
-	//set, get.
-	void DrawDivImg::SetImage(Image* _data, int imgNo) {
-		//サイズをオーバーしてないなら.
-		if (_is_in_range(imgNo, 0, data.size() - 1)) {
-			data[imgNo] = *_data;
-		}
-	}
-	Image* DrawDivImg::GetImage(int imgNo) {
-		//サイズをオーバーしてないなら.
-		if (_is_in_range(imgNo, 0, data.size() - 1)) {
-			return &data[imgNo];
-		}
-		return nullptr; //nullを返す.
 	}
 
 	//LoadGraphの改造版.

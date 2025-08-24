@@ -1,8 +1,8 @@
 /*
-   - KR_Input.h - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Input.h - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用の入力操作機能.
+   入力操作機能を追加します.
 */
 #pragma once
 
@@ -108,11 +108,11 @@ namespace KR_Lib
 	constexpr int MOUSE_MAX   = 3;
 	constexpr int PAD_BTN_MAX = 32;
 
-	//入力管理クラス.
-	class Input
+	//入力管理クラス[継承不可]
+	class InputMng final
 	{
 	private: //実体.
-		static Input inst; //自身のインスタンス.
+		static InputMng inst; //自身のインスタンス.
 
 	private: //データ.
 		int tmKey   [KEY_MAX];     //キーを押している時間.
@@ -122,9 +122,12 @@ namespace KR_Lib
 		INT_XY mPos;     //マウス座標.
 		INT_XY stickVec; //スティック入力.
 
+	private: //関数.
+		DBL_XY GetVector4Dir(INT_XY pow);
+
 	public:
 		//実体の取得.
-		static Input* GetPtr() {
+		static InputMng* GetPtr() {
 			return &inst;
 		}
 
@@ -140,13 +143,12 @@ namespace KR_Lib
 
 		//取得.
 		void   GetMousePos     (DBL_XY* pos, bool isValidX = true, bool isValidY = true);
-		void   GetPadStickVec  (DBL_XY* pos);
+		void   GetPadStickXY   (DBL_XY* pos);
 
 		//移動系.
-		void   InputKey4Dir    (DBL_XY* pos, float speed);
-		void   InputPad4Dir    (DBL_XY* pos, float speed);
-		void   InputPadStick   (DBL_XY* pos, float speed);
-		DBL_XY Move4Dir        (INT_XY  pow);
+		void   MoveKey4Dir     (DBL_XY* pos, float speed);
+		void   MovePad4Dir     (DBL_XY* pos, float speed);
+		void   MovePadStick    (DBL_XY* pos, float speed);
 
 		//更新.
 		void   UpdateKey();

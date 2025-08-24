@@ -1,8 +1,8 @@
 /*
-   - KR_Input.cpp - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Input.cpp - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用の入力操作機能.
+   入力操作機能を追加します.
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -13,38 +13,38 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	Input Input::inst; //インスタンスを生成.
+	InputMng InputMng::inst; //インスタンスを生成.
 
 	//キー入力の判定.
-	bool Input::IsPushKey(KeyID id) {
+	bool InputMng::IsPushKey(KeyID id) {
 		return (tmKey[id] > 0);    //押してるならtrue.
 	}
-	int  Input::IsPushKeyTime(KeyID id) {
+	int  InputMng::IsPushKeyTime(KeyID id) {
 		return tmKey[id];          //押している時間.
 	}
 	//マウス入力の判定.
-	bool Input::IsPushMouse(MouseID id) {
+	bool InputMng::IsPushMouse(MouseID id) {
 		return (tmMouse[id] > 0);  //押してるならtrue.
 	}
-	int  Input::IsPushMouseTime(MouseID id) {
+	int  InputMng::IsPushMouseTime(MouseID id) {
 		return tmMouse[id];        //押している時間.
 	}
 	//コントローラ入力の判定.
-	bool Input::IsPushPadBtn(PadXboxID id) {
+	bool InputMng::IsPushPadBtn(PadXboxID id) {
 		return (tmPadBtn[id] > 0); //押してるならtrue.
 	}
-	bool Input::IsPushPadBtn(PadSwitchID id) {
+	bool InputMng::IsPushPadBtn(PadSwitchID id) {
 		return (tmPadBtn[id] > 0); //押してるならtrue.
 	}
-	int  Input::IsPushPadBtnTime(PadXboxID id) {
+	int  InputMng::IsPushPadBtnTime(PadXboxID id) {
 		return tmPadBtn[id];       //押している時間.
 	}
-	int  Input::IsPushPadBtnTime(PadSwitchID id) {
+	int  InputMng::IsPushPadBtnTime(PadSwitchID id) {
 		return tmPadBtn[id];       //押している時間.
 	}
 
 	//マウス座標取得.
-	void Input::GetMousePos(DBL_XY* pos, bool isValidX, bool isValidY) {
+	void InputMng::GetMousePos(DBL_XY* pos, bool isValidX, bool isValidY) {
 	
 		//xを反映させる.
 		if (isValidX) {
@@ -56,14 +56,14 @@ namespace KR_Lib
 		}
 	}
 	//コントローラスティック操作取得.
-	void Input::GetPadStickVec(DBL_XY* pos) {
+	void InputMng::GetPadStickXY(DBL_XY* pos) {
 		//範囲-1000～1000を-1.0～1.0に変換.
 		pos->x = (double)stickVec.x/1000;
 		pos->y = (double)stickVec.y/1000;
 	}
 
 	//キーボード:十字キー操作.
-	void Input::InputKey4Dir(DBL_XY* pos, float speed) {
+	void InputMng::MoveKey4Dir(DBL_XY* pos, float speed) {
 
 		INT_XY pow{}; //移動力.
 
@@ -82,11 +82,11 @@ namespace KR_Lib
 		}
 
 		//座標移動.
-		pos->x += Move4Dir(pow).x * speed;
-		pos->y += Move4Dir(pow).y * speed;
+		pos->x += GetVector4Dir(pow).x * speed;
+		pos->y += GetVector4Dir(pow).y * speed;
 	}
 	//コントローラ:十字キー操作.
-	void Input::InputPad4Dir(DBL_XY* pos, float speed) {
+	void InputMng::MovePad4Dir(DBL_XY* pos, float speed) {
 
 		INT_XY pow{};  //移動力.
 
@@ -105,21 +105,21 @@ namespace KR_Lib
 		}
 
 		//座標移動.
-		pos->x += Move4Dir(pow).x * speed;
-		pos->y += Move4Dir(pow).y * speed;
+		pos->x += GetVector4Dir(pow).x * speed;
+		pos->y += GetVector4Dir(pow).y * speed;
 	}
 	//コントローラ:スティック操作.
-	void Input::InputPadStick(DBL_XY* pos, float speed) {
+	void InputMng::MovePadStick(DBL_XY* pos, float speed) {
 	
 		DBL_XY vec;
-		GetPadStickVec(&vec); //入力取得.
+		GetPadStickXY(&vec); //入力取得.
 
 		//座標移動.
 		pos->x += vec.x * speed;
 		pos->y += vec.y * speed;
 	}
 	//移動4方向処理(斜め計算)
-	DBL_XY Input::Move4Dir(INT_XY pow){
+	DBL_XY InputMng::GetVector4Dir(INT_XY pow){
 
 		DBL_XY move{}; //求めた移動量.
 
@@ -138,7 +138,7 @@ namespace KR_Lib
 	}
 
 	//ボタンの更新処理.
-	void Input::UpdateKey() {
+	void InputMng::UpdateKey() {
 	
 		char key[KEY_MAX];
 		GetHitKeyStateAll(key); //押しているキー情報を取得.
@@ -154,7 +154,7 @@ namespace KR_Lib
 		}
 	}
 	//マウスの更新処理.
-	void Input::UpdateMouse() {
+	void InputMng::UpdateMouse() {
 
 		//マウス座標取得.
 		GetMousePoint(&mPos.x, &mPos.y);
@@ -170,7 +170,7 @@ namespace KR_Lib
 		}
 	}
 	//コントローラの更新処理.
-	void Input::UpdatePad() {
+	void InputMng::UpdatePad() {
 
 		//スティック入力取得.
 		GetJoypadAnalogInput(&stickVec.x, &stickVec.y, DX_INPUT_PAD1);

@@ -1,8 +1,8 @@
 /*
-   - KR_Timer.h - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Timer.h - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用のタイマー機能.
+   タイマー機能を追加します.
 */
 #pragma once
 
@@ -44,7 +44,7 @@ namespace KR_Lib
 			tmSavePass = tmInit; //初期時刻.
 			isMove = false;
 		}
-		bool GetIsMove() {
+		bool GetIsMove() const {
 			return isMove;
 		}
 
@@ -85,7 +85,7 @@ namespace KR_Lib
 			tmSavePass = tmInit; //初期時刻.
 			isMove = false;
 		}
-		bool GetIsMove() {
+		bool GetIsMove() const {
 			return isMove;
 		}
 

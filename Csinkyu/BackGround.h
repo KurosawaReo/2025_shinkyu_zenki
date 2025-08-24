@@ -34,6 +34,7 @@ private:
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 
 	GameData* p_data{}; //ゲームデータ.
+	Calc*     p_calc{}; //計算機能.
 
 public:
 	void Init(GameData*);

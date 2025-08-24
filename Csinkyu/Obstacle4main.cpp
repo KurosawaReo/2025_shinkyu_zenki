@@ -17,6 +17,7 @@ void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoM
 	p_player   = _player;
 	p_meteoMng = _meteoMng;
 	p_laserMng = _laserMng;
+	p_calc     = Calc::GetPtr();
 }
 //リセット.
 void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
@@ -156,8 +157,8 @@ void Obstacle4main::DrawPreLaserDots() {
 		int blinkAlpha = _int_r(128 + 127 * sin(blinkProgress * M_PI * 8)); // 点滅
 
 		//サイズを徐々に大きく.
-		float dotSize  = (float)(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER1_SIZE);
-		float dotSize2 = (float)(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER2_SIZE);
+		float dotSize  = (float)(3 + p_calc->CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER1_SIZE);
+		float dotSize2 = (float)(3 + p_calc->CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER2_SIZE);
 		//円情報.
 		Circle cir = {{Hx, Hy}, dotSize, GetColor(0, 255, 255)};
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);

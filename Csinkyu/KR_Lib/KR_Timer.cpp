@@ -1,8 +1,8 @@
 /*
-   - KR_Timer.cpp - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Timer.cpp - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用のタイマー機能.
+   タイマー機能を追加します.
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.

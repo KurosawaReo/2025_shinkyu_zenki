@@ -25,13 +25,13 @@ void BG_Tile::Draw(bool isSlow, double slowTime) {
 	{
 		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
-		img[0]->DrawExtend(_dblXY(pos), sizeRate, ANC_MID);
+		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
 	}
 	//反射モード.
 	if (isSlow) {
 		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
-		img[1]->DrawExtend(_dblXY(pos), sizeRate, ANC_MID);
+		img[1]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
 	}
 	ResetDrawBlendMode(); //描画モードリセット.
 }
@@ -49,13 +49,14 @@ void BG_Tile::Shine() {
 void BackGround::Init(GameData* _data) {
 
 	p_data = _data;
+	p_calc = Calc::GetPtr();
 
 	imgBG[0].LoadFile(_T("Resources/Images/bg_normal.png"));
 	imgBG[1].LoadFile(_T("Resources/Images/bg_reflect.png"));
 
 	{
-		INT_XY imgSize  = imgBG[0].GetImage()->size; //画像サイズ取得.
-		DBL_XY sizeRate = { 0.1, 0.1 };              //サイズ倍率.
+		INT_XY imgSize  = imgBG[0].GetSize(); //画像サイズ取得.
+		DBL_XY sizeRate = { 0.1, 0.1 };       //サイズ倍率.
 
 		INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
 
@@ -92,7 +93,7 @@ void BackGround::Draw() {
 	float pass = GameManager::GetPtr()->GetSlowModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(SLOW_MODE_TIME-0.5));
-	time = CalcNumEaseOut(time); //値の曲線変動.
+	time = p_calc->CalcNumEaseOut(time); //値の曲線変動.
 
 	//いくつかのパターンを用意.(デザイン案)
 #if false
@@ -141,7 +142,7 @@ void BackGround::Draw() {
 #else
 	//一定間隔ごと.
 	if (tmShine.IntervalTime()) {
-		int idx = RandNum(0, (int)tiles.size()-1);
+		int idx = p_calc->RandNum(0, (int)tiles.size()-1);
 		tiles[idx].Shine(); //ランダムでタイルを発光させる.
 	}
 	//描画.

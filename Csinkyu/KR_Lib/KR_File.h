@@ -1,8 +1,8 @@
 /*
-   - KR_File.h - (kurosawa original)
-   ver: 2025/08/23
+   - KR_File.h - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用のファイル操作機能.
+   ファイル操作機能を追加します.
 */
 #pragma once
 
