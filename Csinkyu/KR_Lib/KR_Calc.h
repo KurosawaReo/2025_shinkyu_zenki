@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/08/25
 
    計算機能を追加します.
    (オブジェクト指向ver → KR_Object)
@@ -27,9 +27,10 @@ namespace KR_Lib
 		}
 
 		//当たり判定.
-		bool		HitCheckCircle	(const Circle* cir1, const Circle* cir2);
-		bool		HitCheckBox		(const Box*    box1, const Box*    box2);
-		bool		HitCheckLine	(const Line*   line, const Circle* cir);
+		bool		HitCirCir	(const Circle* cir1, const Circle* cir2);
+		bool		HitBoxBox	(const Box*    box1, const Box*    box2);
+		bool		HitBoxCir	(const Box*    box,  const Circle* cir);
+		bool		HitLineCir	(const Line*   line, const Circle* cir);
 
 		//移動限界.
 		void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);

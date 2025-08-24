@@ -3,6 +3,7 @@
    ver: 2025/08/24
 
    入力操作機能を追加します.
+   (オブジェクト指向ver → KR_Object)
 */
 #pragma once
 

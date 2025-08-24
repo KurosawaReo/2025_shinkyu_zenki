@@ -131,7 +131,7 @@ void ItemManager::CheckHitPlayer(int idx)
 	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//“–‚½‚Á‚½ê‡.
-	if (p_calc->HitCheckBox(&plyBox, &itemBox)) {
+	if (p_calc->HitBoxBox(&plyBox, &itemBox)) {
 		OnHitPlayer(idx);
 	}
 }
