@@ -77,7 +77,7 @@
 
    2025/08/23:
    新障害物「花火」を追加する。Level4で登場予定。
-   後日詳細相談, なおとに作らせてもいいかも。
+   詳しくは後日相談, なおとに作ってもらう?
 
 /---------------------------------------------------------/
    前期発表会後 変更内容
@@ -207,7 +207,7 @@ void GameManager::Init() {
 		data.bestScore = file.ReadInt(); //数字を読み込んで登録.
 	}
 	
-	data.stage = 1; //test
+	data.stage = 2; //test
 
 	Reset();
 }
@@ -356,10 +356,12 @@ void GameManager::UpdateReady() {
 }
 void GameManager::UpdateGame() {
 	
+#if defined _DEBUG //Releaseでは入れない.
 	//タイマー加速(Debug)
 	if (p_input->IsPushKey(KEY_L) == 1) {
 		data.counter += 10;
 	}
+#endif
 
 	//カウンター増加.
 	data.counter += ((data.isSlow) ? SLOW_MODE_SPEED : 1);
