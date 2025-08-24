@@ -3,28 +3,73 @@
    プレイヤー管理.
 */
 #pragma once
+#include "EffectManager.h"
 
-//extern POINT Get(int x, int y);//X地点とY地点からPOINT型を一時的に取得.
-//extern BOOL  CollPointToPoint(POINT a, POINT b);//点と点があったっているか.
-//extern RECT  GetRect(int left, int top, int right, int bottom);
-//extern int   PlayerX, PlayerY, PlayerGraph;
+//ダッシュエフェクト.
+struct ReflectEffect
+{
+	DBL_XY pos;           // エフェクト位置
+	float  scale;         // スケール
+	float  alpha;         // 透明度
+	int    timer;         // 表示時間
+	bool   active;        // 有効フラグ
+};
+
+//プレイヤーモード.
+enum PlayerMode
+{
+	Player_Normal,
+	Player_Reflect,     //反射モード.
+	Player_SuperReflect //反射モード強化版.
+};
 
 class Player
 {
 private:
-	DBL_XY pos;    //位置.
-	int    graph;  //画像データ.
-	BOOL   active; //有効か.
+	PlayerMode mode{}; //モード.
+	
+	Circle hit{};      //プレイヤーの当たり判定円.
+	bool   active{};   //有効か.
+	bool   isDebug{};  //デバッグ用.
+
+	float  afterCntr{};					   //残像用時間カウンター.
+	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
+
+	GameData*      p_data{};      //ゲームデータ.
+	EffectManager* p_effectMng{}; //エフェクト管理.
+	InputMng*      p_input{};     //入力機能.
+	Calc*          p_calc{};      //計算機能.
 
 public:
-	void Init();
-	void Update();
-	void Draw();
-	void PlayerMove(); //プレイヤー移動.
+
+	//???
+	static const int MAX_REFLECT_EFFECTS = 5;  // 最大エフェクト数
+	ReflectEffect reflectEffects[MAX_REFLECT_EFFECTS]{};  // エフェクト配列
+	int reflectEffectIndex{};  // 次に使用するエフェクトのインデックス
 
 	//set.
-	void   SetActive(BOOL _active) { active = _active; }
-	//get.
-	DBL_XY GetPos()    { return pos; }
-	BOOL   GetActive() { return active; }
+	void       SetActive(bool _active)     { active = _active; }
+	void       SetMode  (PlayerMode _mode) { mode   = _mode;   } //モード設定.
+	//get. 
+	DBL_XY     GetPos()   { return hit.pos; }
+	bool       GetActive(){ return active; }
+	PlayerMode GetMode()  { return mode; }
+	Circle*    GetHit()   { return &hit; }
+
+
+	//その他.
+	void Init  (GameData*, EffectManager*);
+	void Reset (DBL_XY _pos, bool _active);
+	void Update();
+	void Draw  ();
+
+	void PlayerMove();       //プレイヤー移動.
+	void PlayerDeath();      //プレイヤー死亡.
+
+	void UpdateAfterImage(); //残像更新.
+	void DrawAfterImage();   //残像描画.
+
+	void CreateReflectEffect(DBL_XY pos);
+	void UpdateReflectEffects();
+	void DrawReflectEffects();
 };

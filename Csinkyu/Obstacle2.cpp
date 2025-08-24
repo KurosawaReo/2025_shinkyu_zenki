@@ -3,19 +3,18 @@
    障害物管理クラス（追尾ミサイル）の実装ファイル
    プレイヤーを追跡するミサイルの生成・動作・衝突判定を管理する
 */
-#include "Player.h"    // プレイヤークラスのヘッダーをインクルード
+#include "Player.h"	   // プレイヤークラスのヘッダーをインクルード
 #include "Obstacle2.h" // 障害物クラスのヘッダーをインクルード
 
 // 初期化関数
-void Obstacle2::Init(Player* _player)
+void Obstacle2::Init(GameData* _data, Player* _player)
 {
-	// 敵の画像を読み込む.
-	LoadGraphST(&img, _T("image/enemy.png"));
-	// img.handle;  読み込んだ画像.
-	// img.size.x;  画像の幅
-	// img.size.y;/ 画像の高さ
-
+	data   = _data;
 	player = _player; // プレイヤーのポインタを保存
+}
+
+// リセット
+void Obstacle2::Reset() {
 
 	// すべてのミサイルの状態を初期化.
 	for (int i = 0; i < MAX_M; i++)
@@ -24,7 +23,7 @@ void Obstacle2::Init(Player* _player)
 	}
 
 	// ミサイル発射カウントをリセット.
-	hsc = 30;
+	hsc = OBSTACLE2_SPAN;
 }
 
 // 更新関数
@@ -44,7 +43,7 @@ void Obstacle2::Draw()
 
 		double size = 0.1; // 描画サイズ仮の値
 		// ミサイルを回転させて描画する位置、サイズ、角度、画像ハンドル、透過フラグ
-		DrawRotaGraph(Mx[i], My[i], size, Ma[i], img.handle, TRUE);
+		DrawRotaGraph(_int_r(Mx[i]), _int_r(My[i]), size, Ma[i], img.handle, true);
 	}
 }
 
@@ -55,10 +54,10 @@ void Obstacle2::enemyMove()
 	// extern Player player;
 
 	// ミサイル発射カウンタを少なくする.
-	hsc--;
+	hsc -= (float)((data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 	// カウンタが0になったらミサイルを発射.
-	if (hsc == 0)
+	if (hsc <= 0)
 	{
 		// 使われていないミサイルデータ（Mv[i]=0）を探す.
 		for (int i = 0; i < MAX_M; i++)
@@ -91,7 +90,7 @@ void Obstacle2::enemyMove()
 		}
 
 		// 次のミサイル発射までのカウンタをリセット
-		hsc = 30;
+		hsc = OBSTACLE2_SPAN;
 	}
 
 	// すべてのミサイルの移動処理
@@ -105,9 +104,9 @@ void Obstacle2::enemyMove()
 
 		// 衝突判定の条件チェック（矩形同士の交差判定）
 		int x = Mx[i] < player->GetPos().x + PLAYER_SIZE;    // ミサイルの左端がプレイヤーの右端より左にあるか
-		int x2 = Mx[i] + 16 > player->GetPos().x;           // ミサイルの右端がプレイヤーの左端より右にあるか
+		int x2 = Mx[i] + 16 > player->GetPos().x;            // ミサイルの右端がプレイヤーの左端より右にあるか
 		int y = My[i] < player->GetPos().y + PLAYER_SIZE;    // ミサイルの上端がプレイヤーの下端より上にあるか
-		int y2 = My[i] + 16 > player->GetPos().y;           // ミサイルの下端がプレイヤーの上端より下にあるか
+		int y2 = My[i] + 16 > player->GetPos().y;            // ミサイルの下端がプレイヤーの上端より下にあるか
 
 		// すべての条件が真なら衝突している
 		if (x && x2 && y && y2)
@@ -119,6 +118,7 @@ void Obstacle2::enemyMove()
 		if (isCollison)
 		{
 			Mv[i] = 0;
+			player->PlayerDeath();
 			continue;
 		}
 
@@ -142,7 +142,7 @@ void Obstacle2::enemyMove()
 			while (angleDiff < -M_PI) angleDiff += 2 * M_PI;
 
 			// 一度に回転できる最大角度を制限して滑らかな追尾を実現
-			double turnSpeed = (M_PI / 180.0) * 5.0; // 1フレームあたり最大5度回転
+			double turnSpeed = (M_PI/180.0) * OBSTACLE2_ROT_MAX;
 
 			// 角度を更新（差がほぼ0なら調整しない、差が正なら右回り、負なら左回りに調整）
 			//fabsは少数の絶対値を計算する関数
@@ -177,10 +177,13 @@ void Obstacle2::enemyMove()
 		// cosは角度からX座標の比率を、sinは角度からY座標の比率を教えてくれる
 		// どちらも - 1から1の間の値を返すよ！
 
+		// ミサイルの速度
+		double speed = OBSTACLE2_SPEED;
+		if (data->isSlow) { speed *= SLOW_MODE_SPEED; }
+
 		// 現在の角度に基づいてミサイルを移動させる
-		double speed = 4.0; // ミサイルの速度
-		Mx[i] += (int)(cos(Ma[i]) * speed); // X方向の移動
-		My[i] += (int)(sin(Ma[i]) * speed); // Y方向の移動
+		Mx[i] += cos(Ma[i]) * speed; // X方向の移動
+		My[i] += sin(Ma[i]) * speed; // Y方向の移動
 
 		// 画面外に出たらミサイルを無効化
 		if (Mx[i] < -100 || Mx[i] > 740 || My[i] < -100 || My[i] > 500)

@@ -2,81 +2,313 @@
    - Player.cpp -
    プレイヤー管理.
 */
+#include "GameManager.h"
+#include "Obstacle4main.h"
+
 #include "Player.h"
 
-//初期化.
-void Player::Init()
+//初期化(一回のみ行う)
+void Player::Init(GameData* _data, EffectManager* _effectMng)
 {
-	pos    = { 100, 100 }; //初期位置.
-	active = TRUE;
+	p_data      = _data;
+	p_effectMng = _effectMng;
+	p_input     = InputMng::GetPtr();
+	p_calc      = Calc::GetPtr();
+
+	isDebug = false;
+}
+//リセット(何回でも行う)
+void Player::Reset(DBL_XY _pos, bool _active)
+{
+	hit       = { _pos, PLAYER_SIZE/2, {} };
+	active    = _active;
+	mode      = Player_Normal;
+	afterCntr = 1;
+
+	//座標配列のリセット.
+	for (int i = 0; i < _countof(afterPos); i++) {
+		afterPos[i] = _pos;
+	}
+	// 反射エフェクト初期化を追加
+	reflectEffectIndex = 0;
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		reflectEffects[i].active = false;
+		reflectEffects[i].timer = 0;
+		reflectEffects[i].alpha = 0.0f;
+		reflectEffects[i].scale = 1.0f;
+		reflectEffects[i].pos = _pos;
+	}
 }
 //更新.
 void Player::Update()
 {
+	//デバッグモード切り替え.
+	if (p_input->IsPushKeyTime(KEY_M) == 1) {
+		isDebug = !isDebug;
+	}
+
+	//テスト用：Eキーで反射エフェクトを生成
+	if (p_input->IsPushKeyTime(KEY_E) == 1) {
+		CreateReflectEffect(hit.pos);
+	}
+
 	//有効なら.
 	if (active) {
+		UpdateAfterImage();
+		UpdateReflectEffects();
 		PlayerMove();
 	}
 }
 //描画.
 void Player::Draw()
 {
+	//デバッグ表示.
+	if (isDebug) {
+		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
+		str.Draw(ANC_MID, p_data->font1);
+	}
+	// エフェクトのデバッグ情報表示
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		if (reflectEffects[i].active) {
+			TCHAR debugStr[128];
+			_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
+				i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
+			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
+		}
+	}
+
 	//有効なら.
 	if (active) {
-		unsigned int Cr;
-		Cr = GetColor(255, 255, 255); // 白色
+		DrawAfterImage();
+		DrawReflectEffects();  // エフェクトを先に描画
 
-		// 四角形を描画（プレイヤーの位置に）
-		int x  = _int(pos.x - PLAYER_SIZE/2);
-		int y  = _int(pos.y - PLAYER_SIZE/2);
-		int dx = _int(pos.x + PLAYER_SIZE/2);
-		int dy = _int(pos.y + PLAYER_SIZE/2);
-		DrawBox(x, y, dx, dy, Cr, TRUE);
+		//四角形.
+		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
+		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
+
+		//反射モード中の色.
+		if (mode == Player_Reflect || 
+			mode == Player_SuperReflect
+		){
+			box1.color = box2.color = COLOR_PLY_REFLECT;
+		}
+		//デバッグモード中.
+		if (isDebug) {
+			box1.color = box2.color = COLOR_PLY_DEBUG;
+		}
+
+		DrawBoxST(&box1, ANC_MID, false, true);
+		DrawBoxST(&box2, ANC_MID, false, true);
 	}
+}
+
+//残像更新.
+void Player::UpdateAfterImage()
+{
+	afterCntr -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+
+	//残像を残すタイミングになったら(基本は毎フレーム)
+	if (afterCntr <= 0) {
+		afterCntr = 1;
+
+		//残像データを後ろにずらす.
+		for (int i = PLAYER_AFT_IMG_NUM - 1; i > 0; i--)
+		{
+			afterPos[i] = afterPos[i - 1];
+		}
+		afterPos[0] = hit.pos; //プレイヤー座標を1フレーム目に記録.
+	}
+}
+
+//残像描画.
+void Player::DrawAfterImage()
+{
+	//残像処理.
+	for (int i = 0; i < PLAYER_AFT_IMG_NUM; i++)
+	{
+		//プレイヤーの位置と同じじゃなければ.
+		if (afterPos[i].x != hit.pos.x || afterPos[i].y != hit.pos.y) {
+
+			//透明度の計算.
+			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
+			//透明度反映.
+			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
+
+			Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
+			//反射カラー.
+			if (mode == Player_Reflect ||
+				mode == Player_SuperReflect
+			){
+				box.color = COLOR_PLY_AFT_REF;
+			}
+			//通常カラー.
+			else
+			{
+				box.color = COLOR_PLY_AFT_NOR;
+			}
+
+			DrawBoxST(&box, ANC_MID, false, true);
+		}
+	}
+
+	//描画モードリセット.
+	ResetDrawBlendMode();
 }
 
 //移動処理(斜め対応)
 void Player::PlayerMove()
-{	
-	INT_XY pow{};  //移動力.
-	DBL_XY move{}; //求めた移動量.
-
-	//キー入力に応じて移動力を与える.
-	if (CheckHitKey(KEY_INPUT_UP))
-	{
-		pow.y += -1;
+{
+	//移動する.
+	if (p_data->isSlow) {
+		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
+		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
 	}
-	if (CheckHitKey(KEY_INPUT_DOWN))
-	{
-		pow.y += +1;
+	else {
+		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED);
+		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED);
 	}
-	if (CheckHitKey(KEY_INPUT_LEFT))
-	{
-		pow.x += -1;
-	}
-	if (CheckHitKey(KEY_INPUT_RIGHT))
-	{
-		pow.x += +1;
-	}
-
-	//移動力があれば.
-	if (pow.x != 0 || pow.y != 0) {
-
-		//角度にする.
-		double theta = atan2(pow.y, pow.x);
-		//移動量を求める.
-		move = { cos(theta), sin(theta) };
-		//ほぼ0の値なら0と見なす(計算上誤差があるため)
-		if (fabs(move.x) < 0.0001) { move.x = 0; }
-		if (fabs(move.y) < 0.0001) { move.y = 0; }
-	}
-
-	//座標移動.
-	pos.x += move.x * PLAYER_MOVE_SPEED;
-	pos.y += move.y * PLAYER_MOVE_SPEED;
 	//移動限界.
-	if (pos.x < 0 + PLAYER_SIZE/2) pos.x = PLAYER_SIZE/2;
-	if (pos.y < 0 + PLAYER_SIZE/2) pos.y = PLAYER_SIZE/2;
-	if (pos.x > WINDOW_WID - PLAYER_SIZE/2) pos.x = WINDOW_WID - PLAYER_SIZE/2;
-	if (pos.y > WINDOW_HEI - PLAYER_SIZE/2) pos.y = WINDOW_HEI - PLAYER_SIZE/2;
+	p_calc->FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+}
+
+// 反射エフェクト生成
+void Player::CreateReflectEffect(DBL_XY pos)
+{
+	ReflectEffect* effect = &reflectEffects[reflectEffectIndex];
+
+	effect->pos = pos;
+	effect->scale = 1.0f;
+	effect->alpha = 255.0f;
+	effect->timer = 30;  // 30フレーム表示
+	effect->active = true;
+
+	// 次のインデックスに移動（循環）
+	reflectEffectIndex = (reflectEffectIndex + 1) % MAX_REFLECT_EFFECTS;
+}
+
+// 反射エフェクト更新
+void Player::UpdateReflectEffects()
+{
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		if (reflectEffects[i].active) {
+			reflectEffects[i].timer--;
+			reflectEffects[i].scale += 0.1f;      // 拡大速度を少し遅く
+			reflectEffects[i].alpha -= 6.0f;     // フェードアウト速度を少し遅く
+
+			// タイマーが0になったか透明度が0以下になったら非アクティブ
+			if (reflectEffects[i].timer <= 0 || reflectEffects[i].alpha <= 0) {
+				reflectEffects[i].active = false;
+			}
+		}
+	}
+}
+
+// 反射エフェクト描画
+void Player::DrawReflectEffects()
+{
+	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+		if (reflectEffects[i].active) {
+			ReflectEffect* effect = &reflectEffects[i];
+
+			// 点滅効果の計算（2フレームごとに点滅）
+			bool isFlashOn = ((effect->timer / 2) % 2) == 0;
+			if (!isFlashOn) continue;  // 点滅のOFFフレームなら描画しない
+
+			// エフェクトのサイズ計算
+			int baseSize = (int)(PLAYER_SIZE * effect->scale);
+			int alpha = (int)max(0, min(255, effect->alpha));
+
+			// アルファが0以下なら描画しない
+			if (alpha <= 0) continue;
+
+			// 点滅による輝度変化（強めの点滅）
+			float flashIntensity = (effect->timer % 4 < 2) ? 1.5f : 0.8f;
+			alpha = (int)(alpha * flashIntensity);
+			alpha = min(255, max(0, alpha));
+
+			// ピンク色の設定（より明るく、点滅で変化）
+			UINT color = GetColor(
+				min(255, (int)(alpha * flashIntensity)),
+				alpha * 80 / 255,
+				min(255, alpha * 150 / 255)
+			);
+
+			// アルファブレンドモード設定（エフェクトごとに設定）
+			SetDrawBlendModeST(MODE_ALPHA, alpha);
+
+			// 四角い波紋を描画
+			for (int wave = 0; wave < 3; wave++) {
+				int waveSize = baseSize + wave * 8; // 各波紋のサイズ
+				int waveAlpha = alpha - wave * 50;  // 外側ほど薄く
+
+				if (waveAlpha > 0) {
+					// より明るいピンク色（点滅効果付き）
+					UINT waveColor = GetColor(
+						min(255, (int)(waveAlpha * 2 * flashIntensity)),
+						waveAlpha * 80 / 255,
+						min(255, (int)(waveAlpha * 150 / 255))
+					);
+
+					// 四角い枠線で波紋を描画（太い線）
+					Box waveBox = {
+						effect->pos,
+						{ (double)waveSize, (double)waveSize },
+						waveColor
+					};
+
+					// 枠線を太くするため複数回描画
+					for (int thickness = 0; thickness < 2; thickness++) {
+						Box thickBox = {
+							{ effect->pos.x - thickness, effect->pos.y - thickness },
+							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
+							waveColor
+						};
+						DrawBoxST(&thickBox, ANC_MID, false, true);
+					}
+				}
+			}
+
+			// 中央の四角い光点（点滅で色と大きさが変化）
+			int centerSize = (int)(12 * flashIntensity);
+			UINT centerColor = GetColor(
+				min(255, (int)(255 * flashIntensity)),
+				min(255, (int)(150 * flashIntensity)),
+				min(255, (int)(255 * flashIntensity))
+			);
+
+			Box centerBox = {
+				effect->pos,
+				{ (double)centerSize, (double)centerSize },
+				centerColor
+			};
+			DrawBoxST(&centerBox, ANC_MID, false, true);
+
+			// 描画モードリセット
+			ResetDrawBlendMode();
+		}
+	}
+}
+
+//死亡処理.
+void Player::PlayerDeath() {
+
+	//デバッグモード中は無敵.
+	if (isDebug) { return; }
+
+	//まだ生存してるなら.
+	if (active) {
+
+		//サウンド.
+		SoundMng* sound = SoundMng::GetPtr();
+		sound->Play(_T("PlayerDeath"), false, 80);
+		//エフェクト.
+		EffectData data{};
+		data.type = Effect_PlayerDeath;
+		data.pos  = hit.pos;
+		p_effectMng->SpawnEffect(&data);
+		//GamaManagerの関数実行(includeだけすれば使える)
+		GameManager::GetPtr()->GameEnd(); //ゲーム終了.
+	
+		active = false;
+	}
 }

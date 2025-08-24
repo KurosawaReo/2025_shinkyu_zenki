@@ -1,0 +1,187 @@
+/*
+   - KR_Sound.cpp - (DxLib)
+   ver: 2025/08/24
+
+   サウンド機能を追加します.
+*/
+#if !defined DEF_KR_GLOBAL
+  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
+  #include "KR_Timer.h"
+  using namespace KR_Lib;
+#endif
+#include "KR_Sound.h"
+
+//KR_Libに使う用.
+namespace KR_Lib
+{
+// ▼*---=[ SoundData ]=---*▼ //
+
+	//コンストラクタ(Timer機能を使うためcpp側に入れる)
+	SoundData::SoundData() 
+		: handle(-1), nowVol(-1), aftVol(-1) 
+	{
+		timer = new TimerMicro(COUNT_UP, 0); //アドレスを保存.
+	};
+	//デストラクタ.
+	SoundData::~SoundData() {
+		delete timer; timer = nullptr;
+	};
+
+	//サウンド解放.
+	void SoundData::Release() {
+	
+		//データが登録されていれば.
+		if (handle >= 0) {
+			DeleteSoundMem(handle); //解放.
+		}
+	}
+	//サウンド更新.
+	void SoundData::Update() {
+	
+		//音量が変化するなら.
+		if (nowVol != aftVol) {
+			//変化時間がある.
+			if (aftUS > 0) {
+
+				LONGLONG us = timer->GetPassTime(); //経過時間入手.
+
+				//現在のボリュームを求める.
+				assert(aftUS != 0);                                          //0割対策.
+				int vol = _int(nowVol - (nowVol - aftVol) * _flt(us)/aftUS); //now - 変化量 * 変化時間割合.
+
+				//変化し終わったら.
+				if (us >= aftUS) {
+					vol    = aftVol; //目標音量に固定.
+					nowVol = aftVol; //変化後の音量を設定しておく.
+					aftUS  = 0;      //もう音量変化しない.
+					//フェードアウトなら.
+					if (isFadeOut) {
+						Stop(); //停止する.
+					}
+				}
+
+				//データが登録されていれば.
+				if (handle >= 0) {
+					assert(0 <= vol && vol <= 255);    //範囲内チェック.
+					ChangeVolumeSoundMem(vol, handle); //音量反映.
+				}
+			}
+			//変化時間がない.
+			else {
+				ChangeVolumeSoundMem(aftVol, handle); //音量反映.
+				nowVol = aftVol;                      //変化後の音量に設定.
+			}
+		}
+	}
+	//サウンド再生.
+	void SoundData::Play(bool isLoop, int volume) {
+
+		//データが登録されていれば.
+		if (handle >= 0) {
+			//音量変更.
+			int vol255 = GetVolumeRange(volume);  //0～255に変換.
+			ChangeVolumeSoundMem(vol255, handle); //音量反映.
+			nowVol = aftVol = vol255;             //音量を保存.
+
+			PlaySoundMem(handle, (isLoop ? DX_PLAYTYPE_LOOP : DX_PLAYTYPE_BACK));
+		}
+	}
+	//サウンド停止.
+	void SoundData::Stop() {
+
+		//データが登録されていれば.
+		if (handle >= 0) {
+			//停止.
+			StopSoundMem(handle);
+			//リセット.
+			nowVol = -1;
+			aftVol = -1;
+			isFadeOut = false;
+		}
+	}
+	//音量変更設定.
+	void SoundData::ChangeVolume(int volume, float sec) {
+	
+		nowVol = GetVolumeSoundMem2(handle); //現在の音量.
+		aftVol = GetVolumeRange(volume);     //変化後の音量.
+		aftUS  = (LONGLONG)(1000000 * sec);  //変化時間.
+		//変化時間があるなら.
+		if (aftUS > 0) {
+			timer->Start(); //タイマー開始.
+		}
+	}
+	//ボリューム値を有効範囲に変換.
+	int SoundData::GetVolumeRange(int volume) {
+
+		int vol255 = 255 * volume/100;        //有効範囲(0～255)に変換.
+		assert(0 <= vol255 && vol255 <= 255); //範囲内チェック.
+		return vol255;
+	}
+
+// ▼*---=[ Sound ]=---*▼ //
+
+	SoundMng SoundMng::inst; //インスタンスを生成.
+
+	//デストラクタ.
+	SoundMng::~SoundMng() {
+
+		//サウンドデータを全て取り出す.
+		for (auto& i : sound) {
+			i.second.Release(); //各サウンドの解放.
+		}
+		sound.clear(); //データを空にする.
+	}
+	//サウンド読み込み.
+	int SoundMng::LoadFile(MY_STRING fileName, MY_STRING saveName) {
+	
+		//読み込み.
+		int load = LoadSoundMem(fileName.c_str());
+		if (load < 0) {
+			return -1; //-1: 読み込み失敗.
+		}
+		//ハンドルを保存.
+		sound[saveName].SetHandle(load);
+
+		return 0; //正常終了.
+	}
+	//サウンド再生.
+	void SoundMng::Play(MY_STRING saveName, bool isLoop, int volume) {
+		//存在すれば.
+		if (sound.count(saveName) > 0) {
+			sound[saveName].Play(isLoop, volume); //再生.
+		}
+	}
+	//サウンド停止.
+	void SoundMng::Stop(MY_STRING saveName) {
+		//存在すれば.
+		if (sound.count(saveName) > 0) {
+			sound[saveName].Stop(); //停止.
+		}
+	}
+	//サウンド更新.
+	void SoundMng::Update() {
+
+		//サウンドデータを全て取り出す.
+		for (auto& i : sound) {
+			i.second.Update(); //各サウンドの更新.
+		}
+	}
+
+	//音量を変更.
+	void SoundMng::ChangeVolume(MY_STRING saveName, int volume, float sec) {
+	
+		sound[saveName].ChangeVolume(volume, sec); //変更設定.
+	}
+	//フェードイン再生.
+	void SoundMng::FadeInPlay(MY_STRING saveName, bool isLoop, int volume, float sec) {
+
+		sound[saveName].Play(isLoop, 0);           //最初は音量0で再生.
+		sound[saveName].ChangeVolume(volume, sec); //徐々に大きく.
+	}
+	//フェードアウトする.
+	void SoundMng::FadeOutPlay(MY_STRING saveName, float sec) {
+
+		sound[saveName].ChangeVolume(0, sec); //徐々に小さく.
+		sound[saveName].SetIsFadeOut(true);   //フェードアウトモードに.
+	}
+}

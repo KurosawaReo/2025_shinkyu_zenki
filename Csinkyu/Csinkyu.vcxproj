@@ -19,38 +19,61 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="image\enemy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="Global.h" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="myDrawST.cpp" />
-    <ClCompile Include="myInputST.cpp" />
+    <ClCompile Include="MapGimmickLaser.cpp" />
+    <ClCompile Include="KR_Lib\KR_Calc.cpp" />
+    <ClCompile Include="KR_Lib\KR_Draw.cpp" />
+    <ClCompile Include="KR_Lib\KR_File.cpp" />
+    <ClCompile Include="KR_Lib\KR_Input.cpp" />
+    <ClCompile Include="KR_Lib\KR_Object.cpp" />
+    <ClCompile Include="KR_Lib\KR_Sound.cpp" />
+    <ClCompile Include="KR_Lib\KR_Timer.cpp" />
+    <ClCompile Include="LaserManager.cpp" />
+    <ClCompile Include="Meteo.cpp" />
+    <ClCompile Include="MeteoManager.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
-    <ClCompile Include="Obstacle3.cpp" />
     <ClCompile Include="Obstacle4.cpp" />
+    <ClCompile Include="Obstacle4main.cpp" />
+    <ClCompile Include="Obstacle5.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="myDrawST.h" />
-    <ClInclude Include="myInputST.h" />
+    <ClInclude Include="KR_Lib\KR_Global.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="MapGimmickLaser.h" />
+    <ClInclude Include="KR_Lib\KR_Calc.h" />
+    <ClInclude Include="KR_Lib\KR_Draw.h" />
+    <ClInclude Include="KR_Lib\KR_File.h" />
+    <ClInclude Include="KR_Lib\KR_Input.h" />
+    <ClInclude Include="KR_Lib\KR_Object.h" />
+    <ClInclude Include="KR_Lib\KR_Sound.h" />
+    <ClInclude Include="KR_Lib\KR_Timer.h" />
+    <ClInclude Include="LaserManager.h" />
+    <ClInclude Include="Meteo.h" />
+    <ClInclude Include="MeteoManager.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Obstacle2.h" />
-    <ClInclude Include="Obstacle3.h" />
     <ClInclude Include="Obstacle4.h" />
+    <ClInclude Include="Obstacle4main.h" />
+    <ClInclude Include="Obstacle5.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="image\enemy.png" />
-    <Image Include="image\Player.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -142,14 +165,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>"C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:/DxLib_VC/プロジェクトに追加すべきファイル_VC用;</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>"C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用"</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/DxLib_VC/プロジェクトに追加すべきファイル_VC用;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,12 +186,15 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>C:/DxLib_VC/プロジェクトに追加すべきファイル_VC用;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:/DxLib_VC/プロジェクトに追加すべきファイル_VC用;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,0 +1,58 @@
+/*
+   - KR_Calc.h - (DxLib)
+   ver: 2025/08/24
+
+   計算機能を追加します.
+   (オブジェクト指向ver → KR_Object)
+*/
+#pragma once
+
+//角度変換用.
+#define _rad(x) (x)*(M_PI/180)
+#define _deg(x) (x)*(180/M_PI)
+
+//KR_Libに使う用.
+namespace KR_Lib
+{
+	//計算機能クラス[継承不可]
+	class Calc final
+	{
+	private: //実体.
+		static Calc inst; //自身のインスタンス.
+
+	public:
+		//実体の取得.
+		static Calc* GetPtr() {
+			return &inst;
+		}
+
+		//当たり判定.
+		bool		HitCheckCircle	(const Circle* cir1, const Circle* cir2);
+		bool		HitCheckBox		(const Box*    box1, const Box*    box2);
+		bool		HitCheckLine	(const Line*   line, const Circle* cir);
+
+		//移動限界.
+		void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
+		bool		IsOutInArea		(DBL_XY  pos, INT_XY size, int left, int up, int right, int down, bool isCompOut);
+
+		//計算(座標,角度,長さ,ベクトル)
+		double		CalcDist		(INT_XY pos1,  INT_XY pos2);
+		double		CalcDist		(DBL_XY pos1,  DBL_XY pos2);
+		DBL_XY		CalcMidPos		(DBL_XY pos1,  DBL_XY pos2);
+		DBL_XY		CalcArcPos		(DBL_XY stPos, double ang, double len);
+		double		CalcFacingAng	(DBL_XY stPos, DBL_XY targetPos);
+		DBL_XY		CalcVectorDeg	(double deg);
+		DBL_XY		CalcVectorRad	(double rad);
+
+		//値の曲線変動(アニメーション用)
+		double		CalcNumEaseIn	(double time);
+		double		CalcNumEaseOut	(double time);
+		double		CalcNumEaseInOut(double time);
+		double		CalcNumWaveLoop	(double time);
+
+		//値の操作.
+		int         RandNum			(int st, int ed,            bool isDxRand = false);
+		vector<int> RandNums		(int st, int ed, int count, bool isDxRand = false);
+		double      GetDecimal		(double num);
+	};
+}

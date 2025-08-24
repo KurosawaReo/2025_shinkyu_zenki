@@ -1,32 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="myDrawST.cpp" />
-    <ClCompile Include="myInputST.cpp" />
+    <Image Include="image\enemy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LaserManager.cpp" />
+    <ClCompile Include="Meteo.cpp" />
+    <ClCompile Include="MeteoManager.cpp" />
     <ClCompile Include="Obstacle.cpp" />
-    <ClCompile Include="Obstacle3.cpp" />
-    <ClCompile Include="Global.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle4.cpp" />
+    <ClCompile Include="Obstacle4main.cpp" />
+    <ClCompile Include="Obstacle5.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="KR_Lib\KR_Timer.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="KR_Lib\KR_Sound.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="MapGimmickLaser.cpp" />
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="KR_Lib\KR_Calc.cpp" />
+    <ClCompile Include="KR_Lib\KR_Draw.cpp" />
+    <ClCompile Include="KR_Lib\KR_File.cpp" />
+    <ClCompile Include="KR_Lib\KR_Input.cpp" />
+    <ClCompile Include="KR_Lib\KR_Object.cpp" />
+    <ClCompile Include="Global.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="myDrawST.h" />
-    <ClInclude Include="myInputST.h" />
+    <ClInclude Include="LaserManager.h" />
+    <ClInclude Include="Meteo.h" />
+    <ClInclude Include="MeteoManager.h" />
     <ClInclude Include="Obstacle.h" />
-    <ClInclude Include="Obstacle3.h" />
     <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Obstacle4.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="image\Player.png" />
-    <Image Include="image\enemy.png" />
+    <ClInclude Include="Obstacle4main.h" />
+    <ClInclude Include="Obstacle5.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="KR_Lib\KR_Global.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="KR_Lib\KR_Timer.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="KR_Lib\KR_Sound.h" />
+    <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="MapGimmickLaser.h" />
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="KR_Lib\KR_Calc.h" />
+    <ClInclude Include="KR_Lib\KR_Draw.h" />
+    <ClInclude Include="KR_Lib\KR_File.h" />
+    <ClInclude Include="KR_Lib\KR_Input.h" />
+    <ClInclude Include="KR_Lib\KR_Object.h" />
   </ItemGroup>
 </Project>
