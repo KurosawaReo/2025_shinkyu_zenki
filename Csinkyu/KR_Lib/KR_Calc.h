@@ -1,8 +1,9 @@
 /*
-   - KR_Calc.h - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Calc.h - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用の計算機能.
+   計算機能を追加します.
+   (オブジェクト指向ver → KR_Object)
 */
 #pragma once
 
@@ -13,32 +14,45 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	//当たり判定.
-	bool		HitCheckCircle	(const Circle* cir1, const Circle* cir2);
-	bool		HitCheckBox		(const Box*    box1, const Box*    box2);
-	bool		HitCheckLine	(const Line*   line, const Circle* cir);
+	//計算機能クラス[継承不可]
+	class Calc final
+	{
+	private: //実体.
+		static Calc inst; //自身のインスタンス.
 
-	//移動限界.
-	void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
-	bool		IsOutInArea		(DBL_XY  pos, INT_XY size, int left, int up, int right, int down, bool isCompOut);
+	public:
+		//実体の取得.
+		static Calc* GetPtr() {
+			return &inst;
+		}
 
-	//計算.
-	double		CalcDist		(INT_XY pos1,  INT_XY pos2);
-	double		CalcDist		(DBL_XY pos1,  DBL_XY pos2);
-	DBL_XY		CalcMidPos		(DBL_XY pos1,  DBL_XY pos2);
-	DBL_XY		CalcArcPos		(DBL_XY stPos, double ang, double len);
-	double		CalcFacingAng	(DBL_XY stPos, DBL_XY targetPos);
-	DBL_XY		CalcDegToPos	(double deg);
-	DBL_XY		CalcRadToPos	(double rad);
+		//当たり判定.
+		bool		HitCheckCircle	(const Circle* cir1, const Circle* cir2);
+		bool		HitCheckBox		(const Box*    box1, const Box*    box2);
+		bool		HitCheckLine	(const Line*   line, const Circle* cir);
 
-	//値の曲線変動(アニメーション用)
-	double		CalcNumEaseIn	(double time);
-	double		CalcNumEaseOut	(double time);
-	double		CalcNumEaseInOut(double time);
-	double		CalcNumWaveLoop	(double time);
+		//移動限界.
+		void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
+		bool		IsOutInArea		(DBL_XY  pos, INT_XY size, int left, int up, int right, int down, bool isCompOut);
 
-	//値の操作.
-	int         RandNum			(int st, int ed,            bool isDxRand = false);
-	vector<int> RandNums		(int st, int ed, int count, bool isDxRand = false);
-	double      GetDecimal		(double num);
+		//計算(座標,角度,長さ,ベクトル)
+		double		CalcDist		(INT_XY pos1,  INT_XY pos2);
+		double		CalcDist		(DBL_XY pos1,  DBL_XY pos2);
+		DBL_XY		CalcMidPos		(DBL_XY pos1,  DBL_XY pos2);
+		DBL_XY		CalcArcPos		(DBL_XY stPos, double ang, double len);
+		double		CalcFacingAng	(DBL_XY stPos, DBL_XY targetPos);
+		DBL_XY		CalcVectorDeg	(double deg);
+		DBL_XY		CalcVectorRad	(double rad);
+
+		//値の曲線変動(アニメーション用)
+		double		CalcNumEaseIn	(double time);
+		double		CalcNumEaseOut	(double time);
+		double		CalcNumEaseInOut(double time);
+		double		CalcNumWaveLoop	(double time);
+
+		//値の操作.
+		int         RandNum			(int st, int ed,            bool isDxRand = false);
+		vector<int> RandNums		(int st, int ed, int count, bool isDxRand = false);
+		double      GetDecimal		(double num);
+	};
 }

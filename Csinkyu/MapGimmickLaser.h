@@ -18,6 +18,7 @@ private:
 	Player*       p_player{};
 	LaserManager* p_laserMng{};
 	MeteoManager* p_meteoMng{};
+	Calc*         p_calc{};
 
 	float  laserSpawnTimer{};  // レーザー発射タイマー.
 	float  predictionTimer{};  // 予測線タイマー.

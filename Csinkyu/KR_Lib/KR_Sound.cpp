@@ -1,8 +1,8 @@
 /*
-   - KR_Sound.cpp - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Sound.cpp - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用のサウンド機能.
+   サウンド機能を追加します.
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -17,13 +17,13 @@ namespace KR_Lib
 // ▼*---=[ SoundData ]=---*▼ //
 
 	//コンストラクタ(Timer機能を使うためcpp側に入れる)
-	inline SoundData::SoundData() 
+	SoundData::SoundData() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
 		timer = new TimerMicro(COUNT_UP, 0); //アドレスを保存.
 	};
 	//デストラクタ.
-	inline SoundData::~SoundData() {
+	SoundData::~SoundData() {
 		delete timer; timer = nullptr;
 	};
 
@@ -120,10 +120,10 @@ namespace KR_Lib
 
 // ▼*---=[ Sound ]=---*▼ //
 
-	Sound Sound::inst; //インスタンスを生成.
+	SoundMng SoundMng::inst; //インスタンスを生成.
 
 	//デストラクタ.
-	Sound::~Sound() {
+	SoundMng::~SoundMng() {
 
 		//サウンドデータを全て取り出す.
 		for (auto& i : sound) {
@@ -132,7 +132,7 @@ namespace KR_Lib
 		sound.clear(); //データを空にする.
 	}
 	//サウンド読み込み.
-	int Sound::LoadFile(MY_STRING fileName, MY_STRING saveName) {
+	int SoundMng::LoadFile(MY_STRING fileName, MY_STRING saveName) {
 	
 		//読み込み.
 		int load = LoadSoundMem(fileName.c_str());
@@ -145,21 +145,21 @@ namespace KR_Lib
 		return 0; //正常終了.
 	}
 	//サウンド再生.
-	void Sound::Play(MY_STRING saveName, bool isLoop, int volume) {
+	void SoundMng::Play(MY_STRING saveName, bool isLoop, int volume) {
 		//存在すれば.
 		if (sound.count(saveName) > 0) {
 			sound[saveName].Play(isLoop, volume); //再生.
 		}
 	}
 	//サウンド停止.
-	void Sound::Stop(MY_STRING saveName) {
+	void SoundMng::Stop(MY_STRING saveName) {
 		//存在すれば.
 		if (sound.count(saveName) > 0) {
 			sound[saveName].Stop(); //停止.
 		}
 	}
 	//サウンド更新.
-	void Sound::Update() {
+	void SoundMng::Update() {
 
 		//サウンドデータを全て取り出す.
 		for (auto& i : sound) {
@@ -168,18 +168,18 @@ namespace KR_Lib
 	}
 
 	//音量を変更.
-	void Sound::ChangeVolume(MY_STRING saveName, int volume, float sec) {
+	void SoundMng::ChangeVolume(MY_STRING saveName, int volume, float sec) {
 	
 		sound[saveName].ChangeVolume(volume, sec); //変更設定.
 	}
 	//フェードイン再生.
-	void Sound::FadeInPlay(MY_STRING saveName, bool isLoop, int volume, float sec) {
+	void SoundMng::FadeInPlay(MY_STRING saveName, bool isLoop, int volume, float sec) {
 
 		sound[saveName].Play(isLoop, 0);           //最初は音量0で再生.
 		sound[saveName].ChangeVolume(volume, sec); //徐々に大きく.
 	}
 	//フェードアウトする.
-	void Sound::FadeOutPlay(MY_STRING saveName, float sec) {
+	void SoundMng::FadeOutPlay(MY_STRING saveName, float sec) {
 
 		sound[saveName].ChangeVolume(0, sec); //徐々に小さく.
 		sound[saveName].SetIsFadeOut(true);   //フェードアウトモードに.

@@ -7,6 +7,7 @@
 
 void EffectManager::Init(GameData* _data) {
 	p_data = _data;
+	p_calc = Calc::GetPtr();
 }
 
 void EffectManager::Reset() {
@@ -123,9 +124,9 @@ void EffectManager::Draw() {
 				{
 					//テキスト設定.
 					DrawStr str = { _T("+100"), {}, COLOR_SCORE };
-					str.SetPos(_int_r(effect[i].pos.x), _int_r(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30));
+					str.data.pos = {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y - p_calc->CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -138,9 +139,9 @@ void EffectManager::Draw() {
 				{
 					//テキスト設定.
 					DrawStr str = { _T("+500"), {}, COLOR_SCORE };
-					str.SetPos(_int_r(effect[i].pos.x), _int_r(effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30));
+					str.data.pos = {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y - p_calc->CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -153,7 +154,7 @@ void EffectManager::Draw() {
 				{
 					Box box = { effect[i].pos, { PLAYER_SIZE+effect[i].counter, PLAYER_SIZE+effect[i].counter }, 0xFFFFFF };
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -166,7 +167,7 @@ void EffectManager::Draw() {
 				{
 					Box box = { effect[i].pos, { 10+effect[i].counter*4, 10+effect[i].counter*4 }, COLOR_PLY_REFLECT };
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -179,11 +180,11 @@ void EffectManager::Draw() {
 				{
 					//飛ばす線のデータ.
 					Line line{};
-					line.stPos = CalcArcPos(effect[i].pos, effect[i].ang,     effect[i].len);
-					line.edPos = CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
+					line.stPos = p_calc->CalcArcPos(effect[i].pos, effect[i].ang,     effect[i].len);
+					line.edPos = p_calc->CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
 			        line.color = COLOR_METEO(effect[i].pos);
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEO_BREAK_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumEaseOut(1 - effect[i].counter/METEO_BREAK_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -204,7 +205,7 @@ void EffectManager::Draw() {
 						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
 					};
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -231,7 +232,7 @@ void EffectManager::Draw() {
 						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
 					};
 					//アニメーション値.
-					int pow = _int(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
+					int pow = _int(255 * p_calc->CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -258,7 +259,7 @@ void EffectManager::Draw() {
 						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
 					};
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -285,7 +286,7 @@ void EffectManager::Draw() {
 						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
 					};
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
@@ -312,7 +313,7 @@ void EffectManager::Draw() {
 						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
 					};
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
+					int pow = _int_r(255 * p_calc->CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);

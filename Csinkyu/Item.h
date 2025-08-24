@@ -25,9 +25,10 @@ private:
 	ItemData data[2];
 	int      itemCnt{}; //出すアイテムの数.
 
-	GameData*      p_gamedata{}; //ゲームデータ.
-	Player*        p_player{};   //プレイヤーデータ.
+	GameData*      p_gamedata{};  //ゲームデータ.
+	Player*        p_player{};    //プレイヤーデータ.
 	EffectManager* p_effectMng{};
+	Calc*          p_calc{};      //計算機能.
 
 public:
 	//add.

@@ -37,6 +37,8 @@ private:
 
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
+	InputMng*      p_input{};     //入力機能.
+	Calc*          p_calc{};      //計算機能.
 
 public:
 

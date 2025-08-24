@@ -18,6 +18,7 @@ void MapGimmickLaser::Init(GameData* _data, Player* _player, LaserManager* _lase
 	p_player   = _player;
 	p_laserMng = _laserMng;
 	p_meteoMng = _meteoMng;
+	p_calc     = Calc::GetPtr();
 
 	currentDirection = 0;
 	nextDirection = 0;
@@ -122,7 +123,7 @@ void MapGimmickLaser::DrawPredictionLine()
 #endif
 
 	// —\‘ªü‚Ì“§–¾“x.
-	double alpha = CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
+	double alpha = p_calc->CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
 	SetDrawBlendModeST(MODE_ALPHA, 255*(1-alpha));
 
 	// ’†‰›‚Ì—\‘ªü‚Ì‚İ‚ğ•`‰æ

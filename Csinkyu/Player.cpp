@@ -10,8 +10,10 @@
 //初期化(一回のみ行う)
 void Player::Init(GameData* _data, EffectManager* _effectMng)
 {
-	p_data = _data;
+	p_data      = _data;
 	p_effectMng = _effectMng;
+	p_input     = InputMng::GetPtr();
+	p_calc      = Calc::GetPtr();
 
 	isDebug = false;
 }
@@ -40,15 +42,13 @@ void Player::Reset(DBL_XY _pos, bool _active)
 //更新.
 void Player::Update()
 {
-	Input* input = Input::GetPtr();
-
 	//デバッグモード切り替え.
-	if (input->IsPushKeyTime(KEY_M) == 1) {
+	if (p_input->IsPushKeyTime(KEY_M) == 1) {
 		isDebug = !isDebug;
 	}
 
 	//テスト用：Eキーで反射エフェクトを生成
-	if (input->IsPushKeyTime(KEY_E) == 1) {
+	if (p_input->IsPushKeyTime(KEY_E) == 1) {
 		CreateReflectEffect(hit.pos);
 	}
 
@@ -158,19 +158,17 @@ void Player::DrawAfterImage()
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	Input* input = Input::GetPtr();
-
 	//移動する.
 	if (p_data->isSlow) {
-		input->InputKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
-		input->InputPadStick(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
+		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
+		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
 	}
 	else {
-		input->InputKey4Dir (&hit.pos, PLAYER_MOVE_SPEED);
-		input->InputPadStick(&hit.pos, PLAYER_MOVE_SPEED);
+		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED);
+		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
-	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+	p_calc->FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
 }
 
 // 反射エフェクト生成
@@ -301,7 +299,7 @@ void Player::PlayerDeath() {
 	if (active) {
 
 		//サウンド.
-		Sound* sound = Sound::GetPtr();
+		SoundMng* sound = SoundMng::GetPtr();
 		sound->Play(_T("PlayerDeath"), false, 80);
 		//エフェクト.
 		EffectData data{};

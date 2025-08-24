@@ -1,8 +1,9 @@
 /*
-   - KR_Draw.h - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Draw.h - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用の描画機能.
+   描画機能を追加します.
+   (オブジェクト指向ver → KR_Object)
 */
 #pragma once
 
@@ -59,9 +60,9 @@ namespace KR_Lib
 		//constructor, destructor.
 		DrawImg();
 		~DrawImg();
-		//set, get.
-		void   SetImage(Image* _data) { data = *_data; }
-		Image* GetImage()             { return &data; }
+		//get.
+		int    GetHandle() const { return data.handle; }
+		INT_XY GetSize()   const { return data.size; }
 		//読み込み.
 		int LoadFile  (MY_STRING fileName);
 		//描画.
@@ -85,9 +86,9 @@ namespace KR_Lib
 		//constructor, destructor.
 		DrawDivImg();
 		~DrawDivImg();
-		//set, get.
-		void   SetImage(Image* _data, int imgNo);
-		Image* GetImage(int imgNo);
+		//get.
+		int    GetHandle(int imgNo) const { return data[imgNo].handle; }
+		INT_XY GetSize  (int imgNo) const { return data[imgNo].size; }
 		//読み込み.
 		int LoadFile  (MY_STRING fileName, INT_XY size, INT_XY cnt);
 		//描画.
@@ -104,28 +105,13 @@ namespace KR_Lib
 	//テキスト描画クラス.
 	class DrawStr
 	{
-	private:
+	public:
 		String data{}; //文字列データ.
 
-	public:
 		//constructor.
 		DrawStr(MY_STRING _text, INT_XY _pos, UINT _color) :
 			data{_text, _pos, _color}
 		{}
-		//set.
-		void SetText(MY_STRING _text) {
-			data.text = _text;
-		}
-		void SetPos(int _x, int _y) {
-			data.pos = {_x, _y};
-		}
-		void SetColor(UINT _color) {
-			data.color = _color;
-		}
-		//get.
-		INT_XY GetPos() {
-			return data.pos;
-		}
 		//描画.
 		int    Draw	   (Anchor anc = ANC_MID, int font = -1);
 		int    DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font = -1);

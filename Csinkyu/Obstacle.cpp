@@ -2,6 +2,7 @@
    - Obstacle.cpp -
    áŠQ•¨ŠÇ—.
 */
+#if false
 #include "Player.h"
 #include "Obstacle.h"
 
@@ -50,3 +51,4 @@ void Obstacle::Draw() {
 	//ü‚Ì•`‰æ.
 	DrawLineST(&line);
 }
+#endif

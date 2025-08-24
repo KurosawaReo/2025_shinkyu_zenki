@@ -1,8 +1,8 @@
 /*
-   - KR_File.cpp - (kurosawa original)
-   ver: 2025/08/23
+   - KR_File.cpp - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用のファイル操作機能.
+   ファイル操作機能を追加します.
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.

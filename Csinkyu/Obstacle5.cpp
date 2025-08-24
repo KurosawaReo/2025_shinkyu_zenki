@@ -194,7 +194,7 @@ void Obstacle5::Hitjudgment()
 
 			//ƒTƒEƒ“ƒh.
 			if (!isPlaySound) {
-				Sound* sound = Sound::GetPtr();
+				SoundMng* sound = SoundMng::GetPtr();
 				sound->Play(_T("Ripples"), false, 73);
 				isPlaySound = true; //‚à‚¤Ä¶‚µ‚È‚¢.
 			}

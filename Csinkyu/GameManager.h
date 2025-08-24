@@ -32,8 +32,9 @@ private: //データ.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
-	Input* p_input{};
-	Sound* p_sound{};
+	InputMng* p_input{};
+	SoundMng* p_sound{};
+	Calc*     p_calc{};
 
 public:
 	//実体の取得.

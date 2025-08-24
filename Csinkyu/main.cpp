@@ -61,7 +61,7 @@ int WINAPI WinMain(
 	}
 
 	DxLib_End();               //DxLib‚ÌI—¹ˆ—.
-	DeleteFileW(L"Log.txt");   //Log.txt‚ª¶¬‚³‚ê‚é‚Ì‚ÅÁ‹‚·‚é.
+	DeleteFile(_T("Log.txt")); //Log.txt‚ª¶¬‚³‚ê‚é‚Ì‚ÅÁ‹‚·‚é.
 
 	return 0;
 }

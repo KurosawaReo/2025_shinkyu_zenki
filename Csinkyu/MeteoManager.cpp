@@ -9,6 +9,7 @@ void MeteoManager::Init(GameData* _data, Player* _player, EffectManager* _effect
 	p_data      = _data;
 	p_player    = _player;
 	p_effectMng = _effectMng;
+	p_calc      = Calc::GetPtr();
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
@@ -92,7 +93,7 @@ bool MeteoManager::IsHitMeteos(Circle* cir, bool isDestroy) {
 					data.pos = cir->pos;
 					p_effectMng->SpawnEffect(&data);
 					//サウンド.
-					Sound* sound = Sound::GetPtr();
+					SoundMng* sound = SoundMng::GetPtr();
 					sound->Play(_T("Break"), false, 74);
 				}
 			}
@@ -113,8 +114,8 @@ bool MeteoManager::GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 		//有効かつ、破壊されてないなら.
 		if (meteo[i].GetActive() && meteo[i].GetState() == Meteo_Normal) {
 
-			DBL_XY tmpPos = meteo[i].GetPos();           //1つずつ座標取得.
-			double tmpDis = CalcDist(tmpPos, _startPos); //距離を計算.
+			DBL_XY tmpPos = meteo[i].GetPos();                   //1つずつ座標取得.
+			double tmpDis = p_calc->CalcDist(tmpPos, _startPos); //距離を計算.
 
 			//初回限定.
 			if (shortest == -1) {

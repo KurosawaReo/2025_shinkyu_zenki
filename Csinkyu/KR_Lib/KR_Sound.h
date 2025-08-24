@@ -1,8 +1,8 @@
 /*
-   - KR_Sound.h - (kurosawa original)
-   ver: 2025/08/23
+   - KR_Sound.h - (DxLib)
+   ver: 2025/08/24
 
-   DxLib用のサウンド機能.
+   サウンド機能を追加します.
 */
 #pragma once
 
@@ -11,7 +11,7 @@ namespace KR_Lib
 {
 	class TimerMicro; //前方宣言.
 
-	//サウンドクラス.
+	//サウンドデータ.
 	class SoundData
 	{
 	private:
@@ -45,22 +45,22 @@ namespace KR_Lib
 		int  GetVolumeRange(int volume);          //ボリューム値を有効範囲に変換.
 	};
 
-	//サウンド管理クラス.
-	class Sound
+	//サウンド管理クラス[継承不可]
+	class SoundMng final
 	{
 	private: //実体.
-		static Sound inst; //自身のインスタンス.
+		static SoundMng inst; //自身のインスタンス.
 
 	private: //データ.
 		map<MY_STRING, SoundData> sound;
 
 	public:
 		//実体の取得.
-		static Sound* GetPtr() {
+		static SoundMng* GetPtr() {
 			return &inst;
 		}
 		//destructor.
-		~Sound();
+		~SoundMng();
 
 		int  LoadFile(MY_STRING fileName, MY_STRING saveName);
 		void Play    (MY_STRING saveName, bool isLoop, int volume = 100);

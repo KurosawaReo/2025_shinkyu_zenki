@@ -143,8 +143,9 @@ void GameManager::Init() {
 	srand((unsigned)time(NULL)); //乱数初期化.
 	
 	//実体取得.
-	p_input = Input::GetPtr();
-	p_sound = Sound::GetPtr();
+	p_input = InputMng::GetPtr();
+	p_sound = SoundMng::GetPtr();
+	p_calc  = Calc    ::GetPtr();
 
 	//タイトル.
 	data.scene = SCENE_TITLE;
@@ -555,7 +556,7 @@ void GameManager::DrawTitle() {
 		//切り替え前.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
-			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
+			double anim = p_calc->CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
 			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, {0.5, 0.5}, ANC_MID, true, true);
@@ -563,8 +564,8 @@ void GameManager::DrawTitle() {
 		//切り替え後.
 		else {
 			//アニメーション値.
-			double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
-			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
+			double anim1 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
+			double anim2 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * (1-anim2));
 			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, {0.5, 0.5}, ANC_MID, true, true);
@@ -582,8 +583,8 @@ void GameManager::DrawTitle() {
 		const int scoreY = WINDOW_HEI/2 + 60;
 
 		//アニメーション値.
-		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
-		double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
+		double anim1 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
+		double anim2 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
@@ -599,7 +600,7 @@ void GameManager::DrawTitle() {
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
 		//アニメーション値.
-		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
+		double anim = p_calc->CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-2}, 18, 0xFFFFFF };
@@ -620,15 +621,15 @@ void GameManager::DrawTitle() {
 			//エフェクトをいくつか出す.
 			for (int i = 0; i < 8; i++) {
 				
-				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
+				double newDig = dig + (float)p_calc->RandNum(-300, 300)/10; //少し角度をずらす.
 
 				EffectData data{}; 
 				data.type  = Effect_BreakMeteo;
 				data.pos   = { 600, 338 };
-				data.vec   = CalcDegToPos(newDig);                //ずらした角度を反映.
-				data.speed = ((float)RandNum( 60,  100)/10)*1.4f; //速度抽選.
-				data.len   = ((float)RandNum( 30,  150)/10)*1.4f; //長さ抽選.
-				data.ang   =  (float)RandNum(  0, 3599)/10;       //角度抽選.
+				data.vec   = p_calc->CalcVectorDeg(newDig);               //ずらした角度を反映.
+				data.speed = ((float)p_calc->RandNum( 60,  100)/10)*1.4f; //速度抽選.
+				data.len   = ((float)p_calc->RandNum( 30,  150)/10)*1.4f; //長さ抽選.
+				data.ang   =  (float)p_calc->RandNum(  0, 3599)/10;       //角度抽選.
 				//エフェクト召喚.
 				effectMng.SpawnEffect(&data);
 			}
@@ -683,7 +684,7 @@ void GameManager::DrawEnd() {
 	//終了案内.
 	{
 		//アニメーション値.
-		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
+		double anim = p_calc->CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
 		//スコア表示.
 		TCHAR text[256];
@@ -711,7 +712,7 @@ void GameManager::DrawEnd() {
 		if (data.score > data.bestScore) {
 
 			//アニメーション値.
-			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
+			double anim = p_calc->CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//描画.
 			SetDrawBlendModeST(MODE_ALPHA, 255*anim);
 			imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
@@ -727,7 +728,7 @@ void GameManager::DrawEnd() {
 	if (tmScene[SCENE_END].GetPassTime() > delay2) {
 		
 		//アニメーション値.
-		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
+		double anim = p_calc->CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
@@ -758,10 +759,10 @@ void GameManager::DrawUI() {
 #endif
 
 	//アニメーション値.
-	double alpha1   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.1);
-	double alpha2   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.2);
-	double alpha3   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.3);
-	double alpha4   = CalcNumEaseInOut((tmScene[SCENE_READY].GetPassTime()-1.0)*2);
+	double alpha1   = p_calc->CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.1);
+	double alpha2   = p_calc->CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.2);
+	double alpha3   = p_calc->CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.3);
+	double alpha4   = p_calc->CalcNumEaseInOut((tmScene[SCENE_READY].GetPassTime()-1.0)*2);
 	double animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime()-0.1);
 	double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 	double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.3));
@@ -775,13 +776,13 @@ void GameManager::DrawUI() {
 	};
 	TCHAR text[256];
 	_stprintf(text, _T("LEVEL %d"),        data.level);
-	str[0].SetText(text);
+	str[0].data.text = text;
 	_stprintf(text, _T("BEST SCORE:%05d"), data.bestScore);
-	str[1].SetText(text);
+	str[1].data.text = text;
 	_stprintf(text, _T("SCORE:%05d"),      data.score);
-	str[2].SetText(text);
+	str[2].data.text = text;
 	_stprintf(text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
-	str[3].SetText(text);
+	str[3].data.text = text;
 		
 	//背景画像.
 	imgUI[0].DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
@@ -790,17 +791,17 @@ void GameManager::DrawUI() {
 	str[0].Draw(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].Draw(ANC_MID, data.font3);
-	imgUI[1].DrawExtend({(double)str[1].GetPos().x, (double)str[1].GetPos().y+28}, {0.4, 0.4});
+	imgUI[1].DrawExtend({(double)str[1].data.pos.x, (double)str[1].data.pos.y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].Draw(ANC_MID, data.font3);
-	imgUI[2].DrawExtend({(double)str[2].GetPos().x, (double)str[2].GetPos().y+28}, {0.4, 0.4});
+	imgUI[2].DrawExtend({(double)str[2].data.pos.x, (double)str[2].data.pos.y+28}, {0.4, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].Draw(ANC_MID, data.font3);
-	imgUI[3].DrawExtend({(double)str[3].GetPos().x, (double)str[3].GetPos().y+28}, {0.4, 0.4});
+	imgUI[3].DrawExtend({(double)str[3].data.pos.x, (double)str[3].data.pos.y+28}, {0.4, 0.4});
 	//テキスト(光沢用)
-	str[1].SetColor(0xFFFFFF);
-	str[2].SetColor(0xFFFFFF);
-	str[3].SetColor(0xFFFFFF);
+	str[1].data.color = 0xFFFFFF;
+	str[2].data.color = 0xFFFFFF;
+	str[3].data.color = 0xFFFFFF;
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
 	str[1].Draw(ANC_MID, data.font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
@@ -854,7 +855,7 @@ void GameManager::DrawReflectMode() {
 
 		//画面中央に数字を表示.
 		{
-			double dec = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
+			double dec = p_calc->GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
 			SetDrawBlendModeST(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
