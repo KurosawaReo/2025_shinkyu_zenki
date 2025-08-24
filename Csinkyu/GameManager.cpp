@@ -82,6 +82,7 @@
 /---------------------------------------------------------/
    前期発表会後 変更内容
 
+   ・UIや演出に画像を追加。
    ・UIのレイアウト変更、装飾の追加。「TIME」や「LEVEL」をまとめた。
    ・背景画像を仮で用意。
    ・アイテムの終了タイミングが分かるよう、最後の3秒だけ表示し、音も追加。
@@ -163,6 +164,7 @@ void GameManager::Init() {
 	imgUI[3].    LoadFile(_T("Resources/Images/ui_back_time.png"));
 	imgNewRecord.LoadFile(_T("Resources/Images/new_record.png"));
 	imgGameOver. LoadFile(_T("Resources/Images/gameover.png"));
+	imgReflect.  LoadFile(_T("Resources/Images/reflect.png"));
 	//サウンド読み込み.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));
@@ -621,7 +623,7 @@ void GameManager::DrawTitle() {
 			double dig = -130; //角度.
 
 			//エフェクトをいくつか出す.
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < METEO_BREAK_ANIM_CNT; i++) {
 				
 				double newDig = dig + (float)p_calc->RandNum(-300, 300)/10; //少し角度をずらす.
 
@@ -629,8 +631,8 @@ void GameManager::DrawTitle() {
 				data.type  = Effect_BreakMeteo;
 				data.pos   = { 600, 338 };
 				data.vec   = p_calc->CalcVectorDeg(newDig);               //ずらした角度を反映.
-				data.speed = ((float)p_calc->RandNum( 60,  100)/10)*1.4f; //速度抽選.
-				data.len   = ((float)p_calc->RandNum( 30,  150)/10)*1.4f; //長さ抽選.
+				data.speed = ((float)p_calc->RandNum( 20,  100)/10)*1.4f; //速度抽選.
+				data.len   = ((float)p_calc->RandNum( 10,  150)/10)*1.4f; //長さ抽選.
 				data.ang   =  (float)p_calc->RandNum(  0, 3599)/10;       //角度抽選.
 				//エフェクト召喚.
 				effectMng.SpawnEffect(&data);
@@ -852,20 +854,21 @@ void GameManager::DrawReflectMode() {
 		//テキストの設定.
 		TCHAR text[256];
 		_stprintf(text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
-		DrawStr str1(_T("REFLECT"), {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
-		DrawStr str2(text,          {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
+		DrawStr str(text, {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
 
 		//画面中央に数字を表示.
 		{
-			double dec = p_calc->GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
+			double dec  = p_calc->GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
+			double anim = p_calc->CalcNumEaseOut(dec);
+			
 			SetDrawBlendModeST(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
-				str1.Draw(ANC_MID, data.font4); //反射モード.
+				imgReflect.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2}, {0.3+0.2*anim, 0.3+0.2*anim});
 			}
 			//最後の3秒.
 			if (tmSlowMode.GetPassTime() <= 3) {
-				str2.Draw(ANC_MID, data.font4); //数字.
+				str.Draw(ANC_MID, data.font4); //数字.
 			}
 			ResetDrawBlendMode();
 		}
