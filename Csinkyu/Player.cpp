@@ -42,15 +42,16 @@ void Player::Reset(DBL_XY _pos, bool _active)
 //更新.
 void Player::Update()
 {
+#if defined _DEBUG //Releaseでは入れない.
 	//デバッグモード切り替え.
 	if (p_input->IsPushKeyTime(KEY_M) == 1) {
 		isDebug = !isDebug;
 	}
-
 	//テスト用：Eキーで反射エフェクトを生成
 	if (p_input->IsPushKeyTime(KEY_E) == 1) {
 		CreateReflectEffect(hit.pos);
 	}
+#endif
 
 	//有効なら.
 	if (active) {
@@ -62,6 +63,7 @@ void Player::Update()
 //描画.
 void Player::Draw()
 {
+#if defined _DEBUG //Releaseでは入れない.
 	//デバッグ表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
@@ -76,6 +78,7 @@ void Player::Draw()
 			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
 		}
 	}
+#endif
 
 	//有効なら.
 	if (active) {

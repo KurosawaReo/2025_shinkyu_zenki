@@ -140,7 +140,8 @@ struct GameData
 #define METEO_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
 #define METEO_DEST_TIME					(20)			//隕石の破壊時間.
 #define METEO_GOAL_RAND_RANGE			(500)			//隕石の目標地点の乱数範囲.
-#define METEO_BREAK_ANIM_TIME			(50)			//隕石破壊アニメーション時間.
+#define METEO_BREAK_ANIM_TIME			(50)			//隕石破壊破片のアニメ時間.
+#define METEO_BREAK_ANIM_CNT			(10)			//隕石破壊破片の数.
 
 #define METEO_LINE_CNT_MIN				(5)				//最低n角形.
 #define METEO_LINE_CNT_MAX				(16)			//最大n角形.

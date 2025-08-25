@@ -127,14 +127,14 @@ void Meteo::Destroy() {
 }
 
 //隕石の当たり判定.
-bool Meteo::IsHitMeteo(Circle* pos) {
+bool Meteo::IsHitMeteo(Circle* cir) {
 
 	//有効な隕石なら.
 	if (active && state == Meteo_Normal) {
 		//全ての線で判定.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			//線とプレイヤーが当たったら.
-			if (p_calc->HitCheckLine(&shape.line[i], pos)) {
+			if (p_calc->HitLineCir(&shape.line[i], cir)) {
 				return true; //当たった.
 			}
 		}

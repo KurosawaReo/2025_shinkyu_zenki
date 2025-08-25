@@ -27,6 +27,7 @@ private: //データ.
 	DrawImg imgUI[4]{};     //UI画像.
 	DrawImg imgNewRecord{}; //new record.
 	DrawImg imgGameOver{};  //gameover.
+	DrawImg imgReflect{};   //reflect.
 
 	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.

@@ -42,6 +42,8 @@ class EffectManager
 private:
 	Effect effect[EFFECT_MAX]{};
 
+	DrawImg imgScore[2]{}; //ƒXƒRƒA‰æ‘œ.
+
 	GameData* p_data{};
 	Calc*     p_calc{};
 
