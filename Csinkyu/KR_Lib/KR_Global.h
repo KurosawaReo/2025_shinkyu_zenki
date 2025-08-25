@@ -64,58 +64,83 @@ namespace KR_Lib
 			return {_dbl(x), _dbl(y)};
 		}
 
-		//演算子で計算できるように.
-		XY<T> operator+(const XY<T>& xy) {  //+の右側が引数に入り、返り値が左側に入る.
-			return { x + xy.x, y + xy.y };  //xとyを加算して返す.
+		//演算子[+,-,*,/] [XY<T>・XY<T>]
+		XY<T> operator+(const XY<T>& value) {    //+の右側が引数に入り、返り値が左側に入る.
+			return { x + value.x, y + value.y }; //xとyを加算して返す.
 		}
-		XY<T> operator-(const XY<T>& xy) {
-			return { x - xy.x, y - xy.y };
+		XY<T> operator-(const XY<T>& value) {
+			return { x - value.x, y - value.y };
 		}
-		XY<T> operator*(const XY<T>& xy) {
-			return { x * xy.x, y * xy.y };
+		XY<T> operator*(const XY<T>& value) {
+			return { x * value.x, y * value.y };
 		}
-		XY<T> operator/(const XY<T>& xy) {
-			return { x / xy.x, y / xy.y };
+		XY<T> operator/(const XY<T>& value) {
+			return { x / value.x, y / value.y };
 		}
-
+		//演算子[+=,-=,*=,/=] [XY<T>・XY<T>]
 		XY<T>& operator+=(const XY<T>& xy) {
 			x += xy.x;
 			y += xy.y;
 			return *this; //自身の実体.
 		}
-		XY<T> operator-=(const XY<T>& xy) {
+		XY<T>& operator-=(const XY<T>& xy) {
 			x -= xy.x;
 			y -= xy.y;
 			return *this;
 		}
-		XY<T> operator*=(const XY<T>& xy) {
+		XY<T>& operator*=(const XY<T>& xy) {
 			x *= xy.x;
 			y *= xy.y;
 			return *this;
 		}
-		XY<T> operator/=(const XY<T>& xy) {
+		XY<T>& operator/=(const XY<T>& xy) {
 			x /= xy.x;
 			y /= xy.y;
 			return *this;
 		}
-		XY<T> operator*=(int n) {
-			x *= n;
-			y *= n;
+
+		//演算子 [+,-,*,/] [XY<T>・数値]
+		//右側が数値でなければ無効にする.
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T> operator+(T2 num) {
+			return { x + static_cast<T>(num), y + static_cast<T>(num) }; //cast後にxとyを加算して返す.
+		}
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T> operator-(T2 num) {
+			return { x - static_cast<T>(num), y - static_cast<T>(num) };
+		}
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T> operator*(T2 num) {
+			return { x * static_cast<T>(num), y * static_cast<T>(num) };
+		}
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T> operator/(T2 num) {
+			return { x / static_cast<T>(num), y / static_cast<T>(num) };
+		}
+		//演算子[+=,-=,*=,/=] [XY<T>・数値]
+		//右側が数値でなければ無効にする.
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T>& operator+=(T2 num) {
+			x += num;
+			y += num;
+			return *this; //自身の実体.
+		}
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T>& operator-=(T2 num) {
+			x -= num;
+			y -= num;
 			return *this;
 		}
-		XY<T> operator*=(double n) {
-			x *= n;
-			y *= n;
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T>& operator*=(T2 num) {
+			x *= num;
+			y *= num;
 			return *this;
 		}
-		XY<T> operator/=(int n) {
-			x /= n;
-			y /= n;
-			return *this;
-		}
-		XY<T> operator/=(double n) {
-			x /= n;
-			y /= n;
+		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		XY<T>& operator/=(T2 num) {
+			x /= num;
+			y /= num;
 			return *this;
 		}
 	};

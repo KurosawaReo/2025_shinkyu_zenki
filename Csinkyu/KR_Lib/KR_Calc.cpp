@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/08/25
 
    計算機能を追加します.
    (オブジェクト指向ver → KR_Object)
@@ -17,35 +17,72 @@ namespace KR_Lib
 	Calc Calc::inst; //インスタンスを生成.
 
 	//当たり判定(円と円)
-	bool Calc::HitCheckCircle(const Circle* cir1, const Circle* cir2) {
+	bool Calc::HitCirCir(const Circle* cir1, const Circle* cir2) {
 
 		//距離差.
 		double x = cir1->pos.x - cir2->pos.x;
 		double y = cir1->pos.y - cir2->pos.y;
-		//距離が半径の合計より短ければ当たっている.
-		//(√を削減するために2乗して計算)
+		//距離が半径の合計以下なら(√を削減するために2乗して計算)
 		if (x*x + y*y <= pow(cir1->r+cir2->r, 2)) {
-			return true;
+			return true; //hit.
 		}
 		else {
 			return false;
 		}
 	}
 	//当たり判定(四角と四角)
-	bool Calc::HitCheckBox(const Box* box1, const Box* box2) {
+	bool Calc::HitBoxBox(const Box* box1, const Box* box2) {
 
 		//中央基準座標での判定.
 		if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
 			fabs(box1->pos.y - box2->pos.y) <= (box1->size.y + box2->size.y)/2
 		){
-			return true;
+			return true; //hit.
 		}
 		else {
 			return false;
 		}
 	}
+	//当たり判定(四角と円)
+	bool Calc::HitBoxCir(const Box* box, const Circle* cir) {
+
+		//パターン1: 四角形の上下辺に触れている.
+		if (_is_in_range(cir->pos.x, box->pos.x-box->size.x/2,        box->pos.x+box->size.x/2)        &&
+			_is_in_range(cir->pos.y, box->pos.y-box->size.x/2-cir->r, box->pos.y+box->size.y/2+cir->r))
+		{
+			return true; //hit.
+		}
+		//パターン2: 四角形の左右辺に触れている.
+		if (_is_in_range(cir->pos.x, box->pos.x-box->size.x/2-cir->r, box->pos.x+box->size.x/2+cir->r) &&
+			_is_in_range(cir->pos.y, box->pos.y-box->size.x/2,        box->pos.y+box->size.y/2))
+		{
+			return true; //hit.
+		}
+		//パターン3: 四角形の角に触れている.
+		{
+			//角の座標.
+			const DBL_XY pos[4] = {
+				{box->pos.x-box->size.x/2, box->pos.y-box->size.y/2},
+				{box->pos.x+box->size.x/2, box->pos.y-box->size.y/2},
+				{box->pos.x-box->size.x/2, box->pos.y+box->size.y/2},
+				{box->pos.x+box->size.x/2, box->pos.y+box->size.y/2}
+			};
+			Circle tmpCir = {{}, 0, {}};
+
+			//角4ヶ所ループ.
+			for (auto& i : pos) {
+				//角に円を置く.
+				tmpCir.pos = i;
+				//その円に当たっていれば.
+				if (HitCirCir(cir, &tmpCir)) {
+					return true; //hit.
+				}
+			}
+		}
+		return false; //hitしてない.
+	}
 	//当たり判定(線と円)
-	bool Calc::HitCheckLine(const Line* line, const Circle* cir) {
+	bool Calc::HitLineCir(const Line* line, const Circle* cir) {
 
 		//線の始点と終点から傾きを求める.
 		double katamuki;
@@ -83,8 +120,8 @@ namespace KR_Lib
 		}
 
 		//hit条件.
-		if (dis1 <= cir->r &&                                     //条件1:線に触れている.
-			dis2 <= CalcDist(line->stPos, line->edPos)/2 + cir->r //条件2:線を直径とする円に触れている.
+		if (dis1 <= cir->r &&                                     //条件1: 線に触れている.
+			dis2 <= CalcDist(line->stPos, line->edPos)/2 + cir->r //条件2: 線を直径とする円に触れている.
 		){
 			return true;
 		}

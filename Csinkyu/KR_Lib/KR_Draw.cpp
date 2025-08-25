@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/08/25
 
    描画機能を追加します.
    (オブジェクト指向ver → KR_Object)

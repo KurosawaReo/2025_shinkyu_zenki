@@ -8,6 +8,9 @@
 void EffectManager::Init(GameData* _data) {
 	p_data = _data;
 	p_calc = Calc::GetPtr();
+
+	imgScore[0].LoadFile(_T("Resources/Images/score100.png"));
+	imgScore[1].LoadFile(_T("Resources/Images/score500.png"));
 }
 
 void EffectManager::Reset() {
@@ -122,30 +125,28 @@ void EffectManager::Draw() {
 			{
 				case Effect_Score100:
 				{
-					//テキスト設定.
-					DrawStr str = { _T("+100"), {}, COLOR_SCORE };
-					str.data.pos = {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y - p_calc->CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
+					//座標.
+					DBL_XY pos = {effect[i].pos.x, effect[i].pos.y - p_calc->CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30};
 					//アニメーション値.
 					int pow = _int_r(255 * p_calc->CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					str.Draw(ANC_MID, p_data->font1);
+					imgScore[0].DrawExtend(pos, {0.2, 0.2});
 					ResetDrawBlendMode();
 				}
 				break;
 
 				case Effect_Score500:
 				{
-					//テキスト設定.
-					DrawStr str = { _T("+500"), {}, COLOR_SCORE };
-					str.data.pos = {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y - p_calc->CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30)};
+  				    //座標.
+					DBL_XY pos = { effect[i].pos.x, effect[i].pos.y - p_calc->CalcNumEaseOut(effect[i].counter / SCORE_ANIM_TIME) * 30 };
 					//アニメーション値.
 					int pow = _int_r(255 * p_calc->CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					str.Draw(ANC_MID, p_data->font1);
+					imgScore[1].DrawExtend(pos, {0.2, 0.2});
 					ResetDrawBlendMode();
 				}
 				break;

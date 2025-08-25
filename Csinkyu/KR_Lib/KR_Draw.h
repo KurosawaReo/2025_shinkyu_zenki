@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/08/25
 
    描画機能を追加します.
    (オブジェクト指向ver → KR_Object)
@@ -61,8 +61,7 @@ namespace KR_Lib
 		DrawImg();
 		~DrawImg();
 		//get.
-		int    GetHandle() const { return data.handle; }
-		INT_XY GetSize()   const { return data.size; }
+		INT_XY GetSize() const { return data.size; }
 		//読み込み.
 		int LoadFile  (MY_STRING fileName);
 		//描画.
@@ -87,8 +86,7 @@ namespace KR_Lib
 		DrawDivImg();
 		~DrawDivImg();
 		//get.
-		int    GetHandle(int imgNo) const { return data[imgNo].handle; }
-		INT_XY GetSize  (int imgNo) const { return data[imgNo].size; }
+		INT_XY GetSize(int imgNo) const { return data[imgNo].size; }
 		//読み込み.
 		int LoadFile  (MY_STRING fileName, INT_XY size, INT_XY cnt);
 		//描画.

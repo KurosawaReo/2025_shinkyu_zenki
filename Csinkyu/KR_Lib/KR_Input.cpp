@@ -3,6 +3,7 @@
    ver: 2025/08/24
 
    入力操作機能を追加します.
+   (オブジェクト指向ver → KR_Object)
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.

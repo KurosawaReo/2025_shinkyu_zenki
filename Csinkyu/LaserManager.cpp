@@ -100,7 +100,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = {{laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (p_calc->HitCheckLine(&line, p_player->GetHit())) {
+				if (p_calc->HitLineCir(&line, p_player->GetHit())) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -137,7 +137,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = {{laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (p_calc->HitCheckLine(&line, p_player->GetHit())) {
+				if (p_calc->HitLineCir(&line, p_player->GetHit())) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -199,7 +199,7 @@ void LaserManager::UpdateLaser() {
 					double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 
 					//エフェクトをいくつか出す.
-					for(int j = 0; j < 8; j++){
+					for(int j = 0; j < METEO_BREAK_ANIM_CNT; j++){
 
 						double newDig = dig + (float)p_calc->RandNum(-300, 300)/10; //少し角度をずらす.
 
@@ -207,8 +207,8 @@ void LaserManager::UpdateLaser() {
 						data.type  = Effect_BreakMeteo;
 						data.pos   = { laser[i].x, laser[i].y };
 						data.vec   = p_calc->CalcVectorDeg(newDig);        //ずらした角度を反映.
-						data.speed = (float)p_calc->RandNum( 40,  100)/10; //速度抽選.
-						data.len   = (float)p_calc->RandNum( 30,  150)/10; //長さ抽選.
+						data.speed = (float)p_calc->RandNum( 20,  100)/10; //速度抽選.
+						data.len   = (float)p_calc->RandNum( 10,  150)/10; //長さ抽選.
 						data.ang   = (float)p_calc->RandNum(  0, 3599)/10; //角度抽選.
 						//エフェクト召喚.
 						p_effectMng->SpawnEffect(&data);
@@ -446,7 +446,7 @@ void LaserManager::LaserReflectRange(Circle* cir) {
 			Circle cir2 = { {laser[i].x, laser[i].y}, 1, {} };
 
 			//範囲内なら.
-			if (p_calc->HitCheckCircle(cir, &cir2)) {
+			if (p_calc->HitCirCir(cir, &cir2)) {
 				ReflectLaser(i); //その場で反射.
 			}
 		}
