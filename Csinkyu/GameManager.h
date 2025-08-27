@@ -50,7 +50,7 @@ public:
 	//ƒƒCƒ“ˆ—.
 	void Init();
 	void Reset();
-	void Update();
+	bool Update();
 	void Draw();
 
 	//Reset.

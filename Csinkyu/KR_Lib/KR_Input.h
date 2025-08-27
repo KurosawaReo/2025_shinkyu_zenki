@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/08/27
 
    入力操作機能を追加します.
    (オブジェクト指向ver → KR_Object)
@@ -53,6 +53,7 @@ namespace KR_Lib
 		KEY_X     = KEY_INPUT_X,
 		KEY_Y     = KEY_INPUT_Y,
 		KEY_Z     = KEY_INPUT_Z,
+		KEY_ESC   = KEY_INPUT_ESCAPE, //ESCキー.
 		KEY_SPACE = KEY_INPUT_SPACE,
 		KEY_ENTER = KEY_INPUT_RETURN, //Enterキー.
 	};
@@ -103,6 +104,24 @@ namespace KR_Lib
 		PAD_SWT_HOME,		//0x10000: ホームボタン.
 		PAD_SWT_CAPTURE,	//0x20000: キャプチャーボタン.
 	};
+	//コントローラボタンID(アーケード筐体)
+	enum PadArcadeID
+	{
+		PAD_ACD_DOWN,
+		PAD_ACD_LEFT,
+		PAD_ACD_RIGHT,
+		PAD_ACD_UP,
+		PAD_ACD_BTN_UPPER_1,
+		PAD_ACD_BTN_LOWER_1,
+		PAD_ACD_BTN_LOWER_2,
+		PAD_ACD_BTN_UPPER_2,
+		PAD_ACD_UNNOWN1,     //不明.
+		PAD_ACD_BTN_UPPER_3,
+		PAD_ACD_UNNOWN2,     //不明.
+		PAD_ACD_BTN_LOWER_3,
+		PAD_ACD_UNNOWN3,     //不明.
+		PAD_ACD_BTN_START,
+	};
 
 	//キーやボタンの種類の最大数(変更禁止)
 	constexpr int KEY_MAX     = 256;
@@ -139,8 +158,10 @@ namespace KR_Lib
 		int    IsPushMouseTime (MouseID id);
 		bool   IsPushPadBtn    (PadXboxID   id);
 		bool   IsPushPadBtn    (PadSwitchID id);
+	    bool   IsPushPadBtn    (PadArcadeID id);
 		int    IsPushPadBtnTime(PadXboxID   id);
 		int    IsPushPadBtnTime(PadSwitchID id);
+		int    IsPushPadBtnTime(PadArcadeID id);
 
 		//取得.
 		void   GetMousePos     (DBL_XY* pos, bool isValidX = true, bool isValidY = true);

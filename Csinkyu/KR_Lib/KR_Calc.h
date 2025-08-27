@@ -27,12 +27,12 @@ namespace KR_Lib
 		}
 
 		//ìñÇΩÇËîªíË.
-		bool		HitCirCir	(const Circle* cir1, const Circle* cir2);
-		bool		HitBoxBox	(const Box*    box1, const Box*    box2);
-		bool		HitBoxCir	(const Box*    box,  const Circle* cir);
-		bool		HitLineCir	(const Line*   line, const Circle* cir);
+		bool		HitCirCir		(const Circle* cir1, const Circle* cir2);
+		bool		HitBoxBox		(const Box*    box1, const Box*    box2);
+		bool		HitBoxCir		(const Box*    box,  const Circle* cir);
+		bool		HitLineCir		(const Line*   line, const Circle* cir);
 
-		//à⁄ìÆå¿äE.
+		//å¿äEíl.
 		void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
 		bool		IsOutInArea		(DBL_XY  pos, INT_XY size, int left, int up, int right, int down, bool isCompOut);
 
@@ -55,5 +55,11 @@ namespace KR_Lib
 		int         RandNum			(int st, int ed,            bool isDxRand = false);
 		vector<int> RandNums		(int st, int ed, int count, bool isDxRand = false);
 		double      GetDecimal		(double num);
+
+		//<T> ílÇ™è„å¿â∫å¿ÇâzÇ¶Ç»Ç¢ÇÊÇ§Ç…Ç∑ÇÈ.
+		template<typename T, _type_num_only(T)>
+		T ClampNum(T num, T low, T high) {
+			return max(low, min(num, high));
+		}
 	};
 }

@@ -1,6 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/08/27
 
    入力操作機能を追加します.
    (オブジェクト指向ver → KR_Object)
@@ -37,10 +37,16 @@ namespace KR_Lib
 	bool InputMng::IsPushPadBtn(PadSwitchID id) {
 		return (tmPadBtn[id] > 0); //押してるならtrue.
 	}
+	bool InputMng::IsPushPadBtn(PadArcadeID id) {
+		return (tmPadBtn[id] > 0); //押してるならtrue.
+	}
 	int  InputMng::IsPushPadBtnTime(PadXboxID id) {
 		return tmPadBtn[id];       //押している時間.
 	}
 	int  InputMng::IsPushPadBtnTime(PadSwitchID id) {
+		return tmPadBtn[id];       //押している時間.
+	}
+	int  InputMng::IsPushPadBtnTime(PadArcadeID id) {
 		return tmPadBtn[id];       //押している時間.
 	}
 
