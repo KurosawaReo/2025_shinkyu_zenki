@@ -30,10 +30,12 @@ using namespace std;
 #define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
 #define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
 //便利マクロ.
-#define _if_check(n)              assert(n); if(n)                    //if文の前に同条件のassertを挟む.
-#define _return(num, cond)        if (cond) { return num; }           //条件に合うならreturnする.(cond = 条件)
-#define _is_in_range(num, n1, n2) (n1 <= num && num <= n2)            //範囲内に数値があるかどうか.
-#define _debug_log(var)           printfDx(_T("%s:%d\n"), #var, var); //変数名と値を表示する.
+#define _if_check(n)              assert(n); if(n)                     //if文の前に同条件のassertを挟む.
+#define _return(num, cond)        if (cond) { return num; }            //条件に合うならreturnする.(cond = 条件)
+#define _is_in_range(num, n1, n2) ((n1 <= num) && (num <= n2))         //範囲内に数値があるかどうか.
+#define _debug_log(var)           printfDx(_T("%s: %d\n"), #var, var); //変数名と値を表示する.
+//特殊マクロ(基本KR_Libで使う用)
+#define _type_num_only(T)		  typename = typename enable_if<is_arithmetic<T>::value>::type //int, float, double, char型のみOKとする.
 
 //KR_Libに使う用.
 namespace KR_Lib
@@ -101,43 +103,43 @@ namespace KR_Lib
 
 		//演算子 [+,-,*,/] [XY<T>・数値]
 		//右側が数値でなければ無効にする.
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T> operator+(T2 num) {
 			return { x + static_cast<T>(num), y + static_cast<T>(num) }; //cast後にxとyを加算して返す.
 		}
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T> operator-(T2 num) {
 			return { x - static_cast<T>(num), y - static_cast<T>(num) };
 		}
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T> operator*(T2 num) {
 			return { x * static_cast<T>(num), y * static_cast<T>(num) };
 		}
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T> operator/(T2 num) {
 			return { x / static_cast<T>(num), y / static_cast<T>(num) };
 		}
 		//演算子[+=,-=,*=,/=] [XY<T>・数値]
 		//右側が数値でなければ無効にする.
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator+=(T2 num) {
 			x += num;
 			y += num;
 			return *this; //自身の実体.
 		}
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator-=(T2 num) {
 			x -= num;
 			y -= num;
 			return *this;
 		}
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator*=(T2 num) {
 			x *= num;
 			y *= num;
 			return *this;
 		}
-		template<typename T2, typename = typename enable_if<is_arithmetic<T2>::value>::type>
+		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator/=(T2 num) {
 			x /= num;
 			y /= num;

@@ -24,7 +24,7 @@ namespace KR_Lib
 
 	//‰~‚Æ‚Ì”»’è.
 	bool ObjectCir::HitCheckCir(const Circle* cir) {
-		return p_calc->HitCirCir(&this->cir, cir);
+		return p_calc->HitCirCir(cir, &this->cir);
 	}
 	//ŽlŠpŒ`‚Æ‚Ì”»’è.
 	bool ObjectCir::HitCheckBox(const Box* box) {
@@ -83,7 +83,7 @@ namespace KR_Lib
 		return err; //-1: ‰~•`‰æƒGƒ‰[.
 	}
 	//ObjectCirŒ^: ‰æ‘œ‚ð•`‰æ.
-	int ObjectCir::DrawGraph(DrawImg* img) {
+	int ObjectCir::DrawGraph(DrawImg* img, DBL_XY sizeRate) {
 
 		_return(0, !isActive); //”ñƒAƒNƒeƒBƒu‚È‚ç•`‰æ‚µ‚È‚¢.
 
@@ -91,7 +91,7 @@ namespace KR_Lib
 		Circle tmpCir = cir;
 		tmpCir.pos += offset;
 		//•`‰æ.
-		int err = img->Draw(tmpCir.pos);
+		int err = img->DrawExtend(tmpCir.pos, sizeRate);
 		if (err < 0) {
 			DrawShape(); //‘ã‚í‚è‚É‰~‚ð•`‰æ.
 			return -1;   //-1: ‰æ‘œ•`‰æƒGƒ‰[.
@@ -158,7 +158,7 @@ namespace KR_Lib
 		return err; //-1: ‰~•`‰æƒGƒ‰[.
 	}
 	//ObjectBoxŒ^: ‰æ‘œ‚ð•`‰æ.
-	int ObjectBox::DrawGraph(DrawImg* img) {
+	int ObjectBox::DrawGraph(DrawImg* img, DBL_XY sizeRate) {
 
 		_return(0, !isActive); //”ñƒAƒNƒeƒBƒu‚È‚ç•`‰æ‚µ‚È‚¢.
 
@@ -166,7 +166,7 @@ namespace KR_Lib
 		Box tmpBox = box;
 		tmpBox.pos += offset;
 		//•`‰æ.
-		int err = img->Draw(tmpBox.pos);
+		int err = img->DrawExtend(tmpBox.pos, sizeRate);
 		if (err < 0) {
 			DrawShape(); //‘ã‚í‚è‚ÉŽlŠpŒ`‚ð•`‰æ.
 			return -1;   //-1: ‰æ‘œ•`‰æƒGƒ‰[.

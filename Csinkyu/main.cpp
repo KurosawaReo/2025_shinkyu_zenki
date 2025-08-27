@@ -4,18 +4,20 @@
 */
 #include "GameManager.h"
 
-GameManager GameManager::inst; //インスタンスを生成.
-GameManager* gm;               //実体を入れる用.
+InputMng* p_input = InputMng::GetPtr(); //実体取得.
 
 TimerMicro tmFps(COUNT_DOWN, 1000000/FPS); //fps計測用タイマー.
+
+GameManager GameManager::inst; //インスタンスを生成.
+GameManager* gm;               //実体を入れる用.
 
 void Init() {
 	gm = GameManager::GetPtr(); //GameManagerから実体取得.
 	gm->Init();
 }
 
-void Update() {
-	gm->Update();
+bool Update() {
+	return gm->Update();
 }
 
 void Draw() {
@@ -50,11 +52,13 @@ int WINAPI WinMain(
 	tmFps.Start();
 	//メインループ.
 	//ESCが押されるか、エラーが発生すれば終了.
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
+	while (ProcessMessage() == 0) {
 		//一定時間ごとに処理.
 		if (tmFps.IntervalTime()) {
 			ClearDrawScreen(); //画面クリア.
-			Update();          //更新処理.
+			if (Update()){     //更新処理.
+				break; //ゲーム終了.
+			};
 			Draw();			   //描画処理.
 			ScreenFlip();      //表画面へ描画.
 		}

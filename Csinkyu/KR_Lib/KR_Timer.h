@@ -1,6 +1,6 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/08/25
 
    タイマー機能を追加します.
 */
@@ -69,12 +69,9 @@ namespace KR_Lib
 		TimerMicro(TimerMode _mode, LONGLONG _init) :
 			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化子.
 		{
-			Init();
-		}
-
-		void Init() {
 			QueryPerformanceFrequency(&freq); //頻度の取得.
 		}
+
 		void Start() {
 			QueryPerformanceCounter(&tmStart); //開始時刻の取得.
 			isMove = true; //計測中.

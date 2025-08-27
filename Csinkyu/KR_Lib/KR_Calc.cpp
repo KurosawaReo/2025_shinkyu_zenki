@@ -46,40 +46,15 @@ namespace KR_Lib
 	//“–‚½‚è”»’è(lŠp‚Æ‰~)
 	bool Calc::HitBoxCir(const Box* box, const Circle* cir) {
 
-		//ƒpƒ^[ƒ“1: lŠpŒ`‚Ìã‰º•Ó‚ÉG‚ê‚Ä‚¢‚é.
-		if (_is_in_range(cir->pos.x, box->pos.x-box->size.x/2,        box->pos.x+box->size.x/2)        &&
-			_is_in_range(cir->pos.y, box->pos.y-box->size.x/2-cir->r, box->pos.y+box->size.y/2+cir->r))
-		{
-			return true; //hit.
-		}
-		//ƒpƒ^[ƒ“2: lŠpŒ`‚Ì¶‰E•Ó‚ÉG‚ê‚Ä‚¢‚é.
-		if (_is_in_range(cir->pos.x, box->pos.x-box->size.x/2-cir->r, box->pos.x+box->size.x/2+cir->r) &&
-			_is_in_range(cir->pos.y, box->pos.y-box->size.x/2,        box->pos.y+box->size.y/2))
-		{
-			return true; //hit.
-		}
-		//ƒpƒ^[ƒ“3: lŠpŒ`‚ÌŠp‚ÉG‚ê‚Ä‚¢‚é.
-		{
-			//Šp‚ÌÀ•W.
-			const DBL_XY pos[4] = {
-				{box->pos.x-box->size.x/2, box->pos.y-box->size.y/2},
-				{box->pos.x+box->size.x/2, box->pos.y-box->size.y/2},
-				{box->pos.x-box->size.x/2, box->pos.y+box->size.y/2},
-				{box->pos.x+box->size.x/2, box->pos.y+box->size.y/2}
-			};
-			Circle tmpCir = {{}, 0, {}};
+		DBL_XY nearest;
 
-			//Šp4ƒ–Šƒ‹[ƒv.
-			for (auto& i : pos) {
-				//Šp‚É‰~‚ğ’u‚­.
-				tmpCir.pos = i;
-				//‚»‚Ì‰~‚É“–‚½‚Á‚Ä‚¢‚ê‚Î.
-				if (HitCirCir(cir, &tmpCir)) {
-					return true; //hit.
-				}
-			}
-		}
-		return false; //hit‚µ‚Ä‚È‚¢.
+		//‰~‚Ì’†S‚©‚çˆê”Ô‹ß‚¢lŠpŒ`‚Ì“_‚ğ‹‚ß‚é.
+		nearest.x = ClampNum(cir->pos.x, box->pos.x - box->size.x/2, box->pos.x + box->size.x/2);
+		nearest.y = ClampNum(cir->pos.y, box->pos.y - box->size.y/2, box->pos.y + box->size.y/2);
+		//‰~‚Ì’†S‚Æ‚Ì‹——£.
+		double dis = CalcDist(cir->pos, nearest);
+
+		return (dis <= cir->r); //‹——£‚ª”¼ŒaˆÈ‰º‚È‚çhit.
 	}
 	//“–‚½‚è”»’è(ü‚Æ‰~)
 	bool Calc::HitLineCir(const Line* line, const Circle* cir) {

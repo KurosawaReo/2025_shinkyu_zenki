@@ -41,7 +41,7 @@ namespace KR_Lib
 
 		//constructor.
 		ObjectCir() : Object() {
-			cir.r     = 10;       //デフォルトサイズ.
+			cir.r     = 10;       //デフォルト半径.
 			cir.color = 0xFFFFFF; //デフォルト色.
 		}
 
@@ -62,7 +62,7 @@ namespace KR_Lib
 		void   MoveMousePos  (bool isValidX = true, bool isValidY = true);
 		//描画(Drawの機能)
 		int    DrawShape     (bool isFill = true, bool isAnti = false);
-		int    DrawGraph     (DrawImg* img);
+		int    DrawGraph     (DrawImg* img, DBL_XY sizeRate = {1.0, 1.0});
 	};
 
 	//オブジェクト(四角形)
@@ -73,7 +73,7 @@ namespace KR_Lib
 
 		//constructor.
 		ObjectBox() : Object() {
-			box.size  = {10, 10}; //デフォルトサイズ.
+			box.size  = {20, 20}; //デフォルトサイズ.
 			box.color = 0xFFFFFF; //デフォルト色.
 		}
 
@@ -93,7 +93,7 @@ namespace KR_Lib
 		void   MoveMousePos  (bool isValidX = true, bool isValidY = true);
 		//描画(Drawの機能)
 		int    DrawShape     (bool isFill = true, bool isAnti = false);
-		int    DrawGraph     (DrawImg* img);
+		int    DrawGraph     (DrawImg* img, DBL_XY sizeRate = {1.0, 1.0});
 	};
 
 	//オブジェクト(グリッド上専用)

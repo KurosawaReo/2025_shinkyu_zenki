@@ -267,7 +267,7 @@ void GameManager::Reset() {
 }
 
 //更新.
-void GameManager::Update() {
+bool GameManager::Update() {
 
 	p_input->UpdateKey(); //キー入力更新.
 	p_input->UpdatePad(); //コントローラ入力更新.
@@ -286,6 +286,15 @@ void GameManager::Update() {
 	
 		default: assert(FALSE); break;
 	}
+
+	//特定の操作でゲーム終了
+	if (p_input->IsPushPadBtnTime(PAD_ACD_BTN_START) >= FPS * 1) {
+		return true; //筐体STARTボタン長押しで終了
+	}
+	else if (p_input->IsPushKey(KEY_ESC)) {
+		return true; //ESCAPEキーを押したら即終了.
+	}
+	return false; //続行.
 }
 
 //描画.
@@ -329,7 +338,7 @@ void GameManager::UpdateTitle()
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でゲーム開始.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_XBOX_X) == 1)
+	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
 		data.scene = SCENE_READY;     //準備シーンへ.
@@ -479,7 +488,7 @@ void GameManager::UpdateGame() {
 	effectMng.Update(); //エフェクト.
 	
 	//ポーズする.
-	if(p_input->IsPushKeyTime(KEY_P) == 1){
+	if((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)){
 		data.scene = SCENE_PAUSE;
 		tmScene[SCENE_GAME].Stop(); //一時停止.
 		tmSlowMode.Stop();          //一時停止.
@@ -490,7 +499,7 @@ void GameManager::UpdateEnd() {
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でタイトルへ.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_XBOX_A) == 1)
+	if ((p_input->IsPushKeyTime(KEY_SPACE) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1))
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
@@ -499,7 +508,7 @@ void GameManager::UpdateEnd() {
 void GameManager::UpdatePause() {
 
 	//ポーズ解除.
-	if (p_input->IsPushKeyTime(KEY_P) == 1) {
+	if ((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)) {
 
 		data.scene = SCENE_GAME;
 		tmScene[SCENE_GAME].Start(); //再開.
@@ -669,7 +678,7 @@ void GameManager::DrawGame() {
 	DrawUI();
 	DrawReflectMode(); //反射モード演出.
 
-//	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
+	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
 }
 void GameManager::DrawEnd() {
 	
