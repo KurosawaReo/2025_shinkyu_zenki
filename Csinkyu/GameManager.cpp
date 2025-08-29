@@ -1,8 +1,9 @@
-/*
-   - GameManager.cpp -
-   ゲーム全体管理.
-*/
 /*--------------------------------------------------------/
+   - REFLECT LINE -
+
+   (日本語表記: リフレクトライン)
+   (略称　　　: REFLINE/リフライン)
+/---------------------------------------------------------/
    TODOメモ
 
    2025/05/20:
@@ -79,6 +80,12 @@
    新障害物「花火」を追加する。Level4で登場予定。
    詳しくは後日相談, なおとに作ってもらう?
 
+   2025/08/27:
+   開始時、操作方法分岐を入れて以後の説明文を変えたい。
+   ・KEY_SPACE を押したら⇒Push SPACE (キーボード操作)
+   ・PAD_XBOX_Aを押したら⇒Push A     (パッド操作)
+   など。
+
 /---------------------------------------------------------/
    前期発表会後 変更内容
 
@@ -94,17 +101,40 @@
    ・強化アイテム追加。反射レーザーが隕石に当たっても反射する。
 
    [現在のLevel配分]
-   Level1:
-   　通常レーザー×2, 隕石
-   Level2:
-     直線レーザー×2
-   Level3:
-     波紋
-   Level4:
-     直線レーザー×4, アイテム×2
-   Level5:
-     通常レーザー×4, アイテムが強化
+   Level1: 通常レーザー×2, 隕石
+   Level2: 直線レーザー×2
+   Level3: 波紋
+   Level4: 直線レーザー×4, アイテム×2
+   Level5: 通常レーザー×4, アイテムが強化
+
+/---------------------------------------------------------/
+   【今後の制作予定】
+
+   こわす発表まで:
+   ・障害物「花火」追加
+   ・タイトルロゴ変更(ゲーム名変更のため)
+
+   TGS展示まで:
+   ・開始時の操作方法分岐(できれば)
+   ・ゲーム内チュートリアル
+   ・SCOREランキング実装
+   ・ポスターver2 & アンケート作る
+   
+   最終目標:
+   ・SCORE世界ランキング化
+   ・steam販売
+
+   [チュートリアル配分] ※案
+   tutorial1: 避ける
+   tutorial2: 取る
+   tutorial3: 壊す
+   tutorial4: 敵
+   Levelと同じような演出を出す。stepを踏んで練習させる。
 /--------------------------------------------------------*/
+/*
+   - GameManager.cpp -
+   ゲーム全体管理.
+*/
 
 #include "MeteoManager.h"
 #include "LaserManager.h"
@@ -209,7 +239,7 @@ void GameManager::Init() {
 		data.bestScore = file.ReadInt(); //数字を読み込んで登録.
 	}
 	
-	data.stage = 2; //test
+	data.stage = 1; //test
 
 	Reset();
 }
@@ -678,7 +708,7 @@ void GameManager::DrawGame() {
 	DrawUI();
 	DrawReflectMode(); //反射モード演出.
 
-	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
+//	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
 }
 void GameManager::DrawEnd() {
 	
