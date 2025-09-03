@@ -636,8 +636,8 @@ void GameManager::DrawTitle() {
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
 		str.Draw(ANC_MID, data.font2); //スコア値.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
-		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY + (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
-		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY - (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -834,13 +834,13 @@ void GameManager::DrawUI() {
 	str[0].Draw(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].Draw(ANC_MID, data.font3);
-	imgUI[1].DrawExtend({(double)str[1].data.pos.x, (double)str[1].data.pos.y+28}, {0.4, 0.4});
+	imgUI[1].DrawExtend({(double)str[1].data.pos.x, (double)str[1].data.pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].Draw(ANC_MID, data.font3);
-	imgUI[2].DrawExtend({(double)str[2].data.pos.x, (double)str[2].data.pos.y+28}, {0.4, 0.4});
+	imgUI[2].DrawExtend({(double)str[2].data.pos.x, (double)str[2].data.pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].Draw(ANC_MID, data.font3);
-	imgUI[3].DrawExtend({(double)str[3].data.pos.x, (double)str[3].data.pos.y+28}, {0.4, 0.4});
+	imgUI[3].DrawExtend({(double)str[3].data.pos.x, (double)str[3].data.pos.y+28}, {0.35, 0.4});
 	//テキスト(光沢用)
 	str[1].data.color = 0xFFFFFF;
 	str[2].data.color = 0xFFFFFF;
