@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="FireworksObstacle.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Global.h" />
     <ClCompile Include="Item.cpp" />
@@ -53,6 +54,7 @@
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="FireworksObstacle.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="KR_Lib\KR_Global.h" />
     <ClInclude Include="Item.h" />
