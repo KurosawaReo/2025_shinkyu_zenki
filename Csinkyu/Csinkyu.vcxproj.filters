@@ -28,6 +28,7 @@
     <ClCompile Include="KR_Lib\KR_Input.cpp" />
     <ClCompile Include="KR_Lib\KR_Object.cpp" />
     <ClCompile Include="Global.h" />
+    <ClCompile Include="FireworksObstacle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
@@ -53,5 +54,6 @@
     <ClInclude Include="KR_Lib\KR_File.h" />
     <ClInclude Include="KR_Lib\KR_Input.h" />
     <ClInclude Include="KR_Lib\KR_Object.h" />
+    <ClInclude Include="FireworksObstacle.h" />
   </ItemGroup>
 </Project>
