@@ -154,6 +154,16 @@ struct GameData
 #define SCORE_BREAK_METEO				(500)			//隕石を壊した時のスコア.
 #define SCORE_ANIM_TIME					(50)			//スコアのアニメーション時間.
 
+// 花火の定数定義
+#define FIREWORKS_MAX                    (10)           //最大同時花火数
+#define FIREWORKS_SPAWN_SPAN             (180)          //花火生成間隔（フレーム）
+#define FIREWORKS_WARNING_DURATION       (120)          //予告時間（フレーム）
+#define FIREWORKS_LAUNCH_HEIGHT          (50)           //打ち上げ高度
+#define FIREWORKS_EXPLOSION_RADIUS       (100)          //爆発半径
+#define FIREWORKS_SPARKS_COUNT           (16)           //火花の数（ベース）
+#define FIREWORKS_MIN_DISTANCE           (120)          //花火同士の最小距離
+#define FIREWORKS_GRAVITY                (0.3f)         //重力加速度
+
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)

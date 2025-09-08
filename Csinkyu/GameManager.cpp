@@ -144,6 +144,7 @@
 #include "Obstacle4main.h"
 #include "Obstacle5.h"
 #include "MapGimmickLaser.h"
+#include "FireworksObstacle.h"
 
 #include "Item.h"
 #include "Player.h"
@@ -162,6 +163,7 @@ Obstacle4_2 obstacle4_2;
 Obstacle4_3 obstacle4_3;
 Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
+FireworksObstacle fireworksObs;
 MapGimmickLaser mgl[4];
 //アイテムの実体.
 ItemManager item;
@@ -226,6 +228,7 @@ void GameManager::Init() {
 		obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
 		obstacle5.Init(&data, &player);
+		fireworksObs.Init(&data, &player, &laserMng);
 		//アイテムclass.
 		item.Init(&data, &player, &effectMng);
 		//プレイヤーclass.
@@ -289,6 +292,7 @@ void GameManager::Reset() {
 		ResetNorLaser();
 		ResetStrLaser();
 		obstacle5.Reset();
+		fireworksObs.Reset();
 		//アイテムclass.
 		item.Reset();
 		//プレイヤーclass.
@@ -558,6 +562,7 @@ void GameManager::UpdateObjects() {
 	obstacle4_1.Update();
 	obstacle4_2.Update();
 	item.Update();
+
 	//Lv2以上.
 	if (data.level >= 2) {
 		mgl[0].Update();
@@ -576,6 +581,7 @@ void GameManager::UpdateObjects() {
 	if (data.level >= 5) {
 		obstacle4_3.Update();
 		obstacle4_4.Update();
+		fireworksObs.Update();
 	}
 }
 
@@ -882,6 +888,7 @@ void GameManager::DrawObjects() {
 	if (data.level >= 5){
 		obstacle4_3.Draw();
 		obstacle4_4.Draw();
+		fireworksObs.Draw();
 	}
 }
 //反射モード演出.
