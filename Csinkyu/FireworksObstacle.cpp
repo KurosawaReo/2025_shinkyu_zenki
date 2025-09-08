@@ -217,13 +217,13 @@ void FireworksObstacle::DrawWarningEffect(int index) {
 	SetDrawBlendModeST(MODE_ALPHA, alphaValue);
 
 	Circle cir;
-	// 外側の円（オレンジ）
+	// 外側の円灰色
 	cir = { {fireworks[index].targetX, fireworks[index].targetY}, (float)warningSize, GetColor(128, 128, 128) };
 	DrawCircleST(&cir, false, true);
-	// 内側の円（黄色）
+	// 内側の円灰色
 	cir = { {fireworks[index].targetX, fireworks[index].targetY}, (float)(warningSize / 2), GetColor(128, 128, 128) };
 	DrawCircleST(&cir, false, true);
-	// 中心点（赤）
+	// 中心点灰色
 	cir = { {fireworks[index].targetX, fireworks[index].targetY}, 5, GetColor(128,128, 128) };
 	DrawCircleST(&cir, false, true);
 }

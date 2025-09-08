@@ -524,7 +524,6 @@ void GameManager::UpdateObjects() {
 	obstacle4_2.Update();
 	item.Update();
 
-	fireworksObs.Update();
 	//Lv2ˆÈã.
 	if (data.level >= 2) {
 		mgl[0].Update();
@@ -543,6 +542,7 @@ void GameManager::UpdateObjects() {
 	if (data.level >= 5) {
 		obstacle4_3.Update();
 		obstacle4_4.Update();
+		fireworksObs.Update();
 	}
 }
 
@@ -831,7 +831,6 @@ void GameManager::DrawObjects() {
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
 	item.Draw();
-	fireworksObs.Draw();
 	//Lv2ˆÈã.
 	if (data.level >= 2) {
 		mgl[0].Draw();
@@ -850,6 +849,7 @@ void GameManager::DrawObjects() {
 	if (data.level >= 5){
 		obstacle4_3.Draw();
 		obstacle4_4.Draw();
+		fireworksObs.Draw();
 	}
 }
 //”½Ëƒ‚[ƒh‰‰o.
