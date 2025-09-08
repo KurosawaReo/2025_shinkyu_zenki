@@ -1,8 +1,8 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/08/25
+   ver: 2025/09/07
 
-   計算機能を追加します.
+   計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
 */
 #if !defined DEF_KR_GLOBAL
@@ -14,8 +14,6 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	Calc Calc::inst; //インスタンスを生成.
-
 	//当たり判定(円と円)
 	bool Calc::HitCirCir(const Circle* cir1, const Circle* cir2) {
 

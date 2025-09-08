@@ -28,6 +28,9 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Global.h" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="KR_Lib\KR_Debug.cpp" />
+    <ClCompile Include="KR_Lib\KR_Main.cpp" />
+    <ClCompile Include="KR_Lib\KR_Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapGimmickLaser.cpp" />
     <ClCompile Include="KR_Lib\KR_Calc.cpp" />
@@ -56,8 +59,11 @@
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="FireworksObstacle.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="KR_Lib\KR_Debug.h" />
     <ClInclude Include="KR_Lib\KR_Global.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="KR_Lib\KR_Main.h" />
+    <ClInclude Include="KR_Lib\KR_Scene.h" />
     <ClInclude Include="MapGimmickLaser.h" />
     <ClInclude Include="KR_Lib\KR_Calc.h" />
     <ClInclude Include="KR_Lib\KR_Draw.h" />

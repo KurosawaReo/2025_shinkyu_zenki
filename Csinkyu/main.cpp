@@ -4,23 +4,19 @@
 */
 #include "GameManager.h"
 
-InputMng* p_input = InputMng::GetPtr(); //実体取得.
-
-TimerMicro tmFps(COUNT_DOWN, 1000000/FPS); //fps計測用タイマー.
-
 GameManager GameManager::inst; //インスタンスを生成.
 GameManager* gm;               //実体を入れる用.
 
-void Init() {
+void DxLibMain::Init() {
 	gm = GameManager::GetPtr(); //GameManagerから実体取得.
 	gm->Init();
 }
 
-bool Update() {
-	return gm->Update();
+void DxLibMain::Update() {
+	gm->Update();
 }
 
-void Draw() {
+void DxLibMain::Draw() {
 	gm->Draw();
 }
 
@@ -35,37 +31,10 @@ int WINAPI WinMain(
 ){
 #endif
 
-	ChangeWindowMode(IS_WINDOW_MODE);						//TRUEでwindow, FALSEで全画面にする.
-	SetWindowSize(WINDOW_WID, WINDOW_HEI);					//ウィンドウサイズの設定.
-	SetGraphMode(WINDOW_WID, WINDOW_HEI, WINDOW_COLOR_BIT);	//解像度の設定.
-	SetDrawScreen(DX_SCREEN_BACK);							//裏画面へ描画(ダブルバッファ)
-	SetOutApplicationLogValidFlag(FALSE);                   //FALSEでLog.txtにログを書き込まない.
-	SetWaitVSyncFlag(FALSE);                                //FALSEでVSyncを無効化(FPS制限なし)
+	int err = DxLibMain::GetPtr()->InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
+	_return(-1, err < 0); //初期化エラー.
 
-	//DxLibの初期化.
-	if (DxLib_Init() == -1) {
-		return -1; //エラーで終了.
-	}
-
-	//初期化処理.
-	Init();
-	tmFps.Start();
-	//メインループ.
-	//ESCが押されるか、エラーが発生すれば終了.
-	while (ProcessMessage() == 0) {
-		//一定時間ごとに処理.
-		if (tmFps.IntervalTime()) {
-			ClearDrawScreen(); //画面クリア.
-			if (Update()){     //更新処理.
-				break; //ゲーム終了.
-			};
-			Draw();			   //描画処理.
-			ScreenFlip();      //表画面へ描画.
-		}
-	}
-
-	DxLib_End();               //DxLibの終了処理.
-	DeleteFile(_T("Log.txt")); //Log.txtが生成されるので消去する.
+	DxLibMain::GetPtr()->LoopDx();
 
 	return 0;
 }

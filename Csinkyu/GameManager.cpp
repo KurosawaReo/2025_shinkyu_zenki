@@ -87,8 +87,8 @@
    など。
 
    2025/09/08:
-   花火がスローモードに対応してない。たまに不発弾もある。
-   この辺のバグ修正をしたい。
+   ・花火のバグ修正(スローモードに対応してない, たまに不発する)
+   ・
 
 /---------------------------------------------------------/
    前期発表会後 変更内容
@@ -305,7 +305,7 @@ void GameManager::Reset() {
 }
 
 //更新.
-bool GameManager::Update() {
+void GameManager::Update() {
 
 	p_input->UpdateKey(); //キー入力更新.
 	p_input->UpdatePad(); //コントローラ入力更新.
@@ -327,12 +327,11 @@ bool GameManager::Update() {
 
 	//特定の操作でゲーム終了
 	if (p_input->IsPushPadBtnTime(PAD_ACD_BTN_START) >= FPS * 1) {
-		return true; //筐体STARTボタン長押しで終了
+		DxLibMain::GetPtr()->GameEnd(); //筐体STARTボタン長押しで終了.
 	}
 	else if (p_input->IsPushKey(KEY_ESC)) {
-		return true; //ESCAPEキーを押したら即終了.
+		DxLibMain::GetPtr()->GameEnd(); //ESCAPEキーを押したら即終了.
 	}
-	return false; //続行.
 }
 
 //描画.

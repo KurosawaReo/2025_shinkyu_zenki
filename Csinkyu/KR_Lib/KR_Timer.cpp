@@ -1,8 +1,8 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/08/25
+   ver: 2025/09/03
 
-   タイマー機能を追加します.
+   タイマー機能を追加します。
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -53,6 +53,21 @@ namespace KR_Lib
 		else {
 			return tmSavePass; //保存時間を返す.
 		}	
+	}
+	//一定時間ごとにtrueを返す(CountDown専用)
+	bool Timer::IntervalTime() {
+
+		//CountDownじゃない場合はfalseを返し続ける.
+		if (mode != COUNT_DOWN) {
+			return false;
+		}
+
+		//タイマーが0になるまで.
+		if (GetPassTime() > 0) {
+			return false; //falseを返す.
+		}
+		Start();     //時間リセット.
+		return true; //trueを返す.
 	}
 
 // ▼*---=[ TimerMicro ]=---*▼ //

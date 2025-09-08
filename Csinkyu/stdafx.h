@@ -31,11 +31,13 @@
 
 #include "KR_Lib/KR_Global.h"
 #include "KR_Lib/KR_Calc.h"
+#include "KR_Lib/KR_Debug.h"
 #include "KR_Lib/KR_Draw.h"
 #include "KR_Lib/KR_File.h"
 #include "KR_Lib/KR_Input.h"
 #include "KR_Lib/KR_Object.h"
 #include "KR_Lib/KR_Sound.h"
 #include "KR_Lib/KR_Timer.h"
+#include "KR_Lib/KR_Main.h"
 
 #include "Global.h"
