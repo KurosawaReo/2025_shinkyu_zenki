@@ -35,7 +35,8 @@ private:
 	float  afterCntr{};					   //残像用時間カウンター.
 	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
-	DrawImg imgPlayer{}; //プレイヤー画像.
+	DrawImg imgPlayer[2]{}; //プレイヤー画像.
+	double  imgRot{};       //プレイヤーの画像角度.
 
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
