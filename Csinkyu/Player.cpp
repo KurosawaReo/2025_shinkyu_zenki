@@ -16,6 +16,8 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 	p_calc      = Calc::GetPtr();
 
 	isDebug = false;
+
+	imgPlayer.LoadFile(_T("Resources/Images/player_test.png"));
 }
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
@@ -85,6 +87,8 @@ void Player::Draw()
 		DrawAfterImage();
 		DrawReflectEffects();  // エフェクトを先に描画
 
+		//四角形ver.
+#if false
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
 		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
@@ -102,6 +106,11 @@ void Player::Draw()
 
 		DrawBoxST(&box1, ANC_MID, false, true);
 		DrawBoxST(&box2, ANC_MID, false, true);
+#endif
+		static double rot = 0;
+		rot += 0.5;
+		//画像描画.
+		imgPlayer.DrawRota(hit.pos, 0.2, rot);
 	}
 }
 

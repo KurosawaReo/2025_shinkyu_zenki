@@ -69,13 +69,6 @@
    特定の条件で行くことができて、特別なルールがある感じで。
    特別感のあるBGMや背景に変える。
 
-   2025/08/15:
-   配列をvectorに変えたい。
-   push_backという関数で要素の追加ができるため、生成するときはこれで追加する。
-
-   最大サイズの定数はそのまま残していい気がする
-   例: if (size() < MAX_SIZE) {}
-
    2025/08/23:
    新障害物「花火」を追加する。Level4で登場予定。
    詳しくは後日相談, なおとに作ってもらう?
@@ -88,7 +81,8 @@
 
    2025/09/08:
    ・花火のバグ修正(スローモードに対応してない, たまに不発する)
-   ・
+   ・配列をvectorに変える。最初にreserveで必要分確保し、デストラクタで解放すればいい。
+   ・Calc.hのCalcクラスはなくていい。関数群として置き、KR_Lib名前空間内にCalcという名前空間を置けばOK。
 
 /---------------------------------------------------------/
    前期発表会後 変更内容
@@ -316,11 +310,13 @@ void GameManager::Update() {
 	//シーン別.
 	switch (data.scene) 
 	{
-		case SCENE_TITLE: UpdateTitle(); break;
-		case SCENE_READY: UpdateReady(); break;
-		case SCENE_GAME:  UpdateGame();  break;
-		case SCENE_END:   UpdateEnd();   break;
-		case SCENE_PAUSE: UpdatePause(); break;
+		case SCENE_TITLE:    UpdateTitle();    break;
+		case SCENE_MENU:     UpdateMenu();     break;
+		case SCENE_TUTORIAL: UpdateTutorial(); break;
+		case SCENE_READY:    UpdateReady();    break;
+		case SCENE_GAME:     UpdateGame();     break;
+		case SCENE_END:      UpdateEnd();      break;
+		case SCENE_PAUSE:    UpdatePause();    break;
 	
 		default: assert(FALSE); break;
 	}
@@ -342,11 +338,13 @@ void GameManager::Draw() {
 	//シーン別.
 	switch (data.scene) 
 	{
-		case SCENE_TITLE: DrawTitle(); break;
-		case SCENE_READY: DrawReady(); break;
-		case SCENE_GAME:  DrawGame();  break;
-		case SCENE_END:   DrawEnd();   break;
-		case SCENE_PAUSE: DrawPause(); break;
+		case SCENE_TITLE:    DrawTitle();    break;
+		case SCENE_MENU:     DrawMenu();     break;
+		case SCENE_TUTORIAL: DrawTutorial(); break;
+		case SCENE_READY:    DrawReady();    break;
+		case SCENE_GAME:     DrawGame();     break;
+		case SCENE_END:      DrawEnd();      break;
+		case SCENE_PAUSE:    DrawPause();    break;
 
 		default: assert(FALSE); break;
 	}
@@ -380,6 +378,12 @@ void GameManager::UpdateTitle()
 		tmScene[SCENE_READY].Start(); //タイマー開始.
 		data.scene = SCENE_READY;     //準備シーンへ.
 	}
+}
+void GameManager::UpdateMenu() {
+
+}
+void GameManager::UpdateTutorial() {
+
 }
 void GameManager::UpdateReady() {
 
@@ -689,6 +693,12 @@ void GameManager::DrawTitle() {
 			p_sound->Play(_T("Break"), false, 65);
 		}
 	}
+}
+void GameManager::DrawMenu() {
+
+}
+void GameManager::DrawTutorial() {
+
 }
 void GameManager::DrawReady() {
 	

@@ -59,6 +59,8 @@ public:
 
 	//Update.
 	void UpdateTitle();
+	void UpdateMenu();
+	void UpdateTutorial();
 	void UpdateReady();
 	void UpdateGame();
 	void UpdateEnd();
@@ -68,6 +70,8 @@ public:
 
 	//Draw.
 	void DrawTitle();
+	void DrawMenu();
+	void DrawTutorial();
 	void DrawReady();
 	void DrawGame();
 	void DrawEnd();

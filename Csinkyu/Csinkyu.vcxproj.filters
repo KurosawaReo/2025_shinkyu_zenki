@@ -32,6 +32,7 @@
     <ClCompile Include="KR_Lib\KR_Debug.cpp" />
     <ClCompile Include="KR_Lib\KR_Main.cpp" />
     <ClCompile Include="KR_Lib\KR_Scene.cpp" />
+    <ClCompile Include="TutorialManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
@@ -61,5 +62,6 @@
     <ClInclude Include="KR_Lib\KR_Debug.h" />
     <ClInclude Include="KR_Lib\KR_Main.h" />
     <ClInclude Include="KR_Lib\KR_Scene.h" />
+    <ClInclude Include="TutorialManager.h" />
   </ItemGroup>
 </Project>
