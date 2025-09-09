@@ -16,12 +16,14 @@ using namespace KR_Lib;
 enum Scene
 {
 	SCENE_TITLE,
+	SCENE_MENU,     //メニュー画面.
+	SCENE_TUTORIAL, //チュートリアル.
 	SCENE_READY,
 	SCENE_GAME,
 	SCENE_END,
-	SCENE_PAUSE, //ポーズ画面.
+	SCENE_PAUSE,    //ポーズ画面.
 
-	SCENE_COUNT, //総数.
+	SCENE_COUNT,    //総数.
 };
 //レーザー移動列挙.
 enum MoveDir

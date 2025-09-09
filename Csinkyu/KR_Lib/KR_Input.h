@@ -1,8 +1,8 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/08/27
+   ver: 2025/09/07
 
-   入力操作機能を追加します.
+   入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
@@ -115,12 +115,28 @@ namespace KR_Lib
 		PAD_ACD_BTN_LOWER_1,
 		PAD_ACD_BTN_LOWER_2,
 		PAD_ACD_BTN_UPPER_2,
-		PAD_ACD_UNNOWN1,     //不明.
+		PAD_ACD_UNKNOWN1,     //不明.
 		PAD_ACD_BTN_UPPER_3,
-		PAD_ACD_UNNOWN2,     //不明.
+		PAD_ACD_UNKNOWN2,     //不明.
 		PAD_ACD_BTN_LOWER_3,
-		PAD_ACD_UNNOWN3,     //不明.
+		PAD_ACD_UNKNOWN3,     //不明.
 		PAD_ACD_BTN_START,
+	};
+	//何の操作か(Action登録用)
+	enum InputType
+	{
+		KEY,
+		MOUSE,
+		PAD_XBOX,
+		PAD_SWT,
+		PAD_ACD
+	};
+
+	//Actionで保存するデータ.
+	struct ActionInfo
+	{
+		InputType type; //何の操作か.
+		int       id;   //操作ID.
 	};
 
 	//キーやボタンの種類の最大数(変更禁止)
@@ -131,16 +147,15 @@ namespace KR_Lib
 	//入力管理クラス[継承不可]
 	class InputMng final
 	{
-	private: //実体.
-		static InputMng inst; //自身のインスタンス.
-
 	private: //データ.
-		int tmKey   [KEY_MAX];     //キーを押している時間.
-		int tmMouse [MOUSE_MAX];   //マウスを押下している時間.(bitフラグで管理)
-		int tmPadBtn[PAD_BTN_MAX]; //コントローラボタンを押下している時間.(bitフラグで管理)
+		int tmKey   [KEY_MAX]{};     //キーを押している時間.
+		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.(bitフラグで管理)
+		int tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(bitフラグで管理)
 
-		INT_XY mPos;     //マウス座標.
-		INT_XY stickVec; //スティック入力.
+		INT_XY mPos{};     //マウス座標.
+		INT_XY stickVec{}; //スティック入力.
+
+		map<MY_STRING, vector<ActionInfo>> actionData{}; //アクション記録用.
 
 	private: //関数.
 		DBL_XY GetVector4Dir(INT_XY pow);
@@ -148,10 +163,11 @@ namespace KR_Lib
 	public:
 		//実体の取得.
 		static InputMng* GetPtr() {
+			static InputMng inst; //自身のインスタンス.
 			return &inst;
 		}
 
-		//判定.
+		//操作判定.
 		bool   IsPushKey       (KeyID id);
 		int    IsPushKeyTime   (KeyID id);
 		bool   IsPushMouse     (MouseID id);
@@ -162,15 +178,24 @@ namespace KR_Lib
 		int    IsPushPadBtnTime(PadXboxID   id);
 		int    IsPushPadBtnTime(PadSwitchID id);
 		int    IsPushPadBtnTime(PadArcadeID id);
+		bool   IsPushAction    (MY_STRING name);
+		int    IsPushActionTime(MY_STRING name);
 
-		//取得.
-		void   GetMousePos     (DBL_XY* pos, bool isValidX = true, bool isValidY = true);
-		void   GetPadStickXY   (DBL_XY* pos);
+		//アクション.
+		void   AddAction       (MY_STRING name, KeyID       id);
+		void   AddAction       (MY_STRING name, MouseID     id);
+		void   AddAction       (MY_STRING name, PadXboxID   id);
+		void   AddAction       (MY_STRING name, PadSwitchID id);
+		void   AddAction       (MY_STRING name, PadArcadeID id);
 
 		//移動系.
 		void   MoveKey4Dir     (DBL_XY* pos, float speed);
 		void   MovePad4Dir     (DBL_XY* pos, float speed);
 		void   MovePadStick    (DBL_XY* pos, float speed);
+
+		//取得.
+		DBL_XY GetMousePos     (bool isValidX = true, bool isValidY = true);
+		DBL_XY GetPadStickXY   ();
 
 		//更新.
 		void   UpdateKey();

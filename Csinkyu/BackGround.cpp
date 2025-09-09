@@ -23,7 +23,7 @@ void BG_Tile::Draw(bool isSlow, double slowTime) {
 
 	//’Êíƒ‚[ƒh.
 	{
-		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
+		double alpha = 50 + 70 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_data->counter)/(WINDOW_WID/4))+1)/2);
 		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
 	}

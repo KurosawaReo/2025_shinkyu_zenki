@@ -1,8 +1,8 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/09/07
 
-   サウンド機能を追加します.
+   サウンド機能を追加します。
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -120,8 +120,6 @@ namespace KR_Lib
 
 // ▼*---=[ Sound ]=---*▼ //
 
-	SoundMng SoundMng::inst; //インスタンスを生成.
-
 	//デストラクタ.
 	SoundMng::~SoundMng() {
 
@@ -145,18 +143,22 @@ namespace KR_Lib
 		return 0; //正常終了.
 	}
 	//サウンド再生.
-	void SoundMng::Play(MY_STRING saveName, bool isLoop, int volume) {
+	int SoundMng::Play(MY_STRING saveName, bool isLoop, int volume) {
 		//存在すれば.
 		if (sound.count(saveName) > 0) {
 			sound[saveName].Play(isLoop, volume); //再生.
+			return 0;
 		}
+		return -1; //-1: saveNameが見つからない.
 	}
 	//サウンド停止.
-	void SoundMng::Stop(MY_STRING saveName) {
+	int SoundMng::Stop(MY_STRING saveName) {
 		//存在すれば.
 		if (sound.count(saveName) > 0) {
 			sound[saveName].Stop(); //停止.
+			return 0;
 		}
+		return -1; //-1: saveNameが見つからない.
 	}
 	//サウンド更新.
 	void SoundMng::Update() {

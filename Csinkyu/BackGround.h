@@ -8,8 +8,8 @@ class BG_Tile
 {
 	friend class BackGround; //アクセス許可.
 private:
-	INT_XY     pos{};
-	DBL_XY     sizeRate{};
+	INT_XY   pos{};
+	DBL_XY   sizeRate{};
 	DrawImg* img[2]{};
 
 	Timer timer = Timer(COUNT_DOWN, 3); //発光する時間.
@@ -29,7 +29,7 @@ class BackGround
 {
 private:
 	vector<BG_Tile> tiles;      //背景タイルデータ.
-	DrawImg       imgBG[2]{}; //背景画像.
+	DrawImg         imgBG[2]{}; //背景画像.
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 

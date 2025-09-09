@@ -28,6 +28,9 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Global.h" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="KR_Lib\KR_Debug.cpp" />
+    <ClCompile Include="KR_Lib\KR_Main.cpp" />
+    <ClCompile Include="KR_Lib\KR_Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapGimmickLaser.cpp" />
     <ClCompile Include="KR_Lib\KR_Calc.cpp" />
@@ -50,14 +53,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TutorialManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="FireworksObstacle.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="KR_Lib\KR_Debug.h" />
     <ClInclude Include="KR_Lib\KR_Global.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="KR_Lib\KR_Main.h" />
+    <ClInclude Include="KR_Lib\KR_Scene.h" />
     <ClInclude Include="MapGimmickLaser.h" />
     <ClInclude Include="KR_Lib\KR_Calc.h" />
     <ClInclude Include="KR_Lib\KR_Draw.h" />
@@ -76,6 +83,7 @@
     <ClInclude Include="Obstacle5.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TutorialManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

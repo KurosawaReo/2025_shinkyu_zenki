@@ -1,8 +1,8 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/08/25
+   ver: 2025/09/07
 
-   計算機能を追加します.
+   計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
@@ -17,12 +17,10 @@ namespace KR_Lib
 	//計算機能クラス[継承不可]
 	class Calc final
 	{
-	private: //実体.
-		static Calc inst; //自身のインスタンス.
-
-	public:
-		//実体の取得.
+	public: 
+		//実体取得用.
 		static Calc* GetPtr() {
+			static Calc inst; //自身のインスタンス.
 			return &inst;
 		}
 
@@ -32,7 +30,7 @@ namespace KR_Lib
 		bool		HitBoxCir		(const Box*    box,  const Circle* cir);
 		bool		HitLineCir		(const Line*   line, const Circle* cir);
 
-		//限界値.
+		//範囲限界.
 		void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
 		bool		IsOutInArea		(DBL_XY  pos, INT_XY size, int left, int up, int right, int down, bool isCompOut);
 

@@ -1,8 +1,8 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/09/07
 
-   KR_Lib全体で使う汎用機能を追加します.
+   KR_Lib全体で使う汎用機能を追加します。
 */
 #pragma once
 
@@ -16,10 +16,11 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <cassert> //assert.h をラップしたもの.
-#include <cmath>   //math.h   をラップしたもの.
-#include <cstdlib> //stdlib.h をラップしたもの.
-#include <ctime>   //time.h   をラップしたもの.
+#include <algorithm> //vectorで検索をする用.
+#include <cassert>   //assert.h をラップしたもの.
+#include <cmath>     //math.h   をラップしたもの.
+#include <cstdlib>   //stdlib.h をラップしたもの.
+#include <ctime>     //time.h   をラップしたもの.
 using namespace std;
 //DxLib.
 #include "DxLib.h"
@@ -30,10 +31,10 @@ using namespace std;
 #define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
 #define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
 //便利マクロ.
-#define _if_check(n)              assert(n); if(n)                     //if文の前に同条件のassertを挟む.
-#define _return(num, cond)        if (cond) { return num; }            //条件に合うならreturnする.(cond = 条件)
-#define _is_in_range(num, n1, n2) ((n1 <= num) && (num <= n2))         //範囲内に数値があるかどうか.
-#define _debug_log(var)           printfDx(_T("%s: %d\n"), #var, var); //変数名と値を表示する.
+#define _if_check(n)              assert(n); if(n)             //if文の前に同条件のassertを挟む.
+#define _return(num, cond)        if (cond) { return num; }    //条件に合うならreturnする.(cond = 条件)
+#define _is_in_range(num, n1, n2) ((n1 <= num) && (num <= n2)) //範囲内に数値があるかどうか.
+#define _get_name(value)          #value                       //名前を取得(変数名など)
 //特殊マクロ(基本KR_Libで使う用)
 #define _type_num_only(T)		  typename = typename enable_if<is_arithmetic<T>::value>::type //int, float, double, char型のみOKとする.
 

@@ -1,9 +1,11 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/08/27
+   ver: 2025/09/07
 
-   入力操作機能を追加します.
+   入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
+
+   TODO: Actionをどれか1つの最長時間ではなく, どれか1つでも押した総時間に変えたい.
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -14,8 +16,6 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	InputMng InputMng::inst; //インスタンスを生成.
-
 	//キー入力の判定.
 	bool InputMng::IsPushKey(KeyID id) {
 		return (tmKey[id] > 0);    //押してるならtrue.
@@ -49,24 +49,67 @@ namespace KR_Lib
 	int  InputMng::IsPushPadBtnTime(PadArcadeID id) {
 		return tmPadBtn[id];       //押している時間.
 	}
-
-	//マウス座標取得.
-	void InputMng::GetMousePos(DBL_XY* pos, bool isValidX, bool isValidY) {
-	
-		//xを反映させる.
-		if (isValidX) {
-			pos->x = (double)mPos.x; //double型にして反映.
-		}
-		//yを反映させる.
-		if (isValidY){
-			pos->y = (double)mPos.y; //double型にして反映.
-		}
+	//アクション判定.
+	bool InputMng::IsPushAction(MY_STRING name) {
+		return (IsPushActionTime(name) > 0); //押してるならtrue.
 	}
-	//コントローラスティック操作取得.
-	void InputMng::GetPadStickXY(DBL_XY* pos) {
-		//範囲-1000～1000を-1.0～1.0に変換.
-		pos->x = (double)stickVec.x/1000;
-		pos->y = (double)stickVec.y/1000;
+	int  InputMng::IsPushActionTime(MY_STRING name) {
+
+		const auto data = actionData.find(name); //mapから名前検索.
+		int pushTime = 0; //押している最長時間を記録する.
+
+		//登録されたActionInfoを全ループ.
+		for (auto& i : data->second) {
+			switch (i.type)
+			{
+				case KEY: 
+					pushTime = max(IsPushKeyTime   (static_cast<KeyID>      (i.id)), pushTime);
+					break;
+				case MOUSE: 
+					pushTime = max(IsPushMouseTime (static_cast<MouseID>    (i.id)), pushTime);
+					break;
+				case PAD_XBOX:
+					pushTime = max(IsPushPadBtnTime(static_cast<PadXboxID>  (i.id)), pushTime);
+					break;
+				case PAD_SWT:
+					pushTime = max(IsPushPadBtnTime(static_cast<PadSwitchID>(i.id)), pushTime);
+					break;
+				case PAD_ACD:
+					pushTime = max(IsPushPadBtnTime(static_cast<PadArcadeID>(i.id)), pushTime);
+					break;
+
+				default: assert(FALSE); break;
+			}
+		}
+
+		return pushTime; //最長時間を返す.
+	}
+
+	//アクション追加.
+	void InputMng::AddAction(MY_STRING name, KeyID id) {
+		
+		ActionInfo info{ KEY, _int(id) };
+		actionData[name].push_back(info); //Key操作で登録.
+	}
+	void InputMng::AddAction(MY_STRING name, MouseID id) {
+
+		ActionInfo info{ MOUSE, _int(id) };
+		actionData[name].push_back(info); //Mouse操作で登録.
+	}
+	void InputMng::AddAction(MY_STRING name, PadXboxID id) {
+
+		ActionInfo info{ PAD_XBOX, _int(id) };
+		actionData[name].push_back(info); //Pad操作(xbox)で登録.
+	}
+	void InputMng::AddAction(MY_STRING name, PadSwitchID id) {
+
+		ActionInfo info{ PAD_SWT, _int(id) };
+		actionData[name].push_back(info); //Pad操作(switch)で登録.
+	}
+	void InputMng::AddAction(MY_STRING name, PadArcadeID id) {
+
+		ActionInfo info{ PAD_ACD, _int(id) };
+		actionData[name].push_back(info); //Pad操作(arcade)で登録.
 	}
 
 	//キーボード:十字キー操作.
@@ -95,7 +138,7 @@ namespace KR_Lib
 	//コントローラ:十字キー操作.
 	void InputMng::MovePad4Dir(DBL_XY* pos, float speed) {
 
-		INT_XY pow{};  //移動力.
+		INT_XY pow{}; //移動力.
 
 		//キー入力に応じて移動力を与える.
 		if (IsPushPadBtn(PAD_XBOX_UP)) {
@@ -118,9 +161,8 @@ namespace KR_Lib
 	//コントローラ:スティック操作.
 	void InputMng::MovePadStick(DBL_XY* pos, float speed) {
 	
-		DBL_XY vec;
-		GetPadStickXY(&vec); //入力取得.
-
+		//入力取得.
+		DBL_XY vec = GetPadStickXY();
 		//座標移動.
 		pos->x += vec.x * speed;
 		pos->y += vec.y * speed;
@@ -142,6 +184,27 @@ namespace KR_Lib
 		}
 
 		return move;
+	}
+
+	//マウス座標取得.
+	DBL_XY InputMng::GetMousePos(bool isValidX, bool isValidY) {
+	
+		DBL_XY pos{};
+
+		//xを反映させる.
+		if (isValidX) {
+			pos.x = _dbl(mPos.x); //double型にして反映.
+		}
+		//yを反映させる.
+		if (isValidY){
+			pos.y = _dbl(mPos.y); //double型にして反映.
+		}
+		return pos;
+	}
+	//コントローラスティック操作取得.
+	DBL_XY InputMng::GetPadStickXY() {
+		//範囲-1000～1000を-1.0～1.0に変換.
+		return { _dbl(stickVec.x)/1000, _dbl(stickVec.y)/1000 };
 	}
 
 	//ボタンの更新処理.
