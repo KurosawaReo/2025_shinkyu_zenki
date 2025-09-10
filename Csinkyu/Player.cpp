@@ -17,6 +17,7 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 
 	isDebug = false;
 
+	//画像読み込み.
 	imgPlayer[0].LoadFile(_T("Resources/Images/player_normal.png"));
 	imgPlayer[1].LoadFile(_T("Resources/Images/player_reflect.png"));
 }
@@ -155,23 +156,19 @@ void Player::DrawAfterImage()
 			//透明度反映.
 			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-//			Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
 			Circle cir = { afterPos[i], PLAYER_SIZE/1.5, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
 			){
-//				box.color = COLOR_PLY_AFT_REF;
 				cir.color = COLOR_PLY_AFT_REF;
 			}
 			//通常カラー.
 			else
 			{
-//				box.color = COLOR_PLY_AFT_NOR;
 				cir.color = COLOR_PLY_AFT_NOR;
 			}
 
-//			DrawBoxST(&box, ANC_MID, false, true);
 			DrawCircleST(&cir, false, true);
 		}
 	}
