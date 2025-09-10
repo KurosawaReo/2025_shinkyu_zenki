@@ -207,6 +207,12 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	//最高スコア更新.
 	
+	//アクション登録.
+	p_input->AddAction(_T("GameNext"),  KEY_SPACE);           //キー操作.
+	p_input->AddAction(_T("GameNext"),  PAD_ACD_BTN_UPPER_1); //アーケード操作.
+	p_input->AddAction(_T("GamePause"), KEY_P);               //キー操作.
+	p_input->AddAction(_T("GamePause"), PAD_ACD_BTN_UPPER_2); //アーケード操作.
+
 	//Init処理
 	{
 		//管理class.
@@ -298,9 +304,10 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	p_input->UpdateKey(); //キー入力更新.
-	p_input->UpdatePad(); //コントローラ入力更新.
-	p_sound->Update();    //サウンド更新.
+	p_input->UpdateKey();    //キー入力更新.
+	p_input->UpdatePad();    //コントローラ入力更新.
+	p_input->UpdateAction(); //アクション更新.
+	p_sound->Update();       //サウンド更新.
 
 	bg.Update(); //背景.
 
@@ -364,13 +371,13 @@ void GameManager::ResetStrLaser() {
 }
 
 //シーン別更新.
-void GameManager::UpdateTitle() 
+void GameManager::UpdateTitle()
 {
 	player.Update();    //プレイヤー.
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でゲーム開始.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1)
+	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
 		data.scene = SCENE_READY;     //準備シーンへ.
@@ -392,7 +399,6 @@ void GameManager::UpdateReady() {
 
 		tmScene[SCENE_GAME].Start(); //ゲーム開始.
 		data.scene = SCENE_GAME;     //ゲームシーンへ.
-//		data.level = 1;              //Lv1にする.
 
 		//サウンド.
 		p_sound->Play(_T("LevelUp"), false, 100);
@@ -526,7 +532,7 @@ void GameManager::UpdateGame() {
 	effectMng.Update(); //エフェクト.
 	
 	//ポーズする.
-	if((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)){
+	if(p_input->IsPushActionTime(_T("GamePause")) == 1){
 		data.scene = SCENE_PAUSE;
 		tmScene[SCENE_GAME].Stop(); //一時停止.
 		tmSlowMode.Stop();          //一時停止.
@@ -537,7 +543,7 @@ void GameManager::UpdateEnd() {
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でタイトルへ.
-	if ((p_input->IsPushKeyTime(KEY_SPACE) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1))
+	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
@@ -546,7 +552,7 @@ void GameManager::UpdateEnd() {
 void GameManager::UpdatePause() {
 
 	//ポーズ解除.
-	if ((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)) {
+	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
 		data.scene = SCENE_GAME;
 		tmScene[SCENE_GAME].Start(); //再開.
@@ -835,13 +841,13 @@ void GameManager::DrawUI() {
 	};
 	TCHAR text[256];
 	_stprintf(text, _T("LEVEL %d"),        data.level);
-	str[0].data.text = text;
+	str[0].text = text;
 	_stprintf(text, _T("BEST SCORE:%05d"), data.bestScore);
-	str[1].data.text = text;
+	str[1].text = text;
 	_stprintf(text, _T("SCORE:%05d"),      data.score);
-	str[2].data.text = text;
+	str[2].text = text;
 	_stprintf(text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
-	str[3].data.text = text;
+	str[3].text = text;
 		
 	//背景画像.
 	imgUI[0].DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
@@ -850,17 +856,17 @@ void GameManager::DrawUI() {
 	str[0].Draw(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].Draw(ANC_MID, data.font3);
-	imgUI[1].DrawExtend({(double)str[1].data.pos.x, (double)str[1].data.pos.y+28}, {0.35, 0.4});
+	imgUI[1].DrawExtend({(double)str[1].pos.x, (double)str[1].pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].Draw(ANC_MID, data.font3);
-	imgUI[2].DrawExtend({(double)str[2].data.pos.x, (double)str[2].data.pos.y+28}, {0.35, 0.4});
+	imgUI[2].DrawExtend({(double)str[2].pos.x, (double)str[2].pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].Draw(ANC_MID, data.font3);
-	imgUI[3].DrawExtend({(double)str[3].data.pos.x, (double)str[3].data.pos.y+28}, {0.35, 0.4});
+	imgUI[3].DrawExtend({(double)str[3].pos.x, (double)str[3].pos.y+28}, {0.35, 0.4});
 	//テキスト(光沢用)
-	str[1].data.color = 0xFFFFFF;
-	str[2].data.color = 0xFFFFFF;
-	str[3].data.color = 0xFFFFFF;
+	str[1].color = 0xFFFFFF;
+	str[2].color = 0xFFFFFF;
+	str[3].color = 0xFFFFFF;
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
 	str[1].Draw(ANC_MID, data.font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);

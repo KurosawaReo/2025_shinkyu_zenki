@@ -132,11 +132,17 @@ namespace KR_Lib
 		PAD_ACD
 	};
 
-	//Actionで保存するデータ.
-	struct ActionData
+	//入力データ(単体)
+	struct InputData
 	{
 		InputType type; //何の操作か.
 		int       id;   //操作ID.
+	};
+	//アクションデータ.
+	struct ActionData
+	{
+		vector<InputData> inputs; //登録する入力データ.
+		int time;                 //入力時間.
 	};
 
 	//キーやボタンの種類の最大数(変更禁止)
@@ -155,13 +161,13 @@ namespace KR_Lib
 
 	private: //データ.
 		int tmKey   [KEY_MAX]{};     //キーを押している時間.
-		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.(bitフラグで管理)
-		int tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(bitフラグで管理)
+		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.            (index: bitフラグ)
+		int tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(index: bitフラグ)
 
 		INT_XY mPos{};     //マウス座標.
 		INT_XY stickVec{}; //スティック入力.
 
-		map<MY_STRING, vector<ActionData>> actions{}; //アクション記録用.
+		map<MY_STRING, ActionData> actions{}; //アクション記録用.
 
 	private: //関数.
 		DBL_XY GetVector4Dir(INT_XY pow);
@@ -202,5 +208,6 @@ namespace KR_Lib
 		void   UpdateKey();
 		void   UpdateMouse();
 		void   UpdatePad();
+		void   UpdateAction();
 	};
 }

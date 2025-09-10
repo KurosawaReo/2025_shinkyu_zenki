@@ -426,17 +426,17 @@ namespace KR_Lib
 	int DrawStr::Draw(Anchor anc, int font) {
 	
 		//基準点に座標をずらす.
-		float x = _flt(data.pos.x - (GetTextSize(data.text, font).x-1) * ANCHOR_POS[anc].x);
-		float y = _flt(data.pos.y - (GetTextSize(data.text, font).y-1) * ANCHOR_POS[anc].y);
+		float x = _flt(pos.x - (GetTextSize(text, font).x-1) * ANCHOR_POS[anc].x);
+		float y = _flt(pos.y - (GetTextSize(text, font).y-1) * ANCHOR_POS[anc].y);
 
 		//デフォルトフォント.
 		if (font < 0) {
-			int err = DrawString(_int(x), _int(y), data.text.c_str(), data.color);
+			int err = DrawString(_int(x), _int(y), text.c_str(), color);
 			_return(-1, err < 0) //-1: DrawStringエラー.
 		}
 		//フォント設定あり.
 		else {
-			int err = DrawStringToHandle(_int(x), _int(y), data.text.c_str(), data.color, font);
+			int err = DrawStringToHandle(_int(x), _int(y), text.c_str(), color, font);
 			_return(-2, err < 0) //-2: DrawStringToHandleエラー.
 		}
 		return 0; //正常終了.
@@ -447,16 +447,16 @@ namespace KR_Lib
 		//デフォルトフォント.
 		if (font < 0) {
 			int err = DrawRotaString(
-				data.pos.x, data.pos.y, extend.x, extend.y, pivot.x, pivot.y,
-				_rad(ang), data.color, 0, isVertical, data.text.c_str()
+				pos.x, pos.y, extend.x, extend.y, pivot.x, pivot.y,
+				_rad(ang), color, 0, isVertical, text.c_str()
 			);
 			_return(-1, err < 0) //-1: DrawRotaStringエラー.
 		}
 		//フォント設定あり.
 		else {
 			int err = DrawRotaStringToHandle(
-				data.pos.x, data.pos.y, extend.x, extend.y, pivot.x, pivot.y,
-				_rad(ang), data.color, font, 0, isVertical, data.text.c_str()
+				pos.x, pos.y, extend.x, extend.y, pivot.x, pivot.y,
+				_rad(ang), color, font, 0, isVertical, text.c_str()
 			);
 			_return(-2, err < 0) //-2 DrawRotaStringToHandleエラー.
 		}
@@ -470,7 +470,7 @@ namespace KR_Lib
 			int err = DrawModiString(
 				luPos.x, luPos.y, ruPos.x, ruPos.y,
 				rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-				data.color, 0, isVertical, data.text.c_str()
+				color, 0, isVertical, text.c_str()
 			);
 			_return(-1, err < 0) //-1: DrawModiStringエラー.
 		}
@@ -479,7 +479,7 @@ namespace KR_Lib
 			int err = DrawModiStringToHandle(
 				luPos.x, luPos.y, ruPos.x, ruPos.y,
 				rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-				data.color, font, 0, isVertical, data.text.c_str()
+				color, font, 0, isVertical, text.c_str()
 			);
 			_return(-2, err < 0) //-2: DrawModiStringToHandleエラー.
 		}

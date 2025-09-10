@@ -35,13 +35,6 @@ namespace KR_Lib
 		int    handle; //ハンドル.
 		INT_XY size;   //画像のサイズ.
 	};
-	//文字列データ.
-	struct String
-	{
-		MY_STRING text;  //テキスト.
-		INT_XY    pos;   //画面のどこに描画するか.
-		UINT      color; //文字の色.
-	};
 	//アンカー(描画の基準点)
 	enum Anchor
 	{
@@ -104,10 +97,12 @@ namespace KR_Lib
 	class DrawStr
 	{
 	public:
-		String data{}; //文字列データ.
+		MY_STRING text;  //テキスト.
+		INT_XY    pos;   //画面のどこに描画するか.
+		UINT      color; //文字の色.
 
 		//constructor.
-		DrawStr(MY_STRING _text, INT_XY _pos, UINT _color) : data{_text, _pos, _color} {}
+		DrawStr(MY_STRING _text, INT_XY _pos, UINT _color) : text(_text), pos(_pos), color(_color) {}
 
 		//描画.
 		int    Draw	   (Anchor anc = ANC_MID, int font = -1);
@@ -128,7 +123,7 @@ namespace KR_Lib
 		Font();
 		~Font();
 		//get.
-		int GetFont(){ return handle; }
+		int GetFont() const { return handle; }
 		//フォント作成.
 		void CreateFontH(MY_STRING fontName, int size, int thick, FontTypeID fontId = FONT_NONE);
 
