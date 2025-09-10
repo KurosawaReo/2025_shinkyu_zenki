@@ -92,35 +92,14 @@ void Player::Draw()
 		DrawAfterImage();
 		DrawReflectEffects();  // エフェクトを先に描画
 
-		//四角形ver.
-#if false
-		//四角形.
-		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
-		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
-
-		//反射モード中の色.
-		if (mode == Player_Reflect || 
-			mode == Player_SuperReflect
-		){
-			box1.color = box2.color = COLOR_PLY_REFLECT;
-		}
-		//デバッグモード中.
-		if (isDebug) {
-			box1.color = box2.color = COLOR_PLY_DEBUG;
-		}
-
-		DrawBoxST(&box1, ANC_MID, false, true);
-		DrawBoxST(&box2, ANC_MID, false, true);
-#endif
-
 		//画像描画.
 		if (mode == Player_Reflect ||
 			mode == Player_SuperReflect
 		){
-			imgPlayer[1].DrawRota(hit.pos, 0.2, imgRot); //反射モードの色.
+			imgPlayer[1].DrawRota(hit.pos, 0.2, imgRot); //反射モードの画像.
 		}
 		else {
-			imgPlayer[0].DrawRota(hit.pos, 0.2, imgRot); //通常モードの色.
+			imgPlayer[0].DrawRota(hit.pos, 0.2, imgRot); //通常モードの画像.
 		}
 	}
 }

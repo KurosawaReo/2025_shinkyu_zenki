@@ -64,7 +64,7 @@ namespace KR_Lib
 		MOUSE_R, //0x0002: Right.
 		MOUSE_M, //0x0004: Middle.
 	};
-	//コントローラボタンID(xbox基準)
+	//コントローラID(xbox基準)
 	enum PadXboxID
 	{
 		PAD_XBOX_DOWN,		//0x0001
@@ -82,7 +82,7 @@ namespace KR_Lib
 		PAD_XBOX_STICK_L,   //0x1000: 左スティック押し込み.
 		PAD_XBOX_STICK_R,   //0x2000: 右スティック押し込み.
 	};
-	//コントローラボタンID(switch基準)
+	//コントローラID(switch基準)
 	enum PadSwitchID
 	{
 		PAD_SWT_DOWN,		//0x00001
@@ -104,7 +104,7 @@ namespace KR_Lib
 		PAD_SWT_HOME,		//0x10000: ホームボタン.
 		PAD_SWT_CAPTURE,	//0x20000: キャプチャーボタン.
 	};
-	//コントローラボタンID(アーケード筐体)
+	//コントローラID(アーケード筐体)
 	enum PadArcadeID
 	{
 		PAD_ACD_DOWN,
@@ -133,7 +133,7 @@ namespace KR_Lib
 	};
 
 	//Actionで保存するデータ.
-	struct ActionInfo
+	struct ActionData
 	{
 		InputType type; //何の操作か.
 		int       id;   //操作ID.
@@ -161,7 +161,7 @@ namespace KR_Lib
 		INT_XY mPos{};     //マウス座標.
 		INT_XY stickVec{}; //スティック入力.
 
-		map<MY_STRING, vector<ActionInfo>> actionData{}; //アクション記録用.
+		map<MY_STRING, vector<ActionData>> actions{}; //アクション記録用.
 
 	private: //関数.
 		DBL_XY GetVector4Dir(INT_XY pow);

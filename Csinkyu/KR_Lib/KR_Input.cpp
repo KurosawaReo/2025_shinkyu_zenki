@@ -17,44 +17,44 @@ namespace KR_Lib
 {
 	//ƒL[“ü—Í‚Ì”»’è.
 	bool InputMng::IsPushKey(KeyID id) {
-		return (tmKey[id] > 0);    //‰Ÿ‚µ‚Ä‚é‚È‚çtrue.
+		return tmKey[id] > 0;
 	}
 	int  InputMng::IsPushKeyTime(KeyID id) {
-		return tmKey[id];          //‰Ÿ‚µ‚Ä‚¢‚éŠÔ.
+		return tmKey[id];
 	}
 	//ƒ}ƒEƒX“ü—Í‚Ì”»’è.
 	bool InputMng::IsPushMouse(MouseID id) {
-		return (tmMouse[id] > 0);  //‰Ÿ‚µ‚Ä‚é‚È‚çtrue.
+		return tmMouse[id] > 0;
 	}
 	int  InputMng::IsPushMouseTime(MouseID id) {
-		return tmMouse[id];        //‰Ÿ‚µ‚Ä‚¢‚éŠÔ.
+		return tmMouse[id];
 	}
 	//ƒRƒ“ƒgƒ[ƒ‰“ü—Í‚Ì”»’è.
 	bool InputMng::IsPushPadBtn(PadXboxID id) {
-		return (tmPadBtn[id] > 0); //‰Ÿ‚µ‚Ä‚é‚È‚çtrue.
+		return tmPadBtn[id] > 0;
 	}
 	bool InputMng::IsPushPadBtn(PadSwitchID id) {
-		return (tmPadBtn[id] > 0); //‰Ÿ‚µ‚Ä‚é‚È‚çtrue.
+		return tmPadBtn[id] > 0;
 	}
 	bool InputMng::IsPushPadBtn(PadArcadeID id) {
-		return (tmPadBtn[id] > 0); //‰Ÿ‚µ‚Ä‚é‚È‚çtrue.
+		return tmPadBtn[id] > 0;
 	}
 	int  InputMng::IsPushPadBtnTime(PadXboxID id) {
-		return tmPadBtn[id];       //‰Ÿ‚µ‚Ä‚¢‚éŠÔ.
+		return tmPadBtn[id];
 	}
 	int  InputMng::IsPushPadBtnTime(PadSwitchID id) {
-		return tmPadBtn[id];       //‰Ÿ‚µ‚Ä‚¢‚éŠÔ.
+		return tmPadBtn[id];
 	}
 	int  InputMng::IsPushPadBtnTime(PadArcadeID id) {
-		return tmPadBtn[id];       //‰Ÿ‚µ‚Ä‚¢‚éŠÔ.
+		return tmPadBtn[id];
 	}
 	//ƒAƒNƒVƒ‡ƒ“”»’è.
 	bool InputMng::IsPushAction(MY_STRING name) {
-		return (IsPushActionTime(name) > 0); //‰Ÿ‚µ‚Ä‚é‚È‚çtrue.
+		return IsPushActionTime(name) > 0; //‰Ÿ‚µ‚Ä‚é‚È‚çtrue.
 	}
 	int  InputMng::IsPushActionTime(MY_STRING name) {
 
-		const auto data = actionData.find(name); //map‚©‚ç–¼‘OŒŸõ.
+		const auto data = actions.find(name); //map‚©‚ç–¼‘OŒŸõ.
 		int pushTime = 0; //‰Ÿ‚µ‚Ä‚¢‚éÅ’·ŠÔ‚ğ‹L˜^‚·‚é.
 
 		//“o˜^‚³‚ê‚½ActionInfo‚ğ‘Sƒ‹[ƒv.
@@ -62,19 +62,19 @@ namespace KR_Lib
 			switch (i.type)
 			{
 				case KEY: 
-					pushTime = max(IsPushKeyTime   (static_cast<KeyID>      (i.id)), pushTime);
+					pushTime = max(IsPushKeyTime   (static_cast<KeyID>      (i.id)), pushTime); //Key‘€ì.
 					break;
 				case MOUSE: 
-					pushTime = max(IsPushMouseTime (static_cast<MouseID>    (i.id)), pushTime);
+					pushTime = max(IsPushMouseTime (static_cast<MouseID>    (i.id)), pushTime); //Mouse‘€ì.
 					break;
 				case PAD_XBOX:
-					pushTime = max(IsPushPadBtnTime(static_cast<PadXboxID>  (i.id)), pushTime);
+					pushTime = max(IsPushPadBtnTime(static_cast<PadXboxID>  (i.id)), pushTime); //Pad‘€ì(xbox)
 					break;
 				case PAD_SWT:
-					pushTime = max(IsPushPadBtnTime(static_cast<PadSwitchID>(i.id)), pushTime);
+					pushTime = max(IsPushPadBtnTime(static_cast<PadSwitchID>(i.id)), pushTime); //Pad‘€ì(switch)
 					break;
 				case PAD_ACD:
-					pushTime = max(IsPushPadBtnTime(static_cast<PadArcadeID>(i.id)), pushTime);
+					pushTime = max(IsPushPadBtnTime(static_cast<PadArcadeID>(i.id)), pushTime); //Pad‘€ì(arcade)
 					break;
 
 				default: assert(FALSE); break;
@@ -86,29 +86,19 @@ namespace KR_Lib
 
 	//ƒAƒNƒVƒ‡ƒ“’Ç‰Á.
 	void InputMng::AddAction(MY_STRING name, KeyID id) {
-		
-		ActionInfo info{ KEY, _int(id) };
-		actionData[name].push_back(info); //Key‘€ì‚Å“o˜^.
+		actions[name].push_back({ KEY,      _int(id) }); //Key‘€ì‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, MouseID id) {
-
-		ActionInfo info{ MOUSE, _int(id) };
-		actionData[name].push_back(info); //Mouse‘€ì‚Å“o˜^.
+		actions[name].push_back({ MOUSE,    _int(id) }); //Mouse‘€ì‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, PadXboxID id) {
-
-		ActionInfo info{ PAD_XBOX, _int(id) };
-		actionData[name].push_back(info); //Pad‘€ì(xbox)‚Å“o˜^.
+		actions[name].push_back({ PAD_XBOX, _int(id) }); //Pad‘€ì(xbox)‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, PadSwitchID id) {
-
-		ActionInfo info{ PAD_SWT, _int(id) };
-		actionData[name].push_back(info); //Pad‘€ì(switch)‚Å“o˜^.
+		actions[name].push_back({ PAD_SWT,  _int(id) }); //Pad‘€ì(switch)‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, PadArcadeID id) {
-
-		ActionInfo info{ PAD_ACD, _int(id) };
-		actionData[name].push_back(info); //Pad‘€ì(arcade)‚Å“o˜^.
+		actions[name].push_back({ PAD_ACD,  _int(id) }); //Pad‘€ì(arcade)‚Å“o˜^.
 	}
 
 	//ƒL[ƒ{[ƒh:\šƒL[‘€ì.
