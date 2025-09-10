@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/10
 
    計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -14,16 +14,9 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	//計算機能クラス[継承不可]
-	class Calc final
+	//計算用の関数群.
+	namespace Calc
 	{
-	public: 
-		//実体取得用.
-		static Calc* GetPtr() {
-			static Calc inst; //自身のインスタンス.
-			return &inst;
-		}
-
 		//当たり判定.
 		bool		HitCirCir		(const Circle* cir1, const Circle* cir2);
 		bool		HitBoxBox		(const Box*    box1, const Box*    box2);

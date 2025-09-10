@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/10
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -147,6 +147,12 @@ namespace KR_Lib
 	//入力管理クラス[継承不可]
 	class InputMng final
 	{
+	public: //実体.
+		static InputMng* GetPtr() {
+			static InputMng inst; //自身のインスタンス.
+			return &inst;
+		}
+
 	private: //データ.
 		int tmKey   [KEY_MAX]{};     //キーを押している時間.
 		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.(bitフラグで管理)
@@ -161,11 +167,6 @@ namespace KR_Lib
 		DBL_XY GetVector4Dir(INT_XY pow);
 
 	public:
-		//実体の取得.
-		static InputMng* GetPtr() {
-			static InputMng inst; //自身のインスタンス.
-			return &inst;
-		}
 
 		//操作判定.
 		bool   IsPushKey       (KeyID id);

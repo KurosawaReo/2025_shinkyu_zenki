@@ -35,7 +35,6 @@ private:
 	float      destroyCntr{}; //破壊量の度合.
 
 	GameData*  p_data;        //ゲームデータ.
-	Calc*      p_calc;        //計算機能.
 
 public:
 	//set.

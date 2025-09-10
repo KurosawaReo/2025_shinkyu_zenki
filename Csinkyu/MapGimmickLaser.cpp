@@ -8,6 +8,8 @@
 
 #include "MapGimmickLaser.h"
 
+using namespace Calc; //計算機能を使用.
+
 /// <summary>
 /// リセットするぜ.
 /// </summary>
@@ -18,7 +20,6 @@ void MapGimmickLaser::Init(GameData* _data, Player* _player, LaserManager* _lase
 	p_player   = _player;
 	p_laserMng = _laserMng;
 	p_meteoMng = _meteoMng;
-	p_calc     = Calc::GetPtr();
 
 	currentDirection = 0;
 	nextDirection = 0;
@@ -123,7 +124,7 @@ void MapGimmickLaser::DrawPredictionLine()
 #endif
 
 	// 予測線の透明度.
-	double alpha = p_calc->CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0～1.0の範囲.
+	double alpha = CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0～1.0の範囲.
 	SetDrawBlendModeST(MODE_ALPHA, 255*(1-alpha));
 
 	// 中央の予測線のみを描画

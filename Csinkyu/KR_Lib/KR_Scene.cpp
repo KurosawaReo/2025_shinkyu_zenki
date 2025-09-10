@@ -1,6 +1,6 @@
 /*
    - KR_Scene.cpp - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/10
 
    シーン管理機能を追加します。
    ※ガチで設計をする時用。手軽にプログラムを組む時にはおすすめしません。
@@ -11,7 +11,6 @@
   #include "KR_Input.h"
   #include "KR_Scene.h"
   #include "KR_Sound.h"
-  using namespace KR_Lib;
 #endif
 #include "KR_Scene.h"
 
@@ -23,7 +22,6 @@ namespace KR_Lib
 	//constructor.
 	SceneBasic::SceneBasic() {
 		//実体取得.
-		p_calc  = Calc::GetPtr();
 		p_input = InputMng::GetPtr();
 		p_scene = SceneMng::GetPtr();
 		p_sound = SoundMng::GetPtr();

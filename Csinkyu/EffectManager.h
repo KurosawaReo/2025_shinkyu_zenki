@@ -45,7 +45,6 @@ private:
 	DrawImg imgScore[2]{}; //ƒXƒRƒA‰æ‘œ.
 
 	GameData* p_data{};
-	Calc*     p_calc{};
 
 public:
 	void Init(GameData*);

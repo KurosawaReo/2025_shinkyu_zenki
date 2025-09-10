@@ -41,6 +41,7 @@
     <ClCompile Include="KR_Lib\KR_Sound.cpp" />
     <ClCompile Include="KR_Lib\KR_Timer.cpp" />
     <ClCompile Include="LaserManager.cpp" />
+    <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="Meteo.cpp" />
     <ClCompile Include="MeteoManager.cpp" />
     <ClCompile Include="Obstacle.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="KR_Lib\KR_Sound.h" />
     <ClInclude Include="KR_Lib\KR_Timer.h" />
     <ClInclude Include="LaserManager.h" />
+    <ClInclude Include="MenuManager.h" />
     <ClInclude Include="Meteo.h" />
     <ClInclude Include="MeteoManager.h" />
     <ClInclude Include="Obstacle.h" />

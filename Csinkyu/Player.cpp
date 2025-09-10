@@ -7,13 +7,14 @@
 
 #include "Player.h"
 
+using namespace Calc; //計算機能を使用.
+
 //初期化(一回のみ行う)
 void Player::Init(GameData* _data, EffectManager* _effectMng)
 {
 	p_data      = _data;
 	p_effectMng = _effectMng;
 	p_input     = InputMng::GetPtr();
-	p_calc      = Calc::GetPtr();
 
 	isDebug = false;
 
@@ -190,7 +191,7 @@ void Player::PlayerMove()
 		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
-	p_calc->FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
 }
 
 // 反射エフェクト生成

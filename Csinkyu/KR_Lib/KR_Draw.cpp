@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/09/08
+   ver: 2025/09/10
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -8,7 +8,6 @@
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Calc.h"
-  using namespace KR_Lib;
 #endif
 #include "KR_Draw.h"
 
