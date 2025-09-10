@@ -3,7 +3,7 @@
    マップギミック用の直線レーザー管理.
 */
 #include "Player.h"
-#include "MeteoManager.h"
+#include "MeteorManager.h"
 #include "LaserManager.h"
 
 #include "MapGimmickLaser.h"
@@ -13,13 +13,13 @@ using namespace Calc; //計算機能を使用.
 /// <summary>
 /// リセットするぜ.
 /// </summary>
-void MapGimmickLaser::Init(GameData* _data, Player* _player, LaserManager* _laserMng, MeteoManager* _meteoMng)
+void MapGimmickLaser::Init(GameData* _data, Player* _player, LaserManager* _laserMng, MeteorManager* _meteorMng)
 {
 	//実態取得するぜ.
-	p_data     = _data;
-	p_player   = _player;
-	p_laserMng = _laserMng;
-	p_meteoMng = _meteoMng;
+	p_data      = _data;
+	p_player    = _player;
+	p_laserMng  = _laserMng;
+	p_meteorMng = _meteorMng;
 
 	currentDirection = 0;
 	nextDirection = 0;

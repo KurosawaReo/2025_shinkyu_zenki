@@ -1,16 +1,16 @@
 /*
-   - MeteoManager.h -
+   - MeteorManager.h -
    隕石の出現を管理する.
 */
 #pragma once
-#include "Meteo.h"
+#include "Meteor.h"
 #include "EffectManager.h"
 
 //隕石管理.
-class MeteoManager
+class MeteorManager
 {
 private:
-	Meteo meteo[METEO_CNT_MAX]{}; //隕石データ.
+	Meteor meteor[METEO_CNT_MAX]{}; //隕石データ.
 	float timer{};			      //隕石生成用.
 
 	GameData*      p_data{};      //ゲームデータ.
@@ -23,8 +23,8 @@ public:
 	void Update();
 	void Draw();
 
-	void SpawnMeteo(); //隕石生成.
+	void SpawnMeteor(); //隕石生成.
 
-	bool IsHitMeteos(Circle* cir, bool isDestroy); //隕石のどれか1つでも当たっているか.
-	bool GetMeteoPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //最寄りの隕石座標を探す.
+	bool IsHitMeteors(Circle* cir, bool isDestroy); //隕石のどれか1つでも当たっているか.
+	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //最寄りの隕石座標を探す.
 };

@@ -12,13 +12,13 @@
 using namespace Calc; //計算機能を使用.
 
 //初期化.
-void Obstacle4main::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng, LaserManager* _laserMng)
+void Obstacle4main::Init(GameData* _data, Player* _player, MeteorManager* _meteorMng, LaserManager* _laserMng)
 {
 	// オブジェクトを参照として保存
-	p_data     = _data;
-	p_player   = _player;
-	p_meteoMng = _meteoMng;
-	p_laserMng = _laserMng;
+	p_data      = _data;
+	p_player    = _player;
+	p_meteorMng = _meteorMng;
+	p_laserMng  = _laserMng;
 }
 //リセット.
 void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)

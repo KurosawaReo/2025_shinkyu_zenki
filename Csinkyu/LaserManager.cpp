@@ -3,19 +3,19 @@
    元々Obstacle4mainとしてまとめられてたレーザー.
 */
 #include "Player.h"
-#include "MeteoManager.h"
+#include "MeteorManager.h"
 
 #include "LaserManager.h"
 
 using namespace Calc; //計算機能を使用.
 
 //初期化.
-void LaserManager::Init(GameData* _data, Player* _player, MeteoManager* _meteoMng, EffectManager* _effectMng) {
+void LaserManager::Init(GameData* _data, Player* _player, MeteorManager* _meteorMng, EffectManager* _effectMng) {
 
 	//実体取得.
 	p_data = _data;
 	p_player = _player;
-	p_meteoMng = _meteoMng;
+	p_meteorMng = _meteorMng;
 	p_effectMng = _effectMng;
 }
 //リセット.
@@ -228,13 +228,13 @@ void LaserManager::UpdateLaser() {
 			//一定時間で目標地点を決める.
 			if (laser[i].Counter >= LASER_REF_TRACK_ST_TM) {
 
-				assert(p_meteoMng != nullptr); //ポインタが空でないことを確認.
+				assert(p_meteorMng != nullptr); //ポインタが空でないことを確認.
 
 				DBL_XY laserPos = { laser[i].x, laser[i].y }; //レーザーの現在位置.
 				DBL_XY meteoPos{ -1, -1 };
 
 				//最も近い隕石の位置を取得する.
-				bool hasMeteo = p_meteoMng->GetMeteoPosNearest(laserPos, &meteoPos);
+				bool hasMeteo = p_meteorMng->GetMeteorPosNearest(laserPos, &meteoPos);
 				//隕石があった場合.
 				if (hasMeteo) {
 					laser[i].goalPos = meteoPos; //登録.
@@ -245,7 +245,7 @@ void LaserManager::UpdateLaser() {
 			Circle hit = { {laser[i].x, laser[i].y}, 10, {} }; //当たり判定円(仮)
 
 			//隕石と当たっているなら.
-			if (p_meteoMng->IsHitMeteos(&hit, true)) {
+			if (p_meteorMng->IsHitMeteors(&hit, true)) {
 
 				double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 

@@ -130,7 +130,7 @@
    ƒQ[ƒ€‘S‘ÌŠÇ—.
 */
 
-#include "MeteoManager.h"
+#include "MeteorManager.h"
 #include "LaserManager.h"
 #include "EffectManager.h"
 
@@ -148,7 +148,7 @@
 
 //ŠÇ—ƒNƒ‰ƒX‚ÌÀ‘Ì.
 BackGround    bg;
-MeteoManager  meteoMng;
+MeteorManager meteorMng;
 LaserManager  laserMng;
 EffectManager effectMng;
 //áŠQ•¨‚ÌÀ‘Ì.
@@ -217,17 +217,17 @@ void GameManager::Init() {
 	{
 		//ŠÇ—class.
 		bg.Init(&data);
-		laserMng.Init(&data, &player, &meteoMng, &effectMng);
-		meteoMng.Init(&data, &player, &effectMng);
+		laserMng.Init(&data, &player, &meteorMng, &effectMng);
+		meteorMng.Init(&data, &player, &effectMng);
 		effectMng.Init(&data);
 		//áŠQ•¨class.
 		for (int i = 0; i < _countof(mgl); i++) {
-			mgl[i].Init(&data, &player, &laserMng, &meteoMng);
+			mgl[i].Init(&data, &player, &laserMng, &meteorMng);
 		}
-		obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
-		obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
-		obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
-		obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
+		obstacle4_1.Init(&data, &player, &meteorMng, &laserMng);
+		obstacle4_2.Init(&data, &player, &meteorMng, &laserMng);
+		obstacle4_3.Init(&data, &player, &meteorMng, &laserMng);
+		obstacle4_4.Init(&data, &player, &meteorMng, &laserMng);
 		obstacle5.Init(&data, &player);
 		fireworksObs.Init(&data, &player, &laserMng);
 		//ƒAƒCƒeƒ€class.
@@ -287,7 +287,7 @@ void GameManager::Reset() {
 	{
 		//ŠÇ—class.
 		laserMng.Reset();
-		meteoMng.Reset();
+		meteorMng.Reset();
 		effectMng.Reset();
 		//áŠQ•¨class.
 		ResetNorLaser();
@@ -568,7 +568,7 @@ void GameManager::UpdateObjects() {
 
 	//Lv1ˆÈã.
 	laserMng.Update();
-	meteoMng.Update();
+	meteorMng.Update();
 	obstacle4_1.Update();
 	obstacle4_2.Update();
 	item.Update();
@@ -882,7 +882,7 @@ void GameManager::DrawObjects() {
 
 	//Lv1ˆÈã.
 	laserMng.Draw();
-	meteoMng.Draw();
+	meteorMng.Draw();
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
 	item.Draw();

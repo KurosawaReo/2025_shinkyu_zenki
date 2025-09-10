@@ -31,14 +31,14 @@ protected:
 //	IMG         img{};
 	FlashEffect flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
-	GameData*     p_data{};
-	Player*       p_player{};
-	MeteoManager* p_meteoMng{};
-	LaserManager* p_laserMng{};
+	GameData*      p_data{};
+	Player*        p_player{};
+	MeteorManager* p_meteorMng{};
+	LaserManager*  p_laserMng{};
 
 public:
 	//基本処理.
-	void Init  (GameData*, Player*, MeteoManager*, LaserManager*);
+	void Init  (GameData*, Player*, MeteorManager*, LaserManager*);
 	void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
 	void Update();
 	void Draw  ();

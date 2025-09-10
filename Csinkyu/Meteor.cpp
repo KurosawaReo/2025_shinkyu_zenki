@@ -1,26 +1,26 @@
 /*
-   - Meteo.cpp -
+   - Meteor.cpp -
    降ってくる隕石.
 */
-#include "Meteo.h"
+#include "Meteor.h"
 
 //namespace省略.
 using namespace Calc; 
 
-void Meteo::Init(GameData* _data) {
+void Meteor::Init(GameData* _data) {
 	p_data = _data;
 }
 
-void Meteo::Reset() {
+void Meteor::Reset() {
 
-	state       = Meteo_Normal;
+	state       = Meteor_Normal;
 	pos         = {0, 0};
 	vel         = {0, 0};
 	active      = false;
 	destroyCntr = 0;
 }
 
-void Meteo::Update() {
+void Meteor::Update() {
 
 	//隕石本体が有効なら.
 	if (active) {
@@ -34,19 +34,19 @@ void Meteo::Update() {
 		//状態別処理.
 		switch (state) 
 		{
-			case Meteo_Normal:
+			case Meteor_Normal:
 				//画面外で消去.
 				if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, true)){
 					active = false; //無効にする.
 				}
 				break;
 
-			case Meteo_Destroy:
+			case Meteor_Destroy:
 				//破壊量の度合.
 				destroyCntr += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 				//時間が終了したら.
 				if (destroyCntr >= METEO_DEST_TIME) {
-					state  = Meteo_Normal; //元に戻す.
+					state  = Meteor_Normal; //元に戻す.
 					active = false;        //消滅.
 				}
 				break;
@@ -58,12 +58,12 @@ void Meteo::Update() {
 	}
 }
 
-void Meteo::Draw() {
+void Meteor::Draw() {
 	
 	//隕石本体が有効なら.
 	if (active) {
 		//破壊モード限定.
-		if (state == Meteo_Destroy) {
+		if (state == Meteor_Destroy) {
 			int pow = _int_r(255 * (1-destroyCntr/METEO_DEST_TIME)); //少しずつ減少(255→0)
 			SetDrawBlendModeST(MODE_ADD, pow);
 		}
@@ -81,7 +81,7 @@ void Meteo::Draw() {
 }
 
 //隕石出現.
-void Meteo::Spawn() {
+void Meteor::Spawn() {
 
 	int rnd1 = RandNum(0, 99);
 	int rnd2 = RandNum(0, 99);
@@ -123,16 +123,16 @@ void Meteo::Spawn() {
 }
 
 //隕石破壊.
-void Meteo::Destroy() {
-	state = Meteo_Destroy; //破壊モードに.
+void Meteor::Destroy() {
+	state = Meteor_Destroy; //破壊モードに.
 	destroyCntr = 0;       //0から開始.
 }
 
 //隕石の当たり判定.
-bool Meteo::IsHitMeteo(Circle* cir) {
+bool Meteor::IsHitMeteor(Circle* cir) {
 
 	//有効な隕石なら.
-	if (active && state == Meteo_Normal) {
+	if (active && state == Meteor_Normal) {
 		//全ての線で判定.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			//線とプレイヤーが当たったら.
@@ -146,7 +146,7 @@ bool Meteo::IsHitMeteo(Circle* cir) {
 }
 
 //隕石を構成する線の更新.
-void Meteo::UpdateMeteoLine() {
+void Meteor::UpdateMeteoLine() {
 
 	//何度ずつずれるか.
 	float rot = (float)360/shape.lineCnt; //360度÷描く線の数.
@@ -161,7 +161,7 @@ void Meteo::UpdateMeteoLine() {
 		shape.line[i].edPos = CalcArcPos(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
 
 		//破壊時の回転アニメーション.
-		if (state == Meteo_Destroy) {
+		if (state == Meteor_Destroy) {
 
 			//①隕石を構成する線の情報.
 			DBL_XY lineMidPos = CalcMidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.

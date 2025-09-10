@@ -3,7 +3,7 @@
    元々Obstacle4mainとしてまとめられてたレーザー.
 */
 #pragma once
-#include "MeteoManager.h"
+#include "MeteorManager.h"
 #include "EffectManager.h"
 
 //レーザータイプ.
@@ -57,11 +57,11 @@ private:
 
 	GameData*      p_data{};
 	Player*        p_player{};
-	MeteoManager*  p_meteoMng{};
+	MeteorManager* p_meteorMng{};
 	EffectManager* p_effectMng{};
 
 public:
-	void Init(GameData*, Player*, MeteoManager*, EffectManager*);
+	void Init(GameData*, Player*, MeteorManager*, EffectManager*);
 	void Reset();
 	void Update();
 	void Draw();
