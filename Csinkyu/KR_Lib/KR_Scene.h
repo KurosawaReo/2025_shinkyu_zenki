@@ -1,6 +1,6 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/10
 
    シーン管理機能を追加します。(※ガチで設計する時用のため少し面倒)
 */
@@ -10,7 +10,6 @@
 namespace KR_Lib
 {
 	//前方宣言.
-	class Calc;
 	class InputMng;
 	class SceneMng;
 	class SoundMng;
@@ -19,7 +18,6 @@ namespace KR_Lib
 	class SceneBasic
 	{
 	protected:
-		Calc*     p_calc;
 		InputMng* p_input;
 		SceneMng* p_scene;
 		SoundMng* p_sound;

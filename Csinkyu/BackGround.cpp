@@ -4,6 +4,8 @@
 #include "GameManager.h"
 #include "BackGround.h"
 
+using namespace Calc; //計算機能を使用.
+
 // ▼*---=[ BG_Tile ]=---*▼ //
 
 //初期化.
@@ -49,7 +51,6 @@ void BG_Tile::Shine() {
 void BackGround::Init(GameData* _data) {
 
 	p_data = _data;
-	p_calc = Calc::GetPtr();
 
 	imgBG[0].LoadFile(_T("Resources/Images/bg_normal.png"));
 	imgBG[1].LoadFile(_T("Resources/Images/bg_reflect.png"));
@@ -93,7 +94,7 @@ void BackGround::Draw() {
 	float pass = GameManager::GetPtr()->GetSlowModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(SLOW_MODE_TIME-0.5));
-	time = p_calc->CalcNumEaseOut(time); //値の曲線変動.
+	time = CalcNumEaseOut(time); //値の曲線変動.
 
 	//いくつかのパターンを用意.(デザイン案)
 #if false
@@ -142,7 +143,7 @@ void BackGround::Draw() {
 #else
 	//一定間隔ごと.
 	if (tmShine.IntervalTime()) {
-		int idx = p_calc->RandNum(0, (int)tiles.size()-1);
+		int idx = RandNum(0, (int)tiles.size()-1);
 		tiles[idx].Shine(); //ランダムでタイルを発光させる.
 	}
 	//描画.

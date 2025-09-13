@@ -35,7 +35,6 @@ private: //ƒf[ƒ^.
 
 	InputMng* p_input{};
 	SoundMng* p_sound{};
-	Calc*     p_calc{};
 
 public:
 	//À‘Ì‚Ìæ“¾.

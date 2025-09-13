@@ -1,6 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/10
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -9,7 +9,6 @@
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-  using namespace KR_Lib;
 #endif
 #include "KR_Input.h"
 
@@ -18,98 +17,60 @@ namespace KR_Lib
 {
 	//キー入力の判定.
 	bool InputMng::IsPushKey(KeyID id) {
-		return (tmKey[id] > 0);    //押してるならtrue.
+		return tmKey[id] > 0;
 	}
 	int  InputMng::IsPushKeyTime(KeyID id) {
-		return tmKey[id];          //押している時間.
+		return tmKey[id];
 	}
 	//マウス入力の判定.
 	bool InputMng::IsPushMouse(MouseID id) {
-		return (tmMouse[id] > 0);  //押してるならtrue.
+		return tmMouse[id] > 0;
 	}
 	int  InputMng::IsPushMouseTime(MouseID id) {
-		return tmMouse[id];        //押している時間.
+		return tmMouse[id];
 	}
 	//コントローラ入力の判定.
 	bool InputMng::IsPushPadBtn(PadXboxID id) {
-		return (tmPadBtn[id] > 0); //押してるならtrue.
+		return tmPadBtn[id] > 0;
 	}
 	bool InputMng::IsPushPadBtn(PadSwitchID id) {
-		return (tmPadBtn[id] > 0); //押してるならtrue.
+		return tmPadBtn[id] > 0;
 	}
 	bool InputMng::IsPushPadBtn(PadArcadeID id) {
-		return (tmPadBtn[id] > 0); //押してるならtrue.
+		return tmPadBtn[id] > 0;
 	}
 	int  InputMng::IsPushPadBtnTime(PadXboxID id) {
-		return tmPadBtn[id];       //押している時間.
+		return tmPadBtn[id];
 	}
 	int  InputMng::IsPushPadBtnTime(PadSwitchID id) {
-		return tmPadBtn[id];       //押している時間.
+		return tmPadBtn[id];
 	}
 	int  InputMng::IsPushPadBtnTime(PadArcadeID id) {
-		return tmPadBtn[id];       //押している時間.
+		return tmPadBtn[id];
 	}
 	//アクション判定.
 	bool InputMng::IsPushAction(MY_STRING name) {
-		return (IsPushActionTime(name) > 0); //押してるならtrue.
+		return actions[name].time > 0; //押してる時間があればtrue.
 	}
 	int  InputMng::IsPushActionTime(MY_STRING name) {
-
-		const auto data = actionData.find(name); //mapから名前検索.
-		int pushTime = 0; //押している最長時間を記録する.
-
-		//登録されたActionInfoを全ループ.
-		for (auto& i : data->second) {
-			switch (i.type)
-			{
-				case KEY: 
-					pushTime = max(IsPushKeyTime   (static_cast<KeyID>      (i.id)), pushTime);
-					break;
-				case MOUSE: 
-					pushTime = max(IsPushMouseTime (static_cast<MouseID>    (i.id)), pushTime);
-					break;
-				case PAD_XBOX:
-					pushTime = max(IsPushPadBtnTime(static_cast<PadXboxID>  (i.id)), pushTime);
-					break;
-				case PAD_SWT:
-					pushTime = max(IsPushPadBtnTime(static_cast<PadSwitchID>(i.id)), pushTime);
-					break;
-				case PAD_ACD:
-					pushTime = max(IsPushPadBtnTime(static_cast<PadArcadeID>(i.id)), pushTime);
-					break;
-
-				default: assert(FALSE); break;
-			}
-		}
-
-		return pushTime; //最長時間を返す.
+		return actions[name].time;     //時間を返す.
 	}
 
 	//アクション追加.
 	void InputMng::AddAction(MY_STRING name, KeyID id) {
-		
-		ActionInfo info{ KEY, _int(id) };
-		actionData[name].push_back(info); //Key操作で登録.
+		actions[name].inputs.push_back({ KEY,      _int(id) }); //Key操作で登録.
 	}
 	void InputMng::AddAction(MY_STRING name, MouseID id) {
-
-		ActionInfo info{ MOUSE, _int(id) };
-		actionData[name].push_back(info); //Mouse操作で登録.
+		actions[name].inputs.push_back({ MOUSE,    _int(id) }); //Mouse操作で登録.
 	}
 	void InputMng::AddAction(MY_STRING name, PadXboxID id) {
-
-		ActionInfo info{ PAD_XBOX, _int(id) };
-		actionData[name].push_back(info); //Pad操作(xbox)で登録.
+		actions[name].inputs.push_back({ PAD_XBOX, _int(id) }); //Pad操作(xbox)で登録.
 	}
 	void InputMng::AddAction(MY_STRING name, PadSwitchID id) {
-
-		ActionInfo info{ PAD_SWT, _int(id) };
-		actionData[name].push_back(info); //Pad操作(switch)で登録.
+		actions[name].inputs.push_back({ PAD_SWT,  _int(id) }); //Pad操作(switch)で登録.
 	}
 	void InputMng::AddAction(MY_STRING name, PadArcadeID id) {
-
-		ActionInfo info{ PAD_ACD, _int(id) };
-		actionData[name].push_back(info); //Pad操作(arcade)で登録.
+		actions[name].inputs.push_back({ PAD_ACD,  _int(id) }); //Pad操作(arcade)で登録.
 	}
 
 	//キーボード:十字キー操作.
@@ -252,6 +213,42 @@ namespace KR_Lib
 			}
 			else {
 				tmPadBtn[i] = 0; //0秒にリセット.
+			}
+		}
+	}
+	//アクションの更新処理.
+	void InputMng::UpdateAction() {
+
+		//ActionDataを全ループ.
+		for (auto& i : actions) {
+
+			bool isPush = false; //何かを押しているかどうか.
+
+			//登録されたInputDataを全ループ.
+			for (auto& j : i.second.inputs) {
+
+				switch (j.type)
+				{
+					case KEY:      isPush = IsPushKey   (static_cast<KeyID>      (j.id)); break;
+					case MOUSE:    isPush = IsPushMouse (static_cast<MouseID>    (j.id)); break;
+					case PAD_XBOX: isPush = IsPushPadBtn(static_cast<PadXboxID>  (j.id)); break;
+					case PAD_SWT:  isPush = IsPushPadBtn(static_cast<PadSwitchID>(j.id)); break;
+					case PAD_ACD:  isPush = IsPushPadBtn(static_cast<PadArcadeID>(j.id)); break;
+
+					default: assert(FALSE); break;
+				}
+				//押しているなら.
+				if (isPush) {
+					break; //終了.
+				}
+			}
+
+			//何か1つでも押していたなら.
+			if (isPush) {
+				i.second.time++;   //足す.
+			}
+			else {
+				i.second.time = 0; //リセット.
 			}
 		}
 	}

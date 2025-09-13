@@ -84,27 +84,30 @@
    ・配列をvectorに変える。最初にreserveで必要分確保し、デストラクタで解放すればいい。
    ・Calc.hのCalcクラスはなくていい。関数群として置き、KR_Lib名前空間内にCalcという名前空間を置けばOK。
 
-/---------------------------------------------------------/
-   前期発表会後 変更内容
+   2025/09/09:
+   ・ゲームオーバー画面にヒントが1文出るやつを作りたい。そこでルール説明の補間をする。
 
-   ・UIや演出に画像を追加。
-   ・UIのレイアウト変更、装飾の追加。「TIME」や「LEVEL」をまとめた。
-   ・背景画像を仮で用意。
-   ・アイテムの終了タイミングが分かるよう、最後の3秒だけ表示し、音も追加。
-   ・波紋の爆発するタイミングが分かるよう、演出を調整。
-   ・隕石の破片の飛び散り方がリアルっぽくなるよう調整。
-   ・ポーズ機能仮追加。(Pキー)
-   ・図形や線のアンチエイリアス導入。滑らかで綺麗な描画になった。
-   ・レーザーで短すぎる線を描画しないように。(処理軽減に繋がる)
-   ・強化アイテム追加。反射レーザーが隕石に当たっても反射する。
+/---------------------------------------------------------/
+   [チュートリアル配分]
+   step1: さける 
+　   一定時間耐えたら次へ。
+   step2: とる
+　   アイテムを1回取って解除されたら次へ。
+   step3: こわす
+　   まずは自動でアイテムを取ってレーザーが反射する様子をみせる。
+　   その後、自分で操作させて実演させる。隕石をn個壊せたら次へ。
+   step4: 一通りプレイ
+　   最後に一通りプレイして確認させる。一定時間経ったらチュートリアル終了。
+
+   ※スコアの説明はチュートリアルにはいらない
+   ※メニューにモードごとの説明を入れる(ハイスコアを目指す～など)
 
    [現在のLevel配分]
    Level1: 通常レーザー×2, 隕石
    Level2: 直線レーザー×2
    Level3: 波紋
    Level4: 直線レーザー×4, アイテム×2
-   Level5: 通常レーザー×4, アイテムが強化
-
+   Level5: 通常レーザー×4, アイテムが強化, 花火
 /---------------------------------------------------------/
    【今後の制作予定】
 
@@ -121,20 +124,13 @@
    最終目標:
    ・SCORE世界ランキング化
    ・steam販売
-
-   [チュートリアル配分] ※案
-   tutorial1: 避ける
-   tutorial2: 取る
-   tutorial3: 壊す
-   tutorial4: 敵
-   Levelと同じような演出を出す。stepを踏んで練習させる。
 /--------------------------------------------------------*/
 /*
    - GameManager.cpp -
    ゲーム全体管理.
 */
 
-#include "MeteoManager.h"
+#include "MeteorManager.h"
 #include "LaserManager.h"
 #include "EffectManager.h"
 
@@ -148,13 +144,17 @@
 #include "Player.h"
 
 #include "BackGround.h"
+#include "MenuManager.h"
+#include "TutorialManager.h"
 #include "GameManager.h"
 
 //管理クラスの実体.
-BackGround    bg;
-MeteoManager  meteoMng;
-LaserManager  laserMng;
-EffectManager effectMng;
+BackGround      bg;
+MenuManager     menuMng;
+TutorialManager tutorialMng;
+MeteorManager   meteorMng;
+LaserManager    laserMng;
+EffectManager   effectMng;
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
@@ -168,6 +168,8 @@ ItemManager item;
 //プレイヤーの実体.
 Player player;
 
+using namespace Calc; //計算機能を使用.
+
 //初期化(一回のみ行う)
 void GameManager::Init() {
 
@@ -176,7 +178,6 @@ void GameManager::Init() {
 	//実体取得.
 	p_input = InputMng::GetPtr();
 	p_sound = SoundMng::GetPtr();
-	p_calc  = Calc    ::GetPtr();
 
 	//タイトル.
 	data.scene = SCENE_TITLE;
@@ -210,21 +211,29 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	//最高スコア更新.
 	
+	//アクション登録.
+	p_input->AddAction(_T("GameNext"),  KEY_SPACE);           //キー操作.
+	p_input->AddAction(_T("GameNext"),  PAD_ACD_BTN_UPPER_1); //アーケード操作.
+	p_input->AddAction(_T("GamePause"), KEY_P);               //キー操作.
+	p_input->AddAction(_T("GamePause"), PAD_ACD_BTN_UPPER_2); //アーケード操作.
+
 	//Init処理
 	{
 		//管理class.
 		bg.Init(&data);
-		laserMng.Init(&data, &player, &meteoMng, &effectMng);
-		meteoMng.Init(&data, &player, &effectMng);
+		menuMng.Init();
+		tutorialMng.Init();
+		laserMng.Init(&data, &player, &meteorMng, &effectMng);
+		meteorMng.Init(&data, &player, &effectMng);
 		effectMng.Init(&data);
 		//障害物class.
 		for (int i = 0; i < _countof(mgl); i++) {
-			mgl[i].Init(&data, &player, &laserMng, &meteoMng);
+			mgl[i].Init(&data, &player, &laserMng, &meteorMng);
 		}
-		obstacle4_1.Init(&data, &player, &meteoMng, &laserMng);
-		obstacle4_2.Init(&data, &player, &meteoMng, &laserMng);
-		obstacle4_3.Init(&data, &player, &meteoMng, &laserMng);
-		obstacle4_4.Init(&data, &player, &meteoMng, &laserMng);
+		obstacle4_1.Init(&data, &player, &meteorMng, &laserMng);
+		obstacle4_2.Init(&data, &player, &meteorMng, &laserMng);
+		obstacle4_3.Init(&data, &player, &meteorMng, &laserMng);
+		obstacle4_4.Init(&data, &player, &meteorMng, &laserMng);
 		obstacle5.Init(&data, &player);
 		fireworksObs.Init(&data, &player, &laserMng);
 		//アイテムclass.
@@ -283,8 +292,10 @@ void GameManager::Reset() {
 
 	{
 		//管理class.
+		menuMng.Reset();
+		tutorialMng.Reset();
 		laserMng.Reset();
-		meteoMng.Reset();
+		meteorMng.Reset();
 		effectMng.Reset();
 		//障害物class.
 		ResetNorLaser();
@@ -301,9 +312,10 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	p_input->UpdateKey(); //キー入力更新.
-	p_input->UpdatePad(); //コントローラ入力更新.
-	p_sound->Update();    //サウンド更新.
+	p_input->UpdateKey();    //キー入力更新.
+	p_input->UpdatePad();    //コントローラ入力更新.
+	p_input->UpdateAction(); //アクション更新.
+	p_sound->Update();       //サウンド更新.
 
 	bg.Update(); //背景.
 
@@ -367,23 +379,23 @@ void GameManager::ResetStrLaser() {
 }
 
 //シーン別更新.
-void GameManager::UpdateTitle() 
+void GameManager::UpdateTitle()
 {
 	player.Update();    //プレイヤー.
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でゲーム開始.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1)
+	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
-		data.scene = SCENE_READY;     //準備シーンへ.
+		data.scene = SCENE_MENU;      //メニューシーンへ.
 	}
 }
 void GameManager::UpdateMenu() {
-
+	menuMng.Update();
 }
 void GameManager::UpdateTutorial() {
-
+	tutorialMng.Update();
 }
 void GameManager::UpdateReady() {
 
@@ -395,7 +407,6 @@ void GameManager::UpdateReady() {
 
 		tmScene[SCENE_GAME].Start(); //ゲーム開始.
 		data.scene = SCENE_GAME;     //ゲームシーンへ.
-//		data.level = 1;              //Lv1にする.
 
 		//サウンド.
 		p_sound->Play(_T("LevelUp"), false, 100);
@@ -529,7 +540,7 @@ void GameManager::UpdateGame() {
 	effectMng.Update(); //エフェクト.
 	
 	//ポーズする.
-	if((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)){
+	if(p_input->IsPushActionTime(_T("GamePause")) == 1){
 		data.scene = SCENE_PAUSE;
 		tmScene[SCENE_GAME].Stop(); //一時停止.
 		tmSlowMode.Stop();          //一時停止.
@@ -540,7 +551,7 @@ void GameManager::UpdateEnd() {
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でタイトルへ.
-	if ((p_input->IsPushKeyTime(KEY_SPACE) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1))
+	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
@@ -549,7 +560,7 @@ void GameManager::UpdateEnd() {
 void GameManager::UpdatePause() {
 
 	//ポーズ解除.
-	if ((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)) {
+	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
 		data.scene = SCENE_GAME;
 		tmScene[SCENE_GAME].Start(); //再開.
@@ -565,7 +576,7 @@ void GameManager::UpdateObjects() {
 
 	//Lv1以上.
 	laserMng.Update();
-	meteoMng.Update();
+	meteorMng.Update();
 	obstacle4_1.Update();
 	obstacle4_2.Update();
 	item.Update();
@@ -612,7 +623,7 @@ void GameManager::DrawTitle() {
 		//切り替え前.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
-			double anim = p_calc->CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
+			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
 			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, {0.5, 0.5}, ANC_MID, true, true);
@@ -620,8 +631,8 @@ void GameManager::DrawTitle() {
 		//切り替え後.
 		else {
 			//アニメーション値.
-			double anim1 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
-			double anim2 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
+			double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
+			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * (1-anim2));
 			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, {0.5, 0.5}, ANC_MID, true, true);
@@ -639,8 +650,8 @@ void GameManager::DrawTitle() {
 		const int scoreY = WINDOW_HEI/2 + 60;
 
 		//アニメーション値.
-		double anim1 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
-		double anim2 = p_calc->CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
+		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
+		double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
@@ -656,7 +667,7 @@ void GameManager::DrawTitle() {
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
 		//アニメーション値.
-		double anim = p_calc->CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
+		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-2}, 18, 0xFFFFFF };
@@ -677,15 +688,15 @@ void GameManager::DrawTitle() {
 			//エフェクトをいくつか出す.
 			for (int i = 0; i < METEO_BREAK_ANIM_CNT; i++) {
 				
-				double newDig = dig + (float)p_calc->RandNum(-300, 300)/10; //少し角度をずらす.
+				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
 
 				EffectData data{}; 
 				data.type  = Effect_BreakMeteo;
 				data.pos   = { 600, 338 };
-				data.vec   = p_calc->CalcVectorDeg(newDig);               //ずらした角度を反映.
-				data.speed = ((float)p_calc->RandNum( 20,  100)/10)*1.4f; //速度抽選.
-				data.len   = ((float)p_calc->RandNum( 10,  150)/10)*1.4f; //長さ抽選.
-				data.ang   =  (float)p_calc->RandNum(  0, 3599)/10;       //角度抽選.
+				data.vec   = CalcVectorDeg(newDig);               //ずらした角度を反映.
+				data.speed = ((float)RandNum( 20,  100)/10)*1.4f; //速度抽選.
+				data.len   = ((float)RandNum( 10,  150)/10)*1.4f; //長さ抽選.
+				data.ang   =  (float)RandNum(  0, 3599)/10;       //角度抽選.
 				//エフェクト召喚.
 				effectMng.SpawnEffect(&data);
 			}
@@ -695,10 +706,10 @@ void GameManager::DrawTitle() {
 	}
 }
 void GameManager::DrawMenu() {
-
+	menuMng.Draw();
 }
 void GameManager::DrawTutorial() {
-
+	tutorialMng.Draw();
 }
 void GameManager::DrawReady() {
 	
@@ -746,7 +757,7 @@ void GameManager::DrawEnd() {
 	//終了案内.
 	{
 		//アニメーション値.
-		double anim = p_calc->CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
+		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
 		//スコア表示.
 		TCHAR text[256];
@@ -774,7 +785,7 @@ void GameManager::DrawEnd() {
 		if (data.score > data.bestScore) {
 
 			//アニメーション値.
-			double anim = p_calc->CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
+			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 			//描画.
 			SetDrawBlendModeST(MODE_ALPHA, 255*anim);
 			imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
@@ -790,7 +801,7 @@ void GameManager::DrawEnd() {
 	if (tmScene[SCENE_END].GetPassTime() > delay2) {
 		
 		//アニメーション値.
-		double anim = p_calc->CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
+		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
@@ -821,10 +832,10 @@ void GameManager::DrawUI() {
 #endif
 
 	//アニメーション値.
-	double alpha1   = p_calc->CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.1);
-	double alpha2   = p_calc->CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.2);
-	double alpha3   = p_calc->CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.3);
-	double alpha4   = p_calc->CalcNumEaseInOut((tmScene[SCENE_READY].GetPassTime()-1.0)*2);
+	double alpha1   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.1);
+	double alpha2   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.2);
+	double alpha3   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.3);
+	double alpha4   = CalcNumEaseInOut((tmScene[SCENE_READY].GetPassTime()-1.0)*2);
 	double animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime()-0.1);
 	double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
 	double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.3));
@@ -838,13 +849,13 @@ void GameManager::DrawUI() {
 	};
 	TCHAR text[256];
 	_stprintf(text, _T("LEVEL %d"),        data.level);
-	str[0].data.text = text;
+	str[0].text = text;
 	_stprintf(text, _T("BEST SCORE:%05d"), data.bestScore);
-	str[1].data.text = text;
+	str[1].text = text;
 	_stprintf(text, _T("SCORE:%05d"),      data.score);
-	str[2].data.text = text;
+	str[2].text = text;
 	_stprintf(text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
-	str[3].data.text = text;
+	str[3].text = text;
 		
 	//背景画像.
 	imgUI[0].DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
@@ -853,17 +864,17 @@ void GameManager::DrawUI() {
 	str[0].Draw(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].Draw(ANC_MID, data.font3);
-	imgUI[1].DrawExtend({(double)str[1].data.pos.x, (double)str[1].data.pos.y+28}, {0.35, 0.4});
+	imgUI[1].DrawExtend({(double)str[1].pos.x, (double)str[1].pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].Draw(ANC_MID, data.font3);
-	imgUI[2].DrawExtend({(double)str[2].data.pos.x, (double)str[2].data.pos.y+28}, {0.35, 0.4});
+	imgUI[2].DrawExtend({(double)str[2].pos.x, (double)str[2].pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].Draw(ANC_MID, data.font3);
-	imgUI[3].DrawExtend({(double)str[3].data.pos.x, (double)str[3].data.pos.y+28}, {0.35, 0.4});
+	imgUI[3].DrawExtend({(double)str[3].pos.x, (double)str[3].pos.y+28}, {0.35, 0.4});
 	//テキスト(光沢用)
-	str[1].data.color = 0xFFFFFF;
-	str[2].data.color = 0xFFFFFF;
-	str[3].data.color = 0xFFFFFF;
+	str[1].color = 0xFFFFFF;
+	str[2].color = 0xFFFFFF;
+	str[3].color = 0xFFFFFF;
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
 	str[1].Draw(ANC_MID, data.font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
@@ -879,7 +890,7 @@ void GameManager::DrawObjects() {
 
 	//Lv1以上.
 	laserMng.Draw();
-	meteoMng.Draw();
+	meteorMng.Draw();
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
 	item.Draw();
@@ -917,8 +928,8 @@ void GameManager::DrawReflectMode() {
 
 		//画面中央に数字を表示.
 		{
-			double dec  = p_calc->GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
-			double anim = p_calc->CalcNumEaseOut(dec);
+			double dec  = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
+			double anim = CalcNumEaseOut(dec);
 			
 			SetDrawBlendModeST(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
