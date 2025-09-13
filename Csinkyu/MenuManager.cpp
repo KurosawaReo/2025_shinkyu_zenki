@@ -1,24 +1,88 @@
-/*
+﻿/*
    - MenuManager.cpp -
-   ���j���[�V�[��.
+   メニューシーン.
 */
+#include "Global.h"
+#include "GameManager.h"
 #include "MenuManager.h"
+//#include "KR_Input.h"  // InputMngクラスの完全な定義のために追加
 
-//������.
+//初期化.
 void MenuManager::Init() {
-	_debug_log_str(_T("init\n")); //�f�o�b�O�\��.
+	//*debug*log_str(_T("init\n")); //デバッグ表示.（一時的にコメントアウト）
 
-	Reset(); //���Z�b�g����.
+	// GameManagerからGameDataのポインタを取得
+	p_data = GameManager::GetPtr()->GetGameDataPtr();
+
+	Reset(); //リセット処理.
 }
-//���Z�b�g.
+
+//リセット.
 void MenuManager::Reset() {
+	selectedIndex = 0; //選択項目を初期化（0:ゲーム開始、1:チュートリアル）
+}
 
-}
-//�X�V.
+//更新.
 void MenuManager::Update() {
-	_debug_log_str(_T("update\n")); //�f�o�b�O�\��.
+	//*debug*log_str(_T("update\n")); //デバッグ表示.（一時的にコメントアウト）
+
+	InputMng* input = InputMng::GetPtr();
+
+	// 上下キーで選択項目を変更（トリガー判定：押した瞬間のみ）
+	if (input->IsPushKeyTime(KEY_UP) == 1 || input->IsPushKeyTime(KEY_W) == 1) {
+		selectedIndex = (selectedIndex - 1 + 2) % 2; // 0と1の間をループ
+	}
+	if (input->IsPushKeyTime(KEY_DOWN) == 1 || input->IsPushKeyTime(KEY_S) == 1) {
+		selectedIndex = (selectedIndex + 1) % 2; // 0と1の間をループ
+	}
+
+	// スペースキーまたはエンターキーで決定
+	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushKeyTime(KEY_ENTER) == 1) {
+		if (selectedIndex == 0) {
+			// ゲーム開始
+			p_data->scene = SCENE_READY; // ゲーム準備画面へ
+		}
+		else if (selectedIndex == 1) {
+			// チュートリアル
+			p_data->scene = SCENE_TUTORIAL; // チュートリアル画面へ
+		}
+	}
+
+	// ESCキーでタイトルに戻る
+	if (input->IsPushKeyTime(KEY_ESC) == 1) {
+		p_data->scene = SCENE_TITLE;
+	}
 }
-//�`��.
+
+//描画.
 void MenuManager::Draw() {
-	_debug_log_str(_T("draw\n")); //�f�o�b�O�\��.
+	//*debug*log_str(_T("draw\n")); //デバッグ表示.（一時的にコメントアウト）
+
+	// 背景を暗くする
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	DrawBox(0, 0, WINDOW_WID, WINDOW_HEI, GetColor(0, 0, 0), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	// メニュータイトル
+	DrawString(WINDOW_WID / 2 - 50, 200, _T("MENU"), GetColor(255, 255, 255));
+
+	// メニュー項目
+	int menuY = 400;
+	int menuSpacing = 80;
+
+	// ゲーム開始
+	unsigned int color1 = (selectedIndex == 0) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
+	DrawString(WINDOW_WID / 2 - 60, menuY, _T("ゲーム開始"), color1);
+
+	// チュートリアル
+	unsigned int color2 = (selectedIndex == 1) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
+	DrawString(WINDOW_WID / 2 - 80, menuY + menuSpacing, _T("チュートリアル"), color2);
+
+	// 操作説明
+	DrawString(50, WINDOW_HEI - 150, _T("↑↓ or W/S: 選択"), GetColor(200, 200, 200));
+	DrawString(50, WINDOW_HEI - 120, _T("SPACE/ENTER: 決定"), GetColor(200, 200, 200));
+	DrawString(50, WINDOW_HEI - 90, _T("ESC: タイトルに戻る"), GetColor(200, 200, 200));
+
+	// 選択中の項目にカーソル表示
+	DrawString(WINDOW_WID / 2 - 90, menuY + selectedIndex * menuSpacing, _T("►"), GetColor(255, 255, 0));
 }
