@@ -16,12 +16,14 @@ using namespace KR_Lib;
 enum Scene
 {
 	SCENE_TITLE,
+	SCENE_MENU,     //メニュー画面.
+	SCENE_TUTORIAL, //チュートリアル.
 	SCENE_READY,
 	SCENE_GAME,
 	SCENE_END,
-	SCENE_PAUSE, //ポーズ画面.
+	SCENE_PAUSE,    //ポーズ画面.
 
-	SCENE_COUNT, //総数.
+	SCENE_COUNT,    //総数.
 };
 //レーザー移動列挙.
 enum MoveDir
@@ -80,7 +82,7 @@ struct GameData
 
 #define PLAYER_SIZE						(30)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
-#define PLAYER_AFT_IMG_NUM				(7)             //残像データの数.
+#define PLAYER_AFT_IMG_NUM				(10)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 
 #define ITEM_SIZE						(20)			//アイテムサイズ.

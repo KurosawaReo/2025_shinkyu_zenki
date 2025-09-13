@@ -107,8 +107,7 @@ void EffectManager::Update() {
 				}
 				break;
 
-				default: 
-					; break;
+				default: assert(FALSE); break;
 			}
 		}
 	}
@@ -329,7 +328,7 @@ void EffectManager::Draw() {
 				}
 				break;
 
-				default: assert(false); break;
+				default: assert(FALSE); break;
 			}
 		}
 	}

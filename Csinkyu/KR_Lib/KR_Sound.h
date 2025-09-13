@@ -1,8 +1,8 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/09/07
 
-   サウンド機能を追加します.
+   サウンド機能を追加します。
 */
 #pragma once
 
@@ -48,23 +48,21 @@ namespace KR_Lib
 	//サウンド管理クラス[継承不可]
 	class SoundMng final
 	{
-	private: //実体.
-		static SoundMng inst; //自身のインスタンス.
-
 	private: //データ.
 		map<MY_STRING, SoundData> sound;
 
 	public:
 		//実体の取得.
 		static SoundMng* GetPtr() {
+			static SoundMng inst; //自身のインスタンス.
 			return &inst;
 		}
 		//destructor.
 		~SoundMng();
 
 		int  LoadFile(MY_STRING fileName, MY_STRING saveName);
-		void Play    (MY_STRING saveName, bool isLoop, int volume = 100);
-		void Stop    (MY_STRING saveName);
+		int  Play    (MY_STRING saveName, bool isLoop, int volume = 100);
+		int  Stop    (MY_STRING saveName);
 		void Update  ();
 
 		void ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	       //音量を変更.

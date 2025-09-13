@@ -1,8 +1,8 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/08/25
+   ver: 2025/09/07
 
-   計算機能を追加します.
+   計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
 */
 #if !defined DEF_KR_GLOBAL
@@ -14,8 +14,6 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	Calc Calc::inst; //インスタンスを生成.
-
 	//当たり判定(円と円)
 	bool Calc::HitCirCir(const Circle* cir1, const Circle* cir2) {
 
@@ -46,40 +44,15 @@ namespace KR_Lib
 	//当たり判定(四角と円)
 	bool Calc::HitBoxCir(const Box* box, const Circle* cir) {
 
-		//パターン1: 四角形の上下辺に触れている.
-		if (_is_in_range(cir->pos.x, box->pos.x-box->size.x/2,        box->pos.x+box->size.x/2)        &&
-			_is_in_range(cir->pos.y, box->pos.y-box->size.x/2-cir->r, box->pos.y+box->size.y/2+cir->r))
-		{
-			return true; //hit.
-		}
-		//パターン2: 四角形の左右辺に触れている.
-		if (_is_in_range(cir->pos.x, box->pos.x-box->size.x/2-cir->r, box->pos.x+box->size.x/2+cir->r) &&
-			_is_in_range(cir->pos.y, box->pos.y-box->size.x/2,        box->pos.y+box->size.y/2))
-		{
-			return true; //hit.
-		}
-		//パターン3: 四角形の角に触れている.
-		{
-			//角の座標.
-			const DBL_XY pos[4] = {
-				{box->pos.x-box->size.x/2, box->pos.y-box->size.y/2},
-				{box->pos.x+box->size.x/2, box->pos.y-box->size.y/2},
-				{box->pos.x-box->size.x/2, box->pos.y+box->size.y/2},
-				{box->pos.x+box->size.x/2, box->pos.y+box->size.y/2}
-			};
-			Circle tmpCir = {{}, 0, {}};
+		DBL_XY nearest;
 
-			//角4ヶ所ループ.
-			for (auto& i : pos) {
-				//角に円を置く.
-				tmpCir.pos = i;
-				//その円に当たっていれば.
-				if (HitCirCir(cir, &tmpCir)) {
-					return true; //hit.
-				}
-			}
-		}
-		return false; //hitしてない.
+		//円の中心から一番近い四角形の点を求める.
+		nearest.x = ClampNum(cir->pos.x, box->pos.x - box->size.x/2, box->pos.x + box->size.x/2);
+		nearest.y = ClampNum(cir->pos.y, box->pos.y - box->size.y/2, box->pos.y + box->size.y/2);
+		//円の中心との距離.
+		double dis = CalcDist(cir->pos, nearest);
+
+		return (dis <= cir->r); //距離が半径以下ならhit.
 	}
 	//当たり判定(線と円)
 	bool Calc::HitLineCir(const Line* line, const Circle* cir) {

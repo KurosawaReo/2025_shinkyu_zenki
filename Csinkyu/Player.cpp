@@ -16,6 +16,9 @@ void Player::Init(GameData* _data, EffectManager* _effectMng)
 	p_calc      = Calc::GetPtr();
 
 	isDebug = false;
+
+	imgPlayer[0].LoadFile(_T("Resources/Images/player_normal.png"));
+	imgPlayer[1].LoadFile(_T("Resources/Images/player_reflect.png"));
 }
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
@@ -55,6 +58,8 @@ void Player::Update()
 
 	//有効なら.
 	if (active) {
+		imgRot += 0.5; //画像回転.
+
 		UpdateAfterImage();
 		UpdateReflectEffects();
 		PlayerMove();
@@ -85,6 +90,8 @@ void Player::Draw()
 		DrawAfterImage();
 		DrawReflectEffects();  // エフェクトを先に描画
 
+		//四角形ver.
+#if false
 		//四角形.
 		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
 		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
@@ -102,6 +109,17 @@ void Player::Draw()
 
 		DrawBoxST(&box1, ANC_MID, false, true);
 		DrawBoxST(&box2, ANC_MID, false, true);
+#endif
+
+		//画像描画.
+		if (mode == Player_Reflect ||
+			mode == Player_SuperReflect
+		){
+			imgPlayer[1].DrawRota(hit.pos, 0.2, imgRot); //反射モードの色.
+		}
+		else {
+			imgPlayer[0].DrawRota(hit.pos, 0.2, imgRot); //通常モードの色.
+		}
 	}
 }
 
@@ -137,20 +155,24 @@ void Player::DrawAfterImage()
 			//透明度反映.
 			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-			Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
+//			Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
+			Circle cir = { afterPos[i], PLAYER_SIZE/1.5, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
 			){
-				box.color = COLOR_PLY_AFT_REF;
+//				box.color = COLOR_PLY_AFT_REF;
+				cir.color = COLOR_PLY_AFT_REF;
 			}
 			//通常カラー.
 			else
 			{
-				box.color = COLOR_PLY_AFT_NOR;
+//				box.color = COLOR_PLY_AFT_NOR;
+				cir.color = COLOR_PLY_AFT_NOR;
 			}
 
-			DrawBoxST(&box, ANC_MID, false, true);
+//			DrawBoxST(&box, ANC_MID, false, true);
+			DrawCircleST(&cir, false, true);
 		}
 	}
 

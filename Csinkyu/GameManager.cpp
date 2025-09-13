@@ -1,8 +1,9 @@
-/*
-   - GameManager.cpp -
-   ゲーム全体管理.
-*/
 /*--------------------------------------------------------/
+   - REFLECT LINE -
+
+   (日本語表記: リフレクトライン)
+   (略称　　　: REFLINE/リフライン)
+/---------------------------------------------------------/
    TODOメモ
 
    2025/05/20:
@@ -68,16 +69,20 @@
    特定の条件で行くことができて、特別なルールがある感じで。
    特別感のあるBGMや背景に変える。
 
-   2025/08/15:
-   配列をvectorに変えたい。
-   push_backという関数で要素の追加ができるため、生成するときはこれで追加する。
-
-   最大サイズの定数はそのまま残していい気がする
-   例: if (size() < MAX_SIZE) {}
-
    2025/08/23:
    新障害物「花火」を追加する。Level4で登場予定。
    詳しくは後日相談, なおとに作ってもらう?
+
+   2025/08/27:
+   開始時、操作方法分岐を入れて以後の説明文を変えたい。
+   ・KEY_SPACE を押したら⇒Push SPACE (キーボード操作)
+   ・PAD_XBOX_Aを押したら⇒Push A     (パッド操作)
+   など。
+
+   2025/09/08:
+   ・花火のバグ修正(スローモードに対応してない, たまに不発する)
+   ・配列をvectorに変える。最初にreserveで必要分確保し、デストラクタで解放すればいい。
+   ・Calc.hのCalcクラスはなくていい。関数群として置き、KR_Lib名前空間内にCalcという名前空間を置けばOK。
 
 /---------------------------------------------------------/
    前期発表会後 変更内容
@@ -94,17 +99,40 @@
    ・強化アイテム追加。反射レーザーが隕石に当たっても反射する。
 
    [現在のLevel配分]
-   Level1:
-   　通常レーザー×2, 隕石
-   Level2:
-     直線レーザー×2
-   Level3:
-     波紋
-   Level4:
-     直線レーザー×4, アイテム×2
-   Level5:
-     通常レーザー×4, アイテムが強化
+   Level1: 通常レーザー×2, 隕石
+   Level2: 直線レーザー×2
+   Level3: 波紋
+   Level4: 直線レーザー×4, アイテム×2
+   Level5: 通常レーザー×4, アイテムが強化
+
+/---------------------------------------------------------/
+   【今後の制作予定】
+
+   こわす発表まで:
+   ・障害物「花火」追加
+   ・タイトルロゴ変更(ゲーム名変更のため)
+
+   TGS展示まで:
+   ・開始時の操作方法分岐(できれば)
+   ・ゲーム内チュートリアル
+   ・SCOREランキング実装
+   ・ポスターver2 & アンケート作る
+   
+   最終目標:
+   ・SCORE世界ランキング化
+   ・steam販売
+
+   [チュートリアル配分] ※案
+   tutorial1: 避ける
+   tutorial2: 取る
+   tutorial3: 壊す
+   tutorial4: 敵
+   Levelと同じような演出を出す。stepを踏んで練習させる。
 /--------------------------------------------------------*/
+/*
+   - GameManager.cpp -
+   ゲーム全体管理.
+*/
 
 #include "MeteoManager.h"
 #include "LaserManager.h"
@@ -282,13 +310,23 @@ void GameManager::Update() {
 	//シーン別.
 	switch (data.scene) 
 	{
-		case SCENE_TITLE: UpdateTitle(); break;
-		case SCENE_READY: UpdateReady(); break;
-		case SCENE_GAME:  UpdateGame();  break;
-		case SCENE_END:   UpdateEnd();   break;
-		case SCENE_PAUSE: UpdatePause(); break;
+		case SCENE_TITLE:    UpdateTitle();    break;
+		case SCENE_MENU:     UpdateMenu();     break;
+		case SCENE_TUTORIAL: UpdateTutorial(); break;
+		case SCENE_READY:    UpdateReady();    break;
+		case SCENE_GAME:     UpdateGame();     break;
+		case SCENE_END:      UpdateEnd();      break;
+		case SCENE_PAUSE:    UpdatePause();    break;
 	
 		default: assert(FALSE); break;
+	}
+
+	//特定の操作でゲーム終了
+	if (p_input->IsPushPadBtnTime(PAD_ACD_BTN_START) >= FPS * 1) {
+		DxLibMain::GetPtr()->GameEnd(); //筐体STARTボタン長押しで終了.
+	}
+	else if (p_input->IsPushKey(KEY_ESC)) {
+		DxLibMain::GetPtr()->GameEnd(); //ESCAPEキーを押したら即終了.
 	}
 }
 
@@ -300,11 +338,13 @@ void GameManager::Draw() {
 	//シーン別.
 	switch (data.scene) 
 	{
-		case SCENE_TITLE: DrawTitle(); break;
-		case SCENE_READY: DrawReady(); break;
-		case SCENE_GAME:  DrawGame();  break;
-		case SCENE_END:   DrawEnd();   break;
-		case SCENE_PAUSE: DrawPause(); break;
+		case SCENE_TITLE:    DrawTitle();    break;
+		case SCENE_MENU:     DrawMenu();     break;
+		case SCENE_TUTORIAL: DrawTutorial(); break;
+		case SCENE_READY:    DrawReady();    break;
+		case SCENE_GAME:     DrawGame();     break;
+		case SCENE_END:      DrawEnd();      break;
+		case SCENE_PAUSE:    DrawPause();    break;
 
 		default: assert(FALSE); break;
 	}
@@ -333,11 +373,17 @@ void GameManager::UpdateTitle()
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でゲーム開始.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_XBOX_X) == 1)
+	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
 		data.scene = SCENE_READY;     //準備シーンへ.
 	}
+}
+void GameManager::UpdateMenu() {
+
+}
+void GameManager::UpdateTutorial() {
+
 }
 void GameManager::UpdateReady() {
 
@@ -483,7 +529,7 @@ void GameManager::UpdateGame() {
 	effectMng.Update(); //エフェクト.
 	
 	//ポーズする.
-	if(p_input->IsPushKeyTime(KEY_P) == 1){
+	if((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)){
 		data.scene = SCENE_PAUSE;
 		tmScene[SCENE_GAME].Stop(); //一時停止.
 		tmSlowMode.Stop();          //一時停止.
@@ -494,7 +540,7 @@ void GameManager::UpdateEnd() {
 	effectMng.Update(); //エフェクト.
 
 	//特定の操作でタイトルへ.
-	if (p_input->IsPushKeyTime(KEY_SPACE) == 1 || p_input->IsPushPadBtnTime(PAD_XBOX_A) == 1)
+	if ((p_input->IsPushKeyTime(KEY_SPACE) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_1) == 1))
 	{
 		data.scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
@@ -503,7 +549,7 @@ void GameManager::UpdateEnd() {
 void GameManager::UpdatePause() {
 
 	//ポーズ解除.
-	if (p_input->IsPushKeyTime(KEY_P) == 1) {
+	if ((p_input->IsPushKeyTime(KEY_P) == 1) || (p_input->IsPushPadBtnTime(PAD_ACD_BTN_UPPER_2) == 1)) {
 
 		data.scene = SCENE_GAME;
 		tmScene[SCENE_GAME].Start(); //再開.
@@ -603,8 +649,8 @@ void GameManager::DrawTitle() {
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
 		str.Draw(ANC_MID, data.font2); //スコア値.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
-		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY + (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
-		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY - (10+18*anim2)}, {0.5, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -647,6 +693,12 @@ void GameManager::DrawTitle() {
 			p_sound->Play(_T("Break"), false, 65);
 		}
 	}
+}
+void GameManager::DrawMenu() {
+
+}
+void GameManager::DrawTutorial() {
+
 }
 void GameManager::DrawReady() {
 	
@@ -801,13 +853,13 @@ void GameManager::DrawUI() {
 	str[0].Draw(ANC_MID, data.font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
 	str[1].Draw(ANC_MID, data.font3);
-	imgUI[1].DrawExtend({(double)str[1].data.pos.x, (double)str[1].data.pos.y+28}, {0.4, 0.4});
+	imgUI[1].DrawExtend({(double)str[1].data.pos.x, (double)str[1].data.pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
 	str[2].Draw(ANC_MID, data.font3);
-	imgUI[2].DrawExtend({(double)str[2].data.pos.x, (double)str[2].data.pos.y+28}, {0.4, 0.4});
+	imgUI[2].DrawExtend({(double)str[2].data.pos.x, (double)str[2].data.pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
 	str[3].Draw(ANC_MID, data.font3);
-	imgUI[3].DrawExtend({(double)str[3].data.pos.x, (double)str[3].data.pos.y+28}, {0.4, 0.4});
+	imgUI[3].DrawExtend({(double)str[3].data.pos.x, (double)str[3].data.pos.y+28}, {0.35, 0.4});
 	//テキスト(光沢用)
 	str[1].data.color = 0xFFFFFF;
 	str[2].data.color = 0xFFFFFF;

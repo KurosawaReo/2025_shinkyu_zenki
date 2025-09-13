@@ -1,9 +1,9 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/08/25
+   ver: 2025/09/08
 
-   ƒIƒuƒWƒFƒNƒg‚ð’Ç‰Á‚µ‚Ü‚·, Œp³‚µ‚ÄŽg‚¤‚±‚Æ‚à‰Â‚Å‚·.
-   Draw, Calc, Input‚Ìˆê•”‹@”\‚ðƒIƒuƒWƒFƒNƒgŽwŒü‚ÅŽg‚¦‚Ü‚·.
+   ƒIƒuƒWƒFƒNƒg‚ð’Ç‰Á‚µ‚Ü‚·, Œp³‚µ‚ÄŽg‚¤‚±‚Æ‚à‰Â‚Å‚·B
+   Draw, Calc, Input‚Ìˆê•”‹@”\‚ðƒIƒuƒWƒFƒNƒgŽwŒü‚ÅŽg‚¦‚Ü‚·B
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.h‚É“ü‚Á‚Ä‚È‚¯‚ê‚Î‚±‚±‚Å“±“ü.
@@ -20,11 +20,119 @@ namespace KR_Lib
 	Calc*     p_calc  = Calc::GetPtr();
 	InputMng* p_input = InputMng::GetPtr();
 
+// ¥*---=[ Object ]=---*¥ //
+
+	//ˆÚ“®ŒÀŠE‚ð‰z‚¦‚È‚¢‚æ‚¤ˆÊ’uC³.
+	void ObjectShape::FixPosInArea(int left, int up, int right, int down) {
+		p_calc->FixPosInArea(GetPosPtr(), GetSize().ToIntXY(), left, up, right, down);
+	}
+	//ƒGƒŠƒA‚ð‰z‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©.
+	bool ObjectShape::IsOutInArea(int left, int up, int right, int down, bool isCompOut) {
+		return p_calc->IsOutInArea(GetPos(), GetSize().ToIntXY(), left, up, right, down, isCompOut);
+	}
+	//‹——£‚ð‹‚ß‚é.
+	double ObjectShape::CalcDist(DBL_XY pos) {
+		return p_calc->CalcDist(GetPos(), pos);
+	}
+	//Šp“x‚Æ’·‚³‚©‚ç‰~Žüã‚ÌÀ•W‚ð‹‚ß‚é.
+	DBL_XY ObjectShape::CalcArcPos(double ang, double len) {
+		return p_calc->CalcArcPos(GetPos(), ang, len);
+	}
+	//‘ÎÛÀ•W‚ðŒ©‚½Žž‚Ì•ûŒü‚ð‹‚ß‚é.
+	double ObjectShape::CalcFacingAng(DBL_XY targetPos) {
+		return p_calc->CalcFacingAng(GetPos(), targetPos);
+	}
+
+	//ˆÚ“®‘€ì.
+	void ObjectShape::MoveKey4Dir(float speed) {
+		p_input->MoveKey4Dir(GetPosPtr(), speed);
+	}
+	void ObjectShape::MovePad4Dir(float speed) {
+		p_input->MovePad4Dir(GetPosPtr(), speed);
+	}
+	void ObjectShape::MovePadStick(float speed) {
+		p_input->MovePadStick(GetPosPtr(), speed);
+	}
+	void ObjectShape::MoveMousePos(bool isValidX, bool isValidY) {
+		SetPos(p_input->GetMousePos(isValidX, isValidY));
+	}
+	
+	//‰æ‘œ‚ð•`‰æ.
+	int ObjectShape::DrawGraph() {
+
+		_return(-1, !isActive); //-1: ”ñƒAƒNƒeƒBƒu.
+
+		//‰æ‘œƒf[ƒ^‚ª‚È‚¢.
+		if (img == nullptr) {
+			DrawShape(); //‘ã‚í‚è‚É}Œ`‚ð•`‰æ.
+			return -2;   //-2: ‰æ‘œ‚È‚µ.
+		}
+		//À•W‚Éoffset‚ð‘«‚·.
+		DBL_XY pos = GetPos() + offset;
+		//•`‰æ.
+		int err = img->Draw(pos);
+		_return(-3, err < 0); //-3: ‰æ‘œ•`‰æƒGƒ‰[.
+
+		return 0; //³íI—¹.
+	}
+	int ObjectShape::DrawRectGraph(int left, int up, int right, int down) {
+
+		_return(-1, !isActive); //-1: ”ñƒAƒNƒeƒBƒu.
+
+		//‰æ‘œƒf[ƒ^‚ª‚È‚¢.
+		if (img == nullptr) {
+			DrawShape(); //‘ã‚í‚è‚É}Œ`‚ð•`‰æ.
+			return -2;   //-2: ‰æ‘œ‚È‚µ.
+		}
+		//À•W‚Éoffset‚ð‘«‚·.
+		DBL_XY pos = GetPos() + offset;
+		//•`‰æ.
+		int err = img->DrawRect(pos, left, up, right, down);
+		_return(-3, err < 0); //-3: ‰æ‘œ•`‰æƒGƒ‰[.
+
+		return 0; //³íI—¹.
+	}
+	int ObjectShape::DrawExtendGraph(DBL_XY sizeRate) {
+
+		_return(-1, !isActive); //-1: ”ñƒAƒNƒeƒBƒu.
+
+		//‰æ‘œƒf[ƒ^‚ª‚È‚¢.
+		if (img == nullptr) {
+			DrawShape(); //‘ã‚í‚è‚É}Œ`‚ð•`‰æ.
+			return -2;   //-2: ‰æ‘œ‚È‚µ.
+		}
+		//À•W‚Éoffset‚ð‘«‚·.
+		DBL_XY pos = GetPos() + offset;
+		//•`‰æ.
+		int err = img->DrawExtend(pos, sizeRate);
+		_return(-3, err < 0); //-3: ‰æ‘œ•`‰æƒGƒ‰[.
+
+		return 0; //³íI—¹.
+	}
+	int ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot) {
+
+		_return(-1, !isActive); //-1: ”ñƒAƒNƒeƒBƒu.
+
+		//‰æ‘œƒf[ƒ^‚ª‚È‚¢.
+		if (img == nullptr) {
+			DrawShape(); //‘ã‚í‚è‚É}Œ`‚ð•`‰æ.
+			return -2;   //-2: ‰æ‘œ‚È‚µ.
+		}
+		//À•W‚Éoffset‚ð‘«‚·.
+		DBL_XY pos = GetPos() + offset;
+
+		//•`‰æ.
+		int err = img->DrawRota(pos, sizeRate, ang, pivot);
+		_return(-3, err < 0); //-3: ‰æ‘œ•`‰æƒGƒ‰[.
+
+		return 0; //³íI—¹.
+	}
+
 // ¥*---=[ ObjectCir ]=---*¥ //
 
 	//‰~‚Æ‚Ì”»’è.
 	bool ObjectCir::HitCheckCir(const Circle* cir) {
-		return p_calc->HitCirCir(&this->cir, cir);
+		return p_calc->HitCirCir(cir, &this->cir);
 	}
 	//ŽlŠpŒ`‚Æ‚Ì”»’è.
 	bool ObjectCir::HitCheckBox(const Box* box) {
@@ -34,43 +142,7 @@ namespace KR_Lib
 	bool ObjectCir::HitCheckLine(const Line* line) {
 		return p_calc->HitLineCir(line, &this->cir);
 	}
-
-	//ˆÚ“®ŒÀŠE‚ð‰z‚¦‚È‚¢‚æ‚¤ˆÊ’uC³.
-	void ObjectCir::FixPosInArea(int left, int up, int right, int down) {
-		p_calc->FixPosInArea(&cir.pos, {_int_r(cir.r), _int_r(cir.r)}, left, up, right, down);
-	}
-	//ƒGƒŠƒA‚ð‰z‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©.
-	bool ObjectCir::IsOutInArea(int left, int up, int right, int down, bool isCompOut) {
-		return p_calc->IsOutInArea(cir.pos, {_int_r(cir.r), _int_r(cir.r)}, left, up, right, down, isCompOut);
-	}
-	//‹——£‚ð‹‚ß‚é.
-	double ObjectCir::CalcDist(DBL_XY pos) {
-		return p_calc->CalcDist(cir.pos, pos);
-	}
-	//Šp“x‚Æ’·‚³‚©‚ç‰~Žüã‚ÌÀ•W‚ð‹‚ß‚é.
-	DBL_XY ObjectCir::CalcArcPos(double ang, double len) {
-		return p_calc->CalcArcPos(cir.pos, ang, len);
-	}
-	//‘ÎÛÀ•W‚ðŒ©‚½Žž‚Ì•ûŒü‚ð‹‚ß‚é.
-	double ObjectCir::CalcFacingAng(DBL_XY targetPos) {
-		return p_calc->CalcFacingAng(cir.pos, targetPos);
-	}
-
-	//ˆÚ“®‘€ì.
-	void ObjectCir::MoveKey4Dir(float speed) {
-		p_input->MoveKey4Dir(&cir.pos, speed);
-	}
-	void ObjectCir::MovePad4Dir(float speed) {
-		p_input->MovePad4Dir(&cir.pos, speed);
-	}
-	void ObjectCir::MovePadStick(float speed) {
-		p_input->MovePadStick(&cir.pos, speed);
-	}
-	void ObjectCir::MoveMousePos(bool isValidX, bool isValidY) {
-		p_input->GetMousePos(&cir.pos, isValidX, isValidY);
-	}
-
-	//ObjectCirŒ^: ‰~‚ð•`‰æ.
+	//}Œ`: ‰~‚ð•`‰æ.
 	int ObjectCir::DrawShape(bool isFill, bool isAnti) {
 
 		_return(0, !isActive); //”ñƒAƒNƒeƒBƒu‚È‚ç•`‰æ‚µ‚È‚¢.
@@ -81,22 +153,6 @@ namespace KR_Lib
 		//•`‰æ.
 		int err = DrawCircleST(&tmpCir, isFill, isAnti);
 		return err; //-1: ‰~•`‰æƒGƒ‰[.
-	}
-	//ObjectCirŒ^: ‰æ‘œ‚ð•`‰æ.
-	int ObjectCir::DrawGraph(DrawImg* img) {
-
-		_return(0, !isActive); //”ñƒAƒNƒeƒBƒu‚È‚ç•`‰æ‚µ‚È‚¢.
-
-		//À•W‚Éoffset‚ð‘«‚·.
-		Circle tmpCir = cir;
-		tmpCir.pos += offset;
-		//•`‰æ.
-		int err = img->Draw(tmpCir.pos);
-		if (err < 0) {
-			DrawShape(); //‘ã‚í‚è‚É‰~‚ð•`‰æ.
-			return -1;   //-1: ‰æ‘œ•`‰æƒGƒ‰[.
-		}
-		return 0; //³íI—¹.
 	}
 
 // ¥*---=[ ObjectBox ]=---*¥ //
@@ -109,43 +165,7 @@ namespace KR_Lib
 	bool ObjectBox::HitCheckBox(const Box* box) {
 		return p_calc->HitBoxBox(&this->box, box);
 	}
-
-	//ˆÚ“®ŒÀŠE‚ð‰z‚¦‚È‚¢‚æ‚¤ˆÊ’uC³.
-	void ObjectBox::FixPosInArea(int left, int up, int right, int down) {
-		p_calc->FixPosInArea(&box.pos, box.size.ToIntXY(), left, up, right, down);
-	}
-	//ƒGƒŠƒA‚ð‰z‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©.
-	bool ObjectBox::IsOutInArea(int left, int up, int right, int down, bool isCompOut) {
-		return p_calc->IsOutInArea(box.pos, box.size.ToIntXY(), left, up, right, down, isCompOut);
-	}
-	//‹——£‚ð‹‚ß‚é.
-	double ObjectBox::CalcDist(DBL_XY pos) {
-		return p_calc->CalcDist(box.pos, pos);
-	}
-	//Šp“x‚Æ’·‚³‚©‚ç‰~Žüã‚ÌÀ•W‚ð‹‚ß‚é.
-	DBL_XY ObjectBox::CalcArcPos(double ang, double len) {
-		return p_calc->CalcArcPos(box.pos, ang, len);
-	}
-	//‘ÎÛÀ•W‚ðŒ©‚½Žž‚Ì•ûŒü‚ð‹‚ß‚é.
-	double ObjectBox::CalcFacingAng(DBL_XY targetPos) {
-		return p_calc->CalcFacingAng(box.pos, targetPos);
-	}
-
-	//ˆÚ“®‘€ì.
-	void ObjectBox::MoveKey4Dir(float speed) {
-		p_input->MoveKey4Dir(&box.pos, speed);
-	}
-	void ObjectBox::MovePad4Dir(float speed) {
-		p_input->MovePad4Dir(&box.pos, speed);
-	}
-	void ObjectBox::MovePadStick(float speed) {
-		p_input->MovePadStick(&box.pos, speed);
-	}
-	void ObjectBox::MoveMousePos(bool isValidX, bool isValidY) {
-		p_input->GetMousePos(&box.pos, isValidX, isValidY);
-	}
-
-	//ObjectBoxŒ^: ŽlŠpŒ`‚ð•`‰æ.
+	//}Œ`: ŽlŠpŒ`‚ð•`‰æ.
 	int ObjectBox::DrawShape(bool isFill, bool isAnti) {
 
 		_return(0, !isActive); //”ñƒAƒNƒeƒBƒu‚È‚ç•`‰æ‚µ‚È‚¢.
@@ -156,22 +176,6 @@ namespace KR_Lib
 		//•`‰æ.
 		int err = DrawBoxST(&tmpBox, ANC_MID, isFill, isAnti);
 		return err; //-1: ‰~•`‰æƒGƒ‰[.
-	}
-	//ObjectBoxŒ^: ‰æ‘œ‚ð•`‰æ.
-	int ObjectBox::DrawGraph(DrawImg* img) {
-
-		_return(0, !isActive); //”ñƒAƒNƒeƒBƒu‚È‚ç•`‰æ‚µ‚È‚¢.
-
-		//À•W‚Éoffset‚ð‘«‚·.
-		Box tmpBox = box;
-		tmpBox.pos += offset;
-		//•`‰æ.
-		int err = img->Draw(tmpBox.pos);
-		if (err < 0) {
-			DrawShape(); //‘ã‚í‚è‚ÉŽlŠpŒ`‚ð•`‰æ.
-			return -1;   //-1: ‰æ‘œ•`‰æƒGƒ‰[.
-		}
-		return 0; //³íI—¹.
 	}
 
 // ¥*---=[ ObjectGrid ]=---*¥ //

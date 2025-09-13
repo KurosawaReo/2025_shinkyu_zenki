@@ -1,8 +1,8 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/08/24
+   ver: 2025/09/03
 
-   タイマー機能を追加します.
+   タイマー機能を追加します。
 */
 #pragma once
 
@@ -30,6 +30,7 @@ namespace KR_Lib
 
 	public:
 		//constructor.
+		Timer(){}
 		Timer(TimerMode _mode, float _init) :
 			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化子.
 		{}
@@ -48,7 +49,8 @@ namespace KR_Lib
 			return isMove;
 		}
 
-		float GetPassTime(); //時間取得.
+		float GetPassTime();  //時間取得.
+		bool  IntervalTime(); //一定時間ごとにtrueを返す.
 	};
 
 	//タイマー機能(マイクロ秒)
@@ -66,15 +68,13 @@ namespace KR_Lib
 
 	public:
 		//constructor.
+		TimerMicro(){}
 		TimerMicro(TimerMode _mode, LONGLONG _init) :
 			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化子.
 		{
-			Init();
-		}
-
-		void Init() {
 			QueryPerformanceFrequency(&freq); //頻度の取得.
 		}
+
 		void Start() {
 			QueryPerformanceCounter(&tmStart); //開始時刻の取得.
 			isMove = true; //計測中.

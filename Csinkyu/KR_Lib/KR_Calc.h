@@ -1,8 +1,8 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/08/25
+   ver: 2025/09/07
 
-   計算機能を追加します.
+   計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
@@ -17,22 +17,20 @@ namespace KR_Lib
 	//計算機能クラス[継承不可]
 	class Calc final
 	{
-	private: //実体.
-		static Calc inst; //自身のインスタンス.
-
-	public:
-		//実体の取得.
+	public: 
+		//実体取得用.
 		static Calc* GetPtr() {
+			static Calc inst; //自身のインスタンス.
 			return &inst;
 		}
 
 		//当たり判定.
-		bool		HitCirCir	(const Circle* cir1, const Circle* cir2);
-		bool		HitBoxBox	(const Box*    box1, const Box*    box2);
-		bool		HitBoxCir	(const Box*    box,  const Circle* cir);
-		bool		HitLineCir	(const Line*   line, const Circle* cir);
+		bool		HitCirCir		(const Circle* cir1, const Circle* cir2);
+		bool		HitBoxBox		(const Box*    box1, const Box*    box2);
+		bool		HitBoxCir		(const Box*    box,  const Circle* cir);
+		bool		HitLineCir		(const Line*   line, const Circle* cir);
 
-		//移動限界.
+		//範囲限界.
 		void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
 		bool		IsOutInArea		(DBL_XY  pos, INT_XY size, int left, int up, int right, int down, bool isCompOut);
 
@@ -55,5 +53,11 @@ namespace KR_Lib
 		int         RandNum			(int st, int ed,            bool isDxRand = false);
 		vector<int> RandNums		(int st, int ed, int count, bool isDxRand = false);
 		double      GetDecimal		(double num);
+
+		//<T> 値が上限下限を越えないようにする.
+		template<typename T, _type_num_only(T)>
+		T ClampNum(T num, T low, T high) {
+			return max(low, min(num, high));
+		}
 	};
 }
