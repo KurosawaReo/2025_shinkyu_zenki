@@ -1,13 +1,12 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/10
 
    サウンド機能を追加します。
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Timer.h"
-  using namespace KR_Lib;
 #endif
 #include "KR_Sound.h"
 

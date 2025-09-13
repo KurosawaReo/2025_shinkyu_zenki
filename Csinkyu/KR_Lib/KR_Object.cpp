@@ -1,6 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/09/08
+   ver: 2025/09/10
 
    オブジェクトを追加します, 継承して使うことも可です。
    Draw, Calc, Inputの一部機能をオブジェクト指向で使えます。
@@ -10,37 +10,35 @@
   #include "KR_Calc.h"
   #include "KR_Draw.h"
   #include "KR_Input.h"
-  using namespace KR_Lib;
 #endif
 #include "KR_Object.h"
 
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	Calc*     p_calc  = Calc::GetPtr();
 	InputMng* p_input = InputMng::GetPtr();
 
 // ▼*---=[ Object ]=---*▼ //
 
 	//移動限界を越えないよう位置修正.
 	void ObjectShape::FixPosInArea(int left, int up, int right, int down) {
-		p_calc->FixPosInArea(GetPosPtr(), GetSize().ToIntXY(), left, up, right, down);
+		Calc::FixPosInArea(GetPosPtr(), GetSize().ToIntXY(), left, up, right, down);
 	}
 	//エリアを越えているかどうか.
 	bool ObjectShape::IsOutInArea(int left, int up, int right, int down, bool isCompOut) {
-		return p_calc->IsOutInArea(GetPos(), GetSize().ToIntXY(), left, up, right, down, isCompOut);
+		return Calc::IsOutInArea(GetPos(), GetSize().ToIntXY(), left, up, right, down, isCompOut);
 	}
 	//距離を求める.
 	double ObjectShape::CalcDist(DBL_XY pos) {
-		return p_calc->CalcDist(GetPos(), pos);
+		return Calc::CalcDist(GetPos(), pos);
 	}
 	//角度と長さから円周上の座標を求める.
 	DBL_XY ObjectShape::CalcArcPos(double ang, double len) {
-		return p_calc->CalcArcPos(GetPos(), ang, len);
+		return Calc::CalcArcPos(GetPos(), ang, len);
 	}
 	//対象座標を見た時の方向を求める.
 	double ObjectShape::CalcFacingAng(DBL_XY targetPos) {
-		return p_calc->CalcFacingAng(GetPos(), targetPos);
+		return Calc::CalcFacingAng(GetPos(), targetPos);
 	}
 
 	//移動操作.
@@ -132,15 +130,15 @@ namespace KR_Lib
 
 	//円との判定.
 	bool ObjectCir::HitCheckCir(const Circle* cir) {
-		return p_calc->HitCirCir(cir, &this->cir);
+		return Calc::HitCirCir(cir, &this->cir);
 	}
 	//四角形との判定.
 	bool ObjectCir::HitCheckBox(const Box* box) {
-		return p_calc->HitBoxCir(box, &this->cir);
+		return Calc::HitBoxCir(box, &this->cir);
 	}
 	//線との当たり判定.
 	bool ObjectCir::HitCheckLine(const Line* line) {
-		return p_calc->HitLineCir(line, &this->cir);
+		return Calc::HitLineCir(line, &this->cir);
 	}
 	//図形: 円を描画.
 	int ObjectCir::DrawShape(bool isFill, bool isAnti) {
@@ -159,11 +157,11 @@ namespace KR_Lib
 
 	//円との判定.
 	bool ObjectBox::HitCheckCir(const Circle* cir) {
-		return p_calc->HitBoxCir(&this->box, cir);
+		return Calc::HitBoxCir(&this->box, cir);
 	}
 	//四角形との判定.
 	bool ObjectBox::HitCheckBox(const Box* box) {
-		return p_calc->HitBoxBox(&this->box, box);
+		return Calc::HitBoxBox(&this->box, box);
 	}
 	//図形: 四角形を描画.
 	int ObjectBox::DrawShape(bool isFill, bool isAnti) {

@@ -14,11 +14,10 @@ private:
 
 	DBL_XY plyPos{};   // プレイヤー座標保管用.
 
-	GameData*     p_data{};
-	Player*       p_player{};
-	LaserManager* p_laserMng{};
-	MeteoManager* p_meteoMng{};
-	Calc*         p_calc{};
+	GameData*      p_data{};
+	Player*        p_player{};
+	LaserManager*  p_laserMng{};
+	MeteorManager* p_meteorMng{};
 
 	float  laserSpawnTimer{};  // レーザー発射タイマー.
 	float  predictionTimer{};  // 予測線タイマー.
@@ -29,7 +28,7 @@ private:
 	double nextCenterPos{};    // 次のレーザー発射位置（予測線用）
 
 public:
-	void Init(GameData*, Player*, LaserManager*, MeteoManager*);
+	void Init(GameData*, Player*, LaserManager*, MeteorManager*);
 	void Reset();
 	void Update();
 	void Draw();

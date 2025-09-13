@@ -1,13 +1,12 @@
 /*
    - KR_Main.cpp - (DxLib)
-   ver: 2025/09/09
+   ver: 2025/09/10
 
    プログラム開始地点の処理を行います。
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Timer.h"
-  using namespace KR_Lib;
 #endif
 #include "KR_Main.h"
 
