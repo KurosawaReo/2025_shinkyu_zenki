@@ -4,11 +4,16 @@
 */
 #pragma once
 #include "Meteor.h"
-#include "EffectManager.h"
 
 //隕石管理.
 class MeteorManager
 {
+public: //実体.
+	static MeteorManager* GetPtr() {
+		static MeteorManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	Meteor meteor[METEO_CNT_MAX]{}; //隕石データ.
 	float timer{};			      //隕石生成用.
@@ -18,7 +23,7 @@ private:
 	EffectManager* p_effectMng{};
 
 public:
-	void Init(GameData*, Player*, EffectManager*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

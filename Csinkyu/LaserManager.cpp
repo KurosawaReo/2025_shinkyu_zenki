@@ -3,6 +3,7 @@
    元々Obstacle4mainとしてまとめられてたレーザー.
 */
 #include "Player.h"
+#include "GameManager.h"
 #include "MeteorManager.h"
 
 #include "LaserManager.h"
@@ -10,13 +11,13 @@
 using namespace Calc; //計算機能を使用.
 
 //初期化.
-void LaserManager::Init(GameData* _data, Player* _player, MeteorManager* _meteorMng, EffectManager* _effectMng) {
+void LaserManager::Init() {
 
 	//実体取得.
-	p_data = _data;
-	p_player = _player;
-	p_meteorMng = _meteorMng;
-	p_effectMng = _effectMng;
+	p_data      = GameData::GetPtr();
+	p_player    = Player::GetPtr();
+	p_meteorMng = MeteorManager::GetPtr();
+	p_effectMng = EffectManager::GetPtr();
 }
 //リセット.
 void LaserManager::Reset() {
@@ -69,13 +70,13 @@ void LaserManager::Draw() {
 		//線の色(時間経過で色が変化)
 		switch (line[i].type)
 		{
-		case Laser_Normal:       tmpLine.color = GetColor(50, clr, 255);        break;
-		case Laser_Straight:     tmpLine.color = GetColor(50, clr, 255);        break;
-		case Laser_Reflect:      tmpLine.color = GetColor(clr / 2 + 128, 0, 255);   break;
-		case Laser_SuperReflect: tmpLine.color = GetColor(clr / 2 + 128, 0, 255);   break;
-		case Laser_Falling:      tmpLine.color = GetColor(50, clr, 255);  break; // オレンジ色の軌跡
+			case Laser_Normal:       tmpLine.color = GetColor(50, clr, 255);        break;
+			case Laser_Straight:     tmpLine.color = GetColor(50, clr, 255);        break;
+			case Laser_Reflect:      tmpLine.color = GetColor(clr/2+128, 0, 255);   break;
+			case Laser_SuperReflect: tmpLine.color = GetColor(clr/2+128, 0, 255);   break;
+			case Laser_Falling:      tmpLine.color = GetColor(50, clr, 255);        break;
 
-		default: assert(false); break;
+			default: assert(FALSE); break;
 		}
 
 		DrawLineST(&tmpLine, true); //描画.

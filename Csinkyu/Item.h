@@ -1,5 +1,4 @@
 #pragma once
-#include "Player.h"  // Player クラスを使用するため
 
 //アイテムタイプ.
 enum ItemType
@@ -18,9 +17,15 @@ struct ItemData
 	float    spawnCounter{};
 };
 
-//アイテム管理クラス.
-class ItemManager
+//アイテム管理クラス.[継承不可]
+class ItemManager final
 {
+public: //実体.
+	static ItemManager* GetPtr() {
+		static ItemManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	ItemData data[2];
 	int      itemCnt{}; //出すアイテムの数.
@@ -33,7 +38,7 @@ public:
 	//add.
 	void AddItemCnt() { itemCnt++; }
 
-	void Init(GameData*, Player*, EffectManager*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

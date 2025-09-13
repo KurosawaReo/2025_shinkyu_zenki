@@ -4,6 +4,8 @@
 */
 #pragma once
 
+class GameData; //前方宣言.
+
 //エフェクトタイプ.
 enum EffectType
 {
@@ -36,9 +38,15 @@ struct Effect : public EffectData
 	bool       active{};
 };
 
-//エフェクト管理クラス.
-class EffectManager
+//エフェクト管理クラス.[継承不可]
+class EffectManager final
 {
+public: //実体.
+	static EffectManager* GetPtr() {
+		static EffectManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	Effect effect[EFFECT_MAX]{};
 
@@ -47,7 +55,7 @@ private:
 	GameData* p_data{};
 
 public:
-	void Init(GameData*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/13
 
    KR_Lib全体で使う汎用機能を追加します。
 */
@@ -16,7 +16,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <algorithm> //vectorで検索をする用.
 #include <cassert>   //assert.h をラップしたもの.
 #include <cmath>     //math.h   をラップしたもの.
 #include <cstdlib>   //stdlib.h をラップしたもの.

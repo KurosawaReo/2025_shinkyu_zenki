@@ -48,9 +48,9 @@ void BG_Tile::Shine() {
 // Å•*---=[ BackGround ]=---*Å• //
 
 //èâä˙âª.
-void BackGround::Init(GameData* _data) {
+void BackGround::Init() {
 
-	p_data = _data;
+	p_data = GameData::GetPtr();
 
 	imgBG[0].LoadFile(_T("Resources/Images/bg_normal.png"));
 	imgBG[1].LoadFile(_T("Resources/Images/bg_reflect.png"));
