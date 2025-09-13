@@ -5,7 +5,6 @@
    砲台(不可視)を左右で違う動きにするため、overrideを使用.
 */
 #pragma once
-#include "Player.h"
 #include "Obstacle4main.h"
 
 //#define MAX_L 100 //ミサイルが飛ぶ最大距離.

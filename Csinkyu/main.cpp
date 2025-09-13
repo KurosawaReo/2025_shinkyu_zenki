@@ -4,8 +4,7 @@
 */
 #include "GameManager.h"
 
-GameManager GameManager::inst; //インスタンスを生成.
-GameManager* gm;               //実体を入れる用.
+GameManager* gm; //実体を入れる用.
 
 void DxLibMain::Init() {
 	gm = GameManager::GetPtr(); //GameManagerから実体取得.

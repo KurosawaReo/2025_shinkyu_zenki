@@ -2,13 +2,14 @@
    - Meteor.cpp -
    ~‚Á‚Ä‚­‚éè¦Î.
 */
+#include "GameManager.h"
 #include "Meteor.h"
 
 //namespaceÈ—ª.
 using namespace Calc; 
 
-void Meteor::Init(GameData* _data) {
-	p_data = _data;
+void Meteor::Init() {
+	p_data = GameData::GetPtr();
 }
 
 void Meteor::Reset() {

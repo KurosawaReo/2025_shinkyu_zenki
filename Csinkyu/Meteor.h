@@ -5,6 +5,8 @@
 #pragma once
 #include "Player.h"
 
+class GameData; //‘O•ûéŒ¾.
+
 //è¦Î‚Ìó‘Ô.
 enum MeteorState
 {
@@ -47,7 +49,7 @@ public:
 	MeteorState GetState()  { return state; }
 
 	//‚»‚Ì‘¼.
-	void Init(GameData*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

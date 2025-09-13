@@ -2,19 +2,21 @@
    - MeteorManager.cpp -
    隕石の出現を管理する.
 */
+#include "GameManager.h"
+#include "EffectManager.h"
 #include "MeteorManager.h"
 
 using namespace Calc; //計算機能を使用.
 
-void MeteorManager::Init(GameData* _data, Player* _player, EffectManager* _effectMng) {
+void MeteorManager::Init() {
 
-	p_data      = _data;
-	p_player    = _player;
-	p_effectMng = _effectMng;
+	p_data      = GameData::GetPtr();
+	p_player    = Player::GetPtr();
+	p_effectMng = EffectManager::GetPtr();
 
 	//全隕石ループ.
 	for (int i = 0; i < METEO_CNT_MAX; i++) {
-		meteor[i].Init(_data);
+		meteor[i].Init();
 	}
 }
 

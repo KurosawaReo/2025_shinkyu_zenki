@@ -5,9 +5,15 @@
 #pragma once
 //#include "MeteoManager.h"
 
-//マップギミックレーザー管理用.
-class MapGimmickLaser
+//直線レーザー管理.[継承不可]
+class MapGimmickLaser final
 {
+public: //実体.
+	static MapGimmickLaser* GetPtr() {
+		static MapGimmickLaser inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 //	STRAIGHT_LASER_DATA laser[3]{};
 //	STRAIGHT_LINE_DATA line[OBSTACLE6_LINE_MAX]{}; //レーザーはLaserManagerに統一しとく.
@@ -28,7 +34,7 @@ private:
 	double nextCenterPos{};    // 次のレーザー発射位置（予測線用）
 
 public:
-	void Init(GameData*, Player*, LaserManager*, MeteorManager*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

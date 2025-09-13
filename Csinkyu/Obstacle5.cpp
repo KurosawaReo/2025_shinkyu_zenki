@@ -5,11 +5,11 @@
 
 //初期化(一回のみ行う)
 //リセット(何回でも行う)
-void Obstacle5::Init(GameData* data, Player* player)
+void Obstacle5::Init()
 {
 	//実体のアドレスをもらう.
-	p_data = data;
-	p_player = player;
+	p_data   = GameData::GetPtr();
+	p_player = Player::GetPtr();
 
 	// フラッシュエフェクトの初期化
 	for (int i = 0; i < OBSTACLE5_FLASH_MAX; i++) {

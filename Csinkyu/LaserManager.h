@@ -3,8 +3,11 @@
    元々Obstacle4mainとしてまとめられてたレーザー.
 */
 #pragma once
-#include "MeteorManager.h"
-#include "EffectManager.h"
+
+//前方宣言.
+class Player;
+class MeteorManager;
+class EffectManager;
 
 //レーザータイプ.
 enum LaserType
@@ -47,8 +50,14 @@ struct LaserLineData
 };
 
 //レーザー管理用.
-class LaserManager
+class LaserManager final
 {
+public: //実体.
+	static LaserManager* GetPtr() {
+		static LaserManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	LaserData     laser[LASER_CNT_MAX]{};      //ホーミングレーザーのデータ.
 	LaserLineData line [LASER_LINE_CNT_MAX]{}; //ライン描画用データ.
@@ -61,7 +70,7 @@ private:
 	EffectManager* p_effectMng{};
 
 public:
-	void Init(GameData*, Player*, MeteorManager*, EffectManager*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

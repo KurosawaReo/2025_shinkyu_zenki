@@ -2,6 +2,7 @@
    - Obstacle2.h -
    è·äQï®ä«óù.
 */
+#if false
 #pragma once
 #include "Player.h"
 
@@ -30,3 +31,4 @@ public:
 	void Draw();
 	void enemyMove();
 };
+#endif

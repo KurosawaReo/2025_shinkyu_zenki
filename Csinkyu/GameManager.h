@@ -5,15 +5,45 @@
 #pragma once
 #include "KR_Lib/KR_Scene.h"
 
-//ゲームマネージャー.
-class GameManager 
+//ゲームデータ.[継承不可]
+class GameData final
 {
-private: //実体.
-	static GameManager inst; //自身のインスタンス.
+public:
+	//実体.
+	static GameData* GetPtr() {
+		static GameData inst; //自身のインスタンス.
+		return &inst;
+	}
+
+	Scene scene;      //シーンの記録用.
+	int   stage;      //ステージ数.
+
+	int   score;      //スコア.
+	int   scoreBef;   //スコア(時間加算前)
+	int   bestScore;  //ベストスコア.
+	int   level;	  //レベル.
+
+	float spawnRate;  //障害物の出現時間割合.
+	float counter;    //経過時間カウンター(スローの影響を受ける)
+
+	int   font1;      //フォント.
+	int   font2;      //フォント.
+	int   font3;      //フォント.
+	int   font4;      //フォント.
+
+	bool  isSlow;     //スローモードかどうか.
+};
+
+//ゲームマネージャー.[継承不可]
+class GameManager final
+{
+public: //実体.
+	static GameManager* GetPtr() {
+		static GameManager inst; //自身のインスタンス.
+		return &inst;
+	}
 
 private: //データ.
-	GameData data{}; //ゲームデータ.
-    
 	//シーン別に経過時間を記録する.
 	Timer tmScene[SCENE_COUNT] = {
 		Timer(COUNT_UP, 0), //Titleシーン.
@@ -38,11 +68,6 @@ private: //データ.
 	SoundMng* p_sound{};
 
 public:
-	//実体の取得.
-	static GameManager* GetPtr() {
-		return &inst;
-	}
-	GameData* GetGameDataPtr() { return &data; }
 	//get.
 	float GetSlowModeTime() {
 		return tmSlowMode.GetPassTime();

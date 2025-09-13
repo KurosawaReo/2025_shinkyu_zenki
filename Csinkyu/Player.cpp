@@ -10,10 +10,10 @@
 using namespace Calc; //計算機能を使用.
 
 //初期化(一回のみ行う)
-void Player::Init(GameData* _data, EffectManager* _effectMng)
+void Player::Init()
 {
-	p_data      = _data;
-	p_effectMng = _effectMng;
+	p_data      = GameData::GetPtr();
+	p_effectMng = EffectManager::GetPtr();
 	p_input     = InputMng::GetPtr();
 
 	isDebug = false;

@@ -1,13 +1,20 @@
-#include "FireworksObstacle.h"
+/*
+   - FireworksObstacle.cpp -
+   花火.
+*/
 #include "Player.h"
-#include <cmath>
-#include <cstdlib>
+#include "GameManager.h"
+#include "LaserManager.h"
+#include "FireworksObstacle.h"
+//#include <cmath>    KRライブラリに定義が入ってるため不要.
+//#include <cstdlib>
 
 // 初期化
-void FireworksObstacle::Init(GameData* data, Player* player, LaserManager* laserMng) {
-	p_data = data;
-	p_player = player;
-	p_laserMng = laserMng;
+void FireworksObstacle::Init() {
+
+	p_data     = GameData::GetPtr();
+	p_player   = Player::GetPtr();
+	p_laserMng = LaserManager::GetPtr();
 
 	// 花火データの初期化
 	for (int i = 0; i < FIREWORKS_MAX; i++) {
@@ -146,7 +153,7 @@ void FireworksObstacle::CreateFireworksSparks(float x, float y) {
 	int sparkCount = fireworks[0].sparkCount; // 仮で0番の火花数を使用
 
 	for (int i = 0; i < sparkCount; i++) {
-		float angle = (2.0f * M_PI * i) / sparkCount;
+		float angle = _flt((2.0f * M_PI * i) / sparkCount);
 
 		// 初期速度をランダムに調整
 		float baseSpeed = 2.5f + (float)(rand() % 3); // 2.5~4.5の範囲
@@ -154,7 +161,7 @@ void FireworksObstacle::CreateFireworksSparks(float x, float y) {
 		float speed = baseSpeed * speedVariation;
 
 		// 角度に少しランダム性を追加
-		float angleVariation = (float)(rand() % 40 - 20) * M_PI / 180.0f; // ±20度
+		float angleVariation = _flt((float)(rand() % 40 - 20) * M_PI / 180.0f); // ±20度
 		angle += angleVariation;
 
 		DBL_XY pos = { x, y };

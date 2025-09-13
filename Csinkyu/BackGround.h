@@ -24,9 +24,15 @@ public:
 	void Shine(); //発光.
 };
 
-//背景クラス.
-class BackGround
+//背景クラス.[継承不可]
+class BackGround final
 {
+public: //実体.
+	static BackGround* GetPtr() {
+		static BackGround inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	vector<BG_Tile> tiles;      //背景タイルデータ.
 	DrawImg         imgBG[2]{}; //背景画像.
@@ -36,7 +42,7 @@ private:
 	GameData* p_data{}; //ゲームデータ.
 
 public:
-	void Init(GameData*);
+	void Init();
 	void Update();
 	void Draw();
 };
