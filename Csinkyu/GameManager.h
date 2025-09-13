@@ -3,6 +3,7 @@
    ゲーム全体管理.
 */
 #pragma once
+#include "KR_Lib/KR_Scene.h"
 
 //ゲームマネージャー.
 class GameManager 
@@ -12,7 +13,7 @@ private: //実体.
 
 private: //データ.
 	GameData data{}; //ゲームデータ.
-
+    
 	//シーン別に経過時間を記録する.
 	Timer tmScene[SCENE_COUNT] = {
 		Timer(COUNT_UP, 0), //Titleシーン.
@@ -41,6 +42,7 @@ public:
 	static GameManager* GetPtr() {
 		return &inst;
 	}
+	GameData* GetGameDataPtr() { return &data; }
 	//get.
 	float GetSlowModeTime() {
 		return tmSlowMode.GetPassTime();
