@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/11
 
    計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -160,20 +160,20 @@ namespace KR_Lib
 		}
 		//角度と長さから円周上の座標を求める.
 		//[座標1,角度,長さ → 座標2]
-		DBL_XY CalcArcPos(DBL_XY stPos, double ang, double len) {
+		DBL_XY CalcArcPos(DBL_XY pos, double ang, double len) {
 
 			//角度をradに変換し、座標の計算.
 			double x = cos(_rad(ang)) * len;
 			double y = sin(_rad(ang)) * len;
 
-			return { stPos.x+x, stPos.y+y }; //終点座標を返す.
+			return { pos.x+x, pos.y+y }; //終点座標を返す.
 		}
 		//始点座標から対象座標への方向を求める.
 		//[座標1,座標2 → 角度]
-		double CalcFacingAng(DBL_XY stPos, DBL_XY targetPos) {
+		double CalcFacingAng(DBL_XY from, DBL_XY to) {
 			//座標差.
-			double disX = targetPos.x - stPos.x;
-			double disY = targetPos.y - stPos.y;
+			double disX = to.x - from.x;
+			double disY = to.y - from.y;
 			//radをdigにして返す.
 			return _deg(atan2(disY, disX));
 		}

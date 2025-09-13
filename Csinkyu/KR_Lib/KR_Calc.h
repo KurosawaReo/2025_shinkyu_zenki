@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/11
 
    計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -31,8 +31,8 @@ namespace KR_Lib
 		double		CalcDist		(INT_XY pos1,  INT_XY pos2);
 		double		CalcDist		(DBL_XY pos1,  DBL_XY pos2);
 		DBL_XY		CalcMidPos		(DBL_XY pos1,  DBL_XY pos2);
-		DBL_XY		CalcArcPos		(DBL_XY stPos, double ang, double len);
-		double		CalcFacingAng	(DBL_XY stPos, DBL_XY targetPos);
+		DBL_XY		CalcArcPos		(DBL_XY pos, double ang, double len);
+		double		CalcFacingAng	(DBL_XY from, DBL_XY to);
 		DBL_XY		CalcVectorDeg	(double deg);
 		DBL_XY		CalcVectorRad	(double rad);
 

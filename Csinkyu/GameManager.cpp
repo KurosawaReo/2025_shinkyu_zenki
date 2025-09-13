@@ -144,13 +144,17 @@
 #include "Player.h"
 
 #include "BackGround.h"
+#include "MenuManager.h"
+#include "TutorialManager.h"
 #include "GameManager.h"
 
 //管理クラスの実体.
-BackGround    bg;
-MeteorManager meteorMng;
-LaserManager  laserMng;
-EffectManager effectMng;
+BackGround      bg;
+MenuManager     menuMng;
+TutorialManager tutorialMng;
+MeteorManager   meteorMng;
+LaserManager    laserMng;
+EffectManager   effectMng;
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
@@ -217,6 +221,8 @@ void GameManager::Init() {
 	{
 		//管理class.
 		bg.Init(&data);
+		menuMng.Init();
+		tutorialMng.Init();
 		laserMng.Init(&data, &player, &meteorMng, &effectMng);
 		meteorMng.Init(&data, &player, &effectMng);
 		effectMng.Init(&data);
@@ -286,6 +292,8 @@ void GameManager::Reset() {
 
 	{
 		//管理class.
+		menuMng.Reset();
+		tutorialMng.Reset();
 		laserMng.Reset();
 		meteorMng.Reset();
 		effectMng.Reset();
@@ -380,14 +388,14 @@ void GameManager::UpdateTitle()
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
-		data.scene = SCENE_READY;     //準備シーンへ.
+		data.scene = SCENE_MENU;      //メニューシーンへ.
 	}
 }
 void GameManager::UpdateMenu() {
-
+	menuMng.Update();
 }
 void GameManager::UpdateTutorial() {
-
+	tutorialMng.Update();
 }
 void GameManager::UpdateReady() {
 
@@ -698,10 +706,10 @@ void GameManager::DrawTitle() {
 	}
 }
 void GameManager::DrawMenu() {
-
+	menuMng.Draw();
 }
 void GameManager::DrawTutorial() {
-
+	tutorialMng.Draw();
 }
 void GameManager::DrawReady() {
 	
