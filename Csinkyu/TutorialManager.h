@@ -5,7 +5,7 @@
 #pragma once
 
 //チュートリアル[継承不可]
-class TutorialManager
+class TutorialManager final
 {
 private:
 	int stepNo; //現在のステップ番号.

@@ -44,6 +44,10 @@ void TutorialManager::Draw() {
 //更新:step1
 void TutorialManager::UpdateStep1() {
 
+	//テキスト.
+	DrawStr str({_T("↑↓←→ | 移動"), {0, 0}, 0x00FFFF});
+	str.Draw();
+
 
 
 #if false
