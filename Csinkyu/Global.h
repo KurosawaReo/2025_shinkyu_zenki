@@ -33,6 +33,13 @@ enum MoveDir
 	MOVE_UP,
 	MOVE_DOWN
 };
+//ステージ種類,
+enum StageType
+{
+	STAGE_ENDLESS,
+	STAGE_TUTORIAL,
+//	STAGE_,
+};
 
 // - Debug -
 //定義するとデバッグ表示ON.

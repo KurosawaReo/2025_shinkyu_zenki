@@ -1,6 +1,6 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/15
 
    サウンド機能を追加します。
 */
@@ -158,6 +158,13 @@ namespace KR_Lib
 			return 0;
 		}
 		return -1; //-1: saveNameが見つからない.
+	}
+	//サウンド停止(全てのBGM)
+	void SoundMng::StopAll() {
+		//全て停止する.
+		for (auto& i : sound) {
+			i.second.Stop();
+		}
 	}
 	//サウンド更新.
 	void SoundMng::Update() {
