@@ -51,6 +51,8 @@ void TutorialManager::Draw() {
 //更新:step0
 void TutorialManager::UpdateStep0() {
 
+
+
 	if (p_input->IsPushKeyTime(KEY_0) == 1) {
 
 		//サウンド.
@@ -128,6 +130,8 @@ void TutorialManager::UpdateStep4() {
 
 //描画:step1
 void TutorialManager::DrawStep1() {
+
+
 
 	DrawStr str(_T("↑↓←→: 移動"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0x00FFFF);
 	str.Draw(ANC_MID, p_data->font1);

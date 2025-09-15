@@ -65,7 +65,7 @@ void MenuManager::Update() {
 			p_data->stage = STAGE_TUTORIAL;
 			//BGM.
 			p_sound->StopAll();
-			p_sound->Play(_T("BGM_Tutorial"), true, 68);
+			p_sound->Play(_T("BGM_Tutorial"), true, 50);
 		}
 	}
 

@@ -124,6 +124,10 @@
    最終目標:
    ・SCORE世界ランキング化
    ・steam販売
+
+   [BGM]
+   youtube「Tak_mfk」から使用。
+   steam販売の時にはライセンスに注意。
 /--------------------------------------------------------*/
 /*
    - GameManager.cpp -
@@ -690,8 +694,8 @@ void GameManager::DrawTitle() {
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-2}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, gameData->font1);    //テキスト.
-		DrawCircleST(&cir, false, false); //Xボタンの円.
+		str.Draw(ANC_MID, gameData->font1); //テキスト.
+		DrawCircleST(&cir, false, false);   //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 }
