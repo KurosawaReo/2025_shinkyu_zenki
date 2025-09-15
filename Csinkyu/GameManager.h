@@ -43,17 +43,9 @@ public: //実体.
 		return &inst;
 	}
 
-public: //データ.
-	//シーン別に経過時間を記録する.
-	Timer tmScene[SCENE_COUNT] = {
-		Timer(COUNT_UP, 0), //Titleシーン.
-		Timer(COUNT_UP, 0), //Readyシーン.
-		Timer(COUNT_UP, 0), //Gameシーン.
-		Timer(COUNT_UP, 0), //Endシーン.
-		Timer(COUNT_UP, 0), //Pauseシーン.
-	};
-
 private: //データ.
+	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
+
 	Timer tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME); //スロー継続時間.
 
 	DrawImg imgLogo[2]{};   //タイトルロゴ画像.

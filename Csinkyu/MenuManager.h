@@ -17,7 +17,8 @@ private:
 	GameData* p_data{};     // GameDataのポインタ
 	SoundMng* p_sound{};    // サウンド管理.
 
-	int selectedIndex = 0;  // 選択中のインデックス
+	int   selectedIndex = 0;  // 選択中のインデックス
+	float counter = 0;        // 経過時間カウンター.
 
 public:
 	void Init();
