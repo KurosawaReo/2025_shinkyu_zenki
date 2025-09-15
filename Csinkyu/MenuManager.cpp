@@ -57,6 +57,8 @@ void MenuManager::Update() {
 			//BGM.
 			p_sound->StopAll();
 			p_sound->Play(_T("BGM_Endless"), true, 68);
+
+			GameManager::GetPtr()->tmScene[SCENE_READY].Start(); //タイマー開始.
 		}
 		else if (selectedIndex == 1) {
 			//チュートリアルモードへ.

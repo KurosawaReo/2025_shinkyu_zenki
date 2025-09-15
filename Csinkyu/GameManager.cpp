@@ -178,8 +178,6 @@ void GameManager::Init() {
 	p_input = InputMng::GetPtr();
 	p_sound = SoundMng::GetPtr();
 
-	//タイトル.
-	gameData->scene = SCENE_TITLE;
 	//フォント作成.
 	gameData->font1 = CreateFontToHandle(NULL, 26, 1);
 	gameData->font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
@@ -261,16 +259,19 @@ void GameManager::Reset() {
 		gameData->bestScore = gameData->score; //ハイスコア記録.
 	}
 
-	//リセット.
-	gameData->scoreBef = 0;
-	gameData->score = 0;
-	gameData->isSlow = false;
-	gameData->counter = 0;
-	gameData->spawnRate = 1.0; //最初は100%
-	gameData->level = 1;       //最初はLv1
-	isTitleAnim = false;
-	isBestScoreSound = false;
+	//シーン.
+	gameData->scene = SCENE_TITLE;
+	//データ.
+	gameData->scoreBef  = 0;
+	gameData->score     = 0;
+	gameData->isSlow    = false;
+	gameData->counter   = 0;
+	gameData->spawnRate = 1.0;   //最初は100%
+	gameData->level     = 1;     //最初はLv1
+	isTitleAnim         = false;
+	isBestScoreSound    = false;
 	//サウンド.
+	p_sound->StopAll();
 	p_sound->Play(_T("BGM_Menu"), true, 68); //メニューBGMを流す.
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
@@ -381,7 +382,6 @@ void GameManager::UpdateTitle()
 	//特定の操作でゲーム開始.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
-		tmScene[SCENE_READY].Start(); //タイマー開始.
 		gameData->scene = SCENE_MENU; //メニューシーンへ.
 
 		//隕石破壊アニメーション.
@@ -418,7 +418,7 @@ void GameManager::UpdateTutorial() {
 void GameManager::UpdateReady() {
 
 	player->Update(); //プレイヤー.
-	
+
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
 

@@ -121,11 +121,8 @@ void TutorialManager::UpdateStep4() {
 
 	//チュートリアル終了.
 	if (p_input->IsPushKeyTime(KEY_0) == 1) {
-		p_data->scene = SCENE_MENU; //メニューへ戻る.
-		Reset(); //リセット.
-
-		p_sound->StopAll();
-		p_sound->Play(_T("")); //TODO<<<<<<<<<<<<<<<<<<<<<<<<<
+		//タイトルへ(全てリセット)
+		GameManager::GetPtr()->Reset();
 	}
 }
 
