@@ -87,6 +87,9 @@
    2025/09/09:
    ・ゲームオーバー画面にヒントが1文出るやつを作りたい。そこでルール説明の補間をする。
 
+   2025/09/16:
+   タイトルからメニューに行くとき、パッと画面を変えずにフェードアウトで滑らかに移動するようにしたい。
+
 /---------------------------------------------------------/
    [チュートリアル配分]
    step1: さける 
@@ -221,6 +224,11 @@ void GameManager::Init() {
 	p_input->AddAction(_T("GamePause"), KEY_P);               //キー操作.
 	p_input->AddAction(_T("GamePause"), PAD_ACD_BTN_UPPER_2); //アーケード操作.
 
+	//シーンタイマー初期化.
+	for(int i = 0; i < SCENE_COUNT; i++){
+		tmScene[i] = Timer(COUNT_UP, 0);
+	}
+
 	//Init処理
 	{
 		//障害物.
@@ -277,11 +285,10 @@ void GameManager::Reset() {
 	//サウンド.
 	p_sound->StopAll();
 	p_sound->Play(_T("BGM_Menu"), true, 68); //メニューBGMを流す.
-	//タイマー.
-	tmScene[SCENE_TITLE].Start();
-	tmScene[SCENE_READY].Reset();
-	tmScene[SCENE_GAME].Reset();
-	tmScene[SCENE_END].Reset();
+	//タイマー(全シーン)
+	for (int i = 0; i < SCENE_COUNT; i++) {
+		tmScene[i].Reset();
+	}
 
 	{
 		//障害物class.
@@ -381,6 +388,11 @@ void GameManager::ResetStrLaser() {
 //シーン別更新.
 void GameManager::UpdateTitle()
 {
+	//シーンタイマー開始.
+	if (!tmScene[SCENE_TITLE].GetIsMove()) {
+		tmScene[SCENE_TITLE].Start();
+	}
+
 	player->Update(); //プレイヤー.
 
 	//特定の操作でゲーム開始.
@@ -421,12 +433,16 @@ void GameManager::UpdateTutorial() {
 }
 void GameManager::UpdateReady() {
 
+	//シーンタイマー開始.
+	if (!tmScene[SCENE_READY].GetIsMove()) {
+		tmScene[SCENE_READY].Start();
+	}
+
 	player->Update(); //プレイヤー.
 
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
 
-		tmScene[SCENE_GAME].Start();  //ゲーム開始.
 		gameData->scene = SCENE_GAME; //ゲームシーンへ.
 
 		//サウンド.
@@ -446,6 +462,11 @@ void GameManager::UpdateGame() {
 		gameData->counter += 10;
 	}
 #endif
+
+	//シーンタイマー開始.
+	if (!tmScene[SCENE_GAME].GetIsMove()) {
+		tmScene[SCENE_GAME].Start();
+	}
 
 	//カウンター増加.
 	gameData->counter += ((gameData->isSlow) ? SLOW_MODE_SPEED : 1);
@@ -530,6 +551,11 @@ void GameManager::UpdateGame() {
 	}
 }
 void GameManager::UpdateEnd() {
+
+	//シーンタイマー開始.
+	if (!tmScene[SCENE_END].GetIsMove()) {
+		tmScene[SCENE_END].Start();
+	}
 
 	//特定の操作でタイトルへ.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
@@ -946,7 +972,6 @@ void GameManager::GameEnd() {
 		gameData->scene = SCENE_END; //ゲーム終了へ.
 	
 		tmScene[SCENE_GAME].Stop(); //停止.
-		tmScene[SCENE_END].Start(); //開始.
 		gameData->isSlow = false;
 		tmSlowMode.Reset();
 
@@ -955,7 +980,7 @@ void GameManager::GameEnd() {
 			isItemCountDownSound[i] = false;
 		}
 
-		gameData->scoreBef = gameData->score;                                  //時間加算前のスコアを記録.
+		gameData->scoreBef = gameData->score;                             //時間加算前のスコアを記録.
 		gameData->score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
 		//最高スコア更新なら保存.
