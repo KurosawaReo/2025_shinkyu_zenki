@@ -8,7 +8,6 @@
 
 // 初期化
 void MenuManager::Init() {
-<<<<<<< HEAD
 
 	//GameDataのポインタを取得
 	p_data = GameData::GetPtr();
@@ -21,10 +20,6 @@ void MenuManager::Init() {
 	input->AddAction(_T("MENU_DOWN"), KEY_S);
 	input->AddAction(_T("MENU_NEXT"), KEY_SPACE);
 	input->AddAction(_T("MENU_NEXT"), KEY_ENTER);
-=======
-	// GameManagerからGameDataのポインタを取得
-	p_data = GameManager::GetPtr()->GetGameDataPtr();
->>>>>>> Menu
 
 	Reset(); // リセット処理
 }
@@ -36,10 +31,7 @@ void MenuManager::Reset() {
 
 // 更新
 void MenuManager::Update() {
-<<<<<<< HEAD
 
-=======
->>>>>>> Menu
 	InputMng* input = InputMng::GetPtr();
 
 	// 上下キーで選択項目を変更（トリガー判定：押した瞬間のみ）
@@ -73,10 +65,7 @@ void MenuManager::Update() {
 
 // 描画
 void MenuManager::Draw() {
-<<<<<<< HEAD
 
-=======
->>>>>>> Menu
 	// 背景を暗くする
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DrawBox(0, 0, WINDOW_WID, WINDOW_HEI, GetColor(0, 0, 0), TRUE);
