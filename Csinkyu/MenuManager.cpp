@@ -1,13 +1,12 @@
 ﻿/*
    - MenuManager.cpp -
-   メニューシーン.
+   メニューシーン
 */
 #include "Global.h"
 #include "GameManager.h"
 #include "MenuManager.h"
-//#include "KR_Input.h"  // InputMngクラスの完全な定義のために追加
 
-//初期化.
+// 初期化
 void MenuManager::Init() {
 
 	//GameDataのポインタを取得
@@ -23,17 +22,17 @@ void MenuManager::Init() {
 	input->AddAction(_T("MENU_NEXT"), KEY_SPACE);
 	input->AddAction(_T("MENU_NEXT"), KEY_ENTER);
 
-	Reset(); //リセット処理.
+	Reset(); // リセット処理
 }
 
-//リセット.
+// リセット
 void MenuManager::Reset() {
-	selectedIndex = 0; //選択項目を初期化（0:ゲーム開始、1:チュートリアル）
+	selectedIndex = 0; // 選択項目を初期化（0:ゲーム開始、1:チュートリアル）
 }
 
-//更新.
+// 更新
 void MenuManager::Update() {
-
+	
 	InputMng* input = InputMng::GetPtr();
 
 	// 上下キーで選択項目を変更（トリガー判定：押した瞬間のみ）
@@ -76,7 +75,7 @@ void MenuManager::Update() {
 	}
 }
 
-//描画.
+// 描画
 void MenuManager::Draw() {
 
 	// 背景を暗くする
@@ -87,23 +86,37 @@ void MenuManager::Draw() {
 	// メニュータイトル
 	DrawString(WINDOW_WID / 2 - 50, 200, _T("MENU"), GetColor(255, 255, 255));
 
-	// メニュー項目
+	// メニュー項目の描画
+	int menuX = WINDOW_WID / 2 - 100; // 左端のX座標
 	int menuY = 400;
 	int menuSpacing = 80;
+	int boxWidth = 200;
+	int boxHeight = 50;
+
+	unsigned int normalColor = GetColor(255, 255, 255);   // 白
+	unsigned int selectColor = GetColor(0, 255, 255);     // 水色
 
 	// ゲーム開始
-	unsigned int color1 = (selectedIndex == 0) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-	DrawString(WINDOW_WID / 2 - 60, menuY, _T("ゲーム開始"), color1);
+	unsigned int color1 = (selectedIndex == 0) ? selectColor : normalColor;
+	DrawBox(menuX, menuY, menuX + boxWidth, menuY + boxHeight, selectColor, FALSE); // 水色の枠
+	DrawString(menuX + 20, menuY + 15, _T("ゲーム開始"), color1);
 
 	// チュートリアル
-	unsigned int color2 = (selectedIndex == 1) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-	DrawString(WINDOW_WID / 2 - 80, menuY + menuSpacing, _T("チュートリアル"), color2);
+	unsigned int color2 = (selectedIndex == 1) ? selectColor : normalColor;
+	DrawBox(menuX, menuY + menuSpacing, menuX + boxWidth, menuY + menuSpacing + boxHeight, selectColor, FALSE); // 水色の枠
+	DrawString(menuX + 20, menuY + menuSpacing + 15, _T("チュートリアル"), color2);
 
-	// 操作説明
-	DrawString(50, WINDOW_HEI - 150, _T("↑↓ or W/S: 選択"), GetColor(200, 200, 200));
-	DrawString(50, WINDOW_HEI - 120, _T("SPACE/ENTER: 決定"), GetColor(200, 200, 200));
-	DrawString(50, WINDOW_HEI - 90, _T("ESC: タイトルに戻る"), GetColor(200, 200, 200));
+	// 操作説明エリア
+	int infoX = 50;
+	int infoY = WINDOW_HEI - 170;
+	int infoWidth = 400;
+	int infoHeight = 120;
+	DrawBox(infoX, infoY, infoX + infoWidth, infoY + infoHeight, selectColor, FALSE); // 水色枠
 
-	// 選択中の項目にカーソル表示
-	DrawString(WINDOW_WID / 2 - 90, menuY + selectedIndex * menuSpacing, _T("►"), GetColor(255, 255, 0));
+	DrawString(infoX + 10, infoY + 10, _T("↑↓ or W/S: 選択"), normalColor);
+	DrawString(infoX + 10, infoY + 40, _T("SPACE/ENTER: 決定"), normalColor);
+	DrawString(infoX + 10, infoY + 70, _T("ESC: タイトルに戻る"), normalColor);
+
+	// 選択中の項目に矢印を表示（水色）
+	DrawString(menuX - 30, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor);
 }
