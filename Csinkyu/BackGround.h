@@ -3,6 +3,8 @@
 */
 #pragma once
 
+class BackGround; //前方宣言.
+
 //背景タイル.
 class BG_Tile
 {
@@ -14,10 +16,11 @@ private:
 
 	Timer timer = Timer(COUNT_DOWN, 3); //発光する時間.
 
-	GameData* p_data{};
+	GameData*   p_data{};
+	BackGround* p_bg{};
 
 public:
-	void Init(GameData*);                    //初期化.
+	void Init();                             //初期化.
 	void Update();                           //更新.
 	void Draw(bool isSlow, double slowTime); //描画.
 
@@ -39,9 +42,14 @@ private:
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 
+	float counter; //時間経過計測用.
+
 	GameData* p_data{}; //ゲームデータ.
 
 public:
+	//get.
+	float GetCounter() const { return counter; }
+
 	void Init();
 	void Update();
 	void Draw();

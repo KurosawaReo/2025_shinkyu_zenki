@@ -10,7 +10,8 @@
 void MenuManager::Init() {
 
 	//GameDataのポインタを取得
-	p_data = GameData::GetPtr();
+	p_data  = GameData::GetPtr();
+	p_sound = SoundMng::GetPtr();
 
 	//アクションを登録する(新機能)
 	InputMng* input = InputMng::GetPtr();
@@ -31,7 +32,7 @@ void MenuManager::Reset() {
 
 // 更新
 void MenuManager::Update() {
-
+	
 	InputMng* input = InputMng::GetPtr();
 
 	// 上下キーで選択項目を変更（トリガー判定：押した瞬間のみ）
@@ -47,13 +48,24 @@ void MenuManager::Update() {
 	// スペースキーまたはエンターキーで決定
 //	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushKeyTime(KEY_ENTER) == 1) {
 	if (input->IsPushActionTime(_T("MENU_NEXT")) == 1) {
-		if (selectedIndex == 0) {
-			// ゲーム開始
+
+		if (selectedIndex== 0) {
+			//ゲーム開始(耐久モードへ)
 			p_data->scene = SCENE_READY;
+			p_data->stage = STAGE_ENDLESS;
+			//BGM.
+			p_sound->StopAll();
+			p_sound->Play(_T("BGM_Endless"), true, 68);
+
+			GameManager::GetPtr()->tmScene[SCENE_READY].Start(); //タイマー開始.
 		}
 		else if (selectedIndex == 1) {
-			// チュートリアル
+			//チュートリアルモードへ.
 			p_data->scene = SCENE_TUTORIAL;
+			p_data->stage = STAGE_TUTORIAL;
+			//BGM.
+			p_sound->StopAll();
+			p_sound->Play(_T("BGM_Tutorial"), true, 68);
 		}
 	}
 

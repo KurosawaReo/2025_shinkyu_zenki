@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/15
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -109,7 +109,7 @@ namespace KR_Lib
 		int    DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font = -1);
 		int    DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font = -1);
 		//その他.
-		INT_XY GetTextSize(MY_STRING str, int font = -1);
+		INT_XY GetTextSize(int font = -1);
 	};
 
 	//フォントクラス.

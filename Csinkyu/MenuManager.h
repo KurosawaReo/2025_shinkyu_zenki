@@ -15,6 +15,8 @@ public: //実体.
 
 private:
 	GameData* p_data{};     // GameDataのポインタ
+	SoundMng* p_sound{};    // サウンド管理.
+
 	int selectedIndex = 0;  // 選択中のインデックス
 
 public:
