@@ -395,6 +395,7 @@ void GameManager::UpdateMenu() {
 }
 void GameManager::UpdateTutorial() {
 	tutorialMng->Update();
+	player->Update();
 }
 void GameManager::UpdateReady() {
 
@@ -709,6 +710,7 @@ void GameManager::DrawMenu() {
 }
 void GameManager::DrawTutorial() {
 	tutorialMng->Draw();
+	player->Draw();
 }
 void GameManager::DrawReady() {
 	

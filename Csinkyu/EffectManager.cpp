@@ -153,13 +153,13 @@ void EffectManager::Draw() {
 
 				case Effect_PlayerDeath:
 				{
-					Box box = { effect[i].pos, { PLAYER_SIZE+effect[i].counter, PLAYER_SIZE+effect[i].counter }, 0xFFFFFF };
+					Circle cir= { effect[i].pos, PLAYER_SIZE+effect[i].counter/2, 0xFFFFFF };
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawBoxST(&box, ANC_MID, false, true);
+					DrawCircleST(&cir, false, true);
 					ResetDrawBlendMode();
 				}
 				break;
