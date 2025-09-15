@@ -16,8 +16,7 @@ enum LaserType
 	Laser_Straight,     //直線レーザー.
 	Laser_Reflect,      //反射レーザー.
 	Laser_SuperReflect, //反射レーザー強化版.
-
-	Laser_Falling,         // 落下レーザー（花火用）
+	Laser_Falling,      //落下レーザー(花火用)
 };
 
 //レーザー本体データ.

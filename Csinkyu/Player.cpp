@@ -25,7 +25,7 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit       = { _pos, PLAYER_SIZE/2, {} };
+	hit       = { _pos, PLAYER_SIZE, {} };
 	active    = _active;
 	mode      = Player_Normal;
 	afterCntr = 1;
@@ -96,10 +96,19 @@ void Player::Draw()
 		if (mode == Player_Reflect ||
 			mode == Player_SuperReflect
 		){
-			imgPlayer[1].DrawRota(hit.pos, 0.2, imgRot); //反射モードの画像.
+			//反射モードの画像.
+			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot);
 		}
 		else {
-			imgPlayer[0].DrawRota(hit.pos, 0.2, imgRot); //通常モードの画像.
+			//通常モードの画像.
+			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot);
+		}
+
+		//チュートリアル用.
+		if (p_data->scene == SCENE_TUTORIAL) {
+			
+			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -40).ToIntXY(), 0xFFFFFF );
+			str.Draw();
 		}
 	}
 }
@@ -136,7 +145,7 @@ void Player::DrawAfterImage()
 			//透明度反映.
 			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-			Circle cir = { afterPos[i], PLAYER_SIZE/1.5, {} };
+			Circle cir = { afterPos[i], PLAYER_SIZE, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
