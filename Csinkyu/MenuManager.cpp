@@ -60,10 +60,10 @@ void MenuManager::Update() {
 
 	InputMng* input = InputMng::GetPtr();
 
-	if (input->IsPushActionTime(_T("MENU_UP")) == 1) {
+	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex - 1 + 3) % 3;
 	}
-	if (input->IsPushActionTime(_T("MENU_DOWN")) == 1) {
+	if (input->IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;
 	}
 
@@ -82,20 +82,23 @@ void MenuManager::Update() {
 			p_sound->Play(_T("BGM_Tutorial"), true, 50);
 		}
 		else if (selectedIndex == 2) {
-			p_data->scene = SCENE_TITLE;
+			GameManager::GetPtr()->Reset(); //タイトルへ.
 		}
 	}
+
+	counter += 1;
 }
 
 // 描画
+//なぜかここだけ「あいまいです」エラーが出るため、"DxLib::"というnamespaceをつけている.
 void MenuManager::Draw() {
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
-	DrawBox(0, 0, WINDOW_WID, WINDOW_HEI, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	DxLib::DrawBox(0, 0, WINDOW_WID, WINDOW_HEI, GetColor(0, 0, 0), TRUE);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// メニュータイトル（中央）
-	DrawStringToHandle(WINDOW_WID / 2 - 100, 100, _T("モード選択"), GetColor(0, 255, 255), largeFont);
+	DxLib::DrawStringToHandle(WINDOW_WID / 2 - 100, 100, _T("モード選択"), GetColor(0, 255, 255), largeFont);
 
 	// メニュー項目（左寄せ）
 	int menuX = 100;
@@ -104,24 +107,36 @@ void MenuManager::Draw() {
 	int boxWidth = 400;
 	int boxHeight = 70;
 
-	unsigned int normalColor = GetColor(255, 255, 255);   // 白
-	unsigned int selectColor = GetColor(0, 255, 255);     // 水色
+	unsigned int normalColor  = GetColor(255, 255, 255);   //通常色: 白
+	unsigned int selectColor1 = GetColor(0, 255, 255);     //カーソル表.
+	unsigned int selectColor2 = GetColor(0, 100, 255);     //カーソル裏.
 
 	// 各項目描画
-	unsigned int color1 = (selectedIndex == 0) ? selectColor : normalColor;
-	DrawBox(menuX, menuY, menuX + boxWidth, menuY + boxHeight, selectColor, FALSE);
-	DrawStringToHandle(menuX + 30, menuY + 15, _T("     ゲーム開始"), color1, largeFont);
+	unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
+	DxLib::DrawBox(menuX, menuY, menuX + boxWidth, menuY + boxHeight, selectColor1, FALSE);
+	DxLib::DrawStringToHandle(menuX + 30, menuY + 15, _T("     ゲーム開始"), color1, largeFont);
 
-	unsigned int color2 = (selectedIndex == 1) ? selectColor : normalColor;
-	DrawBox(menuX, menuY + menuSpacing, menuX + boxWidth, menuY + menuSpacing + boxHeight, selectColor, FALSE);
-	DrawStringToHandle(menuX + 30, menuY + menuSpacing + 15, _T("   チュートリアル"), color2, largeFont);
+	unsigned int color2 = (selectedIndex == 1) ? selectColor1 : normalColor;
+	DxLib::DrawBox(menuX, menuY + menuSpacing, menuX + boxWidth, menuY + menuSpacing + boxHeight, selectColor1, FALSE);
+	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing + 15, _T("   チュートリアル"), color2, largeFont);
 
-	unsigned int color3 = (selectedIndex == 2) ? selectColor : normalColor;
-	DrawBox(menuX, menuY + menuSpacing * 2, menuX + boxWidth, menuY + menuSpacing * 2 + boxHeight, selectColor, FALSE);
-	DrawStringToHandle(menuX + 30, menuY + menuSpacing * 2 + 15, _T("   タイトルに戻る"), color3, largeFont);
+	unsigned int color3 = (selectedIndex == 2) ? selectColor1 : normalColor;
+	DxLib::DrawBox(menuX, menuY + menuSpacing * 2, menuX + boxWidth, menuY + menuSpacing * 2 + boxHeight, selectColor1, FALSE);
+	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing * 2 + 15, _T("   タイトルに戻る"), color3, largeFont);
 
 	// 選択中の矢印（大きめ）
-	DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
+	{
+		//基準座標.
+		DBL_XY base = {_dbl(menuX - 25), _dbl(menuY + selectedIndex * menuSpacing + 35)};
+		//アニメーション値.
+		double anim = sin(counter/50*M_PI);
+		
+		Triangle tri = {{base, base.Add(-20, 10*anim), base.Add(-20, -10*anim)}, {} };
+		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
+		int err = DrawTriangleST(&tri, true, false);
+
+//		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
+	}
 
 	// ▼ モード画像の枠（右上）
 	int imgBoxX = WINDOW_WID - 230;
@@ -130,12 +145,12 @@ void MenuManager::Draw() {
 	int imgBoxHeight = 180;
 
 	// 画像枠の背景（半透明黒）
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+	DxLib::DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, GetColor(0, 0, 0), TRUE);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// 画像枠の枠線（水色）
-	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, selectColor, FALSE);
+	DxLib::DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, selectColor1, FALSE);
 
 	// モード画像
 	int imgX = imgBoxX + (imgBoxWidth - 128) / 2; // 中央寄せ（仮に128x128画像想定）
@@ -160,12 +175,12 @@ void MenuManager::Draw() {
 	int textBoxHeight = 100;
 
 	// 説明文枠の背景（半透明黒）
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-	DrawBox(textBoxX, textBoxY, textBoxX + textBoxWidth, textBoxY + textBoxHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+	DxLib::DrawBox(textBoxX, textBoxY, textBoxX + textBoxWidth, textBoxY + textBoxHeight, GetColor(0, 0, 0), TRUE);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// 説明文枠の枠線（水色）
-	DrawBox(textBoxX, textBoxY, textBoxX + textBoxWidth, textBoxY + textBoxHeight, selectColor, FALSE);
+	DxLib::DrawBox(textBoxX, textBoxY, textBoxX + textBoxWidth, textBoxY + textBoxHeight, selectColor1, FALSE);
 
 	// 説明文（右下）
 	int textX = textBoxX + 20;
@@ -173,13 +188,13 @@ void MenuManager::Draw() {
 
 	switch (selectedIndex) {
 	case 0:
-		DrawStringToHandle(textX, textY, _T("エンドレスモードでスコアを競おう！"), normalColor, infoFont);
+		DxLib::DrawStringToHandle(textX, textY, _T("エンドレスモードでスコアを競おう！"), normalColor, infoFont);
 		break;
 	case 1:
-		DrawStringToHandle(textX, textY, _T("操作方法を学ぶチュートリアルです"), normalColor, infoFont);
+		DxLib::DrawStringToHandle(textX, textY, _T("操作方法を学ぶチュートリアルです"), normalColor, infoFont);
 		break;
 	case 2:
-		DrawStringToHandle(textX, textY, _T("タイトル画面に戻ります"), normalColor, infoFont);
+		DxLib::DrawStringToHandle(textX, textY, _T("タイトル画面に戻ります"), normalColor, infoFont);
 		break;
 	}
 
@@ -189,9 +204,9 @@ void MenuManager::Draw() {
 	int infoWidth = 500;
 	int infoHeight = 180;
 
-	DrawBox(infoX, infoY, infoX + infoWidth, infoY + infoHeight, selectColor, FALSE); // 水色枠
+	DxLib::DrawBox(infoX, infoY, infoX + infoWidth, infoY + infoHeight, selectColor1, FALSE); // 水色枠
 
-	DrawStringToHandle(infoX + 20, infoY + 20, _T("↑↓ or W/S: 選択"), normalColor, infoFont);
-	DrawStringToHandle(infoX + 20, infoY + 70, _T("SPACE/ENTER: 決定"), normalColor, infoFont);
+	DxLib::DrawStringToHandle(infoX + 20, infoY + 20, _T("↑↓ or W/S: 選択"), normalColor, infoFont);
+	DxLib::DrawStringToHandle(infoX + 20, infoY + 70, _T("SPACE/ENTER: 決定"), normalColor, infoFont);
 }
 
