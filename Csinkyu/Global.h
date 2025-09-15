@@ -33,6 +33,13 @@ enum MoveDir
 	MOVE_UP,
 	MOVE_DOWN
 };
+//ステージ種類,
+enum StageType
+{
+	STAGE_ENDLESS,
+	STAGE_TUTORIAL,
+//	STAGE_,
+};
 
 // - Debug -
 //定義するとデバッグ表示ON.
@@ -56,11 +63,11 @@ enum MoveDir
 
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 
-#define LEVEL_UP_ANIM_TIME				(120)			//レベルアップアニメーション時間.
+#define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
-#define PLAYER_SIZE						(30)			//プレイヤーサイズ.
+#define PLAYER_SIZE						(17)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
-#define PLAYER_AFT_IMG_NUM				(10)             //残像データの数.
+#define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 
 #define ITEM_SIZE						(20)			//アイテムサイズ.
