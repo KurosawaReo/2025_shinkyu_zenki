@@ -31,16 +31,6 @@ void EffectManager::Update() {
 			switch (effect[i].type) 
 			{
 				case Effect_Score100:
-				{
-					effect[i].counter++;
-
-					//時間経過で消滅.
-					if (effect[i].counter >= SCORE_ANIM_TIME) {
-						DeleteEffect(i);
-					}
-				}
-				break;
-
 				case Effect_Score500:
 				{
 					effect[i].counter++;
@@ -93,16 +83,20 @@ void EffectManager::Update() {
 				}
 				break;
 
-				case Effect_Level1:
-				case Effect_Level2:
-				case Effect_Level3:
-				case Effect_Level4:
-				case Effect_Level5:
+				case Effect_Endless_Level1:
+				case Effect_Endless_Level2:
+				case Effect_Endless_Level3:
+				case Effect_Endless_Level4:
+				case Effect_Endless_Level5:
+				case Effect_Tutorial_Step1:
+				case Effect_Tutorial_Step2:
+				case Effect_Tutorial_Step3:
+				case Effect_Tutorial_Step4:
 				{
 					effect[i].counter++;
 
 					//時間経過で消滅.
-					if (effect[i].counter >= LEVEL_UP_ANIM_TIME) {
+					if (effect[i].counter >= MIDDLE_ANIM_TIME) {
 						DeleteEffect(i);
 					}
 				}
@@ -124,6 +118,7 @@ void EffectManager::Draw() {
 			switch (effect[i].type)
 			{
 				case Effect_Score100:
+				case Effect_Score500:
 				{
 					//座標.
 					DBL_XY pos = {effect[i].pos.x, effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30};
@@ -132,22 +127,13 @@ void EffectManager::Draw() {
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					imgScore[0].DrawExtend(pos, {0.2, 0.2});
-					ResetDrawBlendMode();
-				}
-				break;
-
-				case Effect_Score500:
-				{
-  				    //座標.
-					DBL_XY pos = { effect[i].pos.x, effect[i].pos.y - CalcNumEaseOut(effect[i].counter / SCORE_ANIM_TIME) * 30 };
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					imgScore[1].DrawExtend(pos, {0.2, 0.2});
-					ResetDrawBlendMode();
+					//画像切り替え.
+					if (Effect_Score100) {
+						imgScore[0].DrawExtend(pos, {0.2, 0.2});
+					}
+					else {
+						imgScore[1].DrawExtend(pos, {0.2, 0.2});
+					}
 				}
 				break;
 
@@ -160,7 +146,6 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawCircleST(&cir, false, true);
-					ResetDrawBlendMode();
 				}
 				break;
 
@@ -173,7 +158,6 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawBoxST(&box, ANC_MID, false, true);
-					ResetDrawBlendMode();
 				}
 				break;
 
@@ -190,147 +174,106 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					DrawLineST(&line, true);
-					ResetDrawBlendMode();
 				}
 				break;
 
-				case Effect_Level1:
+				case Effect_Endless_Level1:
+				case Effect_Endless_Level2:
+				case Effect_Endless_Level3:
+				case Effect_Endless_Level4:
+				case Effect_Endless_Level5:
+				case Effect_Tutorial_Step1:
+				case Effect_Tutorial_Step2:
+				case Effect_Tutorial_Step3:
+				case Effect_Tutorial_Step4:
 				{
-					DrawStr str = { _T("Level 1"), {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y-20)}, 0xFFFFFF};
-					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle cirLevel[5] = {
-						{{effect[i].pos.x-60, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x-30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x,    effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
+					//共通設定.
+					DrawStr str = { _T("Unknown"), {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y-20)}, 0xFFFFFF};
+					Circle mainCir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
+					Circle lampCir[5] = {
+						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
+						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF}
 					};
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
+					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/MIDDLE_ANIM_TIME));
+					//何個ランプを使うか.
+					int lampUseCnt  = 0;
+					int lampFillCnt = 0;
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
+					DrawCircleST(&mainCir, false, true);
+
+					switch (effect[i].type) 
+					{
+						case Effect_Endless_Level1:
+							str.text = _T("Level 1");
+							lampUseCnt  = 5;
+							lampFillCnt = 1;
+							break;
+						case Effect_Endless_Level2:
+							str.text = _T("Level 2");
+							lampUseCnt  = 5;
+							lampFillCnt = 2;
+							break;
+						case Effect_Endless_Level3:
+							str.text = _T("Level 3");
+							lampUseCnt  = 5;
+							lampFillCnt = 3;
+							break;
+						case Effect_Endless_Level4:
+							str.text = _T("Level 4");
+							lampUseCnt  = 5;
+							lampFillCnt = 4;
+							break;
+						case Effect_Endless_Level5:
+							str.text = _T("Level 5");
+							lampUseCnt  = 5;
+							lampFillCnt = 5;
+							break;
+
+						case Effect_Tutorial_Step1:
+							str.text = _T("Step 1");
+							lampUseCnt  = 4;
+							lampFillCnt = 1;
+							break;
+						case Effect_Tutorial_Step2:
+							str.text = _T("Step 2");
+							lampUseCnt  = 4;
+							lampFillCnt = 2;
+							break;
+						case Effect_Tutorial_Step3:
+							str.text = _T("Step 3");
+							lampUseCnt  = 4;
+							lampFillCnt = 3;
+							break;
+						case Effect_Tutorial_Step4:
+							str.text = _T("Step 4");
+							lampUseCnt  = 4;
+							lampFillCnt = 4;
+							break;
+					}
+					//テキスト.
 					str.Draw(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, false, true);
-					DrawCircleST(&cirLevel[0], true,  true); //●
-					DrawCircleST(&cirLevel[1], false, true); //○
-					DrawCircleST(&cirLevel[2], false, true); //○
-					DrawCircleST(&cirLevel[3], false, true); //○
-					DrawCircleST(&cirLevel[4], false, true); //○
-					ResetDrawBlendMode();
-				}
-				break;
-
-				case Effect_Level2:
-				{
-					DrawStr str = { _T("Level 2"), {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y-20)}, 0xFFFFFF };
-					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle cirLevel[5] = {
-						{{effect[i].pos.x-60, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x-30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x,    effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
-					};
-					//アニメーション値.
-					int pow = _int(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					str.Draw(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, false, true);
-					DrawCircleST(&cirLevel[0], true,  true); //●
-					DrawCircleST(&cirLevel[1], true,  true); //●
-					DrawCircleST(&cirLevel[2], false, true); //○
-					DrawCircleST(&cirLevel[3], false, true); //○
-					DrawCircleST(&cirLevel[4], false, true); //○
-					ResetDrawBlendMode();
-				}
-				break;
-
-				case Effect_Level3:
-				{
-					DrawStr str = { _T("Level 3"), {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y-20)}, 0xFFFFFF };
-					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle cirLevel[5] = {
-						{{effect[i].pos.x-60, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x-30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x,    effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
-					};
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					str.Draw(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, false, true);
-					DrawCircleST(&cirLevel[0], true,  true); //●
-					DrawCircleST(&cirLevel[1], true,  true); //●
-					DrawCircleST(&cirLevel[2], true,  true); //●
-					DrawCircleST(&cirLevel[3], false, true); //○
-					DrawCircleST(&cirLevel[4], false, true); //○
-					ResetDrawBlendMode();
-				}
-				break;
-
-				case Effect_Level4:
-				{
-					DrawStr str = { _T("Level 4"), {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y-20)}, 0xFFFFFF };
-					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle cirLevel[5] = {
-						{{effect[i].pos.x-60, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x-30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x,    effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
-					};
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					str.Draw(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, false, true);
-					DrawCircleST(&cirLevel[0], true,  true); //●
-					DrawCircleST(&cirLevel[1], true,  true); //●
-					DrawCircleST(&cirLevel[2], true,  true); //●
-					DrawCircleST(&cirLevel[3], true,  true); //●
-					DrawCircleST(&cirLevel[4], false, true); //○
-					ResetDrawBlendMode();
-				}
-				break;
-
-				case Effect_Level5:
-				{
-					DrawStr str = { _T("Level 5"), {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y-20)}, 0xFFFFFF };
-					Circle cir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle cirLevel[5] = {
-						{{effect[i].pos.x-60, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x-30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x,    effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+30, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{effect[i].pos.x+60, effect[i].pos.y+20}, 10, 0xFFFFFF}
-					};
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/LEVEL_UP_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					str.Draw(ANC_MID, p_data->font2);
-					DrawCircleST(&cir, false, true);
-					DrawCircleST(&cirLevel[0], true, true); //●
-					DrawCircleST(&cirLevel[1], true, true); //●
-					DrawCircleST(&cirLevel[2], true, true); //●
-					DrawCircleST(&cirLevel[3], true, true); //●
-					DrawCircleST(&cirLevel[4], true, true); //●
-					ResetDrawBlendMode();
+					//ランプ(必要な数だけ描画)
+					for (int j = 0; j < lampUseCnt; j++) {
+						
+						const int interval = 30; //間隔.
+						//均等になるように配置する.
+						lampCir[j].pos.x = effect[i].pos.x + interval * (j - _flt(lampUseCnt-1)/2);
+						//円描画.
+						DrawCircleST(&lampCir[j], (lampFillCnt >= j+1), true); 
+					}
 				}
 				break;
 
 				default: assert(FALSE); break;
 			}
+
+			ResetDrawBlendMode(); //描画モードリセット.
 		}
 	}
 }

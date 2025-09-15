@@ -56,7 +56,7 @@ enum MoveDir
 
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 
-#define LEVEL_UP_ANIM_TIME				(120)			//レベルアップアニメーション時間.
+#define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
 #define PLAYER_SIZE						(17)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.

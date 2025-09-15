@@ -311,12 +311,17 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	p_input->UpdateKey();    //キー入力更新.
-	p_input->UpdatePad();    //コントローラ入力更新.
-	p_input->UpdateAction(); //アクション更新.
-	p_sound->Update();       //サウンド更新.
+	//ポーズしてなければ.
+	if (gameData->scene != SCENE_PAUSE) {
 
-	bg->Update(); //背景.
+		p_input->UpdateKey();    //キー入力更新.
+		p_input->UpdatePad();    //コントローラ入力更新.
+		p_input->UpdateAction(); //アクション更新.
+		p_sound->Update();       //サウンド更新.
+
+		bg->Update();        //背景.
+		effectMng->Update(); //エフェクト.
+	}
 
 	//シーン別.
 	switch (gameData->scene) 
@@ -359,6 +364,8 @@ void GameManager::Draw() {
 
 		default: assert(FALSE); break;
 	}
+
+	effectMng->Draw(); //エフェクト.
 }
 
 //通常レーザーのリセット.
@@ -380,8 +387,7 @@ void GameManager::ResetStrLaser() {
 //シーン別更新.
 void GameManager::UpdateTitle()
 {
-	player->Update();    //プレイヤー.
-	effectMng->Update(); //エフェクト.
+	player->Update(); //プレイヤー.
 
 	//特定の操作でゲーム開始.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
@@ -399,8 +405,7 @@ void GameManager::UpdateTutorial() {
 }
 void GameManager::UpdateReady() {
 
-	player->Update();    //プレイヤー.
-	effectMng->Update(); //エフェクト.
+	player->Update(); //プレイヤー.
 	
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
@@ -412,7 +417,7 @@ void GameManager::UpdateReady() {
 		p_sound->Play(_T("LevelUp"), false, 100);
 		//エフェクト.
 		EffectData data{};
-		data.type = Effect_Level1;
+		data.type = Effect_Endless_Level1;
 		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
 		effectMng->SpawnEffect(&data);
 	}
@@ -441,7 +446,7 @@ void GameManager::UpdateGame() {
 				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Level2;
+				data.type = Effect_Endless_Level2;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 			}
@@ -454,7 +459,7 @@ void GameManager::UpdateGame() {
 				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Level3;
+				data.type = Effect_Endless_Level3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 			}
@@ -470,7 +475,7 @@ void GameManager::UpdateGame() {
 				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Level4;
+				data.type = Effect_Endless_Level4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 			}
@@ -485,7 +490,7 @@ void GameManager::UpdateGame() {
 				p_sound->Play(_T("LevelUp"), false, 100);
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Level5;
+				data.type = Effect_Endless_Level5;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 			}
@@ -535,9 +540,8 @@ void GameManager::UpdateGame() {
 		}
 	}
 
-	UpdateObjects();     //オブジェクト.
-	player->Update();    //プレイヤー.
-	effectMng->Update(); //エフェクト.
+	UpdateObjects();  //オブジェクト.
+	player->Update(); //プレイヤー.
 	
 	//ポーズする.
 	if(p_input->IsPushActionTime(_T("GamePause")) == 1){
@@ -547,8 +551,6 @@ void GameManager::UpdateGame() {
 	}
 }
 void GameManager::UpdateEnd() {
-
-	effectMng->Update(); //エフェクト.
 
 	//特定の操作でタイトルへ.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
@@ -606,8 +608,7 @@ void GameManager::UpdateObjects() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	
-	player->Draw();    //プレイヤー. 
-	effectMng->Draw(); //エフェクト管理.
+	player->Draw(); //プレイヤー. 
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
@@ -726,8 +727,7 @@ void GameManager::DrawReady() {
 	}
 #endif
 
-	player->Draw();    //プレイヤー.
-	effectMng->Draw(); //エフェクト管理.
+	player->Draw(); //プレイヤー.
 	DrawUI();
 
 }
@@ -735,7 +735,6 @@ void GameManager::DrawGame() {
 
 	DrawObjects();      //オブジェクト.
 	player->Draw();     //プレイヤー.
-	effectMng->Draw();  //エフェクト.
 	DrawUI();
 	DrawReflectMode();  //反射モード演出.
 
@@ -744,7 +743,6 @@ void GameManager::DrawGame() {
 void GameManager::DrawEnd() {
 	
 	DrawObjects();     //オブジェクト.
-	effectMng->Draw(); //エフェクト.
 	{
 		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };

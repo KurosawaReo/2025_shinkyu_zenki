@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/15
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -426,8 +426,8 @@ namespace KR_Lib
 	int DrawStr::Draw(Anchor anc, int font) {
 	
 		//基準点に座標をずらす.
-		float x = _flt(pos.x - (GetTextSize(text, font).x-1) * ANCHOR_POS[anc].x);
-		float y = _flt(pos.y - (GetTextSize(text, font).y-1) * ANCHOR_POS[anc].y);
+		float x = _flt(pos.x - (GetTextSize(font).x-1) * ANCHOR_POS[anc].x);
+		float y = _flt(pos.y - (GetTextSize(font).y-1) * ANCHOR_POS[anc].y);
 
 		//デフォルトフォント.
 		if (font < 0) {
@@ -487,7 +487,7 @@ namespace KR_Lib
 	}
 
 	//テキストのサイズ取得.
-	INT_XY DrawStr::GetTextSize(MY_STRING str, int font) {
+	INT_XY DrawStr::GetTextSize(int font) {
 	
 		INT_XY size{};
 
@@ -497,11 +497,11 @@ namespace KR_Lib
 
 		//デフォルトフォント.
 		if (font < 0) {
-			GetDrawStringSize(&size.x, &size.y, &line, str.c_str(), 255);
+			GetDrawStringSize(&size.x, &size.y, &line, text.c_str(), 255);
 		}
 		//フォント設定あり.
 		else {
-			GetDrawStringSizeToHandle(&size.x, &size.y, &line, str.c_str(), 255, font);
+			GetDrawStringSizeToHandle(&size.x, &size.y, &line, text.c_str(), 255, font);
 			GetFontStateToHandle(name, &size.y, &thick, font); //size.yはフォントから取得.
 		}
 
