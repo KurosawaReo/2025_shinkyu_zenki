@@ -5,7 +5,10 @@
 */
 #pragma once
 
-#include "LaserManager.h" //レーザー管理のヘッダーファイル.
+//前方宣言.
+class Player;
+class LaserManager;
+class MeteorManager;
 
 struct FlashEffect
 {
@@ -33,12 +36,12 @@ protected:
 
 	GameData*      p_data{};
 	Player*        p_player{};
-	MeteorManager* p_meteorMng{};
 	LaserManager*  p_laserMng{};
+	MeteorManager* p_meteorMng{};
 
 public:
 	//基本処理.
-	void Init  (GameData*, Player*, MeteorManager*, LaserManager*);
+	void Init  ();
 	void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
 	void Update();
 	void Draw  ();

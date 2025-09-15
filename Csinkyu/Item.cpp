@@ -2,8 +2,8 @@
    - Item.cpp -
    Item管理.
 */
-#include "GameManager.h"
 #include "Player.h"
+#include "GameManager.h"
 #include "EffectManager.h"
 
 #include "Item.h"
@@ -11,11 +11,11 @@
 using namespace Calc; //計算機能を使用.
 
 //初期化.
-void ItemManager::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
+void ItemManager::Init()
 {
-	p_gamedata  = _gamedata;
-	p_player    = _player;
-	p_effectMng = _effectMng;
+	p_gamedata  = GameData::GetPtr();
+	p_player    = Player::GetPtr();
+	p_effectMng = EffectManager::GetPtr();
 }
 //リセット.
 void ItemManager::Reset()

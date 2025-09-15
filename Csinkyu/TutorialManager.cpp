@@ -44,7 +44,12 @@ void TutorialManager::Draw() {
 //更新:step1
 void TutorialManager::UpdateStep1() {
 
-
+	//テキスト.
+	DrawStr str({_T("↑↓←→ : 移動"), {100, 100}, 0x00FFFF});
+	str.Draw();
+	//枠.
+	Box box = {{_dbl(str.pos.x), _dbl(str.pos.y-1)}, {150, 30}, 0x00FFFF};
+	DrawBoxST(&box, ANC_MID, false); 
 
 #if false
 	if (/*条件*/) {

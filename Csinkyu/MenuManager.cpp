@@ -8,8 +8,18 @@
 
 // 初期化
 void MenuManager::Init() {
-	// GameManagerからGameDataのポインタを取得
-	p_data = GameManager::GetPtr()->GetGameDataPtr();
+
+	//GameDataのポインタを取得
+	p_data = GameData::GetPtr();
+
+	//アクションを登録する(新機能)
+	InputMng* input = InputMng::GetPtr();
+	input->AddAction(_T("MENU_UP"),   KEY_UP);
+	input->AddAction(_T("MENU_UP"),   KEY_W);
+	input->AddAction(_T("MENU_DOWN"), KEY_DOWN);
+	input->AddAction(_T("MENU_DOWN"), KEY_S);
+	input->AddAction(_T("MENU_NEXT"), KEY_SPACE);
+	input->AddAction(_T("MENU_NEXT"), KEY_ENTER);
 
 	Reset(); // リセット処理
 }
@@ -21,18 +31,22 @@ void MenuManager::Reset() {
 
 // 更新
 void MenuManager::Update() {
+
 	InputMng* input = InputMng::GetPtr();
 
 	// 上下キーで選択項目を変更（トリガー判定：押した瞬間のみ）
-	if (input->IsPushKeyTime(KEY_UP) == 1 || input->IsPushKeyTime(KEY_W) == 1) {
+//	if (input->IsPushKeyTime(KEY_UP) == 1 || input->IsPushKeyTime(KEY_W) == 1) {
+	if (input->IsPushActionTime(_T("MENU_UP")) == 1) {
 		selectedIndex = (selectedIndex - 1 + 2) % 2; // 0と1の間をループ
 	}
-	if (input->IsPushKeyTime(KEY_DOWN) == 1 || input->IsPushKeyTime(KEY_S) == 1) {
+//	if (input->IsPushKeyTime(KEY_DOWN) == 1 || input->IsPushKeyTime(KEY_S) == 1) {
+	if (input->IsPushActionTime(_T("MENU_DOWN")) == 1) {
 		selectedIndex = (selectedIndex + 1) % 2; // 0と1の間をループ
 	}
 
 	// スペースキーまたはエンターキーで決定
-	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushKeyTime(KEY_ENTER) == 1) {
+//	if (input->IsPushKeyTime(KEY_SPACE) == 1 || input->IsPushKeyTime(KEY_ENTER) == 1) {
+	if (input->IsPushActionTime(_T("MENU_NEXT")) == 1) {
 		if (selectedIndex == 0) {
 			// ゲーム開始
 			p_data->scene = SCENE_READY;
@@ -51,6 +65,7 @@ void MenuManager::Update() {
 
 // 描画
 void MenuManager::Draw() {
+
 	// 背景を暗くする
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DrawBox(0, 0, WINDOW_WID, WINDOW_HEI, GetColor(0, 0, 0), TRUE);

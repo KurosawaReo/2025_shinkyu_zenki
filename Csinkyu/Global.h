@@ -34,28 +34,6 @@ enum MoveDir
 	MOVE_DOWN
 };
 
-// - ゲームデータ -
-struct GameData
-{
-	Scene scene;      //シーンの記録用.
-	int   stage;      //ステージ数.
-
-	int   score;      //スコア.
-	int   scoreBef;   //スコア(時間加算前)
-	int   bestScore;  //ベストスコア.
-	int   level;	  //レベル.
-
-	float spawnRate;  //障害物の出現時間割合.
-	float counter;    //経過時間カウンター(スローの影響を受ける)
-
-	int   font1;      //フォント.
-	int   font2;      //フォント.
-	int   font3;      //フォント.
-	int   font4;      //フォント.
-
-	bool  isSlow;     //スローモードかどうか.
-};
-
 // - Debug -
 //定義するとデバッグ表示ON.
 //#define DEBUG_LASER_ACTIVE
@@ -157,14 +135,14 @@ struct GameData
 #define SCORE_ANIM_TIME					(50)			//スコアのアニメーション時間.
 
 // 花火の定数定義
-#define FIREWORKS_MAX                    (10)           //最大同時花火数
-#define FIREWORKS_SPAWN_SPAN             (180)          //花火生成間隔（フレーム）
-#define FIREWORKS_WARNING_DURATION       (120)          //予告時間（フレーム）
-#define FIREWORKS_LAUNCH_HEIGHT          (50)           //打ち上げ高度
-#define FIREWORKS_EXPLOSION_RADIUS       (100)          //爆発半径
-#define FIREWORKS_SPARKS_COUNT           (16)           //火花の数（ベース）
-#define FIREWORKS_MIN_DISTANCE           (120)          //花火同士の最小距離
-#define FIREWORKS_GRAVITY                (0.3f)         //重力加速度
+#define FIREWORKS_MAX					(10)			//最大同時花火数
+#define FIREWORKS_SPAWN_SPAN			(180)			//花火生成間隔（フレーム）
+#define FIREWORKS_WARNING_DURATION		(120)			//予告時間（フレーム）
+#define FIREWORKS_LAUNCH_HEIGHT			(50)			//打ち上げ高度
+#define FIREWORKS_EXPLOSION_RADIUS		(100)			//爆発半径
+#define FIREWORKS_SPARKS_COUNT			(16)			//火花の数（ベース）
+#define FIREWORKS_MIN_DISTANCE			(120)			//花火同士の最小距離
+#define FIREWORKS_GRAVITY				(0.3f)			//重力加速度
 
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))

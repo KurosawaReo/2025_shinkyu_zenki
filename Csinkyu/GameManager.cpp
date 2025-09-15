@@ -148,13 +148,16 @@
 #include "TutorialManager.h"
 #include "GameManager.h"
 
-//管理クラスの実体.
-BackGround      bg;
-MenuManager     menuMng;
-TutorialManager tutorialMng;
-MeteorManager   meteorMng;
-LaserManager    laserMng;
-EffectManager   effectMng;
+//ポインタ.
+GameData        *gameData    = GameData::GetPtr();
+BackGround      *bg          = BackGround::GetPtr();
+MenuManager     *menuMng     = MenuManager::GetPtr();
+TutorialManager *tutorialMng = TutorialManager::GetPtr();
+MeteorManager   *meteorMng   = MeteorManager::GetPtr();
+LaserManager    *laserMng    = LaserManager::GetPtr();
+EffectManager   *effectMng   = EffectManager::GetPtr();
+ItemManager     *item        = ItemManager::GetPtr();
+Player          *player      = Player::GetPtr();
 //障害物の実体.
 Obstacle4_1 obstacle4_1;
 Obstacle4_2 obstacle4_2;
@@ -163,10 +166,6 @@ Obstacle4_4 obstacle4_4;
 Obstacle5   obstacle5;
 FireworksObstacle fireworksObs;
 MapGimmickLaser mgl[4];
-//アイテムの実体.
-ItemManager item;
-//プレイヤーの実体.
-Player player;
 
 using namespace Calc; //計算機能を使用.
 
@@ -180,12 +179,12 @@ void GameManager::Init() {
 	p_sound = SoundMng::GetPtr();
 
 	//タイトル.
-	data.scene = SCENE_TITLE;
+	gameData->scene = SCENE_TITLE;
 	//フォント作成.
-	data.font1 = CreateFontToHandle(NULL, 26, 1);
-	data.font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
-	data.font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
-	data.font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
+	gameData->font1 = CreateFontToHandle(NULL, 26, 1);
+	gameData->font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
+	gameData->font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
+	gameData->font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
 	imgLogo[0].  LoadFile(_T("Resources/Images/REFLINEロゴ_一部.png"));
 	imgLogo[1].  LoadFile(_T("Resources/Images/REFLINEロゴ.png"));
@@ -219,37 +218,37 @@ void GameManager::Init() {
 
 	//Init処理
 	{
-		//管理class.
-		bg.Init(&data);
-		menuMng.Init();
-		tutorialMng.Init();
-		laserMng.Init(&data, &player, &meteorMng, &effectMng);
-		meteorMng.Init(&data, &player, &effectMng);
-		effectMng.Init(&data);
-		//障害物class.
+		//障害物.
 		for (int i = 0; i < _countof(mgl); i++) {
-			mgl[i].Init(&data, &player, &laserMng, &meteorMng);
+			mgl[i].Init();
 		}
-		obstacle4_1.Init(&data, &player, &meteorMng, &laserMng);
-		obstacle4_2.Init(&data, &player, &meteorMng, &laserMng);
-		obstacle4_3.Init(&data, &player, &meteorMng, &laserMng);
-		obstacle4_4.Init(&data, &player, &meteorMng, &laserMng);
-		obstacle5.Init(&data, &player);
-		fireworksObs.Init(&data, &player, &laserMng);
-		//アイテムclass.
-		item.Init(&data, &player, &effectMng);
-		//プレイヤーclass.
-		player.Init(&data, &effectMng);
+		obstacle4_1.Init();
+		obstacle4_2.Init();
+		obstacle4_3.Init();
+		obstacle4_4.Init();
+		obstacle5.Init();
+		fireworksObs.Init();
+		//管理クラス.
+		bg->Init();
+		menuMng->Init();
+		tutorialMng->Init();
+		laserMng->Init();
+		meteorMng->Init();
+		effectMng->Init();
+		//アイテム.
+		item->Init();
+		//プレイヤー.
+		player->Init();
 	}
 
 	//スコア読み込み.
 	{
 		File file;
-		file.Open(FILE_DATA, _T("r"));   //ファイルを開く.
-		data.bestScore = file.ReadInt(); //数字を読み込んで登録.
+		file.Open(FILE_DATA, _T("r"));        //ファイルを開く.
+		gameData->bestScore = file.ReadInt(); //数字を読み込んで登録.
 	}
 	
-	data.stage = 1; //test
+	gameData->stage = 1; //test
 
 	Reset();
 }
@@ -257,21 +256,21 @@ void GameManager::Init() {
 //リセット(何回でも行う)
 void GameManager::Reset() {
 
-	if (data.bestScore < data.score) {
-		data.bestScore = data.score; //ハイスコア記録.
+	if (gameData->bestScore < gameData->score) {
+		gameData->bestScore = gameData->score; //ハイスコア記録.
 	}
 
 	//リセット.
-	data.scoreBef = 0;
-	data.score = 0;
-	data.isSlow = false;
-	data.counter = 0;
-	data.spawnRate = 1.0; //最初は100%
-	data.level = 1;       //最初はLv1
+	gameData->scoreBef = 0;
+	gameData->score = 0;
+	gameData->isSlow = false;
+	gameData->counter = 0;
+	gameData->spawnRate = 1.0; //最初は100%
+	gameData->level = 1;       //最初はLv1
 	isTitleAnim = false;
 	isBestScoreSound = false;
 	//サウンド.
-	switch (data.stage) 
+	switch (gameData->stage) 
 	{
 		case 1:
 			p_sound->Stop(_T("BGM1"));
@@ -291,21 +290,21 @@ void GameManager::Reset() {
 	tmScene[SCENE_END].Reset();
 
 	{
-		//管理class.
-		menuMng.Reset();
-		tutorialMng.Reset();
-		laserMng.Reset();
-		meteorMng.Reset();
-		effectMng.Reset();
 		//障害物class.
 		ResetNorLaser();
 		ResetStrLaser();
 		obstacle5.Reset();
 		fireworksObs.Reset();
+		//管理class.
+		menuMng->Reset();
+		tutorialMng->Reset();
+		laserMng->Reset();
+		meteorMng->Reset();
+		effectMng->Reset();
 		//アイテムclass.
-		item.Reset();
+		item->Reset();
 		//プレイヤーclass.
-		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+185 }, true);
+		player->Reset({ WINDOW_WID/2, WINDOW_HEI/2+185 }, true);
 	}
 }
 
@@ -317,10 +316,10 @@ void GameManager::Update() {
 	p_input->UpdateAction(); //アクション更新.
 	p_sound->Update();       //サウンド更新.
 
-	bg.Update(); //背景.
+	bg->Update(); //背景.
 
 	//シーン別.
-	switch (data.scene) 
+	switch (gameData->scene) 
 	{
 		case SCENE_TITLE:    UpdateTitle();    break;
 		case SCENE_MENU:     UpdateMenu();     break;
@@ -345,10 +344,10 @@ void GameManager::Update() {
 //描画.
 void GameManager::Draw() {
 
-	bg.Draw(); //背景.
+	bg->Draw(); //背景.
 
 	//シーン別.
-	switch (data.scene) 
+	switch (gameData->scene) 
 	{
 		case SCENE_TITLE:    DrawTitle();    break;
 		case SCENE_MENU:     DrawMenu();     break;
@@ -381,32 +380,32 @@ void GameManager::ResetStrLaser() {
 //シーン別更新.
 void GameManager::UpdateTitle()
 {
-	player.Update();    //プレイヤー.
-	effectMng.Update(); //エフェクト.
+	player->Update();    //プレイヤー.
+	effectMng->Update(); //エフェクト.
 
 	//特定の操作でゲーム開始.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
-		data.scene = SCENE_MENU;      //メニューシーンへ.
+		gameData->scene = SCENE_MENU;      //メニューシーンへ.
 	}
 }
 void GameManager::UpdateMenu() {
-	menuMng.Update();
+	menuMng->Update();
 }
 void GameManager::UpdateTutorial() {
-	tutorialMng.Update();
+	tutorialMng->Update();
 }
 void GameManager::UpdateReady() {
 
-	player.Update();    //プレイヤー.
-	effectMng.Update(); //エフェクト.
+	player->Update();    //プレイヤー.
+	effectMng->Update(); //エフェクト.
 	
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
 
 		tmScene[SCENE_GAME].Start(); //ゲーム開始.
-		data.scene = SCENE_GAME;     //ゲームシーンへ.
+		gameData->scene = SCENE_GAME;     //ゲームシーンへ.
 
 		//サウンド.
 		p_sound->Play(_T("LevelUp"), false, 100);
@@ -414,7 +413,7 @@ void GameManager::UpdateReady() {
 		EffectData data{};
 		data.type = Effect_Level1;
 		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
-		effectMng.SpawnEffect(&data);
+		effectMng->SpawnEffect(&data);
 	}
 }
 void GameManager::UpdateGame() {
@@ -422,20 +421,20 @@ void GameManager::UpdateGame() {
 #if defined _DEBUG //Releaseでは入れない.
 	//タイマー加速(Debug)
 	if (p_input->IsPushKey(KEY_L) == 1) {
-		data.counter += 10;
+		gameData->counter += 10;
 	}
 #endif
 
 	//カウンター増加.
-	data.counter += ((data.isSlow) ? SLOW_MODE_SPEED : 1);
+	gameData->counter += ((gameData->isSlow) ? SLOW_MODE_SPEED : 1);
 	//出現間隔.
-	data.spawnRate = 1.0f/(1 + (data.counter/8000)); //100%から少しずつ減少.
+	gameData->spawnRate = 1.0f/(1 + (gameData->counter/8000)); //100%から少しずつ減少.
 	//レベル管理.
-	switch (data.level)
+	switch (gameData->level)
 	{
 		case 1:
-			if (data.counter >= 1500) { //1500 = 出現間隔約??%地点.
-				data.level = 2; //Lv2へ.
+			if (gameData->counter >= 1500) { //1500 = 出現間隔約??%地点.
+				gameData->level = 2; //Lv2へ.
 
 				//サウンド.
 				p_sound->Play(_T("LevelUp"), false, 100);
@@ -443,12 +442,12 @@ void GameManager::UpdateGame() {
 				EffectData data{};
 				data.type = Effect_Level2;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 			}
 			break;
 		case 2:
-			if (data.counter >= 3500) { //3500 = 出現間隔約??%地点.
-				data.level = 3; //Lv3へ.
+			if (gameData->counter >= 3500) { //3500 = 出現間隔約??%地点.
+				gameData->level = 3; //Lv3へ.
 
 				//サウンド.
 				p_sound->Play(_T("LevelUp"), false, 100);
@@ -456,15 +455,15 @@ void GameManager::UpdateGame() {
 				EffectData data{};
 				data.type = Effect_Level3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 			}
 			break;
 		case 3:
-			if (data.counter >= 6000) { //6000 = 出現間隔約??%地点.
-				data.level = 4; //Lv4へ.
+			if (gameData->counter >= 6000) { //6000 = 出現間隔約??%地点.
+				gameData->level = 4; //Lv4へ.
 
 				ResetStrLaser();
-				item.AddItemCnt(); //アイテムを増やす.
+				item->AddItemCnt(); //アイテムを増やす.
 
 				//サウンド.
 				p_sound->Play(_T("LevelUp"), false, 100);
@@ -472,12 +471,12 @@ void GameManager::UpdateGame() {
 				EffectData data{};
 				data.type = Effect_Level4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 			}
 			break;
 		case 4:
-			if (data.counter >= 9000) { //9000 = 出現間隔約??%地点.
-				data.level = 5; //Lv5へ.
+			if (gameData->counter >= 9000) { //9000 = 出現間隔約??%地点.
+				gameData->level = 5; //Lv5へ.
 
 				ResetNorLaser();
 
@@ -487,7 +486,7 @@ void GameManager::UpdateGame() {
 				EffectData data{};
 				data.type = Effect_Level5;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 			}
 			break;
 		case 5:
@@ -523,37 +522,37 @@ void GameManager::UpdateGame() {
 		//時間切れで解除.
 		if (tmSlowMode.GetPassTime() <= 0) {
 			
-			player.SetMode(Player_Normal); //反射モード終了.
+			player->SetMode(Player_Normal); //反射モード終了.
 			p_sound->Play(_T("PowerDown"), false, 78); //再生.
 			
 			//リセット.
 			tmSlowMode.Reset();
-			data.isSlow = false;
+			gameData->isSlow = false;
 			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 				isItemCountDownSound[i] = false;
 			}
 		}
 	}
 
-	UpdateObjects();    //オブジェクト.
-	player.Update();    //プレイヤー.
-	effectMng.Update(); //エフェクト.
+	UpdateObjects();     //オブジェクト.
+	player->Update();    //プレイヤー.
+	effectMng->Update(); //エフェクト.
 	
 	//ポーズする.
 	if(p_input->IsPushActionTime(_T("GamePause")) == 1){
-		data.scene = SCENE_PAUSE;
+		gameData->scene = SCENE_PAUSE;
 		tmScene[SCENE_GAME].Stop(); //一時停止.
 		tmSlowMode.Stop();          //一時停止.
 	}
 }
 void GameManager::UpdateEnd() {
 
-	effectMng.Update(); //エフェクト.
+	effectMng->Update(); //エフェクト.
 
 	//特定の操作でタイトルへ.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
-		data.scene = SCENE_TITLE; //ゲームシーンへ.
+		gameData->scene = SCENE_TITLE; //ゲームシーンへ.
 		Reset();
 	}
 }
@@ -562,7 +561,7 @@ void GameManager::UpdatePause() {
 	//ポーズ解除.
 	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
-		data.scene = SCENE_GAME;
+		gameData->scene = SCENE_GAME;
 		tmScene[SCENE_GAME].Start(); //再開.
 		//スローモード中だったなら.
 		if (tmSlowMode.GetPassTime() < SLOW_MODE_TIME) {
@@ -575,28 +574,28 @@ void GameManager::UpdatePause() {
 void GameManager::UpdateObjects() {
 
 	//Lv1以上.
-	laserMng.Update();
-	meteorMng.Update();
+	laserMng->Update();
+	meteorMng->Update();
 	obstacle4_1.Update();
 	obstacle4_2.Update();
-	item.Update();
+	item->Update();
 
 	//Lv2以上.
-	if (data.level >= 2) {
+	if (gameData->level >= 2) {
 		mgl[0].Update();
 		mgl[1].Update();
 	}
 	//Lv3以上.
-	if (data.level >= 3) {
+	if (gameData->level >= 3) {
 		obstacle5.Update();
 	}
 	//Lv4以上.
-	if (data.level >= 4) {
+	if (gameData->level >= 4) {
 		mgl[2].Update();
 		mgl[3].Update();
 	}
 	//Lv5以上.
-	if (data.level >= 5) {
+	if (gameData->level >= 5) {
 		obstacle4_3.Update();
 		obstacle4_4.Update();
 		fireworksObs.Update();
@@ -606,8 +605,8 @@ void GameManager::UpdateObjects() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	
-	player.Draw();    //プレイヤー. 
-	effectMng.Draw(); //エフェクト管理.
+	player->Draw();    //プレイヤー. 
+	effectMng->Draw(); //エフェクト管理.
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
@@ -654,11 +653,11 @@ void GameManager::DrawTitle() {
 		double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
 		//テキスト.
 		TCHAR text[256];
-		_stprintf(text, _T("BEST SCORE: %d"), data.bestScore); //ベストスコア.
+		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
 		DrawStr str(text, {WINDOW_WID/2, scoreY+1}, COLOR_BEST_SCORE);
 
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
-		str.Draw(ANC_MID, data.font2); //スコア値.
+		str.Draw(ANC_MID, gameData->font2); //スコア値.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
 		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
 		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
@@ -673,7 +672,7 @@ void GameManager::DrawTitle() {
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-2}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, data.font1);    //テキスト.
+		str.Draw(ANC_MID, gameData->font1);    //テキスト.
 		DrawCircleST(&cir, false, false); //Xボタンの円.
 		ResetDrawBlendMode();
 	}
@@ -698,7 +697,7 @@ void GameManager::DrawTitle() {
 				data.len   = ((float)RandNum( 10,  150)/10)*1.4f; //長さ抽選.
 				data.ang   =  (float)RandNum(  0, 3599)/10;       //角度抽選.
 				//エフェクト召喚.
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 			}
 			//サウンド.
 			p_sound->Play(_T("Break"), false, 65);
@@ -706,10 +705,10 @@ void GameManager::DrawTitle() {
 	}
 }
 void GameManager::DrawMenu() {
-	menuMng.Draw();
+	menuMng->Draw();
 }
 void GameManager::DrawTutorial() {
-	tutorialMng.Draw();
+	tutorialMng->Draw();
 }
 void GameManager::DrawReady() {
 	
@@ -725,25 +724,25 @@ void GameManager::DrawReady() {
 	}
 #endif
 
-	player.Draw();    //プレイヤー.
-	effectMng.Draw(); //エフェクト管理.
+	player->Draw();    //プレイヤー.
+	effectMng->Draw(); //エフェクト管理.
 	DrawUI();
 
 }
 void GameManager::DrawGame() {
 
-	DrawObjects();     //オブジェクト.
-	player.Draw();     //プレイヤー.
-	effectMng.Draw();  //エフェクト.
+	DrawObjects();      //オブジェクト.
+	player->Draw();     //プレイヤー.
+	effectMng->Draw();  //エフェクト.
 	DrawUI();
-	DrawReflectMode(); //反射モード演出.
+	DrawReflectMode();  //反射モード演出.
 
 //	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
 }
 void GameManager::DrawEnd() {
 	
-	DrawObjects();    //オブジェクト.
-	effectMng.Draw(); //エフェクト.
+	DrawObjects();     //オブジェクト.
+	effectMng->Draw(); //エフェクト.
 	{
 		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
@@ -763,7 +762,7 @@ void GameManager::DrawEnd() {
 		TCHAR text[256];
 		_stprintf(
 			text, _T("%d + %d(%.3f秒) = %d点"),
-			data.scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), data.score
+			gameData->scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), gameData->score
 		);
 		//テキストの設定.
 		DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
@@ -771,8 +770,8 @@ void GameManager::DrawEnd() {
 		//画面中央に文字を表示.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
 		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true); //GAME OVER
-		str1.Draw(ANC_MID, data.font1);
-		str2.Draw(ANC_MID, data.font1);
+		str1.Draw(ANC_MID, gameData->font1);
+		str2.Draw(ANC_MID, gameData->font1);
 		ResetDrawBlendMode();
 	}
 
@@ -782,7 +781,7 @@ void GameManager::DrawEnd() {
 	//一定時間が経ったら.
 	if (tmScene[SCENE_END].GetPassTime() > delay1) {
 		//ベストスコア更新.
-		if (data.score > data.bestScore) {
+		if (gameData->score > gameData->bestScore) {
 
 			//アニメーション値.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
@@ -807,7 +806,7 @@ void GameManager::DrawEnd() {
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, data.font1);    //テキスト.
+		str.Draw(ANC_MID, gameData->font1);    //テキスト.
 		DrawCircleST(&cir, false, false); //Aボタンの円.
 		ResetDrawBlendMode();
 	}
@@ -823,11 +822,11 @@ void GameManager::DrawUI() {
 #if defined DEBUG_SPAWN_RATE
 	//カウンター.
 	DrawFormatStringToHandle(
-		10, WINDOW_HEI-75, 0xFFFFFF, data.font2, _T("Counter: %.2f"), data.counter
+		10, WINDOW_HEI-75, 0xFFFFFF, gameData->font2, _T("Counter: %.2f"), gameData->counter
 	);
 	//出現間隔割合.
 	DrawFormatStringToHandle(
-		10, WINDOW_HEI-40, 0xFFFFFF, data.font2, _T("Spawn  : %.2f%%"), data.spawnRate*100
+		10, WINDOW_HEI-40, 0xFFFFFF, gameData->font2, _T("Spawn  : %.2f%%"), gameData->spawnRate*100
 	);
 #endif
 
@@ -848,11 +847,11 @@ void GameManager::DrawUI() {
 		DrawStr({}, {WINDOW_WID/2+350, 150  }, COLOR_TIME),
 	};
 	TCHAR text[256];
-	_stprintf(text, _T("LEVEL %d"),        data.level);
+	_stprintf(text, _T("LEVEL %d"),        gameData->level);
 	str[0].text = text;
-	_stprintf(text, _T("BEST SCORE:%05d"), data.bestScore);
+	_stprintf(text, _T("BEST SCORE:%05d"), gameData->bestScore);
 	str[1].text = text;
-	_stprintf(text, _T("SCORE:%05d"),      data.score);
+	_stprintf(text, _T("SCORE:%05d"),      gameData->score);
 	str[2].text = text;
 	_stprintf(text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
 	str[3].text = text;
@@ -861,26 +860,26 @@ void GameManager::DrawUI() {
 	imgUI[0].DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
 	//テキスト(main)
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
-	str[0].Draw(ANC_MID, data.font4);
+	str[0].Draw(ANC_MID, gameData->font4);
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
-	str[1].Draw(ANC_MID, data.font3);
+	str[1].Draw(ANC_MID, gameData->font3);
 	imgUI[1].DrawExtend({(double)str[1].pos.x, (double)str[1].pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
-	str[2].Draw(ANC_MID, data.font3);
+	str[2].Draw(ANC_MID, gameData->font3);
 	imgUI[2].DrawExtend({(double)str[2].pos.x, (double)str[2].pos.y+28}, {0.35, 0.4});
 	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
-	str[3].Draw(ANC_MID, data.font3);
+	str[3].Draw(ANC_MID, gameData->font3);
 	imgUI[3].DrawExtend({(double)str[3].pos.x, (double)str[3].pos.y+28}, {0.35, 0.4});
 	//テキスト(光沢用)
 	str[1].color = 0xFFFFFF;
 	str[2].color = 0xFFFFFF;
 	str[3].color = 0xFFFFFF;
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
-	str[1].Draw(ANC_MID, data.font3);
+	str[1].Draw(ANC_MID, gameData->font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
-	str[2].Draw(ANC_MID, data.font3);
+	str[2].Draw(ANC_MID, gameData->font3);
 	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
-	str[3].Draw(ANC_MID, data.font3);
+	str[3].Draw(ANC_MID, gameData->font3);
 
 	//描画モードリセット.
 	ResetDrawBlendMode();
@@ -889,27 +888,27 @@ void GameManager::DrawUI() {
 void GameManager::DrawObjects() {
 
 	//Lv1以上.
-	laserMng.Draw();
-	meteorMng.Draw();
+	laserMng->Draw();
+	meteorMng->Draw();
 	obstacle4_1.Draw();
 	obstacle4_2.Draw();
-	item.Draw();
+	item->Draw();
 	//Lv2以上.
-	if (data.level >= 2) {
+	if (gameData->level >= 2) {
 		mgl[0].Draw();
 		mgl[1].Draw();
 	}
 	//Lv3以上.
-	if (data.level >= 3) {
+	if (gameData->level >= 3) {
 		obstacle5.Draw();
 	}
 	//Lv4以上.
-	if (data.level >= 4) {
+	if (gameData->level >= 4) {
 		mgl[2].Draw();
 		mgl[3].Draw();
 	}
 	//Lv5以上.
-	if (data.level >= 5){
+	if (gameData->level >= 5){
 		obstacle4_3.Draw();
 		obstacle4_4.Draw();
 		fireworksObs.Draw();
@@ -938,7 +937,7 @@ void GameManager::DrawReflectMode() {
 			}
 			//最後の3秒.
 			if (tmSlowMode.GetPassTime() <= 3) {
-				str.Draw(ANC_MID, data.font4); //数字.
+				str.Draw(ANC_MID, gameData->font4); //数字.
 			}
 			ResetDrawBlendMode();
 		}
@@ -949,13 +948,13 @@ void GameManager::DrawReflectMode() {
 void GameManager::GameEnd() {
 	
 	//まだ終わってないなら(念のため2重実行されることを防ぐ)
-	if (data.scene != SCENE_END) {
+	if (gameData->scene != SCENE_END) {
 
-		data.scene = SCENE_END; //ゲーム終了へ.
+		gameData->scene = SCENE_END; //ゲーム終了へ.
 	
 		tmScene[SCENE_GAME].Stop(); //停止.
 		tmScene[SCENE_END].Start(); //開始.
-		data.isSlow = false;
+		gameData->isSlow = false;
 		tmSlowMode.Reset();
 
 		//記録リセット.
@@ -963,20 +962,20 @@ void GameManager::GameEnd() {
 			isItemCountDownSound[i] = false;
 		}
 
-		data.scoreBef = data.score;                                  //時間加算前のスコアを記録.
-		data.score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
+		gameData->scoreBef = gameData->score;                                  //時間加算前のスコアを記録.
+		gameData->score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
 
 		//最高スコア更新なら保存.
-		if (data.score > data.bestScore) {
+		if (gameData->score > gameData->bestScore) {
 
 			File file;
 			file.MakeDir(FILE_DATA_PATH);  //フォルダ作成.
 			file.Open(FILE_DATA, _T("w")); //ファイルを開く.
-			file.WriteInt(data.score);     //スコアを保存.
+			file.WriteInt(gameData->score);     //スコアを保存.
 		}
 
 		//サウンド.
-		switch (data.stage) 
+		switch (gameData->stage) 
 		{
 			case 1:
 				p_sound->FadeOutPlay(_T("BGM1"), 2);
@@ -992,9 +991,9 @@ void GameManager::GameEnd() {
 //アイテムを取った時.
 void GameManager::TakeItem() {
 
-	data.isSlow = true;             //スローモードにする.
-	data.score += SCORE_TAKE_ITEM;  //スコア加算.
-	tmSlowMode.Start();             //スローモード計測開始.
+	gameData->isSlow = true;             //スローモードにする.
+	gameData->score += SCORE_TAKE_ITEM;  //スコア加算.
+	tmSlowMode.Start();                  //スローモード計測開始.
 
 	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {

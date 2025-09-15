@@ -24,7 +24,7 @@ private:
 	Player*   p_player{};
 
 public:
-	void Init(GameData*, Player*);  // ポインタのポインタから修正
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

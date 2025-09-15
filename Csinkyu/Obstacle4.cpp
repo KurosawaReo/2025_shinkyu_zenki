@@ -4,7 +4,7 @@
    レーザーの継承先クラス.
    砲台(不可視)を左右で違う動きにするため、overrideを使用.
 */
-#include "Player.h"    // プレイヤークラスのヘッダーファイル
+#include "GameManager.h"
 #include "Obstacle4.h" // 自身のヘッダーファイル
 
 //obstacle4mainのMove関数をobstacle4用に上書き.
