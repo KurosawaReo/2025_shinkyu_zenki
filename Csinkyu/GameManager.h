@@ -15,23 +15,23 @@ public:
 		return &inst;
 	}
 
-	Scene scene;      //シーンの記録用.
-	int   stage;      //ステージ数.
+	Scene     scene;	  //シーンの記録用.
+	StageType stage;	  //ステージ種類.
 
-	int   score;      //スコア.
-	int   scoreBef;   //スコア(時間加算前)
-	int   bestScore;  //ベストスコア.
-	int   level;	  //レベル.
+	int		  score;      //スコア.
+	int		  scoreBef;   //スコア(時間加算前)
+	int		  bestScore;  //ベストスコア.
+	int		  level;	  //レベル.
 
-	float spawnRate;  //障害物の出現時間割合.
-	float counter;    //経過時間カウンター(スローの影響を受ける)
+	float	  spawnRate;  //障害物の出現時間割合.
+	float	  counter;    //経過時間カウンター(スローの影響を受ける)
 
-	int   font1;      //フォント.
-	int   font2;      //フォント.
-	int   font3;      //フォント.
-	int   font4;      //フォント.
-
-	bool  isSlow;     //スローモードかどうか.
+	int		  font1;      //フォント.
+	int		  font2;      //フォント.
+	int		  font3;      //フォント.
+	int		  font4;      //フォント.
+		
+	bool	  isSlow;     //スローモードかどうか.
 };
 
 //ゲームマネージャー.[継承不可]
@@ -93,6 +93,7 @@ public:
 	void UpdatePause();
 
 	void UpdateObjects();
+	void UpdateSlowMode();
 
 	//Draw.
 	void DrawTitle();

@@ -196,19 +196,22 @@ void GameManager::Init() {
 	imgGameOver. LoadFile(_T("Resources/Images/gameover.png"));
 	imgReflect.  LoadFile(_T("Resources/Images/reflect.png"));
 	//サウンド読み込み.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM1"));
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM2"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("TakeItem"));	//アイテム取る.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	//カウントダウン.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	//アイテム解除.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		//レーザー(発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),		_T("Laser2"));		//レーザー(強発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		_T("Laser3"));		//レーザー(反射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		_T("Ripples"));		//波紋.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		_T("Break"));		//隕石破壊.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Virtual Terminal.mp3"),	    _T("BGM_Menu"));     //メニューBGM.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial")); //チュートリアルBGM.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless"));  //耐久モードBGM.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/命ナキ者ノ詩.mp3"),		    _T("BGM_Over"));     //ゲームオーバーBGM.
+
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("TakeItem")); 	 //アイテム取る.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	 //カウントダウン.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	 //アイテム解除.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		 //レーザー(発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),		_T("Laser2"));		 //レーザー(強発射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		_T("Laser3"));		 //レーザー(反射)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		_T("Ripples"));		 //波紋.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		_T("Break"));		 //隕石破壊.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		_T("PlayerDeath"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	//最高スコア更新.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //最高スコア更新.
 	
 	//アクション登録.
 	p_input->AddAction(_T("GameNext"),  KEY_SPACE);           //キー操作.
@@ -247,8 +250,6 @@ void GameManager::Init() {
 		file.Open(FILE_DATA, _T("r"));        //ファイルを開く.
 		gameData->bestScore = file.ReadInt(); //数字を読み込んで登録.
 	}
-	
-	gameData->stage = 1; //test
 
 	Reset();
 }
@@ -270,19 +271,7 @@ void GameManager::Reset() {
 	isTitleAnim = false;
 	isBestScoreSound = false;
 	//サウンド.
-	switch (gameData->stage) 
-	{
-		case 1:
-			p_sound->Stop(_T("BGM1"));
-			p_sound->Play(_T("BGM1"), true, 68);
-			break;
-		case 2:
-			p_sound->Stop(_T("BGM2"));
-			p_sound->FadeInPlay(_T("BGM2"), true, 68, 3);
-			break;
-
-		default: assert(false); break;
-	}
+	p_sound->Play(_T("BGM_Menu"), true, 68); //メニューBGMを流す.
 	//タイマー.
 	tmScene[SCENE_TITLE].Start();
 	tmScene[SCENE_READY].Reset();
@@ -393,7 +382,30 @@ void GameManager::UpdateTitle()
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		tmScene[SCENE_READY].Start(); //タイマー開始.
-		gameData->scene = SCENE_MENU;      //メニューシーンへ.
+		gameData->scene = SCENE_MENU; //メニューシーンへ.
+
+		//隕石破壊アニメーション.
+		{
+			double dig = -130; //角度.
+
+			//エフェクトをいくつか出す.
+			for (int i = 0; i < METEO_BREAK_ANIM_CNT; i++) {
+
+				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
+
+				EffectData data{};
+				data.type  = Effect_BreakMeteo;
+				data.pos   = { 600, 338 };
+				data.vec   = CalcVectorDeg(newDig);               //ずらした角度を反映.
+				data.speed = ((float)RandNum(20, 100)/10) * 1.4f; //速度抽選.
+				data.len   = ((float)RandNum(10, 150)/10) * 1.4f; //長さ抽選.
+				data.ang   =  (float)RandNum(0, 3599)/10;         //角度抽選.
+				//エフェクト召喚.
+				effectMng->SpawnEffect(&data);
+			}
+			//サウンド.
+			p_sound->Play(_T("Break"), false, 65);
+		}
 	}
 }
 void GameManager::UpdateMenu() {
@@ -410,8 +422,8 @@ void GameManager::UpdateReady() {
 	//一定時間経ったら.
 	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
 
-		tmScene[SCENE_GAME].Start(); //ゲーム開始.
-		gameData->scene = SCENE_GAME;     //ゲームシーンへ.
+		tmScene[SCENE_GAME].Start();  //ゲーム開始.
+		gameData->scene = SCENE_GAME; //ゲームシーンへ.
 
 		//サウンド.
 		p_sound->Play(_T("LevelUp"), false, 100);
@@ -502,46 +514,9 @@ void GameManager::UpdateGame() {
 		default: assert(false); break;
 	}
 
-	//スローモード.
-	if (tmSlowMode.GetIsMove()) {
-		//3秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 3){
-			if (!isItemCountDownSound[2]) {
-				p_sound->Play(_T("CountDown"), false, 78); //再生.
-				isItemCountDownSound[2] = true;
-			}
-		}
-		//2秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 2) {
-			if (!isItemCountDownSound[1]) {
-				p_sound->Play(_T("CountDown"), false, 78); //再生.
-				isItemCountDownSound[1] = true;
-			}
-		}
-		//1秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 1) {
-			if (!isItemCountDownSound[0]) {
-				p_sound->Play(_T("CountDown"), false, 78); //再生.
-				isItemCountDownSound[0] = true;
-			}
-		}
-		//時間切れで解除.
-		if (tmSlowMode.GetPassTime() <= 0) {
-			
-			player->SetMode(Player_Normal); //反射モード終了.
-			p_sound->Play(_T("PowerDown"), false, 78); //再生.
-			
-			//リセット.
-			tmSlowMode.Reset();
-			gameData->isSlow = false;
-			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
-				isItemCountDownSound[i] = false;
-			}
-		}
-	}
-
-	UpdateObjects();  //オブジェクト.
 	player->Update(); //プレイヤー.
+	UpdateObjects();  //オブジェクト.
+	UpdateSlowMode(); //スローモード.
 	
 	//ポーズする.
 	if(p_input->IsPushActionTime(_T("GamePause")) == 1){
@@ -602,6 +577,47 @@ void GameManager::UpdateObjects() {
 		obstacle4_3.Update();
 		obstacle4_4.Update();
 		fireworksObs.Update();
+	}
+}
+//スローモードの更新.
+void GameManager::UpdateSlowMode() {
+
+	//スローモード.
+	if (tmSlowMode.GetIsMove()) {
+		//3秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 3){
+			if (!isItemCountDownSound[2]) {
+				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				isItemCountDownSound[2] = true;
+			}
+		}
+		//2秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 2) {
+			if (!isItemCountDownSound[1]) {
+				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				isItemCountDownSound[1] = true;
+			}
+		}
+		//1秒以下になったばかりの時.
+		if (tmSlowMode.GetPassTime() <= 1) {
+			if (!isItemCountDownSound[0]) {
+				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				isItemCountDownSound[0] = true;
+			}
+		}
+		//時間切れで解除.
+		if (tmSlowMode.GetPassTime() <= 0) {
+			
+			player->SetMode(Player_Normal); //反射モード終了.
+			p_sound->Play(_T("PowerDown"), false, 78); //再生.
+			
+			//リセット.
+			tmSlowMode.Reset();
+			gameData->isSlow = false;
+			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
+				isItemCountDownSound[i] = false;
+			}
+		}
 	}
 }
 
@@ -677,33 +693,6 @@ void GameManager::DrawTitle() {
 		str.Draw(ANC_MID, gameData->font1);    //テキスト.
 		DrawCircleST(&cir, false, false); //Xボタンの円.
 		ResetDrawBlendMode();
-	}
-	//隕石破壊.
-	if (tmScene[SCENE_TITLE].GetPassTime() > delay5) {
-		//まだ出してなければ.
-		if (!isTitleAnim) {
-			isTitleAnim = true; //一度きり.
-
-			double dig = -130; //角度.
-
-			//エフェクトをいくつか出す.
-			for (int i = 0; i < METEO_BREAK_ANIM_CNT; i++) {
-				
-				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-
-				EffectData data{}; 
-				data.type  = Effect_BreakMeteo;
-				data.pos   = { 600, 338 };
-				data.vec   = CalcVectorDeg(newDig);               //ずらした角度を反映.
-				data.speed = ((float)RandNum( 20,  100)/10)*1.4f; //速度抽選.
-				data.len   = ((float)RandNum( 10,  150)/10)*1.4f; //長さ抽選.
-				data.ang   =  (float)RandNum(  0, 3599)/10;       //角度抽選.
-				//エフェクト召喚.
-				effectMng->SpawnEffect(&data);
-			}
-			//サウンド.
-			p_sound->Play(_T("Break"), false, 65);
-		}
 	}
 }
 void GameManager::DrawMenu() {
@@ -977,15 +966,17 @@ void GameManager::GameEnd() {
 		//サウンド.
 		switch (gameData->stage) 
 		{
-			case 1:
-				p_sound->FadeOutPlay(_T("BGM1"), 2);
+			case STAGE_TUTORIAL:
+				p_sound->FadeOutPlay(_T("BGM_Tutorial"), 2);
 				break;
-			case 2:
-				p_sound->FadeOutPlay(_T("BGM2"), 2);
+			case STAGE_ENDLESS:
+				p_sound->FadeOutPlay(_T("BGM_Endless"), 2);
 				break;
 
 			default: assert(false); break;
 		}
+		//ゲームオーバーBGM.
+		p_sound->Play(_T("BGM_Over"), true, 68);
 	}
 }
 //アイテムを取った時.
