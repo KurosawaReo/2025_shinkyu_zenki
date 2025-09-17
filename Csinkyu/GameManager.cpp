@@ -305,7 +305,7 @@ void GameManager::Reset() {
 		//アイテムclass.
 		item->Reset();
 		//プレイヤーclass.
-		player->Reset({ WINDOW_WID/2, WINDOW_HEI/2+185 }, true);
+		player->Reset({ WINDOW_WID/2, WINDOW_HEI/2+250 }, true);
 	}
 }
 
@@ -392,8 +392,6 @@ void GameManager::UpdateTitle()
 	if (!tmScene[SCENE_TITLE].GetIsMove()) {
 		tmScene[SCENE_TITLE].Start();
 	}
-
-	player->Update(); //プレイヤー.
 
 	//特定の操作でゲーム開始.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
@@ -654,8 +652,6 @@ void GameManager::UpdateSlowMode() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 	
-	player->Draw(); //プレイヤー. 
-
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
 	const float delay2 = 1.4f;
@@ -665,7 +661,8 @@ void GameManager::DrawTitle() {
 
 	//画像の表示.
 	{
-		const int logoY = WINDOW_HEI/2 - 75;
+		const int    logoY   = WINDOW_HEI/2 - 85;
+		const DBL_XY imgSize = {0.7, 0.7};
 	
 		//切り替え前.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
@@ -673,7 +670,7 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * anim);
-			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, {0.5, 0.5}, ANC_MID, true, true);
+			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, imgSize, ANC_MID, true, true);
 		}
 		//切り替え後.
 		else {
@@ -682,10 +679,10 @@ void GameManager::DrawTitle() {
 			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * (1-anim2));
-			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, {0.5, 0.5}, ANC_MID, true, true);
+			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, ANC_MID, true, true);
 			//ロゴ2枚目.
 			SetDrawBlendModeST(MODE_ALPHA, 255 * anim1);
-			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, {0.5, 0.5}, ANC_MID, true, true);
+			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, ANC_MID, true, true);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -694,7 +691,7 @@ void GameManager::DrawTitle() {
 	//best score.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
 
-		const int scoreY = WINDOW_HEI/2 + 60;
+		const int drawY = WINDOW_HEI/2 + 115;
 
 		//アニメーション値.
 		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
@@ -702,22 +699,25 @@ void GameManager::DrawTitle() {
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
-		DrawStr str(text, {WINDOW_WID/2, scoreY+1}, COLOR_BEST_SCORE);
+		DrawStr str(text, {WINDOW_WID/2, drawY+1}, COLOR_BEST_SCORE);
 
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
 		str.Draw(ANC_MID, gameData->font2); //スコア値.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
-		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
-		imgUI[1].DrawExtend({WINDOW_WID/2, scoreY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
+		imgUI[1].DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
+
+		const int drawY = WINDOW_HEI/2+310;
+
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
-		DrawStr str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, WINDOW_HEI/2+285}, 0xFFFFFF);
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+285-2}, 18, 0xFFFFFF };
+		DrawStr str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
+		Circle cir = { {WINDOW_WID/2+92, drawY-2}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
 		str.Draw(ANC_MID, gameData->font1); //テキスト.
