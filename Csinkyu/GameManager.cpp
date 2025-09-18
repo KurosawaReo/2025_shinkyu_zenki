@@ -691,7 +691,7 @@ void GameManager::DrawTitle() {
 	//best score.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
 
-		const int drawY = WINDOW_HEI/2 + 115;
+		const int drawY = WINDOW_HEI/2 + 130;
 
 		//アニメーション値.
 		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
