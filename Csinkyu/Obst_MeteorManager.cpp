@@ -1,10 +1,11 @@
 /*
-   - MeteorManager.cpp -
-   隕石の出現を管理する.
+   - Obst_MeteorManager.cpp -
+
+   障害物: 隕石出現管理.
 */
 #include "GameManager.h"
 #include "EffectManager.h"
-#include "MeteorManager.h"
+#include "Obst_MeteorManager.h"
 
 using namespace Calc; //計算機能を使用.
 

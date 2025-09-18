@@ -4,7 +4,7 @@
 */
 #include "Player.h"
 #include "GameManager.h"
-#include "MeteorManager.h"
+#include "Obst_MeteorManager.h"
 
 #include "LaserManager.h"
 
@@ -251,7 +251,7 @@ void LaserManager::UpdateLaser() {
 				double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 
 				//エフェクトをいくつか出す.
-				for (int j = 0; j < METEO_BREAK_ANIM_CNT; j++) {
+				for (int j = 0; j < METEOR_BREAK_ANIM_CNT; j++) {
 
 					double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
 

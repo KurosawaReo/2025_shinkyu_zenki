@@ -1,15 +1,16 @@
 /*
-   - TutorialManager.h -
-   チュートリアルシーン.
+   - Stage_Tutorial.h -
+
+   ステージ: チュートリアル.
 */
 #pragma once
 
 //チュートリアル.[継承不可]
-class TutorialManager final
+class TutorialStage final
 {
 public: //実体.
-	static TutorialManager* GetPtr() {
-		static TutorialManager inst; //自身のインスタンス.
+	static TutorialStage* GetPtr() {
+		static TutorialStage inst; //自身のインスタンス.
 		return &inst;
 	}
 

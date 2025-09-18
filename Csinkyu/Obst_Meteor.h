@@ -1,6 +1,7 @@
 /*
-   - Meteor.h -
-   ~‚Α‚Δ‚­‚ιθ¦Ξ.
+   - Obst_Meteor.h -
+   
+   αQ•¨: θ¦Ξ.
 */
 #pragma once
 #include "Player.h"

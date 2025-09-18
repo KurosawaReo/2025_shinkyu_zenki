@@ -42,7 +42,7 @@ void UIManager::Draw() {
 #endif
 
 	//€”õ or ƒQ[ƒ€ƒV[ƒ“‚È‚ç.
-	if (p_gameData->scene == SCENE_READY || p_gameData->scene == SCENE_GAME || p_gameData->scene == SCENE_END) {
+	if (p_gameData->scene == SCENE_GAME || p_gameData->scene == SCENE_END) {
 
 		const float time = p_gameMng->GetSceneTime(SCENE_READY);
 

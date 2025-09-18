@@ -137,44 +137,45 @@
    ゲーム全体管理.
 */
 
-#include "MeteorManager.h"
-#include "LaserManager.h"
-#include "EffectManager.h"
-#include "UIManager.h"
+#include "BackGround.h"
 #include "MenuManager.h"
-#include "TutorialManager.h"
+#include "Stage_Tutorial.h"
 
-#include "Obstacle4.h"
-#include "Obstacle4main.h"
-#include "Obstacle5.h"
-#include "MapGimmickLaser.h"
-#include "FireworksObstacle.h"
+#include "LaserManager.h"
+#include "Obst_NormalLaser.h"
+#include "Obst_NormalLaserMain.h"
+#include "Obst_StraightLaser.h"
+#include "Obst_MeteorManager.h"
+#include "Obst_Ripples.h"
+#include "Obst_Fireworks.h"
 
 #include "Item.h"
 #include "Player.h"
 
-#include "BackGround.h"
+#include "EffectManager.h"
+#include "UIManager.h"
+
 #include "GameManager.h"
 
 //ポインタ.
-GameData        *gameData    = GameData::GetPtr();
-BackGround      *bg          = BackGround::GetPtr();
-MenuManager     *menuMng     = MenuManager::GetPtr();
-TutorialManager *tutorialMng = TutorialManager::GetPtr();
-MeteorManager   *meteorMng   = MeteorManager::GetPtr();
-LaserManager    *laserMng    = LaserManager::GetPtr();
-EffectManager   *effectMng   = EffectManager::GetPtr();
-UIManager       *uiMng       = UIManager::GetPtr();
-ItemManager     *item        = ItemManager::GetPtr();
-Player          *player      = Player::GetPtr();
+GameData         *gameData     = GameData::GetPtr();
+BackGround       *bg           = BackGround::GetPtr();
+MenuManager      *menuMng      = MenuManager::GetPtr();
+TutorialStage    *tutorialMng  = TutorialStage::GetPtr();
+LaserManager     *laserMng     = LaserManager::GetPtr();
+MeteorManager    *meteorMng    = MeteorManager::GetPtr();
+Ripples          *ripples      = Ripples::GetPtr();
+FireworksManager *fireworksMng = FireworksManager::GetPtr();
+ItemManager      *item         = ItemManager::GetPtr();
+Player           *player       = Player::GetPtr();
+EffectManager    *effectMng    = EffectManager::GetPtr();
+UIManager        *uiMng        = UIManager::GetPtr();
 //障害物の実体.
-Obstacle4_1 obstacle4_1;
-Obstacle4_2 obstacle4_2;
-Obstacle4_3 obstacle4_3;
-Obstacle4_4 obstacle4_4;
-Obstacle5   obstacle5;
-FireworksObstacle fireworksObs;
-MapGimmickLaser mgl[4];
+NormalLaser_1 laserNor1;
+NormalLaser_2 laserNor2;
+NormalLaser_3 laserNor3;
+NormalLaser_4 laserNor4;
+StraightLaser mgl[4];
 
 using namespace Calc; //計算機能を使用.
 
@@ -234,24 +235,22 @@ void GameManager::Init() {
 		for (int i = 0; i < _countof(mgl); i++) {
 			mgl[i].Init();
 		}
-		obstacle4_1.Init();
-		obstacle4_2.Init();
-		obstacle4_3.Init();
-		obstacle4_4.Init();
-		obstacle5.Init();
-		fireworksObs.Init();
-		//管理クラス.
+		laserNor1.Init();
+		laserNor2.Init();
+		laserNor3.Init();
+		laserNor4.Init();
+
 		bg->Init();
 		menuMng->Init();
 		tutorialMng->Init();
 		laserMng->Init();
 		meteorMng->Init();
+		ripples->Init();
+		fireworksMng->Init();
+		item->Init();
+		player->Init();
 		effectMng->Init();
 		uiMng->Init();
-		//アイテム.
-		item->Init();
-		//プレイヤー.
-		player->Init();
 	}
 
 	//スコア読み込み.
@@ -291,20 +290,18 @@ void GameManager::Reset() {
 	}
 
 	{
-		//障害物class.
+		//レーザー系.
 		ResetNorLaser();
 		ResetStrLaser();
-		obstacle5.Reset();
-		fireworksObs.Reset();
-		//管理class.
+
 		menuMng->Reset();
 		tutorialMng->Reset();
 		laserMng->Reset();
 		meteorMng->Reset();
+		ripples->Reset();
+		fireworksMng->Reset();
 		effectMng->Reset();
-		//アイテムclass.
 		item->Reset();
-		//プレイヤーclass.
 		player->Reset({ WINDOW_WID/2, WINDOW_HEI/2+250 }, true);
 	}
 }
@@ -329,8 +326,6 @@ void GameManager::Update() {
 	{
 		case SCENE_TITLE:    UpdateTitle();    break;
 		case SCENE_MENU:     UpdateMenu();     break;
-		case SCENE_TUTORIAL: UpdateTutorial(); break;
-		case SCENE_READY:    UpdateReady();    break;
 		case SCENE_GAME:     UpdateGame();     break;
 		case SCENE_END:      UpdateEnd();      break;
 		case SCENE_PAUSE:    UpdatePause();    break;
@@ -357,8 +352,6 @@ void GameManager::Draw() {
 	{
 		case SCENE_TITLE:    DrawTitle();    break;
 		case SCENE_MENU:     DrawMenu();     break;
-		case SCENE_TUTORIAL: DrawTutorial(); break;
-		case SCENE_READY:    DrawReady();    break;
 		case SCENE_GAME:     DrawGame();     break;
 		case SCENE_END:      DrawEnd();      break;
 		case SCENE_PAUSE:    DrawPause();    break;
@@ -373,10 +366,10 @@ void GameManager::Draw() {
 //通常レーザーのリセット.
 void GameManager::ResetNorLaser() {
 
-	obstacle4_1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
-	obstacle4_2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
-	obstacle4_3.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_RIGHT);
-	obstacle4_4.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_LEFT);
+	laserNor1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
+	laserNor2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
+	laserNor3.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_RIGHT);
+	laserNor4.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_LEFT);
 }
 //直線レーザーのリセット.
 void GameManager::ResetStrLaser() {
@@ -404,7 +397,7 @@ void GameManager::UpdateTitle()
 			double dig = -130; //角度.
 
 			//エフェクトをいくつか出す.
-			for (int i = 0; i < METEO_BREAK_ANIM_CNT; i++) {
+			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
 				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
 
@@ -425,10 +418,6 @@ void GameManager::UpdateTitle()
 }
 void GameManager::UpdateMenu() {
 	menuMng->Update();
-}
-void GameManager::UpdateTutorial() {
-	tutorialMng->Update();
-	player->Update();
 }
 void GameManager::UpdateReady() {
 
@@ -583,8 +572,8 @@ void GameManager::UpdateObjects() {
 	//Lv1以上.
 	laserMng->Update();
 	meteorMng->Update();
-	obstacle4_1.Update();
-	obstacle4_2.Update();
+	laserNor1.Update();
+	laserNor2.Update();
 	item->Update();
 
 	//Lv2以上.
@@ -594,7 +583,7 @@ void GameManager::UpdateObjects() {
 	}
 	//Lv3以上.
 	if (gameData->level >= 3) {
-		obstacle5.Update();
+		ripples->Update();
 	}
 	//Lv4以上.
 	if (gameData->level >= 4) {
@@ -603,9 +592,9 @@ void GameManager::UpdateObjects() {
 	}
 	//Lv5以上.
 	if (gameData->level >= 5) {
-		obstacle4_3.Update();
-		obstacle4_4.Update();
-		fireworksObs.Update();
+		laserNor3.Update();
+		laserNor4.Update();
+		fireworksMng->Update();
 	}
 }
 //スローモードの更新.
@@ -729,26 +718,6 @@ void GameManager::DrawTitle() {
 void GameManager::DrawMenu() {
 	menuMng->Draw();
 }
-void GameManager::DrawTutorial() {
-	tutorialMng->Draw();
-	player->Draw();
-}
-void GameManager::DrawReady() {
-	
-#if false
-	bg.Draw(); //背景.
-	{
-		float anim = min(tmScene[SCENE_READY].GetPassTime(), 1); //アニメーション値.
-		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
-
-		SetDrawBlendModeST(MODE_ALPHA, 255*(1-anim));
-		DrawBoxST(&box, ANC_LU);
-		ResetDrawBlendMode();
-	}
-#endif
-
-	player->Draw(); //プレイヤー.
-}
 void GameManager::DrawGame() {
 
 	DrawObjects();      //オブジェクト.
@@ -836,8 +805,8 @@ void GameManager::DrawObjects() {
 	//Lv1以上.
 	laserMng->Draw();
 	meteorMng->Draw();
-	obstacle4_1.Draw();
-	obstacle4_2.Draw();
+	laserNor1.Draw();
+	laserNor2.Draw();
 	item->Draw();
 	//Lv2以上.
 	if (gameData->level >= 2) {
@@ -846,7 +815,7 @@ void GameManager::DrawObjects() {
 	}
 	//Lv3以上.
 	if (gameData->level >= 3) {
-		obstacle5.Draw();
+		ripples->Draw();
 	}
 	//Lv4以上.
 	if (gameData->level >= 4) {
@@ -855,9 +824,9 @@ void GameManager::DrawObjects() {
 	}
 	//Lv5以上.
 	if (gameData->level >= 5){
-		obstacle4_3.Draw();
-		obstacle4_4.Draw();
-		fireworksObs.Draw();
+		laserNor3.Draw();
+		laserNor4.Draw();
+		fireworksMng->Draw();
 	}
 }
 //反射モード演出.

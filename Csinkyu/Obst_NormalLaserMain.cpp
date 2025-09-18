@@ -1,21 +1,18 @@
 /*
-   - Obstacle4main.cpp -
+   - Obst_NormalLaserMain.cpp -
 
-   レーザー砲台の継承元クラス.
-
-   プレイヤーを追尾するレーザーを発射する障害物を実装.
-   レーザー反射機能追加.
+   障害物: レーザー発射台(継承元)
 */
-#include "Player.h"
 #include "GameManager.h"
-#include "MeteorManager.h"
+#include "Player.h"
 #include "LaserManager.h"
-#include "Obstacle4.h" // 自身のヘッダーファイル
+#include "Obst_MeteorManager.h"
+#include "Obst_NormalLaserMain.h" //自身のヘッダ.
 
 using namespace Calc; //計算機能を使用.
 
 //初期化.
-void Obstacle4main::Init()
+void NormalLaserMain::Init()
 {
 	// オブジェクトを参照として保存
 	p_data      = GameData::GetPtr();
@@ -24,7 +21,7 @@ void Obstacle4main::Init()
 	p_meteorMng = MeteorManager::GetPtr();
 }
 //リセット.
-void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
+void NormalLaserMain::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 {
 	Hx      = _Hx;                      // 砲台のX座標初期値（画面中央）
 	Hy      = _Hy;                      // 砲台のY座標初期値（画面上部）
@@ -39,7 +36,7 @@ void Obstacle4main::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 	}
 }
 //更新.
-void Obstacle4main::Update()
+void NormalLaserMain::Update()
 {
 //	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
 	if (p_data->scene == SCENE_GAME) {  // ゲーム中のみ
@@ -61,7 +58,7 @@ void Obstacle4main::Update()
 	}
 }
 //描画.
-void Obstacle4main::Draw()
+void NormalLaserMain::Draw()
 {
 	DrawObstFlash(); // 発射エフェクトの描画.
 	
@@ -71,11 +68,11 @@ void Obstacle4main::Draw()
 }
 
 //発射エフェクトの更新.
-void Obstacle4main::UpdateObstFlash() {
+void NormalLaserMain::UpdateObstFlash() {
 
 }
 //発射エフェクトの描画.
-void Obstacle4main::DrawObstFlash() {
+void NormalLaserMain::DrawObstFlash() {
 
 	// レーザー発射前の予告●を描画
 	DrawPreLaserDots();
@@ -152,7 +149,7 @@ void Obstacle4main::DrawObstFlash() {
 }
 
 // レーザー発射前の予告●を描画
-void Obstacle4main::DrawPreLaserDots() {
+void NormalLaserMain::DrawPreLaserDots() {
 
 	// 発射タイミングが近づいている場合のみ●を表示
 	if (Hsc <= HscTm + 60) { // 発射60フレーム前から表示
@@ -180,7 +177,7 @@ void Obstacle4main::DrawPreLaserDots() {
  * @brief 敵（障害物）の移動処理
  * レーザーの移動とプレイヤーへの追尾、砲台の移動とレーザー発射を管理
  */
-void Obstacle4main::enemy4Move()
+void NormalLaserMain::enemy4Move()
 {
 	// 砲台の移動とレーザー発射処理
 	{
@@ -216,7 +213,7 @@ void Obstacle4main::enemy4Move()
 }
 
 //光るeffectの生成.
-void Obstacle4main::CreateFlashEffect(double fx, double fy)
+void NormalLaserMain::CreateFlashEffect(double fx, double fy)
 {
 	DBL_XY pPos = p_player->GetPos(); //プレイヤー座標取得.
 

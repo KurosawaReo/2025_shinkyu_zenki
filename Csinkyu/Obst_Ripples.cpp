@@ -1,7 +1,12 @@
+/*
+   - Ripples.cpp -
+
+   障害物: 波紋.
+*/
 #include "GameManager.h"
 #include "Player.h"
 
-#include "Obstacle5.h"
+#include "Obst_Ripples.h"
 
 //初期化(一回のみ行う)
 //リセット(何回でも行う)

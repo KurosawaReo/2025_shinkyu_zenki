@@ -1,11 +1,12 @@
 /*
-   - FireworksObstacle.cpp -
-   花火.
+   - Obst_Fireworks.cpp -
+
+   障害物: 花火.
 */
 #include "Player.h"
 #include "GameManager.h"
 #include "LaserManager.h"
-#include "FireworksObstacle.h"
+#include "Obst_Fireworks.h"
 //#include <cmath>    KRライブラリに定義が入ってるため不要.
 //#include <cstdlib>
 

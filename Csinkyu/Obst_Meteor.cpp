@@ -1,9 +1,10 @@
 /*
-   - Meteor.cpp -
-   ~‚Α‚Δ‚­‚ιθ¦Ξ.
+   - Obst_Meteor.cpp -
+
+   αQ•¨: θ¦Ξ.
 */
 #include "GameManager.h"
-#include "Meteor.h"
+#include "Obst_Meteor.h"
 
 //namespaceΘ—ª.
 using namespace Calc; 

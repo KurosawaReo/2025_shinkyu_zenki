@@ -3,7 +3,7 @@
    ƒvƒŒƒCƒ„[ŠÇ—.
 */
 #include "GameManager.h"
-#include "Obstacle4main.h"
+#include "Obst_NormalLaserMain.h"
 
 #include "Player.h"
 
