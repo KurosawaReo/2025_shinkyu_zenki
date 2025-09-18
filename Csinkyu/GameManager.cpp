@@ -140,6 +140,9 @@
 #include "MeteorManager.h"
 #include "LaserManager.h"
 #include "EffectManager.h"
+#include "UIManager.h"
+#include "MenuManager.h"
+#include "TutorialManager.h"
 
 #include "Obstacle4.h"
 #include "Obstacle4main.h"
@@ -151,8 +154,6 @@
 #include "Player.h"
 
 #include "BackGround.h"
-#include "MenuManager.h"
-#include "TutorialManager.h"
 #include "GameManager.h"
 
 //ポインタ.
@@ -163,6 +164,7 @@ TutorialManager *tutorialMng = TutorialManager::GetPtr();
 MeteorManager   *meteorMng   = MeteorManager::GetPtr();
 LaserManager    *laserMng    = LaserManager::GetPtr();
 EffectManager   *effectMng   = EffectManager::GetPtr();
+UIManager       *uiMng       = UIManager::GetPtr();
 ItemManager     *item        = ItemManager::GetPtr();
 Player          *player      = Player::GetPtr();
 //障害物の実体.
@@ -193,10 +195,7 @@ void GameManager::Init() {
 	//画像読み込み.
 	imgLogo[0].  LoadFile(_T("Resources/Images/REFLINEロゴ_一部.png"));
 	imgLogo[1].  LoadFile(_T("Resources/Images/REFLINEロゴ.png"));
-	imgUI[0].    LoadFile(_T("Resources/Images/ui_back_level.png"));
-	imgUI[1].    LoadFile(_T("Resources/Images/ui_back_best_score.png"));
-	imgUI[2].    LoadFile(_T("Resources/Images/ui_back_score.png"));
-	imgUI[3].    LoadFile(_T("Resources/Images/ui_back_time.png"));
+	imgUI.       LoadFile(_T("Resources/Images/ui_back_best_score.png"));
 	imgNewRecord.LoadFile(_T("Resources/Images/new_record.png"));
 	imgGameOver. LoadFile(_T("Resources/Images/gameover.png"));
 	imgReflect.  LoadFile(_T("Resources/Images/reflect.png"));
@@ -248,6 +247,7 @@ void GameManager::Init() {
 		laserMng->Init();
 		meteorMng->Init();
 		effectMng->Init();
+		uiMng->Init();
 		//アイテム.
 		item->Init();
 		//プレイヤー.
@@ -284,7 +284,7 @@ void GameManager::Reset() {
 	isBestScoreSound    = false;
 	//サウンド.
 	p_sound->StopAll();
-	p_sound->Play(_T("BGM_Menu"), true, 68); //メニューBGMを流す.
+	p_sound->Play(_T("BGM_Menu"), true, 90); //メニューBGMを流す.
 	//タイマー(全シーン)
 	for (int i = 0; i < SCENE_COUNT; i++) {
 		tmScene[i].Reset();
@@ -367,6 +367,7 @@ void GameManager::Draw() {
 	}
 
 	effectMng->Draw(); //エフェクト.
+	uiMng->Draw();     //UI.
 }
 
 //通常レーザーのリセット.
@@ -704,8 +705,8 @@ void GameManager::DrawTitle() {
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim1);
 		str.Draw(ANC_MID, gameData->font2); //スコア値.
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim2);
-		imgUI[1].DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
-		imgUI[1].DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
+		imgUI.DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
+		imgUI.DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
 		ResetDrawBlendMode();
 	}
 	//PUSH SPACE.
@@ -747,17 +748,12 @@ void GameManager::DrawReady() {
 #endif
 
 	player->Draw(); //プレイヤー.
-	DrawUI();
-
 }
 void GameManager::DrawGame() {
 
 	DrawObjects();      //オブジェクト.
 	player->Draw();     //プレイヤー.
-	DrawUI();
 	DrawReflectMode();  //反射モード演出.
-
-//	DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
 }
 void GameManager::DrawEnd() {
 	
@@ -770,7 +766,6 @@ void GameManager::DrawEnd() {
 		DrawBoxST(&box, ANC_LU); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
-	DrawUI();
 
 	//終了案内.
 	{
@@ -835,74 +830,6 @@ void GameManager::DrawPause() {
 	DrawGame(); //ゲームシーンと同じ.
 }
 
-//UIの描画.
-void GameManager::DrawUI() {
-
-#if defined DEBUG_SPAWN_RATE
-	//カウンター.
-	DrawFormatStringToHandle(
-		10, WINDOW_HEI-75, 0xFFFFFF, gameData->font2, _T("Counter: %.2f"), gameData->counter
-	);
-	//出現間隔割合.
-	DrawFormatStringToHandle(
-		10, WINDOW_HEI-40, 0xFFFFFF, gameData->font2, _T("Spawn  : %.2f%%"), gameData->spawnRate*100
-	);
-#endif
-
-	//アニメーション値.
-	double alpha1   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.1);
-	double alpha2   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.2);
-	double alpha3   = CalcNumEaseInOut( tmScene[SCENE_READY].GetPassTime()-0.3);
-	double alpha4   = CalcNumEaseInOut((tmScene[SCENE_READY].GetPassTime()-1.0)*2);
-	double animSin1 = sin(M_PI* tmScene[SCENE_READY].GetPassTime()-0.1);
-	double animSin2 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.2));
-	double animSin3 = sin(M_PI*(tmScene[SCENE_READY].GetPassTime()-0.3));
-
-	//テキスト設定.
-	DrawStr str[4] = {
-		DrawStr({}, {WINDOW_WID/2,      70+2}, 0xFFFFFF),
-		DrawStr({}, {WINDOW_WID/2-350, 150  }, COLOR_BEST_SCORE),
-		DrawStr({}, {WINDOW_WID/2,     150  }, COLOR_SCORE),
-		DrawStr({}, {WINDOW_WID/2+350, 150  }, COLOR_TIME),
-	};
-	TCHAR text[256];
-	_stprintf(text, _T("LEVEL %d"),        gameData->level);
-	str[0].text = text;
-	_stprintf(text, _T("BEST SCORE:%05d"), gameData->bestScore);
-	str[1].text = text;
-	_stprintf(text, _T("SCORE:%05d"),      gameData->score);
-	str[2].text = text;
-	_stprintf(text, _T("TIME:%.3f"),       tmScene[SCENE_GAME].GetPassTime());
-	str[3].text = text;
-		
-	//背景画像.
-	imgUI[0].DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
-	//テキスト(main)
-	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
-	str[0].Draw(ANC_MID, gameData->font4);
-	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
-	str[1].Draw(ANC_MID, gameData->font3);
-	imgUI[1].DrawExtend({(double)str[1].pos.x, (double)str[1].pos.y+28}, {0.35, 0.4});
-	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
-	str[2].Draw(ANC_MID, gameData->font3);
-	imgUI[2].DrawExtend({(double)str[2].pos.x, (double)str[2].pos.y+28}, {0.35, 0.4});
-	SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
-	str[3].Draw(ANC_MID, gameData->font3);
-	imgUI[3].DrawExtend({(double)str[3].pos.x, (double)str[3].pos.y+28}, {0.35, 0.4});
-	//テキスト(光沢用)
-	str[1].color = 0xFFFFFF;
-	str[2].color = 0xFFFFFF;
-	str[3].color = 0xFFFFFF;
-	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
-	str[1].Draw(ANC_MID, gameData->font3);
-	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
-	str[2].Draw(ANC_MID, gameData->font3);
-	SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
-	str[3].Draw(ANC_MID, gameData->font3);
-
-	//描画モードリセット.
-	ResetDrawBlendMode();
-}
 //オブジェクトの描画.
 void GameManager::DrawObjects() {
 

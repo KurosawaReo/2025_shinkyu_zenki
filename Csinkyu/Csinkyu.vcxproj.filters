@@ -5,8 +5,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LaserManager.cpp" />
-    <ClCompile Include="Meteo.cpp" />
-    <ClCompile Include="MeteoManager.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Obstacle4.cpp" />
@@ -33,11 +31,13 @@
     <ClCompile Include="KR_Lib\KR_Main.cpp" />
     <ClCompile Include="KR_Lib\KR_Scene.cpp" />
     <ClCompile Include="TutorialManager.cpp" />
+    <ClCompile Include="MenuManager.cpp" />
+    <ClCompile Include="Meteor.cpp" />
+    <ClCompile Include="MeteorManager.cpp" />
+    <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
-    <ClInclude Include="Meteo.h" />
-    <ClInclude Include="MeteoManager.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Obstacle4.h" />
@@ -63,5 +63,9 @@
     <ClInclude Include="KR_Lib\KR_Main.h" />
     <ClInclude Include="KR_Lib\KR_Scene.h" />
     <ClInclude Include="TutorialManager.h" />
+    <ClInclude Include="MenuManager.h" />
+    <ClInclude Include="Meteor.h" />
+    <ClInclude Include="MeteorManager.h" />
+    <ClInclude Include="UIManager.h" />
   </ItemGroup>
 </Project>

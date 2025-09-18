@@ -17,6 +17,7 @@ private:
 	int stepNo{}; //現在のステップ番号.
 
 	GameData*      p_data{};
+	GameManager*   p_gameMng{};
 	EffectManager* p_effectMng{};
 	InputMng*      p_input{};
 	SoundMng*      p_sound{};

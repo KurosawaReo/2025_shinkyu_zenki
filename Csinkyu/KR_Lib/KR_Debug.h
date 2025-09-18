@@ -1,6 +1,6 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/19
 
    デバッグ機能を追加します。
 */
@@ -18,9 +18,11 @@ namespace KR_Lib
 		void Log(MY_STRING text, double value);
 		void Log(MY_STRING text);
 
+		void LogPadID();
+
 		//配列データの表示.
 		template<typename T>
-		void DebugArray(T data[], int maxSize) {
+		void LogArray(T data[], int maxSize) {
 
 			for (int i = 0; i < maxSize; i++)
 			{
@@ -31,5 +33,4 @@ namespace KR_Lib
 			}
 		}
 	}
-
 }

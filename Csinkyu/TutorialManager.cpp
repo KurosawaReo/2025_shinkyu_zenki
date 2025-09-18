@@ -93,7 +93,7 @@ void TutorialManager::UpdateStep2() {
 		p_sound->Play(_T("LevelUp"), false, 100);
 		//エフェクト.
 		EffectData data{};
-		data.type = Effect_Tutorial_Step3;		
+		data.type = Effect_Tutorial_Step3;
 		data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 		p_effectMng->SpawnEffect(&data);
 
@@ -130,7 +130,6 @@ void TutorialManager::UpdateStep4() {
 
 //描画:step1
 void TutorialManager::DrawStep1() {
-
 
 
 	DrawStr str(_T("↑↓←→: 移動"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0x00FFFF);

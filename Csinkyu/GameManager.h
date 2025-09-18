@@ -49,7 +49,7 @@ private: //データ.
 	Timer tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME); //スロー継続時間.
 
 	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
-	DrawImg imgUI[4]{};     //UI画像.
+	DrawImg imgUI{};        //UI画像.
 	DrawImg imgNewRecord{}; //new record.
 	DrawImg imgGameOver{};  //gameover.
 	DrawImg imgReflect{};   //reflect.
@@ -65,6 +65,9 @@ public:
 	//get.
 	float GetSlowModeTime() {
 		return tmSlowMode.GetPassTime();
+	}
+	float GetSceneTime(Scene scene) {
+		return tmScene[scene].GetPassTime();
 	}
 
 	//メイン処理.
@@ -98,7 +101,6 @@ public:
 	void DrawEnd();
 	void DrawPause();
 
-	void DrawUI();
 	void DrawObjects();
 	void DrawReflectMode();
 
