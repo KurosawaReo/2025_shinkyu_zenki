@@ -57,7 +57,7 @@ public:
 
 	void Spawn();				//隕石出現. 
 	void Destroy();				//隕石破壊.
-	bool IsHitMeteor(Circle*);	//隕石の当たり判定.
+	bool IsHitMeteor(Circle);	//隕石の当たり判定.
 
 	void UpdateMeteoLine();		//隕石を構成する線の更新.
 };

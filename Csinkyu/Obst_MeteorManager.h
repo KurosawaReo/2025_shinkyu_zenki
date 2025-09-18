@@ -31,6 +31,6 @@ public:
 
 	void SpawnMeteor(); //и¦ђОђ¶ђ¬.
 
-	bool IsHitMeteors(Circle* cir, bool isDestroy); //и¦ђО‚М‚З‚к‚©1‚В‚Е‚а“–‚Ѕ‚Б‚Д‚ў‚й‚©.
+	bool IsHitMeteors(Circle cir, bool isDestroy); //и¦ђО‚М‚З‚к‚©1‚В‚Е‚а“–‚Ѕ‚Б‚Д‚ў‚й‚©.
 	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //ЌЕЉс‚и‚Ми¦ђОЌА•W‚р’T‚·.
 };

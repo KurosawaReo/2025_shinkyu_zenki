@@ -131,14 +131,14 @@ void Meteor::Destroy() {
 }
 
 //隕石の当たり判定.
-bool Meteor::IsHitMeteor(Circle* cir) {
+bool Meteor::IsHitMeteor(Circle cir) {
 
 	//有効な隕石なら.
 	if (active && state == Meteor_Normal) {
 		//全ての線で判定.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			//線とプレイヤーが当たったら.
-			if (HitLineCir(&shape.line[i], cir)) {
+			if (HitLineCir(&shape.line[i], &cir)) {
 				return true; //当たった.
 			}
 		}

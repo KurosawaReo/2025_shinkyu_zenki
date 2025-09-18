@@ -96,6 +96,9 @@ void LaserManager::UpdateLaser() {
 	{
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
+		//プレイヤー当たり判定.
+		Circle plyHit = p_player->GetHit();
+
 		//レーザータイプ別.
 		switch (laser[i].type)
 		{
@@ -103,7 +106,7 @@ void LaserManager::UpdateLaser() {
 		{
 			Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 			// プレイヤーとレーザーの当たり判定
-			if (HitLineCir(&line, p_player->GetHit())) {
+			if (HitLineCir(&line, &plyHit)) {
 
 				//反射あり.
 				if (p_player->GetMode() == Player_Reflect)
@@ -140,7 +143,7 @@ void LaserManager::UpdateLaser() {
 		{
 			Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 			// プレイヤーとレーザーの当たり判定
-			if (HitLineCir(&line, p_player->GetHit())) {
+			if (HitLineCir(&line, &plyHit)) {
 
 				//反射あり.
 				if (p_player->GetMode() == Player_Reflect)
@@ -178,7 +181,7 @@ void LaserManager::UpdateLaser() {
 		{
 			Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 			// プレイヤーとレーザーの当たり判定
-			if (HitLineCir(&line, p_player->GetHit())) {
+			if (HitLineCir(&line, &plyHit)) {
 
 				//反射あり.
 				if (p_player->GetMode() == Player_Reflect)
@@ -246,7 +249,7 @@ void LaserManager::UpdateLaser() {
 			Circle hit = { {laser[i].x, laser[i].y}, 10, {} }; //当たり判定円(仮)
 
 			//隕石と当たっているなら.
-			if (p_meteorMng->IsHitMeteors(&hit, true)) {
+			if (p_meteorMng->IsHitMeteors(hit, true)) {
 
 				double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
 

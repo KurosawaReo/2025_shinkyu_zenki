@@ -126,9 +126,9 @@ void ItemManager::CheckHitPlayer(int idx)
 	}
 
 	//プレイヤーの判定を取得.
-	Circle* plyHit = p_player->GetHit();
+	Circle plyHit = p_player->GetHit();
 	//当たり判定を四角形とする.
-	Box plyBox  = { plyHit->pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
+	Box plyBox  = { plyHit.pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
 	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//当たった場合.

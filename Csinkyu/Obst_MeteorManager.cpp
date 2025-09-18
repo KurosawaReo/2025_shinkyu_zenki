@@ -75,7 +75,7 @@ void MeteorManager::SpawnMeteor(){
 }
 
 //隕石のどれか1つでも当たっているか.
-bool MeteorManager::IsHitMeteors(Circle* cir, bool isDestroy) {
+bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 
 	bool hit;
 
@@ -94,7 +94,7 @@ bool MeteorManager::IsHitMeteors(Circle* cir, bool isDestroy) {
 					//エフェクト.
 					EffectData data{};
 					data.type = Effect_Score500;
-					data.pos = cir->pos;
+					data.pos = cir.pos;
 					p_effectMng->SpawnEffect(&data);
 					//サウンド.
 					SoundMng* sound = SoundMng::GetPtr();

@@ -28,6 +28,9 @@ private:
 	SoundMng*      p_sound{};
 
 public:
+	//get.
+	int GetStepNo() const { return stepNo; }
+
 	void Init();
 	void Reset();
 	void Update();

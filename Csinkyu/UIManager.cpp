@@ -3,6 +3,7 @@
    UI管理.
 */
 #include "GameManager.h"
+#include "Stage_Tutorial.h"
 #include "UIManager.h"
 using namespace Calc; //計算機能.
 
@@ -10,8 +11,9 @@ using namespace Calc; //計算機能.
 void UIManager::Init() {
 
 	//実体取得.
-	p_gameMng  = GameManager::GetPtr();
-	p_gameData = GameData::GetPtr();
+	p_gameMng     = GameManager::GetPtr();
+	p_gameData    = GameData::GetPtr();
+	p_tutorialStg = TutorialStage::GetPtr();
 
 	//画像.
 	imgUI[0].LoadFile(_T("Resources/Images/ui_back_level.png"));
@@ -49,7 +51,20 @@ void UIManager::Draw() {
 	{
 		case STAGE_TUTORIAL:
 		{
+			//アニメーション値.
+			double alpha = CalcNumEaseInOut((time - 1.0) * 2);
+			//テキスト設定.
+			DrawStr str({}, { WINDOW_WID/2, 70 + 2 }, 0xFFFFFF);
+			
+			TCHAR text[256];
+			_stprintf(text, _T("STEP %d"), p_tutorialStg->GetStepNo());
+			str.text = text;
 
+			//描画.
+			imgUI[0].DrawExtend({ WINDOW_WID/2, 70 }, { 0.4, 0.35 }); //背景画像.
+			SetDrawBlendModeST(MODE_ALPHA, 255 * alpha);
+			str.Draw(ANC_MID, p_gameData->font4);
+			ResetDrawBlendMode();
 		}
 		break;
 

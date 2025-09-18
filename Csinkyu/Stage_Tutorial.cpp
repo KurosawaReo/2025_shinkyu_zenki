@@ -52,20 +52,15 @@ void TutorialStage::Draw() {
 //更新:step0
 void TutorialStage::UpdateStep0() {
 
+	//サウンド.
+	p_sound->Play(_T("LevelUp"), false, 100);
+	//エフェクト.
+	EffectData data{};
+	data.type = Effect_Tutorial_Step1;
+	data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
+	p_effectMng->SpawnEffect(&data);
 
-
-	if (p_input->IsPushKeyTime(KEY_0) == 1) {
-
-		//サウンド.
-		p_sound->Play(_T("LevelUp"), false, 100);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_Tutorial_Step1;		
-		data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-		p_effectMng->SpawnEffect(&data);
-
-		stepNo++; //次のステップ.
-	}
+	stepNo++; //次のステップ.
 }
 //更新:step1
 void TutorialStage::UpdateStep1() {

@@ -4,7 +4,9 @@
 */
 #pragma once
 
-class GameManager; //前方宣言.
+//前方宣言.
+class GameManager;
+//class TutorialStage;
 
 //UI管理.[継承不可]
 class UIManager final
@@ -18,8 +20,9 @@ public: //実体.
 private: //データ.
 	DrawImg imgUI[4]{}; //UI画像.
 
-	GameManager* p_gameMng{};
-	GameData*    p_gameData{};
+	GameManager*   p_gameMng{};
+	GameData*      p_gameData{};
+	TutorialStage* p_tutorialStg{};
 
 public:
 	void Init();

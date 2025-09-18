@@ -61,10 +61,10 @@ public:
 	void       SetActive(bool _active)     { active = _active; }
 	void       SetMode  (PlayerMode _mode) { mode   = _mode;   } //ÉÇÅ[Éhê›íË.
 	//get. 
-	DBL_XY     GetPos()   { return hit.pos; }
-	bool       GetActive(){ return active; }
-	PlayerMode GetMode()  { return mode; }
-	Circle*    GetHit()   { return &hit; }
+	DBL_XY     GetPos()    const { return hit.pos; }
+	bool       GetActive() const { return active; }
+	PlayerMode GetMode()   const { return mode; }
+	Circle     GetHit()    const { return hit; }
 
 	//ÇªÇÃëº.
 	void Init  ();

@@ -61,11 +61,11 @@ void MenuManager::Update() {
 	InputMng* input = InputMng::GetPtr();
 
 	//カーソル移動操作.
-	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) {   //長押しにも対応.
-		selectedIndex = (selectedIndex - 1) % 3;
+	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) {
+		selectedIndex = (selectedIndex+3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 	}
-	if (input->IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
-		selectedIndex = (selectedIndex + 1) % 3;
+	if (input->IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) {
+		selectedIndex = (selectedIndex + 1) % 3;   //+1して、3の余り(0～2)をループ.
 	}
 
 	//決定操作.
