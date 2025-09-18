@@ -5,6 +5,10 @@
 */
 #pragma once
 
+//前方宣言.
+class GameManager;
+class EffectManager;
+
 //チュートリアル.[継承不可]
 class TutorialStage final
 {

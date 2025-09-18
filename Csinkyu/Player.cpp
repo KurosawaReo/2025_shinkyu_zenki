@@ -105,7 +105,7 @@ void Player::Draw()
 		}
 
 		//チュートリアル用.
-		if (p_data->scene == SCENE_TUTORIAL) {
+		if (p_data->stage == STAGE_TUTORIAL) {
 			
 			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -40).ToIntXY(), 0xFFFFFF );
 			str.Draw();

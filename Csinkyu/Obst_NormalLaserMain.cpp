@@ -26,12 +26,12 @@ void NormalLaserMain::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 	Hx      = _Hx;                      // 砲台のX座標初期値（画面中央）
 	Hy      = _Hy;                      // 砲台のY座標初期値（画面上部）
 	Hm      = _Hm;                      // 砲台の移動速度
-	Hsc     = OBSTACLE4_SHOT_START+100; // 砲台の発射カウンタ初期値 
-	HscTm   = OBSTACLE4_SHOT_START;     // 砲台の発射タイミング初期値
+	Hsc     = LASER_NOR_SHOT_START+100; // 砲台の発射カウンタ初期値 
+	HscTm   = LASER_NOR_SHOT_START;     // 砲台の発射タイミング初期値
 	moveDir = _moveDir;                 // 初期方向を右に設定.
 
 	//フラッシュを無効化.
-	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++) {
+	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 		flashEffect[i].ValidFlag = 0;
 	}
 }
@@ -45,7 +45,7 @@ void NormalLaserMain::Update()
 		Hsc -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 		//エフェクトのカウンタを更新.
-		for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++) {
+		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 			//有効なら.
 			if (flashEffect[i].ValidFlag)
 			{
@@ -77,7 +77,7 @@ void NormalLaserMain::DrawObstFlash() {
 	// レーザー発射前の予告●を描画
 	DrawPreLaserDots();
 
-	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
+	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
 	{
 		if (flashEffect[i].ValidFlag == 0)
 		{
@@ -86,14 +86,14 @@ void NormalLaserMain::DrawObstFlash() {
 
 		//エフェクトの透明度を時間に応じて計算.
 		float alpha = 1.0f - (
-			flashEffect[i].Counter * OBSTACLE4_FLASH_ALPHA_TM / flashEffect[i].Duration
+			flashEffect[i].Counter * LASER_NOR_FLASH_ALPHA_TM / flashEffect[i].Duration
 		);
 		int alphaValue = _int_r(255 * alpha);
 		alphaValue = max(alphaValue, 0); //下限は0.
 
 		//エフェクトのサイズを時間に応じて拡大.
-		float sizeMultiplier = OBSTACLE4_FLASH_SIZE_INIT + (
-			flashEffect[i].Counter * OBSTACLE4_FLASH_SIZE_SPREAD / flashEffect[i].Duration
+		float sizeMultiplier = LASER_NOR_FLASH_SIZE_INIT + (
+			flashEffect[i].Counter * LASER_NOR_FLASH_SIZE_SPREAD / flashEffect[i].Duration
 		);
 		int effectSize = _int_r(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
@@ -158,8 +158,8 @@ void NormalLaserMain::DrawPreLaserDots() {
 		int blinkAlpha = _int_r(128 + 127 * sin(blinkProgress * M_PI * 8)); // 点滅
 
 		//サイズを徐々に大きく.
-		float dotSize  = (float)(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER1_SIZE);
-		float dotSize2 = (float)(3 + CalcNumEaseOut(blinkProgress) * OBSTACLE4_PRE_LASER2_SIZE);
+		float dotSize  = (float)(3 + CalcNumEaseOut(blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
+		float dotSize2 = (float)(3 + CalcNumEaseOut(blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
 		//円情報.
 		Circle cir = {{Hx, Hy}, dotSize, GetColor(0, 255, 255)};
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
@@ -200,14 +200,14 @@ void NormalLaserMain::enemy4Move()
 				CreateFlashEffect(Hx, Hy); //エフェクトを出す.
 			}
 
-			HscTm -= OBSTACLE4_SHOT_SPAN; //発射タイミングを変更.
+			HscTm -= LASER_NOR_SHOT_SPAN; //発射タイミングを変更.
 		}
 		//0秒を下回ったらもう一周.
 		if (Hsc <= 0) {
 			//タイマー再開(徐々に短くなる)
 			//発射開始時間より短くならないよう時間を設定.
-			Hsc   = OBSTACLE4_SHOT_START + OBSTACLE4_SHOT_RESET * p_data->spawnRate;
-			HscTm = OBSTACLE4_SHOT_START;
+			Hsc   = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * p_data->spawnRate;
+			HscTm = LASER_NOR_SHOT_START;
 		}
 	}
 }
@@ -218,7 +218,7 @@ void NormalLaserMain::CreateFlashEffect(double fx, double fy)
 	DBL_XY pPos = p_player->GetPos(); //プレイヤー座標取得.
 
 	//未使用のエフェクトスロットを探す.
-	for (int i = 0; i < OBSTACLE4_FLASH_MAX; i++)
+	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
 	{
 		if (flashEffect[i].ValidFlag == 0)
 		{
@@ -231,7 +231,7 @@ void NormalLaserMain::CreateFlashEffect(double fx, double fy)
 			flashEffect[i].y = fy;
 			flashEffect[i].angle = angle; // プレイヤーへの角度を保存
 			flashEffect[i].Counter = 0;
-			flashEffect[i].Duration = OBSTACLE4_FLASH_VALID_TM; //一定フレーム光る.
+			flashEffect[i].Duration = LASER_NOR_FLASH_VALID_TM; //一定フレーム光る.
 			flashEffect[i].BaseSize = 20; //基本サイズ
 			flashEffect[i].ValidFlag = 1;
 			break;

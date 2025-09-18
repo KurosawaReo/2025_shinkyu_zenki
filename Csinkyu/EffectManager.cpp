@@ -77,7 +77,7 @@ void EffectManager::Update() {
 					effect[i].pos.y += effect[i].vec.y * newSpeed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 
 					//時間経過で消滅.
-					if (effect[i].counter >= METEO_BREAK_ANIM_TIME) {
+					if (effect[i].counter >= METEOR_BREAK_ANIM_TIME) {
 						DeleteEffect(i);
 					}
 				}
@@ -169,7 +169,7 @@ void EffectManager::Draw() {
 					line.edPos = CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
 			        line.color = COLOR_METEO(effect[i].pos);
 					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEO_BREAK_ANIM_TIME));
+					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEOR_BREAK_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);

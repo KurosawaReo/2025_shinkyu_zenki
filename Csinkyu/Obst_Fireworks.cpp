@@ -11,7 +11,7 @@
 //#include <cstdlib>
 
 // 初期化
-void FireworksObstacle::Init() {
+void FireworksManager::Init() {
 
 	p_data     = GameData::GetPtr();
 	p_player   = Player::GetPtr();
@@ -34,7 +34,7 @@ void FireworksObstacle::Init() {
 }
 
 // リセット
-void FireworksObstacle::Reset() {
+void FireworksManager::Reset() {
 	spawnTimer = 120; // 最初は少し待機
 
 	// 既存の花火をすべてクリア
@@ -47,14 +47,14 @@ void FireworksObstacle::Reset() {
 }
 
 // ランダム位置生成
-void FireworksObstacle::GenerateRandomPosition(float& x, float& y) {
+void FireworksManager::GenerateRandomPosition(float& x, float& y) {
 	int margin = 80;
 	x = (float)(margin + (rand() % (WINDOW_WID - margin * 2)));
 	y = (float)(margin + (rand() % (WINDOW_HEI - margin * 2 - FIREWORKS_LAUNCH_HEIGHT)));
 }
 
 // 距離チェック
-bool FireworksObstacle::CheckDistance(float x, float y) {
+bool FireworksManager::CheckDistance(float x, float y) {
 	for (int i = 0; i < FIREWORKS_MAX; i++) {
 		if (fireworks[i].ValidFlag == 1) {
 			float dx = x - fireworks[i].targetX;
@@ -69,7 +69,7 @@ bool FireworksObstacle::CheckDistance(float x, float y) {
 }
 
 // 花火開始
-void FireworksObstacle::StartFireworks(float x, float y) {
+void FireworksManager::StartFireworks(float x, float y) {
 	for (int i = 0; i < FIREWORKS_MAX; i++) {
 		if (fireworks[i].ValidFlag == 0) {
 			fireworks[i].targetX = x;
@@ -89,7 +89,7 @@ void FireworksObstacle::StartFireworks(float x, float y) {
 }
 
 // 花火生成更新
-void FireworksObstacle::UpdateFireworksGeneration() {
+void FireworksManager::UpdateFireworksGeneration() {
 	spawnTimer -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
 	if (spawnTimer <= 0) {
@@ -116,7 +116,7 @@ void FireworksObstacle::UpdateFireworksGeneration() {
 }
 
 // 個別花火更新
-void FireworksObstacle::UpdateIndividualFireworks() {
+void FireworksManager::UpdateIndividualFireworks() {
 	for (int i = 0; i < FIREWORKS_MAX; i++) {
 		if (fireworks[i].ValidFlag == 0) continue;
 
@@ -141,7 +141,7 @@ void FireworksObstacle::UpdateIndividualFireworks() {
 }
 
 // 爆発処理
-void FireworksObstacle::ExplodeFireworks(int index) {
+void FireworksManager::ExplodeFireworks(int index) {
 	CreateFireworksSparks(fireworks[index].x, fireworks[index].y);
 
 	// 爆発音
@@ -150,7 +150,7 @@ void FireworksObstacle::ExplodeFireworks(int index) {
 }
 
 // 花火の火花作成（LaserManagerを使用）- 落下効果付き
-void FireworksObstacle::CreateFireworksSparks(float x, float y) {
+void FireworksManager::CreateFireworksSparks(float x, float y) {
 	int sparkCount = fireworks[0].sparkCount; // 仮で0番の火花数を使用
 
 	for (int i = 0; i < sparkCount; i++) {
@@ -177,13 +177,13 @@ void FireworksObstacle::CreateFireworksSparks(float x, float y) {
 }
 
 // 更新
-void FireworksObstacle::Update() {
+void FireworksManager::Update() {
 	UpdateFireworksGeneration();
 	UpdateIndividualFireworks();
 }
 
 // 描画
-void FireworksObstacle::Draw() {
+void FireworksManager::Draw() {
 	for (int i = 0; i < FIREWORKS_MAX; i++) {
 		if (fireworks[i].ValidFlag == 0) continue;
 
@@ -198,7 +198,7 @@ void FireworksObstacle::Draw() {
 }
 
 // 予告エフェクト描画
-void FireworksObstacle::DrawWarningEffect(int index) {
+void FireworksManager::DrawWarningEffect(int index) {
 	float elapsedTime = fireworks[index].Duration - fireworks[index].Counter;
 
 	// 点滅エフェクト

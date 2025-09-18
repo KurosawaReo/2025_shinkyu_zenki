@@ -19,8 +19,8 @@ enum MeteorState
 struct MeteorShape
 {
 	int   lineCnt{};					 //隕石を何角形にするか.
-	float lineDis[METEO_LINE_CNT_MAX]{}; //隕石の中心からの頂点の距離.
-	Line  line   [METEO_LINE_CNT_MAX]{}; //隕石を構成する線. 
+	float lineDis[METEOR_LINE_CNT_MAX]{}; //隕石の中心からの頂点の距離.
+	Line  line   [METEOR_LINE_CNT_MAX]{}; //隕石を構成する線. 
 };
 
 //隕石(単体)

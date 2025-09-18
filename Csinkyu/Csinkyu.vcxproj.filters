@@ -5,11 +5,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LaserManager.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
-    <ClCompile Include="Obstacle2.cpp" />
-    <ClCompile Include="Obstacle4.cpp" />
-    <ClCompile Include="Obstacle4main.cpp" />
-    <ClCompile Include="Obstacle5.cpp" />
+    <ClCompile Include="Obst_NormalLaser.cpp" />
+    <ClCompile Include="Obst_NormalLaserMain.cpp" />
+    <ClCompile Include="Obst_Ripples.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
@@ -18,7 +16,7 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="KR_Lib\KR_Sound.cpp" />
     <ClCompile Include="EffectManager.cpp" />
-    <ClCompile Include="MapGimmickLaser.cpp" />
+    <ClCompile Include="Obst_StraightLaser.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="KR_Lib\KR_Calc.cpp" />
     <ClCompile Include="KR_Lib\KR_Draw.cpp" />
@@ -26,23 +24,22 @@
     <ClCompile Include="KR_Lib\KR_Input.cpp" />
     <ClCompile Include="KR_Lib\KR_Object.cpp" />
     <ClCompile Include="Global.h" />
-    <ClCompile Include="FireworksObstacle.cpp" />
+    <ClCompile Include="Obst_Fireworks.cpp" />
     <ClCompile Include="KR_Lib\KR_Debug.cpp" />
     <ClCompile Include="KR_Lib\KR_Main.cpp" />
     <ClCompile Include="KR_Lib\KR_Scene.cpp" />
-    <ClCompile Include="TutorialManager.cpp" />
+    <ClCompile Include="Stage_Tutorial.cpp" />
     <ClCompile Include="MenuManager.cpp" />
-    <ClCompile Include="Meteor.cpp" />
-    <ClCompile Include="MeteorManager.cpp" />
+    <ClCompile Include="Obst_Meteor.cpp" />
+    <ClCompile Include="Obst_MeteorManager.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="Stage_Endless.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />
-    <ClInclude Include="Obstacle.h" />
-    <ClInclude Include="Obstacle2.h" />
-    <ClInclude Include="Obstacle4.h" />
-    <ClInclude Include="Obstacle4main.h" />
-    <ClInclude Include="Obstacle5.h" />
+    <ClInclude Include="Obst_NormalLaser.h" />
+    <ClInclude Include="Obst_NormalLaserMain.h" />
+    <ClInclude Include="Obst_Ripples.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="KR_Lib\KR_Global.h" />
     <ClInclude Include="Item.h" />
@@ -51,21 +48,22 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="KR_Lib\KR_Sound.h" />
     <ClInclude Include="EffectManager.h" />
-    <ClInclude Include="MapGimmickLaser.h" />
+    <ClInclude Include="Obst_StraightLaser.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="KR_Lib\KR_Calc.h" />
     <ClInclude Include="KR_Lib\KR_Draw.h" />
     <ClInclude Include="KR_Lib\KR_File.h" />
     <ClInclude Include="KR_Lib\KR_Input.h" />
     <ClInclude Include="KR_Lib\KR_Object.h" />
-    <ClInclude Include="FireworksObstacle.h" />
+    <ClInclude Include="Obst_Fireworks.h" />
     <ClInclude Include="KR_Lib\KR_Debug.h" />
     <ClInclude Include="KR_Lib\KR_Main.h" />
     <ClInclude Include="KR_Lib\KR_Scene.h" />
-    <ClInclude Include="TutorialManager.h" />
+    <ClInclude Include="Stage_Tutorial.h" />
     <ClInclude Include="MenuManager.h" />
-    <ClInclude Include="Meteor.h" />
-    <ClInclude Include="MeteorManager.h" />
+    <ClInclude Include="Obst_Meteor.h" />
+    <ClInclude Include="Obst_MeteorManager.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="Stage_Endless.h" />
   </ItemGroup>
 </Project>

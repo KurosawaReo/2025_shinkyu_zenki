@@ -28,8 +28,8 @@ void Meteor::Update() {
 	if (active) {
 
 		//移動.
-		pos.x += vel.x * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-		pos.y += vel.y * METEO_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		pos.x += vel.x * METEOR_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		pos.y += vel.y * METEOR_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
 		//回転.
 		ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
@@ -38,7 +38,7 @@ void Meteor::Update() {
 		{
 			case Meteor_Normal:
 				//画面外で消去.
-				if (IsOutInArea(pos, { METEO_LINE_DIS_MAX*2, METEO_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, true)){
+				if (IsOutInArea(pos, { METEOR_LINE_DIS_MAX*2, METEOR_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, true)){
 					active = false; //無効にする.
 				}
 				break;
@@ -47,7 +47,7 @@ void Meteor::Update() {
 				//破壊量の度合.
 				destroyCntr += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 				//時間が終了したら.
-				if (destroyCntr >= METEO_DEST_TIME) {
+				if (destroyCntr >= METEOR_DEST_TIME) {
 					state  = Meteor_Normal; //元に戻す.
 					active = false;        //消滅.
 				}
@@ -66,7 +66,7 @@ void Meteor::Draw() {
 	if (active) {
 		//破壊モード限定.
 		if (state == Meteor_Destroy) {
-			int pow = _int_r(255 * (1-destroyCntr/METEO_DEST_TIME)); //少しずつ減少(255→0)
+			int pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
 			SetDrawBlendModeST(MODE_ADD, pow);
 		}
 
@@ -93,18 +93,18 @@ void Meteor::Spawn() {
 	//50%:上下端から出現.
 	if (rnd1 < 50) {
 		pos.x = RandNum(0, WINDOW_WID);                                                 //xの設定.
-		pos.y = (rnd2 < 50) ? 0 - METEO_LINE_DIS_MAX : WINDOW_HEI + METEO_LINE_DIS_MAX; //yの設定.
+		pos.y = (rnd2 < 50) ? 0 - METEOR_LINE_DIS_MAX : WINDOW_HEI + METEOR_LINE_DIS_MAX; //yの設定.
 	}
 	//50%:左右端から出現.
 	else {
-		pos.x = (rnd2 < 50) ? 0 - METEO_LINE_DIS_MAX : WINDOW_WID + METEO_LINE_DIS_MAX; //xの設定.
+		pos.x = (rnd2 < 50) ? 0 - METEOR_LINE_DIS_MAX : WINDOW_WID + METEOR_LINE_DIS_MAX; //xの設定.
 		pos.y = RandNum(0, WINDOW_HEI);                                                 //yの設定.
 	}
 
 	//目標地点の抽選.
 	{
-		goalPos.x = RandNum(WINDOW_WID/2 - METEO_GOAL_RAND_RANGE, WINDOW_WID/2 + METEO_GOAL_RAND_RANGE);
-		goalPos.y = RandNum(WINDOW_HEI/2 - METEO_GOAL_RAND_RANGE, WINDOW_HEI/2 + METEO_GOAL_RAND_RANGE);
+		goalPos.x = RandNum(WINDOW_WID/2 - METEOR_GOAL_RAND_RANGE, WINDOW_WID/2 + METEOR_GOAL_RAND_RANGE);
+		goalPos.y = RandNum(WINDOW_HEI/2 - METEOR_GOAL_RAND_RANGE, WINDOW_HEI/2 + METEOR_GOAL_RAND_RANGE);
 		//目標地点までの角度を求める.
 		double rad = atan2(goalPos.y - pos.y, goalPos.x - pos.x);
 		//xとyのvectorに分解.
@@ -114,10 +114,10 @@ void Meteor::Spawn() {
 	//隕石の設定.
 	{
 		//何角形にするか.
-		shape.lineCnt = RandNum(METEO_LINE_CNT_MIN, METEO_LINE_CNT_MAX);
+		shape.lineCnt = RandNum(METEOR_LINE_CNT_MIN, METEOR_LINE_CNT_MAX);
 		//頂点の位置を抽選.
 		for (int i = 0; i < shape.lineCnt; i++) {
-			shape.lineDis[i] = (float)RandNum(METEO_LINE_DIS_MIN*10, METEO_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
+			shape.lineDis[i] = (float)RandNum(METEOR_LINE_DIS_MIN*10, METEOR_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
 		}
 	}
 

@@ -140,6 +140,7 @@
 #include "BackGround.h"
 #include "MenuManager.h"
 #include "Stage_Tutorial.h"
+#include "Stage_Endless.h"
 
 #include "LaserManager.h"
 #include "Obst_NormalLaser.h"
@@ -161,7 +162,8 @@
 GameData         *gameData     = GameData::GetPtr();
 BackGround       *bg           = BackGround::GetPtr();
 MenuManager      *menuMng      = MenuManager::GetPtr();
-TutorialStage    *tutorialMng  = TutorialStage::GetPtr();
+TutorialStage    *tutorialStg  = TutorialStage::GetPtr();
+EndlessStage     *endlessStg   = EndlessStage::GetPtr();
 LaserManager     *laserMng     = LaserManager::GetPtr();
 MeteorManager    *meteorMng    = MeteorManager::GetPtr();
 Ripples          *ripples      = Ripples::GetPtr();
@@ -224,10 +226,12 @@ void GameManager::Init() {
 	p_input->AddAction(_T("GamePause"), KEY_P);               //キー操作.
 	p_input->AddAction(_T("GamePause"), PAD_ACD_BTN_UPPER_2); //アーケード操作.
 
-	//シーンタイマー初期化.
+	//タイマー初期化.
 	for(int i = 0; i < SCENE_COUNT; i++){
 		tmScene[i] = Timer(COUNT_UP, 0);
 	}
+	tmGameTime = Timer(COUNT_UP, 0);
+	tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME);
 
 	//Init処理
 	{
@@ -242,7 +246,8 @@ void GameManager::Init() {
 
 		bg->Init();
 		menuMng->Init();
-		tutorialMng->Init();
+		tutorialStg->Init();
+		endlessStg->Init();
 		laserMng->Init();
 		meteorMng->Init();
 		ripples->Init();
@@ -270,8 +275,6 @@ void GameManager::Reset() {
 		gameData->bestScore = gameData->score; //ハイスコア記録.
 	}
 
-	//シーン.
-	gameData->scene = SCENE_TITLE;
 	//データ.
 	gameData->scoreBef  = 0;
 	gameData->score     = 0;
@@ -281,6 +284,7 @@ void GameManager::Reset() {
 	gameData->level     = 1;     //最初はLv1
 	isTitleAnim         = false;
 	isBestScoreSound    = false;
+	isGameStart         = false;
 	//サウンド.
 	p_sound->StopAll();
 	p_sound->Play(_T("BGM_Menu"), true, 90); //メニューBGMを流す.
@@ -288,6 +292,7 @@ void GameManager::Reset() {
 	for (int i = 0; i < SCENE_COUNT; i++) {
 		tmScene[i].Reset();
 	}
+	tmGameTime.Reset();
 
 	{
 		//レーザー系.
@@ -295,7 +300,7 @@ void GameManager::Reset() {
 		ResetStrLaser();
 
 		menuMng->Reset();
-		tutorialMng->Reset();
+		tutorialStg->Reset();
 		laserMng->Reset();
 		meteorMng->Reset();
 		ripples->Reset();
@@ -309,14 +314,13 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
+	p_input->UpdateKey();    //キー入力更新.
+	p_input->UpdatePad();    //コントローラ入力更新.
+	p_input->UpdateAction(); //アクション更新.
+	p_sound->Update();       //サウンド更新.
+
 	//ポーズしてなければ.
 	if (gameData->scene != SCENE_PAUSE) {
-
-		p_input->UpdateKey();    //キー入力更新.
-		p_input->UpdatePad();    //コントローラ入力更新.
-		p_input->UpdateAction(); //アクション更新.
-		p_sound->Update();       //サウンド更新.
-
 		bg->Update();        //背景.
 		effectMng->Update(); //エフェクト.
 	}
@@ -360,7 +364,6 @@ void GameManager::Draw() {
 	}
 
 	effectMng->Draw(); //エフェクト.
-	uiMng->Draw();     //UI.
 }
 
 //通常レーザーのリセット.
@@ -419,29 +422,6 @@ void GameManager::UpdateTitle()
 void GameManager::UpdateMenu() {
 	menuMng->Update();
 }
-void GameManager::UpdateReady() {
-
-	//シーンタイマー開始.
-	if (!tmScene[SCENE_READY].GetIsMove()) {
-		tmScene[SCENE_READY].Start();
-	}
-
-	player->Update(); //プレイヤー.
-
-	//一定時間経ったら.
-	if (tmScene[SCENE_READY].GetPassTime() >= GAME_START_TIME) {
-
-		gameData->scene = SCENE_GAME; //ゲームシーンへ.
-
-		//サウンド.
-		p_sound->Play(_T("LevelUp"), false, 100);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_Endless_Level1;
-		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
-		effectMng->SpawnEffect(&data);
-	}
-}
 void GameManager::UpdateGame() {
 	
 #if defined _DEBUG //Releaseでは入れない.
@@ -456,87 +436,39 @@ void GameManager::UpdateGame() {
 		tmScene[SCENE_GAME].Start();
 	}
 
-	//カウンター増加.
-	gameData->counter += ((gameData->isSlow) ? SLOW_MODE_SPEED : 1);
-	//出現間隔.
-	gameData->spawnRate = 1.0f/(1 + (gameData->counter/8000)); //100%から少しずつ減少.
-	//レベル管理.
-	switch (gameData->level)
-	{
-		case 1:
-			if (gameData->counter >= 1500) { //1500 = 出現間隔約??%地点.
-				gameData->level = 2; //Lv2へ.
+	//ゲーム開始前.
+	if (!isGameStart) {
+		//一定時間経ったら.
+		if (tmScene[SCENE_GAME].GetPassTime() >= GAME_START_TIME) {
 
-				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
-				//エフェクト.
-				EffectData data{};
-				data.type = Effect_Endless_Level2;
-				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng->SpawnEffect(&data);
-			}
-			break;
-		case 2:
-			if (gameData->counter >= 3500) { //3500 = 出現間隔約??%地点.
-				gameData->level = 3; //Lv3へ.
+			tmGameTime.Start(); //ゲーム時間計測開始.
+			isGameStart = true; //ゲーム開始.
+		}
+	}
+	//ゲーム開始後.
+	else{
 
-				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
-				//エフェクト.
-				EffectData data{};
-				data.type = Effect_Endless_Level3;
-				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng->SpawnEffect(&data);
-			}
-			break;
-		case 3:
-			if (gameData->counter >= 6000) { //6000 = 出現間隔約??%地点.
-				gameData->level = 4; //Lv4へ.
+		UpdateObjects();  //オブジェクト.
+		UpdateSlowMode(); //スローモード.
 
-				ResetStrLaser();
-				item->AddItemCnt(); //アイテムを増やす.
+		//ステージ別.
+		switch (gameData->stage) 
+		{
+			case STAGE_TUTORIAL: tutorialStg->Update(); break;
+			case STAGE_ENDLESS:  endlessStg->Update();  break;
 
-				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
-				//エフェクト.
-				EffectData data{};
-				data.type = Effect_Endless_Level4;
-				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng->SpawnEffect(&data);
-			}
-			break;
-		case 4:
-			if (gameData->counter >= 9000) { //9000 = 出現間隔約??%地点.
-				gameData->level = 5; //Lv5へ.
-
-				ResetNorLaser();
-
-				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
-				//エフェクト.
-				EffectData data{};
-				data.type = Effect_Endless_Level5;
-				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng->SpawnEffect(&data);
-			}
-			break;
-		case 5:
-			//最終レベル.
-			break;
-
-		default: assert(false); break;
+			default: assert(FALSE); break;
+		}
+		//ポーズ.
+		if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
+			Debug::Log(L"a");
+			gameData->scene = SCENE_PAUSE;
+			tmGameTime.Stop(); //一時停止.
+			tmSlowMode.Stop(); //一時停止.
+		}
 	}
 
 	player->Update(); //プレイヤー.
-	UpdateObjects();  //オブジェクト.
-	UpdateSlowMode(); //スローモード.
-	
-	//ポーズする.
-	if(p_input->IsPushActionTime(_T("GamePause")) == 1){
-		gameData->scene = SCENE_PAUSE;
-		tmScene[SCENE_GAME].Stop(); //一時停止.
-		tmSlowMode.Stop();          //一時停止.
-	}
 }
 void GameManager::UpdateEnd() {
 
@@ -553,12 +485,14 @@ void GameManager::UpdateEnd() {
 	}
 }
 void GameManager::UpdatePause() {
+	
+	Debug::Log(L"b");
 
 	//ポーズ解除.
 	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
 		gameData->scene = SCENE_GAME;
-		tmScene[SCENE_GAME].Start(); //再開.
+		tmGameTime.Start(); //再開.
 		//スローモード中だったなら.
 		if (tmSlowMode.GetPassTime() < SLOW_MODE_TIME) {
 			tmSlowMode.Start(); //再開.
@@ -723,10 +657,11 @@ void GameManager::DrawGame() {
 	DrawObjects();      //オブジェクト.
 	player->Draw();     //プレイヤー.
 	DrawReflectMode();  //反射モード演出.
+	uiMng->Draw();      //UI.
 }
 void GameManager::DrawEnd() {
 	
-	DrawObjects();     //オブジェクト.
+	DrawObjects(); //オブジェクト.
 	{
 		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
@@ -735,6 +670,7 @@ void GameManager::DrawEnd() {
 		DrawBoxST(&box, ANC_LU); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
+	uiMng->Draw(); //UI.
 
 	//終了案内.
 	{
@@ -745,7 +681,7 @@ void GameManager::DrawEnd() {
 		TCHAR text[256];
 		_stprintf(
 			text, _T("%d + %d(%.3f秒) = %d点"),
-			gameData->scoreBef, (int)(tmScene[SCENE_GAME].GetPassTime() * 10), tmScene[SCENE_GAME].GetPassTime(), gameData->score
+			gameData->scoreBef, _int(tmGameTime.GetPassTime() * 10), tmGameTime.GetPassTime(), gameData->score
 		);
 		//テキストの設定.
 		DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
@@ -867,25 +803,25 @@ void GameManager::GameEnd() {
 
 		gameData->scene = SCENE_END; //ゲーム終了へ.
 	
-		tmScene[SCENE_GAME].Stop(); //停止.
-		gameData->isSlow = false;
+		tmGameTime.Stop(); //停止.
 		tmSlowMode.Reset();
+		gameData->isSlow = false;
 
 		//記録リセット.
 		for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 			isItemCountDownSound[i] = false;
 		}
 
-		gameData->scoreBef = gameData->score;                             //時間加算前のスコアを記録.
-		gameData->score += (int)(tmScene[SCENE_GAME].GetPassTime() * 10); //時間ボーナス加算.
+		gameData->scoreBef = gameData->score;                   //時間加算前のスコアを記録.
+		gameData->score += _int(tmGameTime.GetPassTime() * 10); //時間ボーナス加算.
 
 		//最高スコア更新なら保存.
 		if (gameData->score > gameData->bestScore) {
 
 			File file;
-			file.MakeDir(FILE_DATA_PATH);  //フォルダ作成.
-			file.Open(FILE_DATA, _T("w")); //ファイルを開く.
-			file.WriteInt(gameData->score);     //スコアを保存.
+			file.MakeDir(FILE_DATA_PATH);   //フォルダ作成.
+			file.Open(FILE_DATA, _T("w"));  //ファイルを開く.
+			file.WriteInt(gameData->score); //スコアを保存.
 		}
 
 		//サウンド.
@@ -898,7 +834,7 @@ void GameManager::GameEnd() {
 				p_sound->FadeOutPlay(_T("BGM_Endless"), 2);
 				break;
 
-			default: assert(false); break;
+			default: assert(FALSE); break;
 		}
 		//ゲームオーバーBGM.
 		p_sound->Play(_T("BGM_Over"), true, 68);

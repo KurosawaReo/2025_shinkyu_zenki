@@ -60,28 +60,37 @@ void MenuManager::Update() {
 
 	InputMng* input = InputMng::GetPtr();
 
-	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) { //長押しにも対応.
-		selectedIndex = (selectedIndex - 1 + 3) % 3;
+	//カーソル移動操作.
+	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) {   //長押しにも対応.
+		selectedIndex = (selectedIndex - 1) % 3;
 	}
 	if (input->IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;
 	}
 
+	//決定操作.
 	if (input->IsPushActionTime(_T("MENU_NEXT")) == 1) {
-		if (selectedIndex == 0) {
-			p_data->scene = SCENE_READY;
-			p_data->stage = STAGE_ENDLESS;
-			p_sound->StopAll();
-			p_sound->Play(_T("BGM_Endless"), true, 68);
-		}
-		else if (selectedIndex == 1) {
-			p_data->scene = SCENE_TUTORIAL;
-			p_data->stage = STAGE_TUTORIAL;
-			p_sound->StopAll();
-			p_sound->Play(_T("BGM_Tutorial"), true, 50);
-		}
-		else if (selectedIndex == 2) {
-			GameManager::GetPtr()->Reset(); //タイトルへ.
+		
+		switch (selectedIndex) 
+		{
+			case 0:
+				p_data->scene = SCENE_GAME;
+				p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
+				p_sound->StopAll();
+				p_sound->Play(_T("BGM_Endless"), true, 68);
+				break;
+			case 1:
+				p_data->scene = SCENE_GAME;
+				p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
+				p_sound->StopAll();
+				p_sound->Play(_T("BGM_Tutorial"), true, 50);
+				break;
+			case 2:
+				p_data->scene = SCENE_TITLE;    //タイトルへ.
+				GameManager::GetPtr()->Reset(); //リセット.
+				break;
+
+			default: assert(FALSE); break;
 		}
 	}
 

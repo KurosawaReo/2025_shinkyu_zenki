@@ -86,7 +86,7 @@ void StraightLaser::Update()
 
 		//タイマー再開(徐々に短くなる)
 		//予測線の出る時間より短くならないよう設定.
-		laserSpawnTimer = LASER_STR_PREDICTION_TIME + RIPPLES_SPAWN_SPAN * p_data->spawnRate;
+		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * p_data->spawnRate;
 
 		showPrediction = false;
 		predictionTimer = 0;

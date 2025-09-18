@@ -46,7 +46,8 @@ public: //実体.
 private: //データ.
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
-	Timer tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME); //スロー継続時間.
+	Timer tmGameTime{};     //ゲーム計測時間.
+	Timer tmSlowMode{};     //スロー継続時間.
 
 	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
 	DrawImg imgUI{};        //UI画像.
@@ -58,6 +59,8 @@ private: //データ.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
+	bool isGameStart{};             //ゲーム開始サイン.
+
 	InputMng* p_input{};
 	SoundMng* p_sound{};
 
@@ -68,6 +71,9 @@ public:
 	}
 	float GetSceneTime(Scene scene) {
 		return tmScene[scene].GetPassTime();
+	}
+	float GetGameTime() {
+		return tmGameTime.GetPassTime();
 	}
 
 	//メイン処理.

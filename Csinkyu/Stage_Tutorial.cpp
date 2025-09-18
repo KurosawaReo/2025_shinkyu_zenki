@@ -125,6 +125,7 @@ void TutorialStage::UpdateStep4() {
 	//チュートリアル終了.
 	if (p_input->IsPushKeyTime(KEY_0) == 1) {
 		//タイトルへ(全てリセット)
+		p_data->scene = SCENE_TITLE;
 		GameManager::GetPtr()->Reset();
 	}
 }
