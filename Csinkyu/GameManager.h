@@ -46,10 +46,11 @@ public: //実体.
 private: //データ.
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
-	Timer tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME); //スロー継続時間.
+	Timer tmGameTime{};     //ゲーム計測時間.
+	Timer tmSlowMode{};     //スロー継続時間.
 
 	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
-	DrawImg imgUI[4]{};     //UI画像.
+	DrawImg imgUI{};        //UI画像.
 	DrawImg imgNewRecord{}; //new record.
 	DrawImg imgGameOver{};  //gameover.
 	DrawImg imgReflect{};   //reflect.
@@ -58,6 +59,8 @@ private: //データ.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
+	bool isGameStart{};             //ゲーム開始サイン.
+
 	InputMng* p_input{};
 	SoundMng* p_sound{};
 
@@ -65,6 +68,12 @@ public:
 	//get.
 	float GetSlowModeTime() {
 		return tmSlowMode.GetPassTime();
+	}
+	float GetSceneTime(Scene scene) {
+		return tmScene[scene].GetPassTime();
+	}
+	float GetGameTime() {
+		return tmGameTime.GetPassTime();
 	}
 
 	//メイン処理.
@@ -80,8 +89,6 @@ public:
 	//Update.
 	void UpdateTitle();
 	void UpdateMenu();
-	void UpdateTutorial();
-	void UpdateReady();
 	void UpdateGame();
 	void UpdateEnd();
 	void UpdatePause();
@@ -92,13 +99,10 @@ public:
 	//Draw.
 	void DrawTitle();
 	void DrawMenu();
-	void DrawTutorial();
-	void DrawReady();
 	void DrawGame();
 	void DrawEnd();
 	void DrawPause();
 
-	void DrawUI();
 	void DrawObjects();
 	void DrawReflectMode();
 

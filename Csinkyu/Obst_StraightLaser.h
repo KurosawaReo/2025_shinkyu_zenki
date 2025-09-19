@@ -1,16 +1,17 @@
-/* 
-   - MapGimmickLaserManager.h -
-   マップギミック用の直線レーザー管理.
+/*
+   - Obst_StraightLaser.h -
+
+   障害物: 直線レーザー.
 */
 #pragma once
 //#include "MeteoManager.h"
 
 //直線レーザー管理.[継承不可]
-class MapGimmickLaser final
+class StraightLaser final
 {
 public: //実体.
-	static MapGimmickLaser* GetPtr() {
-		static MapGimmickLaser inst; //自身のインスタンス.
+	static StraightLaser* GetPtr() {
+		static StraightLaser inst; //自身のインスタンス.
 		return &inst;
 	}
 
@@ -42,17 +43,3 @@ public:
 	void SpawnStraightLaser();   // 直線レーザー発射.
 	void DrawPredictionLine();
 };
-
-//↑のクラスの実体を2つ出せばいいため不要.
-#if false
-#include "Player.h"
-#include "MapGimmickLaserManager.h"
-class MapGimmickLaser : public MapGimmickLaserManager
-{
-public:
-
-
-private:
-
-};
-#endif

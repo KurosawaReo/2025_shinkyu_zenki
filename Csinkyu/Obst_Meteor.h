@@ -1,6 +1,7 @@
 /*
-   - Meteor.h -
-   降ってくる隕石.
+   - Obst_Meteor.h -
+   
+   障害物: 隕石.
 */
 #pragma once
 #include "Player.h"
@@ -18,8 +19,8 @@ enum MeteorState
 struct MeteorShape
 {
 	int   lineCnt{};					 //隕石を何角形にするか.
-	float lineDis[METEO_LINE_CNT_MAX]{}; //隕石の中心からの頂点の距離.
-	Line  line   [METEO_LINE_CNT_MAX]{}; //隕石を構成する線. 
+	float lineDis[METEOR_LINE_CNT_MAX]{}; //隕石の中心からの頂点の距離.
+	Line  line   [METEOR_LINE_CNT_MAX]{}; //隕石を構成する線. 
 };
 
 //隕石(単体)
@@ -56,7 +57,7 @@ public:
 
 	void Spawn();				//隕石出現. 
 	void Destroy();				//隕石破壊.
-	bool IsHitMeteor(Circle*);	//隕石の当たり判定.
+	bool IsHitMeteor(Circle);	//隕石の当たり判定.
 
 	void UpdateMeteoLine();		//隕石を構成する線の更新.
 };

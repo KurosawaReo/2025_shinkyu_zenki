@@ -1,5 +1,9 @@
 #pragma once
 
+//前方宣言.
+class Player;
+class EffectManager;
+
 //アイテムタイプ.
 enum ItemType
 {

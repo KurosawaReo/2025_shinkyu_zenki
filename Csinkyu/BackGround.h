@@ -3,7 +3,9 @@
 */
 #pragma once
 
-class BackGround; //前方宣言.
+//前方宣言.
+class GameData; 
+class BackGround;
 
 //背景タイル.
 class BG_Tile

@@ -1,14 +1,14 @@
 /*
-   - Obstacle4.cpp -
+   - Obst_NormalLaser.cpp -
 
-   レーザーの継承先クラス.
-   砲台(不可視)を左右で違う動きにするため、overrideを使用.
+   障害物: レーザー発射台(継承先)
+   個体によって違う動きをするため、overrideを使用.
 */
 #include "GameManager.h"
-#include "Obstacle4.h" // 自身のヘッダーファイル
+#include "Obst_NormalLaser.h"
 
 //obstacle4mainのMove関数をobstacle4用に上書き.
-void Obstacle4_1::Move()
+void NormalLaser_1::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
@@ -18,29 +18,29 @@ void Obstacle4_1::Move()
 	{
 	case MOVE_LEFT:
 		Hx -= moveSpeed;
-		if (Hx < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hx = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hx = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_UP;
 		}
 		break;
 	case MOVE_RIGHT:
 		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - OBSTACLE4_OUTER_MARGIN) {
-			Hx = WINDOW_WID - OBSTACLE4_OUTER_MARGIN;
+		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
+			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_DOWN;
 		}
 		break;
 	case MOVE_DOWN:
 		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - OBSTACLE4_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - OBSTACLE4_OUTER_MARGIN;
+		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
+			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_LEFT;
 		}
 		break;
 	case MOVE_UP:
 		Hy -= moveSpeed;
-		if (Hy < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hy = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hy = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_RIGHT;
 		}
 		break;
@@ -48,7 +48,7 @@ void Obstacle4_1::Move()
 }
 
 //obstacle4mainのMove関数をobstacle5用に上書き.
-void Obstacle4_2::Move()
+void NormalLaser_2::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
@@ -58,29 +58,29 @@ void Obstacle4_2::Move()
 	{
 	case MOVE_LEFT:
 		Hx -= moveSpeed;
-		if (Hx < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hx = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hx = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_DOWN;
 		}
 		break;
 	case MOVE_RIGHT:
 		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - OBSTACLE4_OUTER_MARGIN) {
-			Hx = WINDOW_WID - OBSTACLE4_OUTER_MARGIN;
+		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
+			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_UP;
 		}
 		break;
 	case MOVE_DOWN:
 		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - OBSTACLE4_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - OBSTACLE4_OUTER_MARGIN;
+		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
+			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_RIGHT;
 		}
 		break;
 	case MOVE_UP:
 		Hy -= moveSpeed;
-		if (Hy < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hy = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hy = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_LEFT;
 		}
 		break;
@@ -88,7 +88,7 @@ void Obstacle4_2::Move()
 }
 
 //obstacle4mainのMove関数をobstacle5用に上書き.
-void Obstacle4_3::Move()
+void NormalLaser_3::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * ((p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
@@ -98,29 +98,29 @@ void Obstacle4_3::Move()
 	{
 	case MOVE_LEFT:
 		Hx -= moveSpeed;
-		if (Hx < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hx = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hx = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_DOWN;
 		}
 		break;
 	case MOVE_RIGHT:
 		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - OBSTACLE4_OUTER_MARGIN) {
-			Hx = WINDOW_WID - OBSTACLE4_OUTER_MARGIN;
+		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
+			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_UP;
 		}
 		break;
 	case MOVE_DOWN:
 		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - OBSTACLE4_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - OBSTACLE4_OUTER_MARGIN;
+		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
+			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_RIGHT;
 		}
 		break;
 	case MOVE_UP:
 		Hy -= moveSpeed;
-		if (Hy < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hy = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hy = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_LEFT;
 		}
 		break;
@@ -128,7 +128,7 @@ void Obstacle4_3::Move()
 }
 
 //obstacle4mainのMove関数をobstacle4用に上書き.
-void Obstacle4_4::Move()
+void NormalLaser_4::Move()
 {
 	// 移動速度
 	float moveSpeed = Hm * ((p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1);
@@ -138,29 +138,29 @@ void Obstacle4_4::Move()
 	{
 	case MOVE_LEFT:
 		Hx -= moveSpeed;
-		if (Hx < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hx = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hx = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_UP;
 		}
 		break;
 	case MOVE_RIGHT:
 		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - OBSTACLE4_OUTER_MARGIN) {
-			Hx = WINDOW_WID - OBSTACLE4_OUTER_MARGIN;
+		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
+			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_DOWN;
 		}
 		break;
 	case MOVE_DOWN:
 		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - OBSTACLE4_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - OBSTACLE4_OUTER_MARGIN;
+		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
+			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_LEFT;
 		}
 		break;
 	case MOVE_UP:
 		Hy -= moveSpeed;
-		if (Hy < 0 + OBSTACLE4_OUTER_MARGIN) {
-			Hy = 0 + OBSTACLE4_OUTER_MARGIN;
+		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
+			Hy = 0 + LASER_NOR_OUTER_MARGIN;
 			moveDir = MOVE_RIGHT;
 		}
 		break;

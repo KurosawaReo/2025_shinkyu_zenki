@@ -83,12 +83,14 @@ void ItemManager::Draw()
 				Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
 				DrawBoxST(&box1, ANC_MID, false);
 				DrawBoxST(&box2, ANC_MID, false);
+
+				//チュートリアル用.
+				if (p_gamedata->stage == STAGE_TUTORIAL) {
+
+					DrawStr str(_T("アイテム"), box1.pos.Add(0, -30).ToIntXY(), 0xFFFFFF);
+					str.Draw();
+				}
 			}
-		
-			// 画像を使用する場合のコード例
-			// if (itemGraph != -1) {
-			//     DrawGraph((int)itemX, (int)itemY, itemGraph, true);
-			// }
 		}
 	}
 }
@@ -126,9 +128,9 @@ void ItemManager::CheckHitPlayer(int idx)
 	}
 
 	//プレイヤーの判定を取得.
-	Circle* plyHit = p_player->GetHit();
+	Circle plyHit = p_player->GetHit();
 	//当たり判定を四角形とする.
-	Box plyBox  = { plyHit->pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
+	Box plyBox  = { plyHit.pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
 	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//当たった場合.

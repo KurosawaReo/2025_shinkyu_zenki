@@ -1,20 +1,21 @@
 /*
-   - MapGimmickLaserManager.cpp -
-   マップギミック用の直線レーザー管理.
+   - Obst_StraightLaser.h -
+
+   障害物: 直線レーザー.
 */
 #include "Player.h"
 #include "GameManager.h"
-#include "MeteorManager.h"
 #include "LaserManager.h"
+#include "Obst_MeteorManager.h"
 
-#include "MapGimmickLaser.h"
+#include "Obst_StraightLaser.h"
 
 using namespace Calc; //計算機能を使用.
 
 /// <summary>
 /// リセットするぜ.
 /// </summary>
-void MapGimmickLaser::Init()
+void StraightLaser::Init()
 {
 	//実態取得するぜ.
 	p_data      = GameData::GetPtr();
@@ -32,9 +33,9 @@ void MapGimmickLaser::Init()
 /// <summary>
 /// リセットするよ～ん
 /// </summary>
-void MapGimmickLaser::Reset()
+void StraightLaser::Reset()
 {
-	laserSpawnTimer = MGL_LASER_PREDICTION_TIME+80; //予測線が出るタイミングから開始.
+	laserSpawnTimer = LASER_STR_PREDICTION_TIME+80; //予測線が出るタイミングから開始.
 	nextLaserIndex = 0;
 	predictionTimer = 0;
 	showPrediction = false;
@@ -43,7 +44,7 @@ void MapGimmickLaser::Reset()
 /// <summary>
 /// 更新するぜ.
 /// </summary>
-void MapGimmickLaser::Update()
+void StraightLaser::Update()
 {
 	plyPos = p_player->GetPos();//プレイヤーの現在位置を取得.
 
@@ -51,7 +52,7 @@ void MapGimmickLaser::Update()
 	laserSpawnTimer -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 
 	// 予測線表示タイマー更新（レーザー発射の60フレーム前から表示）
-	if (laserSpawnTimer <= MGL_LASER_PREDICTION_TIME)
+	if (laserSpawnTimer <= LASER_STR_PREDICTION_TIME)
 	{
 		if (!showPrediction)
 		{
@@ -70,7 +71,7 @@ void MapGimmickLaser::Update()
 
 			showPrediction = true;
 		}
-		predictionTimer = MGL_LASER_PREDICTION_TIME - laserSpawnTimer; // 予測線表示からの経過時間
+		predictionTimer = LASER_STR_PREDICTION_TIME - laserSpawnTimer; // 予測線表示からの経過時間
 	}
 	else
 	{
@@ -85,7 +86,7 @@ void MapGimmickLaser::Update()
 
 		//タイマー再開(徐々に短くなる)
 		//予測線の出る時間より短くならないよう設定.
-		laserSpawnTimer = MGL_LASER_PREDICTION_TIME + MGL_LASER_SPAWN_SPAN * p_data->spawnRate;
+		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * p_data->spawnRate;
 
 		showPrediction = false;
 		predictionTimer = 0;
@@ -95,7 +96,7 @@ void MapGimmickLaser::Update()
 /// <summary>
 /// 描画処理だぜ～
 /// </summary>
-void MapGimmickLaser::Draw()
+void StraightLaser::Draw()
 {
 	// 予測線の描画（レーザーより先に描画）
 	if (showPrediction)
@@ -107,7 +108,7 @@ void MapGimmickLaser::Draw()
 /// <summary>
 /// 予測線描画処理
 /// </summary>
-void MapGimmickLaser::DrawPredictionLine()
+void StraightLaser::DrawPredictionLine()
 {
 	// 次のレーザー発射方向と位置を使用
 	double startX, startY, endX, endY;
@@ -125,7 +126,7 @@ void MapGimmickLaser::DrawPredictionLine()
 #endif
 
 	// 予測線の透明度.
-	double alpha = CalcNumEaseIn((float)predictionTimer/MGL_LASER_PREDICTION_TIME); //0.0～1.0の範囲.
+	double alpha = CalcNumEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0～1.0の範囲.
 	SetDrawBlendModeST(MODE_ALPHA, 255*(1-alpha));
 
 	// 中央の予測線のみを描画
@@ -177,7 +178,7 @@ void MapGimmickLaser::DrawPredictionLine()
 /// <summary>
 /// //直線レーザー発射(コードおもれー) - ランダム発射版
 /// </summary>
-void MapGimmickLaser::SpawnStraightLaser()
+void StraightLaser::SpawnStraightLaser()
 {
 	// 予測された方向で発射
 	int direction = nextDirection;  // 修正: currentDirectionではなくnextDirectionを使用

@@ -1,6 +1,7 @@
 /*
-   - FireworksObstacle.h -
-   花火.
+   - Obst_Fireworks.h -
+
+   障害物: 花火.
 */
 #pragma once
 
@@ -29,8 +30,15 @@ struct FireworksData {
 	bool hasFallen;  // 落下済みか
 };
 
-class FireworksObstacle 
+//花火管理.[継承不可]
+class FireworksManager final 
 {
+public: //実体.
+	static FireworksManager* GetPtr() {
+		static FireworksManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private: //変数.
 	FireworksData fireworks[FIREWORKS_MAX];
 	float spawnTimer;

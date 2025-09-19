@@ -1,15 +1,20 @@
 /*
-   - TutorialManager.h -
-   チュートリアルシーン.
+   - Stage_Tutorial.h -
+
+   ステージ: チュートリアル.
 */
 #pragma once
 
+//前方宣言.
+class GameManager;
+class EffectManager;
+
 //チュートリアル.[継承不可]
-class TutorialManager final
+class TutorialStage final
 {
 public: //実体.
-	static TutorialManager* GetPtr() {
-		static TutorialManager inst; //自身のインスタンス.
+	static TutorialStage* GetPtr() {
+		static TutorialStage inst; //自身のインスタンス.
 		return &inst;
 	}
 
@@ -17,11 +22,15 @@ private:
 	int stepNo{}; //現在のステップ番号.
 
 	GameData*      p_data{};
+	GameManager*   p_gameMng{};
 	EffectManager* p_effectMng{};
 	InputMng*      p_input{};
 	SoundMng*      p_sound{};
 
 public:
+	//get.
+	int GetStepNo() const { return stepNo; }
+
 	void Init();
 	void Reset();
 	void Update();

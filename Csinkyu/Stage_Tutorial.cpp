@@ -1,24 +1,25 @@
 /*
-   - TutorialManager.cpp -
-   チュートリアルシーン.
+   - Stage_Tutorial.cpp -
+   
+   ステージ: チュートリアル.
 */
 #include "GameManager.h"
 #include "EffectManager.h"
-#include "TutorialManager.h"
+#include "Stage_Tutorial.h"
 
 //初期化.
-void TutorialManager::Init() {
+void TutorialStage::Init() {
 	p_data      = GameData::GetPtr();
 	p_effectMng = EffectManager::GetPtr();
 	p_input     = InputMng::GetPtr();
 	p_sound     = SoundMng::GetPtr();
 }
 //リセット.
-void TutorialManager::Reset() {
+void TutorialStage::Reset() {
 	stepNo = 0; //後からstep1にする.
 }
 //更新.
-void TutorialManager::Update() {
+void TutorialStage::Update() {
 
 	//ステップ別.
 	switch (stepNo)
@@ -33,7 +34,7 @@ void TutorialManager::Update() {
 	}
 }
 //描画.
-void TutorialManager::Draw() {
+void TutorialStage::Draw() {
 
 	//ステップ別.
 	switch (stepNo)
@@ -49,25 +50,20 @@ void TutorialManager::Draw() {
 }
 
 //更新:step0
-void TutorialManager::UpdateStep0() {
+void TutorialStage::UpdateStep0() {
 
+	//サウンド.
+	p_sound->Play(_T("LevelUp"), false, 100);
+	//エフェクト.
+	EffectData data{};
+	data.type = Effect_Tutorial_Step1;
+	data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
+	p_effectMng->SpawnEffect(&data);
 
-
-	if (p_input->IsPushKeyTime(KEY_0) == 1) {
-
-		//サウンド.
-		p_sound->Play(_T("LevelUp"), false, 100);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_Tutorial_Step1;		
-		data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-		p_effectMng->SpawnEffect(&data);
-
-		stepNo++; //次のステップ.
-	}
+	stepNo++; //次のステップ.
 }
 //更新:step1
-void TutorialManager::UpdateStep1() {
+void TutorialStage::UpdateStep1() {
 
 	if (p_input->IsPushKeyTime(KEY_0) == 1) {
 
@@ -83,7 +79,7 @@ void TutorialManager::UpdateStep1() {
 	}
 }
 //更新:step2
-void TutorialManager::UpdateStep2() {
+void TutorialStage::UpdateStep2() {
 
 
 
@@ -93,7 +89,7 @@ void TutorialManager::UpdateStep2() {
 		p_sound->Play(_T("LevelUp"), false, 100);
 		//エフェクト.
 		EffectData data{};
-		data.type = Effect_Tutorial_Step3;		
+		data.type = Effect_Tutorial_Step3;
 		data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 		p_effectMng->SpawnEffect(&data);
 
@@ -101,7 +97,7 @@ void TutorialManager::UpdateStep2() {
 	}
 }
 //更新:step3
-void TutorialManager::UpdateStep3() {
+void TutorialStage::UpdateStep3() {
 
 
 
@@ -119,18 +115,18 @@ void TutorialManager::UpdateStep3() {
 	}
 }
 //更新:step4
-void TutorialManager::UpdateStep4() {
+void TutorialStage::UpdateStep4() {
 
 	//チュートリアル終了.
 	if (p_input->IsPushKeyTime(KEY_0) == 1) {
 		//タイトルへ(全てリセット)
+		p_data->scene = SCENE_TITLE;
 		GameManager::GetPtr()->Reset();
 	}
 }
 
 //描画:step1
-void TutorialManager::DrawStep1() {
-
+void TutorialStage::DrawStep1() {
 
 
 	DrawStr str(_T("↑↓←→: 移動"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0x00FFFF);
@@ -141,14 +137,14 @@ void TutorialManager::DrawStep1() {
 	DrawBoxST(&box, ANC_MID, false);
 }
 //描画:step2
-void TutorialManager::DrawStep2() {
+void TutorialStage::DrawStep2() {
 
 }
 //描画:step3
-void TutorialManager::DrawStep3() {
+void TutorialStage::DrawStep3() {
 
 }
 //描画:step4
-void TutorialManager::DrawStep4() {
+void TutorialStage::DrawStep4() {
 
 }

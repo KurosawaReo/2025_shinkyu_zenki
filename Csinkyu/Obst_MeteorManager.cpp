@@ -1,10 +1,11 @@
 /*
-   - MeteorManager.cpp -
-   隕石の出現を管理する.
+   - Obst_MeteorManager.cpp -
+
+   障害物: 隕石出現管理.
 */
 #include "GameManager.h"
 #include "EffectManager.h"
-#include "MeteorManager.h"
+#include "Obst_MeteorManager.h"
 
 using namespace Calc; //計算機能を使用.
 
@@ -15,17 +16,17 @@ void MeteorManager::Init() {
 	p_effectMng = EffectManager::GetPtr();
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
+	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		meteor[i].Init();
 	}
 }
 
 void MeteorManager::Reset() {
 
-	timer = METEO_SPAWN_SPAN; //初期時間.
+	timer = METEOR_SPAWN_SPAN; //初期時間.
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
+	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		meteor[i].Reset();
 	}
 }
@@ -39,11 +40,11 @@ void MeteorManager::Update() {
 	//タイマーが0になったら.
 	else {
 		SpawnMeteor(); //隕石生成.
-		timer = METEO_SPAWN_SPAN * p_data->spawnRate; //タイマー再開(徐々に短くなる)
+		timer = METEOR_SPAWN_SPAN * p_data->spawnRate; //タイマー再開(徐々に短くなる)
 	}
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
+	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		meteor[i].Update(); //更新.
 	}
 	//プレイヤーとの当たり判定.
@@ -55,7 +56,7 @@ void MeteorManager::Update() {
 void MeteorManager::Draw() {
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
+	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		meteor[i].Draw(); //描画.
 	}
 }
@@ -64,7 +65,7 @@ void MeteorManager::Draw() {
 void MeteorManager::SpawnMeteor(){
 	
 	//空いてる所を探す.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
+	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		if (!meteor[i].GetActive()) {
 
 			meteor[i].Spawn(); //出現.
@@ -74,12 +75,12 @@ void MeteorManager::SpawnMeteor(){
 }
 
 //隕石のどれか1つでも当たっているか.
-bool MeteorManager::IsHitMeteors(Circle* cir, bool isDestroy) {
+bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 
 	bool hit;
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
+	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		hit = meteor[i].IsHitMeteor(cir); //1こずつ判定.
 		//当たれば.
 		if (hit) {
@@ -93,7 +94,7 @@ bool MeteorManager::IsHitMeteors(Circle* cir, bool isDestroy) {
 					//エフェクト.
 					EffectData data{};
 					data.type = Effect_Score500;
-					data.pos = cir->pos;
+					data.pos = cir.pos;
 					p_effectMng->SpawnEffect(&data);
 					//サウンド.
 					SoundMng* sound = SoundMng::GetPtr();
@@ -113,7 +114,7 @@ bool MeteorManager::GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 	double shortest = -1; //暫定の最短距離.
 
 	//全隕石ループ.
-	for (int i = 0; i < METEO_CNT_MAX; i++) {
+	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		//有効かつ、破壊されてないなら.
 		if (meteor[i].GetActive() && meteor[i].GetState() == Meteor_Normal) {
 
