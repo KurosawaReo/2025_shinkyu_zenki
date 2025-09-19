@@ -167,7 +167,8 @@ enum StageType
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
 #define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
-#define COLOR_ITEM						(GetColor( 60, 255,  60))
+//#define COLOR_ITEM					(GetColor( 60, 255,  60))
+#define COLOR_ITEM						(GetColor(255, 155, 255))
 #define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))                              //予測演出.
 #define COLOR_METEO(pos)				(GetColor(0, _int_r(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
