@@ -3,27 +3,29 @@
    プレイヤー管理.
 */
 #include "GameManager.h"
-#include "Obstacle4main.h"
+#include "Obst_NormalLaserMain.h"
 
 #include "Player.h"
 
+using namespace Calc; //計算機能を使用.
+
 //初期化(一回のみ行う)
-void Player::Init(GameData* _data, EffectManager* _effectMng)
+void Player::Init()
 {
-	p_data      = _data;
-	p_effectMng = _effectMng;
+	p_data      = GameData::GetPtr();
+	p_effectMng = EffectManager::GetPtr();
 	p_input     = InputMng::GetPtr();
-	p_calc      = Calc::GetPtr();
 
 	isDebug = false;
 
+	//画像読み込み.
 	imgPlayer[0].LoadFile(_T("Resources/Images/player_normal.png"));
 	imgPlayer[1].LoadFile(_T("Resources/Images/player_reflect.png"));
 }
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit       = { _pos, PLAYER_SIZE/2, {} };
+	hit       = { _pos, PLAYER_SIZE, {} };
 	active    = _active;
 	mode      = Player_Normal;
 	afterCntr = 1;
@@ -90,35 +92,23 @@ void Player::Draw()
 		DrawAfterImage();
 		DrawReflectEffects();  // エフェクトを先に描画
 
-		//四角形ver.
-#if false
-		//四角形.
-		Box box1 = { hit.pos, { PLAYER_SIZE,   PLAYER_SIZE   }, 0xFFFFFF };
-		Box box2 = { hit.pos, { PLAYER_SIZE-2, PLAYER_SIZE-2 }, 0xFFFFFF };
-
-		//反射モード中の色.
-		if (mode == Player_Reflect || 
-			mode == Player_SuperReflect
-		){
-			box1.color = box2.color = COLOR_PLY_REFLECT;
-		}
-		//デバッグモード中.
-		if (isDebug) {
-			box1.color = box2.color = COLOR_PLY_DEBUG;
-		}
-
-		DrawBoxST(&box1, ANC_MID, false, true);
-		DrawBoxST(&box2, ANC_MID, false, true);
-#endif
-
 		//画像描画.
 		if (mode == Player_Reflect ||
 			mode == Player_SuperReflect
 		){
-			imgPlayer[1].DrawRota(hit.pos, 0.2, imgRot); //反射モードの色.
+			//反射モードの画像.
+			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot);
 		}
 		else {
-			imgPlayer[0].DrawRota(hit.pos, 0.2, imgRot); //通常モードの色.
+			//通常モードの画像.
+			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot);
+		}
+
+		//チュートリアル用.
+		if (p_data->stage == STAGE_TUTORIAL) {
+			
+			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -40).ToIntXY(), 0xFFFFFF );
+			str.Draw();
 		}
 	}
 }
@@ -155,23 +145,19 @@ void Player::DrawAfterImage()
 			//透明度反映.
 			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-//			Box box = { afterPos[i], {PLAYER_SIZE, PLAYER_SIZE}, {} };
-			Circle cir = { afterPos[i], PLAYER_SIZE/1.5, {} };
+			Circle cir = { afterPos[i], PLAYER_SIZE, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
 			){
-//				box.color = COLOR_PLY_AFT_REF;
 				cir.color = COLOR_PLY_AFT_REF;
 			}
 			//通常カラー.
 			else
 			{
-//				box.color = COLOR_PLY_AFT_NOR;
 				cir.color = COLOR_PLY_AFT_NOR;
 			}
 
-//			DrawBoxST(&box, ANC_MID, false, true);
 			DrawCircleST(&cir, false, true);
 		}
 	}
@@ -193,7 +179,7 @@ void Player::PlayerMove()
 		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED);
 	}
 	//移動限界.
-	p_calc->FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
 }
 
 // 反射エフェクト生成

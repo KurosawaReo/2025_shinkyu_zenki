@@ -1,11 +1,14 @@
 /*
-   - Obstacle4main.h -
+   - Obst_NormalLaserMain.h -
 
-   レーザー砲台の継承元クラス.
+   障害物: レーザー発射台(継承元)
 */
 #pragma once
 
-#include "LaserManager.h" //レーザー管理のヘッダーファイル.
+//前方宣言.
+class Player;
+class LaserManager;
+class MeteorManager;
 
 struct FlashEffect
 {
@@ -19,7 +22,7 @@ struct FlashEffect
 };
 
 //継承元となるクラス(親)
-class Obstacle4main
+class NormalLaserMain
 {
 protected:
 	float   Hx{}, Hy{};  //砲台の位置.
@@ -28,18 +31,16 @@ protected:
 	float   HscTm{};     //砲台がショットする時間.
 	MoveDir moveDir{};   //現在の移動方向.
 
-//	IMG         img{};
-	FlashEffect flashEffect[OBSTACLE4_FLASH_MAX]{};	// クラスのメンバ変数として追加
+	FlashEffect flashEffect[LASER_NOR_FLASH_MAX]{};	// クラスのメンバ変数として追加
 
-	GameData*     p_data{};
-	Player*       p_player{};
-	MeteoManager* p_meteoMng{};
-	LaserManager* p_laserMng{};
-	Calc*         p_calc{};
+	GameData*      p_data{};
+	Player*        p_player{};
+	LaserManager*  p_laserMng{};
+	MeteorManager* p_meteorMng{};
 
 public:
 	//基本処理.
-	void Init  (GameData*, Player*, MeteoManager*, LaserManager*);
+	void Init  ();
 	void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
 	void Update();
 	void Draw  ();

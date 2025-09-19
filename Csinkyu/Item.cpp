@@ -2,19 +2,20 @@
    - Item.cpp -
    Item管理.
 */
-#include "GameManager.h"
 #include "Player.h"
+#include "GameManager.h"
 #include "EffectManager.h"
 
 #include "Item.h"
 
+using namespace Calc; //計算機能を使用.
+
 //初期化.
-void ItemManager::Init(GameData* _gamedata, Player* _player, EffectManager* _effectMng)
+void ItemManager::Init()
 {
-	p_gamedata  = _gamedata;
-	p_player    = _player;
-	p_effectMng = _effectMng;
-	p_calc      = Calc::GetPtr();
+	p_gamedata  = GameData::GetPtr();
+	p_player    = Player::GetPtr();
+	p_effectMng = EffectManager::GetPtr();
 }
 //リセット.
 void ItemManager::Reset()
@@ -72,7 +73,7 @@ void ItemManager::Draw()
 
 				Circle cir = { data[i].pos, 30, COLOR_PLY_REFLECT };
 
-				SetDrawBlendModeST(MODE_ADD, 128 + 127*p_calc->CalcNumWaveLoop(data[i].counter/20)); //点滅.
+				SetDrawBlendModeST(MODE_ADD, 128 + 127*CalcNumWaveLoop(data[i].counter/20)); //点滅.
 				DrawCircleST(&cir, false, true);
 				ResetDrawBlendMode();
 			}
@@ -82,12 +83,14 @@ void ItemManager::Draw()
 				Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
 				DrawBoxST(&box1, ANC_MID, false);
 				DrawBoxST(&box2, ANC_MID, false);
+
+				//チュートリアル用.
+				if (p_gamedata->stage == STAGE_TUTORIAL) {
+
+					DrawStr str(_T("アイテム"), box1.pos.Add(0, -30).ToIntXY(), COLOR_ITEM);
+					str.Draw();
+				}
 			}
-		
-			// 画像を使用する場合のコード例
-			// if (itemGraph != -1) {
-			//     DrawGraph((int)itemX, (int)itemY, itemGraph, true);
-			// }
 		}
 	}
 }
@@ -96,8 +99,8 @@ void ItemManager::Draw()
 void ItemManager::ItemSpawn(int idx) {
 
 	//座標の設定.
-	data[idx].pos.x = (double)p_calc->RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
-	data[idx].pos.y = -ITEM_SIZE;	 						        		    // 画面上部の少し上から開始
+	data[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
+	data[idx].pos.y = -ITEM_SIZE;					        		    // 画面上部の少し上から開始
 	//タイプを決める.
 	if (p_gamedata->level <= 4) {
 		data[idx].type = Item_Normal;
@@ -125,13 +128,13 @@ void ItemManager::CheckHitPlayer(int idx)
 	}
 
 	//プレイヤーの判定を取得.
-	Circle* plyHit = p_player->GetHit();
+	Circle plyHit = p_player->GetHit();
 	//当たり判定を四角形とする.
-	Box plyBox  = { plyHit->pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
+	Box plyBox  = { plyHit.pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
 	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
 	
 	//当たった場合.
-	if (p_calc->HitBoxBox(&plyBox, &itemBox)) {
+	if (HitBoxBox(&plyBox, &itemBox)) {
 		OnHitPlayer(idx);
 	}
 }

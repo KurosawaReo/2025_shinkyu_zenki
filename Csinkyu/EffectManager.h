@@ -4,19 +4,26 @@
 */
 #pragma once
 
+class GameData; //前方宣言.
+
 //エフェクトタイプ.
 enum EffectType
 {
 	Effect_Score100,
 	Effect_Score500,
-	Effect_PlayerDeath,  //プレイヤー死亡.
-	Effect_ReflectLaser, //レーザー反射.
-	Effect_BreakMeteo,   //隕石破壊.
-	Effect_Level1,		 //レベル1演出.
-	Effect_Level2,		 //レベル2演出.
-	Effect_Level3,		 //レベル3演出.
-	Effect_Level4,		 //レベル4演出.
-	Effect_Level5,		 //レベル5演出.
+	Effect_PlayerDeath,		//プレイヤー死亡.
+	Effect_ReflectLaser,	//レーザー反射.
+	Effect_BreakMeteo,		//隕石破壊.
+
+	Effect_Endless_Level1,	//耐久モード: Level1演出.
+	Effect_Endless_Level2,	//耐久モード: Level2演出.
+	Effect_Endless_Level3,	//耐久モード: Level3演出.
+	Effect_Endless_Level4,	//耐久モード: Level4演出.
+	Effect_Endless_Level5,	//耐久モード: Level5演出.
+	Effect_Tutorial_Step1,	//チュートリアル: step1演出.
+	Effect_Tutorial_Step2,	//チュートリアル: step2演出.
+	Effect_Tutorial_Step3,	//チュートリアル: step3演出.
+	Effect_Tutorial_Step4,	//チュートリアル: step4演出.
 };
 //エフェクトデータ.
 struct EffectData
@@ -36,19 +43,24 @@ struct Effect : public EffectData
 	bool       active{};
 };
 
-//エフェクト管理クラス.
-class EffectManager
+//エフェクト管理クラス.[継承不可]
+class EffectManager final
 {
+public: //実体.
+	static EffectManager* GetPtr() {
+		static EffectManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	Effect effect[EFFECT_MAX]{};
 
 	DrawImg imgScore[2]{}; //スコア画像.
 
 	GameData* p_data{};
-	Calc*     p_calc{};
 
 public:
-	void Init(GameData*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

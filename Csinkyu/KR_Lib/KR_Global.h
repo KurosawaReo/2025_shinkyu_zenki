@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/15
 
    KR_Lib全体で使う汎用機能を追加します。
 */
@@ -16,7 +16,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <algorithm> //vectorで検索をする用.
 #include <cassert>   //assert.h をラップしたもの.
 #include <cmath>     //math.h   をラップしたもの.
 #include <cstdlib>   //stdlib.h をラップしたもの.
@@ -65,6 +64,10 @@ namespace KR_Lib
 		//DBL_XY型に変換.
 		XY<double> ToDblXY() const {
 			return {_dbl(x), _dbl(y)};
+		}
+		//加算した結果を返す.
+		XY<T> Add(T _x, T _y) {
+			return {x+_x, y+_y};
 		}
 
 		//演算子[+,-,*,/] [XY<T>・XY<T>]

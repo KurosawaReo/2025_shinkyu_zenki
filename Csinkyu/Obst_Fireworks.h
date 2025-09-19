@@ -1,8 +1,13 @@
-#pragma once
-#include "Global.h"
-#include "LaserManager.h"
+/*
+   - Obst_Fireworks.h -
 
-class Player;
+   障害物: 花火.
+*/
+#pragma once
+
+class GameData; //前方宣言.
+class Player;   //前方宣言.
+
 // 花火の状態
 enum FireworksState {
 	FIREWORKS_STATE_WARNING,    // 予告状態
@@ -25,15 +30,24 @@ struct FireworksData {
 	bool hasFallen;  // 落下済みか
 };
 
-class FireworksObstacle {
-private:
-	GameData* p_data;
-	Player* p_player;
-	LaserManager* p_laserMng;
+//花火管理.[継承不可]
+class FireworksManager final 
+{
+public: //実体.
+	static FireworksManager* GetPtr() {
+		static FireworksManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
+private: //変数.
 	FireworksData fireworks[FIREWORKS_MAX];
 	float spawnTimer;
 
-	// プライベート関数
+	GameData*     p_data;
+	Player*       p_player;
+	LaserManager* p_laserMng;
+
+private: //関数.
 	void GenerateRandomPosition(float& x, float& y);
 	bool CheckDistance(float x, float y);
 	void StartFireworks(float x, float y);
@@ -46,7 +60,7 @@ private:
 	void DrawWarningEffect(int index);
 
 public:
-	void Init(GameData* data, Player* player, LaserManager* laserMng);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

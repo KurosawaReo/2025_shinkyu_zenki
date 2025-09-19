@@ -1,13 +1,12 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/15
 
    サウンド機能を追加します。
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Timer.h"
-  using namespace KR_Lib;
 #endif
 #include "KR_Sound.h"
 
@@ -159,6 +158,13 @@ namespace KR_Lib
 			return 0;
 		}
 		return -1; //-1: saveNameが見つからない.
+	}
+	//サウンド停止(全てのBGM)
+	void SoundMng::StopAll() {
+		//全て停止する.
+		for (auto& i : sound) {
+			i.second.Stop();
+		}
 	}
 	//サウンド更新.
 	void SoundMng::Update() {

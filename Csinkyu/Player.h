@@ -5,6 +5,8 @@
 #pragma once
 #include "EffectManager.h"
 
+class GameData; //前方宣言.
+
 //ダッシュエフェクト.
 struct ReflectEffect
 {
@@ -23,8 +25,15 @@ enum PlayerMode
 	Player_SuperReflect //反射モード強化版.
 };
 
-class Player
+//プレイヤー.[継承不可]
+class Player final
 {
+public: //実体.
+	static Player* GetPtr() {
+		static Player inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	PlayerMode mode{}; //モード.
 	
@@ -41,10 +50,8 @@ private:
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
 	InputMng*      p_input{};     //入力機能.
-	Calc*          p_calc{};      //計算機能.
 
 public:
-
 	//???
 	static const int MAX_REFLECT_EFFECTS = 5;  // 最大エフェクト数
 	ReflectEffect reflectEffects[MAX_REFLECT_EFFECTS]{};  // エフェクト配列
@@ -54,14 +61,13 @@ public:
 	void       SetActive(bool _active)     { active = _active; }
 	void       SetMode  (PlayerMode _mode) { mode   = _mode;   } //モード設定.
 	//get. 
-	DBL_XY     GetPos()   { return hit.pos; }
-	bool       GetActive(){ return active; }
-	PlayerMode GetMode()  { return mode; }
-	Circle*    GetHit()   { return &hit; }
-
+	DBL_XY     GetPos()    const { return hit.pos; }
+	bool       GetActive() const { return active; }
+	PlayerMode GetMode()   const { return mode; }
+	Circle     GetHit()    const { return hit; }
 
 	//その他.
-	void Init  (GameData*, EffectManager*);
+	void Init  ();
 	void Reset (DBL_XY _pos, bool _active);
 	void Update();
 	void Draw  ();

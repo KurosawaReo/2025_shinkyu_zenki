@@ -3,8 +3,11 @@
    元々Obstacle4mainとしてまとめられてたレーザー.
 */
 #pragma once
-#include "MeteoManager.h"
-#include "EffectManager.h"
+
+//前方宣言.
+class Player;
+class MeteorManager;
+class EffectManager;
 
 //レーザータイプ.
 enum LaserType
@@ -13,8 +16,7 @@ enum LaserType
 	Laser_Straight,     //直線レーザー.
 	Laser_Reflect,      //反射レーザー.
 	Laser_SuperReflect, //反射レーザー強化版.
-
-	Laser_Falling,         // 落下レーザー（花火用）
+	Laser_Falling,      //落下レーザー(花火用)
 };
 
 //レーザー本体データ.
@@ -47,8 +49,14 @@ struct LaserLineData
 };
 
 //レーザー管理用.
-class LaserManager
+class LaserManager final
 {
+public: //実体.
+	static LaserManager* GetPtr() {
+		static LaserManager inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 	LaserData     laser[LASER_CNT_MAX]{};      //ホーミングレーザーのデータ.
 	LaserLineData line [LASER_LINE_CNT_MAX]{}; //ライン描画用データ.
@@ -57,12 +65,11 @@ private:
 
 	GameData*      p_data{};
 	Player*        p_player{};
-	MeteoManager*  p_meteoMng{};
+	MeteorManager* p_meteorMng{};
 	EffectManager* p_effectMng{};
-	Calc*          p_calc{};
 
 public:
-	void Init(GameData*, Player*, MeteoManager*, EffectManager*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

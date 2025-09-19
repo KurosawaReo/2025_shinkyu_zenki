@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/09/07
+   ver: 2025/09/10
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -64,7 +64,7 @@ namespace KR_Lib
 		MOUSE_R, //0x0002: Right.
 		MOUSE_M, //0x0004: Middle.
 	};
-	//コントローラボタンID(xbox基準)
+	//コントローラID(xbox基準)
 	enum PadXboxID
 	{
 		PAD_XBOX_DOWN,		//0x0001
@@ -82,7 +82,7 @@ namespace KR_Lib
 		PAD_XBOX_STICK_L,   //0x1000: 左スティック押し込み.
 		PAD_XBOX_STICK_R,   //0x2000: 右スティック押し込み.
 	};
-	//コントローラボタンID(switch基準)
+	//コントローラID(switch基準)
 	enum PadSwitchID
 	{
 		PAD_SWT_DOWN,		//0x00001
@@ -104,7 +104,7 @@ namespace KR_Lib
 		PAD_SWT_HOME,		//0x10000: ホームボタン.
 		PAD_SWT_CAPTURE,	//0x20000: キャプチャーボタン.
 	};
-	//コントローラボタンID(アーケード筐体)
+	//コントローラID(アーケード筐体)
 	enum PadArcadeID
 	{
 		PAD_ACD_DOWN,
@@ -132,11 +132,17 @@ namespace KR_Lib
 		PAD_ACD
 	};
 
-	//Actionで保存するデータ.
-	struct ActionInfo
+	//入力データ(単体)
+	struct InputData
 	{
 		InputType type; //何の操作か.
 		int       id;   //操作ID.
+	};
+	//アクションデータ.
+	struct ActionData
+	{
+		vector<InputData> inputs; //登録する入力データ.
+		int time;                 //入力時間.
 	};
 
 	//キーやボタンの種類の最大数(変更禁止)
@@ -147,25 +153,26 @@ namespace KR_Lib
 	//入力管理クラス[継承不可]
 	class InputMng final
 	{
+	public: //実体.
+		static InputMng* GetPtr() {
+			static InputMng inst; //自身のインスタンス.
+			return &inst;
+		}
+
 	private: //データ.
 		int tmKey   [KEY_MAX]{};     //キーを押している時間.
-		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.(bitフラグで管理)
-		int tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(bitフラグで管理)
+		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.            (index: bitフラグ)
+		int tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(index: bitフラグ)
 
 		INT_XY mPos{};     //マウス座標.
 		INT_XY stickVec{}; //スティック入力.
 
-		map<MY_STRING, vector<ActionInfo>> actionData{}; //アクション記録用.
+		map<MY_STRING, ActionData> actions{}; //アクション記録用.
 
 	private: //関数.
 		DBL_XY GetVector4Dir(INT_XY pow);
 
 	public:
-		//実体の取得.
-		static InputMng* GetPtr() {
-			static InputMng inst; //自身のインスタンス.
-			return &inst;
-		}
 
 		//操作判定.
 		bool   IsPushKey       (KeyID id);
@@ -201,5 +208,6 @@ namespace KR_Lib
 		void   UpdateKey();
 		void   UpdateMouse();
 		void   UpdatePad();
+		void   UpdateAction();
 	};
 }

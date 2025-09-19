@@ -1,24 +1,30 @@
-/* 
-   - MapGimmickLaserManager.h -
-   マップギミック用の直線レーザー管理.
+/*
+   - Obst_StraightLaser.h -
+
+   障害物: 直線レーザー.
 */
 #pragma once
 //#include "MeteoManager.h"
 
-//マップギミックレーザー管理用.
-class MapGimmickLaser
+//直線レーザー管理.[継承不可]
+class StraightLaser final
 {
+public: //実体.
+	static StraightLaser* GetPtr() {
+		static StraightLaser inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
 //	STRAIGHT_LASER_DATA laser[3]{};
 //	STRAIGHT_LINE_DATA line[OBSTACLE6_LINE_MAX]{}; //レーザーはLaserManagerに統一しとく.
 
 	DBL_XY plyPos{};   // プレイヤー座標保管用.
 
-	GameData*     p_data{};
-	Player*       p_player{};
-	LaserManager* p_laserMng{};
-	MeteoManager* p_meteoMng{};
-	Calc*         p_calc{};
+	GameData*      p_data{};
+	Player*        p_player{};
+	LaserManager*  p_laserMng{};
+	MeteorManager* p_meteorMng{};
 
 	float  laserSpawnTimer{};  // レーザー発射タイマー.
 	float  predictionTimer{};  // 予測線タイマー.
@@ -29,7 +35,7 @@ private:
 	double nextCenterPos{};    // 次のレーザー発射位置（予測線用）
 
 public:
-	void Init(GameData*, Player*, LaserManager*, MeteoManager*);
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();
@@ -37,17 +43,3 @@ public:
 	void SpawnStraightLaser();   // 直線レーザー発射.
 	void DrawPredictionLine();
 };
-
-//↑のクラスの実体を2つ出せばいいため不要.
-#if false
-#include "Player.h"
-#include "MapGimmickLaserManager.h"
-class MapGimmickLaser : public MapGimmickLaserManager
-{
-public:
-
-
-private:
-
-};
-#endif

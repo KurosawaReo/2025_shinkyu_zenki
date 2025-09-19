@@ -1,5 +1,7 @@
 /*
-突然出現する障害物
+   - Ripples.h -
+
+   障害物: 波紋.
 */
 #pragma once
 
@@ -13,10 +15,17 @@ typedef struct tagFLASHEFFECT5
 	bool AlreadyHit;
 }FLASHEFFECT5;
 
-class Obstacle5
+//波紋管理.[継承不可]
+class Ripples final
 {
+public: //実体.
+	static Ripples* GetPtr() {
+		static Ripples inst; //自身のインスタンス.
+		return &inst;
+	}
+
 private:
-	FLASHEFFECT5 flashEffect[OBSTACLE5_FLASH_MAX]{}; // クラスのメンバ変数として追加
+	FLASHEFFECT5 flashEffect[RIPPLES_FLASH_MAX]{}; // クラスのメンバ変数として追加
 
 	float flashTimer{}; //出現タイマー.
 
@@ -24,7 +33,7 @@ private:
 	Player*   p_player{};
 
 public:
-	void Init(GameData*, Player*);  // ポインタのポインタから修正
+	void Init();
 	void Reset();
 	void Update();
 	void Draw();

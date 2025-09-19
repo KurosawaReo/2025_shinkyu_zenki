@@ -3,28 +3,54 @@
    ゲーム全体管理.
 */
 #pragma once
+#include "KR_Lib/KR_Scene.h"
 
-//ゲームマネージャー.
-class GameManager 
+//ゲームデータ.[継承不可]
+class GameData final
 {
-private: //実体.
-	static GameManager inst; //自身のインスタンス.
+public:
+	//実体.
+	static GameData* GetPtr() {
+		static GameData inst; //自身のインスタンス.
+		return &inst;
+	}
+
+	Scene     scene;	  //シーンの記録用.
+	StageType stage;	  //ステージ種類.
+
+	int		  score;      //スコア.
+	int		  scoreBef;   //スコア(時間加算前)
+	int		  bestScore;  //ベストスコア.
+	int		  level;	  //レベル.
+
+	float	  spawnRate;  //障害物の出現時間割合.
+	float	  counter;    //経過時間カウンター(スローの影響を受ける)
+
+	int		  font1;      //フォント.
+	int		  font2;      //フォント.
+	int		  font3;      //フォント.
+	int		  font4;      //フォント.
+		
+	bool	  isSlow;     //スローモードかどうか.
+};
+
+//ゲームマネージャー.[継承不可]
+class GameManager final
+{
+public: //実体.
+	static GameManager* GetPtr() {
+		static GameManager inst; //自身のインスタンス.
+		return &inst;
+	}
 
 private: //データ.
-	GameData data{}; //ゲームデータ.
+	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
-	//シーン別に経過時間を記録する.
-	Timer tmScene[SCENE_COUNT] = {
-		Timer(COUNT_UP, 0), //Titleシーン.
-		Timer(COUNT_UP, 0), //Readyシーン.
-		Timer(COUNT_UP, 0), //Gameシーン.
-		Timer(COUNT_UP, 0), //Endシーン.
-		Timer(COUNT_UP, 0), //Pauseシーン.
-	};
-	Timer tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME); //スロー継続時間.
+	Timer tmGameTime{};     //ゲーム計測時間.
+	Timer tmSlowMode{};     //スロー継続時間.
 
 	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
-	DrawImg imgUI[4]{};     //UI画像.
+	DrawImg imgUI{};        //UI画像.
 	DrawImg imgNewRecord{}; //new record.
 	DrawImg imgGameOver{};  //gameover.
 	DrawImg imgReflect{};   //reflect.
@@ -33,18 +59,21 @@ private: //データ.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
+	bool isGameStart{};             //ゲーム開始サイン.
+
 	InputMng* p_input{};
 	SoundMng* p_sound{};
-	Calc*     p_calc{};
 
 public:
-	//実体の取得.
-	static GameManager* GetPtr() {
-		return &inst;
-	}
 	//get.
 	float GetSlowModeTime() {
 		return tmSlowMode.GetPassTime();
+	}
+	float GetSceneTime(Scene scene) {
+		return tmScene[scene].GetPassTime();
+	}
+	float GetGameTime() {
+		return tmGameTime.GetPassTime();
 	}
 
 	//メイン処理.
@@ -60,24 +89,20 @@ public:
 	//Update.
 	void UpdateTitle();
 	void UpdateMenu();
-	void UpdateTutorial();
-	void UpdateReady();
 	void UpdateGame();
 	void UpdateEnd();
 	void UpdatePause();
 
 	void UpdateObjects();
+	void UpdateSlowMode();
 
 	//Draw.
 	void DrawTitle();
 	void DrawMenu();
-	void DrawTutorial();
-	void DrawReady();
 	void DrawGame();
 	void DrawEnd();
 	void DrawPause();
 
-	void DrawUI();
 	void DrawObjects();
 	void DrawReflectMode();
 
