@@ -427,7 +427,7 @@ void GameManager::UpdateGame() {
 #if defined _DEBUG //Releaseでは入れない.
 	//タイマー加速(Debug)
 	if (p_input->IsPushKey(KEY_L) == 1) {
-		gameData->counter += 10;
+		gameData->counter += 30;
 	}
 #endif
 

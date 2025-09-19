@@ -120,7 +120,7 @@ void FireworksManager::UpdateIndividualFireworks() {
 	for (int i = 0; i < FIREWORKS_MAX; i++) {
 		if (fireworks[i].ValidFlag == 0) continue;
 
-		fireworks[i].Counter -= (p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
+		fireworks[i].Counter -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1.0f;
 
 		// ó‘Ô‘JˆÚ‚ÌŠÇ—
 		float elapsedTime = fireworks[i].Duration - fireworks[i].Counter;

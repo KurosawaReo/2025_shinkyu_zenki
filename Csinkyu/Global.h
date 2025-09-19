@@ -90,8 +90,8 @@ enum StageType
 #define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
-#define LASER_CNT_MAX					(50)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(12000)			//レーザー描画線の最大数.
+#define LASER_CNT_MAX					(80)			//レーザーの最大数.
+#define LASER_LINE_CNT_MAX				(14000)			//レーザー描画線の最大数.
 #define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
