@@ -22,7 +22,6 @@ struct FireworksData {
 	float targetX, targetY;     // 目標座標（爆発位置）
 	float vx, vy;              // 速度
 	float Counter;             // カウンタ
-	float Duration;            // 持続時間
 	FireworksState state;      // 現在の状態
 	int sparkCount;            // 火花数
 
@@ -40,7 +39,7 @@ public: //実体.
 	}
 
 private: //変数.
-	FireworksData fireworks[FIREWORKS_MAX];
+	FireworksData fireworks[FIREWORKS_CNT_MAX];
 	float spawnTimer;
 
 	GameData*     p_data;

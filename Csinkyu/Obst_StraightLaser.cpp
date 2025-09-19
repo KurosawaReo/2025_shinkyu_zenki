@@ -138,7 +138,7 @@ void StraightLaser::DrawPredictionLine()
 		endX = WINDOW_WID + 50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -147,7 +147,7 @@ void StraightLaser::DrawPredictionLine()
 		endX = -50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -156,7 +156,7 @@ void StraightLaser::DrawPredictionLine()
 		endY = WINDOW_HEI + 50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -165,7 +165,7 @@ void StraightLaser::DrawPredictionLine()
 		endY = -50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;

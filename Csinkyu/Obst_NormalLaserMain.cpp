@@ -161,7 +161,7 @@ void NormalLaserMain::DrawPreLaserDots() {
 		float dotSize  = (float)(3 + CalcNumEaseOut(blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
 		float dotSize2 = (float)(3 + CalcNumEaseOut(blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
 		//â~èÓïÒ.
-		Circle cir = {{Hx, Hy}, dotSize, GetColor(0, 255, 255)};
+		Circle cir = {{Hx, Hy}, dotSize, COLOR_PRE_EFFECT };
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
 		// ñCë‰ÇÃà íuÇ…ÅúÇï`âÊ

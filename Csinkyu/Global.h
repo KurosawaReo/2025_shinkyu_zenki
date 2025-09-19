@@ -144,9 +144,10 @@ enum StageType
 #define RIPPLES_MIN_DISTANCE			(100)			//最小距離.
 
 //障害物: 花火.
-#define FIREWORKS_MAX					(10)			//最大同時花火数
-#define FIREWORKS_SPAWN_SPAN			(180)			//花火生成間隔（フレーム）
-#define FIREWORKS_WARNING_DURATION		(120)			//予告時間（フレーム）
+#define FIREWORKS_CNT_MAX				(10)			//最大同時出現数
+#define FIREWORKS_RND_MAX				(2)				//花火出現最大数
+#define FIREWORKS_SPAWN_SPAN			(600)			//花火生成間隔（フレーム）
+#define FIREWORKS_WARNING_DURATION		(120)			//予告を出す長さ（フレーム）
 #define FIREWORKS_LAUNCH_HEIGHT			(50)			//打ち上げ高度
 #define FIREWORKS_EXPLOSION_RADIUS		(100)			//爆発半径
 #define FIREWORKS_SPARKS_COUNT			(16)			//火花の数（ベース）
@@ -167,7 +168,7 @@ enum StageType
 #define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
 #define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor( 60, 255,  60))
-#define COLOR_PRE_LINE					(GetColor(128, 128, 128))                              //予測線.
+#define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))                              //予測演出.
 #define COLOR_METEO(pos)				(GetColor(0, _int_r(255 * fabs(sin(pos.x/200))), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)

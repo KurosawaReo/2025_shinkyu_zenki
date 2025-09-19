@@ -109,8 +109,8 @@
    Level1: 通常レーザー×2, 隕石
    Level2: 直線レーザー×2
    Level3: 波紋
-   Level4: 直線レーザー×4, アイテム×2
-   Level5: 通常レーザー×4, アイテムが強化, 花火
+   Level4: 花火, アイテム×2
+   Level5: 通常レーザー×4, アイテムが強化
 /---------------------------------------------------------/
    【今後の制作予定】
 
@@ -505,9 +505,9 @@ void GameManager::UpdateObjects() {
 
 	//Lv1以上.
 	laserMng->Update();
-	meteorMng->Update();
 	laserNor1.Update();
 	laserNor2.Update();
+	meteorMng->Update();
 	item->Update();
 
 	//Lv2以上.
@@ -521,14 +521,12 @@ void GameManager::UpdateObjects() {
 	}
 	//Lv4以上.
 	if (gameData->level >= 4) {
-		mgl[2].Update();
-		mgl[3].Update();
+		fireworksMng->Update();
 	}
 	//Lv5以上.
 	if (gameData->level >= 5) {
 		laserNor3.Update();
 		laserNor4.Update();
-		fireworksMng->Update();
 	}
 }
 //スローモードの更新.
@@ -740,9 +738,9 @@ void GameManager::DrawObjects() {
 
 	//Lv1以上.
 	laserMng->Draw();
-	meteorMng->Draw();
 	laserNor1.Draw();
 	laserNor2.Draw();
+	meteorMng->Draw();
 	item->Draw();
 	//Lv2以上.
 	if (gameData->level >= 2) {
@@ -755,14 +753,12 @@ void GameManager::DrawObjects() {
 	}
 	//Lv4以上.
 	if (gameData->level >= 4) {
-		mgl[2].Draw();
-		mgl[3].Draw();
+		fireworksMng->Draw();
 	}
 	//Lv5以上.
-	if (gameData->level >= 5){
+	if (gameData->level >= 5) {
 		laserNor3.Draw();
 		laserNor4.Draw();
-		fireworksMng->Draw();
 	}
 }
 //反射モード演出.
