@@ -151,13 +151,13 @@ void EffectManager::Draw() {
 
 				case Effect_ReflectLaser:
 				{
-					Box box = { effect[i].pos, { 10+effect[i].counter*4, 10+effect[i].counter*4 }, COLOR_PLY_REFLECT };
+					Circle cir = { effect[i].pos, 5+effect[i].counter*2, COLOR_PLY_REFLECT };
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawBoxST(&box, ANC_MID, false, true);
+					DrawCircleST(&cir, false, true);
 				}
 				break;
 

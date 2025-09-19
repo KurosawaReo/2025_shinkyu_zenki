@@ -16,6 +16,9 @@ void ItemManager::Init()
 	p_gamedata  = GameData::GetPtr();
 	p_player    = Player::GetPtr();
 	p_effectMng = EffectManager::GetPtr();
+
+	//画像.
+	imgItem.LoadFile(_T("Resources/Images/item.png"));	
 }
 //リセット.
 void ItemManager::Reset()
@@ -79,15 +82,17 @@ void ItemManager::Draw()
 			}
 			//アイテム本体.
 			{
-				Box box1 = { data[i].pos, {ITEM_SIZE,   ITEM_SIZE  }, COLOR_ITEM }; //{pos}, {size}, color.
-				Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
-				DrawBoxST(&box1, ANC_MID, false);
-				DrawBoxST(&box2, ANC_MID, false);
+				//Box box1 = { data[i].pos, {ITEM_SIZE,   ITEM_SIZE  }, COLOR_ITEM }; //{pos}, {size}, color.
+				//Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
+				//DrawBoxST(&box1, ANC_MID, false);
+				//DrawBoxST(&box2, ANC_MID, false);
+
+				imgItem.DrawExtend(data[i].pos, {0.035, 0.035}, ANC_MID, true, true);
 
 				//チュートリアル用.
 				if (p_gamedata->stage == STAGE_TUTORIAL) {
 
-					DrawStr str(_T("アイテム"), box1.pos.Add(0, -30).ToIntXY(), 0xFFFFFF);
+					DrawStr str(_T("アイテム"), data[i].pos.Add(0, -30).ToIntXY(), COLOR_ITEM);
 					str.Draw();
 				}
 			}
@@ -130,11 +135,10 @@ void ItemManager::CheckHitPlayer(int idx)
 	//プレイヤーの判定を取得.
 	Circle plyHit = p_player->GetHit();
 	//当たり判定を四角形とする.
-	Box plyBox  = { plyHit.pos,   {PLAYER_SIZE, PLAYER_SIZE}, {} };
-	Box itemBox = { data[idx].pos, {ITEM_SIZE,   ITEM_SIZE},   {} };
+	Box itemBox = { data[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {} };
 	
 	//当たった場合.
-	if (HitBoxBox(&plyBox, &itemBox)) {
+	if (HitBoxCir(&itemBox, &plyHit)) {
 		OnHitPlayer(idx);
 	}
 }

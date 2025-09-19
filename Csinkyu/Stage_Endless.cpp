@@ -70,7 +70,6 @@ void EndlessStage::Update() {
 			if (p_data->counter >= 6000) { //6000 = 出現間隔約??%地点.
 				p_data->level = 4; //Lv4へ.
 
-				GameManager::GetPtr()->ResetStrLaser();
 				ItemManager::GetPtr()->AddItemCnt(); //アイテムを増やす.
 
 				//サウンド.

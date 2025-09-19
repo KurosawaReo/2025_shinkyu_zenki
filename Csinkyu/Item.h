@@ -34,6 +34,8 @@ private:
 	ItemData data[2];
 	int      itemCnt{}; //出すアイテムの数.
 
+	DrawImg  imgItem{}; //アイテム画像.
+
 	GameData*      p_gamedata{};  //ゲームデータ.
 	Player*        p_player{};    //プレイヤーデータ.
 	EffectManager* p_effectMng{};
