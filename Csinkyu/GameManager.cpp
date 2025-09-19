@@ -461,7 +461,6 @@ void GameManager::UpdateGame() {
 		}
 		//ポーズ.
 		if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
-			Debug::Log(L"a");
 			gameData->scene = SCENE_PAUSE;
 			tmGameTime.Stop(); //一時停止.
 			tmSlowMode.Stop(); //一時停止.
@@ -486,8 +485,6 @@ void GameManager::UpdateEnd() {
 }
 void GameManager::UpdatePause() {
 	
-	Debug::Log(L"b");
-
 	//ポーズ解除.
 	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
