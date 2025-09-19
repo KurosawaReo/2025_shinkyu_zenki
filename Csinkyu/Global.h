@@ -79,7 +79,7 @@ enum StageType
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 
 //アイテム.
-#define ITEM_SIZE						(20)			//アイテムサイズ.
+#define ITEM_SIZE						(25)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME				(400)           //アイテム復活時間.
 
