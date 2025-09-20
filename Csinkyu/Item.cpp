@@ -35,15 +35,6 @@ void ItemManager::Reset()
 //更新.
 void ItemManager::Update()
 {
-	//発動待ちなら.
-	if (isItemUseWait) {
-		//敵のレーザーが存在すれば.
-		if (p_laserMng->IsExistEnemyLaser()) {
-			isItemUseWait = false;
-			ItemUse(); //アイテム発動.
-		}
-	}
-
 	for (int i = 0; i < ITEM_COUNT; i++) {
 
 		//出現済みアイテム.
@@ -66,8 +57,8 @@ void ItemManager::Update()
 		else {
 			//召喚可能なら.
 			if (i+1 <= itemMaxCnt) {
-				//スローモード中は加算しない.
-				items[i].spawnCounter += (isSlowMode) ? 0 : 1;
+				//反射モード中は加算しない.
+				items[i].spawnCounter += (p_gamedata->isReflectMode) ? 0 : 1;
 				//一定時間で再生成.
 				if (items[i].spawnCounter > ITEM_RESPAWN_TIME)
 				{
@@ -76,6 +67,12 @@ void ItemManager::Update()
 				}
 			}
 		}
+	}
+
+	//発動待ちなら(もし何か発動条件をつけるならここに)
+	if (isItemUseWait) {
+		isItemUseWait = false;
+		ItemUse(); //アイテム発動.
 	}
 }
 //描画.

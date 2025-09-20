@@ -22,7 +22,7 @@ void BG_Tile::Update() {
 	}
 }
 //描画.
-void BG_Tile::Draw(bool isSlow, double slowTime) {
+void BG_Tile::Draw(double slowTime) {
 
 	//通常モード.
 	{
@@ -31,7 +31,7 @@ void BG_Tile::Draw(bool isSlow, double slowTime) {
 		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
 	}
 	//反射モード.
-	if (isSlow) {
+	if (p_data->isReflectMode) {
 		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeST(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter())/(WINDOW_WID/4))+1)/2);
 		img[1]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
@@ -97,7 +97,7 @@ void BackGround::Draw() {
 	//スローモード経過時間.
 	float pass = GameManager::GetPtr()->GetSlowModeTime();
 	//最初の0.5秒
-	double time = 0.5-(pass -(SLOW_MODE_TIME-0.5));
+	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
 	time = CalcNumEaseOut(time); //値の曲線変動.
 
 	//一定間隔ごと.
@@ -107,7 +107,7 @@ void BackGround::Draw() {
 	}
 	//各タイル描画.
 	for (auto& i : tiles) {
-		i.Draw(isSlowMode, time);
+		i.Draw(time);
 	}
 
 	//スローモード中.

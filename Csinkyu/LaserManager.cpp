@@ -454,13 +454,21 @@ void LaserManager::ReflectLaser(int idx)
 }
 
 //敵のレーザーが1つでも存在するかどうか.
-bool LaserManager::IsExistEnemyLaser() {
+bool LaserManager::IsExistEnemyLaser(DBL_XY pos, float len) {
 
 	//全てのレーザー.
 	for (int i = 0; i < LASER_CNT_MAX; i++) {
 		if (laser[i].ValidFlag) {
-			if (laser[i].type == Laser_Normal)  { return true; }
-			if (laser[i].type == Laser_Falling) { return true; }
+
+			//敵のレーザーなら.
+			if (laser[i].type == Laser_Normal   ||
+			    laser[i].type == Laser_Straight ||
+			    laser[i].type == Laser_Falling) 
+			{
+				//距離が範囲内ならtrueを返す.
+				double dist = CalcDist(pos, {laser[i].x, laser[i].y});
+				_return(true, dist <= len);
+			}
 		}
 	}
 

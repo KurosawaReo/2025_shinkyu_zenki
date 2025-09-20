@@ -38,7 +38,6 @@ private:
 	DrawImg  imgItem{}; //アイテム画像.
 
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
-	bool     isSlowMode{};    //スローモードかどうか.
 
 	GameData*      p_gamedata{};  //ゲームデータ.
 	Player*        p_player{};    //プレイヤーデータ.
@@ -46,8 +45,6 @@ private:
 	EffectManager* p_effectMng{};
 
 public:
-	//set.
-	void SetIsSlowMode(bool _flag) { isSlowMode = _flag; }
 	//add.
 	void AddItemCnt() { itemMaxCnt++; }
 

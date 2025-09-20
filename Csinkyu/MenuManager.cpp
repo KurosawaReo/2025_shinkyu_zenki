@@ -6,19 +6,10 @@
 #include "GameManager.h"
 #include "MenuManager.h"
 
-// フォントハンドル
-static int largeFont = -1;     // メニュー項目用（大）
-static int infoFont = -1;      // 操作説明用（中）
-
-// モード画像ハンドル
-static int imageStart = -1;
-static int imageTutorial = -1;
-static int imageBack = -1;
-
 // 初期化
 void MenuManager::Init() {
 
-	p_data = GameData::GetPtr();
+	p_data  = GameData::GetPtr();
 	p_sound = SoundMng::GetPtr();
 
 	// 入力アクション登録
@@ -30,22 +21,14 @@ void MenuManager::Init() {
 	input->AddAction(_T("MENU_NEXT"), KEY_SPACE);
 	input->AddAction(_T("MENU_NEXT"), KEY_ENTER);
 
-	// フォント作成（1回のみ）
-	if (largeFont == -1)
-		largeFont = CreateFontToHandle(_T("メイリオ"), 36, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
+	//フォント作成.
+	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FONT_EDGE);
+	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FONT_EDGE);
 
-	if (infoFont == -1)
-		infoFont = CreateFontToHandle(_T("メイリオ"), 28, 3, DX_FONTTYPE_ANTIALIASING_EDGE);
-
-	// モードごとの画像読み込み（1回だけ）
-	if (imageStart == -1)
-		imageStart = LoadGraph(_T("Resources/Images/menu_start1.png")); // ゲーム開始画像
-
-	if (imageTutorial == -1)
-		imageTutorial = LoadGraph(_T("Resources/Images/menu_tutorial.png")); // チュートリアル画像
-
-	if (imageBack == -1)
-		imageBack = LoadGraph(_T("Resources/Images/menu_back.png")); // タイトル戻る画像
+	//モードごとの画像読み込み.
+	imgMenu[0].LoadFile(_T("Resources/Images/menu_start1.png"));   //ゲーム開始.
+	imgMenu[1].LoadFile(_T("Resources/Images/menu_tutorial.png")); //チュートリアル.
+	imgMenu[2].LoadFile(_T("Resources/Images/menu_back.png"));     //タイトルに戻る.
 
 	Reset();
 }
@@ -106,7 +89,7 @@ void MenuManager::Draw() {
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// メニュータイトル（中央）
-	DxLib::DrawStringToHandle(WINDOW_WID / 2 - 100, 100, _T("モード選択"), GetColor(0, 255, 255), largeFont);
+	DxLib::DrawStringToHandle(WINDOW_WID / 2 - 100, 100, _T("モード選択"), GetColor(0, 255, 255), fontMenu[1].GetFont());
 
 	// メニュー項目
 	int menuX = 100;
@@ -124,15 +107,15 @@ void MenuManager::Draw() {
 	// 各項目描画
 	unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
 	DxLib::DrawBox(menuX, menuY, menuX + boxWidth, menuY + boxHeight, selectColor1, FALSE);
-	DxLib::DrawStringToHandle(menuX + 30, menuY + 15, _T("     ゲーム開始"), color1, largeFont);
+	DxLib::DrawStringToHandle(menuX + 30, menuY + 15, _T("     ゲーム開始"), color1, fontMenu[1].GetFont());
 
 	unsigned int color2 = (selectedIndex == 1) ? selectColor1 : normalColor;
 	DxLib::DrawBox(menuX, menuY + menuSpacing, menuX + boxWidth, menuY + menuSpacing + boxHeight, selectColor1, FALSE);
-	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing + 15, _T("   チュートリアル"), color2, largeFont);
+	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing + 15, _T("   チュートリアル"), color2, fontMenu[1].GetFont());
 
 	unsigned int color3 = (selectedIndex == 2) ? selectColor1 : normalColor;
 	DxLib::DrawBox(menuX, menuY + menuSpacing * 2, menuX + boxWidth, menuY + menuSpacing * 2 + boxHeight, selectColor1, FALSE);
-	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing * 2 + 15, _T("   タイトルに戻る"), color3, largeFont);
+	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing * 2 + 15, _T("   タイトルに戻る"), color3, fontMenu[1].GetFont());
 
 	// 選択中の矢印（大きめ）
 	{
@@ -148,50 +131,20 @@ void MenuManager::Draw() {
 //		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
 	}
 
-	// ▼ モード画像の枠（右上）
-	int imgWidth = 0, imgHeight = 0;
+	// ▼ モード画像
 	
-	// デフォルトは imageStart のサイズを使用
-	GetGraphSize(imageStart, &imgWidth, &imgHeight);
+	//画像の座標(ここを中心とする)
+	DBL_XY imgPos  = { WINDOW_WID - 850, 245 };
+	//画像のサイズ.
+	DBL_XY imgSize = imgMenu[selectedIndex].GetSize().ToDblXY();
+	//枠を画像よりどれだけ大きくするか.
+	const int margin = 10;
 
-	// 他の画像のサイズは同じ前提ならこれでOK
-	if (selectedIndex == 1) GetGraphSize(imageTutorial, &imgWidth, &imgHeight);
-	else if (selectedIndex == 2) GetGraphSize(imageBack, &imgWidth, &imgHeight);
-
-	// 枠を画像より少し大きくするための余白
-	int margin = 10;
-
-	// 枠サイズ（画像サイズ + 余白）
-	int imgBoxWidth = imgWidth + margin * 2;
-	int imgBoxHeight = imgHeight + margin * 2;
-
-	// 枠の位置
-	int imgBoxX = WINDOW_WID - 850 - margin;
-	int imgBoxY = 245 - margin;
-
-	// 背景（半透明）
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	// 枠線
-	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, frameColor, FALSE);
-
-	// 画像描画（枠の中に配置）
-	int imgX = imgBoxX + margin;
-	int imgY = imgBoxY + margin;
-
-	switch (selectedIndex) {
-	case 0:
-		DrawGraph(imgX, imgY, imageStart, TRUE);
-		break;
-	case 1:
-		DrawGraph(imgX, imgY, imageTutorial, TRUE);
-		break;
-	case 2:
-		DrawGraph(imgX, imgY, imageBack, TRUE);
-		break;
-	}
+	//画像.
+	imgMenu[selectedIndex].Draw(imgPos);
+	//画像の枠線(位置とサイズは画像を元にする)
+	Box box = { imgPos, imgSize + margin, frameColor };
+	DrawBoxST(&box, ANC_MID, false);
 
 	// ▼ 説明文の枠（右下）
 	int textBoxX = WINDOW_WID - 560;
@@ -213,21 +166,21 @@ void MenuManager::Draw() {
 	switch (selectedIndex) 
 	{
 	case 0:
-		DrawStringToHandle(textX, textY + 0, _T("時間経過でLevelが上がり、"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 30, _T("ゲームオーバーになるまで続く"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 60, _T("エンドレスモード。"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 90, _T("・隕石を壊す : +500"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 120, _T("・アイテムを取る : +100"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 150, _T("・タイムボーナス : 1秒ごとに +10"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 180, _T("ハイスコアを目指して頑張ろう！"), normalColor, infoFont);
+		DrawStringToHandle(textX, textY + 0, _T("時間経過でLevelが上がり、"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 30, _T("ゲームオーバーになるまで続く"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 60, _T("エンドレスモード。"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 90, _T("・隕石を壊す : +500"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 120, _T("・アイテムを取る : +100"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 150, _T("・タイムボーナス : 1秒ごとに +10"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 180, _T("ハイスコアを目指して頑張ろう！"), normalColor, fontMenu[0].GetFont());
 		break;
 	case 1:
-		DrawStringToHandle(textX, textY + 0, _T("ゲームの基本操作を学べます。"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 40, _T("初めての方は最初に"), normalColor, infoFont);
-		DrawStringToHandle(textX, textY + 80, _T("プレイしてください。"), normalColor, infoFont);
+		DrawStringToHandle(textX, textY + 0, _T("ゲームの基本操作を学べます。"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 40, _T("初めての方は最初に"), normalColor, fontMenu[0].GetFont());
+		DrawStringToHandle(textX, textY + 80, _T("プレイしてください。"), normalColor, fontMenu[0].GetFont());
 		break;
 	case 2:
-		DrawStringToHandle(textX, textY + 0, _T("タイトル画面に戻ります。"), normalColor, infoFont);
+		DrawStringToHandle(textX, textY + 0, _T("タイトル画面に戻ります。"), normalColor, fontMenu[0].GetFont());
 		break;
 	}
 
@@ -238,6 +191,6 @@ void MenuManager::Draw() {
 	int infoHeight = 180;
 
 	DrawBox(infoX, infoY, infoX + infoWidth, infoY + infoHeight, selectColor1, FALSE);
-	DrawStringToHandle(infoX + 20, infoY + 20, _T("選択 :↑↓ or W/S:"), normalColor, infoFont);
-	DrawStringToHandle(infoX + 20, infoY + 70, _T("決定 :SPACE/ENTER/Ⓐ"), normalColor, infoFont);
+	DrawStringToHandle(infoX + 20, infoY + 20, _T("選択 :↑↓ or W/S:"), normalColor, fontMenu[0].GetFont());
+	DrawStringToHandle(infoX + 20, infoY + 70, _T("決定 :SPACE/ENTER/Ⓐ"), normalColor, fontMenu[0].GetFont());
 }

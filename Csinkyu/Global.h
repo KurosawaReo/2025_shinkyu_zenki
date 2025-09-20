@@ -67,8 +67,9 @@ enum StageType
 //ゲーム設定.
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 
-#define SLOW_MODE_TIME					(8)             //スローモード制限時間.
-#define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
+#define REFLECT_MODE_TIME				(8)             //反射モード制限時間.
+#define SLOW_MODE_SPEED					(0.20f)			//スロー速度倍率.
+#define SLOW_MODE_DIS_LEN				(200)			//スローになるプレイヤーとレーザーの距離範囲.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 

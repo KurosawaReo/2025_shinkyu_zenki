@@ -240,7 +240,7 @@ void GameManager::Init() {
 		tmScene[i] = Timer(COUNT_UP, 0);
 	}
 	tmGameTime = Timer(COUNT_UP, 0);
-	tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME);
+	tmSlowMode = Timer(COUNT_DOWN, REFLECT_MODE_TIME);
 
 	//Init処理
 	{
@@ -285,15 +285,16 @@ void GameManager::Reset() {
 	}
 
 	//データ.
-	gameData->scoreBef  = 0;
-	gameData->score     = 0;
-	gameData->counter   = 0;
-	gameData->speedRate = 1.0;   //通常は100%
-	gameData->spawnRate = 1.0;   //最初は100%
-	gameData->level     = 1;     //最初はLv1
-	isTitleAnim         = false;
-	isBestScoreSound    = false;
-	isGameStart         = false;
+	gameData->scoreBef      = 0;
+	gameData->score         = 0;
+	gameData->counter       = 0;
+	gameData->speedRate     = 1.0;   //通常は100%
+	gameData->spawnRate     = 1.0;   //最初は100%
+	gameData->level         = 1;     //最初はLv1
+	gameData->isReflectMode = false; //最初はLv1
+	isTitleAnim             = false;
+	isBestScoreSound        = false;
+	isGameStart             = false;
 	//サウンド.
 	p_sound->StopAll();
 	p_sound->Play(_T("BGM_Menu"), true, 90); //メニューBGMを流す.
@@ -500,7 +501,7 @@ void GameManager::UpdatePause() {
 		gameData->scene = SCENE_GAME;
 		tmGameTime.Start(); //再開.
 		//スローモード中だったなら.
-		if (tmSlowMode.GetPassTime() < SLOW_MODE_TIME) {
+		if (tmSlowMode.GetPassTime() < REFLECT_MODE_TIME) {
 			tmSlowMode.Start(); //再開.
 		}
 	}
@@ -538,7 +539,16 @@ void GameManager::UpdateObjects() {
 //スローモードの更新.
 void GameManager::UpdateSlowMode() {
 
-	//スローモード.
+	//スローモード時間判定.
+	if (gameData->slowBufCntr > 0) {
+		gameData->speedRate  = SLOW_MODE_SPEED; //速度倍率を遅くする.
+		gameData->slowBufCntr--;                //カウントを減らす.
+	}
+	else {
+		gameData->speedRate  = 1.0; //速度倍率を戻す.
+	}
+
+	//スローモード中.
 	if (tmSlowMode.GetIsMove()) {
 		//3秒以下になったばかりの時.
 		if (tmSlowMode.GetPassTime() <= 3){
@@ -564,14 +574,13 @@ void GameManager::UpdateSlowMode() {
 		//時間切れで解除.
 		if (tmSlowMode.GetPassTime() <= 0) {
 			
-			player->SetMode(Player_Normal); //反射モード終了.
 			p_sound->Play(_T("PowerDown"), false, 78); //再生.
 			
-			//リセット.
-			gameData->speedRate = 1.0;  //速度倍率を100%に戻す.
+			gameData->isReflectMode = false; //反射モード解除.
+			gameData->speedRate     = 1.0;   //速度倍率を100%に戻す.
+			gameData->slowBufCntr   = 0;     //カウンターを0に.
 			tmSlowMode.Reset();
-			bg->  SetIsSlowMode(false); //背景を戻す.
-			item->SetIsSlowMode(false); //アイテムの出現を再開.
+			player->SetMode(Player_Normal);  //通常状態に戻す.
 			
 			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 				isItemCountDownSound[i] = false;
@@ -788,7 +797,7 @@ void GameManager::DrawReflectMode() {
 			
 			SetDrawBlendModeST(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
-			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
+			if (tmSlowMode.GetPassTime() > REFLECT_MODE_TIME-1) {
 				imgReflect.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2}, {0.3+0.2*anim, 0.3+0.2*anim});
 			}
 			//最後の3秒.
@@ -848,10 +857,8 @@ void GameManager::GameEnd() {
 //アイテムを使用した時.
 void GameManager::ItemUsed() {
 
-	gameData->speedRate = SLOW_MODE_SPEED; //速度倍率を遅くする.
-	tmSlowMode.Start();                    //スローモード計測開始.
-	bg->  SetIsSlowMode(true);             //背景変化.
-	item->SetIsSlowMode(true);             //アイテムの出現を停止.
+	gameData->isReflectMode = true; //反射モードにする.
+	tmSlowMode.Start();             //スローモード計測開始.
 
 	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {

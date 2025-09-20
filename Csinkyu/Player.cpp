@@ -3,6 +3,7 @@
    プレイヤー管理.
 */
 #include "GameManager.h"
+#include "LaserManager.h"
 #include "Obst_NormalLaserMain.h"
 
 #include "Player.h"
@@ -65,6 +66,14 @@ void Player::Update()
 		UpdateAfterImage();
 		UpdateReflectEffects();
 		PlayerMove();
+		
+		//反射モード中.
+		if (p_data->isReflectMode) {
+			//敵のレーザーが近くにあれば.
+			if (LaserManager::GetPtr()->IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
+				p_data->slowBufCntr = 50;
+			}
+		}
 	}
 }
 //描画.

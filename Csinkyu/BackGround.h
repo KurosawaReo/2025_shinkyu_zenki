@@ -22,9 +22,9 @@ private:
 	BackGround* p_bg{};
 
 public:
-	void Init();                             //初期化.
-	void Update();                           //更新.
-	void Draw(bool isSlow, double slowTime); //描画.
+	void Init();                //初期化.
+	void Update();              //更新.
+	void Draw(double slowTime); //描画.
 
 	void Shine(); //発光.
 };
@@ -44,14 +44,11 @@ private:
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 
-	float counter;    //時間経過計測用.
-	bool  isSlowMode; //スローモードかどうか.
+	float counter; //時間経過計測用.
 
 	GameData* p_data{}; //ゲームデータ.
 
 public:
-	//set.
-	void  SetIsSlowMode(bool _flag) { isSlowMode = _flag; }
 	//get.
 	float GetCounter() const { return counter; }
 

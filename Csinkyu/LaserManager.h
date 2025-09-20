@@ -81,7 +81,7 @@ public:
 	void DeleteLaser      (int idx);                                //消去.
 	void ReflectLaser     (int idx);               	                //反射.
 
-	bool IsExistEnemyLaser();                                       //敵のレーザーが1つでも存在するかどうか.
+	bool IsExistEnemyLaser(DBL_XY pos, float len);                  //敵のレーザーが1つでも存在するかどうか.
 
 	void LaserRefTracking (int idx);                                //レーザー(reflected)の隕石追尾.
 	void LaserReflectRange(Circle* cir);						    //レーザーの一括反射.
