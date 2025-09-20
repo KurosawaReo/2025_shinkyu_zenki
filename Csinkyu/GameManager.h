@@ -23,6 +23,7 @@ public:
 	int		  bestScore;  //ベストスコア.
 	int		  level;	  //レベル.
 
+	float	  speedRate;  //ゲーム進行速度倍率.
 	float	  spawnRate;  //障害物の出現時間割合.
 	float	  counter;    //経過時間カウンター(スローの影響を受ける)
 
@@ -30,8 +31,6 @@ public:
 	int		  font2;      //フォント.
 	int		  font3;      //フォント.
 	int		  font4;      //フォント.
-		
-	bool	  isSlow;     //スローモードかどうか.
 };
 
 //ゲームマネージャー.[継承不可]
@@ -108,5 +107,5 @@ public:
 
 	//その他.
 	void GameEnd();
-	void TakeItem();
+	void ItemUsed();
 };

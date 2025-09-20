@@ -84,7 +84,7 @@ void BackGround::Init() {
 //更新.
 void BackGround::Update() {
 	
-	counter += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	counter += p_data->speedRate;
 
 	//各タイル更新.
 	for (auto& i : tiles) {
@@ -107,11 +107,11 @@ void BackGround::Draw() {
 	}
 	//各タイル描画.
 	for (auto& i : tiles) {
-		i.Draw(p_data->isSlow, time);
+		i.Draw(isSlowMode, time);
 	}
 
 	//スローモード中.
-	if (p_data->isSlow) {
+	if (p_data->speedRate) {
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
 		DrawBoxST(&box, ANC_MID, false, true);

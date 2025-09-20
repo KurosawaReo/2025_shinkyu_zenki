@@ -77,8 +77,10 @@ enum StageType
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
+#define PLAYER_MAX_EFFECT               (5)             //最大エフェクト数
 
 //アイテム.
+#define ITEM_COUNT						(2)				//アイテムの数.
 #define ITEM_SIZE						(25)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME				(400)           //アイテム復活時間.
@@ -155,7 +157,7 @@ enum StageType
 #define FIREWORKS_GRAVITY				(0.3f)			//重力加速度
 
 //エフェクト.
-#define EFFECT_MAX						(50)			//エフェクトの最大出現数.
+#define EFFECT_MAX						(70)			//エフェクトの最大出現数.
 
 //スコア.
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.

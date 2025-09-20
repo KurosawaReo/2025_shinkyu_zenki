@@ -121,7 +121,7 @@ int Ripples::GetEffectState(int index)
 void Ripples::UpdateFlashGeneration()
 {
 	//タイマー減少.
-	flashTimer -= ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+	flashTimer -= p_data->speedRate;
 	//0以下になったら実行.
 	if (flashTimer <= 0) {
 		// 新しいフラッシュエフェクトを生成
@@ -140,7 +140,7 @@ void Ripples::UpdateFlashGeneration()
 		}
 
 		//カウントダウン.
-		flashEffect[i].Counter -= (p_data->isSlow) ? (float)SLOW_MODE_SPEED : 1.0f;
+		flashEffect[i].Counter -= p_data->speedRate;
 		//エフェクト時間が終了したら無効化.
 		if (flashEffect[i].Counter <= 0)  // 0以下になったら終了
 		{

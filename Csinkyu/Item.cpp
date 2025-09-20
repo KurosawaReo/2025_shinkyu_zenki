@@ -4,6 +4,7 @@
 */
 #include "Player.h"
 #include "GameManager.h"
+#include "LaserManager.h"
 #include "EffectManager.h"
 
 #include "Item.h"
@@ -15,6 +16,7 @@ void ItemManager::Init()
 {
 	p_gamedata  = GameData::GetPtr();
 	p_player    = Player::GetPtr();
+	p_laserMng  = LaserManager::GetPtr();
 	p_effectMng = EffectManager::GetPtr();
 
 	//画像.
@@ -24,41 +26,52 @@ void ItemManager::Init()
 void ItemManager::Reset()
 {
 	//全て消滅.
-	for (int i = 0; i < _countof(data); i++) {
+	for (int i = 0; i < _countof(items); i++) {
 		ItemErase(i);
 	}
 	//最初はアイテム1つ.
-	itemCnt = 1;
+	itemMaxCnt = 1;
 }
 //更新.
 void ItemManager::Update()
 {
-	for (int i = 0; i < _countof(data); i++) {
+	//発動待ちなら.
+	if (isItemUseWait) {
+		//敵のレーザーが存在すれば.
+		if (p_laserMng->IsExistEnemyLaser()) {
+			isItemUseWait = false;
+			ItemUse(); //アイテム発動.
+		}
+	}
 
-		if (data[i].active) {
+	for (int i = 0; i < ITEM_COUNT; i++) {
+
+		//出現済みアイテム.
+		if (items[i].active) {
 
 			//カウンター.
-			data[i].counter += ((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
+			items[i].counter += p_gamedata->speedRate;
 			//落下.
-			data[i].pos.y += ITEM_SPEED * (double)((p_gamedata->isSlow) ? SLOW_MODE_SPEED : 1);
+			items[i].pos.y += ITEM_SPEED * p_gamedata->speedRate;
 			//当たり判定.
 			CheckHitPlayer(i);
 
 			//画面下部を超えたら消滅.
 			//チュートリアルテキスト用に余分をつける.
-			if (data[i].pos.y > WINDOW_HEI + ITEM_SIZE + 50) {
+			if (items[i].pos.y > WINDOW_HEI + ITEM_SIZE + 50) {
 				ItemErase(i);
 			}
 		}
+		//未出現アイテム.
 		else {
 			//召喚可能なら.
-			if (itemCnt >= i+1) {
+			if (i+1 <= itemMaxCnt) {
 				//スローモード中は加算しない.
-				data[i].spawnCounter += (p_gamedata->isSlow) ? 0 : 1;
+				items[i].spawnCounter += (isSlowMode) ? 0 : 1;
 				//一定時間で再生成.
-				if (data[i].spawnCounter > ITEM_RESPAWN_TIME)
+				if (items[i].spawnCounter > ITEM_RESPAWN_TIME)
 				{
-					data[i].spawnCounter = 0; //リセット.
+					items[i].spawnCounter = 0; //リセット.
 					ItemSpawn(i);
 				}
 			}
@@ -68,16 +81,16 @@ void ItemManager::Update()
 //描画.
 void ItemManager::Draw()
 {
-	for (int i = 0; i < _countof(data); i++) {
+	for (int i = 0; i < _countof(items); i++) {
 
 		//有効なアイテムを描画.
-		if (data[i].active) {
+		if (items[i].active) {
 			//強化演出.
-			if (data[i].type == Item_Super) {
+			if (items[i].type == Item_Super) {
 
-				Circle cir = { data[i].pos, 30, COLOR_PLY_REFLECT };
+				Circle cir = { items[i].pos, 30, COLOR_PLY_REFLECT };
 
-				SetDrawBlendModeST(MODE_ADD, 128 + 127*CalcNumWaveLoop(data[i].counter/20)); //点滅.
+				SetDrawBlendModeST(MODE_ADD, 128 + 127*CalcNumWaveLoop(items[i].counter/20)); //点滅.
 				DrawCircleST(&cir, false, true);
 				ResetDrawBlendMode();
 			}
@@ -88,11 +101,11 @@ void ItemManager::Draw()
 				//DrawBoxST(&box1, ANC_MID, false);
 				//DrawBoxST(&box2, ANC_MID, false);
 
-				imgItem.DrawExtend(data[i].pos, {0.035, 0.035}, ANC_MID, true, true);
+				imgItem.DrawExtend(items[i].pos, {0.035, 0.035}, ANC_MID, true, true);
 
 				//チュートリアル用.
 				if (p_gamedata->stage == STAGE_TUTORIAL) {
-					DrawStr str(_T("アイテム"), data[i].pos.Add(0, -35).ToIntXY(), COLOR_ITEM);
+					DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToIntXY(), COLOR_ITEM);
 					str.Draw();
 				}
 			}
@@ -104,77 +117,80 @@ void ItemManager::Draw()
 void ItemManager::ItemSpawn(int idx) {
 
 	//座標の設定.
-	data[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
-	data[idx].pos.y = -ITEM_SIZE;					        		    // 画面上部の少し上から開始
+	items[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
+	items[idx].pos.y = -ITEM_SIZE;					        		    // 画面上部の少し上から開始
 	//タイプを決める.
-	if (p_gamedata->level <= 4) {
-		data[idx].type = Item_Normal;
+	if (p_gamedata->level < 5) {
+		items[idx].type = Item_Normal;
 	}
 	else {
-		data[idx].type = Item_Super; //Lv4からは強化版へ.
+		items[idx].type = Item_Super; //Lv5からは強化版へ.
 	}
 	// アイテムの状態設定
-	data[idx].active = true; //アクティブフラグ
-	data[idx].counter = 0;
+	items[idx].active = true; //アクティブフラグ
+	items[idx].counter = 0;
 }
 //アイテム消滅.
 void ItemManager::ItemErase(int idx) {
-	data[idx].active = false;
-	data[idx].counter = 0;
-	data[idx].spawnCounter = 0;
+	items[idx].active = false;
+	items[idx].counter = 0;
+	items[idx].spawnCounter = 0;
+}
+//アイテム発動.
+void ItemManager::ItemUse()
+{
+	//アイテムを使用.
+	GameManager::GetPtr()->ItemUsed();
+	//サウンド.
+	SoundMng* sound = SoundMng::GetPtr();
+	sound->Play(_T("ItemUse"), false, 76); //ポワーン.
 }
 
 // プレイヤーとの当たり判定
 void ItemManager::CheckHitPlayer(int idx)
 {
 	//アイテムが無効orプレイヤーがいないなら処理しない.
-	if (!data[idx].active || !p_player->GetActive()) {
+	if (!items[idx].active || !p_player->GetActive()) {
 		return;
 	}
 
 	//プレイヤーの判定を取得.
 	Circle plyHit = p_player->GetHit();
 	//当たり判定を四角形とする.
-	Box itemBox = { data[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {} };
+	Box itemBox = { items[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {} };
 	
 	//当たった場合.
 	if (HitBoxCir(&itemBox, &plyHit)) {
-		OnHitPlayer(idx);
+
+		//エフェクト召喚.
+		EffectData effect{};
+		effect.type = Effect_Score100;
+		effect.pos = items[idx].pos;
+		p_effectMng->SpawnEffect(&effect);
+		//スコア加算.
+		p_gamedata->score += SCORE_TAKE_ITEM;
+
+		//プレイヤーのモード設定.
+		switch (items[idx].type)
+		{
+			case Item_Normal:
+				p_player->SetMode(Player_Reflect);
+				break;
+			case Item_Super:
+				p_player->SetMode(Player_SuperReflect);
+				break;
+
+			default: assert(FALSE); break;
+		}
+
+		//座標を画面上に移動.
+		items[idx].pos = { -100, -100 };
+		//全てのアイテム.
+		for (int i = 0; i < ITEM_COUNT; i++) {
+			items[i].active  = false; //削除(非アクティブに)
+			items[i].counter = 0;     //カウンターリセット.
+		}
+
+		isItemUseWait = true; //発動待ち.
 	}
-}
-
-// プレイヤーと当たったときの処理
-void ItemManager::OnHitPlayer(int idx)
-{
-	//アイテムを取った処理.
-	GameManager::GetPtr()->TakeItem();
-	//サウンド.
-	SoundMng* sound = SoundMng::GetPtr();
-	sound->Play(_T("TakeItem"),   false, 76); //ポワーン.
-	//エフェクト召喚.
-	EffectData effect{};
-	effect.type = Effect_Score100;
-	effect.pos = data[idx].pos;
-	p_effectMng->SpawnEffect(&effect);
-
-	/*Circle cir = { p_player.GetPos(), 1000, {} };
-	p_laserMng.LaserReflectRange(&cir);*/
-
-	//プレイヤーのモード設定.
-	switch (data[idx].type)
-	{
-		case Item_Normal:
-			p_player->SetMode(Player_Reflect);
-			break;
-		case Item_Super:
-			p_player->SetMode(Player_SuperReflect);
-			break;
-
-		default: assert(false); break;
-	}
-	//アイテムを削除（非アクティブにする）
-	data[idx].active = false;
-	data[idx].counter = 0; //カウンターをリセットして再生成タイマー開始.
-	//座標を画面外に移動（念のため）
-	data[idx].pos = {-100, -100};
 }

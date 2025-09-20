@@ -51,12 +51,11 @@ private:
 	EffectManager* p_effectMng{}; //エフェクト管理.
 	InputMng*      p_input{};     //入力機能.
 
-public:
-	//???
-	static const int MAX_REFLECT_EFFECTS = 5;  // 最大エフェクト数
-	ReflectEffect reflectEffects[MAX_REFLECT_EFFECTS]{};  // エフェクト配列
-	int reflectEffectIndex{};  // 次に使用するエフェクトのインデックス
+	//エフェクト用(未使用)
+	ReflectEffect reflectEffects[PLAYER_MAX_EFFECT]{}; // エフェクト配列
+	int reflectEffectIndex{};                          // 次に使用するエフェクトのインデックス
 
+public:
 	//set.
 	void       SetActive(bool _active)     { active = _active; }
 	void       SetMode  (PlayerMode _mode) { mode   = _mode;   } //モード設定.
@@ -78,6 +77,7 @@ public:
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
 
+	//エフェクト用(未使用)
 	void CreateReflectEffect(DBL_XY pos);
 	void UpdateReflectEffects();
 	void DrawReflectEffects();

@@ -44,11 +44,14 @@ private:
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 
-	float counter; //時間経過計測用.
+	float counter;    //時間経過計測用.
+	bool  isSlowMode; //スローモードかどうか.
 
 	GameData* p_data{}; //ゲームデータ.
 
 public:
+	//set.
+	void  SetIsSlowMode(bool _flag) { isSlowMode = _flag; }
 	//get.
 	float GetCounter() const { return counter; }
 

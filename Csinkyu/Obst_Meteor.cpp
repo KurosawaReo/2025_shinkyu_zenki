@@ -28,10 +28,10 @@ void Meteor::Update() {
 	if (active) {
 
 		//移動.
-		pos.x += vel.x * METEOR_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-		pos.y += vel.y * METEOR_SPEED * (double)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		pos.x += vel.x * METEOR_SPEED * p_data->speedRate;
+		pos.y += vel.y * METEOR_SPEED * p_data->speedRate;
 		//回転.
-		ang += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+		ang += p_data->speedRate;
 
 		//状態別処理.
 		switch (state) 
@@ -45,7 +45,7 @@ void Meteor::Update() {
 
 			case Meteor_Destroy:
 				//破壊量の度合.
-				destroyCntr += (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+				destroyCntr += p_data->speedRate;
 				//時間が終了したら.
 				if (destroyCntr >= METEOR_DEST_TIME) {
 					state  = Meteor_Normal; //元に戻す.
@@ -75,7 +75,6 @@ void Meteor::Draw() {
 			
 			shape.line[i].color = COLOR_METEOR(pos);
 			DrawLineST(&shape.line[i], true, 2);
-//			DrawLineST(&shape.line[i], false, 1);
 		}
 
 		//チュートリアル.
