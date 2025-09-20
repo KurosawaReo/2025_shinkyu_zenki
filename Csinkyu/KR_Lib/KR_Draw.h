@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/09/15
+   ver: 2025/09/21
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -13,11 +13,12 @@ namespace KR_Lib
 	//フォントタイプID(入力しやすくする用)
 	enum FontTypeID
 	{
-		FONT_NORMAL = DX_FONTTYPE_NORMAL,
-		FONT_EDGE   = DX_FONTTYPE_EDGE,
-		FONT_ANTI   = DX_FONTTYPE_ANTIALIASING, //アンチエイリアス(滑らかになる)
+		FONT_NORMAL    = DX_FONTTYPE_NORMAL,
+		FONT_EDGE      = DX_FONTTYPE_EDGE,
+		FONT_ANTI      = DX_FONTTYPE_ANTIALIASING,      //アンチエイリアス(滑らかになる)
+		FONT_ANTI_EDGE = DX_FONTTYPE_ANTIALIASING_EDGE, //アンチエイリアス & エッジ
 
-		FONT_NONE   = -1, //指定なし.
+		FONT_NONE      = -1, //指定なし.
 	};
 	//描画モードID(入力しやすくする用)
 	enum BlendModeID

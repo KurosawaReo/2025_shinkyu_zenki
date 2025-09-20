@@ -22,9 +22,9 @@ private:
 	BackGround* p_bg{};
 
 public:
-	void Init();                             //初期化.
-	void Update();                           //更新.
-	void Draw(bool isSlow, double slowTime); //描画.
+	void Init();                //初期化.
+	void Update();              //更新.
+	void Draw(double slowTime); //描画.
 
 	void Shine(); //発光.
 };

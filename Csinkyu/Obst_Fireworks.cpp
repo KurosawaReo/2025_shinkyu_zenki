@@ -88,7 +88,7 @@ void FireworksManager::StartFireworks(float x, float y) {
 
 // ‰Ô‰Î¶¬XV
 void FireworksManager::UpdateFireworksGeneration() {
-	spawnTimer -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	spawnTimer -= p_data->speedRate;
 
 	if (spawnTimer <= 0) {
 		//1`3ŒÂ‚Ì‰Ô‰Î‚ðƒ‰ƒ“ƒ_ƒ€¶¬.
@@ -120,7 +120,7 @@ void FireworksManager::UpdateIndividualFireworks() {
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
 		if (fireworks[i].ValidFlag == 0) continue;
 
-		fireworks[i].Counter -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1.0f;
+		fireworks[i].Counter -= p_data->speedRate;
 
 		//Œx•\Ž¦.
 		if (fireworks[i].Counter > 0) {

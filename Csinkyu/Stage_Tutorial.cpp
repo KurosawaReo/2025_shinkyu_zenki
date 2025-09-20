@@ -65,6 +65,8 @@ void TutorialStage::UpdateStep0() {
 //更新:step1
 void TutorialStage::UpdateStep1() {
 
+
+
 	if (p_input->IsPushKeyTime(KEY_0) == 1) {
 
 		//サウンド.
@@ -128,9 +130,10 @@ void TutorialStage::UpdateStep4() {
 //描画:step1
 void TutorialStage::DrawStep1() {
 
-
 	DrawStr str(_T("↑↓←→: 移動"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0x00FFFF);
 	str.Draw(ANC_MID, p_data->font1);
+
+
 
 	//枠.
 	Box box = { str.pos.Add(0, 0).ToDblXY(), str.GetTextSize(p_data->font1).ToDblXY()+12, 0x00FFFF};

@@ -2,6 +2,7 @@
 
 //前方宣言.
 class Player;
+class LaserManager;
 class EffectManager;
 
 //アイテムタイプ.
@@ -31,18 +32,21 @@ public: //実体.
 	}
 
 private:
-	ItemData data[2];
-	int      itemCnt{}; //出すアイテムの数.
+	ItemData items[ITEM_COUNT]{};
+	int      itemMaxCnt{}; //出すアイテムの数.
 
 	DrawImg  imgItem{}; //アイテム画像.
 
+	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
+
 	GameData*      p_gamedata{};  //ゲームデータ.
 	Player*        p_player{};    //プレイヤーデータ.
+	LaserManager*  p_laserMng{};
 	EffectManager* p_effectMng{};
 
 public:
 	//add.
-	void AddItemCnt() { itemCnt++; }
+	void AddItemCnt() { itemMaxCnt++; }
 
 	void Init();
 	void Reset();
@@ -51,10 +55,7 @@ public:
 
 	void ItemSpawn(int idx); //アイテム召喚.
 	void ItemErase(int idx); //アイテム消滅.
+	void ItemUse  ();        //アイテム発動.
 
-	//当たり判定関連.
-	void CheckHitPlayer(int idx); // プレイヤーとの当たり判定
-	void OnHitPlayer   (int idx); // 当たったときの処理
-
-//	bool IsActive() const { return active; }
+	void CheckHitPlayer(int idx); //プレイヤーとの当たり判定.
 };

@@ -34,7 +34,7 @@ void EndlessStage::Update() {
 	}
 
 	//カウンター増加.
-	p_data->counter += ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+	p_data->counter += p_data->speedRate;
 	//出現間隔.
 	p_data->spawnRate = 1.0f/(1+(p_data->counter/8000)); //100%から少しずつ減少.
 	//レベル管理.
