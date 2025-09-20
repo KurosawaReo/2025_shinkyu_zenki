@@ -70,11 +70,12 @@ enum StageType
 #define REFLECT_MODE_TIME				(8)             //反射モード制限時間.
 #define SLOW_MODE_SPEED					(0.20f)			//スロー速度倍率.
 #define SLOW_MODE_DIS_LEN				(200)			//スローになるプレイヤーとレーザーの距離範囲.
+#define SLOW_MODE_BUF_F                 (50)            //スローが継続するフレーム数.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
 //プレイヤー.
-#define PLAYER_SIZE						(17)			//プレイヤーサイズ.
+#define PLAYER_SIZE						(35)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.

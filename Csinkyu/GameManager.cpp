@@ -551,7 +551,7 @@ void GameManager::UpdateSlowMode() {
 	//スローモード中.
 	if (tmSlowMode.GetIsMove()) {
 		//3秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 3){
+		if (tmSlowMode.GetPassTime() <= 3) {
 			if (!isItemCountDownSound[2]) {
 				p_sound->Play(_T("CountDown"), false, 78); //再生.
 				isItemCountDownSound[2] = true;

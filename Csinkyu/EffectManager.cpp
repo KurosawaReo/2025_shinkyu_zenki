@@ -139,7 +139,7 @@ void EffectManager::Draw() {
 
 				case Effect_PlayerDeath:
 				{
-					Circle cir= { effect[i].pos, PLAYER_SIZE+effect[i].counter/2, 0xFFFFFF };
+					Circle cir = { effect[i].pos, PLAYER_SIZE/2+effect[i].counter/2, 0xFFFFFF };
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 

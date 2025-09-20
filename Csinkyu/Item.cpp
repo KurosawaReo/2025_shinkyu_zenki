@@ -98,7 +98,7 @@ void ItemManager::Draw()
 				//DrawBoxST(&box1, ANC_MID, false);
 				//DrawBoxST(&box2, ANC_MID, false);
 
-				imgItem.DrawExtend(items[i].pos, {0.035, 0.035}, ANC_MID, true, true);
+				imgItem.DrawExtend(items[i].pos, {0.045, 0.045}, ANC_MID, true, true);
 
 				//チュートリアル用.
 				if (p_gamedata->stage == STAGE_TUTORIAL) {

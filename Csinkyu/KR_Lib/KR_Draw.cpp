@@ -13,7 +13,6 @@
 
 /*
    [終点の注意]
-
    DrawBox, DrawLine, DrawExtendGraphなどの終点を設定するものは
    始点から終点-1まで描画される仕様(その方が直感的だと作者は判断したそう)
 
@@ -25,6 +24,10 @@
    ３■　　■
    ４■■■■
    ５
+
+   [サイズの-1について]
+   画像やテキストの描画で、調整でサイズを-1している。
+   -1が必要かどうかは悩ましいが、これがないと画像をタイルのように並べた時にずれが起きる。
 */
 
 //KR_Libに使う用.
@@ -66,7 +69,7 @@ namespace KR_Lib
 
 		//過去に読み込んだ画像は解放.
 		if (data.handle != NONE_HANDLE) {
-			DeleteGraph(data.handle);
+			DeleteGraph(data.handle); //画像解放.
 			data.handle = NONE_HANDLE;
 		}
 		//画像読み込み.

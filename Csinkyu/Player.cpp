@@ -26,7 +26,7 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit       = { _pos, PLAYER_SIZE, {} };
+	hit       = { _pos, PLAYER_SIZE/2, {} };
 	active    = _active;
 	mode      = Player_Normal;
 	afterCntr = 1;
@@ -71,7 +71,7 @@ void Player::Update()
 		if (p_data->isReflectMode) {
 			//敵のレーザーが近くにあれば.
 			if (LaserManager::GetPtr()->IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
-				p_data->slowBufCntr = 50;
+				p_data->slowBufCntr = SLOW_MODE_BUF_F;
 			}
 		}
 	}
@@ -106,11 +106,11 @@ void Player::Draw()
 			mode == Player_SuperReflect
 		){
 			//反射モードの画像.
-			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot);
+			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
 		}
 		else {
 			//通常モードの画像.
-			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot);
+			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
 		}
 
 		//チュートリアル用.
@@ -153,7 +153,7 @@ void Player::DrawAfterImage()
 			//透明度反映.
 			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-			Circle cir = { afterPos[i], PLAYER_SIZE, {} };
+			Circle cir = { afterPos[i], PLAYER_SIZE/2, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
