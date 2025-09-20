@@ -45,7 +45,8 @@ void ItemManager::Update()
 			CheckHitPlayer(i);
 
 			//画面下部を超えたら消滅.
-			if (data[i].pos.y > WINDOW_HEI + ITEM_SIZE) {
+			//チュートリアルテキスト用に余分をつける.
+			if (data[i].pos.y > WINDOW_HEI + ITEM_SIZE + 50) {
 				ItemErase(i);
 			}
 		}
@@ -91,8 +92,7 @@ void ItemManager::Draw()
 
 				//チュートリアル用.
 				if (p_gamedata->stage == STAGE_TUTORIAL) {
-
-					DrawStr str(_T("アイテム"), data[i].pos.Add(0, -30).ToIntXY(), COLOR_ITEM);
+					DrawStr str(_T("アイテム"), data[i].pos.Add(0, -35).ToIntXY(), COLOR_ITEM);
 					str.Draw();
 				}
 			}

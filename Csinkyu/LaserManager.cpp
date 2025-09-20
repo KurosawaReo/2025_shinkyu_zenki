@@ -53,19 +53,6 @@ void LaserManager::Draw() {
 	}
 #endif
 
-	//レーザー.
-	for (int i = 0; i < LASER_CNT_MAX; i++) 
-	{
-		if (laser[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
-		
-		if (p_data->stage == STAGE_TUTORIAL) {
-			//有効なレーザーの横に表示する.
-			DBL_XY pos = { laser[i].x, laser[i].y };
-			DrawStr str(_T("レーザー"), pos.ToIntXY(), 0xFFFFFF);
-			str.Draw();
-		}
-	}
-
 	//レーザーの軌跡.
 	for (int i = 0; i < LASER_LINE_CNT_MAX; i++) 
 	{
@@ -97,6 +84,32 @@ void LaserManager::Draw() {
 
 	//通常の描画モードに戻す
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+	//レーザー本体.
+	for (int i = 0; i < LASER_CNT_MAX; i++)
+	{
+		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
+
+		UINT color;
+		//線の色(先端の色を使用)
+		switch (laser[i].type)
+		{
+			case Laser_Normal:       color = GetColor(50, 255, 255); break;
+			case Laser_Straight:     color = GetColor(50, 255, 255); break;
+			case Laser_Reflect:      color = GetColor(255,  0, 255); break;
+			case Laser_SuperReflect: color = GetColor(255,  0, 255); break;
+			case Laser_Falling:      color = GetColor(50, 255, 255); break;
+
+			default: assert(FALSE); break;
+		}
+
+		if (p_data->stage == STAGE_TUTORIAL) {
+			//有効なレーザーに表示する.
+			DBL_XY pos = { laser[i].x, laser[i].y };
+			DrawStr str(_T("レーザー"), pos.ToIntXY(), color);
+			str.Draw();
+		}
+	}
 }
 
 //各レーザーの更新.

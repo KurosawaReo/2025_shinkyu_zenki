@@ -167,7 +167,7 @@ void EffectManager::Draw() {
 					Line line{};
 					line.stPos = CalcArcPos(effect[i].pos, effect[i].ang,     effect[i].len);
 					line.edPos = CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
-			        line.color = COLOR_METEO(effect[i].pos);
+			        line.color = COLOR_METEOR(effect[i].pos);
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEOR_BREAK_ANIM_TIME));
 

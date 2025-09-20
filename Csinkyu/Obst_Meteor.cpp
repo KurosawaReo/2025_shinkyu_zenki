@@ -73,9 +73,16 @@ void Meteor::Draw() {
 		//有効な線を全て描画.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			
-			shape.line[i].color = COLOR_METEO(pos);
+			shape.line[i].color = COLOR_METEOR(pos);
 			DrawLineST(&shape.line[i], true, 2);
 //			DrawLineST(&shape.line[i], false, 1);
+		}
+
+		//チュートリアル.
+		if (p_data->stage == STAGE_TUTORIAL) {
+			DBL_XY txtPos = pos.Add(0, 0);
+			DrawStr str(_T("隕石"), txtPos.ToIntXY(), COLOR_METEOR(txtPos));
+			str.Draw();
 		}
 
 		ResetDrawBlendMode(); //描画モードリセット.
