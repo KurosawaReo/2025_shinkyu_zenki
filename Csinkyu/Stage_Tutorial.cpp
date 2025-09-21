@@ -130,13 +130,37 @@ void TutorialStage::UpdateStep4() {
 //描画:step1
 void TutorialStage::DrawStep1() {
 
+	DrawTopText(_T("プレイヤーを移動させよう\n"));
+
+	//↑↓←→: 移動
+}
+//描画:step2
+void TutorialStage::DrawStep2() {
+
+	DrawTopText(_T(""));
+
+}
+//描画:step3
+void TutorialStage::DrawStep3() {
+	DrawTopText(_T(""));
+
+}
+//描画:step4
+void TutorialStage::DrawStep4() {
+	DrawTopText(_T(""));
+
+}
+
+//画面上にテキストを出す.
+void TutorialStage::DrawTopText(MY_STRING text) {
+
 	//テキスト.
-	DrawStr str(_T("↑↓←→: 移動"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0xFFFFFF);
-	str.Draw(ANC_MID, p_data->font1);
+	DrawStr str(text, {WINDOW_WID/2, 150}, 0xFFFFFF);
+	str.Draw(ANC_MID, p_data->font2);
 	//枠.
 	{
-		DBL_XY pos  = (str.pos - str.GetTextSize(p_data->font1)/2).Add(-4, -8).ToDblXY();
-		DBL_XY size = (str.GetTextSize(p_data->font1) + 15).ToDblXY();
+		DBL_XY pos  = (str.pos - str.GetTextSize(p_data->font2)/2).Add(-8, -8).ToDblXY();
+		DBL_XY size = (str.GetTextSize(p_data->font2) + 20).ToDblXY();
 		//グラデーションをつける.
 		GradLine line;
 		line.AddPoint(pos,                     0x00FFFF);
@@ -145,16 +169,4 @@ void TutorialStage::DrawStep1() {
 		line.AddPoint(pos.Add(     0, size.y), 0x000000);
 		line.Draw(true);
 	}
-}
-//描画:step2
-void TutorialStage::DrawStep2() {
-
-}
-//描画:step3
-void TutorialStage::DrawStep3() {
-
-}
-//描画:step4
-void TutorialStage::DrawStep4() {
-
 }

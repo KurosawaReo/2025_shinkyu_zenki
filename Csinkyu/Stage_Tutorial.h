@@ -46,4 +46,6 @@ public:
 	void DrawStep2();
 	void DrawStep3();
 	void DrawStep4();
+
+	void DrawTopText(MY_STRING text);
 };

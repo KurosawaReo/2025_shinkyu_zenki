@@ -82,29 +82,24 @@ void ItemManager::Draw()
 
 		//有効なアイテムを描画.
 		if (items[i].active) {
+			
+			SetDrawBlendModeKR(MODE_ADD, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
+			
 			//強化演出.
 			if (items[i].type == Item_Super) {
-
 				Circle cir = { items[i].pos, 30, COLOR_PLY_REFLECT };
-
-				SetDrawBlendModeKR(MODE_ADD, 128 + 127*CalcNumWaveLoop(items[i].counter/20)); //点滅.
 				DrawCircleKR(&cir, false, true);
-				ResetDrawBlendMode();
 			}
 			//アイテム本体.
 			{
-				//Box box1 = { data[i].pos, {ITEM_SIZE,   ITEM_SIZE  }, COLOR_ITEM }; //{pos}, {size}, color.
-				//Box box2 = { data[i].pos, {ITEM_SIZE-2, ITEM_SIZE-2}, COLOR_ITEM }; //{pos}, {size}, color.
-				//DrawBoxST(&box1, ANC_MID, false);
-				//DrawBoxST(&box2, ANC_MID, false);
-
 				imgItem.DrawExtend(items[i].pos, {0.045, 0.045}, ANC_MID, true, true);
+			}
+			ResetDrawBlendMode();
 
-				//チュートリアル用.
-				if (p_gamedata->stage == STAGE_TUTORIAL) {
-					DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToIntXY(), COLOR_ITEM);
-					str.Draw();
-				}
+			//チュートリアル用.
+			if (p_gamedata->stage == STAGE_TUTORIAL) {
+				DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToIntXY(), COLOR_ITEM);
+				str.Draw();
 			}
 		}
 	}
