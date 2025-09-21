@@ -130,21 +130,21 @@ void TutorialStage::UpdateStep4() {
 //描画:step1
 void TutorialStage::DrawStep1() {
 
-	DrawStr str(_T("↑↓←→: 移動"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0x00FFFF);
+	//テキスト.
+	DrawStr str(_T("↑↓←→: 移動"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0xFFFFFF);
 	str.Draw(ANC_MID, p_data->font1);
-	DBL_XY s = {1.0, 1.0};
-	
-
-	GradLine line;
-	line.AddPoint({100, 100}, {255, 255, 255, 255});
-	line.AddPoint({300, 100}, {255,   0, 255, 255});
-	line.AddPoint({100, 300}, {255, 255,   0, 255});
-	line.AddPoint({300, 300}, {  0, 255, 255, 255});
-	line.Draw(true);
-
 	//枠.
-	Box box = { str.pos.Add(0, 0).ToDblXY(), str.GetTextSize(p_data->font1).ToDblXY()+12, 0x00FFFF};
-	DrawBoxKR(&box, ANC_MID, false);
+	{
+		DBL_XY pos  = (str.pos - str.GetTextSize(p_data->font1)/2).Add(-4, -8).ToDblXY();
+		DBL_XY size = (str.GetTextSize(p_data->font1) + 15).ToDblXY();
+		//グラデーションをつける.
+		GradLine line;
+		line.AddPoint(pos,                     0x00FFFF);
+		line.AddPoint(pos.Add(size.x,      0), 0x000000);
+		line.AddPoint(pos.Add(size.x, size.y), 0xFF00FF);
+		line.AddPoint(pos.Add(     0, size.y), 0x000000);
+		line.Draw(true);
+	}
 }
 //描画:step2
 void TutorialStage::DrawStep2() {

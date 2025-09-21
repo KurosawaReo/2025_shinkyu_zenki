@@ -62,6 +62,7 @@ private: //データ.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
 	bool isGameStart{};             //ゲーム開始サイン.
+	bool isBestScore{};             //ベストスコア更新したか.
 
 	InputMng* p_input{};
 	SoundMng* p_sound{};

@@ -535,7 +535,7 @@ namespace KR_Lib
 
 		VERTEX2D point;
 		point.pos = VGet(pos.x, pos.y, 0); //VECTOR型にして登録.
-		point.dif = color.GetRGBA();       //RGBAで登録.
+		point.dif = color.GetColorU8();    //COLOR_U8で登録.
 		point.rhw = 1.0f;                  //2Dでは不要?
 		point.u = point.v = 0.0f;          //テクスチャUVは使わない.
 
@@ -544,8 +544,8 @@ namespace KR_Lib
 	//描画.
 	void GradLine::Draw(bool isClose) {
 
-		//確実に透過させるため、ブレンドモードを設定.
-		//SetDrawBlendModeKR(MODE_ALPHA, 255);
+		//透過を反映させるため、描画モードを変更.
+		SetDrawBlendModeKR(MODE_ALPHA, 255);
 
 		//全頂点ループ.
 		for (int i = 0; i < points.size()-1; i++) {

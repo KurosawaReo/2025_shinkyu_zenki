@@ -47,9 +47,6 @@ namespace KR_Lib
 	using MY_STRING = string;  //char型.
 #endif
 
-	//分かりやすくする用.
-	using RGBA = COLOR_U8;
-
 	//xとyの凝縮.
 	template<typename T> //型を<>で入力して使う.
 	struct XY
@@ -156,6 +153,11 @@ namespace KR_Lib
 	using INT_XY = XY<int>;    //int型.
 	using DBL_XY = XY<double>; //double型.
 	
+	//RGBAデータ(COLOR_U8とほぼ同じだが、こっちでは順をrgbにする)
+	struct RGBA
+	{
+		BYTE r, g, b, a;
+	};
 	//色データ.
 	class MY_COLOR
 	{
@@ -169,8 +171,8 @@ namespace KR_Lib
 		MY_COLOR(BYTE _r, BYTE _g, BYTE _b, BYTE _a) : color{ _r,  _g,  _b,  _a} {}
 		MY_COLOR(UINT _colorCode);
 		//get.
-		RGBA GetRGBA()      const { return color; }
-		UINT GetColorCode() const { return DxLib::GetColor(color.r, color.g, color.b); }
+		COLOR_U8 GetColorU8()   const { return {color.b, color.g, color.r, color.a}; }
+		UINT     GetColorCode() const { return DxLib::GetColor(color.r, color.g, color.b); }
 
 		//代入用.
 		void operator=(const RGBA& rgba);

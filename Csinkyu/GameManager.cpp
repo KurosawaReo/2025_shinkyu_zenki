@@ -272,6 +272,8 @@ void GameManager::Init() {
 		File file;
 		file.Open(FILE_DATA, _T("r"));        //ファイルを開く.
 		gameData->bestScore = file.ReadInt(); //数字を読み込んで登録.
+
+		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
 	}
 
 	Reset();
@@ -279,10 +281,6 @@ void GameManager::Init() {
 
 //リセット(何回でも行う)
 void GameManager::Reset() {
-
-	if (gameData->bestScore < gameData->score) {
-		gameData->bestScore = gameData->score; //ハイスコア記録.
-	}
 
 	//データ.
 	gameData->scoreBef      = 0;
@@ -295,6 +293,7 @@ void GameManager::Reset() {
 	isTitleAnim             = false;
 	isBestScoreSound        = false;
 	isGameStart             = false;
+	isBestScore             = false;
 	//サウンド.
 	p_sound->StopAll();
 	p_sound->Play(_T("BGM_Menu"), true, 90); //メニューBGMを流す.
@@ -489,7 +488,8 @@ void GameManager::UpdateEnd() {
 	//特定の操作でタイトルへ.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
-		gameData->scene = SCENE_TITLE; //ゲームシーンへ.
+		gameData->scene = SCENE_TITLE;
+		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
 		Reset();
 	}
 }
@@ -728,7 +728,7 @@ void GameManager::DrawEnd() {
 	//一定時間が経ったら.
 	if (tmScene[SCENE_END].GetPassTime() > delay1) {
 		//ベストスコア更新.
-		if (gameData->score > gameData->bestScore) {
+		if (isBestScore) {
 
 			//アニメーション値.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
@@ -841,13 +841,19 @@ void GameManager::GameEnd() {
 		gameData->scoreBef = gameData->score;                   //時間加算前のスコアを記録.
 		gameData->score += _int(tmGameTime.GetPassTime() * 10); //時間ボーナス加算.
 
-		//最高スコア更新なら保存.
-		if (gameData->score > gameData->bestScore) {
+		//耐久モードのみ判定.
+		if (gameData->stage == STAGE_ENDLESS) {
+			//最高スコア更新なら.
+			if (gameData->score > gameData->bestScore) {
 
-			File file;
-			file.MakeDir(FILE_DATA_PATH);   //フォルダ作成.
-			file.Open(FILE_DATA, _T("w"));  //ファイルを開く.
-			file.WriteInt(gameData->score); //スコアを保存.
+				File file;
+				file.MakeDir(FILE_DATA_PATH);   //フォルダ作成.
+				file.Open(FILE_DATA, _T("w"));  //ファイルを開く.
+				file.WriteInt(gameData->score); //スコアを保存.
+
+				gameData->bestScore = gameData->score; //スコア更新.
+				isBestScore = true;
+			}
 		}
 
 		//サウンド.

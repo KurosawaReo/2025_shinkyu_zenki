@@ -20,11 +20,17 @@ public: //実体.
 private: //データ.
 	DrawImg imgUI[4]{}; //UI画像.
 
+	int disBestScore{}; //表示ベストスコア.
+	int disScore{};     //表示スコア.
+
 	GameManager*   p_gameMng{};
 	GameData*      p_gameData{};
 	TutorialStage* p_tutorialStg{};
 
 public:
+	//set.
+	void SetDisBestScore(int _score) { disBestScore = _score; }
+
 	void Init();
 	void Reset();
 	void Update();

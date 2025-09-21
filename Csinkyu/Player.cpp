@@ -61,7 +61,7 @@ void Player::Update()
 
 	//—LŒø‚È‚ç.
 	if (active) {
-		imgRot += 0.5; //‰æ‘œ‰ñ“].
+		imgRot += 1 * p_data->speedRate; //‰æ‘œ‰ñ“].
 
 		UpdateAfterImage();
 		UpdateReflectEffects();
