@@ -132,9 +132,54 @@ void MenuManager::Draw() {
 	}
 
 	// ▼ モード画像
-	
+#if false
+	int imgWidth = 0, imgHeight = 0;
+
+	// デフォルトは imageStart のサイズを使用
+	GetGraphSize(imageStart, &imgWidth, &imgHeight);
+
+	// 他の画像のサイズは同じ前提ならこれでOK
+	if (selectedIndex == 1) GetGraphSize(imageTutorial, &imgWidth, &imgHeight);
+	else if (selectedIndex == 2) GetGraphSize(imageBack, &imgWidth, &imgHeight);
+
+	// 枠を画像より少し大きくするための余白
+	int margin = 10;
+
+	// 枠サイズ（画像サイズ + 余白）
+	int imgBoxWidth = imgWidth + margin * 2;
+	int imgBoxHeight = imgHeight + margin * 2;
+
+	// 枠の位置
+	int imgBoxX = WINDOW_WID - 850 - margin;
+	int imgBoxY = 245 - margin;
+
+	// 背景（半透明）
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, GetColor(0, 0, 0), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	// 枠線
+	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, frameColor, FALSE);
+
+	// 画像描画（枠の中に配置）
+	int imgX = imgBoxX + margin;
+	int imgY = imgBoxY + margin;
+
+	switch (selectedIndex) {
+	case 0:
+		DrawGraph(imgX, imgY, imageStart, TRUE);
+		break;
+	case 1:
+		DrawGraph(imgX, imgY, imageTutorial, TRUE);
+		break;
+	case 2:
+		DrawGraph(imgX, imgY, imageBack, TRUE);
+		break;
+	}
+#endif
+
 	//画像の座標(ここを中心とする)
-	DBL_XY imgPos  = { WINDOW_WID - 850, 245 };
+	DBL_XY imgPos  = { WINDOW_WID - 450, 450 };
 	//画像のサイズ.
 	DBL_XY imgSize = imgMenu[selectedIndex].GetSize().ToDblXY();
 	//枠を画像よりどれだけ大きくするか.
