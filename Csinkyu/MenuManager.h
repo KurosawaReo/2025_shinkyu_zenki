@@ -14,8 +14,11 @@ public: //実体.
 	}
 
 private:
-	GameData* p_data{};     // GameDataのポインタ
-	SoundMng* p_sound{};    // サウンド管理.
+	GameData* p_data{};    //GameDataのポインタ.
+	SoundMng* p_sound{};   //サウンド管理.
+
+	DrawImg imgMenu [3]{}; //メニュー用画像.
+	Font    fontMenu[2]{}; //メニュー用フォント.
 
 	int   selectedIndex = 0;  // 選択中のインデックス
 	float counter = 0;        // 経過時間カウンター.

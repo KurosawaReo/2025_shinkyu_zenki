@@ -35,7 +35,7 @@ void MeteorManager::Update() {
 
 	//タイマーが残っていれば.
 	if (timer > 0) {
-		timer -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		timer -= p_data->speedRate;
 	}
 	//タイマーが0になったら.
 	else {

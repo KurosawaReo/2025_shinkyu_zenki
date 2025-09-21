@@ -3,6 +3,7 @@
    プレイヤー管理.
 */
 #include "GameManager.h"
+#include "LaserManager.h"
 #include "Obst_NormalLaserMain.h"
 
 #include "Player.h"
@@ -25,7 +26,7 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit       = { _pos, PLAYER_SIZE, {} };
+	hit       = { _pos, PLAYER_SIZE/2, {} };
 	active    = _active;
 	mode      = Player_Normal;
 	afterCntr = 1;
@@ -36,7 +37,7 @@ void Player::Reset(DBL_XY _pos, bool _active)
 	}
 	// 反射エフェクト初期化を追加
 	reflectEffectIndex = 0;
-	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
 		reflectEffects[i].active = false;
 		reflectEffects[i].timer = 0;
 		reflectEffects[i].alpha = 0.0f;
@@ -65,6 +66,14 @@ void Player::Update()
 		UpdateAfterImage();
 		UpdateReflectEffects();
 		PlayerMove();
+		
+		//反射モード中.
+		if (p_data->isReflectMode) {
+			//敵のレーザーが近くにあれば.
+			if (LaserManager::GetPtr()->IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
+				p_data->slowBufCntr = SLOW_MODE_BUF_F;
+			}
+		}
 	}
 }
 //描画.
@@ -77,7 +86,7 @@ void Player::Draw()
 		str.Draw(ANC_MID, p_data->font1);
 	}
 	// エフェクトのデバッグ情報表示
-	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
 		if (reflectEffects[i].active) {
 			TCHAR debugStr[128];
 			_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
@@ -97,17 +106,16 @@ void Player::Draw()
 			mode == Player_SuperReflect
 		){
 			//反射モードの画像.
-			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot);
+			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
 		}
 		else {
 			//通常モードの画像.
-			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot);
+			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
 		}
 
 		//チュートリアル用.
 		if (p_data->stage == STAGE_TUTORIAL) {
-			
-			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -40).ToIntXY(), 0xFFFFFF );
+			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToIntXY(), 0xFFFFFF );
 			str.Draw();
 		}
 	}
@@ -116,7 +124,7 @@ void Player::Draw()
 //残像更新.
 void Player::UpdateAfterImage()
 {
-	afterCntr -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	afterCntr -= p_data->speedRate;
 
 	//残像を残すタイミングになったら(基本は毎フレーム)
 	if (afterCntr <= 0) {
@@ -145,7 +153,7 @@ void Player::DrawAfterImage()
 			//透明度反映.
 			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
 
-			Circle cir = { afterPos[i], PLAYER_SIZE, {} };
+			Circle cir = { afterPos[i], PLAYER_SIZE/2, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
@@ -170,14 +178,8 @@ void Player::DrawAfterImage()
 void Player::PlayerMove()
 {
 	//移動する.
-	if (p_data->isSlow) {
-		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
-		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * SLOW_MODE_SPEED);
-	}
-	else {
-		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED);
-		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED);
-	}
+	p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+	p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
 	//移動限界.
 	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
 }
@@ -194,13 +196,13 @@ void Player::CreateReflectEffect(DBL_XY pos)
 	effect->active = true;
 
 	// 次のインデックスに移動（循環）
-	reflectEffectIndex = (reflectEffectIndex + 1) % MAX_REFLECT_EFFECTS;
+	reflectEffectIndex = (reflectEffectIndex + 1) % PLAYER_MAX_EFFECT;
 }
 
 // 反射エフェクト更新
 void Player::UpdateReflectEffects()
 {
-	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
 		if (reflectEffects[i].active) {
 			reflectEffects[i].timer--;
 			reflectEffects[i].scale += 0.1f;      // 拡大速度を少し遅く
@@ -217,7 +219,7 @@ void Player::UpdateReflectEffects()
 // 反射エフェクト描画
 void Player::DrawReflectEffects()
 {
-	for (int i = 0; i < MAX_REFLECT_EFFECTS; i++) {
+	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
 		if (reflectEffects[i].active) {
 			ReflectEffect* effect = &reflectEffects[i];
 

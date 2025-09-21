@@ -67,14 +67,14 @@ void EffectManager::Update() {
 				case Effect_BreakMeteo:
 				{
 					//カウンター加算.
-					effect[i].counter += ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					effect[i].counter += p_data->speedRate;
 					//回転.
-					effect[i].ang += 3 * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					effect[i].ang += 3 * p_data->speedRate;
 					//減速.
 					float newSpeed = effect[i].speed/(1+(effect[i].counter/10));
 					//移動.
-					effect[i].pos.x += effect[i].vec.x * newSpeed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
-					effect[i].pos.y += effect[i].vec.y * newSpeed * ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+					effect[i].pos.x += effect[i].vec.x * newSpeed * p_data->speedRate;
+					effect[i].pos.y += effect[i].vec.y * newSpeed * p_data->speedRate;
 
 					//時間経過で消滅.
 					if (effect[i].counter >= METEOR_BREAK_ANIM_TIME) {
@@ -128,7 +128,7 @@ void EffectManager::Draw() {
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
 					//画像切り替え.
-					if (Effect_Score100) {
+					if (effect[i].type == Effect_Score100) {
 						imgScore[0].DrawExtend(pos, {0.2, 0.2});
 					}
 					else {
@@ -139,7 +139,7 @@ void EffectManager::Draw() {
 
 				case Effect_PlayerDeath:
 				{
-					Circle cir= { effect[i].pos, PLAYER_SIZE+effect[i].counter/2, 0xFFFFFF };
+					Circle cir = { effect[i].pos, PLAYER_SIZE/2+effect[i].counter/2, 0xFFFFFF };
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 
@@ -151,13 +151,13 @@ void EffectManager::Draw() {
 
 				case Effect_ReflectLaser:
 				{
-					Box box = { effect[i].pos, { 10+effect[i].counter*4, 10+effect[i].counter*4 }, COLOR_PLY_REFLECT };
+					Circle cir = { effect[i].pos, 5+effect[i].counter*1.5, COLOR_PLY_REFLECT };
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawBoxST(&box, ANC_MID, false, true);
+					DrawCircleST(&cir, false, true);
 				}
 				break;
 
@@ -167,7 +167,7 @@ void EffectManager::Draw() {
 					Line line{};
 					line.stPos = CalcArcPos(effect[i].pos, effect[i].ang,     effect[i].len);
 					line.edPos = CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
-			        line.color = COLOR_METEO(effect[i].pos);
+			        line.color = COLOR_METEOR(effect[i].pos);
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEOR_BREAK_ANIM_TIME));
 

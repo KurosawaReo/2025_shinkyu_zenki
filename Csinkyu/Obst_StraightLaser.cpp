@@ -49,7 +49,7 @@ void StraightLaser::Update()
 	plyPos = p_player->GetPos();//プレイヤーの現在位置を取得.
 
 	//レーザー発射タイマー更新.
-	laserSpawnTimer -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	laserSpawnTimer -= p_data->speedRate;
 
 	// 予測線表示タイマー更新（レーザー発射の60フレーム前から表示）
 	if (laserSpawnTimer <= LASER_STR_PREDICTION_TIME)
@@ -138,7 +138,7 @@ void StraightLaser::DrawPredictionLine()
 		endX = WINDOW_WID + 50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -147,7 +147,7 @@ void StraightLaser::DrawPredictionLine()
 		endX = -50;
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -156,7 +156,7 @@ void StraightLaser::DrawPredictionLine()
 		endY = WINDOW_HEI + 50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;
@@ -165,7 +165,7 @@ void StraightLaser::DrawPredictionLine()
 		endY = -50;
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_LINE;
+			predictionLine.color = COLOR_PRE_EFFECT;
 			DrawLineST(&predictionLine, true);
 		}
 		break;

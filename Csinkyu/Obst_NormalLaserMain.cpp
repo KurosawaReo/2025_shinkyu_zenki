@@ -42,19 +42,19 @@ void NormalLaserMain::Update()
 	if (p_data->scene == SCENE_GAME) {  // ゲーム中のみ
 		
 		//発射カウンタを減少.
-		Hsc -= (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+		Hsc -= p_data->speedRate;
 
 		//エフェクトのカウンタを更新.
 		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 			//有効なら.
 			if (flashEffect[i].ValidFlag)
 			{
-				flashEffect[i].Counter += (float)((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+				flashEffect[i].Counter += p_data->speedRate;
 			}
 		}
 
-		enemy4Move();					// 障害物の移動処理
-		UpdateObstFlash();              // 発射エフェクトの更新.
+		enemy4Move();	   // 障害物の移動処理
+		UpdateObstFlash(); // 発射エフェクトの更新.
 	}
 }
 //描画.
@@ -161,7 +161,7 @@ void NormalLaserMain::DrawPreLaserDots() {
 		float dotSize  = (float)(3 + CalcNumEaseOut(blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
 		float dotSize2 = (float)(3 + CalcNumEaseOut(blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
 		//円情報.
-		Circle cir = {{Hx, Hy}, dotSize, GetColor(0, 255, 255)};
+		Circle cir = {{Hx, Hy}, dotSize, COLOR_PRE_EFFECT };
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
 		// 砲台の位置に●を描画

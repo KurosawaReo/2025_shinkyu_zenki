@@ -67,19 +67,23 @@ enum StageType
 //ゲーム設定.
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 
-#define SLOW_MODE_TIME					(8)             //スローモード制限時間.
-#define SLOW_MODE_SPEED					(0.20f)			//スローモード速度倍率.
+#define REFLECT_MODE_TIME				(8)             //反射モード制限時間.
+#define SLOW_MODE_SPEED					(0.20f)			//スロー速度倍率.
+#define SLOW_MODE_DIS_LEN				(200)			//スローになるプレイヤーとレーザーの距離範囲.
+#define SLOW_MODE_BUF_F                 (50)            //スローが継続するフレーム数.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
 //プレイヤー.
-#define PLAYER_SIZE						(17)			//プレイヤーサイズ.
+#define PLAYER_SIZE						(35)			//プレイヤーサイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
+#define PLAYER_MAX_EFFECT               (5)             //最大エフェクト数
 
 //アイテム.
-#define ITEM_SIZE						(20)			//アイテムサイズ.
+#define ITEM_COUNT						(2)				//アイテムの数.
+#define ITEM_SIZE						(25)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME				(400)           //アイテム復活時間.
 
@@ -90,8 +94,8 @@ enum StageType
 #define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
-#define LASER_CNT_MAX					(50)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(12000)			//レーザー描画線の最大数.
+#define LASER_CNT_MAX					(80)			//レーザーの最大数.
+#define LASER_LINE_CNT_MAX				(14000)			//レーザー描画線の最大数.
 #define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
@@ -144,9 +148,10 @@ enum StageType
 #define RIPPLES_MIN_DISTANCE			(100)			//最小距離.
 
 //障害物: 花火.
-#define FIREWORKS_MAX					(10)			//最大同時花火数
-#define FIREWORKS_SPAWN_SPAN			(180)			//花火生成間隔（フレーム）
-#define FIREWORKS_WARNING_DURATION		(120)			//予告時間（フレーム）
+#define FIREWORKS_CNT_MAX				(10)			//最大同時出現数
+#define FIREWORKS_RND_MAX				(2)				//花火出現最大数
+#define FIREWORKS_SPAWN_SPAN			(600)			//花火生成間隔（フレーム）
+#define FIREWORKS_WARNING_DURATION		(120)			//予告を出す長さ（フレーム）
 #define FIREWORKS_LAUNCH_HEIGHT			(50)			//打ち上げ高度
 #define FIREWORKS_EXPLOSION_RADIUS		(100)			//爆発半径
 #define FIREWORKS_SPARKS_COUNT			(16)			//火花の数（ベース）
@@ -154,7 +159,7 @@ enum StageType
 #define FIREWORKS_GRAVITY				(0.3f)			//重力加速度
 
 //エフェクト.
-#define EFFECT_MAX						(50)			//エフェクトの最大出現数.
+#define EFFECT_MAX						(70)			//エフェクトの最大出現数.
 
 //スコア.
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.
@@ -166,9 +171,10 @@ enum StageType
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
 #define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
-#define COLOR_ITEM						(GetColor( 60, 255,  60))
-#define COLOR_PRE_LINE					(GetColor(128, 128, 128))                              //予測線.
-#define COLOR_METEO(pos)				(GetColor(0, _int_r(255 * fabs(sin(pos.x/200))), 255)) //隕石.
+//#define COLOR_ITEM					(GetColor( 60, 255,  60))
+#define COLOR_ITEM						(GetColor(255, 155, 255))
+#define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))   //予測演出.
+#define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::CalcNumWaveLoop(pos.x/250)), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)

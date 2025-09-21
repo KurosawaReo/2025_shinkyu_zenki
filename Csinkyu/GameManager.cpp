@@ -90,6 +90,15 @@
    2025/09/16:
    タイトルからメニューに行くとき、パッと画面を変えずにフェードアウトで滑らかに移動するようにしたい。
 
+   2025/09/21:
+   [進捗]
+   ・アイテムの使用タイミングを変更
+   ・スローモードの対応を「speedRate」をかけるだけで良くしたこと
+   　旧: counter -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	 新: counter -= p_data->speedRate;
+   [改善点]
+   ・LevelUp演出, Step演出もエフェクトのため、エフェクトが上限まで出てると表示が出なくなる問題
+
 /---------------------------------------------------------/
    [チュートリアル配分]
    step1: さける 
@@ -109,8 +118,8 @@
    Level1: 通常レーザー×2, 隕石
    Level2: 直線レーザー×2
    Level3: 波紋
-   Level4: 直線レーザー×4, アイテム×2
-   Level5: 通常レーザー×4, アイテムが強化, 花火
+   Level4: 花火, アイテム×2
+   Level5: 通常レーザー×4, アイテムが強化
 /---------------------------------------------------------/
    【今後の制作予定】
 
@@ -208,7 +217,7 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless"));  //耐久モードBGM.
 	p_sound->LoadFile(_T("Resources/Sounds/bgm/命ナキ者ノ詩.mp3"),		    _T("BGM_Over"));     //ゲームオーバーBGM.
 
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("TakeItem")); 	 //アイテム取る.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("ItemUse")); 	 //アイテム発動.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	 //カウントダウン.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	 //アイテム解除.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		 //レーザー(発射)
@@ -231,7 +240,7 @@ void GameManager::Init() {
 		tmScene[i] = Timer(COUNT_UP, 0);
 	}
 	tmGameTime = Timer(COUNT_UP, 0);
-	tmSlowMode = Timer(COUNT_DOWN, SLOW_MODE_TIME);
+	tmSlowMode = Timer(COUNT_DOWN, REFLECT_MODE_TIME);
 
 	//Init処理
 	{
@@ -276,15 +285,16 @@ void GameManager::Reset() {
 	}
 
 	//データ.
-	gameData->scoreBef  = 0;
-	gameData->score     = 0;
-	gameData->isSlow    = false;
-	gameData->counter   = 0;
-	gameData->spawnRate = 1.0;   //最初は100%
-	gameData->level     = 1;     //最初はLv1
-	isTitleAnim         = false;
-	isBestScoreSound    = false;
-	isGameStart         = false;
+	gameData->scoreBef      = 0;
+	gameData->score         = 0;
+	gameData->counter       = 0;
+	gameData->speedRate     = 1.0;   //通常は100%
+	gameData->spawnRate     = 1.0;   //最初は100%
+	gameData->level         = 1;     //最初はLv1
+	gameData->isReflectMode = false; //最初はLv1
+	isTitleAnim             = false;
+	isBestScoreSound        = false;
+	isGameStart             = false;
 	//サウンド.
 	p_sound->StopAll();
 	p_sound->Play(_T("BGM_Menu"), true, 90); //メニューBGMを流す.
@@ -427,7 +437,7 @@ void GameManager::UpdateGame() {
 #if defined _DEBUG //Releaseでは入れない.
 	//タイマー加速(Debug)
 	if (p_input->IsPushKey(KEY_L) == 1) {
-		gameData->counter += 10;
+		gameData->counter += 30;
 	}
 #endif
 
@@ -461,7 +471,6 @@ void GameManager::UpdateGame() {
 		}
 		//ポーズ.
 		if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
-			Debug::Log(L"a");
 			gameData->scene = SCENE_PAUSE;
 			tmGameTime.Stop(); //一時停止.
 			tmSlowMode.Stop(); //一時停止.
@@ -486,15 +495,13 @@ void GameManager::UpdateEnd() {
 }
 void GameManager::UpdatePause() {
 	
-	Debug::Log(L"b");
-
 	//ポーズ解除.
 	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
 		gameData->scene = SCENE_GAME;
 		tmGameTime.Start(); //再開.
 		//スローモード中だったなら.
-		if (tmSlowMode.GetPassTime() < SLOW_MODE_TIME) {
+		if (tmSlowMode.GetPassTime() < REFLECT_MODE_TIME) {
 			tmSlowMode.Start(); //再開.
 		}
 	}
@@ -505,9 +512,9 @@ void GameManager::UpdateObjects() {
 
 	//Lv1以上.
 	laserMng->Update();
-	meteorMng->Update();
 	laserNor1.Update();
 	laserNor2.Update();
+	meteorMng->Update();
 	item->Update();
 
 	//Lv2以上.
@@ -521,23 +528,30 @@ void GameManager::UpdateObjects() {
 	}
 	//Lv4以上.
 	if (gameData->level >= 4) {
-		mgl[2].Update();
-		mgl[3].Update();
+		fireworksMng->Update();
 	}
 	//Lv5以上.
 	if (gameData->level >= 5) {
 		laserNor3.Update();
 		laserNor4.Update();
-		fireworksMng->Update();
 	}
 }
 //スローモードの更新.
 void GameManager::UpdateSlowMode() {
 
-	//スローモード.
+	//スローモード時間判定.
+	if (gameData->slowBufCntr > 0) {
+		gameData->speedRate  = SLOW_MODE_SPEED; //速度倍率を遅くする.
+		gameData->slowBufCntr--;                //カウントを減らす.
+	}
+	else {
+		gameData->speedRate  = 1.0; //速度倍率を戻す.
+	}
+
+	//スローモード中.
 	if (tmSlowMode.GetIsMove()) {
 		//3秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 3){
+		if (tmSlowMode.GetPassTime() <= 3) {
 			if (!isItemCountDownSound[2]) {
 				p_sound->Play(_T("CountDown"), false, 78); //再生.
 				isItemCountDownSound[2] = true;
@@ -560,12 +574,14 @@ void GameManager::UpdateSlowMode() {
 		//時間切れで解除.
 		if (tmSlowMode.GetPassTime() <= 0) {
 			
-			player->SetMode(Player_Normal); //反射モード終了.
 			p_sound->Play(_T("PowerDown"), false, 78); //再生.
 			
-			//リセット.
+			gameData->isReflectMode = false; //反射モード解除.
+			gameData->speedRate     = 1.0;   //速度倍率を100%に戻す.
+			gameData->slowBufCntr   = 0;     //カウンターを0に.
 			tmSlowMode.Reset();
-			gameData->isSlow = false;
+			player->SetMode(Player_Normal);  //通常状態に戻す.
+			
 			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 				isItemCountDownSound[i] = false;
 			}
@@ -725,8 +741,8 @@ void GameManager::DrawEnd() {
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeST(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, gameData->font1);    //テキスト.
-		DrawCircleST(&cir, false, false); //Aボタンの円.
+		str.Draw(ANC_MID, gameData->font1); //テキスト.
+		DrawCircleST(&cir, false, false);   //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -740,9 +756,9 @@ void GameManager::DrawObjects() {
 
 	//Lv1以上.
 	laserMng->Draw();
-	meteorMng->Draw();
 	laserNor1.Draw();
 	laserNor2.Draw();
+	meteorMng->Draw();
 	item->Draw();
 	//Lv2以上.
 	if (gameData->level >= 2) {
@@ -755,14 +771,12 @@ void GameManager::DrawObjects() {
 	}
 	//Lv4以上.
 	if (gameData->level >= 4) {
-		mgl[2].Draw();
-		mgl[3].Draw();
+		fireworksMng->Draw();
 	}
 	//Lv5以上.
-	if (gameData->level >= 5){
+	if (gameData->level >= 5) {
 		laserNor3.Draw();
 		laserNor4.Draw();
-		fireworksMng->Draw();
 	}
 }
 //反射モード演出.
@@ -783,7 +797,7 @@ void GameManager::DrawReflectMode() {
 			
 			SetDrawBlendModeST(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
-			if (tmSlowMode.GetPassTime() > SLOW_MODE_TIME-1) {
+			if (tmSlowMode.GetPassTime() > REFLECT_MODE_TIME-1) {
 				imgReflect.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2}, {0.3+0.2*anim, 0.3+0.2*anim});
 			}
 			//最後の3秒.
@@ -805,7 +819,7 @@ void GameManager::GameEnd() {
 	
 		tmGameTime.Stop(); //停止.
 		tmSlowMode.Reset();
-		gameData->isSlow = false;
+		gameData->speedRate = 1.0; //速度倍率を100%に戻す.
 
 		//記録リセット.
 		for (int i = 0; i < _countof(isItemCountDownSound); i++) {
@@ -840,12 +854,11 @@ void GameManager::GameEnd() {
 		p_sound->Play(_T("BGM_Over"), true, 68);
 	}
 }
-//アイテムを取った時.
-void GameManager::TakeItem() {
+//アイテムを使用した時.
+void GameManager::ItemUsed() {
 
-	gameData->isSlow = true;             //スローモードにする.
-	gameData->score += SCORE_TAKE_ITEM;  //スコア加算.
-	tmSlowMode.Start();                  //スローモード計測開始.
+	gameData->isReflectMode = true; //反射モードにする.
+	tmSlowMode.Start();             //スローモード計測開始.
 
 	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {

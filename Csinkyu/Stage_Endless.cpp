@@ -34,7 +34,7 @@ void EndlessStage::Update() {
 	}
 
 	//カウンター増加.
-	p_data->counter += ((p_data->isSlow) ? SLOW_MODE_SPEED : 1);
+	p_data->counter += p_data->speedRate;
 	//出現間隔.
 	p_data->spawnRate = 1.0f/(1+(p_data->counter/8000)); //100%から少しずつ減少.
 	//レベル管理.
@@ -70,7 +70,6 @@ void EndlessStage::Update() {
 			if (p_data->counter >= 6000) { //6000 = 出現間隔約??%地点.
 				p_data->level = 4; //Lv4へ.
 
-				GameManager::GetPtr()->ResetStrLaser();
 				ItemManager::GetPtr()->AddItemCnt(); //アイテムを増やす.
 
 				//サウンド.
