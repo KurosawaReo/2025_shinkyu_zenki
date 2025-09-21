@@ -33,7 +33,8 @@ void Player::Reset(DBL_XY _pos, bool _active)
 
 	//座標配列のリセット.
 	for (int i = 0; i < _countof(afterPos); i++) {
-		afterPos[i] = _pos;
+		afterPos[i].pos      = _pos;
+		afterPos[i].isActive = false;
 	}
 	// 反射エフェクト初期化を追加
 	reflectEffectIndex = 0;
@@ -133,9 +134,16 @@ void Player::UpdateAfterImage()
 		//残像データを後ろにずらす.
 		for (int i = PLAYER_AFT_IMG_NUM - 1; i > 0; i--)
 		{
-			afterPos[i] = afterPos[i - 1];
+			afterPos[i] = afterPos[i-1];
 		}
-		afterPos[0] = hit.pos; //プレイヤー座標を1フレーム目に記録.
+		//位置が変わったら(移動したら)
+		if (hit.pos.x != afterPos[1].pos.x || hit.pos.y != afterPos[1].pos.y) {
+			afterPos[0].pos      = hit.pos; //プレイヤー座標を1フレーム目に記録.
+			afterPos[0].isActive = true;    //有効に.
+		}
+		else {
+			afterPos[0].isActive = false;   //無効に.
+		}
 	}
 }
 
@@ -145,15 +153,15 @@ void Player::DrawAfterImage()
 	//残像処理.
 	for (int i = 0; i < PLAYER_AFT_IMG_NUM; i++)
 	{
-		//プレイヤーの位置と同じじゃなければ.
-		if (afterPos[i].x != hit.pos.x || afterPos[i].y != hit.pos.y) {
+		if (!afterPos[i].isActive) { continue; }
 
+		if (hit.pos.x != afterPos[i].pos.x || hit.pos.y != afterPos[i].pos.y) {
 			//透明度の計算.
 			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
 			//透明度反映.
 			SetDrawBlendModeKR(MODE_ADD, 255*(1-alpha));
 
-			Circle cir = { afterPos[i], PLAYER_SIZE/2, {} };
+			Circle cir = { afterPos[i].pos, PLAYER_SIZE/2, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect

@@ -17,6 +17,13 @@ struct ReflectEffect
 	bool   active;        // 有効フラグ
 };
 
+//残像データ.
+struct AfterEffect
+{
+	DBL_XY pos;
+	bool   isActive;
+};
+
 //プレイヤーモード.
 enum PlayerMode
 {
@@ -35,17 +42,17 @@ public: //実体.
 	}
 
 private:
-	PlayerMode mode{}; //モード.
+	PlayerMode  mode{};     //モード.
 	
-	Circle hit{};      //プレイヤーの当たり判定円.
-	bool   active{};   //有効か.
-	bool   isDebug{};  //デバッグ用.
+	Circle      hit{};      //プレイヤーの当たり判定円.
+	bool        active{};   //有効か.
+	bool        isDebug{};  //デバッグ用.
 
-	float  afterCntr{};					   //残像用時間カウンター.
-	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
+	float       afterCntr{};				    //残像用時間カウンター.
+	AfterEffect afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
-	DrawImg imgPlayer[2]{}; //プレイヤー画像.
-	double  imgRot{};       //プレイヤーの画像角度.
+	DrawImg     imgPlayer[2]{}; //プレイヤー画像.
+	double      imgRot{};       //プレイヤーの画像角度.
 
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
