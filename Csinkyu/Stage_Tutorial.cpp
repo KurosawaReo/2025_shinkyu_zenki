@@ -3,16 +3,34 @@
    
    ステージ: チュートリアル.
 */
-#include "GameManager.h"
+#include "LaserManager.h"
+#include "Obst_NormalLaser.h"
+#include "Obst_StraightLaser.h"
+#include "Obst_MeteorManager.h"
+#include "Obst_Ripples.h"
+#include "Obst_Fireworks.h"
+#include "Item.h"
 #include "EffectManager.h"
+#include "GameManager.h"
+
 #include "Stage_Tutorial.h"
 
 //初期化.
 void TutorialStage::Init() {
-	p_data      = GameData::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
-	p_input     = InputMng::GetPtr();
-	p_sound     = SoundMng::GetPtr();
+	//実体取得.
+	p_data         = GameData::GetPtr();
+	p_gameMng      = GameManager::GetPtr();
+	p_laserMng     = LaserManager::GetPtr();
+	p_meteorMng    = MeteorManager::GetPtr();
+	p_ripples      = Ripples::GetPtr();
+	p_itemMng      = ItemManager::GetPtr();
+	p_fireworksMng = FireworksManager::GetPtr();
+	p_effectMng    = EffectManager::GetPtr();
+	p_input        = InputMng::GetPtr();
+	p_sound        = SoundMng::GetPtr();
+
+	font[0].CreateFontH(_T(""), 20, 1, FONT_ANTI);
+	font[1].CreateFontH(_T(""), 26, 1, FONT_ANTI);
 }
 //リセット.
 void TutorialStage::Reset() {
@@ -130,7 +148,8 @@ void TutorialStage::UpdateStep4() {
 //描画:step1
 void TutorialStage::DrawStep1() {
 
-	DrawTopText(_T("プレイヤーを移動させよう\n"));
+	DrawTopText (_T("プレイヤーを移動させよう"));
+	DrawTopText2(_T("キーボード:↑↓←→"));
 
 	//↑↓←→: 移動
 }
@@ -156,11 +175,34 @@ void TutorialStage::DrawTopText(MY_STRING text) {
 
 	//テキスト.
 	DrawStr str(text, {WINDOW_WID/2, 150}, 0xFFFFFF);
-	str.Draw(ANC_MID, p_data->font2);
+	str.Draw(ANC_MID, font[1].GetFont());
 	//枠.
 	{
-		DBL_XY pos  = (str.pos - str.GetTextSize(p_data->font2)/2).Add(-8, -8).ToDblXY();
-		DBL_XY size = (str.GetTextSize(p_data->font2) + 20).ToDblXY();
+		const int margin = 24;
+
+		DBL_XY pos  = (str.pos - str.GetTextSize(font[1].GetFont())/2).Add(-margin/2, -margin/2).ToDblXY();
+		DBL_XY size = (str.GetTextSize(font[1].GetFont()) + margin).ToDblXY();
+		//グラデーションをつける.
+		GradLine line;
+		line.AddPoint(pos,                     0x00FFFF);
+		line.AddPoint(pos.Add(size.x,      0), 0x000000);
+		line.AddPoint(pos.Add(size.x, size.y), 0xFF00FF);
+		line.AddPoint(pos.Add(     0, size.y), 0x000000);
+		line.Draw(true);
+	}
+}
+//画面上にテキストを出す(2行目)
+void TutorialStage::DrawTopText2(MY_STRING text) {
+
+	//テキスト.
+	DrawStr str(text, {WINDOW_WID/2, 210}, 0xFFFFFF);
+	str.Draw(ANC_MID, font[0].GetFont());
+	//枠.
+	{
+		const int margin = 24;
+
+		DBL_XY pos  = (str.pos - str.GetTextSize(font[0].GetFont())/2).Add(-margin/2, -margin/2).ToDblXY();
+		DBL_XY size = (str.GetTextSize(font[0].GetFont()) + margin).ToDblXY();
 		//グラデーションをつける.
 		GradLine line;
 		line.AddPoint(pos,                     0x00FFFF);

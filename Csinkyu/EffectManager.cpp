@@ -151,7 +151,7 @@ void EffectManager::Draw() {
 
 				case Effect_ReflectLaser:
 				{
-					Circle cir = { effect[i].pos, 5+effect[i].counter*1.5, COLOR_PLY_REFLECT };
+					Circle cir = { effect[i].pos, _flt(5+effect[i].counter*1.5), COLOR_PLY_REFLECT };
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
 

@@ -95,7 +95,7 @@ void BackGround::Update() {
 void BackGround::Draw() {
 
 	//スローモード経過時間.
-	float pass = GameManager::GetPtr()->GetSlowModeTime();
+	float pass = GameManager::GetPtr()->GetReflectModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
 	time = CalcNumEaseOut(time); //値の曲線変動.

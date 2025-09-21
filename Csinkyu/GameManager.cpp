@@ -181,20 +181,31 @@ ItemManager      *item         = ItemManager::GetPtr();
 Player           *player       = Player::GetPtr();
 EffectManager    *effectMng    = EffectManager::GetPtr();
 UIManager        *uiMng        = UIManager::GetPtr();
-//障害物の実体.
-NormalLaser_1 laserNor1;
-NormalLaser_2 laserNor2;
-NormalLaser_3 laserNor3;
-NormalLaser_4 laserNor4;
-StraightLaser mgl[4];
 
 using namespace Calc; //計算機能を使用.
 
+//destructor.
+GameManager::~GameManager() {
+	//解放.
+	delete laserNor1;
+	delete laserNor2;
+	delete laserNor3;
+	delete laserNor4;
+	delete laserStr[0];
+	delete laserStr[1];
+}
 //初期化(一回のみ行う)
 void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
 	
+	//実体生成.
+	laserNor1   = new NormalLaser_1();
+	laserNor2   = new NormalLaser_2();
+	laserNor3   = new NormalLaser_3();
+	laserNor4   = new NormalLaser_4();
+	laserStr[0] = new StraightLaser();
+	laserStr[1] = new StraightLaser();
 	//実体取得.
 	p_input = InputMng::GetPtr();
 	p_sound = SoundMng::GetPtr();
@@ -239,19 +250,19 @@ void GameManager::Init() {
 	for(int i = 0; i < SCENE_COUNT; i++){
 		tmScene[i] = Timer(COUNT_UP, 0);
 	}
-	tmGameTime = Timer(COUNT_UP, 0);
-	tmSlowMode = Timer(COUNT_DOWN, REFLECT_MODE_TIME);
+	tmGameTime    = Timer(COUNT_UP, 0);
+	tmReflectMode = Timer(COUNT_DOWN, REFLECT_MODE_TIME);
 
 	//Init処理
 	{
 		//障害物.
-		for (int i = 0; i < _countof(mgl); i++) {
-			mgl[i].Init();
+		for (int i = 0; i < _countof(laserStr); i++) {
+			laserStr[i]->Init();
 		}
-		laserNor1.Init();
-		laserNor2.Init();
-		laserNor3.Init();
-		laserNor4.Init();
+		laserNor1->Init();
+		laserNor2->Init();
+		laserNor3->Init();
+		laserNor4->Init();
 
 		bg->Init();
 		menuMng->Init();
@@ -378,16 +389,16 @@ void GameManager::Draw() {
 //通常レーザーのリセット.
 void GameManager::ResetNorLaser() {
 
-	laserNor1.Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
-	laserNor2.Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
-	laserNor3.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_RIGHT);
-	laserNor4.Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_LEFT);
+	laserNor1->Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
+	laserNor2->Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
+	laserNor3->Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_RIGHT);
+	laserNor4->Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_LEFT);
 }
 //直線レーザーのリセット.
 void GameManager::ResetStrLaser() {
 
-	for (int i = 0; i < _countof(mgl); i++) {
-		mgl[i].Reset();
+	for (int i = 0; i < _countof(laserStr); i++) {
+		laserStr[i]->Reset();
 	}
 }
 
@@ -457,8 +468,7 @@ void GameManager::UpdateGame() {
 	//ゲーム開始後.
 	else{
 
-		UpdateObjects();  //オブジェクト.
-		UpdateSlowMode(); //スローモード.
+		UpdateReflectMode(); //反射モード.
 
 		//ステージ別.
 		switch (gameData->stage) 
@@ -471,8 +481,8 @@ void GameManager::UpdateGame() {
 		//ポーズ.
 		if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 			gameData->scene = SCENE_PAUSE;
-			tmGameTime.Stop(); //一時停止.
-			tmSlowMode.Stop(); //一時停止.
+			tmGameTime.Stop();    //一時停止.
+			tmReflectMode.Stop(); //一時停止.
 		}
 	}
 
@@ -501,45 +511,16 @@ void GameManager::UpdatePause() {
 		gameData->scene = SCENE_GAME;
 		tmGameTime.Start(); //再開.
 		//スローモード中だったなら.
-		if (tmSlowMode.GetPassTime() < REFLECT_MODE_TIME) {
-			tmSlowMode.Start(); //再開.
+		if (tmReflectMode.GetPassTime() < REFLECT_MODE_TIME) {
+			tmReflectMode.Start(); //再開.
 		}
 	}
 }
 
-//オブジェクトの更新.
-void GameManager::UpdateObjects() {
+//反射モードの更新.
+void GameManager::UpdateReflectMode() {
 
-	//Lv1以上.
-	laserMng->Update();
-	laserNor1.Update();
-	laserNor2.Update();
-	meteorMng->Update();
-	item->Update();
-
-	//Lv2以上.
-	if (gameData->level >= 2) {
-		mgl[0].Update();
-		mgl[1].Update();
-	}
-	//Lv3以上.
-	if (gameData->level >= 3) {
-		ripples->Update();
-	}
-	//Lv4以上.
-	if (gameData->level >= 4) {
-		fireworksMng->Update();
-	}
-	//Lv5以上.
-	if (gameData->level >= 5) {
-		laserNor3.Update();
-		laserNor4.Update();
-	}
-}
-//スローモードの更新.
-void GameManager::UpdateSlowMode() {
-
-	//スローモード時間判定.
+	//反射モード時間判定.
 	if (gameData->slowBufCntr > 0) {
 		gameData->speedRate  = SLOW_MODE_SPEED; //速度倍率を遅くする.
 		gameData->slowBufCntr--;                //カウントを減らす.
@@ -548,39 +529,40 @@ void GameManager::UpdateSlowMode() {
 		gameData->speedRate  = 1.0; //速度倍率を戻す.
 	}
 
-	//スローモード中.
-	if (tmSlowMode.GetIsMove()) {
+	//反射モード中.
+	if (tmReflectMode.GetIsMove()) {
 		//3秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 3) {
+		if (tmReflectMode.GetPassTime() <= 3) {
 			if (!isItemCountDownSound[2]) {
 				p_sound->Play(_T("CountDown"), false, 78); //再生.
 				isItemCountDownSound[2] = true;
 			}
 		}
 		//2秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 2) {
+		if (tmReflectMode.GetPassTime() <= 2) {
 			if (!isItemCountDownSound[1]) {
 				p_sound->Play(_T("CountDown"), false, 78); //再生.
 				isItemCountDownSound[1] = true;
 			}
 		}
 		//1秒以下になったばかりの時.
-		if (tmSlowMode.GetPassTime() <= 1) {
+		if (tmReflectMode.GetPassTime() <= 1) {
 			if (!isItemCountDownSound[0]) {
 				p_sound->Play(_T("CountDown"), false, 78); //再生.
 				isItemCountDownSound[0] = true;
 			}
 		}
 		//時間切れで解除.
-		if (tmSlowMode.GetPassTime() <= 0) {
+		if (tmReflectMode.GetPassTime() <= 0) {
 			
-			p_sound->Play(_T("PowerDown"), false, 78); //再生.
-			
+			tmReflectMode.Reset();
+
 			gameData->isReflectMode = false; //反射モード解除.
 			gameData->speedRate     = 1.0;   //速度倍率を100%に戻す.
 			gameData->slowBufCntr   = 0;     //カウンターを0に.
-			tmSlowMode.Reset();
 			player->SetMode(Player_Normal);  //通常状態に戻す.
+			
+			p_sound->Play(_T("PowerDown"), false, 78); //再生.
 			
 			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 				isItemCountDownSound[i] = false;
@@ -670,7 +652,6 @@ void GameManager::DrawMenu() {
 }
 void GameManager::DrawGame() {
 
-	DrawObjects();      //オブジェクト.
 	player->Draw();     //プレイヤー.
 	DrawReflectMode();  //反射モード演出.
 	uiMng->Draw();      //UI.
@@ -689,7 +670,15 @@ void GameManager::DrawGame() {
 }
 void GameManager::DrawEnd() {
 	
-	DrawObjects(); //オブジェクト.
+	//ステージ別.
+	switch (gameData->stage) 
+	{
+		case STAGE_TUTORIAL: tutorialStg->Draw(); break;
+		case STAGE_ENDLESS:  endlessStg->Draw();  break;
+
+		default: assert(FALSE); break;
+	}
+	//黒フィルター.
 	{
 		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
@@ -763,57 +752,29 @@ void GameManager::DrawPause() {
 	DrawGame(); //ゲームシーンと同じ.
 }
 
-//オブジェクトの描画.
-void GameManager::DrawObjects() {
-
-	//Lv1以上.
-	laserMng->Draw();
-	laserNor1.Draw();
-	laserNor2.Draw();
-	meteorMng->Draw();
-	item->Draw();
-	//Lv2以上.
-	if (gameData->level >= 2) {
-		mgl[0].Draw();
-		mgl[1].Draw();
-	}
-	//Lv3以上.
-	if (gameData->level >= 3) {
-		ripples->Draw();
-	}
-	//Lv4以上.
-	if (gameData->level >= 4) {
-		fireworksMng->Draw();
-	}
-	//Lv5以上.
-	if (gameData->level >= 5) {
-		laserNor3.Draw();
-		laserNor4.Draw();
-	}
-}
 //反射モード演出.
 void GameManager::DrawReflectMode() {
 
 	//カウントダウン中.
-	if (tmSlowMode.GetIsMove() && tmSlowMode.GetPassTime() > 0)
+	if (tmReflectMode.GetIsMove() && tmReflectMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
 		TCHAR text[256];
-		_stprintf(text, _T("%d"), (int)ceil(tmSlowMode.GetPassTime())); //TCHAR型に変数を代入.
+		_stprintf(text, _T("%d"), (int)ceil(tmReflectMode.GetPassTime())); //TCHAR型に変数を代入.
 		DrawStr str(text, {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
 
 		//画面中央に数字を表示.
 		{
-			double dec  = GetDecimal(tmSlowMode.GetPassTime()); //小数だけ取り出す.
+			double dec  = GetDecimal(tmReflectMode.GetPassTime()); //小数だけ取り出す.
 			double anim = CalcNumEaseOut(dec);
 			
 			SetDrawBlendModeKR(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
-			if (tmSlowMode.GetPassTime() > REFLECT_MODE_TIME-1) {
+			if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME-1) {
 				imgReflect.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2}, {0.3+0.2*anim, 0.3+0.2*anim});
 			}
 			//最後の3秒.
-			if (tmSlowMode.GetPassTime() <= 3) {
+			if (tmReflectMode.GetPassTime() <= 3) {
 				str.Draw(ANC_MID, gameData->font4); //数字.
 			}
 			ResetDrawBlendMode();
@@ -830,7 +791,7 @@ void GameManager::GameEnd() {
 		gameData->scene = SCENE_END; //ゲーム終了へ.
 	
 		tmGameTime.Stop(); //停止.
-		tmSlowMode.Reset();
+		tmReflectMode.Reset();
 		gameData->speedRate = 1.0; //速度倍率を100%に戻す.
 
 		//記録リセット.
@@ -876,7 +837,7 @@ void GameManager::GameEnd() {
 void GameManager::ItemUsed() {
 
 	gameData->isReflectMode = true; //反射モードにする.
-	tmSlowMode.Start();             //スローモード計測開始.
+	tmReflectMode.Start();          //反射モード計測開始.
 
 	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {

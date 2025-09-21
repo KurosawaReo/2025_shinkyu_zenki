@@ -3,17 +3,30 @@
 
    ステージ: 耐久モード.
 */
-#include "GameManager.h"
+#include "LaserManager.h"
+#include "Obst_NormalLaser.h"
+#include "Obst_StraightLaser.h"
+#include "Obst_MeteorManager.h"
+#include "Obst_Ripples.h"
+#include "Obst_Fireworks.h"
 #include "Item.h"
 #include "EffectManager.h"
+#include "GameManager.h"
+
 #include "Stage_Endless.h"
 
 //初期化.
 void EndlessStage::Init() {
 	//実体取得.
-	p_data      = GameData::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
-	p_sound     = SoundMng::GetPtr();
+	p_data         = GameData::GetPtr();
+	p_gameMng      = GameManager::GetPtr();
+	p_laserMng     = LaserManager::GetPtr();
+	p_meteorMng    = MeteorManager::GetPtr();
+	p_ripples      = Ripples::GetPtr();
+	p_itemMng      = ItemManager::GetPtr();
+	p_fireworksMng = FireworksManager::GetPtr();
+	p_effectMng    = EffectManager::GetPtr();
+	p_sound        = SoundMng::GetPtr();
 }
 //リセット.
 void EndlessStage::Reset() {
@@ -102,8 +115,67 @@ void EndlessStage::Update() {
 
 		default: assert(FALSE); break;
 	}
+
+	UpdateObjects();
 }
 //描画.
 void EndlessStage::Draw() {
+	DrawObjects();
+}
 
+//オブジェクトの更新.
+void EndlessStage::UpdateObjects() {
+
+	//Lv1以上.
+	p_laserMng->Update();
+	p_gameMng->laserNor1->Update();
+	p_gameMng->laserNor2->Update();
+	p_meteorMng->Update();
+	p_itemMng->Update();
+	//Lv2以上.
+	if (p_data->level >= 2) {
+		p_gameMng->laserStr[0]->Update();
+		p_gameMng->laserStr[1]->Update();
+	}
+	//Lv3以上.
+	if (p_data->level >= 3) {
+		p_ripples->Update();
+	}
+	//Lv4以上.
+	if (p_data->level >= 4) {
+		p_fireworksMng->Update();
+	}
+	//Lv5以上.
+	if (p_data->level >= 5) {
+		p_gameMng->laserNor3->Update();
+		p_gameMng->laserNor4->Update();
+	}
+}
+//オブジェクトの描画.
+void EndlessStage::DrawObjects() {
+
+	//Lv1以上.
+	p_laserMng->Draw();
+	p_gameMng->laserNor1->Draw();
+	p_gameMng->laserNor2->Draw();
+	p_meteorMng->Draw();
+	p_itemMng->Draw();
+	//Lv2以上.
+	if (p_data->level >= 2) {
+		p_gameMng->laserStr[0]->Draw();
+		p_gameMng->laserStr[1]->Draw();
+	}
+	//Lv3以上.
+	if (p_data->level >= 3) {
+		p_ripples->Draw();
+	}
+	//Lv4以上.
+	if (p_data->level >= 4) {
+		p_fireworksMng->Draw();
+	}
+	//Lv5以上.
+	if (p_data->level >= 5) {
+		p_gameMng->laserNor3->Draw();
+		p_gameMng->laserNor4->Draw();
+	}
 }

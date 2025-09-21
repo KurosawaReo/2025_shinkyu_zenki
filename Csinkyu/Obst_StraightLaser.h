@@ -6,19 +6,10 @@
 #pragma once
 //#include "MeteoManager.h"
 
-//直線レーザー管理.[継承不可]
-class StraightLaser final
+//直線レーザー.
+class StraightLaser
 {
-public: //実体.
-	static StraightLaser* GetPtr() {
-		static StraightLaser inst; //自身のインスタンス.
-		return &inst;
-	}
-
 private:
-//	STRAIGHT_LASER_DATA laser[3]{};
-//	STRAIGHT_LINE_DATA line[OBSTACLE6_LINE_MAX]{}; //レーザーはLaserManagerに統一しとく.
-
 	DBL_XY plyPos{};   // プレイヤー座標保管用.
 
 	GameData*      p_data{};
