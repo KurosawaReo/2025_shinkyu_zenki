@@ -126,7 +126,7 @@ void EffectManager::Draw() {
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//•`‰æ.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
+					SetDrawBlendModeKR(MODE_ALPHA, pow);
 					//‰æ‘œØ‚è‘Ö‚¦.
 					if (effect[i].type == Effect_Score100) {
 						imgScore[0].DrawExtend(pos, {0.2, 0.2});
@@ -144,8 +144,8 @@ void EffectManager::Draw() {
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 
 					//•`‰æ.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawCircleST(&cir, false, true);
+					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					DrawCircleKR(&cir, false, true);
 				}
 				break;
 
@@ -156,8 +156,8 @@ void EffectManager::Draw() {
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
 
 					//•`‰æ.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawCircleST(&cir, false, true);
+					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					DrawCircleKR(&cir, false, true);
 				}
 				break;
 
@@ -172,8 +172,8 @@ void EffectManager::Draw() {
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEOR_BREAK_ANIM_TIME));
 
 					//•`‰æ.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawLineST(&line, true);
+					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					DrawLineKR(&line, true);
 				}
 				break;
 
@@ -204,8 +204,8 @@ void EffectManager::Draw() {
 					int lampFillCnt = 0;
 
 					//•`‰æ.
-					SetDrawBlendModeST(MODE_ALPHA, pow);
-					DrawCircleST(&mainCir, false, true);
+					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					DrawCircleKR(&mainCir, false, true);
 
 					switch (effect[i].type) 
 					{
@@ -265,7 +265,7 @@ void EffectManager::Draw() {
 						//‹Ï“™‚É‚È‚é‚æ‚¤‚É”z’u‚·‚é.
 						lampCir[j].pos.x = effect[i].pos.x + interval * (j - _flt(lampUseCnt-1)/2);
 						//‰~•`‰æ.
-						DrawCircleST(&lampCir[j], (lampFillCnt >= j+1), true); 
+						DrawCircleKR(&lampCir[j], (lampFillCnt >= j+1), true); 
 					}
 				}
 				break;

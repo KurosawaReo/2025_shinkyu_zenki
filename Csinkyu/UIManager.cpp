@@ -62,7 +62,7 @@ void UIManager::Draw() {
 
 			//描画.
 			imgUI[0].DrawExtend({ WINDOW_WID/2, 70 }, { 0.4, 0.35 }); //背景画像.
-			SetDrawBlendModeST(MODE_ALPHA, 255 * alpha);
+			SetDrawBlendModeKR(MODE_ALPHA, 255 * alpha);
 			str.Draw(ANC_MID, p_gameData->font4);
 			ResetDrawBlendMode();
 		}
@@ -99,26 +99,26 @@ void UIManager::Draw() {
 			//背景画像.
 			imgUI[0].DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
 			//テキスト(main)
-			SetDrawBlendModeST(MODE_ALPHA, 255 * alpha4);
+			SetDrawBlendModeKR(MODE_ALPHA, 255 * alpha4);
 			str[0].Draw(ANC_MID, p_gameData->font4);
-			SetDrawBlendModeST(MODE_ALPHA, 255 * alpha1);
+			SetDrawBlendModeKR(MODE_ALPHA, 255 * alpha1);
 			str[1].Draw(ANC_MID, p_gameData->font3);
 			imgUI[1].DrawExtend({(double)str[1].pos.x, (double)str[1].pos.y+28}, {0.35, 0.4});
-			SetDrawBlendModeST(MODE_ALPHA, 255 * alpha2);
+			SetDrawBlendModeKR(MODE_ALPHA, 255 * alpha2);
 			str[2].Draw(ANC_MID, p_gameData->font3);
 			imgUI[2].DrawExtend({(double)str[2].pos.x, (double)str[2].pos.y+28}, {0.35, 0.4});
-			SetDrawBlendModeST(MODE_ALPHA, 255 * alpha3);
+			SetDrawBlendModeKR(MODE_ALPHA, 255 * alpha3);
 			str[3].Draw(ANC_MID, p_gameData->font3);
 			imgUI[3].DrawExtend({(double)str[3].pos.x, (double)str[3].pos.y+28}, {0.35, 0.4});
 			//テキスト(光沢用)
 			str[1].color = 0xFFFFFF;
 			str[2].color = 0xFFFFFF;
 			str[3].color = 0xFFFFFF;
-			SetDrawBlendModeST(MODE_ALPHA, 100 * animSin1);
+			SetDrawBlendModeKR(MODE_ALPHA, 100 * animSin1);
 			str[1].Draw(ANC_MID, p_gameData->font3);
-			SetDrawBlendModeST(MODE_ALPHA, 100 * animSin2);
+			SetDrawBlendModeKR(MODE_ALPHA, 100 * animSin2);
 			str[2].Draw(ANC_MID, p_gameData->font3);
-			SetDrawBlendModeST(MODE_ALPHA, 100 * animSin3);
+			SetDrawBlendModeKR(MODE_ALPHA, 100 * animSin3);
 			str[3].Draw(ANC_MID, p_gameData->font3);
 
 			//描画モードリセット.

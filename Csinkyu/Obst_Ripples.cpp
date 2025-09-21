@@ -264,15 +264,15 @@ void Ripples::DrawWarningEffect(int index)
 	}
 
 	// 予告エフェクトを描画.
-	SetDrawBlendModeST(MODE_ALPHA, alphaValue);
+	SetDrawBlendModeKR(MODE_ALPHA, alphaValue);
 
 	Circle cir;
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize,   GetColor(150, 150, 150) };
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize/2, GetColor(200, 200, 200) };
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize+5, GetColor(120, 120, 120) }; // 外周リング
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();
@@ -297,13 +297,13 @@ void Ripples::DrawActiveEffect(int index)
 	int innerSize = effectSize / 2;
 
 	// アクティブエフェクトを円形で描画（シアン色で光る）
-	SetDrawBlendModeST(MODE_ADD, alphaValue);
+	SetDrawBlendModeKR(MODE_ADD, alphaValue);
 
 	Circle cir;
 	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)effectSize, GetColor(0, 255, 255)};
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)innerSize,  GetColor(0, 255, 200)};
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();

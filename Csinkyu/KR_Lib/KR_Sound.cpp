@@ -1,6 +1,6 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/09/15
+   ver: 2025/09/21
 
    サウンド機能を追加します。
 */
@@ -15,11 +15,12 @@ namespace KR_Lib
 {
 // ▼*---=[ SoundData ]=---*▼ //
 
-	//コンストラクタ(Timer機能を使うためcpp側に入れる)
+	//コンストラクタ.
 	SoundData::SoundData() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
-		timer = new TimerMicro(COUNT_UP, 0); //アドレスを保存.
+		//.hの方でコンストラクタを使えないため、動的確保させる.
+		timer = new TimerMicro(COUNT_UP, 0);
 	};
 	//デストラクタ.
 	SoundData::~SoundData() {

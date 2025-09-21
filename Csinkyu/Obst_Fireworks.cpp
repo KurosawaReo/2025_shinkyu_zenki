@@ -226,16 +226,16 @@ void FireworksManager::DrawWarningEffect(int index) {
 		warningSize = 30;
 	}
 
-	SetDrawBlendModeST(MODE_ALPHA, alphaValue);
+	SetDrawBlendModeKR(MODE_ALPHA, alphaValue);
 
 	Circle cir;
 	// äOë§ÇÃâ~äDêF
 	cir = { {fireworks[index].targetX, fireworks[index].targetY}, (float)warningSize, GetColor(128, 128, 128) };
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 	// ì‡ë§ÇÃâ~äDêF
 	cir = { {fireworks[index].targetX, fireworks[index].targetY}, (float)(warningSize / 2), GetColor(128, 128, 128) };
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 	// íÜêSì_äDêF
 	cir = { {fireworks[index].targetX, fireworks[index].targetY}, 5, GetColor(128,128, 128) };
-	DrawCircleST(&cir, false, true);
+	DrawCircleKR(&cir, false, true);
 }

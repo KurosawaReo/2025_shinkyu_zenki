@@ -126,7 +126,7 @@ void MenuManager::Draw() {
 		
 		Triangle tri = {{base, base.Add(-20, 10*anim), base.Add(-20, -10*anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
-		int err = DrawTriangleST(&tri, true, false);
+		int err = DrawTriangleKR(&tri, true, false);
 
 //		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
 	}
@@ -189,7 +189,7 @@ void MenuManager::Draw() {
 	imgMenu[selectedIndex].Draw(imgPos);
 	//画像の枠線(位置とサイズは画像を元にする)
 	Box box = { imgPos, imgSize + margin, frameColor };
-	DrawBoxST(&box, ANC_MID, false);
+	DrawBoxKR(&box, ANC_MID, false);
 
 	// ▼ 説明文の枠（右下）
 	int textBoxX = WINDOW_WID - 560;

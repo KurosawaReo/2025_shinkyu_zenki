@@ -34,6 +34,7 @@
     <ClCompile Include="Obst_MeteorManager.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="Stage_Endless.cpp" />
+    <ClCompile Include="KR_Lib\KR_Global.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LaserManager.h" />

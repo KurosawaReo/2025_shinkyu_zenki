@@ -87,8 +87,8 @@ void ItemManager::Draw()
 
 				Circle cir = { items[i].pos, 30, COLOR_PLY_REFLECT };
 
-				SetDrawBlendModeST(MODE_ADD, 128 + 127*CalcNumWaveLoop(items[i].counter/20)); //点滅.
-				DrawCircleST(&cir, false, true);
+				SetDrawBlendModeKR(MODE_ADD, 128 + 127*CalcNumWaveLoop(items[i].counter/20)); //点滅.
+				DrawCircleKR(&cir, false, true);
 				ResetDrawBlendMode();
 			}
 			//アイテム本体.

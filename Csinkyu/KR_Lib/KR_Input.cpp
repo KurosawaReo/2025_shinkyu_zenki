@@ -1,11 +1,9 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/21
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
-
-   TODO: Actionをどれか1つの最長時間ではなく, どれか1つでも押した総時間に変えたい.
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.

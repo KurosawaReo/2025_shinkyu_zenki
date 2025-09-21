@@ -127,7 +127,7 @@ void StraightLaser::DrawPredictionLine()
 
 	// —\‘ªü‚Ì“§–¾“x.
 	double alpha = CalcNumEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
-	SetDrawBlendModeST(MODE_ALPHA, 255*(1-alpha));
+	SetDrawBlendModeKR(MODE_ALPHA, 255*(1-alpha));
 
 	// ’†‰›‚Ì—\‘ªü‚Ì‚İ‚ğ•`‰æ
 	// ”­Ë•ûŒü‚É‰‚¶‚Ä—\‘ªü‚ğ•`‰æ
@@ -139,7 +139,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineST(&predictionLine, true);
+			DrawLineKR(&predictionLine, true);
 		}
 		break;
 	case 1: // ‰E‚©‚ç¶‚Ö
@@ -148,7 +148,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineST(&predictionLine, true);
+			DrawLineKR(&predictionLine, true);
 		}
 		break;
 	case 2: // ã‚©‚ç‰º‚Ö
@@ -157,7 +157,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineST(&predictionLine, true);
+			DrawLineKR(&predictionLine, true);
 		}
 		break;
 	case 3: // ‰º‚©‚çã‚Ö
@@ -166,7 +166,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineST(&predictionLine, true);
+			DrawLineKR(&predictionLine, true);
 		}
 		break;
 	}

@@ -79,7 +79,7 @@ void LaserManager::Draw() {
 			default: assert(FALSE); break;
 		}
 
-		DrawLineST(&tmpLine, true); //•`‰æ.
+		DrawLineKR(&tmpLine, true); //•`‰æ.
 	}
 
 	//’Êí‚Ì•`‰æƒ‚[ƒh‚É–ß‚·

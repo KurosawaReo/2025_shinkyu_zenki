@@ -132,12 +132,19 @@ void TutorialStage::DrawStep1() {
 
 	DrawStr str(_T("ª«©¨: ˆÚ“®"), {WINDOW_WID/2-500, WINDOW_HEI/2}, 0x00FFFF);
 	str.Draw(ANC_MID, p_data->font1);
+	DBL_XY s = {1.0, 1.0};
+	
 
-
+	GradLine line;
+	line.AddPoint({100, 100}, {255, 255, 255, 255});
+	line.AddPoint({300, 100}, {255,   0, 255, 255});
+	line.AddPoint({100, 300}, {255, 255,   0, 255});
+	line.AddPoint({300, 300}, {  0, 255, 255, 255});
+	line.Draw(true);
 
 	//˜g.
 	Box box = { str.pos.Add(0, 0).ToDblXY(), str.GetTextSize(p_data->font1).ToDblXY()+12, 0x00FFFF};
-	DrawBoxST(&box, ANC_MID, false);
+	DrawBoxKR(&box, ANC_MID, false);
 }
 //•`‰æ:step2
 void TutorialStage::DrawStep2() {

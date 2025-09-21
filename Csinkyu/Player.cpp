@@ -151,7 +151,7 @@ void Player::DrawAfterImage()
 			//透明度の計算.
 			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
 			//透明度反映.
-			SetDrawBlendModeST(MODE_ADD, 255*(1-alpha));
+			SetDrawBlendModeKR(MODE_ADD, 255*(1-alpha));
 
 			Circle cir = { afterPos[i], PLAYER_SIZE/2, {} };
 			//反射カラー.
@@ -166,7 +166,7 @@ void Player::DrawAfterImage()
 				cir.color = COLOR_PLY_AFT_NOR;
 			}
 
-			DrawCircleST(&cir, false, true);
+			DrawCircleKR(&cir, false, true);
 		}
 	}
 
@@ -247,7 +247,7 @@ void Player::DrawReflectEffects()
 			);
 
 			// アルファブレンドモード設定（エフェクトごとに設定）
-			SetDrawBlendModeST(MODE_ALPHA, alpha);
+			SetDrawBlendModeKR(MODE_ALPHA, alpha);
 
 			// 四角い波紋を描画
 			for (int wave = 0; wave < 3; wave++) {
@@ -276,7 +276,7 @@ void Player::DrawReflectEffects()
 							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxST(&thickBox, ANC_MID, false, true);
+						DrawBoxKR(&thickBox, ANC_MID, false, true);
 					}
 				}
 			}
@@ -294,7 +294,7 @@ void Player::DrawReflectEffects()
 				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
-			DrawBoxST(&centerBox, ANC_MID, false, true);
+			DrawBoxKR(&centerBox, ANC_MID, false, true);
 
 			// 描画モードリセット
 			ResetDrawBlendMode();

@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/09/11
+   ver: 2025/09/21
 
    計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
