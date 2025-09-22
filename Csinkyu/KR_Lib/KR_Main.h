@@ -39,6 +39,6 @@ namespace KR_Lib
 		void Update();
 		void Draw();
 
-		void GameEnd(); //ゲームを終了する.
+		void GameOver(); //ゲームを終了する.
 	};
 }

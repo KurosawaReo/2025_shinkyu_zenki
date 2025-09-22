@@ -6,7 +6,7 @@
 
 //前方宣言.
 class GameManager;
-//class TutorialStage;
+class TutorialStage;
 
 //UI管理.[継承不可]
 class UIManager final
@@ -20,14 +20,18 @@ public: //実体.
 private: //データ.
 	DrawImg imgUI[4]{}; //UI画像.
 
-	int disBestScore{}; //表示ベストスコア.
-	int disScore{};     //表示スコア.
+	int  disBestScore{}; //表示ベストスコア.
+	int  disScore{};     //表示スコア.
+
+	bool isShowScore{}; //スコアを表示するかどうか.
 
 	GameManager*   p_gameMng{};
 	GameData*      p_gameData{};
 	TutorialStage* p_tutorialStg{};
 
 public:
+	//sign.
+	void SignIsShowScore() { isShowScore = true; }
 	//set.
 	void SetDisBestScore(int _score) { disBestScore = _score; }
 

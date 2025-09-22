@@ -38,6 +38,7 @@ private:
 	DrawImg  imgItem{}; //アイテム画像.
 
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
+	bool     isSpawnAble{};   //召喚可能かどうか.
 
 	GameData*      p_gamedata{};  //ゲームデータ.
 	Player*        p_player{};    //プレイヤーデータ.
@@ -45,6 +46,8 @@ private:
 	EffectManager* p_effectMng{};
 
 public:
+	//set.
+	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
 	//add.
 	void AddItemCnt() { itemMaxCnt++; }
 

@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "GameManager.h"
 #include "Obst_MeteorManager.h"
+#include "Stage_Tutorial.h"
 
 #include "LaserManager.h"
 
@@ -132,7 +133,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -169,7 +170,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -207,7 +208,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -302,6 +303,11 @@ void LaserManager::UpdateLaser() {
 					else {
 						laser[i].Counter = LASER_REF_TRACK_ED_TM; //再反射後は追尾しない.
 						ReflectLaser(i); //再反射.
+					}
+
+					//チュートリアルなら指示送信.
+					if (p_data->stage == STAGE_TUTORIAL) {
+						TutorialStage::GetPtr()->SetBreakMeteor(true);	
 					}
 				}
 				else {
@@ -451,6 +457,11 @@ void LaserManager::ReflectLaser(int idx)
 	//サウンド.
 	SoundMng* sound = SoundMng::GetPtr();
 	sound->Play(_T("Laser3"), false, 58);
+
+	//チュートリアルなら指示送信.
+	if (p_data->stage == STAGE_TUTORIAL) {
+		TutorialStage::GetPtr()->SetReflectLaser(true);
+	}
 }
 
 //敵のレーザーが1つでも存在するかどうか.

@@ -17,13 +17,18 @@ public: //実体.
 
 private:
 	Meteor meteor[METEOR_CNT_MAX]{}; //隕石データ.
-	float timer{};			      //隕石生成用.
+
+	float timer{};       //隕石生成用.
+	bool  isSpawnAble{}; //召喚可能かどうか.
 
 	GameData*      p_data{};      //ゲームデータ.
 	Player*        p_player{};	  //プレイヤーデータ.
 	EffectManager* p_effectMng{};
 
 public:
+	//set.
+	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
+
 	void Init();
 	void Reset();
 	void Update();

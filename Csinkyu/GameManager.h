@@ -124,6 +124,7 @@ public:
 	void DrawReflectMode();
 
 	//‚»‚Ì‘¼.
-	void GameEnd();
+	void GameOver();
 	void ItemUsed();
+	void ReflectModeEnd();
 };

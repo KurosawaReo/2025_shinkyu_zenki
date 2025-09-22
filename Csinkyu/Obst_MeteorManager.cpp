@@ -23,6 +23,8 @@ void MeteorManager::Init() {
 
 void MeteorManager::Reset() {
 
+	isSpawnAble = false; //許可が出されるまで召喚不可.
+
 	timer = METEOR_SPAWN_SPAN; //初期時間.
 
 	//全隕石ループ.
@@ -33,14 +35,17 @@ void MeteorManager::Reset() {
 
 void MeteorManager::Update() {
 
-	//タイマーが残っていれば.
-	if (timer > 0) {
-		timer -= p_data->speedRate;
-	}
-	//タイマーが0になったら.
-	else {
-		SpawnMeteor(); //隕石生成.
-		timer = METEOR_SPAWN_SPAN * p_data->spawnRate; //タイマー再開(徐々に短くなる)
+	//召喚可能なら.
+	if (isSpawnAble) {
+		//タイマーが残っていれば.
+		if (timer > 0) {
+			timer -= p_data->speedRate;
+		}
+		//タイマーが0になったら.
+		else {
+			SpawnMeteor(); //隕石生成.
+			timer = METEOR_SPAWN_SPAN * p_data->spawnRate; //タイマー再開(徐々に短くなる)
+		}
 	}
 
 	//全隕石ループ.
