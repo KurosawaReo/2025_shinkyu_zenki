@@ -159,11 +159,16 @@ void TutorialStage::UpdateStep2() {
 			//最初の一定時間は停止.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
+			p_itemMng->Update();
+
 			//一定時間経過したら.
 			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 3.0) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				//オブジェクトリセット.
+				p_itemMng->Reset();
+				
 				startTimer.Reset(); //リセット.
 				endTimer.Reset();   //リセット.
 				startTimer.Start(); //開始.

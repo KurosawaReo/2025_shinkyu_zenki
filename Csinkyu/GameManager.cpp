@@ -351,7 +351,6 @@ void GameManager::Update() {
 		bg->Update();        //背景.
 		effectMng->Update(); //エフェクト.
 	}
-	Debug::LogPadID();
 	//シーン別.
 	switch (gameData->scene) 
 	{
@@ -617,6 +616,7 @@ void GameManager::DrawTitle() {
 		ResetDrawBlendMode();
 	}
 
+#if defined SHOW_BEST_SCORE
 	//best score.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
 
@@ -637,6 +637,7 @@ void GameManager::DrawTitle() {
 		imgUI.DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
 		ResetDrawBlendMode();
 	}
+#endif
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
 
