@@ -52,11 +52,11 @@ void Player::Update()
 {
 #if defined _DEBUG //Releaseでは入れない.
 	//デバッグモード切り替え.
-	if (p_input->IsPushKeyTime(KEY_M) == 1) {
+	if (p_input->IsPushKeyTime(KeyID::M) == 1) {
 		isDebug = !isDebug;
 	}
 	//テスト用：Eキーで反射エフェクトを生成
-	if (p_input->IsPushKeyTime(KEY_E) == 1) {
+	if (p_input->IsPushKeyTime(KeyID::E) == 1) {
 		CreateReflectEffect(hit.pos);
 	}
 #endif
