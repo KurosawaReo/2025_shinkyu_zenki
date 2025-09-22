@@ -25,12 +25,13 @@ void ItemManager::Init()
 //リセット.
 void ItemManager::Reset()
 {
+	isSpawnAble = false; //許可が出されるまで召喚不可.
+	itemMaxCnt = 1; 	 //最初はアイテム1つ.
+
 	//全て消滅.
 	for (int i = 0; i < _countof(items); i++) {
 		ItemErase(i);
 	}
-	//最初はアイテム1つ.
-	itemMaxCnt = 1;
 }
 //更新.
 void ItemManager::Update()

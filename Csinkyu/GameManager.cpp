@@ -1,149 +1,149 @@
-/*--------------------------------------------------------/
+ï»¿/*--------------------------------------------------------/
    - REFLECT LINE -
 
-   (“ú–{Œê•\‹L: ƒŠƒtƒŒƒNƒgƒ‰ƒCƒ“)
-   (—ªÌ@@@: REFLINE/ƒŠƒtƒ‰ƒCƒ“)
+   (æ—¥æœ¬èªè¡¨è¨˜: ãƒªãƒ•ãƒ¬ã‚¯ãƒˆãƒ©ã‚¤ãƒ³)
+   (ç•¥ç§°ã€€ã€€ã€€: REFLINE/ãƒªãƒ•ãƒ©ã‚¤ãƒ³)
 /---------------------------------------------------------/
-   TODOƒƒ‚
+   TODOãƒ¡ãƒ¢
 
    2025/05/20:
-   ‰¼‚ÅƒXƒ[ƒ‚[ƒh‚ğÀ‘•‚µ‚½‚ªAƒŒ[ƒU[‚Ì“®‚«‚ª‰ö‚µ‚¢B
+   ä»®ã§ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã‚’å®Ÿè£…ã—ãŸãŒã€ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®å‹•ããŒæ€ªã—ã„ã€‚
    
    2025/05/26:
-   ƒXƒ[ƒ‚[ƒhŠ®¬BƒŒ[ƒU[‚Ì“®‚«‚Ì‰ö‚µ‚³‚à‰ğŒˆB
-   EƒAƒCƒeƒ€‚ÌÀ‘•
-   EƒXƒ[ƒ‚[ƒh‚ÌŠÔ§ŒÀ <<< now
-   EáŠQ•¨4‚Ì–C‘ä‚ğ‰æ–Êˆêü“®‚©‚·(ƒQ[ƒ€ŠÔ??•bˆÈ~)
+   ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ãƒ‰å®Œæˆã€‚ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®å‹•ãã®æ€ªã—ã•ã‚‚è§£æ±ºã€‚
+   ãƒ»ã‚¢ã‚¤ãƒ†ãƒ ã®å®Ÿè£…
+   ãƒ»ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã®æ™‚é–“åˆ¶é™ <<< now
+   ãƒ»éšœå®³ç‰©4ã®ç ²å°ã‚’ç”»é¢ä¸€å‘¨å‹•ã‹ã™(ã‚²ãƒ¼ãƒ æ™‚é–“??ç§’ä»¥é™)
 
    2025/06/02:
-   ƒXƒ[ƒ‚[ƒh‚Ì‰ğœ‚Ü‚ÅŠ®¬B
-   EƒAƒCƒeƒ€‚Ì—‰º‘¬“xA’è”‚¢‚¶‚Á‚Ä‚à•Ï‚í‚ç‚È‚¢B
-   E‚Æ‚éA‚±‚í‚·‚ğ‚Ç‚¤‚·‚é‚©l‚¦‚éB
+   ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã®è§£é™¤ã¾ã§å®Œæˆã€‚
+   ãƒ»ã‚¢ã‚¤ãƒ†ãƒ ã®è½ä¸‹é€Ÿåº¦ã€å®šæ•°ã„ã˜ã£ã¦ã‚‚å¤‰ã‚ã‚‰ãªã„ã€‚
+   ãƒ»ã¨ã‚‹ã€ã“ã‚ã™ã‚’ã©ã†ã™ã‚‹ã‹è€ƒãˆã‚‹ã€‚
 
    2025/06/09:
-   "‚±‚í‚·"‚Ì•ûjŒˆ’èB
+   "ã“ã‚ã™"ã®æ–¹é‡æ±ºå®šã€‚
    
-   1.ü‚Å\¬‚³‚ê‚½‘½ŠpŒ`‚Ìè¦Î‚ª’èŠú“I‚É~‚Á‚Ä‚­‚é(‘S•ûŒü‚©‚çƒ‰ƒ“ƒ_ƒ€)
-   2.ƒAƒCƒeƒ€‚ğæ‚é‚ÆƒŒ[ƒU[‚ğ”½Ë‚·‚é‚æ‚¤‚É‚È‚èAŠgU‚·‚é‚æ‚¤‚É”ò‚ñ‚Å‚¢‚­B
-   3.‹ß‚­‚Éè¦Î‚ª‚ ‚éê‡Aè¦Î‚ÉŒü‚©‚Á‚Ä”ò‚ñ‚Å‚¢‚­B
-   4.”½Ë‚µ‚½ƒŒ[ƒU[‚ªè¦Î‚É“–‚½‚é‚Æ‰ó‚ê‚é(‰Â”\‚È‚ç‰ó‚ê‚éƒAƒjƒ[ƒVƒ‡ƒ“‚ğ“ü‚ê‚½‚¢)
-   ‰Û‘è“_: ‚Ç‚¤‚â‚Á‚Äè¦Î‚ÌÀ•W‚ğæ“¾‚·‚é‚©.
+   1.ç·šã§æ§‹æˆã•ã‚ŒãŸå¤šè§’å½¢ã®éš•çŸ³ãŒå®šæœŸçš„ã«é™ã£ã¦ãã‚‹(å…¨æ–¹å‘ã‹ã‚‰ãƒ©ãƒ³ãƒ€ãƒ )
+   2.ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–ã‚‹ã¨ãƒ¬ãƒ¼ã‚¶ãƒ¼ã‚’åå°„ã™ã‚‹ã‚ˆã†ã«ãªã‚Šã€æ‹¡æ•£ã™ã‚‹ã‚ˆã†ã«é£›ã‚“ã§ã„ãã€‚
+   3.è¿‘ãã«éš•çŸ³ãŒã‚ã‚‹å ´åˆã€éš•çŸ³ã«å‘ã‹ã£ã¦é£›ã‚“ã§ã„ãã€‚
+   4.åå°„ã—ãŸãƒ¬ãƒ¼ã‚¶ãƒ¼ãŒéš•çŸ³ã«å½“ãŸã‚‹ã¨å£Šã‚Œã‚‹(å¯èƒ½ãªã‚‰å£Šã‚Œã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å…¥ã‚ŒãŸã„)
+   èª²é¡Œç‚¹: ã©ã†ã‚„ã£ã¦éš•çŸ³ã®åº§æ¨™ã‚’å–å¾—ã™ã‚‹ã‹.
 
-   ¬“c“‡ ¨ƒŒ[ƒU[‚Ì”½Ë
-   •àV@ ¨ü‚Å\¬‚³‚ê‚½‘½ŠpŒ`‚Ìè¦Î
+   å°ç”°å³¶ â†’ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®åå°„
+   é»’æ¾¤ã€€ â†’ç·šã§æ§‹æˆã•ã‚ŒãŸå¤šè§’å½¢ã®éš•çŸ³
 
-   [—]—T‚ª‚ ‚ê‚Î]
-   EFPS‚Ím•b‘Ò‹@‚Å‚Í‚È‚­AŠÔŒv‘ª‚Å‘ª‚è‚½‚¢
+   [ä½™è£•ãŒã‚ã‚Œã°]
+   ãƒ»FPSã¯mç§’å¾…æ©Ÿã§ã¯ãªãã€æ™‚é–“è¨ˆæ¸¬ã§æ¸¬ã‚ŠãŸã„
 
    2025/06/23:
-   ‰¼‚Åè¦Î‚ª~‚é‚Ì‚ğì‚Á‚½‚ªA³í‚©‚Ç‚¤‚©‚ª‰ö‚µ‚¢B
-   “Á‚ÉisSlow‚É‚æ‚èƒXƒ[‚É‚È‚éŠ‚ÅdoubleŒ^‚É‚¤‚Ü‚­ƒLƒƒƒXƒg‚Å‚«‚Ä‚¨‚ç‚¸
-   ˆê’U‘S‚Ä‚Ì‘¬“x’²®‚ğ‚µ‚Ä‚éŠ‚ğŠm”F‚µ‚½‚¢B
+   ä»®ã§éš•çŸ³ãŒé™ã‚‹ã®ã‚’ä½œã£ãŸãŒã€æ­£å¸¸ã‹ã©ã†ã‹ãŒæ€ªã—ã„ã€‚
+   ç‰¹ã«isSlowã«ã‚ˆã‚Šã‚¹ãƒ­ãƒ¼ã«ãªã‚‹æ‰€ã§doubleå‹ã«ã†ã¾ãã‚­ãƒ£ã‚¹ãƒˆã§ãã¦ãŠã‚‰ãš
+   ä¸€æ—¦å…¨ã¦ã®é€Ÿåº¦èª¿æ•´ã‚’ã—ã¦ã‚‹æ‰€ã‚’ç¢ºèªã—ãŸã„ã€‚
 
    2025/06/26:
-   è¦Î‚Í‘å‘Ì³í‚É‚Å‚«‚½‚Æv‚í‚ê‚éB
-   ƒŒ[ƒU[‚Ì”­Ë‚ğAOŠpŒ`‚Ì“G‚Ìæ’[‚©‚ço‚é‚æ‚¤‚É‚Å‚«‚½‚ç—Ç‚³‚»‚¤B
-   ‘Å‚Â•ûŒü‚ÉOŠpŒ`‚ğ‰ñ“]‚³‚¹‚éB
+   éš•çŸ³ã¯å¤§ä½“æ­£å¸¸ã«ã§ããŸã¨æ€ã‚ã‚Œã‚‹ã€‚
+   ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®ç™ºå°„ã‚’ã€ä¸‰è§’å½¢ã®æ•µã®å…ˆç«¯ã‹ã‚‰å‡ºã‚‹ã‚ˆã†ã«ã§ããŸã‚‰è‰¯ã•ãã†ã€‚
+   æ‰“ã¤æ–¹å‘ã«ä¸‰è§’å½¢ã‚’å›è»¢ã•ã›ã‚‹ã€‚
 
    2025/06/30:
-   ‰¼‚Å‘½ŠpŒ`‚ÍŠ®¬‚µ‚½B
-   ‚½‚¾•Ó‚ª‚¤‚Ü‚­Œq‚ª‚ç‚È‚¢‚½‚ßA‚»‚ÌƒƒWƒbƒN‚¾‚¯Œ©’¼‚·B
-   (’¸“_‚ÌˆÊ’u‚ğ‰ñ“]‚ğg‚Á‚Ä‘ª‚ê‚Îs‚¯‚é‹C‚ª‚·‚é)
+   ä»®ã§å¤šè§’å½¢ã¯å®Œæˆã—ãŸã€‚
+   ãŸã è¾ºãŒã†ã¾ãç¹‹ãŒã‚‰ãªã„ãŸã‚ã€ãã®ãƒ­ã‚¸ãƒƒã‚¯ã ã‘è¦‹ç›´ã™ã€‚
+   (é ‚ç‚¹ã®ä½ç½®ã‚’å›è»¢ã‚’ä½¿ã£ã¦æ¸¬ã‚Œã°è¡Œã‘ã‚‹æ°—ãŒã™ã‚‹)
 
    2025/07/14:
-   ‚ ‚Ü‚èi’»‚È‚µB”½ËƒŒ[ƒU[‚Ì‰ñ“]–â‘è‚Íˆê’U’¼‚µ‚½‚ªA‹““®‚Í‰ö‚µ‚¢B
-   ‘OŠú”­•\‰ï‚Ü‚Å‚É‚±‚Ì•Ó‚Í‚â‚Á‚Ä‚¨‚«‚½‚¢
-   Eè¦Î‚ª‰ó‚ê‚éA\¬‚µ‚Ä‚éü‚ªƒoƒ‰ƒoƒ‰‚É‚È‚é‚æ‚¤‚É‚·‚é
-   E’Ç”öƒŒ[ƒU[‚Æ‚Í•Ê‚ÉA’¼üƒŒ[ƒU[‚ğ’Ç‰Á‚·‚é
-   EƒTƒEƒ“ƒhŠÖŒW
+   ã‚ã¾ã‚Šé€²æ—ãªã—ã€‚åå°„ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®å›è»¢å•é¡Œã¯ä¸€æ—¦ç›´ã—ãŸãŒã€æŒ™å‹•ã¯æ€ªã—ã„ã€‚
+   å‰æœŸç™ºè¡¨ä¼šã¾ã§ã«ã“ã®è¾ºã¯ã‚„ã£ã¦ãŠããŸã„
+   ãƒ»éš•çŸ³ãŒå£Šã‚Œã‚‹æ™‚ã€æ§‹æˆã—ã¦ã‚‹ç·šãŒãƒãƒ©ãƒãƒ©ã«ãªã‚‹ã‚ˆã†ã«ã™ã‚‹
+   ãƒ»è¿½å°¾ãƒ¬ãƒ¼ã‚¶ãƒ¼ã¨ã¯åˆ¥ã«ã€ç›´ç·šãƒ¬ãƒ¼ã‚¶ãƒ¼ã‚’è¿½åŠ ã™ã‚‹
+   ãƒ»ã‚µã‚¦ãƒ³ãƒ‰é–¢ä¿‚
 
    2025/07/15:
-   ”½Ë‰¼Š®¬B‚±‚ÌƒQ[ƒ€‚Ì•ûj‚àŒ©‚¦‚Ä‚«‚½B
-   uè¦Î‚ğ”j‰ó‚·‚é‚ÆƒXƒRƒA‚ğ“¾‚ç‚êA‚»‚ÌƒXƒRƒA‚ğ‹£‚¤ƒQ[ƒ€v‚Ås‚¯‚é‹C‚ª‚·‚éB
+   åå°„ä»®å®Œæˆã€‚ã“ã®ã‚²ãƒ¼ãƒ ã®æ–¹é‡ã‚‚è¦‹ãˆã¦ããŸã€‚
+   ã€Œéš•çŸ³ã‚’ç ´å£Šã™ã‚‹ã¨ã‚¹ã‚³ã‚¢ã‚’å¾—ã‚‰ã‚Œã€ãã®ã‚¹ã‚³ã‚¢ã‚’ç«¶ã†ã‚²ãƒ¼ãƒ ã€ã§è¡Œã‘ã‚‹æ°—ãŒã™ã‚‹ã€‚
 
    2025/08/02:
-   UI‚É”wŒi‰æ‘œ‚ğ‰¼‚Å’Ç‰Á‚µ‚½‚ªA’[‚Ì•û‚ğ“§‰ß‚³‚¹‚½‚¢B
+   UIã«èƒŒæ™¯ç”»åƒã‚’ä»®ã§è¿½åŠ ã—ãŸãŒã€ç«¯ã®æ–¹ã‚’é€éã•ã›ãŸã„ã€‚
 
    2025/08/04:
-   ExƒXƒe[ƒWÀ‘•‚µ‚Ä‚à‚¢‚¢‚©‚àB
-   “Á’è‚ÌğŒ‚Ås‚­‚±‚Æ‚ª‚Å‚«‚ÄA“Á•Ê‚Èƒ‹[ƒ‹‚ª‚ ‚éŠ´‚¶‚ÅB
-   “Á•ÊŠ´‚Ì‚ ‚éBGM‚â”wŒi‚É•Ï‚¦‚éB
+   Exã‚¹ãƒ†ãƒ¼ã‚¸å®Ÿè£…ã—ã¦ã‚‚ã„ã„ã‹ã‚‚ã€‚
+   ç‰¹å®šã®æ¡ä»¶ã§è¡Œãã“ã¨ãŒã§ãã¦ã€ç‰¹åˆ¥ãªãƒ«ãƒ¼ãƒ«ãŒã‚ã‚‹æ„Ÿã˜ã§ã€‚
+   ç‰¹åˆ¥æ„Ÿã®ã‚ã‚‹BGMã‚„èƒŒæ™¯ã«å¤‰ãˆã‚‹ã€‚
 
    2025/08/23:
-   VáŠQ•¨u‰Ô‰Îv‚ğ’Ç‰Á‚·‚éBLevel4‚Å“oê—\’èB
-   Ú‚µ‚­‚ÍŒã“ú‘Š’k, ‚È‚¨‚Æ‚Éì‚Á‚Ä‚à‚ç‚¤?
+   æ–°éšœå®³ç‰©ã€ŒèŠ±ç«ã€ã‚’è¿½åŠ ã™ã‚‹ã€‚Level4ã§ç™»å ´äºˆå®šã€‚
+   è©³ã—ãã¯å¾Œæ—¥ç›¸è«‡, ãªãŠã¨ã«ä½œã£ã¦ã‚‚ã‚‰ã†?
 
    2025/08/27:
-   ŠJnA‘€ì•û–@•ªŠò‚ğ“ü‚ê‚ÄˆÈŒã‚Ìà–¾•¶‚ğ•Ï‚¦‚½‚¢B
-   EKEY_SPACE ‚ğ‰Ÿ‚µ‚½‚çËPush SPACE (ƒL[ƒ{[ƒh‘€ì)
-   EPAD_XBOX_A‚ğ‰Ÿ‚µ‚½‚çËPush A     (ƒpƒbƒh‘€ì)
-   ‚È‚ÇB
+   é–‹å§‹æ™‚ã€æ“ä½œæ–¹æ³•åˆ†å²ã‚’å…¥ã‚Œã¦ä»¥å¾Œã®èª¬æ˜æ–‡ã‚’å¤‰ãˆãŸã„ã€‚
+   ãƒ»KEY_SPACE ã‚’æŠ¼ã—ãŸã‚‰â‡’Push SPACE (ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œ)
+   ãƒ»PAD_XBOX_Aã‚’æŠ¼ã—ãŸã‚‰â‡’Push A     (ãƒ‘ãƒƒãƒ‰æ“ä½œ)
+   ãªã©ã€‚
 
    2025/09/08:
-   E‰Ô‰Î‚ÌƒoƒOC³(ƒXƒ[ƒ‚[ƒh‚É‘Î‰‚µ‚Ä‚È‚¢, ‚½‚Ü‚É•s”­‚·‚é)
-   E”z—ñ‚ğvector‚É•Ï‚¦‚éBÅ‰‚Éreserve‚Å•K—v•ªŠm•Û‚µAƒfƒXƒgƒ‰ƒNƒ^‚Å‰ğ•ú‚·‚ê‚Î‚¢‚¢B
-   ECalc.h‚ÌCalcƒNƒ‰ƒX‚Í‚È‚­‚Ä‚¢‚¢BŠÖ”ŒQ‚Æ‚µ‚Ä’u‚«AKR_Lib–¼‘O‹óŠÔ“à‚ÉCalc‚Æ‚¢‚¤–¼‘O‹óŠÔ‚ğ’u‚¯‚ÎOKB
+   ãƒ»èŠ±ç«ã®ãƒã‚°ä¿®æ­£(ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã«å¯¾å¿œã—ã¦ãªã„, ãŸã¾ã«ä¸ç™ºã™ã‚‹)
+   ãƒ»é…åˆ—ã‚’vectorã«å¤‰ãˆã‚‹ã€‚æœ€åˆã«reserveã§å¿…è¦åˆ†ç¢ºä¿ã—ã€ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§è§£æ”¾ã™ã‚Œã°ã„ã„ã€‚
+   ãƒ»Calc.hã®Calcã‚¯ãƒ©ã‚¹ã¯ãªãã¦ã„ã„ã€‚é–¢æ•°ç¾¤ã¨ã—ã¦ç½®ãã€KR_Libåå‰ç©ºé–“å†…ã«Calcã¨ã„ã†åå‰ç©ºé–“ã‚’ç½®ã‘ã°OKã€‚
 
    2025/09/09:
-   EƒQ[ƒ€ƒI[ƒo[‰æ–Ê‚Éƒqƒ“ƒg‚ª1•¶o‚é‚â‚Â‚ğì‚è‚½‚¢B‚»‚±‚Åƒ‹[ƒ‹à–¾‚Ì•âŠÔ‚ğ‚·‚éB
+   ãƒ»ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ç”»é¢ã«ãƒ’ãƒ³ãƒˆãŒ1æ–‡å‡ºã‚‹ã‚„ã¤ã‚’ä½œã‚ŠãŸã„ã€‚ãã“ã§ãƒ«ãƒ¼ãƒ«èª¬æ˜ã®è£œé–“ã‚’ã™ã‚‹ã€‚
 
    2025/09/16:
-   ƒ^ƒCƒgƒ‹‚©‚çƒƒjƒ…[‚És‚­‚Æ‚«Aƒpƒb‚Æ‰æ–Ê‚ğ•Ï‚¦‚¸‚ÉƒtƒF[ƒhƒAƒEƒg‚ÅŠŠ‚ç‚©‚ÉˆÚ“®‚·‚é‚æ‚¤‚É‚µ‚½‚¢B
+   ã‚¿ã‚¤ãƒˆãƒ«ã‹ã‚‰ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã«è¡Œãã¨ãã€ãƒ‘ãƒƒã¨ç”»é¢ã‚’å¤‰ãˆãšã«ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã§æ»‘ã‚‰ã‹ã«ç§»å‹•ã™ã‚‹ã‚ˆã†ã«ã—ãŸã„ã€‚
 
    2025/09/21:
-   [i’»]
-   EƒAƒCƒeƒ€‚Ìg—pƒ^ƒCƒ~ƒ“ƒO‚ğ•ÏX
-   EƒXƒ[ƒ‚[ƒh‚Ì‘Î‰‚ğuspeedRatev‚ğ‚©‚¯‚é‚¾‚¯‚Å—Ç‚­‚µ‚½‚±‚Æ
-   @‹Œ: counter -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
-	 V: counter -= p_data->speedRate;
-   [‰ü‘P“_]
-   ELevelUp‰‰o, Step‰‰o‚àƒGƒtƒFƒNƒg‚Ì‚½‚ßAƒGƒtƒFƒNƒg‚ªãŒÀ‚Ü‚Åo‚Ä‚é‚Æ•\¦‚ªo‚È‚­‚È‚é–â‘è
+   [é€²æ—]
+   ãƒ»ã‚¢ã‚¤ãƒ†ãƒ ã®ä½¿ç”¨ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’å¤‰æ›´
+   ãƒ»ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã®å¯¾å¿œã‚’ã€ŒspeedRateã€ã‚’ã‹ã‘ã‚‹ã ã‘ã§è‰¯ãã—ãŸã“ã¨
+   ã€€æ—§: counter -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
+	 æ–°: counter -= p_data->speedRate;
+   [æ”¹å–„ç‚¹]
+   ãƒ»LevelUpæ¼”å‡º, Stepæ¼”å‡ºã‚‚ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãŸã‚ã€ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãŒä¸Šé™ã¾ã§å‡ºã¦ã‚‹ã¨è¡¨ç¤ºãŒå‡ºãªããªã‚‹å•é¡Œ
 
 /---------------------------------------------------------/
-   [ƒ`ƒ…[ƒgƒŠƒAƒ‹”z•ª]
-   step1: ‚³‚¯‚é 
-@   ˆê’èŠÔ‘Ï‚¦‚½‚çŸ‚ÖB
-   step2: ‚Æ‚é
-@   ƒAƒCƒeƒ€‚ğ1‰ñæ‚Á‚Ä‰ğœ‚³‚ê‚½‚çŸ‚ÖB
-   step3: ‚±‚í‚·
-@   ‚Ü‚¸‚Í©“®‚ÅƒAƒCƒeƒ€‚ğæ‚Á‚ÄƒŒ[ƒU[‚ª”½Ë‚·‚é—lq‚ğ‚İ‚¹‚éB
-@   ‚»‚ÌŒãA©•ª‚Å‘€ì‚³‚¹‚ÄÀ‰‰‚³‚¹‚éBè¦Î‚ğnŒÂ‰ó‚¹‚½‚çŸ‚ÖB
-   step4: ˆê’Ê‚èƒvƒŒƒC
-@   ÅŒã‚Éˆê’Ê‚èƒvƒŒƒC‚µ‚ÄŠm”F‚³‚¹‚éBˆê’èŠÔŒo‚Á‚½‚çƒ`ƒ…[ƒgƒŠƒAƒ‹I—¹B
+   [ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«é…åˆ†]
+   step1: ã•ã‘ã‚‹ 
+ã€€   ä¸€å®šæ™‚é–“è€ãˆãŸã‚‰æ¬¡ã¸ã€‚
+   step2: ã¨ã‚‹
+ã€€   ã‚¢ã‚¤ãƒ†ãƒ ã‚’1å›å–ã£ã¦è§£é™¤ã•ã‚ŒãŸã‚‰æ¬¡ã¸ã€‚
+   step3: ã“ã‚ã™
+ã€€   ã¾ãšã¯è‡ªå‹•ã§ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–ã£ã¦ãƒ¬ãƒ¼ã‚¶ãƒ¼ãŒåå°„ã™ã‚‹æ§˜å­ã‚’ã¿ã›ã‚‹ã€‚
+ã€€   ãã®å¾Œã€è‡ªåˆ†ã§æ“ä½œã•ã›ã¦å®Ÿæ¼”ã•ã›ã‚‹ã€‚éš•çŸ³ã‚’nå€‹å£Šã›ãŸã‚‰æ¬¡ã¸ã€‚
+   step4: ä¸€é€šã‚Šãƒ—ãƒ¬ã‚¤
+ã€€   æœ€å¾Œã«ä¸€é€šã‚Šãƒ—ãƒ¬ã‚¤ã—ã¦ç¢ºèªã•ã›ã‚‹ã€‚ä¸€å®šæ™‚é–“çµŒã£ãŸã‚‰ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«çµ‚äº†ã€‚
 
-   ¦ƒXƒRƒA‚Ìà–¾‚Íƒ`ƒ…[ƒgƒŠƒAƒ‹‚É‚Í‚¢‚ç‚È‚¢
-   ¦ƒƒjƒ…[‚Éƒ‚[ƒh‚²‚Æ‚Ìà–¾‚ğ“ü‚ê‚é(ƒnƒCƒXƒRƒA‚ğ–Úw‚·`‚È‚Ç)
+   â€»ã‚¹ã‚³ã‚¢ã®èª¬æ˜ã¯ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã«ã¯ã„ã‚‰ãªã„
+   â€»ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã«ãƒ¢ãƒ¼ãƒ‰ã”ã¨ã®èª¬æ˜ã‚’å…¥ã‚Œã‚‹(ãƒã‚¤ã‚¹ã‚³ã‚¢ã‚’ç›®æŒ‡ã™ï½ãªã©)
 
-   [Œ»İ‚ÌLevel”z•ª]
-   Level1: ’ÊíƒŒ[ƒU[~2, è¦Î
-   Level2: ’¼üƒŒ[ƒU[~2
-   Level3: ”g–ä
-   Level4: ‰Ô‰Î, ƒAƒCƒeƒ€~2
-   Level5: ’ÊíƒŒ[ƒU[~4, ƒAƒCƒeƒ€‚ª‹­‰»
+   [ç¾åœ¨ã®Levelé…åˆ†]
+   Level1: é€šå¸¸ãƒ¬ãƒ¼ã‚¶ãƒ¼Ã—2, éš•çŸ³
+   Level2: ç›´ç·šãƒ¬ãƒ¼ã‚¶ãƒ¼Ã—2
+   Level3: æ³¢ç´‹
+   Level4: èŠ±ç«, ã‚¢ã‚¤ãƒ†ãƒ Ã—2
+   Level5: é€šå¸¸ãƒ¬ãƒ¼ã‚¶ãƒ¼Ã—4, ã‚¢ã‚¤ãƒ†ãƒ ãŒå¼·åŒ–
 /---------------------------------------------------------/
-   y¡Œã‚Ì§ì—\’èz
+   ã€ä»Šå¾Œã®åˆ¶ä½œäºˆå®šã€‘
 
-   ‚±‚í‚·”­•\‚Ü‚Å:
-   EáŠQ•¨u‰Ô‰Îv’Ç‰Á
-   Eƒ^ƒCƒgƒ‹ƒƒS•ÏX(ƒQ[ƒ€–¼•ÏX‚Ì‚½‚ß)
+   ã“ã‚ã™ç™ºè¡¨ã¾ã§:
+   ãƒ»éšœå®³ç‰©ã€ŒèŠ±ç«ã€è¿½åŠ 
+   ãƒ»ã‚¿ã‚¤ãƒˆãƒ«ãƒ­ã‚´å¤‰æ›´(ã‚²ãƒ¼ãƒ åå¤‰æ›´ã®ãŸã‚)
 
-   TGS“W¦‚Ü‚Å:
-   EŠJn‚Ì‘€ì•û–@•ªŠò(‚Å‚«‚ê‚Î)
-   EƒQ[ƒ€“àƒ`ƒ…[ƒgƒŠƒAƒ‹
-   ESCOREƒ‰ƒ“ƒLƒ“ƒOÀ‘•
-   Eƒ|ƒXƒ^[ver2 & ƒAƒ“ƒP[ƒgì‚é
+   TGSå±•ç¤ºã¾ã§:
+   ãƒ»é–‹å§‹æ™‚ã®æ“ä½œæ–¹æ³•åˆ†å²(ã§ãã‚Œã°)
+   ãƒ»ã‚²ãƒ¼ãƒ å†…ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«
+   ãƒ»SCOREãƒ©ãƒ³ã‚­ãƒ³ã‚°å®Ÿè£…
+   ãƒ»ãƒã‚¹ã‚¿ãƒ¼ver2 & ã‚¢ãƒ³ã‚±ãƒ¼ãƒˆä½œã‚‹
    
-   ÅI–Ú•W:
-   ESCORE¢ŠEƒ‰ƒ“ƒLƒ“ƒO‰»
-   Esteam”Ì”„
+   æœ€çµ‚ç›®æ¨™:
+   ãƒ»SCOREä¸–ç•Œãƒ©ãƒ³ã‚­ãƒ³ã‚°åŒ–
+   ãƒ»steamè²©å£²
 
    [BGM]
-   youtubeuTak_mfkv‚©‚çg—pB
-   steam”Ì”„‚Ì‚É‚Íƒ‰ƒCƒZƒ“ƒX‚É’ˆÓB
+   youtubeã€ŒTak_mfkã€ã‹ã‚‰ä½¿ç”¨ã€‚
+   steamè²©å£²ã®æ™‚ã«ã¯ãƒ©ã‚¤ã‚»ãƒ³ã‚¹ã«æ³¨æ„ã€‚
 /--------------------------------------------------------*/
 /*
    - GameManager.cpp -
-   ƒQ[ƒ€‘S‘ÌŠÇ—.
+   ã‚²ãƒ¼ãƒ å…¨ä½“ç®¡ç†.
 */
 
 #include "BackGround.h"
@@ -167,7 +167,7 @@
 
 #include "GameManager.h"
 
-//ƒ|ƒCƒ“ƒ^.
+//ãƒã‚¤ãƒ³ã‚¿.
 GameData         *gameData     = GameData::GetPtr();
 BackGround       *bg           = BackGround::GetPtr();
 MenuManager      *menuMng      = MenuManager::GetPtr();
@@ -182,11 +182,11 @@ Player           *player       = Player::GetPtr();
 EffectManager    *effectMng    = EffectManager::GetPtr();
 UIManager        *uiMng        = UIManager::GetPtr();
 
-using namespace Calc; //ŒvZ‹@”\‚ğg—p.
+using namespace Calc; //è¨ˆç®—æ©Ÿèƒ½ã‚’ä½¿ç”¨.
 
 //destructor.
 GameManager::~GameManager() {
-	//‰ğ•ú.
+	//è§£æ”¾.
 	delete laserNor1;
 	delete laserNor2;
 	delete laserNor3;
@@ -194,75 +194,75 @@ GameManager::~GameManager() {
 	delete laserStr[0];
 	delete laserStr[1];
 }
-//‰Šú‰»(ˆê‰ñ‚Ì‚İs‚¤)
+//åˆæœŸåŒ–(ä¸€å›ã®ã¿è¡Œã†)
 void GameManager::Init() {
 
-	srand((unsigned)time(NULL)); //—”‰Šú‰».
+	srand((unsigned)time(NULL)); //ä¹±æ•°åˆæœŸåŒ–.
 	
-	//À‘Ì¶¬.
+	//å®Ÿä½“ç”Ÿæˆ.
 	laserNor1   = new NormalLaser_1();
 	laserNor2   = new NormalLaser_2();
 	laserNor3   = new NormalLaser_3();
 	laserNor4   = new NormalLaser_4();
 	laserStr[0] = new StraightLaser();
 	laserStr[1] = new StraightLaser();
-	//À‘Ìæ“¾.
+	//å®Ÿä½“å–å¾—.
 	p_input = InputMng::GetPtr();
 	p_sound = SoundMng::GetPtr();
 
-	//ƒtƒHƒ“ƒgì¬.
+	//ãƒ•ã‚©ãƒ³ãƒˆä½œæˆ.
 	gameData->font1 = CreateFontToHandle(NULL, 26, 1);
 	gameData->font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData->font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData->font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
-	//‰æ‘œ“Ç‚İ‚İ.
-	imgLogo[0].  LoadFile(_T("Resources/Images/REFLINEƒƒS_ˆê•”.png"));
-	imgLogo[1].  LoadFile(_T("Resources/Images/REFLINEƒƒS.png"));
+	//ç”»åƒèª­ã¿è¾¼ã¿.
+	imgLogo[0].  LoadFile(_T("Resources/Images/REFLINEãƒ­ã‚´_ä¸€éƒ¨.png"));
+	imgLogo[1].  LoadFile(_T("Resources/Images/REFLINEãƒ­ã‚´.png"));
 	imgUI.       LoadFile(_T("Resources/Images/ui_back_best_score.png"));
 	imgNewRecord.LoadFile(_T("Resources/Images/new_record.png"));
 	imgGameOver. LoadFile(_T("Resources/Images/gameover.png"));
 	imgReflect.  LoadFile(_T("Resources/Images/reflect.png"));
-	//ƒTƒEƒ“ƒh“Ç‚İ‚İ.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Virtual Terminal.mp3"),	    _T("BGM_Menu"));     //ƒƒjƒ…[BGM.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial")); //ƒ`ƒ…[ƒgƒŠƒAƒ‹BGM.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless"));  //‘Ï‹vƒ‚[ƒhBGM.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/–½ƒiƒLÒƒm.mp3"),		    _T("BGM_Over"));     //ƒQ[ƒ€ƒI[ƒo[BGM.
+	//ã‚µã‚¦ãƒ³ãƒ‰èª­ã¿è¾¼ã¿.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Virtual Terminal.mp3"),	    _T("BGM_Menu"));     //ãƒ¡ãƒ‹ãƒ¥ãƒ¼BGM.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial")); //ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«BGM.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless"));  //è€ä¹…ãƒ¢ãƒ¼ãƒ‰BGM.
+	p_sound->LoadFile(_T("Resources/Sounds/bgm/å‘½ãƒŠã‚­è€…ãƒè©©.mp3"),		    _T("BGM_Over"));     //ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼BGM.
 
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("ItemUse")); 	 //ƒAƒCƒeƒ€”­“®.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	 //ƒJƒEƒ“ƒgƒ_ƒEƒ“.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	 //ƒAƒCƒeƒ€‰ğœ.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		 //ƒŒ[ƒU[(”­Ë)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),		_T("Laser2"));		 //ƒŒ[ƒU[(‹­”­Ë)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		_T("Laser3"));		 //ƒŒ[ƒU[(”½Ë)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		_T("Ripples"));		 //”g–ä.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		_T("Break"));		 //è¦Î”j‰ó.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("ItemUse")); 	 //ã‚¢ã‚¤ãƒ†ãƒ ç™ºå‹•.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	 //ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	 //ã‚¢ã‚¤ãƒ†ãƒ è§£é™¤.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		 //ãƒ¬ãƒ¼ã‚¶ãƒ¼(ç™ºå°„)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),		_T("Laser2"));		 //ãƒ¬ãƒ¼ã‚¶ãƒ¼(å¼·ç™ºå°„)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		_T("Laser3"));		 //ãƒ¬ãƒ¼ã‚¶ãƒ¼(åå°„)
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		_T("Ripples"));		 //æ³¢ç´‹.
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		_T("Break"));		 //éš•çŸ³ç ´å£Š.
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		_T("PlayerDeath"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/Œˆ’èƒ{ƒ^ƒ“‚ğ‰Ÿ‚·23.mp3"),		_T("LevelUp"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //Å‚ƒXƒRƒAXV.
+	p_sound->LoadFile(_T("Resources/Sounds/se/æ±ºå®šãƒœã‚¿ãƒ³ã‚’æŠ¼ã™23.mp3"),		_T("LevelUp"));
+	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //æœ€é«˜ã‚¹ã‚³ã‚¢æ›´æ–°.
 
-	//ƒAƒNƒVƒ‡ƒ““o˜^.
-	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //ƒL[‘€ì.
-	p_input->AddAction(_T("GamePause"), KeyID::P);      //ƒL[‘€ì.
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ç™»éŒ².
+	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //ã‚­ãƒ¼æ“ä½œ.
+	p_input->AddAction(_T("GamePause"), KeyID::P);      //ã‚­ãƒ¼æ“ä½œ.
 #if defined INPUT_CHANGE_ARCADE
-	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //ƒA[ƒP[ƒh‘€ì.
-	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //ƒA[ƒP[ƒh‘€ì.
-	p_input->AddAction(_T("GameQuit"),  PadArcadeID::BtnStart);  //ƒA[ƒP[ƒh‘€ì.
+	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //ã‚¢ãƒ¼ã‚±ãƒ¼ãƒ‰æ“ä½œ.
+	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //ã‚¢ãƒ¼ã‚±ãƒ¼ãƒ‰æ“ä½œ.
+	p_input->AddAction(_T("GameQuit"),  PadArcadeID::BtnStart);  //ã‚¢ãƒ¼ã‚±ãƒ¼ãƒ‰æ“ä½œ.
 #else
-	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //ƒRƒ“ƒgƒ[ƒ‰‘€ì.
-	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //ƒRƒ“ƒgƒ[ƒ‰‘€ì.
-	p_input->AddAction(_T("GameQuit"),  PadXboxID::Menu); //ƒRƒ“ƒgƒ[ƒ‰‘€ì.
+	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©æ“ä½œ.
+	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©æ“ä½œ.
+	p_input->AddAction(_T("GameQuit"),  PadXboxID::Menu); //ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©æ“ä½œ.
 #endif
 
-	//ƒ^ƒCƒ}[‰Šú‰».
+	//ã‚¿ã‚¤ãƒãƒ¼åˆæœŸåŒ–.
 	for(int i = 0; i < SCENE_COUNT; i++){
 		tmScene[i] = Timer(COUNT_UP, 0);
 	}
 	tmGameTime    = Timer(COUNT_UP, 0);
 	tmReflectMode = Timer(COUNT_DOWN, REFLECT_MODE_TIME);
 
-	//Initˆ—
+	//Initå‡¦ç†
 	{
-		//áŠQ•¨.
+		//éšœå®³ç‰©.
 		for (int i = 0; i < _countof(laserStr); i++) {
 			laserStr[i]->Init();
 		}
@@ -285,44 +285,49 @@ void GameManager::Init() {
 		uiMng->Init();
 	}
 
-	//ƒXƒRƒA“Ç‚İ‚İ.
+	//ã‚¹ã‚³ã‚¢èª­ã¿è¾¼ã¿.
 	{
 		File file;
-		file.Open(FILE_DATA, _T("r"));        //ƒtƒ@ƒCƒ‹‚ğŠJ‚­.
-		gameData->bestScore = file.ReadInt(); //”š‚ğ“Ç‚İ‚ñ‚Å“o˜^.
+		file.Open(FILE_DATA, _T("r"));        //ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã.
+		gameData->bestScore = file.ReadInt(); //æ•°å­—ã‚’èª­ã¿è¾¼ã‚“ã§ç™»éŒ².
 
-		uiMng->SetDisBestScore(gameData->bestScore); //ƒxƒXƒgƒXƒRƒA•\¦XV.
+		uiMng->SetDisBestScore(gameData->bestScore); //ãƒ™ã‚¹ãƒˆã‚¹ã‚³ã‚¢è¡¨ç¤ºæ›´æ–°.
 	}
 
 	Reset();
 }
 
-//ƒŠƒZƒbƒg(‰½‰ñ‚Å‚às‚¤)
+//ãƒªã‚»ãƒƒãƒˆ(ä½•å›ã§ã‚‚è¡Œã†)
 void GameManager::Reset() {
 
-	//ƒf[ƒ^.
+	//ãƒ‡ãƒ¼ã‚¿.
 	gameData->scoreBef      = 0;
 	gameData->score         = 0;
 	gameData->counter       = 0;
-	gameData->speedRate     = 1.0;   //’Êí‚Í100%
-	gameData->spawnRate     = 1.0;   //Å‰‚Í100%
-	gameData->level         = 1;     //Å‰‚ÍLv1
-	gameData->isReflectMode = false; //Å‰‚ÍLv1
+	gameData->speedRate     = 1.0;   //é€šå¸¸ã¯100%
+	gameData->spawnRate     = 1.0;   //æœ€åˆã¯100%
+	gameData->level         = 1;     //æœ€åˆã¯Lv1
+	gameData->isReflectMode = false; //æœ€åˆã¯Lv1
 	isTitleAnim             = false;
 	isBestScoreSound        = false;
 	isGameStart             = false;
 	isBestScore             = false;
-	//ƒTƒEƒ“ƒh.
-	p_sound->StopAll();
-	p_sound->Play(_T("BGM_Menu"), true, 90); //ƒƒjƒ…[BGM‚ğ—¬‚·.
-	//ƒ^ƒCƒ}[(‘SƒV[ƒ“)
+	for (int i = 0; i < 3; i++) {
+		isItemCountDownSound[i] = false;
+	}
+	//ã‚¿ã‚¤ãƒãƒ¼.
 	for (int i = 0; i < SCENE_COUNT; i++) {
 		tmScene[i].Reset();
 	}
 	tmGameTime.Reset();
+	tmReflectMode.Reset();
+
+	//ã‚µã‚¦ãƒ³ãƒ‰.
+	p_sound->StopAll();
+	p_sound->Play(_T("BGM_Menu"), true, 90); //ãƒ¡ãƒ‹ãƒ¥ãƒ¼BGMã‚’æµã™.
 
 	{
-		//ƒŒ[ƒU[Œn.
+		//ãƒ¬ãƒ¼ã‚¶ãƒ¼ç³».
 		ResetNorLaser();
 		ResetStrLaser();
 
@@ -332,26 +337,27 @@ void GameManager::Reset() {
 		meteorMng->Reset();
 		ripples->Reset();
 		fireworksMng->Reset();
-		effectMng->Reset();
 		item->Reset();
 		player->Reset({ WINDOW_WID/2, WINDOW_HEI/2+250 }, true);
+		effectMng->Reset();
+		uiMng->Reset();
 	}
 }
 
-//XV.
+//æ›´æ–°.
 void GameManager::Update() {
 
-	p_input->UpdateKey();    //ƒL[“ü—ÍXV.
-	p_input->UpdatePad();    //ƒRƒ“ƒgƒ[ƒ‰“ü—ÍXV.
-	p_input->UpdateAction(); //ƒAƒNƒVƒ‡ƒ“XV.
-	p_sound->Update();       //ƒTƒEƒ“ƒhXV.
+	p_input->UpdateKey();    //ã‚­ãƒ¼å…¥åŠ›æ›´æ–°.
+	p_input->UpdatePad();    //ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©å…¥åŠ›æ›´æ–°.
+	p_input->UpdateAction(); //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³æ›´æ–°.
+	p_sound->Update();       //ã‚µã‚¦ãƒ³ãƒ‰æ›´æ–°.
 
-	//ƒ|[ƒY‚µ‚Ä‚È‚¯‚ê‚Î.
+	//ãƒãƒ¼ã‚ºã—ã¦ãªã‘ã‚Œã°.
 	if (gameData->scene != SCENE_PAUSE) {
-		bg->Update();        //”wŒi.
-		effectMng->Update(); //ƒGƒtƒFƒNƒg.
+		bg->Update();        //èƒŒæ™¯.
+		effectMng->Update(); //ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ.
 	}
-	//ƒV[ƒ“•Ê.
+	//ã‚·ãƒ¼ãƒ³åˆ¥.
 	switch (gameData->scene) 
 	{
 		case SCENE_TITLE:    UpdateTitle();    break;
@@ -363,21 +369,21 @@ void GameManager::Update() {
 		default: assert(FALSE); break;
 	}
 
-	//“Á’è‚Ì‘€ì‚ÅƒQ[ƒ€I—¹
+	//ç‰¹å®šã®æ“ä½œã§ã‚²ãƒ¼ãƒ çµ‚äº†
 	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
-		DxLibMain::GetPtr()->GameEnd(); //â‘ÌSTARTƒ{ƒ^ƒ“’·‰Ÿ‚µ‚ÅI—¹.
+		DxLibMain::GetPtr()->GameEnd(); //ãƒœã‚¿ãƒ³é•·æŠ¼ã—ã§çµ‚äº†.
 	}
 	else if (p_input->IsPushKey(KeyID::Esc)) {
-		DxLibMain::GetPtr()->GameEnd(); //ESCAPEƒL[‚ğ‰Ÿ‚µ‚½‚ç‘¦I—¹.
+		DxLibMain::GetPtr()->GameEnd(); //ESCAPEã‚­ãƒ¼ã‚’æŠ¼ã—ãŸã‚‰å³çµ‚äº†.
 	}
 }
 
-//•`‰æ.
+//æç”».
 void GameManager::Draw() {
 
-	bg->Draw(); //”wŒi.
+	bg->Draw(); //èƒŒæ™¯.
 
-	//ƒV[ƒ“•Ê.
+	//ã‚·ãƒ¼ãƒ³åˆ¥.
 	switch (gameData->scene) 
 	{
 		case SCENE_TITLE:    DrawTitle();    break;
@@ -389,10 +395,10 @@ void GameManager::Draw() {
 		default: assert(FALSE); break;
 	}
 
-	effectMng->Draw(); //ƒGƒtƒFƒNƒg.
+	effectMng->Draw(); //ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ.
 }
 
-//’ÊíƒŒ[ƒU[‚ÌƒŠƒZƒbƒg.
+//é€šå¸¸ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®ãƒªã‚»ãƒƒãƒˆ.
 void GameManager::ResetNorLaser() {
 
 	laserNor1->Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
@@ -400,7 +406,7 @@ void GameManager::ResetNorLaser() {
 	laserNor3->Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_RIGHT);
 	laserNor4->Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_LEFT);
 }
-//’¼üƒŒ[ƒU[‚ÌƒŠƒZƒbƒg.
+//ç›´ç·šãƒ¬ãƒ¼ã‚¶ãƒ¼ã®ãƒªã‚»ãƒƒãƒˆ.
 void GameManager::ResetStrLaser() {
 
 	for (int i = 0; i < _countof(laserStr); i++) {
@@ -408,39 +414,39 @@ void GameManager::ResetStrLaser() {
 	}
 }
 
-//ƒV[ƒ“•ÊXV.
+//ã‚·ãƒ¼ãƒ³åˆ¥æ›´æ–°.
 void GameManager::UpdateTitle()
 {
-	//ƒV[ƒ“ƒ^ƒCƒ}[ŠJn.
+	//ã‚·ãƒ¼ãƒ³ã‚¿ã‚¤ãƒãƒ¼é–‹å§‹.
 	if (!tmScene[SCENE_TITLE].GetIsMove()) {
 		tmScene[SCENE_TITLE].Start();
 	}
 
-	//“Á’è‚Ì‘€ì‚ÅƒQ[ƒ€ŠJn.
+	//ç‰¹å®šã®æ“ä½œã§ã‚²ãƒ¼ãƒ é–‹å§‹.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
-		gameData->scene = SCENE_MENU; //ƒƒjƒ…[ƒV[ƒ“‚Ö.
+		gameData->scene = SCENE_MENU; //ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚·ãƒ¼ãƒ³ã¸.
 
-		//è¦Î”j‰óƒAƒjƒ[ƒVƒ‡ƒ“.
+		//éš•çŸ³ç ´å£Šã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³.
 		{
-			double dig = -130; //Šp“x.
+			double dig = -130; //è§’åº¦.
 
-			//ƒGƒtƒFƒNƒg‚ğ‚¢‚­‚Â‚©o‚·.
+			//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã„ãã¤ã‹å‡ºã™.
 			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
-				double newDig = dig + (float)RandNum(-300, 300)/10; //­‚µŠp“x‚ğ‚¸‚ç‚·.
+				double newDig = dig + (float)RandNum(-300, 300)/10; //å°‘ã—è§’åº¦ã‚’ãšã‚‰ã™.
 
 				EffectData data{};
 				data.type  = Effect_BreakMeteo;
 				data.pos   = { 600, 338 };
-				data.vec   = CalcVectorDeg(newDig);               //‚¸‚ç‚µ‚½Šp“x‚ğ”½‰f.
-				data.speed = ((float)RandNum(20, 100)/10) * 1.4f; //‘¬“x’Š‘I.
-				data.len   = ((float)RandNum(10, 150)/10) * 1.4f; //’·‚³’Š‘I.
-				data.ang   =  (float)RandNum(0, 3599)/10;         //Šp“x’Š‘I.
-				//ƒGƒtƒFƒNƒg¢Š«.
+				data.vec   = CalcVectorDeg(newDig);               //ãšã‚‰ã—ãŸè§’åº¦ã‚’åæ˜ .
+				data.speed = ((float)RandNum(20, 100)/10) * 1.4f; //é€Ÿåº¦æŠ½é¸.
+				data.len   = ((float)RandNum(10, 150)/10) * 1.4f; //é•·ã•æŠ½é¸.
+				data.ang   =  (float)RandNum(0, 3599)/10;         //è§’åº¦æŠ½é¸.
+				//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå¬å–š.
 				effectMng->SpawnEffect(&data);
 			}
-			//ƒTƒEƒ“ƒh.
+			//ã‚µã‚¦ãƒ³ãƒ‰.
 			p_sound->Play(_T("Break"), false, 65);
 		}
 	}
@@ -450,33 +456,33 @@ void GameManager::UpdateMenu() {
 }
 void GameManager::UpdateGame() {
 	
-#if defined _DEBUG //Release‚Å‚Í“ü‚ê‚È‚¢.
-	//ƒ^ƒCƒ}[‰Á‘¬(Debug)
+#if defined _DEBUG //Releaseã§ã¯å…¥ã‚Œãªã„.
+	//ã‚¿ã‚¤ãƒãƒ¼åŠ é€Ÿ(Debug)
 	if (p_input->IsPushKey(KeyID::L) == 1) {
 		gameData->counter += 30;
 	}
 #endif
 
-	//ƒV[ƒ“ƒ^ƒCƒ}[ŠJn.
+	//ã‚·ãƒ¼ãƒ³ã‚¿ã‚¤ãƒãƒ¼é–‹å§‹.
 	if (!tmScene[SCENE_GAME].GetIsMove()) {
 		tmScene[SCENE_GAME].Start();
 	}
 
-	//ƒQ[ƒ€ŠJn‘O.
+	//ã‚²ãƒ¼ãƒ é–‹å§‹å‰.
 	if (!isGameStart) {
-		//ˆê’èŠÔŒo‚Á‚½‚ç.
+		//ä¸€å®šæ™‚é–“çµŒã£ãŸã‚‰.
 		if (tmScene[SCENE_GAME].GetPassTime() >= GAME_START_TIME) {
 
-			tmGameTime.Start(); //ƒQ[ƒ€ŠÔŒv‘ªŠJn.
-			isGameStart = true; //ƒQ[ƒ€ŠJn.
+			tmGameTime.Start(); //ã‚²ãƒ¼ãƒ æ™‚é–“è¨ˆæ¸¬é–‹å§‹.
+			isGameStart = true; //ã‚²ãƒ¼ãƒ é–‹å§‹.
 		}
 	}
-	//ƒQ[ƒ€ŠJnŒã.
+	//ã‚²ãƒ¼ãƒ é–‹å§‹å¾Œ.
 	else{
 
-		UpdateReflectMode(); //”½Ëƒ‚[ƒh.
+		UpdateReflectMode(); //åå°„ãƒ¢ãƒ¼ãƒ‰.
 
-		//ƒXƒe[ƒW•Ê.
+		//ã‚¹ãƒ†ãƒ¼ã‚¸åˆ¥.
 		switch (gameData->stage) 
 		{
 			case STAGE_TUTORIAL: tutorialStg->Update(); break;
@@ -484,135 +490,123 @@ void GameManager::UpdateGame() {
 
 			default: assert(FALSE); break;
 		}
-		//ƒ|[ƒY.
+		//ãƒãƒ¼ã‚º.
 		if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 			gameData->scene = SCENE_PAUSE;
-			tmGameTime.Stop();    //ˆê’â~.
-			tmReflectMode.Stop(); //ˆê’â~.
+			tmGameTime.Stop();    //ä¸€æ™‚åœæ­¢.
+			tmReflectMode.Stop(); //ä¸€æ™‚åœæ­¢.
 		}
 	}
 
-	player->Update(); //ƒvƒŒƒCƒ„[.
+	player->Update(); //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼.
 }
 void GameManager::UpdateEnd() {
 
-	//ƒV[ƒ“ƒ^ƒCƒ}[ŠJn.
+	//ã‚·ãƒ¼ãƒ³ã‚¿ã‚¤ãƒãƒ¼é–‹å§‹.
 	if (!tmScene[SCENE_END].GetIsMove()) {
 		tmScene[SCENE_END].Start();
 	}
 
-	//“Á’è‚Ì‘€ì‚Åƒ^ƒCƒgƒ‹‚Ö.
+	//ç‰¹å®šã®æ“ä½œã§ã‚¿ã‚¤ãƒˆãƒ«ã¸.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 	{
 		gameData->scene = SCENE_TITLE;
-		uiMng->SetDisBestScore(gameData->bestScore); //ƒxƒXƒgƒXƒRƒA•\¦XV.
+		uiMng->SetDisBestScore(gameData->bestScore); //ãƒ™ã‚¹ãƒˆã‚¹ã‚³ã‚¢è¡¨ç¤ºæ›´æ–°.
 		Reset();
 	}
 }
 void GameManager::UpdatePause() {
 	
-	//ƒ|[ƒY‰ğœ.
+	//ãƒãƒ¼ã‚ºè§£é™¤.
 	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
 		gameData->scene = SCENE_GAME;
-		tmGameTime.Start(); //ÄŠJ.
-		//ƒXƒ[ƒ‚[ƒh’†‚¾‚Á‚½‚È‚ç.
+		tmGameTime.Start(); //å†é–‹.
+		//ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ãƒ‰ä¸­ã ã£ãŸãªã‚‰.
 		if (tmReflectMode.GetPassTime() < REFLECT_MODE_TIME) {
-			tmReflectMode.Start(); //ÄŠJ.
+			tmReflectMode.Start(); //å†é–‹.
 		}
 	}
 }
 
-//”½Ëƒ‚[ƒh‚ÌXV.
+//åå°„ãƒ¢ãƒ¼ãƒ‰ã®æ›´æ–°.
 void GameManager::UpdateReflectMode() {
 
-	//”½Ëƒ‚[ƒhŠÔ”»’è.
+	//åå°„ãƒ¢ãƒ¼ãƒ‰æ™‚é–“åˆ¤å®š.
 	if (gameData->slowBufCntr > 0) {
-		gameData->speedRate  = SLOW_MODE_SPEED; //‘¬“x”{—¦‚ğ’x‚­‚·‚é.
-		gameData->slowBufCntr--;                //ƒJƒEƒ“ƒg‚ğŒ¸‚ç‚·.
+		gameData->speedRate  = SLOW_MODE_SPEED; //é€Ÿåº¦å€ç‡ã‚’é…ãã™ã‚‹.
+		gameData->slowBufCntr--;                //ã‚«ã‚¦ãƒ³ãƒˆã‚’æ¸›ã‚‰ã™.
 	}
 	else {
-		gameData->speedRate  = 1.0; //‘¬“x”{—¦‚ğ–ß‚·.
+		gameData->speedRate  = 1.0; //é€Ÿåº¦å€ç‡ã‚’æˆ»ã™.
 	}
 
-	//”½Ëƒ‚[ƒh’†.
+	//åå°„ãƒ¢ãƒ¼ãƒ‰ä¸­.
 	if (tmReflectMode.GetIsMove()) {
-		//3•bˆÈ‰º‚É‚È‚Á‚½‚Î‚©‚è‚Ì.
+		//3ç§’ä»¥ä¸‹ã«ãªã£ãŸã°ã‹ã‚Šã®æ™‚.
 		if (tmReflectMode.GetPassTime() <= 3) {
 			if (!isItemCountDownSound[2]) {
-				p_sound->Play(_T("CountDown"), false, 78); //Ä¶.
+				p_sound->Play(_T("CountDown"), false, 78); //å†ç”Ÿ.
 				isItemCountDownSound[2] = true;
 			}
 		}
-		//2•bˆÈ‰º‚É‚È‚Á‚½‚Î‚©‚è‚Ì.
+		//2ç§’ä»¥ä¸‹ã«ãªã£ãŸã°ã‹ã‚Šã®æ™‚.
 		if (tmReflectMode.GetPassTime() <= 2) {
 			if (!isItemCountDownSound[1]) {
-				p_sound->Play(_T("CountDown"), false, 78); //Ä¶.
+				p_sound->Play(_T("CountDown"), false, 78); //å†ç”Ÿ.
 				isItemCountDownSound[1] = true;
 			}
 		}
-		//1•bˆÈ‰º‚É‚È‚Á‚½‚Î‚©‚è‚Ì.
+		//1ç§’ä»¥ä¸‹ã«ãªã£ãŸã°ã‹ã‚Šã®æ™‚.
 		if (tmReflectMode.GetPassTime() <= 1) {
 			if (!isItemCountDownSound[0]) {
-				p_sound->Play(_T("CountDown"), false, 78); //Ä¶.
+				p_sound->Play(_T("CountDown"), false, 78); //å†ç”Ÿ.
 				isItemCountDownSound[0] = true;
 			}
 		}
-		//ŠÔØ‚ê‚Å‰ğœ.
+		//æ™‚é–“åˆ‡ã‚Œã§è§£é™¤.
 		if (tmReflectMode.GetPassTime() <= 0) {
-			
-			tmReflectMode.Reset();
-
-			gameData->isReflectMode = false; //”½Ëƒ‚[ƒh‰ğœ.
-			gameData->speedRate     = 1.0;   //‘¬“x”{—¦‚ğ100%‚É–ß‚·.
-			gameData->slowBufCntr   = 0;     //ƒJƒEƒ“ƒ^[‚ğ0‚É.
-			player->SetMode(Player_Normal);  //’Êíó‘Ô‚É–ß‚·.
-			
-			p_sound->Play(_T("PowerDown"), false, 78); //Ä¶.
-			
-			for (int i = 0; i < _countof(isItemCountDownSound); i++) {
-				isItemCountDownSound[i] = false;
-			}
+			ReflectModeEnd();
 		}
 	}
 }
 
-//ƒV[ƒ“•Ê•`‰æ.
+//ã‚·ãƒ¼ãƒ³åˆ¥æç”».
 void GameManager::DrawTitle() {
 	
-	//ƒAƒjƒ[ƒVƒ‡ƒ“Ø‚è‘Ö‚í‚èƒ|ƒCƒ“ƒg.
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³åˆ‡ã‚Šæ›¿ã‚ã‚Šãƒã‚¤ãƒ³ãƒˆ.
 	const float delay1 = 1;
 	const float delay2 = 1.4f;
 	const float delay3 = 1.6f;
 	const float delay4 = 3;
 	const float delay5 = 3;
 
-	//‰æ‘œ‚Ì•\¦.
+	//ç”»åƒã®è¡¨ç¤º.
 	{
 		const int    logoY   = WINDOW_HEI/2 - 85;
 		const DBL_XY imgSize = {0.7, 0.7};
 	
-		//Ø‚è‘Ö‚¦‘O.
+		//åˆ‡ã‚Šæ›¿ãˆå‰.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
-			//ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+			//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
-			//ƒƒS1–‡–Ú.
+			//ãƒ­ã‚´1æšç›®.
 			SetDrawBlendModeKR(MODE_ALPHA, 255 * anim);
 			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, imgSize, ANC_MID, true, true);
 		}
-		//Ø‚è‘Ö‚¦Œã.
+		//åˆ‡ã‚Šæ›¿ãˆå¾Œ.
 		else {
-			//ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+			//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 			double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
-			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //­‚µ’x‰„‚ ‚è.
-			//ƒƒS1–‡–Ú.
+			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //å°‘ã—é…å»¶ã‚ã‚Š.
+			//ãƒ­ã‚´1æšç›®.
 			SetDrawBlendModeKR(MODE_ALPHA, 255 * (1-anim2));
 			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, ANC_MID, true, true);
-			//ƒƒS2–‡–Ú.
+			//ãƒ­ã‚´2æšç›®.
 			SetDrawBlendModeKR(MODE_ALPHA, 255 * anim1);
 			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, ANC_MID, true, true);
 		}
-		//•`‰æƒ‚[ƒhƒŠƒZƒbƒg.
+		//æç”»ãƒ¢ãƒ¼ãƒ‰ãƒªã‚»ãƒƒãƒˆ.
 		ResetDrawBlendMode();
 	}
 
@@ -622,16 +616,16 @@ void GameManager::DrawTitle() {
 
 		const int drawY = WINDOW_HEI/2 + 130;
 
-		//ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
 		double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
-		//ƒeƒLƒXƒg.
+		//ãƒ†ã‚­ã‚¹ãƒˆ.
 		TCHAR text[256];
-		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ƒxƒXƒgƒXƒRƒA.
+		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ãƒ™ã‚¹ãƒˆã‚¹ã‚³ã‚¢.
 		DrawStr str(text, {WINDOW_WID/2, drawY+1}, COLOR_BEST_SCORE);
 
 		SetDrawBlendModeKR(MODE_ALPHA, 255*anim1);
-		str.Draw(ANC_MID, gameData->font2); //ƒXƒRƒA’l.
+		str.Draw(ANC_MID, gameData->font2); //ã‚¹ã‚³ã‚¢å€¤.
 		SetDrawBlendModeKR(MODE_ALPHA, 255*anim2);
 		imgUI.DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
 		imgUI.DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
@@ -643,15 +637,15 @@ void GameManager::DrawTitle() {
 
 		const int drawY = WINDOW_HEI/2+310;
 
-		//ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
-		//ƒeƒLƒXƒg.
+		//ãƒ†ã‚­ã‚¹ãƒˆ.
 		DrawStr str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, drawY-2}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, gameData->font1); //ƒeƒLƒXƒg.
-		DrawCircleKR(&cir, false, false);   //Xƒ{ƒ^ƒ“‚Ì‰~.
+		str.Draw(ANC_MID, gameData->font1); //ãƒ†ã‚­ã‚¹ãƒˆ.
+		DrawCircleKR(&cir, false, false);   //Xãƒœã‚¿ãƒ³ã®å††.
 		ResetDrawBlendMode();
 	}
 }
@@ -660,13 +654,13 @@ void GameManager::DrawMenu() {
 }
 void GameManager::DrawGame() {
 
-	player->Draw();     //ƒvƒŒƒCƒ„[.
-	DrawReflectMode();  //”½Ëƒ‚[ƒh‰‰o.
+	player->Draw();     //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼.
+	DrawReflectMode();  //åå°„ãƒ¢ãƒ¼ãƒ‰æ¼”å‡º.
 	uiMng->Draw();      //UI.
 
-	//ƒQ[ƒ€‚ªŠJn‚µ‚½‚ç.
+	//ã‚²ãƒ¼ãƒ ãŒé–‹å§‹ã—ãŸã‚‰.
 	if (isGameStart) {
-		//ƒXƒe[ƒW•Ê.
+		//ã‚¹ãƒ†ãƒ¼ã‚¸åˆ¥.
 		switch (gameData->stage)
 		{
 			case STAGE_TUTORIAL: tutorialStg->Draw(); break;
@@ -678,7 +672,7 @@ void GameManager::DrawGame() {
 }
 void GameManager::DrawEnd() {
 	
-	//ƒXƒe[ƒW•Ê.
+	//ã‚¹ãƒ†ãƒ¼ã‚¸åˆ¥.
 	switch (gameData->stage) 
 	{
 		case STAGE_TUTORIAL: tutorialStg->Draw(); break;
@@ -686,32 +680,32 @@ void GameManager::DrawEnd() {
 
 		default: assert(FALSE); break;
 	}
-	//•ƒtƒBƒ‹ƒ^[.
+	//é»’ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼.
 	{
-		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeKR(MODE_ALPHA, 128*anim);
-		DrawBoxKR(&box, ANC_LU); //‰æ–Ê‚ğˆÃ‚­‚·‚é(UIˆÈŠO)
+		DrawBoxKR(&box, ANC_LU); //ç”»é¢ã‚’æš—ãã™ã‚‹(UIä»¥å¤–)
 		ResetDrawBlendMode();
 	}
 	uiMng->Draw(); //UI.
 
-	//I—¹ˆÄ“à.
+	//çµ‚äº†æ¡ˆå†….
 	{
-		//ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
 
-		//ƒXƒRƒA•\¦.
+		//ã‚¹ã‚³ã‚¢è¡¨ç¤º.
 		TCHAR text[256];
 		_stprintf(
-			text, _T("%d + %d(%.3f•b) = %d“_"),
+			text, _T("%d + %d(%.3fç§’) = %dç‚¹"),
 			gameData->scoreBef, _int(tmGameTime.GetPassTime() * 10), tmGameTime.GetPassTime(), gameData->score
 		);
-		//ƒeƒLƒXƒg‚Ìİ’è.
+		//ãƒ†ã‚­ã‚¹ãƒˆã®è¨­å®š.
 		DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
 		DrawStr str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
-		//‰æ–Ê’†‰›‚É•¶š‚ğ•\¦.
+		//ç”»é¢ä¸­å¤®ã«æ–‡å­—ã‚’è¡¨ç¤º.
 		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
 		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true); //GAME OVER
 		str1.Draw(ANC_MID, gameData->font1);
@@ -722,110 +716,110 @@ void GameManager::DrawEnd() {
 	const float delay1 = 1.2f;
 	const float delay2 = 1.5f;
 
-	//ˆê’èŠÔ‚ªŒo‚Á‚½‚ç.
+	//ä¸€å®šæ™‚é–“ãŒçµŒã£ãŸã‚‰.
 	if (tmScene[SCENE_END].GetPassTime() > delay1) {
-		//ƒxƒXƒgƒXƒRƒAXV.
+		//ãƒ™ã‚¹ãƒˆã‚¹ã‚³ã‚¢æ›´æ–°.
 		if (isBestScore) {
 
-			//ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+			//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
-			//•`‰æ.
+			//æç”».
 			SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
 			imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
 			ResetDrawBlendMode();
-			//ƒTƒEƒ“ƒh.
+			//ã‚µã‚¦ãƒ³ãƒ‰.
 			if (!isBestScoreSound) {
 				p_sound->Play(_T("BestScore"), false, 65);
-				isBestScoreSound = true; //ˆê“x‚Ì‚İ.
+				isBestScoreSound = true; //ä¸€åº¦ã®ã¿.
 			}
 		}
 	}
-	//ˆê’èŠÔ‚ªŒo‚Á‚½‚ç.
+	//ä¸€å®šæ™‚é–“ãŒçµŒã£ãŸã‚‰.
 	if (tmScene[SCENE_END].GetPassTime() > delay2) {
 		
-		//ƒAƒjƒ[ƒVƒ‡ƒ“’l.
+		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å€¤.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
-		//ƒeƒLƒXƒg.
+		//ãƒ†ã‚­ã‚¹ãƒˆ.
 		DrawStr str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
 		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, gameData->font1); //ƒeƒLƒXƒg.
-		DrawCircleKR(&cir, false, false);   //Aƒ{ƒ^ƒ“‚Ì‰~.
+		str.Draw(ANC_MID, gameData->font1); //ãƒ†ã‚­ã‚¹ãƒˆ.
+		DrawCircleKR(&cir, false, false);   //Aãƒœã‚¿ãƒ³ã®å††.
 		ResetDrawBlendMode();
 	}
 }
 void GameManager::DrawPause() {
 
-	DrawGame(); //ƒQ[ƒ€ƒV[ƒ“‚Æ“¯‚¶.
+	DrawGame(); //ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã¨åŒã˜.
 }
 
-//”½Ëƒ‚[ƒh‰‰o.
+//åå°„ãƒ¢ãƒ¼ãƒ‰æ¼”å‡º.
 void GameManager::DrawReflectMode() {
 
-	//ƒJƒEƒ“ƒgƒ_ƒEƒ“’†.
+	//ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³ä¸­.
 	if (tmReflectMode.GetIsMove() && tmReflectMode.GetPassTime() > 0)
 	{
-		//ƒeƒLƒXƒg‚Ìİ’è.
+		//ãƒ†ã‚­ã‚¹ãƒˆã®è¨­å®š.
 		TCHAR text[256];
-		_stprintf(text, _T("%d"), (int)ceil(tmReflectMode.GetPassTime())); //TCHARŒ^‚É•Ï”‚ğ‘ã“ü.
+		_stprintf(text, _T("%d"), (int)ceil(tmReflectMode.GetPassTime())); //TCHARå‹ã«å¤‰æ•°ã‚’ä»£å…¥.
 		DrawStr str(text, {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
 
-		//‰æ–Ê’†‰›‚É”š‚ğ•\¦.
+		//ç”»é¢ä¸­å¤®ã«æ•°å­—ã‚’è¡¨ç¤º.
 		{
-			double dec  = GetDecimal(tmReflectMode.GetPassTime()); //¬”‚¾‚¯æ‚èo‚·.
+			double dec  = GetDecimal(tmReflectMode.GetPassTime()); //å°æ•°ã ã‘å–ã‚Šå‡ºã™.
 			double anim = CalcNumEaseOut(dec);
 			
-			SetDrawBlendModeKR(MODE_ALPHA, _int_r(255 * dec)); //1•b‚²‚Æ‚É”–‚­‚È‚é‰‰o.
-			//Å‰‚Ì1•b.
+			SetDrawBlendModeKR(MODE_ALPHA, _int_r(255 * dec)); //1ç§’ã”ã¨ã«è–„ããªã‚‹æ¼”å‡º.
+			//æœ€åˆã®1ç§’.
 			if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME-1) {
 				imgReflect.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2}, {0.3+0.2*anim, 0.3+0.2*anim});
 			}
-			//ÅŒã‚Ì3•b.
+			//æœ€å¾Œã®3ç§’.
 			if (tmReflectMode.GetPassTime() <= 3) {
-				str.Draw(ANC_MID, gameData->font4); //”š.
+				str.Draw(ANC_MID, gameData->font4); //æ•°å­—.
 			}
 			ResetDrawBlendMode();
 		}
 	}
 }
 
-//ƒQ[ƒ€I—¹.
+//ã‚²ãƒ¼ãƒ çµ‚äº†.
 void GameManager::GameEnd() {
 	
-	//‚Ü‚¾I‚í‚Á‚Ä‚È‚¢‚È‚ç(”O‚Ì‚½‚ß2dÀs‚³‚ê‚é‚±‚Æ‚ğ–h‚®)
+	//ã¾ã çµ‚ã‚ã£ã¦ãªã„ãªã‚‰(å¿µã®ãŸã‚2é‡å®Ÿè¡Œã•ã‚Œã‚‹ã“ã¨ã‚’é˜²ã)
 	if (gameData->scene != SCENE_END) {
 
-		gameData->scene = SCENE_END; //ƒQ[ƒ€I—¹‚Ö.
+		gameData->scene = SCENE_END; //ã‚²ãƒ¼ãƒ çµ‚äº†ã¸.
 	
-		tmGameTime.Stop(); //’â~.
+		tmGameTime.Stop(); //åœæ­¢.
 		tmReflectMode.Reset();
-		gameData->speedRate = 1.0; //‘¬“x”{—¦‚ğ100%‚É–ß‚·.
+		gameData->speedRate = 1.0; //é€Ÿåº¦å€ç‡ã‚’100%ã«æˆ»ã™.
 
-		//‹L˜^ƒŠƒZƒbƒg.
+		//è¨˜éŒ²ãƒªã‚»ãƒƒãƒˆ.
 		for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 			isItemCountDownSound[i] = false;
 		}
 
-		gameData->scoreBef = gameData->score;                   //ŠÔ‰ÁZ‘O‚ÌƒXƒRƒA‚ğ‹L˜^.
-		gameData->score += _int(tmGameTime.GetPassTime() * 10); //ŠÔƒ{[ƒiƒX‰ÁZ.
+		gameData->scoreBef = gameData->score;                   //æ™‚é–“åŠ ç®—å‰ã®ã‚¹ã‚³ã‚¢ã‚’è¨˜éŒ².
+		gameData->score += _int(tmGameTime.GetPassTime() * 10); //æ™‚é–“ãƒœãƒ¼ãƒŠã‚¹åŠ ç®—.
 
-		//‘Ï‹vƒ‚[ƒh‚Ì‚İ”»’è.
+		//è€ä¹…ãƒ¢ãƒ¼ãƒ‰ã®ã¿åˆ¤å®š.
 		if (gameData->stage == STAGE_ENDLESS) {
-			//Å‚ƒXƒRƒAXV‚È‚ç.
+			//æœ€é«˜ã‚¹ã‚³ã‚¢æ›´æ–°ãªã‚‰.
 			if (gameData->score > gameData->bestScore) {
 
 				File file;
-				file.MakeDir(FILE_DATA_PATH);   //ƒtƒHƒ‹ƒ_ì¬.
-				file.Open(FILE_DATA, _T("w"));  //ƒtƒ@ƒCƒ‹‚ğŠJ‚­.
-				file.WriteInt(gameData->score); //ƒXƒRƒA‚ğ•Û‘¶.
+				file.MakeDir(FILE_DATA_PATH);   //ãƒ•ã‚©ãƒ«ãƒ€ä½œæˆ.
+				file.Open(FILE_DATA, _T("w"));  //ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã.
+				file.WriteInt(gameData->score); //ã‚¹ã‚³ã‚¢ã‚’ä¿å­˜.
 
-				gameData->bestScore = gameData->score; //ƒXƒRƒAXV.
+				gameData->bestScore = gameData->score; //ã‚¹ã‚³ã‚¢æ›´æ–°.
 				isBestScore = true;
 			}
 		}
 
-		//ƒTƒEƒ“ƒh.
+		//ã‚µã‚¦ãƒ³ãƒ‰.
 		switch (gameData->stage) 
 		{
 			case STAGE_TUTORIAL:
@@ -837,18 +831,46 @@ void GameManager::GameEnd() {
 
 			default: assert(FALSE); break;
 		}
-		//ƒQ[ƒ€ƒI[ƒo[BGM.
+		//ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼BGM.
 		p_sound->Play(_T("BGM_Over"), true, 68);
 	}
 }
-//ƒAƒCƒeƒ€‚ğg—p‚µ‚½.
+//ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ãŸæ™‚.
 void GameManager::ItemUsed() {
 
-	gameData->isReflectMode = true; //”½Ëƒ‚[ƒh‚É‚·‚é.
-	tmReflectMode.Start();          //”½Ëƒ‚[ƒhŒv‘ªŠJn.
+	gameData->isReflectMode = true; //åå°„ãƒ¢ãƒ¼ãƒ‰ã«ã™ã‚‹.
+	tmReflectMode.Start();          //åå°„ãƒ¢ãƒ¼ãƒ‰è¨ˆæ¸¬é–‹å§‹.
 
-	//‹L˜^ƒŠƒZƒbƒg.
+	//è¨˜éŒ²ãƒªã‚»ãƒƒãƒˆ.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {
 		isItemCountDownSound[i] = false;
+	}
+
+	//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ãªã‚‰æŒ‡ç¤ºé€ä¿¡.
+	if (gameData->stage == STAGE_TUTORIAL) {
+		tutorialStg->SetTakeItem(true);       //æŒ‡ç¤ºã‚’é€ã‚‹.
+		tutorialStg->SetReflectFinish(false); //falseã«ã™ã‚‹(æŒ‡ç¤ºå–ã‚Šæ¶ˆã—)
+	}
+}
+//åå°„ãƒ¢ãƒ¼ãƒ‰çµ‚äº†.
+void GameManager::ReflectModeEnd() {
+
+	tmReflectMode.Reset();
+
+	gameData->isReflectMode = false; //åå°„ãƒ¢ãƒ¼ãƒ‰è§£é™¤.
+	gameData->speedRate     = 1.0;   //é€Ÿåº¦å€ç‡ã‚’100%ã«æˆ»ã™.
+	gameData->slowBufCntr   = 0;     //ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’0ã«.
+	player->SetMode(Player_Normal);  //é€šå¸¸çŠ¶æ…‹ã«æˆ»ã™.
+			
+	p_sound->Play(_T("PowerDown"), false, 78); //å†ç”Ÿ.
+	
+	//è¨˜éŒ²ãƒªã‚»ãƒƒãƒˆ.
+	for (int i = 0; i < _countof(isItemCountDownSound); i++) {
+		isItemCountDownSound[i] = false;
+	}
+
+	//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ãªã‚‰æŒ‡ç¤ºé€ä¿¡.
+	if (gameData->stage == STAGE_TUTORIAL) {
+		tutorialStg->SetReflectFinish(true); //æŒ‡ç¤ºã‚’é€ã‚‹.
 	}
 }

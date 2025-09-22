@@ -59,24 +59,26 @@ void MenuManager::Update() {
 
 		switch (selectedIndex)
 		{
-		case 0:
-			p_data->scene = SCENE_GAME;
-			p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
-			p_sound->StopAll();
-			p_sound->Play(_T("BGM_Endless"), true, 68);
-			break;
-		case 1:
-			p_data->scene = SCENE_GAME;
-			p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
-			p_sound->StopAll();
-			p_sound->Play(_T("BGM_Tutorial"), true, 50);
-			break;
-		case 2:
-			p_data->scene = SCENE_TITLE;    //タイトルへ.
-			GameManager::GetPtr()->Reset(); //リセット.
-			break;
+			case 0:
+				p_data->scene = SCENE_GAME;
+				p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
+				//BGM.
+				p_sound->StopAll();
+				p_sound->Play(_T("BGM_Endless"), true, 68);
+				break;
+			case 1:
+				p_data->scene = SCENE_GAME;
+				p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
+				//BGM.
+				p_sound->StopAll();
+				p_sound->Play(_T("BGM_Tutorial"), true, 50);
+				break;
+			case 2:
+				p_data->scene = SCENE_TITLE;    //タイトルへ.
+				GameManager::GetPtr()->Reset(); //リセット.
+				break;
 
-		default: assert(FALSE); break;
+			default: assert(FALSE); break;
 		}
 	}
 

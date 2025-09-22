@@ -67,7 +67,7 @@ enum StageType
 
 //ゲーム設定.
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
-#define TUTORIAL_START_WAIT_TIME        (1.0)           //チュートリアルで項目が開始した時の停止時間.
+#define TUTORIAL_START_WAIT_TIME        (1.5)           //チュートリアルで項目が開始した時の停止時間.
 #define TUTORIAL_END_NEXT_TIME          (1.0)           //チュートリアルで次に進む間隔時間.
 
 #define REFLECT_MODE_TIME				(8)             //反射モード制限時間.

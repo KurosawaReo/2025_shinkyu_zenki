@@ -44,6 +44,10 @@ void EndlessStage::Update() {
 		data.type = Effect_Endless_Level1;
 		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
 		p_effectMng->SpawnEffect(&data);
+
+		//召喚可能にする.
+		p_meteorMng->SetIsSpawnAble(true);
+		p_itemMng->  SetIsSpawnAble(true);
 	}
 
 	//カウンター増加.

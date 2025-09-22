@@ -126,4 +126,5 @@ public:
 	//‚»‚Ì‘¼.
 	void GameEnd();
 	void ItemUsed();
+	void ReflectModeEnd();
 };

@@ -23,7 +23,7 @@ void UIManager::Init() {
 }
 //リセット.
 void UIManager::Reset() {
-
+	isShowScore = false;
 }
 //更新.
 void UIManager::Update() {
@@ -52,18 +52,36 @@ void UIManager::Draw() {
 		case STAGE_TUTORIAL:
 		{
 			//アニメーション値.
-			double alpha = CalcNumEaseInOut((time - 1.0) * 2);
+			double alpha   = CalcNumEaseInOut((time-1.0) * 2);
+			double alpha2  = CalcNumEaseInOut(time-0.2);
+			double animSin = sin(M_PI * (time-0.2));
 			//テキスト設定.
-			DrawStr str({}, { WINDOW_WID/2, 70 + 2 }, 0xFFFFFF);
+			DrawStr str1({}, { WINDOW_WID/2, 70+2 }, 0xFFFFFF);
+			DrawStr str2({}, { WINDOW_WID/2,  150 }, COLOR_SCORE);
 			
 			TCHAR text[256];
 			_stprintf(text, _T("STEP %d"), p_tutorialStg->GetStepNo());
-			str.text = text;
+			str1.text = text;
+			_stprintf(text, _T("SCORE:%05d"), p_gameData->score);
+			str2.text = text;
 
-			//描画.
-			imgUI[0].DrawExtend({ WINDOW_WID/2, 70 }, { 0.4, 0.35 }); //背景画像.
+			//STEP.
+			imgUI[0].DrawExtend({ WINDOW_WID/2, 70 }, {0.4, 0.35}); //背景画像.
 			SetDrawBlendModeKR(MODE_ALPHA, 255 * alpha);
-			str.Draw(ANC_MID, p_gameData->font4);
+			str1.Draw(ANC_MID, p_gameData->font4);
+
+			//SCORE.
+			if (isShowScore) {
+				SetDrawBlendModeKR(MODE_ALPHA, 255 * alpha2);
+				str2.Draw(ANC_MID, p_gameData->font3);
+				imgUI[2].DrawExtend({(double)str2.pos.x, (double)str2.pos.y+28}, {0.35, 0.4});
+				//テキスト(光沢用)
+				str2.color = 0xFFFFFF;
+				SetDrawBlendModeKR(MODE_ALPHA, 100 * animSin);
+				str2.Draw(ANC_MID, p_gameData->font3);
+			}
+
+			//描画モードリセット.
 			ResetDrawBlendMode();
 		}
 		break;
