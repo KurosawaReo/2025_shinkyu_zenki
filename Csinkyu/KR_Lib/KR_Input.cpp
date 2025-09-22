@@ -15,36 +15,36 @@ namespace KR_Lib
 {
 	//ƒL[“ü—Í‚Ì”»’è.
 	bool InputMng::IsPushKey(KeyID id) {
-		return tmKey[id] > 0;
+		return tmKey[_int(id)] > 0;
 	}
 	int  InputMng::IsPushKeyTime(KeyID id) {
-		return tmKey[id];
+		return tmKey[_int(id)];
 	}
 	//ƒ}ƒEƒX“ü—Í‚Ì”»’è.
 	bool InputMng::IsPushMouse(MouseID id) {
-		return tmMouse[id] > 0;
+		return tmMouse[_int(id)] > 0;
 	}
 	int  InputMng::IsPushMouseTime(MouseID id) {
-		return tmMouse[id];
+		return tmMouse[_int(id)];
 	}
 	//ƒRƒ“ƒgƒ[ƒ‰“ü—Í‚Ì”»’è.
 	bool InputMng::IsPushPadBtn(PadXboxID id) {
-		return tmPadBtn[id] > 0;
+		return tmPadBtn[_int(id)] > 0;
 	}
 	bool InputMng::IsPushPadBtn(PadSwitchID id) {
-		return tmPadBtn[id] > 0;
+		return tmPadBtn[_int(id)] > 0;
 	}
 	bool InputMng::IsPushPadBtn(PadArcadeID id) {
-		return tmPadBtn[id] > 0;
+		return tmPadBtn[_int(id)] > 0;
 	}
 	int  InputMng::IsPushPadBtnTime(PadXboxID id) {
-		return tmPadBtn[id];
+		return tmPadBtn[_int(id)];
 	}
 	int  InputMng::IsPushPadBtnTime(PadSwitchID id) {
-		return tmPadBtn[id];
+		return tmPadBtn[_int(id)];
 	}
 	int  InputMng::IsPushPadBtnTime(PadArcadeID id) {
-		return tmPadBtn[id];
+		return tmPadBtn[_int(id)];
 	}
 	//ƒAƒNƒVƒ‡ƒ“”»’è.
 	bool InputMng::IsPushAction(MY_STRING name) {
@@ -56,19 +56,19 @@ namespace KR_Lib
 
 	//ƒAƒNƒVƒ‡ƒ“’Ç‰Á.
 	void InputMng::AddAction(MY_STRING name, KeyID id) {
-		actions[name].inputs.push_back({ KEY,      _int(id) }); //Key‘€ì‚Å“o˜^.
+		actions[name].inputs.push_back({ InputType::Key,       _int(id) }); //Key‘€ì‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, MouseID id) {
-		actions[name].inputs.push_back({ MOUSE,    _int(id) }); //Mouse‘€ì‚Å“o˜^.
+		actions[name].inputs.push_back({ InputType::Mouse,     _int(id) }); //Mouse‘€ì‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, PadXboxID id) {
-		actions[name].inputs.push_back({ PAD_XBOX, _int(id) }); //Pad‘€ì(xbox)‚Å“o˜^.
+		actions[name].inputs.push_back({ InputType::PadXbox,   _int(id) }); //Pad‘€ì(xbox)‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, PadSwitchID id) {
-		actions[name].inputs.push_back({ PAD_SWT,  _int(id) }); //Pad‘€ì(switch)‚Å“o˜^.
+		actions[name].inputs.push_back({ InputType::PadSwitch, _int(id) }); //Pad‘€ì(switch)‚Å“o˜^.
 	}
 	void InputMng::AddAction(MY_STRING name, PadArcadeID id) {
-		actions[name].inputs.push_back({ PAD_ACD,  _int(id) }); //Pad‘€ì(arcade)‚Å“o˜^.
+		actions[name].inputs.push_back({ InputType::PadArcade, _int(id) }); //Pad‘€ì(arcade)‚Å“o˜^.
 	}
 
 	//ƒL[ƒ{[ƒh:\šƒL[‘€ì.
@@ -77,16 +77,16 @@ namespace KR_Lib
 		INT_XY pow{}; //ˆÚ“®—Í.
 
 		//ƒL[“ü—Í‚É‰‚¶‚ÄˆÚ“®—Í‚ğ—^‚¦‚é.
-		if (IsPushKey(KEY_UP)   ||IsPushKey(KEY_W)) {
+		if (IsPushKey(KeyID::Up)   ||IsPushKey(KeyID::W)) {
 			pow.y += -1;
 		}
-		if (IsPushKey(KEY_DOWN) ||IsPushKey(KEY_S)) {
+		if (IsPushKey(KeyID::Down) ||IsPushKey(KeyID::S)) {
 			pow.y += +1;
 		}
-		if (IsPushKey(KEY_LEFT) ||IsPushKey(KEY_A)) {
+		if (IsPushKey(KeyID::Left) ||IsPushKey(KeyID::A)) {
 			pow.x += -1;
 		}
-		if (IsPushKey(KEY_RIGHT)||IsPushKey(KEY_D)) {
+		if (IsPushKey(KeyID::Right)||IsPushKey(KeyID::D)) {
 			pow.x += +1;
 		}
 
@@ -100,16 +100,16 @@ namespace KR_Lib
 		INT_XY pow{}; //ˆÚ“®—Í.
 
 		//ƒL[“ü—Í‚É‰‚¶‚ÄˆÚ“®—Í‚ğ—^‚¦‚é.
-		if (IsPushPadBtn(PAD_XBOX_UP)) {
+		if (IsPushPadBtn(PadXboxID::Up)) {
 			pow.y += -1;
 		}
-		if (IsPushPadBtn(PAD_XBOX_DOWN)) {
+		if (IsPushPadBtn(PadXboxID::Down)) {
 			pow.y += +1;
 		}
-		if (IsPushPadBtn(PAD_XBOX_LEFT)) {
+		if (IsPushPadBtn(PadXboxID::Left)) {
 			pow.x += -1;
 		}
-		if (IsPushPadBtn(PAD_XBOX_RIGHT)) {
+		if (IsPushPadBtn(PadXboxID::Right)) {
 			pow.x += +1;
 		}
 
@@ -227,11 +227,11 @@ namespace KR_Lib
 
 				switch (j.type)
 				{
-					case KEY:      isPush = IsPushKey   (static_cast<KeyID>      (j.id)); break;
-					case MOUSE:    isPush = IsPushMouse (static_cast<MouseID>    (j.id)); break;
-					case PAD_XBOX: isPush = IsPushPadBtn(static_cast<PadXboxID>  (j.id)); break;
-					case PAD_SWT:  isPush = IsPushPadBtn(static_cast<PadSwitchID>(j.id)); break;
-					case PAD_ACD:  isPush = IsPushPadBtn(static_cast<PadArcadeID>(j.id)); break;
+					case InputType::Key:       isPush = IsPushKey   (static_cast<KeyID>      (j.id)); break;
+					case InputType::Mouse:     isPush = IsPushMouse (static_cast<MouseID>    (j.id)); break;
+					case InputType::PadXbox:   isPush = IsPushPadBtn(static_cast<PadXboxID>  (j.id)); break;
+					case InputType::PadSwitch: isPush = IsPushPadBtn(static_cast<PadSwitchID>(j.id)); break;
+					case InputType::PadArcade: isPush = IsPushPadBtn(static_cast<PadArcadeID>(j.id)); break;
 
 					default: assert(FALSE); break;
 				}

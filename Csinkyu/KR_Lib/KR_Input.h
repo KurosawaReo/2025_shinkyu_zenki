@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/09/22
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -11,125 +11,125 @@
 namespace KR_Lib
 {
 	//キーボードID.
-	enum KeyID
+	enum class KeyID
 	{
-		KEY_DOWN  = KEY_INPUT_DOWN,
-		KEY_LEFT  = KEY_INPUT_LEFT,
-		KEY_RIGHT = KEY_INPUT_RIGHT,
-		KEY_UP    = KEY_INPUT_UP,
-		KEY_0     = KEY_INPUT_0,
-		KEY_1     = KEY_INPUT_1,
-		KEY_2     = KEY_INPUT_2,
-		KEY_3     = KEY_INPUT_3,
-		KEY_4     = KEY_INPUT_4,
-		KEY_5     = KEY_INPUT_5,
-		KEY_6     = KEY_INPUT_6,
-		KEY_7     = KEY_INPUT_7,
-		KEY_8     = KEY_INPUT_8,
-		KEY_9     = KEY_INPUT_9,
-		KEY_A     = KEY_INPUT_A,
-		KEY_B     = KEY_INPUT_B,
-		KEY_C     = KEY_INPUT_C,
-		KEY_D     = KEY_INPUT_D,
-		KEY_E     = KEY_INPUT_E,
-		KEY_F     = KEY_INPUT_F,
-		KEY_G     = KEY_INPUT_G,
-		KEY_H     = KEY_INPUT_H,
-		KEY_I     = KEY_INPUT_I,
-		KEY_J     = KEY_INPUT_J,
-		KEY_K     = KEY_INPUT_K,
-		KEY_L     = KEY_INPUT_L,
-		KEY_M     = KEY_INPUT_M,
-		KEY_N     = KEY_INPUT_N,
-		KEY_O     = KEY_INPUT_O,
-		KEY_P     = KEY_INPUT_P,
-		KEY_Q     = KEY_INPUT_Q,
-		KEY_R     = KEY_INPUT_R,
-		KEY_S     = KEY_INPUT_S,
-		KEY_T     = KEY_INPUT_T,
-		KEY_U     = KEY_INPUT_U,
-		KEY_V     = KEY_INPUT_V,
-		KEY_W     = KEY_INPUT_W,
-		KEY_X     = KEY_INPUT_X,
-		KEY_Y     = KEY_INPUT_Y,
-		KEY_Z     = KEY_INPUT_Z,
-		KEY_ESC   = KEY_INPUT_ESCAPE, //ESCキー.
-		KEY_SPACE = KEY_INPUT_SPACE,
-		KEY_ENTER = KEY_INPUT_RETURN, //Enterキー.
+		Down  = KEY_INPUT_DOWN,
+		Left  = KEY_INPUT_LEFT,
+		Right = KEY_INPUT_RIGHT,
+		Up    = KEY_INPUT_UP,
+		Num0  = KEY_INPUT_0,
+		Num1  = KEY_INPUT_1,
+		Num2  = KEY_INPUT_2,
+		Num3  = KEY_INPUT_3,
+		Num4  = KEY_INPUT_4,
+		Num5  = KEY_INPUT_5,
+		Num6  = KEY_INPUT_6,
+		Num7  = KEY_INPUT_7,
+		Num8  = KEY_INPUT_8,
+		Num9  = KEY_INPUT_9,
+		A     = KEY_INPUT_A,
+		B     = KEY_INPUT_B,
+		C     = KEY_INPUT_C,
+		D     = KEY_INPUT_D,
+		E     = KEY_INPUT_E,
+		F     = KEY_INPUT_F,
+		G     = KEY_INPUT_G,
+		H     = KEY_INPUT_H,
+		I     = KEY_INPUT_I,
+		J     = KEY_INPUT_J,
+		K     = KEY_INPUT_K,
+		L     = KEY_INPUT_L,
+		M     = KEY_INPUT_M,
+		N     = KEY_INPUT_N,
+		O     = KEY_INPUT_O,
+		P     = KEY_INPUT_P,
+		Q     = KEY_INPUT_Q,
+		R     = KEY_INPUT_R,
+		S     = KEY_INPUT_S,
+		T     = KEY_INPUT_T,
+		U     = KEY_INPUT_U,
+		V     = KEY_INPUT_V,
+		W     = KEY_INPUT_W,
+		X     = KEY_INPUT_X,
+		Y     = KEY_INPUT_Y,
+		Z     = KEY_INPUT_Z,
+		Esc   = KEY_INPUT_ESCAPE, //ESCキー.
+		Space = KEY_INPUT_SPACE,
+		Enter = KEY_INPUT_RETURN, //ENTERキー.
 	};
 	//マウスID.
-	enum MouseID
+	enum class MouseID
 	{
-		MOUSE_L, //0x0001: Left.
-		MOUSE_R, //0x0002: Right.
-		MOUSE_M, //0x0004: Middle.
+		Left,   //0x0001
+		Right,  //0x0002
+		Middle, //0x0004
 	};
 	//コントローラID(xbox基準)
-	enum PadXboxID
+	enum class PadXboxID
 	{
-		PAD_XBOX_DOWN,		//0x0001
-		PAD_XBOX_LEFT,		//0x0002
-		PAD_XBOX_RIGHT,		//0x0004
-		PAD_XBOX_UP,		//0x0008
-		PAD_XBOX_A,			//0x0010: 下のボタン.
-		PAD_XBOX_B,			//0x0020: 右のボタン.
-		PAD_XBOX_X,			//0x0040: 左のボタン.
-		PAD_XBOX_Y,			//0x0080: 上のボタン.
-		PAD_XBOX_L,			//0x0100
-		PAD_XBOX_R,			//0x0200
-		PAD_XBOX_VIEW,		//0x0400
-		PAD_XBOX_MENU,		//0x0800
-		PAD_XBOX_STICK_L,   //0x1000: 左スティック押し込み.
-		PAD_XBOX_STICK_R,   //0x2000: 右スティック押し込み.
+		Down,	//0x0001
+		Left,	//0x0002
+		Right,	//0x0004
+		Up,		//0x0008
+		A,		//0x0010: 下のボタン.
+		B,		//0x0020: 右のボタン.
+		X,		//0x0040: 左のボタン.
+		Y,		//0x0080: 上のボタン.
+		L,		//0x0100
+		R,		//0x0200
+		View,	//0x0400
+		Menu,	//0x0800
+		StickL, //0x1000: 左スティック押し込み.
+		StickR, //0x2000: 右スティック押し込み.
 	};
 	//コントローラID(switch基準)
-	enum PadSwitchID
+	enum class PadSwitchID
 	{
-		PAD_SWT_DOWN,		//0x00001
-		PAD_SWT_LEFT,		//0x00002
-		PAD_SWT_RIGHT,		//0x00004
-		PAD_SWT_UP,			//0x00008
-		PAD_SWT_B,			//0x00010: 下のボタン.
-		PAD_SWT_A,			//0x00020: 右のボタン.
-		PAD_SWT_Y,			//0x00040: 左のボタン.
-		PAD_SWT_X,			//0x00080: 上のボタン.
-		PAD_SWT_L,			//0x00100
-		PAD_SWT_R,			//0x00200
-		PAD_SWT_ZL,			//0x00400
-		PAD_SWT_ZR,			//0x00800
-		PAD_SWT_MINUS,		//0x01000: -ボタン.
-		PAD_SWT_PLUS,		//0x02000: +ボタン.
-		PAD_SWT_STICK_L,	//0x04000: 左スティック押し込み.
-		PAD_SWT_STICK_R,	//0x08000: 右スティック押し込み.
-		PAD_SWT_HOME,		//0x10000: ホームボタン.
-		PAD_SWT_CAPTURE,	//0x20000: キャプチャーボタン.
+		Down,	 //0x00001
+		Left,	 //0x00002
+		Right,	 //0x00004
+		Up,		 //0x00008
+		B,		 //0x00010: 下のボタン.
+		A,		 //0x00020: 右のボタン.
+		Y,		 //0x00040: 左のボタン.
+		X,		 //0x00080: 上のボタン.
+		L,		 //0x00100
+		R,		 //0x00200
+		ZL,		 //0x00400
+		ZR,		 //0x00800
+		Minus,	 //0x01000: -ボタン.
+		Plus,	 //0x02000: +ボタン.
+		StickL,	 //0x04000: 左スティック押し込み.
+		StickR,	 //0x08000: 右スティック押し込み.
+		Home,	 //0x10000: ホームボタン.
+		Capture, //0x20000: キャプチャーボタン.
 	};
 	//コントローラID(アーケード筐体)
-	enum PadArcadeID
+	enum class PadArcadeID
 	{
-		PAD_ACD_DOWN,
-		PAD_ACD_LEFT,
-		PAD_ACD_RIGHT,
-		PAD_ACD_UP,
-		PAD_ACD_BTN_UPPER_1,
-		PAD_ACD_BTN_LOWER_1,
-		PAD_ACD_BTN_LOWER_2,
-		PAD_ACD_BTN_UPPER_2,
-		PAD_ACD_UNKNOWN1,     //不明.
-		PAD_ACD_BTN_UPPER_3,
-		PAD_ACD_UNKNOWN2,     //不明.
-		PAD_ACD_BTN_LOWER_3,
-		PAD_ACD_UNKNOWN3,     //不明.
-		PAD_ACD_BTN_START,
+		Down,
+		Left,
+	    Right,
+		Up,
+		BtnUpper1,
+		BtnLower1,
+		BtnLower2,
+		BtnUpper2,
+		Unknown1,  //不明.
+		BtnUpper3,
+		Unknown2,  //不明.
+		BtnLower3,
+		Unknown3,  //不明.
+		BtnStart,
 	};
 	//何の操作か(Action登録用)
-	enum InputType
+	enum class InputType
 	{
-		KEY,
-		MOUSE,
-		PAD_XBOX,
-		PAD_SWT,
-		PAD_ACD
+		Key,
+		Mouse,
+		PadXbox,
+		PadSwitch,
+		PadArcade
 	};
 
 	//入力データ(単体)
