@@ -440,7 +440,7 @@ void TutorialStage::DrawStep3() {
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
 	double alpha1 = Calc::CalcNumEaseIn ((startTimer.GetPassTime()-0.5)*2);
 	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime()*2);
-	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
+	double alpha  = alpha1 * (1-alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
     switch (stepInNo) 

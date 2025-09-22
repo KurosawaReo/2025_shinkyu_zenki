@@ -332,7 +332,7 @@ void Player::PlayerDeath() {
 		data.pos  = hit.pos;
 		p_effectMng->SpawnEffect(&data);
 		//GamaManagerの関数実行(includeだけすれば使える)
-		GameManager::GetPtr()->GameEnd(); //ゲーム終了.
+		GameManager::GetPtr()->GameOver(); //ゲーム終了.
 	
 		active = false;
 	}

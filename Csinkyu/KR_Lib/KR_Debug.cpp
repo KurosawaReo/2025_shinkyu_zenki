@@ -6,6 +6,7 @@
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
+  #include "KR_Input.h"
 #endif
 #include "KR_Debug.h"
 
@@ -29,6 +30,17 @@ namespace KR_Lib
 			printfDx(_T("%s\n"),     text.c_str());
 		}
 
+		//マウス座標の表示(座標調べにおすすめ)
+		void LogMousePos() {
+			int mx = -1, my = -1;
+			GetMousePoint(&mx, &my); //マウス座標取得.
+			//表示.
+			DrawFormatString(100, 300, 0xFFFFFF, _T("マウス座標: %d, %d"), mx, my);
+			//円.
+			DrawCircle(mx, my, 7, 0x303030);
+			DrawCircle(mx, my, 5, 0xA0A0A0);
+			DrawCircle(mx, my, 3, 0xFFFFFF);
+		}
 		//コントローラIDの表示.
 		void LogPadID() {
 			DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));

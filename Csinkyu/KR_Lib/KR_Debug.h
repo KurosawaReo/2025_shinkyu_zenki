@@ -18,6 +18,7 @@ namespace KR_Lib
 		void Log(MY_STRING text, double value);
 		void Log(MY_STRING text);
 
+		void LogMousePos();
 		void LogPadID();
 
 		//配列データの表示.

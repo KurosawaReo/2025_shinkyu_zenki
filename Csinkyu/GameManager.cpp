@@ -371,10 +371,10 @@ void GameManager::Update() {
 
 	//特定の操作でゲーム終了
 	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
-		DxLibMain::GetPtr()->GameEnd(); //ボタン長押しで終了.
+		DxLibMain::GetPtr()->GameOver(); //ボタン長押しで終了.
 	}
 	else if (p_input->IsPushKey(KeyID::Esc)) {
-		DxLibMain::GetPtr()->GameEnd(); //ESCAPEキーを押したら即終了.
+		DxLibMain::GetPtr()->GameOver(); //ESCAPEキーを押したら即終了.
 	}
 }
 
@@ -423,32 +423,8 @@ void GameManager::UpdateTitle()
 	}
 
 	//特定の操作でゲーム開始.
-	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
-	{
+	if (p_input->IsPushActionTime(_T("GameNext")) == 1) {
 		gameData->scene = SCENE_MENU; //メニューシーンへ.
-
-		//隕石破壊アニメーション.
-		{
-			double dig = -130; //角度.
-
-			//エフェクトをいくつか出す.
-			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
-
-				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-
-				EffectData data{};
-				data.type  = Effect_BreakMeteo;
-				data.pos   = { 600, 338 };
-				data.vec   = CalcVectorDeg(newDig);               //ずらした角度を反映.
-				data.speed = ((float)RandNum(20, 100)/10) * 1.4f; //速度抽選.
-				data.len   = ((float)RandNum(10, 150)/10) * 1.4f; //長さ抽選.
-				data.ang   =  (float)RandNum(0, 3599)/10;         //角度抽選.
-				//エフェクト召喚.
-				effectMng->SpawnEffect(&data);
-			}
-			//サウンド.
-			p_sound->Play(_T("Break"), false, 65);
-		}
 	}
 }
 void GameManager::UpdateMenu() {
@@ -507,12 +483,15 @@ void GameManager::UpdateEnd() {
 		tmScene[SCENE_END].Start();
 	}
 
-	//特定の操作でタイトルへ.
-	if (p_input->IsPushActionTime(_T("GameNext")) == 1)
-	{
-		gameData->scene = SCENE_TITLE;
-		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
-		Reset();
+	//チュートリアルじゃなければ.
+	if (gameData->stage != STAGE_TUTORIAL) {
+		//特定の操作でタイトルへ.
+		if (p_input->IsPushActionTime(_T("GameNext")) == 1)
+		{
+			gameData->scene = SCENE_TITLE;
+			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
+			Reset();
+		}
 	}
 }
 void GameManager::UpdatePause() {
@@ -538,7 +517,7 @@ void GameManager::UpdateReflectMode() {
 		gameData->slowBufCntr--;                //カウントを減らす.
 	}
 	else {
-		gameData->speedRate  = 1.0; //速度倍率を戻す.
+		gameData->speedRate = 1.0; //速度倍率を戻す.
 	}
 
 	//反射モード中.
@@ -573,7 +552,7 @@ void GameManager::UpdateReflectMode() {
 
 //シーン別描画.
 void GameManager::DrawTitle() {
-	
+	Debug::LogMousePos();
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
 	const float delay2 = 1.4f;
@@ -612,7 +591,7 @@ void GameManager::DrawTitle() {
 
 #if defined SHOW_BEST_SCORE
 	//best score.
-	if (tmScene[SCENE_TITLE].GetPassTime() > delay2) {
+	if (tmScene[SCENE_TITLE].GetPassTime() >= delay2) {
 
 		const int drawY = WINDOW_HEI/2 + 130;
 
@@ -633,20 +612,47 @@ void GameManager::DrawTitle() {
 	}
 #endif
 	//PUSH SPACE.
-	if (tmScene[SCENE_TITLE].GetPassTime() > delay4) {
+	if (tmScene[SCENE_TITLE].GetPassTime() >= delay4) {
 
 		const int drawY = WINDOW_HEI/2+310;
 
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
-		DrawStr str(_T("Push SPACE or  X"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
-		Circle cir = { {WINDOW_WID/2+92, drawY-2}, 18, 0xFFFFFF };
+		DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
+//		Circle cir = { {WINDOW_WID/2+92, drawY-2}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
 		str.Draw(ANC_MID, gameData->font1); //テキスト.
-		DrawCircleKR(&cir, false, false);   //Xボタンの円.
+//		DrawCircleKR(&cir, false, false);   //Xボタンの円.
 		ResetDrawBlendMode();
+	}
+	//隕石破壊アニメーション.
+	if (!isTitleAnim) {
+		if (tmScene[SCENE_TITLE].GetPassTime() >= delay5) {
+
+			double dig = -130; //角度.
+
+			//エフェクトをいくつか出す.
+			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
+
+				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
+
+				EffectData data{};
+				data.type  = Effect_BreakMeteo;
+				data.pos   = { 584, 290 };
+				data.vec   = CalcVectorDeg(newDig);               //ずらした角度を反映.
+				data.speed = ((float)RandNum(20, 100)/10) * 1.4f; //速度抽選.
+				data.len   = ((float)RandNum(10, 150)/10) * 1.4f; //長さ抽選.
+				data.ang   =  (float)RandNum(0, 3599)/10;         //角度抽選.
+				//エフェクト召喚.
+				effectMng->SpawnEffect(&data);
+			}
+			//サウンド.
+			p_sound->Play(_T("Break"), false, 65);
+
+			isTitleAnim = true;
+		}
 	}
 }
 void GameManager::DrawMenu() {
@@ -740,12 +746,12 @@ void GameManager::DrawEnd() {
 		//アニメーション値.
 		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 		//テキスト.
-		DrawStr str(_T("Push SPACE or  A"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
-		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
+		DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
+//		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
 		str.Draw(ANC_MID, gameData->font1); //テキスト.
-		DrawCircleKR(&cir, false, false);   //Aボタンの円.
+//		DrawCircleKR(&cir, false, false);   //Aボタンの円.
 		ResetDrawBlendMode();
 	}
 }
@@ -784,55 +790,57 @@ void GameManager::DrawReflectMode() {
 	}
 }
 
-//ゲーム終了.
-void GameManager::GameEnd() {
-	
-	//まだ終わってないなら(念のため2重実行されることを防ぐ)
-	if (gameData->scene != SCENE_END) {
+//ゲーム終了(死亡)
+void GameManager::GameOver() {
 
-		gameData->scene = SCENE_END; //ゲーム終了へ.
-	
-		tmGameTime.Stop(); //停止.
-		tmReflectMode.Reset();
-		gameData->speedRate = 1.0; //速度倍率を100%に戻す.
-
-		//記録リセット.
-		for (int i = 0; i < _countof(isItemCountDownSound); i++) {
-			isItemCountDownSound[i] = false;
-		}
-
-		gameData->scoreBef = gameData->score;                   //時間加算前のスコアを記録.
-		gameData->score += _int(tmGameTime.GetPassTime() * 10); //時間ボーナス加算.
-
-		//耐久モードのみ判定.
-		if (gameData->stage == STAGE_ENDLESS) {
-			//最高スコア更新なら.
-			if (gameData->score > gameData->bestScore) {
-
-				File file;
-				file.MakeDir(FILE_DATA_PATH);   //フォルダ作成.
-				file.Open(FILE_DATA, _T("w"));  //ファイルを開く.
-				file.WriteInt(gameData->score); //スコアを保存.
-
-				gameData->bestScore = gameData->score; //スコア更新.
-				isBestScore = true;
-			}
-		}
-
-		//サウンド.
-		switch (gameData->stage) 
+	//ステージ別.
+	switch (gameData->stage)
+	{
+		case STAGE_TUTORIAL:
 		{
-			case STAGE_TUTORIAL:
-				p_sound->FadeOutPlay(_T("BGM_Tutorial"), 2);
-				break;
-			case STAGE_ENDLESS:
+			//特に何もしない.
+		}
+		break;
+
+		case STAGE_ENDLESS:
+		{
+			//まだ終わってないなら(念のため2重実行されることを防ぐ)
+			if (gameData->scene != SCENE_END) {
+				gameData->scene = SCENE_END; //ゲーム終了へ.
+	
+				tmGameTime.Stop(); //停止.
+				tmReflectMode.Reset();
+				gameData->speedRate = 1.0; //速度倍率を100%に戻す.
+
+				//記録リセット.
+				for (int i = 0; i < _countof(isItemCountDownSound); i++) {
+					isItemCountDownSound[i] = false;
+				}
+
+				gameData->scoreBef = gameData->score;                   //時間加算前のスコアを記録.
+				gameData->score += _int(tmGameTime.GetPassTime() * 10); //時間ボーナス加算.
+
+				//最高スコア更新なら.
+				if (gameData->score > gameData->bestScore) {
+
+					File file;
+					file.MakeDir(FILE_DATA_PATH);   //フォルダ作成.
+					file.Open(FILE_DATA, _T("w"));  //ファイルを開く.
+					file.WriteInt(gameData->score); //スコアを保存.
+
+					gameData->bestScore = gameData->score; //スコア更新.
+					isBestScore = true;
+				}
+
+				//BGM停止.
 				p_sound->FadeOutPlay(_T("BGM_Endless"), 2);
-				break;
+				//ゲームオーバーBGM.
+				p_sound->Play(_T("BGM_Over"), true, 68);
+			}
+			break;
 
 			default: assert(FALSE); break;
 		}
-		//ゲームオーバーBGM.
-		p_sound->Play(_T("BGM_Over"), true, 68);
 	}
 }
 //アイテムを使用した時.

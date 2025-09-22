@@ -59,7 +59,7 @@ namespace KR_Lib
 		DeleteFile(_T("Log.txt")); //Log.txt‚ª¶¬‚³‚ê‚é‚Ì‚ÅÁ‹‚·‚é.
 	}
 	//ƒQ[ƒ€‚ğI—¹‚·‚é.
-	void DxLibMain::GameEnd() {
+	void DxLibMain::GameOver() {
 		isEnd = true;
 	}
 }
