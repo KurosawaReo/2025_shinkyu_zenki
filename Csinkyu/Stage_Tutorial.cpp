@@ -30,8 +30,8 @@ void TutorialStage::Init() {
 	p_input        = InputMng::GetPtr();
 	p_sound        = SoundMng::GetPtr();
 
-	font[0].CreateFontH(_T(""), 20, 1, FONT_ANTI);
-	font[1].CreateFontH(_T(""), 26, 1, FONT_ANTI);
+	font[0].CreateFontH(_T(""), 26, 1, FONT_ANTI);
+	font[1].CreateFontH(_T(""), 30, 1, FONT_ANTI);
 
 	//タイマー
 	startTimer = Timer(COUNT_UP, 0);
@@ -122,7 +122,7 @@ void TutorialStage::UpdateStep1() {
 			p_laserMng->Update();
 
 			//一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 8.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 8.5) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -160,7 +160,7 @@ void TutorialStage::UpdateStep2() {
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 3.0) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -178,7 +178,7 @@ void TutorialStage::UpdateStep2() {
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 3.0) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -212,7 +212,7 @@ void TutorialStage::UpdateStep3() {
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 3.0) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -230,7 +230,7 @@ void TutorialStage::UpdateStep3() {
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 3.0) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -264,7 +264,7 @@ void TutorialStage::UpdateStep4() {
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 3.0) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -282,7 +282,7 @@ void TutorialStage::UpdateStep4() {
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 3.0) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -299,9 +299,9 @@ void TutorialStage::UpdateStep4() {
 void TutorialStage::DrawStep1() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::CalcNumEaseIn (startTimer.GetPassTime());
-	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
-	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
+	double alpha1 = Calc::CalcNumEaseIn (startTimer.GetPassTime()*2);
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime()*2);
+	double alpha  = alpha1 * (1-alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
     switch (stepInNo) 
@@ -330,8 +330,8 @@ void TutorialStage::DrawStep1() {
 void TutorialStage::DrawStep2() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::CalcNumEaseIn(startTimer.GetPassTime());
-	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
+	double alpha1 = Calc::CalcNumEaseIn (startTimer.GetPassTime()*2);
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime()*2);
 	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
@@ -356,8 +356,8 @@ void TutorialStage::DrawStep2() {
 void TutorialStage::DrawStep3() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::CalcNumEaseIn(startTimer.GetPassTime());
-	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
+	double alpha1 = Calc::CalcNumEaseIn (startTimer.GetPassTime()*2);
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime()*2);
 	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
@@ -389,8 +389,8 @@ void TutorialStage::DrawStep3() {
 void TutorialStage::DrawStep4() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::CalcNumEaseIn(startTimer.GetPassTime());
-	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
+	double alpha1 = Calc::CalcNumEaseIn (startTimer.GetPassTime()*2);
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime()*2);
 	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
@@ -418,14 +418,14 @@ void TutorialStage::DrawStep4() {
 //alphaは0.0～1.0
 void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 
-	DrawStr str(text, {WINDOW_WID/2, 150}, 0xFFFFFF);
+	DrawStr str(text, {WINDOW_WID/2, 150}, {0, 255, 255});
 	const int useFont = font[1].GetFont();
 
 	{
 		const int margin = 24;
 		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
 		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
-		Box box = {pos, size, 0x000000};
+		Box    box  = {pos, size, 0x000000};
 
 		//枠背景.
 		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
@@ -438,9 +438,9 @@ void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 		//枠線グラデーション.
 		GradLine line;
 		line.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
-		line.AddPoint(pos.Add(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
-		line.AddPoint(pos.Add(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
-		line.AddPoint(pos.Add(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x,      0), {  0, 100, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x, size.y), {  0, 255, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(     0, size.y), {  0, 100, 255, _int_r(255*alpha)});
 		line.Draw(true);
 	}
 }
@@ -448,14 +448,14 @@ void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 //alphaは0.0～1.0
 void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 
-	DrawStr str(text, {WINDOW_WID/2, 150+60}, 0xFFFFFF);
+	DrawStr str(text, {WINDOW_WID/2, 150+60}, {255, 255, 255});
 	const int useFont = font[0].GetFont();
 
 	{
 		const int margin = 24;
 		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
 		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
-		Box box = {pos, size, 0x000000};
+		Box    box  = {pos, size, 0x000000};
 
 		//枠背景.
 		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
@@ -478,14 +478,14 @@ void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 //alphaは0.0～1.0
 void TutorialStage::DrawTopText3(MY_STRING text, double alpha) {
 
-	DrawStr str(text, {WINDOW_WID/2, 150+60+50}, 0xFFFFFF);
+	DrawStr str(text, {WINDOW_WID/2, 150+60+55}, {255, 255, 255});
 	const int useFont = font[0].GetFont();
 
 	{
 		const int margin = 24;
 		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
 		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
-		Box box = {pos, size, 0x000000};
+		Box    box  = {pos, size, 0x000000};
 
 		//枠背景.
 		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);

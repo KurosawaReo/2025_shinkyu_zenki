@@ -16,10 +16,13 @@ void MenuManager::Init() {
 	InputMng* input = InputMng::GetPtr();
 	input->AddAction(_T("MENU_UP"), KEY_UP);
 	input->AddAction(_T("MENU_UP"), KEY_W);
+	input->AddAction(_T("MENU_UP"), PAD_XBOX_UP);
 	input->AddAction(_T("MENU_DOWN"), KEY_DOWN);
 	input->AddAction(_T("MENU_DOWN"), KEY_S);
+	input->AddAction(_T("MENU_DOWN"), PAD_XBOX_DOWN);
 	input->AddAction(_T("MENU_NEXT"), KEY_SPACE);
 	input->AddAction(_T("MENU_NEXT"), KEY_ENTER);
+	input->AddAction(_T("MENU_NEXT"), PAD_XBOX_A);
 
 	//フォント作成.
 	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FONT_EDGE);

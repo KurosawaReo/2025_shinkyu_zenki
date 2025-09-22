@@ -43,11 +43,11 @@ enum StageType
 };
 
 //====================================================================//
-//【Debug】
+//【設定】
 
-//定義するとデバッグ表示ON.
-//#define DEBUG_LASER_ACTIVE
-//#define DEBUG_SPAWN_RATE
+//#define DEBUG_LASER_ACTIVE //デバッグ用.
+//#define DEBUG_SPAWN_RATE   //デバッグ用.
+//#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
 
 //====================================================================//
 //【定数】

@@ -241,10 +241,17 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //最高スコア更新.
 	
 	//アクション登録.
-	p_input->AddAction(_T("GameNext"),  KEY_SPACE);           //キー操作.
+	p_input->AddAction(_T("GameNext"),  KEY_SPACE);  //キー操作.
+	p_input->AddAction(_T("GamePause"), KEY_P);      //キー操作.
+#if defined INPUT_CHANGE_ARCADE
 	p_input->AddAction(_T("GameNext"),  PAD_ACD_BTN_UPPER_1); //アーケード操作.
-	p_input->AddAction(_T("GamePause"), KEY_P);               //キー操作.
 	p_input->AddAction(_T("GamePause"), PAD_ACD_BTN_UPPER_2); //アーケード操作.
+	p_input->AddAction(_T("GameQuit"),  PAD_ACD_BTN_START);   //アーケード操作.
+#else
+	p_input->AddAction(_T("GameNext"),  PAD_XBOX_A); //コントローラ操作.
+	p_input->AddAction(_T("GamePause"), PAD_XBOX_X); //コントローラ操作.
+	p_input->AddAction(_T("GameQuit"),  PAD_XBOX_MENU); //コントローラ操作.
+#endif
 
 	//タイマー初期化.
 	for(int i = 0; i < SCENE_COUNT; i++){
@@ -344,7 +351,7 @@ void GameManager::Update() {
 		bg->Update();        //背景.
 		effectMng->Update(); //エフェクト.
 	}
-
+	Debug::LogPadID();
 	//シーン別.
 	switch (gameData->scene) 
 	{
@@ -358,7 +365,7 @@ void GameManager::Update() {
 	}
 
 	//特定の操作でゲーム終了
-	if (p_input->IsPushPadBtnTime(PAD_ACD_BTN_START) >= FPS * 1) {
+	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
 		DxLibMain::GetPtr()->GameEnd(); //筐体STARTボタン長押しで終了.
 	}
 	else if (p_input->IsPushKey(KEY_ESC)) {
