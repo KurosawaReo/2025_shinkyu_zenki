@@ -26,15 +26,16 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit       = { _pos, PLAYER_SIZE/2, {} };
-	active    = _active;
-	mode      = Player_Normal;
-	afterCntr = 1;
+	hit        = { _pos, PLAYER_SIZE/2, {} };
+	active     = _active;
+	mode       = Player_Normal;
+	afterCntr  = 1;
+	isMoveAble = true;
 
 	//座標配列のリセット.
-	for (int i = 0; i < _countof(afterPos); i++) {
-		afterPos[i].pos      = _pos;
-		afterPos[i].isActive = false;
+	for (int i = 0; i < _countof(after); i++) {
+		after[i].pos      = _pos;
+		after[i].isActive = false;
 	}
 	// 反射エフェクト初期化を追加
 	reflectEffectIndex = 0;
@@ -62,7 +63,7 @@ void Player::Update()
 
 	//有効なら.
 	if (active) {
-		imgRot += 1 * p_data->speedRate; //画像回転.
+		imgRot += 1.5 * p_data->speedRate; //画像回転.
 
 		UpdateAfterImage();
 		UpdateReflectEffects();
@@ -134,15 +135,15 @@ void Player::UpdateAfterImage()
 		//残像データを後ろにずらす.
 		for (int i = PLAYER_AFT_IMG_NUM - 1; i > 0; i--)
 		{
-			afterPos[i] = afterPos[i-1];
+			after[i] = after[i-1];
 		}
 		//位置が変わったら(移動したら)
-		if (hit.pos.x != afterPos[1].pos.x || hit.pos.y != afterPos[1].pos.y) {
-			afterPos[0].pos      = hit.pos; //プレイヤー座標を1フレーム目に記録.
-			afterPos[0].isActive = true;    //有効に.
+		if (hit.pos.x != after[1].pos.x || hit.pos.y != after[1].pos.y) {
+			after[0].pos      = hit.pos; //プレイヤー座標を1フレーム目に記録.
+			after[0].isActive = true;    //有効に.
 		}
 		else {
-			afterPos[0].isActive = false;   //無効に.
+			after[0].isActive = false;   //無効に.
 		}
 	}
 }
@@ -153,15 +154,15 @@ void Player::DrawAfterImage()
 	//残像処理.
 	for (int i = 0; i < PLAYER_AFT_IMG_NUM; i++)
 	{
-		if (!afterPos[i].isActive) { continue; }
+		if (!after[i].isActive) { continue; }
 
-		if (hit.pos.x != afterPos[i].pos.x || hit.pos.y != afterPos[i].pos.y) {
+		if (hit.pos.x != after[i].pos.x || hit.pos.y != after[i].pos.y) {
 			//透明度の計算.
 			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
 			//透明度反映.
 			SetDrawBlendModeKR(MODE_ADD, 255*(1-alpha));
 
-			Circle cir = { afterPos[i].pos, PLAYER_SIZE/2, {} };
+			Circle cir = { after[i].pos, PLAYER_SIZE/2, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
@@ -185,11 +186,14 @@ void Player::DrawAfterImage()
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	//移動する.
-	p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
-	p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
-	//移動限界.
-	FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+	//移動可能なら.
+	if (isMoveAble) {
+		//移動する.
+		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+		//移動限界.
+		FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+	}
 }
 
 // 反射エフェクト生成

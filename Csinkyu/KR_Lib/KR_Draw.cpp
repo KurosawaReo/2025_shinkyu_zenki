@@ -544,21 +544,22 @@ namespace KR_Lib
 	//描画.
 	void GradLine::Draw(bool isClose) {
 
-		//透過を反映させるため、描画モードを変更.
-		SetDrawBlendModeKR(MODE_ALPHA, 255);
+		//頂点の数.
+		int count = (isClose) ? points.size() + 1 : points.size();
+		//頂点配列.
+		vector<VERTEX2D> tmp(count);
 
-		//全頂点ループ.
-		for (int i = 0; i < points.size()-1; i++) {
-			VERTEX2D tmp[2] = {points[i], points[i+1]};
-			DrawPrimitive2D(tmp, 2, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
+		//頂点データをコピー.
+		for (int i = 0; i < points.size(); i++) {
+			tmp[i] = points[i];
 		}
-		//始点と終点を繋ぐ.
 		if (isClose) {
-			VERTEX2D tmp[2] = { points[points.size()-1], points[0] };
-			DrawPrimitive2D(tmp, 2, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
+			tmp[points.size()] = tmp[0]; //終点に始点を入れる.
 		}
 
-		//描画モードリセット.
+		//描画.
+		SetDrawBlendModeKR(MODE_ALPHA, 255); //透過を反映させるためにアルファモードにする.
+		DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE); //TODO: DX_PRIMTYPE_LINESTRIP以外の機能.
 		ResetDrawBlendMode();
 	}
 

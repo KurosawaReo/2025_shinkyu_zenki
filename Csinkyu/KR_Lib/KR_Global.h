@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/09/22
 
    KR_Lib全体で使う汎用機能を追加します。
 */
@@ -166,9 +166,9 @@ namespace KR_Lib
 
 	public:
 		//constructor.
-		MY_COLOR()                                   : color{255, 255, 255, 255} {}
-		MY_COLOR(BYTE _r, BYTE _g, BYTE _b)          : color{ _r,  _g,  _b, 255} {}
-		MY_COLOR(BYTE _r, BYTE _g, BYTE _b, BYTE _a) : color{ _r,  _g,  _b,  _a} {}
+		MY_COLOR()                               : color{255, 255, 255, 255} {}
+		MY_COLOR(int _r, int _g, int _b)         : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), 255} {}
+		MY_COLOR(int _r, int _g, int _b, int _a) : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), static_cast<BYTE>(_a)} {}
 		MY_COLOR(UINT _colorCode);
 		//get.
 		COLOR_U8 GetColorU8()   const { return {color.b, color.g, color.r, color.a}; }

@@ -24,6 +24,7 @@ void TutorialStage::Init() {
 	p_meteorMng    = MeteorManager::GetPtr();
 	p_ripples      = Ripples::GetPtr();
 	p_itemMng      = ItemManager::GetPtr();
+	p_player       = Player::GetPtr();
 	p_fireworksMng = FireworksManager::GetPtr();
 	p_effectMng    = EffectManager::GetPtr();
 	p_input        = InputMng::GetPtr();
@@ -31,10 +32,17 @@ void TutorialStage::Init() {
 
 	font[0].CreateFontH(_T(""), 20, 1, FONT_ANTI);
 	font[1].CreateFontH(_T(""), 26, 1, FONT_ANTI);
+
+	//タイマー
+	startTimer = Timer(COUNT_UP, 0);
+	endTimer   = Timer(COUNT_UP, 0);
 }
 //リセット.
 void TutorialStage::Reset() {
-	stepNo = 0; //後からstep1にする.
+	startTimer.Reset();
+	endTimer.Reset();
+	stepNo   = 0; //後からstep1にする.
+	stepInNo = 0;
 }
 //更新.
 void TutorialStage::Update() {
@@ -78,137 +86,421 @@ void TutorialStage::UpdateStep0() {
 	data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
 	p_effectMng->SpawnEffect(&data);
 
-	stepNo++; //次のステップ.
+	startTimer.Start(); //開始.
+	stepNo++;           //次のステップ.
+	stepInNo = 0;
 }
 //更新:step1
 void TutorialStage::UpdateStep1() {
 
+	//ステップ内項目.
+	switch (stepInNo) 
+	{
+		case 0:
+		{
+			plyMoveSum += p_player->GetMoveDist(); //プレイヤー移動距離を計測.
 
+			//一定距離移動したら.
+			if (!endTimer.GetIsMove() && plyMoveSum >= 2000) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				startTimer.Reset(); //リセット.
+				endTimer.Reset();   //リセット.
+				startTimer.Start(); //開始.
+				stepInNo++;
+			}
+		}
+		break;
 
-	if (p_input->IsPushKeyTime(KEY_0) == 1) {
+		case 1:
+		{
+			//最初の一定時間は停止.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-		//サウンド.
-		p_sound->Play(_T("LevelUp"), false, 100);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_Tutorial_Step2;		
-		data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-		p_effectMng->SpawnEffect(&data);
+			p_gameMng->laserNor1->Update();
+			p_laserMng->Update();
 
-		stepNo++; //次のステップ.
+			//一定時間経過したら.
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 8.0) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				//サウンド.
+				p_sound->Play(_T("LevelUp"), false, 100);
+				//エフェクト.
+				EffectData data{};
+				data.type = Effect_Tutorial_Step2;
+				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
+				p_effectMng->SpawnEffect(&data);
+
+				//オブジェクトリセット.
+				p_gameMng->ResetNorLaser();
+				p_laserMng->Reset();
+
+				startTimer.Reset(); //リセット.
+				endTimer.Reset();   //リセット.
+				startTimer.Start(); //開始.
+				stepNo++;           //次のステップ.
+				stepInNo = 0;
+			}
+		}
+		break;
 	}
 }
 //更新:step2
 void TutorialStage::UpdateStep2() {
 
+	//ステップ内項目.
+	switch (stepInNo) 
+	{
+		case 0:
+		{
+			//最初の一定時間は停止.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
+			//一定時間経過したら.
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				startTimer.Reset(); //リセット.
+				endTimer.Reset();   //リセット.
+				startTimer.Start(); //開始.
+				stepInNo++;
+			}
+		}
+		break;
 
-	if (p_input->IsPushKeyTime(KEY_0) == 1) {
+		case 1:
+		{
+			//最初の一定時間は停止.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-		//サウンド.
-		p_sound->Play(_T("LevelUp"), false, 100);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_Tutorial_Step3;
-		data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-		p_effectMng->SpawnEffect(&data);
+			//一定時間経過したら.
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				//サウンド.
+				p_sound->Play(_T("LevelUp"), false, 100);
+				//エフェクト.
+				EffectData data{};
+				data.type = Effect_Tutorial_Step3;
+				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
+				p_effectMng->SpawnEffect(&data);
 
-		stepNo++; //次のステップ.
+				startTimer.Reset(); //リセット.
+				endTimer.Reset();   //リセット.
+				startTimer.Start(); //開始.
+				stepNo++;           //次のステップ.
+				stepInNo = 0;
+			}
+		}
+		break;
 	}
 }
 //更新:step3
 void TutorialStage::UpdateStep3() {
 
+	//ステップ内項目.
+	switch (stepInNo) 
+	{
+		case 0:
+		{
+			//最初の一定時間は停止.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
+			//一定時間経過したら.
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				startTimer.Reset(); //リセット.
+				endTimer.Reset();   //リセット.
+				startTimer.Start(); //開始.
+				stepInNo++;
+			}
+		}
+		break;
 
-	if (p_input->IsPushKeyTime(KEY_0) == 1) {
-		
-		//サウンド.
-		p_sound->Play(_T("LevelUp"), false, 100);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_Tutorial_Step4;		
-		data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-		p_effectMng->SpawnEffect(&data);
+		case 1:
+		{
+			//最初の一定時間は停止.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-		stepNo++; //次のステップ.
+			//一定時間経過したら.
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				//サウンド.
+				p_sound->Play(_T("LevelUp"), false, 100);
+				//エフェクト.
+				EffectData data{};
+				data.type = Effect_Tutorial_Step3;
+				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
+				p_effectMng->SpawnEffect(&data);
+
+				startTimer.Reset(); //リセット.
+				endTimer.Reset();   //リセット.
+				startTimer.Start(); //開始.
+				stepNo++;           //次のステップ.
+				stepInNo = 0;
+			}
+		}
+		break;
 	}
 }
 //更新:step4
 void TutorialStage::UpdateStep4() {
 
-	//チュートリアル終了.
-	if (p_input->IsPushKeyTime(KEY_0) == 1) {
-		//タイトルへ(全てリセット)
-		p_data->scene = SCENE_TITLE;
-		GameManager::GetPtr()->Reset();
+	//ステップ内項目.
+	switch (stepInNo) 
+	{
+		case 0:
+		{
+			//最初の一定時間は停止.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
+
+			//一定時間経過したら.
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				startTimer.Reset(); //リセット.
+				endTimer.Reset();   //リセット.
+				startTimer.Start(); //開始.
+				stepInNo++;
+			}
+		}
+		break;
+
+		case 1:
+		{
+			//最初の一定時間は停止.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
+
+			//一定時間経過したら.
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 1.0) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				//チュートリアル終了.
+				p_data->scene = SCENE_TITLE;
+				GameManager::GetPtr()->Reset(); //全てリセット.
+			}
+		}
+		break;
 	}
 }
 
 //描画:step1
 void TutorialStage::DrawStep1() {
 
-	DrawTopText (_T("プレイヤーを移動させよう"));
-	DrawTopText2(_T("キーボード:↑↓←→"));
+	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
+	double alpha1 = Calc::CalcNumEaseIn (startTimer.GetPassTime());
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
+	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
 
-	//↑↓←→: 移動
+    //ステップ内項目.
+    switch (stepInNo) 
+    {
+        case 0:
+        {
+            DrawTopText1(_T("プレイヤーを移動させる"), alpha);
+            DrawTopText2(_T("キーボード操作: WASD/↑↓←→"), alpha);
+            DrawTopText3(_T("コントローラー操作: 左スティック"), alpha);
+        }
+        break;
+
+        case 1:
+        {
+            DrawTopText1(_T("攻撃をさける"), alpha);
+            DrawTopText2(_T("青いものは敵です。当たると即死します。"), alpha);
+            DrawTopText3(_T("灰色: 予兆　青色: 攻撃"), alpha);
+
+            p_gameMng->laserNor1->Draw();
+            p_laserMng->Draw();
+        }
+        break;
+    }
 }
 //描画:step2
 void TutorialStage::DrawStep2() {
 
-	DrawTopText(_T(""));
+	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
+	double alpha1 = Calc::CalcNumEaseIn(startTimer.GetPassTime());
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
+	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
 
+    //ステップ内項目.
+    switch (stepInNo) 
+    {
+        case 0:
+        {
+            DrawTopText1(_T("アイテムをとる"), alpha);
+            DrawTopText2(_T("アイテムは画面上から降ってきます。触れると取れます。"), alpha);
+        }
+        break;
+
+        case 1:
+        {
+            DrawTopText1(_T("アイテム発動"), alpha);
+            DrawTopText2(_T("触れると自動で効果が発動し、一定時間経つと解除されます"), alpha);
+        }
+        break;
+    }
 }
 //描画:step3
 void TutorialStage::DrawStep3() {
-	DrawTopText(_T(""));
 
+	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
+	double alpha1 = Calc::CalcNumEaseIn(startTimer.GetPassTime());
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
+	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
+
+    //ステップ内項目.
+    switch (stepInNo) 
+    {
+        case 0:
+        {
+            DrawTopText1(_T("反射モード"), alpha);
+            DrawTopText2(_T("アイテムを取ると、反射モードになります"), alpha);
+        }
+        break;
+
+        case 1:
+        {
+            DrawTopText1(_T("レーザーを跳ね返す"), alpha);
+            DrawTopText2(_T("反射モード中は、レーザーに当たると跳ね返せます"), alpha);
+        }
+        break;
+
+        case 2:
+        {
+            DrawTopText1(_T("隕石をこわす"), alpha);
+            DrawTopText2(_T("跳ね返したレーザーは、隕石に向かって飛んでいきます"), alpha);
+        }
+        break;
+    }
 }
 //描画:step4
 void TutorialStage::DrawStep4() {
-	DrawTopText(_T(""));
 
-}
+	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
+	double alpha1 = Calc::CalcNumEaseIn(startTimer.GetPassTime());
+	double alpha2 = Calc::CalcNumEaseOut(endTimer.GetPassTime());
+	double alpha  = alpha1 * (1 - alpha2); //同時に作動しても繋がるように.
+
+    //ステップ内項目.
+    switch (stepInNo) 
+    {
+        case 0:
+        {
+            DrawTopText1(_T("スコアを増やす"), alpha);
+            DrawTopText2(_T("アイテムをとると+100 / 隕石をこわすと+500 増えます"), alpha);
+        }
+        break;
+
+        case 1:
+        {
+            DrawTopText1(_T("一通りプレイ"), alpha);
+            DrawTopText2(_T("さける→とる→こわす を繰り返しスコアを増やす。これが主な流れです。"), alpha);
+            DrawTopText3(_T("最後に5000点稼いでみましょう。"), alpha);
+        }
+        break;
+    }
+} 
+
 
 //画面上にテキストを出す.
-void TutorialStage::DrawTopText(MY_STRING text) {
+//alphaは0.0～1.0
+void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 
-	//テキスト.
 	DrawStr str(text, {WINDOW_WID/2, 150}, 0xFFFFFF);
-	str.Draw(ANC_MID, font[1].GetFont());
-	//枠.
+	const int useFont = font[1].GetFont();
+
 	{
 		const int margin = 24;
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		Box box = {pos, size, 0x000000};
 
-		DBL_XY pos  = (str.pos - str.GetTextSize(font[1].GetFont())/2).Add(-margin/2, -margin/2).ToDblXY();
-		DBL_XY size = (str.GetTextSize(font[1].GetFont()) + margin).ToDblXY();
-		//グラデーションをつける.
+		//枠背景.
+		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
+		DrawBoxKR(&box, ANC_LU);
+		//テキスト.
+		SetDrawBlendModeKR(MODE_ALPHA, 255*alpha);
+		str.Draw(ANC_MID, useFont);
+		ResetDrawBlendMode();
+
+		//枠線グラデーション.
 		GradLine line;
-		line.AddPoint(pos,                     0x00FFFF);
-		line.AddPoint(pos.Add(size.x,      0), 0x000000);
-		line.AddPoint(pos.Add(size.x, size.y), 0xFF00FF);
-		line.AddPoint(pos.Add(     0, size.y), 0x000000);
+		line.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
 		line.Draw(true);
 	}
 }
 //画面上にテキストを出す(2行目)
-void TutorialStage::DrawTopText2(MY_STRING text) {
+//alphaは0.0～1.0
+void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 
-	//テキスト.
-	DrawStr str(text, {WINDOW_WID/2, 210}, 0xFFFFFF);
-	str.Draw(ANC_MID, font[0].GetFont());
-	//枠.
+	DrawStr str(text, {WINDOW_WID/2, 150+60}, 0xFFFFFF);
+	const int useFont = font[0].GetFont();
+
 	{
 		const int margin = 24;
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		Box box = {pos, size, 0x000000};
 
-		DBL_XY pos  = (str.pos - str.GetTextSize(font[0].GetFont())/2).Add(-margin/2, -margin/2).ToDblXY();
-		DBL_XY size = (str.GetTextSize(font[0].GetFont()) + margin).ToDblXY();
-		//グラデーションをつける.
+		//枠背景.
+		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
+		DrawBoxKR(&box, ANC_LU);
+		//テキスト.
+		SetDrawBlendModeKR(MODE_ALPHA, 255*alpha);
+		str.Draw(ANC_MID, useFont);
+		ResetDrawBlendMode();
+
+		//枠線グラデーション.
 		GradLine line;
-		line.AddPoint(pos,                     0x00FFFF);
-		line.AddPoint(pos.Add(size.x,      0), 0x000000);
-		line.AddPoint(pos.Add(size.x, size.y), 0xFF00FF);
-		line.AddPoint(pos.Add(     0, size.y), 0x000000);
+		line.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
+		line.Draw(true);
+	}
+}
+//画面上にテキストを出す(3行目)
+//alphaは0.0～1.0
+void TutorialStage::DrawTopText3(MY_STRING text, double alpha) {
+
+	DrawStr str(text, {WINDOW_WID/2, 150+60+50}, 0xFFFFFF);
+	const int useFont = font[0].GetFont();
+
+	{
+		const int margin = 24;
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		Box box = {pos, size, 0x000000};
+
+		//枠背景.
+		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
+		DrawBoxKR(&box, ANC_LU);
+		//テキスト.
+		SetDrawBlendModeKR(MODE_ALPHA, 255*alpha);
+		str.Draw(ANC_MID, useFont);
+		ResetDrawBlendMode();
+
+		//枠線グラデーション.
+		GradLine line;
+		line.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
 		line.Draw(true);
 	}
 }
