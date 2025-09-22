@@ -134,8 +134,8 @@ void NormalLaserMain::DrawObstFlash() {
 		//描画モード設定(光る)
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
 
-		DrawLineST(&line1, true);
-		DrawLineST(&line2, true);
+		DrawLineKR(&line1, true);
+		DrawLineKR(&line2, true);
 
 		//エフェクト時間が終了したら無効化
 		if (flashEffect[i].Counter >= flashEffect[i].Duration)
@@ -165,9 +165,9 @@ void NormalLaserMain::DrawPreLaserDots() {
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
 		// 砲台の位置に●を描画
-		DrawCircleST(&cir, false, true);
+		DrawCircleKR(&cir, false, true);
 		cir.r = dotSize2;
-		DrawCircleST(&cir, false, true);
+		DrawCircleKR(&cir, false, true);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}

@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/09/15
+   ver: 2025/09/22
 
    KR_Lib全体で使う汎用機能を追加します。
 */
@@ -40,7 +40,7 @@ using namespace std;
 //KR_Libに使う用.
 namespace KR_Lib
 {
-//文字コードで切り替え.
+	//文字コードで切り替え.
 #if defined UNICODE
 	using MY_STRING = wstring; //wchar_t型.
 #else
@@ -51,17 +51,17 @@ namespace KR_Lib
 	template<typename T> //型を<>で入力して使う.
 	struct XY
 	{
-		T x{}, y{};
+		T x, y;
 
 		//constructor.
-		XY(){}
-		XY(T _x, T _y) : x(_x), y(_y) {}
+		XY()           : x(0),  y(0)  {}
+		XY(T _x, T _y) : x(_x), y(_y) {} //INT_XY n = {1, 0}; この書き方ができる.
 
-		//INT_XY型に変換.
+		//int型に変換.
 		XY<int> ToIntXY() const {
 			return {_int_r(x), _int_r(y)};
 		}
-		//DBL_XY型に変換.
+		//double型に変換.
 		XY<double> ToDblXY() const {
 			return {_dbl(x), _dbl(y)};
 		}
@@ -105,7 +105,7 @@ namespace KR_Lib
 			return *this;
 		}
 
-		//演算子 [+,-,*,/] [XY<T>・数値]
+		//演算子[+,-,*,/] [XY<T>・数値]
 		//右側が数値でなければ無効にする.
 		template<typename T2, _type_num_only(T2)>
 		XY<T> operator+(T2 num) {
@@ -152,32 +152,58 @@ namespace KR_Lib
 	};
 	using INT_XY = XY<int>;    //int型.
 	using DBL_XY = XY<double>; //double型.
+	
+	//RGBAデータ(COLOR_U8とほぼ同じだが、こっちでは順をrgbにする)
+	struct RGBA
+	{
+		BYTE r, g, b, a;
+	};
+	//色データ.
+	class MY_COLOR
+	{
+	private:
+		RGBA color;
+
+	public:
+		//constructor.
+		MY_COLOR()                               : color{255, 255, 255, 255} {}
+		MY_COLOR(int _r, int _g, int _b)         : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), 255} {}
+		MY_COLOR(int _r, int _g, int _b, int _a) : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), static_cast<BYTE>(_a)} {}
+		MY_COLOR(UINT _colorCode);
+		//get.
+		COLOR_U8 GetColorU8()   const { return {color.b, color.g, color.r, color.a}; }
+		UINT     GetColorCode() const { return DxLib::GetColor(color.r, color.g, color.b); }
+
+		//代入用.
+		void operator=(const RGBA& rgba);
+		void operator=(UINT colorCode);
+	};
 
 	//円データ.
 	struct Circle
 	{
-		DBL_XY pos;   //座標.
-		float  r;     //半径.
-		UINT   color; //色.
+		DBL_XY   pos;    //座標.
+		float    r;      //半径.
+		MY_COLOR color;  //色.
 	};
 	//四角形データ.
 	struct Box
 	{
-		DBL_XY pos;   //座標.
-		DBL_XY size;  //サイズ.
-		UINT   color; //色.
+		DBL_XY   pos;    //座標.
+		DBL_XY   size;   //サイズ.
+		MY_COLOR color;  //色.
 	};
 	//三角形データ.
 	struct Triangle
 	{
-		DBL_XY pos[3]; //3点の座標.
-		UINT   color;  //色.
+		DBL_XY   pos[3]; //3点の座標.
+		MY_COLOR color;  //色.
 	};
 	//線データ.
 	struct Line
 	{
-		DBL_XY stPos; //始点座標.
-		DBL_XY edPos; //終点座標.
-		UINT   color; //色.
+		DBL_XY   stPos; //始点座標.
+		DBL_XY   edPos; //終点座標.
+		MY_COLOR color; //色.
 	};
 }

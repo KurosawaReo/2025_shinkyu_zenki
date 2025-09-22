@@ -67,14 +67,14 @@ void Meteor::Draw() {
 		//破壊モード限定.
 		if (state == Meteor_Destroy) {
 			int pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
-			SetDrawBlendModeST(MODE_ADD, pow);
+			SetDrawBlendModeKR(MODE_ADD, pow);
 		}
 
 		//有効な線を全て描画.
 		for (int i = 0; i < shape.lineCnt; i++) {
 			
 			shape.line[i].color = COLOR_METEOR(pos);
-			DrawLineST(&shape.line[i], true, 2);
+			DrawLineKR(&shape.line[i], true, 2);
 		}
 
 		//チュートリアル.
