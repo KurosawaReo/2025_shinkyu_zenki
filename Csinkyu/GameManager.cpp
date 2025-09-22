@@ -239,18 +239,18 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		_T("PlayerDeath"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //最高スコア更新.
-	
+
 	//アクション登録.
-	p_input->AddAction(_T("GameNext"),  KEY_SPACE);  //キー操作.
-	p_input->AddAction(_T("GamePause"), KEY_P);      //キー操作.
+	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //キー操作.
+	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作.
 #if defined INPUT_CHANGE_ARCADE
-	p_input->AddAction(_T("GameNext"),  PAD_ACD_BTN_UPPER_1); //アーケード操作.
-	p_input->AddAction(_T("GamePause"), PAD_ACD_BTN_UPPER_2); //アーケード操作.
-	p_input->AddAction(_T("GameQuit"),  PAD_ACD_BTN_START);   //アーケード操作.
+	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //アーケード操作.
+	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //アーケード操作.
+	p_input->AddAction(_T("GameQuit"),  PadArcadeID::BtnStart);  //アーケード操作.
 #else
-	p_input->AddAction(_T("GameNext"),  PAD_XBOX_A); //コントローラ操作.
-	p_input->AddAction(_T("GamePause"), PAD_XBOX_X); //コントローラ操作.
-	p_input->AddAction(_T("GameQuit"),  PAD_XBOX_MENU); //コントローラ操作.
+	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //コントローラ操作.
+	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //コントローラ操作.
+	p_input->AddAction(_T("GameQuit"),  PadXboxID::Menu); //コントローラ操作.
 #endif
 
 	//タイマー初期化.
@@ -368,7 +368,7 @@ void GameManager::Update() {
 	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
 		DxLibMain::GetPtr()->GameEnd(); //筐体STARTボタン長押しで終了.
 	}
-	else if (p_input->IsPushKey(KEY_ESC)) {
+	else if (p_input->IsPushKey(KeyID::Esc)) {
 		DxLibMain::GetPtr()->GameEnd(); //ESCAPEキーを押したら即終了.
 	}
 }
@@ -453,7 +453,7 @@ void GameManager::UpdateGame() {
 	
 #if defined _DEBUG //Releaseでは入れない.
 	//タイマー加速(Debug)
-	if (p_input->IsPushKey(KEY_L) == 1) {
+	if (p_input->IsPushKey(KeyID::L) == 1) {
 		gameData->counter += 30;
 	}
 #endif

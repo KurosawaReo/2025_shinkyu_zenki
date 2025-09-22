@@ -14,15 +14,15 @@ void MenuManager::Init() {
 
 	// 入力アクション登録
 	InputMng* input = InputMng::GetPtr();
-	input->AddAction(_T("MENU_UP"), KEY_UP);
-	input->AddAction(_T("MENU_UP"), KEY_W);
-	input->AddAction(_T("MENU_UP"), PAD_XBOX_UP);
-	input->AddAction(_T("MENU_DOWN"), KEY_DOWN);
-	input->AddAction(_T("MENU_DOWN"), KEY_S);
-	input->AddAction(_T("MENU_DOWN"), PAD_XBOX_DOWN);
-	input->AddAction(_T("MENU_NEXT"), KEY_SPACE);
-	input->AddAction(_T("MENU_NEXT"), KEY_ENTER);
-	input->AddAction(_T("MENU_NEXT"), PAD_XBOX_A);
+	input->AddAction(_T("MENU_UP"),   KeyID::Up);
+	input->AddAction(_T("MENU_UP"),   KeyID::W);
+	input->AddAction(_T("MENU_UP"),   PadXboxID::Up);
+	input->AddAction(_T("MENU_DOWN"), KeyID::Down);
+	input->AddAction(_T("MENU_DOWN"), KeyID::S);
+	input->AddAction(_T("MENU_DOWN"), PadXboxID::Down);
+	input->AddAction(_T("MENU_NEXT"), KeyID::Space);
+	input->AddAction(_T("MENU_NEXT"), KeyID::Enter);
+	input->AddAction(_T("MENU_NEXT"), PadXboxID::A);
 
 	//フォント作成.
 	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FONT_EDGE);
