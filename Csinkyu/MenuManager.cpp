@@ -9,7 +9,7 @@
 // 初期化
 void MenuManager::Init() {
 
-	p_data  = GameData::GetPtr();
+	p_data = GameData::GetPtr();
 	p_sound = SoundMng::GetPtr();
 
 	// 入力アクション登録
@@ -29,7 +29,7 @@ void MenuManager::Init() {
 	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FONT_EDGE);
 
 	//モードごとの画像読み込み.
-	imgMenu[0].LoadFile(_T("Resources/Images/menu_start1.png"));   //ゲーム開始.
+	imgMenu[0].LoadFile(_T("Resources/Images/menu_start.png"));   //ゲーム開始.
 	imgMenu[1].LoadFile(_T("Resources/Images/menu_tutorial.png")); //チュートリアル.
 	imgMenu[2].LoadFile(_T("Resources/Images/menu_back.png"));     //タイトルに戻る.
 
@@ -48,7 +48,7 @@ void MenuManager::Update() {
 
 	//カーソル移動操作.
 	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) {
-		selectedIndex = (selectedIndex+3 - 1) % 3; //-1して、3の余り(0～2)をループ.
+		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 	}
 	if (input->IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;   //+1して、3の余り(0～2)をループ.
@@ -56,27 +56,27 @@ void MenuManager::Update() {
 
 	//決定操作.
 	if (input->IsPushActionTime(_T("MENU_NEXT")) == 1) {
-		
-		switch (selectedIndex) 
-		{
-			case 0:
-				p_data->scene = SCENE_GAME;
-				p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
-				p_sound->StopAll();
-				p_sound->Play(_T("BGM_Endless"), true, 68);
-				break;
-			case 1:
-				p_data->scene = SCENE_GAME;
-				p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
-				p_sound->StopAll();
-				p_sound->Play(_T("BGM_Tutorial"), true, 50);
-				break;
-			case 2:
-				p_data->scene = SCENE_TITLE;    //タイトルへ.
-				GameManager::GetPtr()->Reset(); //リセット.
-				break;
 
-			default: assert(FALSE); break;
+		switch (selectedIndex)
+		{
+		case 0:
+			p_data->scene = SCENE_GAME;
+			p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
+			p_sound->StopAll();
+			p_sound->Play(_T("BGM_Endless"), true, 68);
+			break;
+		case 1:
+			p_data->scene = SCENE_GAME;
+			p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
+			p_sound->StopAll();
+			p_sound->Play(_T("BGM_Tutorial"), true, 50);
+			break;
+		case 2:
+			p_data->scene = SCENE_TITLE;    //タイトルへ.
+			GameManager::GetPtr()->Reset(); //リセット.
+			break;
+
+		default: assert(FALSE); break;
 		}
 	}
 
@@ -101,11 +101,12 @@ void MenuManager::Draw() {
 	int boxWidth = 400;
 	int boxHeight = 70;
 
-	unsigned int textColor    = GetColor(255, 255, 255);   //テキスト色:
-	unsigned int frameColor   = GetColor(  0, 255, 255);   //枠色.
-	unsigned int normalColor  = GetColor(150, 150, 150);   //未選択色.
+	unsigned int textColor = GetColor(255, 255, 255);   //テキスト色:
+	unsigned int frameColor = GetColor(0, 255, 255);   //枠色.
+	unsigned int normalColor = GetColor(150, 150, 150);   //未選択色.
 	unsigned int selectColor1 = GetColor(100, 255, 255);   //カーソル表.
-	unsigned int selectColor2 = GetColor( 50, 150, 255);   //カーソル裏.
+	unsigned int selectColor2 = GetColor(50, 150, 255);   //カーソル裏.
+	unsigned int lineColor = GetColor(0, 255, 255);      //線の色（黄色）.
 
 	// 各項目描画
 	unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
@@ -123,66 +124,19 @@ void MenuManager::Draw() {
 	// 選択中の矢印（大きめ）
 	{
 		//基準座標.
-		DBL_XY base = {_dbl(menuX - 25), _dbl(menuY + selectedIndex * menuSpacing + 35)};
+		DBL_XY base = { _dbl(menuX - 25), _dbl(menuY + selectedIndex * menuSpacing + 35) };
 		//アニメーション値.
-		double anim = sin(counter/50*M_PI);
-		
-		Triangle tri = {{base, base.Add(-20, 10*anim), base.Add(-20, -10*anim)}, {} };
+		double anim = sin(counter / 50 * M_PI);
+
+		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
 		int err = DrawTriangleKR(&tri, true, false);
 
-//		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
+		//		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
 	}
-
-	// ▼ モード画像
-#if false
-	int imgWidth = 0, imgHeight = 0;
-
-	// デフォルトは imageStart のサイズを使用
-	GetGraphSize(imageStart, &imgWidth, &imgHeight);
-
-	// 他の画像のサイズは同じ前提ならこれでOK
-	if (selectedIndex == 1) GetGraphSize(imageTutorial, &imgWidth, &imgHeight);
-	else if (selectedIndex == 2) GetGraphSize(imageBack, &imgWidth, &imgHeight);
-
-	// 枠を画像より少し大きくするための余白
-	int margin = 10;
-
-	// 枠サイズ（画像サイズ + 余白）
-	int imgBoxWidth = imgWidth + margin * 2;
-	int imgBoxHeight = imgHeight + margin * 2;
-
-	// 枠の位置
-	int imgBoxX = WINDOW_WID - 850 - margin;
-	int imgBoxY = 245 - margin;
-
-	// 背景（半透明）
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	// 枠線
-	DrawBox(imgBoxX, imgBoxY, imgBoxX + imgBoxWidth, imgBoxY + imgBoxHeight, frameColor, FALSE);
-
-	// 画像描画（枠の中に配置）
-	int imgX = imgBoxX + margin;
-	int imgY = imgBoxY + margin;
-
-	switch (selectedIndex) {
-	case 0:
-		DrawGraph(imgX, imgY, imageStart, TRUE);
-		break;
-	case 1:
-		DrawGraph(imgX, imgY, imageTutorial, TRUE);
-		break;
-	case 2:
-		DrawGraph(imgX, imgY, imageBack, TRUE);
-		break;
-	}
-#endif
 
 	//画像の座標(ここを中心とする)
-	DBL_XY imgPos  = { WINDOW_WID - 450, 450 };
+	DBL_XY imgPos = { WINDOW_WID - 450, 450 };
 	//画像のサイズ.
 	DBL_XY imgSize = imgMenu[selectedIndex].GetSize().ToDblXY();
 	//枠を画像よりどれだけ大きくするか.
@@ -194,11 +148,58 @@ void MenuManager::Draw() {
 	Box box = { imgPos, imgSize + margin, frameColor };
 	DrawBoxKR(&box, ANC_MID, false);
 
-	// ▼ 説明文の枠（右下）
-	int textBoxX = WINDOW_WID - 560;
-	int textBoxY = WINDOW_HEI - 300;
-	int textBoxWidth = 520;
+	// ▼ 説明文の枠（右下）- 画像の幅に合わせる
+	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）
 	int textBoxHeight = 260;
+	int textBoxX = (int)(imgPos.x - textBoxWidth / 2);  // 画像と同じ中心位置
+	int textBoxY = WINDOW_HEI - 300;
+
+	// ▼ 選択項目から画像、説明文エリアまでの線を描画
+	{
+		// 選択されたメニュー項目の右端座標
+		int menuItemRightX = menuX + boxWidth;
+		int menuItemCenterY = menuY + selectedIndex * menuSpacing + boxHeight / 2;
+
+		// 画像の左端座標
+		int imgLeftX = (int)(imgPos.x - imgSize.x / 2);
+		int imgCenterY = (int)imgPos.y;
+
+		// 説明文エリアの上端中央座標
+		int textBoxCenterX = textBoxX + textBoxWidth / 2;
+		int textBoxTopY = textBoxY;
+
+		// 線の太さ
+		int lineThickness = 3;
+
+		// アニメーション効果（点滅）
+		double pulseAnim = (sin(counter * 0.1) + 1.0) / 2.0; // 0.0～1.0の範囲
+		int alpha = (int)(128 + 127 * pulseAnim); // 128～255の範囲でアルファ値変化
+
+		DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+		// 1. メニュー項目から画像への線（水平線→垂直線）
+		// 水平線（メニュー項目右端から画像左端まで）
+		for (int i = 0; i < lineThickness; i++) {
+			DxLib::DrawLine(menuItemRightX, menuItemCenterY + i - lineThickness / 2,
+				imgLeftX, menuItemCenterY + i - lineThickness / 2, lineColor);
+		}
+
+		
+
+		// 2. 画像から説明文エリアへの線（垂直線のみ）
+		// 垂直線（画像下端から説明文上端まで）
+		int imgBottomY = (int)(imgPos.y + imgSize.y / 2);
+		for (int i = 0; i < lineThickness; i++) {
+			DxLib::DrawLine((int)imgPos.x + i - lineThickness / 2, imgBottomY,
+				(int)imgPos.x + i - lineThickness / 2, textBoxTopY, lineColor);
+		}
+
+		DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
+	// モード説明タイトル（説明文枠の上に表示）
+	int titleY = textBoxY - 40;  // 説明文枠の40ピクセル上に配置
+	DxLib::DrawStringToHandle(textBoxX + 20, titleY, _T("モード説明"), GetColor(0, 255, 255), fontMenu[1].GetFont());
 
 	// 説明文枠の背景（半透明黒）
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
@@ -211,7 +212,7 @@ void MenuManager::Draw() {
 	int textX = textBoxX + 10;
 	int textY = textBoxY + 20;
 
-	switch (selectedIndex) 
+	switch (selectedIndex)
 	{
 	case 0:
 		DrawStringToHandle(textX, textY + 0, _T("時間経過でLevelが上がり、"), normalColor, fontMenu[0].GetFont());
