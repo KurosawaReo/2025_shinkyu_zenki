@@ -133,7 +133,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -170,7 +170,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -208,7 +208,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)

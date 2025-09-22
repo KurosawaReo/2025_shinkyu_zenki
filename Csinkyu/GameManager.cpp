@@ -360,11 +360,11 @@ void GameManager::Update() {
 	//シーン別.
 	switch (gameData->scene) 
 	{
-		case SCENE_TITLE:    UpdateTitle();    break;
-		case SCENE_MENU:     UpdateMenu();     break;
-		case SCENE_GAME:     UpdateGame();     break;
-		case SCENE_END:      UpdateEnd();      break;
-		case SCENE_PAUSE:    UpdatePause();    break;
+		case SCENE_TITLE: UpdateTitle(); break;
+		case SCENE_MENU:  UpdateMenu();  break;
+		case SCENE_GAME:  UpdateGame();  break;
+		case SCENE_END:   UpdateEnd();   break;
+		case SCENE_PAUSE: UpdatePause(); break;
 	
 		default: assert(FALSE); break;
 	}
@@ -386,11 +386,11 @@ void GameManager::Draw() {
 	//シーン別.
 	switch (gameData->scene) 
 	{
-		case SCENE_TITLE:    DrawTitle();    break;
-		case SCENE_MENU:     DrawMenu();     break;
-		case SCENE_GAME:     DrawGame();     break;
-		case SCENE_END:      DrawEnd();      break;
-		case SCENE_PAUSE:    DrawPause();    break;
+		case SCENE_TITLE: DrawTitle(); break;
+		case SCENE_MENU:  DrawMenu();  break;
+		case SCENE_GAME:  DrawGame();  break;
+		case SCENE_END:   DrawEnd();   break;
+		case SCENE_PAUSE: DrawPause(); break;
 
 		default: assert(FALSE); break;
 	}
@@ -483,8 +483,20 @@ void GameManager::UpdateEnd() {
 		tmScene[SCENE_END].Start();
 	}
 
-	//チュートリアルじゃなければ.
-	if (gameData->stage != STAGE_TUTORIAL) {
+	//チュートリアルの場合.
+	if (gameData->stage == STAGE_TUTORIAL) {
+
+		UpdateGame(); //ゲームシーンと同じ動作をする.
+
+		//死亡後一定時間経過したら.
+		if (tmScene[SCENE_END].GetPassTime() >= TUTORIAL_RESPAWN_TIME) {
+			tmScene[SCENE_END].Reset();   //タイマーリセット.
+			player->PlayerRevival();      //復活.
+			gameData->scene = SCENE_GAME; //ゲームシーンへ戻る.
+		}
+	}
+	//チュートリアル以外の場合.
+	else {
 		//特定の操作でタイトルへ.
 		if (p_input->IsPushActionTime(_T("GameNext")) == 1)
 		{
@@ -513,8 +525,8 @@ void GameManager::UpdateReflectMode() {
 
 	//反射モード時間判定.
 	if (gameData->slowBufCntr > 0) {
-		gameData->speedRate  = SLOW_MODE_SPEED; //速度倍率を遅くする.
-		gameData->slowBufCntr--;                //カウントを減らす.
+		gameData->speedRate = SLOW_MODE_SPEED; //速度倍率を遅くする.
+		gameData->slowBufCntr--;               //カウントを減らす.
 	}
 	else {
 		gameData->speedRate = 1.0; //速度倍率を戻す.
@@ -552,7 +564,7 @@ void GameManager::UpdateReflectMode() {
 
 //シーン別描画.
 void GameManager::DrawTitle() {
-	Debug::LogMousePos();
+
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
 	const float delay2 = 1.4f;
@@ -697,62 +709,83 @@ void GameManager::DrawEnd() {
 	}
 	uiMng->Draw(); //UI.
 
-	//終了案内.
-	{
+	//チュートリアルの場合.
+	if (gameData->stage == STAGE_TUTORIAL) {
+		
 		//アニメーション値.
 		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
+		//テキスト.
+		DrawStr str(_T("チュートリアルではその場で復活します..."), {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FFFF);
 
-		//スコア表示.
-		TCHAR text[256];
-		_stprintf(
-			text, _T("%d + %d(%.3f秒) = %d点"),
-			gameData->scoreBef, _int(tmGameTime.GetPassTime() * 10), tmGameTime.GetPassTime(), gameData->score
-		);
-		//テキストの設定.
-		DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
-		DrawStr str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
-		//画面中央に文字を表示.
-		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true); //GAME OVER
-		str1.Draw(ANC_MID, gameData->font1);
-		str2.Draw(ANC_MID, gameData->font1);
+		SetDrawBlendModeKR(MODE_ALPHA, 255 * anim);
+
+		//GAME OVER
+		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true);
+		//テキスト.
+		str.Draw(ANC_MID, gameData->font2);
+
 		ResetDrawBlendMode();
 	}
-
-	const float delay1 = 1.2f;
-	const float delay2 = 1.5f;
-
-	//一定時間が経ったら.
-	if (tmScene[SCENE_END].GetPassTime() > delay1) {
-		//ベストスコア更新.
-		if (isBestScore) {
-
+	//チュートリアル以外の場合.
+	else {
+		//終了案内.
+		{
 			//アニメーション値.
-			double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
-			//描画.
+			double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
+
+			//スコア表示.
+			TCHAR text[256];
+			_stprintf(
+				text, _T("%d + %d(%.3f秒) = %d点"),
+				gameData->scoreBef, _int(tmGameTime.GetPassTime() * 10), tmGameTime.GetPassTime(), gameData->score
+			);
+			//テキストの設定.
+			DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
+			DrawStr str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
+
 			SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-			imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
+			imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true); //GAME OVER
+			//画面中央に文字を表示.
+			str1.Draw(ANC_MID, gameData->font1);
+			str2.Draw(ANC_MID, gameData->font1);
 			ResetDrawBlendMode();
-			//サウンド.
-			if (!isBestScoreSound) {
-				p_sound->Play(_T("BestScore"), false, 65);
-				isBestScoreSound = true; //一度のみ.
+		}
+
+		const float delay1 = 1.2f;
+		const float delay2 = 1.5f;
+
+		//一定時間が経ったら.
+		if (tmScene[SCENE_END].GetPassTime() > delay1) {
+			//ベストスコア更新.
+			if (isBestScore) {
+
+				//アニメーション値.
+				double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
+				//描画.
+				SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
+				imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
+				ResetDrawBlendMode();
+				//サウンド.
+				if (!isBestScoreSound) {
+					p_sound->Play(_T("BestScore"), false, 65);
+					isBestScoreSound = true; //一度のみ.
+				}
 			}
 		}
-	}
-	//一定時間が経ったら.
-	if (tmScene[SCENE_END].GetPassTime() > delay2) {
+		//一定時間が経ったら.
+		if (tmScene[SCENE_END].GetPassTime() > delay2) {
 		
-		//アニメーション値.
-		double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
-		//テキスト.
-		DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
-//		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
+			//アニメーション値.
+			double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
+			//テキスト.
+			DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
+	//		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
-		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, gameData->font1); //テキスト.
-//		DrawCircleKR(&cir, false, false);   //Aボタンの円.
-		ResetDrawBlendMode();
+			SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
+			str.Draw(ANC_MID, gameData->font1); //テキスト.
+	//		DrawCircleKR(&cir, false, false);   //Aボタンの円.
+			ResetDrawBlendMode();
+		}
 	}
 }
 void GameManager::DrawPause() {
@@ -798,7 +831,7 @@ void GameManager::GameOver() {
 	{
 		case STAGE_TUTORIAL:
 		{
-			//特に何もしない.
+			gameData->scene = SCENE_END; //ゲーム終了へ.
 		}
 		break;
 

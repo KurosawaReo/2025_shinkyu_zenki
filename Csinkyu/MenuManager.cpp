@@ -29,7 +29,7 @@ void MenuManager::Init() {
 	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FONT_EDGE);
 
 	//モードごとの画像読み込み.
-	imgMenu[0].LoadFile(_T("Resources/Images/menu_start.png"));   //ゲーム開始.
+	imgMenu[0].LoadFile(_T("Resources/Images/menu_start.png"));    //ゲーム開始.
 	imgMenu[1].LoadFile(_T("Resources/Images/menu_tutorial.png")); //チュートリアル.
 	imgMenu[2].LoadFile(_T("Resources/Images/menu_back.png"));     //タイトルに戻る.
 
@@ -103,12 +103,12 @@ void MenuManager::Draw() {
 	int boxWidth = 400;
 	int boxHeight = 70;
 
-	unsigned int textColor = GetColor(255, 255, 255);   //テキスト色:
-	unsigned int frameColor = GetColor(0, 255, 255);   //枠色.
-	unsigned int normalColor = GetColor(150, 150, 150);   //未選択色.
-	unsigned int selectColor1 = GetColor(100, 255, 255);   //カーソル表.
-	unsigned int selectColor2 = GetColor(50, 150, 255);   //カーソル裏.
-	unsigned int lineColor = GetColor(0, 255, 255);      //線の色（黄色）.
+	unsigned int textColor    = GetColor(255, 255, 255); //テキスト色:
+	unsigned int frameColor   = GetColor(0, 255, 255);   //枠色.
+	unsigned int normalColor  = GetColor(150, 150, 150); //未選択色.
+	unsigned int selectColor1 = GetColor(100, 255, 255); //カーソル表.
+	unsigned int selectColor2 = GetColor(50, 150, 255);  //カーソル裏.
+	unsigned int lineColor    = GetColor(0, 255, 255);   //線の色（黄色）.
 
 	// 各項目描画
 	unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
@@ -133,8 +133,6 @@ void MenuManager::Draw() {
 		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
 		int err = DrawTriangleKR(&tri, true, false);
-
-		//		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
 	}
 
 	//画像の座標(ここを中心とする)
@@ -162,9 +160,9 @@ void MenuManager::Draw() {
 		int menuItemRightX = menuX + boxWidth;
 		int menuItemCenterY = menuY + selectedIndex * menuSpacing + boxHeight / 2;
 
-		// 画像の左端座標
-		int imgLeftX = (int)(imgPos.x - imgSize.x / 2);
+		int imgLeftX   = (int)(imgPos.x - imgSize.x/2) - margin; // 画像の左端座標
 		int imgCenterY = (int)imgPos.y;
+		int imgBottomY = (int)(imgPos.y + imgSize.y/2) + margin;
 
 		// 説明文エリアの上端中央座標
 		int textBoxCenterX = textBoxX + textBoxWidth / 2;
@@ -182,18 +180,19 @@ void MenuManager::Draw() {
 		// 1. メニュー項目から画像への線（水平線→垂直線）
 		// 水平線（メニュー項目右端から画像左端まで）
 		for (int i = 0; i < lineThickness; i++) {
-			DxLib::DrawLine(menuItemRightX, menuItemCenterY + i - lineThickness / 2,
-				imgLeftX, menuItemCenterY + i - lineThickness / 2, lineColor);
+			DxLib::DrawLine(
+				menuItemRightX, menuItemCenterY+i-lineThickness/2,
+				imgLeftX,       menuItemCenterY+i-lineThickness/2, lineColor
+			);
 		}
-
-		
 
 		// 2. 画像から説明文エリアへの線（垂直線のみ）
 		// 垂直線（画像下端から説明文上端まで）
-		int imgBottomY = (int)(imgPos.y + imgSize.y / 2);
 		for (int i = 0; i < lineThickness; i++) {
-			DxLib::DrawLine((int)imgPos.x + i - lineThickness / 2, imgBottomY,
-				(int)imgPos.x + i - lineThickness / 2, textBoxTopY, lineColor);
+			DxLib::DrawLine(
+				(int)imgPos.x+i-lineThickness/2, imgBottomY,
+				(int)imgPos.x+i-lineThickness/2, textBoxTopY, lineColor
+			);
 		}
 
 		DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

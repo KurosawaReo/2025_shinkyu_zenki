@@ -66,9 +66,10 @@ private:
 
 public:
 	//set.
-	void       SetActive    (bool _active)     { active     = _active; }
-	void       SetMode      (PlayerMode _mode) { mode       = _mode;   } //モード設定.
-	void       SetIsMoveAble(bool _flag)       { isMoveAble = _flag;   }
+	void       SetPos       (DBL_XY     _pos)    { hit.pos    = _pos;    }
+	void       SetActive    (bool       _active) { active     = _active; }
+	void       SetMode      (PlayerMode _mode)   { mode       = _mode;   } //モード設定.
+	void       SetIsMoveAble(bool       _flag)   { isMoveAble = _flag;   }
 	//get. 
 	DBL_XY     GetPos()     const { return hit.pos; }
 	bool       GetActive()  const { return active; }
@@ -87,6 +88,7 @@ public:
 
 	void PlayerMove();       //プレイヤー移動.
 	void PlayerDeath();      //プレイヤー死亡.
+	void PlayerRevival();    //プレイヤー復活.
 
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.

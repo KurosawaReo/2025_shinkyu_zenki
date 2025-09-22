@@ -32,12 +32,12 @@ void Player::Reset(DBL_XY _pos, bool _active)
 	afterCntr  = 1;
 	isMoveAble = true;
 
-	//座標配列のリセット.
+	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
 		after[i].pos      = _pos;
 		after[i].isActive = false;
 	}
-	// 反射エフェクト初期化を追加
+	//反射エフェクトリセット.
 	reflectEffectIndex = 0;
 	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
 		reflectEffects[i].active = false;
@@ -123,6 +123,56 @@ void Player::Draw()
 	}
 }
 
+//移動処理(斜め対応)
+void Player::PlayerMove()
+{
+	//移動可能なら.
+	if (isMoveAble) {
+		//移動する.
+		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+		//移動限界.
+		FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+	}
+}
+
+//死亡処理.
+void Player::PlayerDeath() {
+
+	//デバッグモード中は無敵.
+	if (isDebug) { return; }
+
+	//まだ生存してるなら.
+	if (active) {
+
+		//サウンド.
+		SoundMng* sound = SoundMng::GetPtr();
+		sound->Play(_T("PlayerDeath"), false, 80);
+		//エフェクト.
+		EffectData data{};
+		data.type = Effect_PlayerDeath;
+		data.pos  = hit.pos;
+		p_effectMng->SpawnEffect(&data);
+		//GamaManagerの関数実行(includeだけすれば使える)
+		GameManager::GetPtr()->GameOver(); //ゲーム終了.
+	
+		active = false;
+	}
+}
+
+//プレイヤー復活.
+void Player::PlayerRevival()
+{
+	hit.pos = {WINDOW_WID/2, WINDOW_HEI/2};
+	active  = true;
+
+	//残像配列のリセット.
+	for (int i = 0; i < _countof(after); i++) {
+		after[i].pos = hit.pos;
+		after[i].isActive = false;
+	}
+}
+
 //残像更新.
 void Player::UpdateAfterImage()
 {
@@ -181,19 +231,6 @@ void Player::DrawAfterImage()
 
 	//描画モードリセット.
 	ResetDrawBlendMode();
-}
-
-//移動処理(斜め対応)
-void Player::PlayerMove()
-{
-	//移動可能なら.
-	if (isMoveAble) {
-		//移動する.
-		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
-		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
-		//移動限界.
-		FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
-	}
 }
 
 // 反射エフェクト生成
@@ -311,29 +348,5 @@ void Player::DrawReflectEffects()
 			// 描画モードリセット
 			ResetDrawBlendMode();
 		}
-	}
-}
-
-//死亡処理.
-void Player::PlayerDeath() {
-
-	//デバッグモード中は無敵.
-	if (isDebug) { return; }
-
-	//まだ生存してるなら.
-	if (active) {
-
-		//サウンド.
-		SoundMng* sound = SoundMng::GetPtr();
-		sound->Play(_T("PlayerDeath"), false, 80);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_PlayerDeath;
-		data.pos  = hit.pos;
-		p_effectMng->SpawnEffect(&data);
-		//GamaManagerの関数実行(includeだけすれば使える)
-		GameManager::GetPtr()->GameOver(); //ゲーム終了.
-	
-		active = false;
 	}
 }

@@ -32,7 +32,7 @@ void TutorialStage::Init() {
 	p_input        = InputMng::GetPtr();
 	p_sound        = SoundMng::GetPtr();
 
-	font[0].CreateFontH(_T(""), 24, 1, FONT_ANTI);
+	font[0].CreateFontH(_T(""), 25, 1, FONT_ANTI);
 	font[1].CreateFontH(_T(""), 30, 1, FONT_ANTI);
 
 	//タイマー
@@ -394,8 +394,8 @@ void TutorialStage::DrawStep1() {
 
         case 1:
         {
-            DrawTopText1(_T("攻撃をさける"), alpha);
-            DrawTopText2(_T("青いものは敵です  当たると即死します"), alpha);
+            DrawTopText1(_T("攻撃をよける"), alpha);
+            DrawTopText2(_T("青いものは敵です。当たると即死します。"), alpha);
             DrawTopText3(_T("灰色:予兆 / 青色:攻撃"), alpha);
 
             p_gameMng->laserNor1->Draw();
@@ -418,7 +418,7 @@ void TutorialStage::DrawStep2() {
         case 0:
         {
             DrawTopText1(_T("アイテムをとる"), alpha);
-            DrawTopText2(_T("アイテムは画面上から降ってきます  触れると取れます"), alpha);
+            DrawTopText2(_T("アイテムは画面上から降ってきます。触れると取れます。"), alpha);
 
 			p_itemMng->Draw();
         }
@@ -427,7 +427,7 @@ void TutorialStage::DrawStep2() {
         case 1:
         {
             DrawTopText1(_T("アイテム発動"), alpha);
-            DrawTopText2(_T("触れると自動で効果が発動し、一定時間経つと解除されます"), alpha);
+            DrawTopText2(_T("触れると自動で効果が発動し、一定時間経つと解除されます。"), alpha);
 
 			p_itemMng->Draw();
         }
@@ -448,7 +448,7 @@ void TutorialStage::DrawStep3() {
         case 0:
         {
             DrawTopText1(_T("反射モード"), alpha);
-            DrawTopText2(_T("アイテムを取ると反射モードになります"), alpha);
+            DrawTopText2(_T("アイテムを取ると反射モードになります。"), alpha);
 
 			p_itemMng->Draw();
         }
@@ -457,7 +457,7 @@ void TutorialStage::DrawStep3() {
         case 1:
         {
             DrawTopText1(_T("レーザーを跳ね返す"), alpha);
-            DrawTopText2(_T("反射モード中は、レーザーに当たると跳ね返せます"), alpha);
+            DrawTopText2(_T("反射モード中は、レーザーに当たると跳ね返せます。"), alpha);
 
 			p_itemMng->Draw();
 			p_laserMng->Draw();
@@ -469,7 +469,7 @@ void TutorialStage::DrawStep3() {
         case 2:
         {
             DrawTopText1(_T("隕石をこわす"), alpha);
-            DrawTopText2(_T("跳ね返したレーザーは、隕石に向かって飛んでいきます"), alpha);
+            DrawTopText2(_T("跳ね返したレーザーは、隕石に向かって飛んでいきます。"), alpha);
 
 			p_itemMng->Draw();
 			p_laserMng->Draw();
@@ -481,7 +481,7 @@ void TutorialStage::DrawStep3() {
 		case 3:
 		{
 			DrawTopText1(_T("反射モードの注意"), alpha);
-			DrawTopText2(_T("無敵ではないので、レーザー以外に当たると死にます"), alpha);
+			DrawTopText2(_T("無敵ではないので、レーザー以外に当たると死にます。"), alpha);
 
 			p_itemMng->Draw();
 			p_laserMng->Draw();
@@ -504,7 +504,7 @@ void TutorialStage::DrawStep4() {
     {
         case 0:
         {
-            DrawTopText2(_T("隕石を壊すとスコアを貰えます  2000点稼いでみましょう"), alpha);
+            DrawTopText2(_T("隕石を壊すとスコアを貰えます。2000点稼いでみましょう。"), alpha);
 			DrawTopText3(_T("アイテムを取る:+100, 隕石を壊す:+500"), alpha);
 
 			p_itemMng->Draw();
@@ -516,8 +516,8 @@ void TutorialStage::DrawStep4() {
 
 		case 1:
 		{
-			DrawTopText2(_T("これでチュートリアルを終わります"), alpha);
-			DrawTopText3(_T("ハイスコアを目指して頑張ってください"), alpha);
+			DrawTopText2(_T("これでチュートリアルを終わります。"), alpha);
+			DrawTopText3(_T("ハイスコアを目指して頑張ってください！"), alpha);
 		}
 		break;
     }
@@ -528,7 +528,7 @@ void TutorialStage::DrawStep4() {
 //alphaは0.0～1.0
 void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 
-	DrawStr str(text, {WINDOW_WID/2, 160}, {0, 255, 255});
+	DrawStr str(text, {WINDOW_WID/2, 155}, {0, 255, 255});
 	const int useFont = font[1].GetFont();
 
 	{
@@ -558,7 +558,7 @@ void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 //alphaは0.0～1.0
 void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 
-	DrawStr str(text, {WINDOW_WID/2, 160+80}, {255, 255, 255});
+	DrawStr str(text, {WINDOW_WID/2, 155+70}, {255, 255, 255});
 	const int useFont = font[0].GetFont();
 
 	{
@@ -588,7 +588,7 @@ void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 //alphaは0.0～1.0
 void TutorialStage::DrawTopText3(MY_STRING text, double alpha) {
 
-	DrawStr str(text, {WINDOW_WID/2, 160+80+60}, {255, 255, 255});
+	DrawStr str(text, {WINDOW_WID/2, 155+70+55}, {255, 255, 255});
 	const int useFont = font[0].GetFont();
 
 	{
