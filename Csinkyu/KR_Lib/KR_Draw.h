@@ -100,10 +100,10 @@ namespace KR_Lib
 	public:
 		MY_STRING text;  //テキスト.
 		INT_XY    pos;   //画面のどこに描画するか.
-		UINT      color; //文字の色.
+		MY_COLOR  color; //文字の色.
 
 		//constructor.
-		DrawStr(MY_STRING _text, INT_XY _pos, UINT _color) : text(_text), pos(_pos), color(_color) {}
+		DrawStr(MY_STRING _text, INT_XY _pos, MY_COLOR _color) : text(_text), pos(_pos), color(_color) {}
 
 		//描画.
 		int    Draw	   (Anchor anc = ANC_MID, int font = -1);
@@ -132,15 +132,28 @@ namespace KR_Lib
 		Font& operator=(const Font&) = delete;
 	};
 
+	//グラデーション線.
+	class GradLine
+	{
+	private:
+		vector<VERTEX2D> points; //頂点データ.
+
+	public:
+		//頂点追加.
+		void AddPoint(DBL_XY pos, MY_COLOR color);
+		//描画.
+		void Draw(bool isClose = false);
+	};
+
 	//図形.
-	int    DrawCircleST		 (const Circle*   data,                       bool isFill = true, bool isAnti = false, float thick = 1);
-	int    DrawBoxST		 (const Box*      data, Anchor anc = ANC_MID, bool isFill = true, bool isAnti = false);
-	int    DrawTriangleST	 (const Triangle* data,                       bool isFill = true, bool isAnti = false);
-	int    DrawLineST		 (const Line*     data,                                           bool isAnti = false, float thick = 1.0f);
-	int    DrawWindowGrid	 (int wid, int hei, int size, UINT clrWid = 0xA0A0FF, UINT clrHei = 0xFFA0A0);
+	int    DrawCircleKR		 (const Circle*   data,                       bool isFill = true, bool isAnti = false, float thick = 1);
+	int    DrawBoxKR		 (const Box*      data, Anchor anc = ANC_MID, bool isFill = true, bool isAnti = false);
+	int    DrawTriangleKR	 (const Triangle* data,                       bool isFill = true, bool isAnti = false);
+	int    DrawLineKR		 (const Line*     data,                                           bool isAnti = false, float thick = 1.0f);
+	int    DrawWindowGrid	 (int wid, int hei, int size, MY_COLOR clrWid = {160, 160, 255}, MY_COLOR clrHei = {255, 160, 160});
 
 	//描画モード.
-	int    SetDrawBlendModeST(BlendModeID id, int    power = 255);
-	int    SetDrawBlendModeST(BlendModeID id, double power = 255);
+	int    SetDrawBlendModeKR(BlendModeID id, int    power = 255);
+	int    SetDrawBlendModeKR(BlendModeID id, double power = 255);
 	int    ResetDrawBlendMode();
 }

@@ -5,6 +5,13 @@
 #pragma once
 #include "KR_Lib/KR_Scene.h"
 
+//前方宣言.
+class NormalLaser_1;
+class NormalLaser_2;
+class NormalLaser_3;
+class NormalLaser_4;
+class StraightLaser;
+
 //ゲームデータ.[継承不可]
 class GameData final
 {
@@ -49,7 +56,7 @@ private: //データ.
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
 	Timer tmGameTime{};     //ゲーム計測時間.
-	Timer tmSlowMode{};     //スロー継続時間.
+	Timer tmReflectMode{};  //スロー継続時間.
 
 	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
 	DrawImg imgUI{};        //UI画像.
@@ -62,14 +69,24 @@ private: //データ.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
 	bool isGameStart{};             //ゲーム開始サイン.
+	bool isBestScore{};             //ベストスコア更新したか.
 
 	InputMng* p_input{};
 	SoundMng* p_sound{};
 
+public: //オブジェクト.
+	NormalLaser_1* laserNor1;
+	NormalLaser_2* laserNor2;
+	NormalLaser_3* laserNor3;
+	NormalLaser_4* laserNor4;
+	StraightLaser* laserStr[2];
+
 public:
+	//destructor.
+	~GameManager();
 	//get.
-	float GetSlowModeTime() {
-		return tmSlowMode.GetPassTime();
+	float GetReflectModeTime() {
+		return tmReflectMode.GetPassTime();
 	}
 	float GetSceneTime(Scene scene) {
 		return tmScene[scene].GetPassTime();
@@ -95,8 +112,7 @@ public:
 	void UpdateEnd();
 	void UpdatePause();
 
-	void UpdateObjects();
-	void UpdateSlowMode();
+	void UpdateReflectMode();
 
 	//Draw.
 	void DrawTitle();
@@ -105,7 +121,6 @@ public:
 	void DrawEnd();
 	void DrawPause();
 
-	void DrawObjects();
 	void DrawReflectMode();
 
 	//その他.

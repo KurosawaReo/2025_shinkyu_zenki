@@ -27,13 +27,13 @@ void BG_Tile::Draw(double slowTime) {
 	//通常モード.
 	{
 		double alpha = 60 + 70 * sin(M_PI * timer.GetPassTime()/3);
-		SetDrawBlendModeST(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter())/(WINDOW_WID/4))+1)/2);
+		SetDrawBlendModeKR(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
 		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
 	}
 	//反射モード.
 	if (p_data->isReflectMode) {
-		double alpha = 70 + 100 * sin(M_PI * timer.GetPassTime()/3);
-		SetDrawBlendModeST(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter())/(WINDOW_WID/4))+1)/2);
+		double alpha = 60 + 70 * sin(M_PI * timer.GetPassTime()/3);
+		SetDrawBlendModeKR(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
 		img[1]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
 	}
 	ResetDrawBlendMode(); //描画モードリセット.
@@ -95,7 +95,7 @@ void BackGround::Update() {
 void BackGround::Draw() {
 
 	//スローモード経過時間.
-	float pass = GameManager::GetPtr()->GetSlowModeTime();
+	float pass = GameManager::GetPtr()->GetReflectModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
 	time = CalcNumEaseOut(time); //値の曲線変動.
@@ -114,6 +114,6 @@ void BackGround::Draw() {
 	if (p_data->speedRate) {
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-		DrawBoxST(&box, ANC_MID, false, true);
+		DrawBoxKR(&box, ANC_MID, false, true);
 	}
 }

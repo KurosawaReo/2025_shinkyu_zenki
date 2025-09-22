@@ -17,6 +17,13 @@ struct ReflectEffect
 	bool   active;        // 有効フラグ
 };
 
+//残像データ.
+struct AfterEffect
+{
+	DBL_XY pos;
+	bool   isActive;
+};
+
 //プレイヤーモード.
 enum PlayerMode
 {
@@ -35,17 +42,19 @@ public: //実体.
 	}
 
 private:
-	PlayerMode mode{}; //モード.
+	PlayerMode  mode{};     //モード.
 	
-	Circle hit{};      //プレイヤーの当たり判定円.
-	bool   active{};   //有効か.
-	bool   isDebug{};  //デバッグ用.
+	Circle      hit{};      //プレイヤーの当たり判定円.
+	bool        active{};   //有効か.
+	bool        isDebug{};  //デバッグ用.
 
-	float  afterCntr{};					   //残像用時間カウンター.
-	DBL_XY afterPos[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
+	float       afterCntr{};	 		     //残像用時間カウンター.
+	AfterEffect after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
-	DrawImg imgPlayer[2]{}; //プレイヤー画像.
-	double  imgRot{};       //プレイヤーの画像角度.
+	DrawImg     imgPlayer[2]{}; //プレイヤー画像.
+	double      imgRot{};       //プレイヤーの画像角度.
+
+	bool        isMoveAble{};   //移動可能かどうか.
 
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
@@ -57,13 +66,18 @@ private:
 
 public:
 	//set.
-	void       SetActive(bool _active)     { active = _active; }
-	void       SetMode  (PlayerMode _mode) { mode   = _mode;   } //モード設定.
+	void       SetActive    (bool _active)     { active     = _active; }
+	void       SetMode      (PlayerMode _mode) { mode       = _mode;   } //モード設定.
+	void       SetIsMoveAble(bool _flag)       { isMoveAble = _flag;   }
 	//get. 
-	DBL_XY     GetPos()    const { return hit.pos; }
-	bool       GetActive() const { return active; }
-	PlayerMode GetMode()   const { return mode; }
-	Circle     GetHit()    const { return hit; }
+	DBL_XY     GetPos()     const { return hit.pos; }
+	bool       GetActive()  const { return active; }
+	PlayerMode GetMode()    const { return mode; }
+	Circle     GetHit()     const { return hit; }
+	//計測.
+	double     GetMoveDist() const { 
+		return Calc::CalcDist(hit.pos, after[1].pos); //移動した距離.
+	}
 
 	//その他.
 	void Init  ();

@@ -16,10 +16,13 @@ void MenuManager::Init() {
 	InputMng* input = InputMng::GetPtr();
 	input->AddAction(_T("MENU_UP"), KEY_UP);
 	input->AddAction(_T("MENU_UP"), KEY_W);
+	input->AddAction(_T("MENU_UP"), PAD_XBOX_UP);
 	input->AddAction(_T("MENU_DOWN"), KEY_DOWN);
 	input->AddAction(_T("MENU_DOWN"), KEY_S);
+	input->AddAction(_T("MENU_DOWN"), PAD_XBOX_DOWN);
 	input->AddAction(_T("MENU_NEXT"), KEY_SPACE);
 	input->AddAction(_T("MENU_NEXT"), KEY_ENTER);
+	input->AddAction(_T("MENU_NEXT"), PAD_XBOX_A);
 
 	//フォント作成.
 	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FONT_EDGE);
@@ -127,7 +130,7 @@ void MenuManager::Draw() {
 
 		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
-		int err = DrawTriangleST(&tri, true, false);
+		int err = DrawTriangleKR(&tri, true, false);
 
 		//		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
 	}
@@ -143,7 +146,7 @@ void MenuManager::Draw() {
 	imgMenu[selectedIndex].Draw(imgPos);
 	//画像の枠線(位置とサイズは画像を元にする)
 	Box box = { imgPos, imgSize + margin, frameColor };
-	DrawBoxST(&box, ANC_MID, false);
+	DrawBoxKR(&box, ANC_MID, false);
 
 	// ▼ 説明文の枠（右下）- 画像の幅に合わせる
 	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）

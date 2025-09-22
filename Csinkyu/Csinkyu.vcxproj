@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="KR_Lib\KR_Global.cpp" />
     <ClCompile Include="Obst_Fireworks.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Global.h" />

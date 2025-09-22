@@ -1,6 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/09/10
+   ver: 2025/09/21
 
    オブジェクトを追加します, 継承して使うことも可です。
    Draw, Calc, Inputの一部機能をオブジェクト指向で使えます。
@@ -149,7 +149,7 @@ namespace KR_Lib
 		Circle tmpCir = cir;
 		tmpCir.pos += offset;
 		//描画.
-		int err = DrawCircleST(&tmpCir, isFill, isAnti);
+		int err = DrawCircleKR(&tmpCir, isFill, isAnti);
 		return err; //-1: 円描画エラー.
 	}
 
@@ -172,7 +172,7 @@ namespace KR_Lib
 		Box tmpBox = box;
 		tmpBox.pos += offset;
 		//描画.
-		int err = DrawBoxST(&tmpBox, ANC_MID, isFill, isAnti);
+		int err = DrawBoxKR(&tmpBox, ANC_MID, isFill, isAnti);
 		return err; //-1: 円描画エラー.
 	}
 

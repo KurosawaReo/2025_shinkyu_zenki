@@ -434,12 +434,12 @@ namespace KR_Lib
 
 		//デフォルトフォント.
 		if (font < 0) {
-			int err = DrawString(_int(x), _int(y), text.c_str(), color);
+			int err = DrawString(_int(x), _int(y), text.c_str(), color.GetColorCode());
 			_return(-1, err < 0) //-1: DrawStringエラー.
 		}
 		//フォント設定あり.
 		else {
-			int err = DrawStringToHandle(_int(x), _int(y), text.c_str(), color, font);
+			int err = DrawStringToHandle(_int(x), _int(y), text.c_str(), color.GetColorCode(), font);
 			_return(-2, err < 0) //-2: DrawStringToHandleエラー.
 		}
 		return 0; //正常終了.
@@ -451,7 +451,7 @@ namespace KR_Lib
 		if (font < 0) {
 			int err = DrawRotaString(
 				pos.x, pos.y, extend.x, extend.y, pivot.x, pivot.y,
-				_rad(ang), color, 0, isVertical, text.c_str()
+				_rad(ang), color.GetColorCode(), 0, isVertical, text.c_str()
 			);
 			_return(-1, err < 0) //-1: DrawRotaStringエラー.
 		}
@@ -459,7 +459,7 @@ namespace KR_Lib
 		else {
 			int err = DrawRotaStringToHandle(
 				pos.x, pos.y, extend.x, extend.y, pivot.x, pivot.y,
-				_rad(ang), color, font, 0, isVertical, text.c_str()
+				_rad(ang), color.GetColorCode(), font, 0, isVertical, text.c_str()
 			);
 			_return(-2, err < 0) //-2 DrawRotaStringToHandleエラー.
 		}
@@ -473,7 +473,7 @@ namespace KR_Lib
 			int err = DrawModiString(
 				luPos.x, luPos.y, ruPos.x, ruPos.y,
 				rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-				color, 0, isVertical, text.c_str()
+				color.GetColorCode(), 0, isVertical, text.c_str()
 			);
 			_return(-1, err < 0) //-1: DrawModiStringエラー.
 		}
@@ -482,7 +482,7 @@ namespace KR_Lib
 			int err = DrawModiStringToHandle(
 				luPos.x, luPos.y, ruPos.x, ruPos.y,
 				rdPos.x, rdPos.y, ldPos.x, ldPos.y,
-				color, font, 0, isVertical, text.c_str()
+				color.GetColorCode(), font, 0, isVertical, text.c_str()
 			);
 			_return(-2, err < 0) //-2: DrawModiStringToHandleエラー.
 		}
@@ -528,26 +528,61 @@ namespace KR_Lib
 		handle = CreateFontToHandle(fontName.c_str(), size, thick, fontId);
 	}
 
+// ▼*---=[ GradLine ]=---*▼ //
+	
+	//頂点追加.
+	void GradLine::AddPoint(DBL_XY pos, MY_COLOR color) {
+
+		VERTEX2D point;
+		point.pos = VGet(pos.x, pos.y, 0); //VECTOR型にして登録.
+		point.dif = color.GetColorU8();    //COLOR_U8で登録.
+		point.rhw = 1.0f;                  //2Dでは不要?
+		point.u = point.v = 0.0f;          //テクスチャUVは使わない.
+
+		points.push_back(point); //頂点追加.
+	}
+	//描画.
+	void GradLine::Draw(bool isClose) {
+
+		//頂点の数.
+		int count = (isClose) ? points.size() + 1 : points.size();
+		//頂点配列.
+		vector<VERTEX2D> tmp(count);
+
+		//頂点データをコピー.
+		for (int i = 0; i < points.size(); i++) {
+			tmp[i] = points[i];
+		}
+		if (isClose) {
+			tmp[points.size()] = tmp[0]; //終点に始点を入れる.
+		}
+
+		//描画.
+		SetDrawBlendModeKR(MODE_ALPHA, 255); //透過を反映させるためにアルファモードにする.
+		DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE); //TODO: DX_PRIMTYPE_LINESTRIP以外の機能.
+		ResetDrawBlendMode();
+	}
+
 // ▼*---=[ function ]=---*▼ //
 
 	//DrawCircleの改造版.
-	int DrawCircleST(const Circle* data, bool isFill, bool isAnti, float thick) {
+	int DrawCircleKR(const Circle* data, bool isFill, bool isAnti, float thick) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			//posnum(角形数)は60に設定する.
-			int err = DrawCircleAA(_flt(data->pos.x), _flt(data->pos.y), data->r, 60, data->color, isFill, thick);
+			int err = DrawCircleAA(_flt(data->pos.x), _flt(data->pos.y), data->r, 60, data->color.GetColorCode(), isFill, thick);
 			_return(-1, err < 0) //-1: DrawCircleAAエラー.
 		}
 		//アンチエイリアスなし.
 		else{
-			int err = DrawCircle(_int_r(data->pos.x), _int_r(data->pos.y), _int_r(data->r), data->color, isFill, _int_r(thick));
+			int err = DrawCircle(_int_r(data->pos.x), _int_r(data->pos.y), _int_r(data->r), data->color.GetColorCode(), isFill, _int_r(thick));
 			_return(-2, err < 0) //-2: DrawCircleエラー.
 		}
 		return 0; //正常終了.
 	}
 	//DrawBoxの改造版.
-	int DrawBoxST(const Box* data, Anchor anc, bool isFill, bool isAnti) {
+	int DrawBoxKR(const Box* data, Anchor anc, bool isFill, bool isAnti) {
 
 		_return(-3, data->size.x <= 0.0 || data->size.y <= 0.0) //-3: サイズが0.0以下.
 
@@ -560,25 +595,25 @@ namespace KR_Lib
 
 		//アンチエイリアスあり.
 		if (isAnti) {
-			int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->color, isFill);
+			int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->color.GetColorCode(), isFill);
 			_return(-1, err < 0) //-1: DrawBoxAAエラー.
 		}
 		//アンチエイリアスなし.
 		else {
-			int err = DrawBox((int)x1, (int)y1, (int)x2+1, (int)y2+1, data->color, isFill);
+			int err = DrawBox(_int(x1), _int(y1), _int(x2+1), _int(y2+1), data->color.GetColorCode(), isFill);
 			_return(-2, err < 0) //-2: DrawBoxエラー.
 		}
 		return 0; //正常終了.
 	}
 	//DrawTriangleの改造版.
-	int DrawTriangleST(const Triangle* data, bool isFill, bool isAnti) {
+	int DrawTriangleKR(const Triangle* data, bool isFill, bool isAnti) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			int err = DrawTriangleAA(
 				_flt(data->pos[0].x), _flt(data->pos[0].y),
 				_flt(data->pos[1].x), _flt(data->pos[1].y),
-				_flt(data->pos[2].x), _flt(data->pos[2].y), data->color, isFill
+				_flt(data->pos[2].x), _flt(data->pos[2].y), data->color.GetColorCode(), isFill
 			);
 			_return(-1, err < 0) //-1: DrawTriangleAAエラー.
 		}
@@ -587,20 +622,20 @@ namespace KR_Lib
 			int err = DrawTriangle(
 				_int_r(data->pos[0].x), _int_r(data->pos[0].y),
 				_int_r(data->pos[1].x), _int_r(data->pos[1].y),
-				_int_r(data->pos[2].x), _int_r(data->pos[2].y), data->color, isFill
+				_int_r(data->pos[2].x), _int_r(data->pos[2].y), data->color.GetColorCode(), isFill
 			);
 			_return(-2, err < 0) //-2: DrawTriangleエラー.
 		}
 		return 0; //正常終了.
 	}
 	//DrawLineの改造版.
-	int DrawLineST(const Line* data, bool isAnti, float thick) {
+	int DrawLineKR(const Line* data, bool isAnti, float thick) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			int err = DrawLineAA(
 				_flt(data->stPos.x), _flt(data->stPos.y),
-				_flt(data->edPos.x), _flt(data->edPos.y), data->color, thick
+				_flt(data->edPos.x), _flt(data->edPos.y), data->color.GetColorCode(), thick
 			);
 			_return(-1, err < 0) //-1: DrawLineAAエラー.
 		}
@@ -608,37 +643,37 @@ namespace KR_Lib
 		else {
 			int err = DrawLine(
 				_int_r(data->stPos.x), _int_r(data->stPos.y), 
-				_int_r(data->edPos.x), _int_r(data->edPos.y), data->color, (int)thick
+				_int_r(data->edPos.x), _int_r(data->edPos.y), data->color.GetColorCode(), _int(thick)
 			);
 			_return(-2, err < 0) //-2: DrawLineエラー.
 		}
 		return 0; //正常終了.
 	}
 	//画面全体にグリッド線を描画.
-	int DrawWindowGrid(int wid, int hei, int size, UINT clrWid, UINT clrHei) {
+	int DrawWindowGrid(int wid, int hei, int size, MY_COLOR clrWid, MY_COLOR clrHei) {
 
 		//縦線の描画.
 		for (int x = 0; x < wid; x += size) {
 
-			Line line = { {_dbl(x), 0}, {_dbl(x), _dbl(hei)}, clrHei};
-			int err = DrawLineST(&line);
+			Line line = { {_dbl(x), 0}, {_dbl(x), _dbl(hei)}, clrHei };
+			int err = DrawLineKR(&line);
 			_return(-1, err < 0) //-1: 縦線でエラー.
 		}
 		//横線の描画.
 		for (int y = 0; y < hei; y += size) {
 
 			Line line = { {0, _dbl(y)}, {_dbl(wid), _dbl(y)}, clrWid };
-			int err = DrawLineST(&line);
+			int err = DrawLineKR(&line);
 			_return(-2, err < 0) //-2: 横線でエラー.
 		}
 		return 0; //正常終了.
 	}
 
 	//描画モード変更.
-	int SetDrawBlendModeST(BlendModeID id, int power) {
+	int SetDrawBlendModeKR(BlendModeID id, int power) {
 		return SetDrawBlendMode(id, power);
 	}
-	int SetDrawBlendModeST(BlendModeID id, double power) {
+	int SetDrawBlendModeKR(BlendModeID id, double power) {
 		return SetDrawBlendMode(id, _int_r(power));
 	}
 	//描画モードリセット.

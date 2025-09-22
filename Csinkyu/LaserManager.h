@@ -5,6 +5,7 @@
 #pragma once
 
 //‘O•ûéŒ¾.
+class GameData;
 class Player;
 class MeteorManager;
 class EffectManager;
