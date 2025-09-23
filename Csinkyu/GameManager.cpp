@@ -92,7 +92,7 @@
 
    2025/09/21:
    [進捗]
-   ・アイテムの使用タイミングを変更
+   ・反射モードのスローになるタイミングを変更
    ・スローモードの対応を「speedRate」をかけるだけで良くしたこと
    　旧: counter -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 	 新: counter -= p_data->speedRate;
@@ -101,18 +101,10 @@
 
 /---------------------------------------------------------/
    [チュートリアル配分]
-   step1: さける 
-　   一定時間耐えたら次へ。
-   step2: とる
-　   アイテムを1回取って解除されたら次へ。
-   step3: こわす
-　   まずは自動でアイテムを取ってレーザーが反射する様子をみせる。
-　   その後、自分で操作させて実演させる。隕石をn個壊せたら次へ。
-   step4: 一通りプレイ
-　   最後に一通りプレイして確認させる。一定時間経ったらチュートリアル終了。
-
-   ※スコアの説明はチュートリアルにはいらない
-   ※メニューにモードごとの説明を入れる(ハイスコアを目指す～など)
+   step1: 移動, よける
+   step2: アイテム
+   step3: 反射モード
+   step4: スコア
 
    [現在のLevel配分]
    Level1: 通常レーザー×2, 隕石
@@ -140,6 +132,28 @@
    [BGM]
    youtube「Tak_mfk」から使用。
    steam販売の時にはライセンスに注意。
+   
+   [実績案]
+   ・直線レーザー
+     耐久モードでLevel2に到達する
+   ・波紋
+   　耐久モードでLevel3に到達する
+   ・花火
+   　耐久モードでLevel4に到達する
+   ・大波乱
+   　耐久モードでLevel5に到達する
+   ・即死王
+   　耐久モードでゲームオーバー時にスコアを20点未満にする
+   ・発売年
+     耐久モードでゲームオーバー時にスコアを2025点にする
+   ・チュートリアルマスター
+   　チュートリアルモードSTEP4でスコアを3000点獲得する
+   ・サバイバルマスター
+     耐久モードでアイテムを取らずにスコアを1000点獲得する
+   ・スーパーサバイバルマスター
+	 耐久モードでアイテムを取らずにスコアを1500点獲得する
+   ・REFLECT LINE
+     レーザー反射数が計10000回を超える
 /--------------------------------------------------------*/
 /*
    - GameManager.cpp -
@@ -242,7 +256,7 @@ void GameManager::Init() {
 
 	//アクション登録.
 	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //キー操作.
-	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作.
+	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作. z
 #if defined INPUT_CHANGE_ARCADE
 	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //アーケード操作.
 	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //アーケード操作.
@@ -250,7 +264,7 @@ void GameManager::Init() {
 #else
 	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //コントローラ操作.
 	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //コントローラ操作.
-	p_input->AddAction(_T("GameQuit"),  PadXboxID::Menu); //コントローラ操作.
+	p_input->AddAction(_T("GameQuit"),  PadXboxID::View); //コントローラ操作.
 #endif
 
 	//タイマー初期化.
