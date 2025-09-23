@@ -8,7 +8,7 @@
 using namespace Calc; //計算機能を使用.
 
 void EffectManager::Init() {
-	p_data = GameData::GetPtr();
+	p_data = &GameData::GetInst();
 
 	imgScore[0].LoadFile(_T("Resources/Images/score100.png"));
 	imgScore[1].LoadFile(_T("Resources/Images/score500.png"));

@@ -1,10 +1,13 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/09/23
 
    サウンド機能を追加します。
 */
 #pragma once
+
+//実体取得マクロ.
+#define SoundMngInst KR_Lib::SoundMng::GetInst()
 
 //KR_Libに使う用.
 namespace KR_Lib
@@ -48,13 +51,22 @@ namespace KR_Lib
 	//サウンド管理クラス[継承不可]
 	class SoundMng final
 	{
-	public: //実体.
-		static SoundMng* GetPtr() {
+	//▼実体関係.
+	public:
+		//実体取得用.
+		static SoundMng& GetInst() {
 			static SoundMng inst; //自身のインスタンス.
-			return &inst;
+			return inst;
 		}
+		//使用禁止.
+		SoundMng(const SoundMng&) = delete;
+		SoundMng& operator=(const SoundMng&) = delete;
+	private: 
+		//constructor(新規作成をできなくする)
+		SoundMng(){}
 
-	private: //データ.
+	//▼データ.
+	private: 
 		map<MY_STRING, SoundData> sound;
 
 	public:
@@ -71,4 +83,6 @@ namespace KR_Lib
 		void FadeInPlay  (MY_STRING saveName, bool isLoop, int volume, float sec); //フェードイン再生.
 		void FadeOutPlay (MY_STRING saveName, float sec);						   //フェードアウトする.
 	};
+	//実体.
+	static SoundMng& InstSoundMng = SoundMng::GetInst();
 }

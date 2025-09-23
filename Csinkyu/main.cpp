@@ -6,16 +6,16 @@
 
 GameManager* gm; //ŽÀ‘Ì‚ð“ü‚ê‚é—p.
 
-void DxLibMain::Init() {
-	gm = GameManager::GetPtr(); //GameManager‚©‚çŽÀ‘ÌŽæ“¾.
+void App::Init() {
+	gm = &GameManager::GetInst(); //GameManager‚©‚çŽÀ‘ÌŽæ“¾.
 	gm->Init();
 }
 
-void DxLibMain::Update() {
+void App::Update() {
 	gm->Update();
 }
 
-void DxLibMain::Draw() {
+void App::Draw() {
 	gm->Draw();
 }
 
@@ -30,10 +30,10 @@ int WINAPI WinMain(
 ){
 #endif
 
-	int err = DxLibMain::GetPtr()->InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
+	int err = InstApp.InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
 	_return(-1, err < 0); //‰Šú‰»ƒGƒ‰[.
 
-	DxLibMain::GetPtr()->LoopDx();
+	InstApp.LoopDx();
 
 	return 0;
 }

@@ -18,10 +18,10 @@ using namespace Calc; //計算機能を使用.
 void StraightLaser::Init()
 {
 	//実態取得するぜ.
-	p_data      = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_laserMng  = LaserManager::GetPtr();
-	p_meteorMng = MeteorManager::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_laserMng  = &LaserManager::GetInst();
+	p_meteorMng = &MeteorManager::GetInst();
 
 	currentDirection = 0;
 	nextDirection = 0;

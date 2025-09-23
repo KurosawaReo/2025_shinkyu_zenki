@@ -1,20 +1,20 @@
 /*
-   - KR_Main.cpp - (DxLib)
-   ver: 2025/09/21
+   - KR_App.cpp - (DxLib)
+   ver: 2025/09/23
 
-   プログラム開始地点の処理を行います。
+   プログラム全体(開始,終了など)の処理を行います。
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Timer.h"
 #endif
-#include "KR_Main.h"
+#include "KR_App.h"
 
 //KR_Libに使う用.
 namespace KR_Lib
 {
 	//DxLibの初期化処理.
-	int DxLibMain::InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync) {
+	int App::InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync) {
 
 		ChangeWindowMode(isWindowMode);				//TRUEでwindow, FALSEで全画面にする.
 		SetWindowSize   (windowWid, windowHei);		//ウィンドウサイズの設定.
@@ -41,7 +41,7 @@ namespace KR_Lib
 		return 0; //正常終了.
 	}
 	//DxLibのループ処理.
-	void DxLibMain::LoopDx() {
+	void App::LoopDx() {
 
 		//メインループ.
 		//ESCが押されるか、終了サインがあれば終了.
@@ -59,7 +59,7 @@ namespace KR_Lib
 		DeleteFile(_T("Log.txt")); //Log.txtが生成されるので消去する.
 	}
 	//ゲームを終了する.
-	void DxLibMain::GameOver() {
+	void App::GameOver() {
 		isEnd = true;
 	}
 }

@@ -38,6 +38,6 @@
 #include "KR_Lib/KR_Object.h"
 #include "KR_Lib/KR_Sound.h"
 #include "KR_Lib/KR_Timer.h"
-#include "KR_Lib/KR_Main.h"
+#include "KR_Lib/KR_App.h"
 
 #include "Global.h"

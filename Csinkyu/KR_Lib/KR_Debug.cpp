@@ -1,6 +1,6 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/09/23
 
    デバッグ機能を追加します。
 */
@@ -17,6 +17,9 @@ namespace KR_Lib
 	namespace Debug 
 	{
 		//値の表示.
+		void Log(MY_STRING text) {
+			printfDx(_T("%s\n"),     text.c_str());
+		}
 		void Log(MY_STRING text, int    value) {
 			printfDx(_T("%s: %d\n"), text.c_str(), value);
 		}
@@ -25,9 +28,6 @@ namespace KR_Lib
 		}
 		void Log(MY_STRING text, double value) {
 			printfDx(_T("%s: %f\n"), text.c_str(), value);
-		}
-		void Log(MY_STRING text) {
-			printfDx(_T("%s\n"),     text.c_str());
 		}
 
 		//マウス座標の表示(座標調べにおすすめ)

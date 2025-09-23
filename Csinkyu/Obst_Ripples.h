@@ -18,12 +18,21 @@ typedef struct tagFLASHEFFECT5
 //波紋管理.[継承不可]
 class Ripples final
 {
-public: //実体.
-	static Ripples* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static Ripples& GetInst() {
 		static Ripples inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	Ripples(const Ripples&) = delete;
+	Ripples& operator=(const Ripples&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	Ripples(){}
 
+//▼データ.
 private:
 	FLASHEFFECT5 flashEffect[RIPPLES_FLASH_MAX]{}; // クラスのメンバ変数として追加
 

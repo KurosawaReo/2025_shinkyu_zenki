@@ -182,19 +182,19 @@
 #include "GameManager.h"
 
 //ポインタ.
-GameData         *gameData     = GameData::GetPtr();
-BackGround       *bg           = BackGround::GetPtr();
-MenuManager      *menuMng      = MenuManager::GetPtr();
-TutorialStage    *tutorialStg  = TutorialStage::GetPtr();
-EndlessStage     *endlessStg   = EndlessStage::GetPtr();
-LaserManager     *laserMng     = LaserManager::GetPtr();
-MeteorManager    *meteorMng    = MeteorManager::GetPtr();
-Ripples          *ripples      = Ripples::GetPtr();
-FireworksManager *fireworksMng = FireworksManager::GetPtr();
-ItemManager      *item         = ItemManager::GetPtr();
-Player           *player       = Player::GetPtr();
-EffectManager    *effectMng    = EffectManager::GetPtr();
-UIManager        *uiMng        = UIManager::GetPtr();
+GameData         *gameData     = &GameData::GetInst();
+BackGround       *bg           = &BackGround::GetInst();
+MenuManager      *menuMng      = &MenuManager::GetInst();
+TutorialStage    *tutorialStg  = &TutorialStage::GetInst();
+EndlessStage     *endlessStg   = &EndlessStage::GetInst();
+LaserManager     *laserMng     = &LaserManager::GetInst();
+MeteorManager    *meteorMng    = &MeteorManager::GetInst();
+Ripples          *ripples      = &Ripples::GetInst();
+FireworksManager *fireworksMng = &FireworksManager::GetInst();
+ItemManager      *item         = &ItemManager::GetInst();
+Player           *player       = &Player::GetInst();
+EffectManager    *effectMng    = &EffectManager::GetInst();
+UIManager        *uiMng        = &UIManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
@@ -221,8 +221,8 @@ void GameManager::Init() {
 	laserStr[0] = new StraightLaser();
 	laserStr[1] = new StraightLaser();
 	//実体取得.
-	p_input = InputMng::GetPtr();
-	p_sound = SoundMng::GetPtr();
+	p_input = &InputMng::GetInst();
+	p_sound = &SoundMng::GetInst();
 
 	//フォント作成.
 	gameData->font1 = CreateFontToHandle(NULL, 26, 1);
@@ -385,10 +385,10 @@ void GameManager::Update() {
 
 	//特定の操作でゲーム終了
 	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
-		DxLibMain::GetPtr()->GameOver(); //ボタン長押しで終了.
+		App::GetInst().GameOver(); //ボタン長押しで終了.
 	}
 	else if (p_input->IsPushKey(KeyID::Esc)) {
-		DxLibMain::GetPtr()->GameOver(); //ESCAPEキーを押したら即終了.
+		App::GetInst().GameOver(); //ESCAPEキーを押したら即終了.
 	}
 }
 

@@ -15,10 +15,10 @@ using namespace Calc; //計算機能を使用.
 void LaserManager::Init() {
 
 	//実体取得.
-	p_data      = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_meteorMng = MeteorManager::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_meteorMng = &MeteorManager::GetInst();
+	p_effectMng = &EffectManager::GetInst();
 }
 //リセット.
 void LaserManager::Reset() {
@@ -307,7 +307,7 @@ void LaserManager::UpdateLaser() {
 
 					//チュートリアルなら指示送信.
 					if (p_data->stage == STAGE_TUTORIAL) {
-						TutorialStage::GetPtr()->SetBreakMeteor(true);	
+						TutorialStage::GetInst().SetBreakMeteor(true);	
 					}
 				}
 				else {
@@ -400,15 +400,14 @@ bool LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			laser[i].type = type;   // タイプの登録
 
 			//サウンド.
-			SoundMng* sound = SoundMng::GetPtr();
 			if (type == Laser_Normal) {
-				sound->Play(_T("Laser1"), false, 58); //通常レーザー.
+				InstSoundMng.Play(_T("Laser1"), false, 58); //通常レーザー.
 			}
 			if (type == Laser_Straight) {
-				sound->Play(_T("Laser2"), false, 60); //直線レーザー.
+				InstSoundMng.Play(_T("Laser2"), false, 60); //直線レーザー.
 			}
 			if (type == Laser_Falling) {
-				sound->Play(_T("Laser1"), false, 45); //落下レーザー（少し音量小さめ）.
+				InstSoundMng.Play(_T("Laser1"), false, 45); //落下レーザー（少し音量小さめ）.
 			}
 
 			return true; //召喚成功.
@@ -455,12 +454,11 @@ void LaserManager::ReflectLaser(int idx)
 	data.pos = { laser[idx].x, laser[idx].y };
 	p_effectMng->SpawnEffect(&data);
 	//サウンド.
-	SoundMng* sound = SoundMng::GetPtr();
-	sound->Play(_T("Laser3"), false, 58);
+	InstSoundMng.Play(_T("Laser3"), false, 58);
 
 	//チュートリアルなら指示送信.
 	if (p_data->stage == STAGE_TUTORIAL) {
-		TutorialStage::GetPtr()->SetReflectLaser(true);
+		TutorialStage::GetInst().SetReflectLaser(true);
 	}
 }
 

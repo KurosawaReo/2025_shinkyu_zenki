@@ -7,12 +7,21 @@
 //メニュー.[継承不可]
 class MenuManager final
 {
-public: //実体.
-	static MenuManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static MenuManager& GetInst() {
 		static MenuManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	MenuManager(const MenuManager&) = delete;
+	MenuManager& operator=(const MenuManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	MenuManager(){}
 
+//▼データ.
 private:
 	GameData* p_data{};    //GameDataのポインタ.
 	SoundMng* p_sound{};   //サウンド管理.

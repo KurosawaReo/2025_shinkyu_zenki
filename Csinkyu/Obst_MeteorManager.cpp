@@ -11,9 +11,9 @@ using namespace Calc; //計算機能を使用.
 
 void MeteorManager::Init() {
 
-	p_data      = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_effectMng = &EffectManager::GetInst();
 
 	//全隕石ループ.
 	for (int i = 0; i < METEOR_CNT_MAX; i++) {
@@ -102,8 +102,7 @@ bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 					data.pos = cir.pos;
 					p_effectMng->SpawnEffect(&data);
 					//サウンド.
-					SoundMng* sound = SoundMng::GetPtr();
-					sound->Play(_T("Break"), false, 74);
+					InstSoundMng.Play(_T("Break"), false, 74);
 				}
 			}
 			return true; //1つでも当たっている.

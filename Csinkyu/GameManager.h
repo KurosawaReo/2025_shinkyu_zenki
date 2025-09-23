@@ -15,13 +15,22 @@ class StraightLaser;
 //ゲームデータ.[継承不可]
 class GameData final
 {
+//▼実体関係.
 public:
-	//実体.
-	static GameData* GetPtr() {
+	//実体取得用.
+	static GameData& GetInst() {
 		static GameData inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	GameData(const GameData&) = delete;
+	GameData& operator=(const GameData&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	GameData(){}
 
+//▼データ.
+public:
 	Scene     scene;			//シーンの記録用.
 	StageType stage;			//ステージ種類.
 
@@ -46,13 +55,22 @@ public:
 //ゲームマネージャー.[継承不可]
 class GameManager final
 {
-public: //実体.
-	static GameManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static GameManager& GetInst() {
 		static GameManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	GameManager(const GameManager&) = delete;
+	GameManager& operator=(const GameManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	GameManager(){}
 
-private: //データ.
+//▼データ.
+private:
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
 	Timer tmGameTime{};     //ゲーム計測時間.
