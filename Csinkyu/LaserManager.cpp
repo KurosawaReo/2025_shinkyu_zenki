@@ -426,19 +426,19 @@ void LaserManager::DeleteLaser(int idx) {
 //レーザー反射.
 void LaserManager::ReflectLaser(int idx)
 {
-	// レーザーからプレイヤーへのベクトルを計算
-	double dx = plyPos.x - laser[idx].x;
-	double dy = plyPos.y - laser[idx].y;
+	//// レーザーからプレイヤーへのベクトルを計算
+	//double dx = plyPos.x - laser[idx].x;
+	//double dy = plyPos.y - laser[idx].y;
 
-	// ベクトルの長さを計算
-	double length = sqrt(dx * dx + dy * dy);
+	//// ベクトルの長さを計算
+	//double length = sqrt(dx * dx + dy * dy);
 
-	// 正規化（長さを1にする）
-	if (length > 0)
-	{
-		dx /= length;
-		dy /= length;
-	}
+	//// 正規化（長さを1にする）
+	//if (length > 0)
+	//{
+	//	dx /= length;
+	//	dy /= length;
+	//}
 
 	//反射時の元の角度.
 	double ang = _deg(atan2(laser[idx].vy, laser[idx].vx));
