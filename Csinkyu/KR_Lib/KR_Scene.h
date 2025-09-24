@@ -1,13 +1,10 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/09/23
+   ver: 2025/09/24
 
    シーン管理機能を追加します。(※ガチで設計する時用のため少し面倒)
 */
 #pragma once
-
-//実体取得マクロ.
-#define SceneMngInst KR_Lib::SceneMng::GetInst()
 
 //KR_Libに使う用.
 namespace KR_Lib

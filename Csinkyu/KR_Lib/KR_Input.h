@@ -1,14 +1,11 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/09/23
+   ver: 2025/09/24
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
-
-//実体取得マクロ.
-#define InputMngInst KR_Lib::InputMng::GetInst()
 
 //KR_Libに使う用.
 namespace KR_Lib

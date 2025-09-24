@@ -129,7 +129,7 @@ void MenuManager::Draw() {
 
 		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
-		int err = DrawTriangleKR(&tri, true, false);
+		int err = DrawTriangleKR(&tri, true, true);
 	}
 
 	//画像の座標(ここを中心とする)
@@ -157,9 +157,9 @@ void MenuManager::Draw() {
 		int menuItemRightX = menuX + boxWidth;
 		int menuItemCenterY = menuY + selectedIndex * menuSpacing + boxHeight / 2;
 
-		int imgLeftX   = (int)(imgPos.x - imgSize.x/2) - margin; // 画像の左端座標
+		int imgLeftX   = (int)(imgPos.x - imgSize.x/2) - margin/2; //画像の左端座標.
 		int imgCenterY = (int)imgPos.y;
-		int imgBottomY = (int)(imgPos.y + imgSize.y/2) + margin;
+		int imgBottomY = (int)(imgPos.y + imgSize.y/2) + margin/2; //画像の下端座標.
 
 		// 説明文エリアの上端中央座標
 		int textBoxCenterX = textBoxX + textBoxWidth / 2;

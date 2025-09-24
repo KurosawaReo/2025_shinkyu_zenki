@@ -1,13 +1,10 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/09/23
+   ver: 2025/09/24
 
    サウンド機能を追加します。
 */
 #pragma once
-
-//実体取得マクロ.
-#define SoundMngInst KR_Lib::SoundMng::GetInst()
 
 //KR_Libに使う用.
 namespace KR_Lib
