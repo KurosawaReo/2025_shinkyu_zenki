@@ -48,8 +48,9 @@ private:
 
 //▼データ.
 private:
-	vector<BG_Tile> tiles;      //背景タイルデータ.
-	DrawImg         imgBG[2]{}; //背景画像.
+	vector<BG_Tile> tiles;           //背景タイルデータ.
+	DrawImg         imgBG[2]{};      //背景画像.
+	DrawImg         imgFrameBG{};    //背景画像.
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 

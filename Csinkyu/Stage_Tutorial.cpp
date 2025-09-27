@@ -357,7 +357,7 @@ void TutorialStage::UpdateStep4() {
 		case 1:
 		{
 			//[終了条件] 一定時間が経過したら
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 6.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 5.0) {
 				//BGMフェードアウト.
 				p_sound->FadeOutPlay(_T("BGM_Tutorial"), TUTORIAL_END_NEXT_TIME);
 
@@ -504,7 +504,7 @@ void TutorialStage::DrawStep4() {
     {
         case 0:
         {
-            DrawTopText2(_T("隕石を壊すとスコアを貰えます。2000点稼いでみましょう。"), alpha);
+            DrawTopText2(_T("スコアを稼いで最後に2000点稼いでみましょう。"), alpha);
 			DrawTopText3(_T("アイテムを取る:+100, 隕石を壊す:+500"), alpha);
 
 			p_itemMng->Draw();
@@ -516,8 +516,8 @@ void TutorialStage::DrawStep4() {
 
 		case 1:
 		{
-			DrawTopText2(_T("これでチュートリアルを終わります。"), alpha);
-			DrawTopText3(_T("ハイスコアを目指して頑張ってください！"), alpha);
+			DrawTopText2(_T("これでチュートリアルは以上です。"), alpha);
+			DrawTopText3(_T("自動でタイトルに戻ります..."), alpha);
 		}
 		break;
     }

@@ -53,8 +53,9 @@ void BackGround::Init() {
 
 	p_data = &GameData::GetInst();
 
-	imgBG[0].LoadFile(_T("Resources/Images/bg_normal.png"));
-	imgBG[1].LoadFile(_T("Resources/Images/bg_reflect.png"));
+	imgBG[0].  LoadFile(_T("Resources/Images/bg_normal.png"));
+	imgBG[1].  LoadFile(_T("Resources/Images/bg_reflect.png"));
+	imgFrameBG.LoadFile(_T("Resources/Images/reflect_mode_frame.png"));
 
 	{
 		INT_XY imgSize  = imgBG[0].GetSize(); //画像サイズ取得.
@@ -112,6 +113,10 @@ void BackGround::Draw() {
 
 	//スローモード中.
 	if (p_data->speedRate) {
+		//グラデーション枠.
+		SetDrawBlendModeKR(MODE_ALPHA, 255*time);
+		imgFrameBG.Draw({WINDOW_WID/2, WINDOW_HEI/2});
+		ResetDrawBlendMode();
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
 		DrawBoxKR(&box, ANC_MID, false, true);

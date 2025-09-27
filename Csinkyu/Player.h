@@ -80,10 +80,10 @@ public:
 	void       SetMode      (PlayerMode _mode)   { mode       = _mode;   } //ƒ‚[ƒhİ’è.
 	void       SetIsMoveAble(bool       _flag)   { isMoveAble = _flag;   }
 	//get. 
-	DBL_XY     GetPos()     const { return hit.pos; }
-	bool       GetActive()  const { return active; }
-	PlayerMode GetMode()    const { return mode; }
-	Circle     GetHit()     const { return hit; }
+	DBL_XY     GetPos()      const { return hit.pos; }
+	bool       GetActive()   const { return active; }
+	PlayerMode GetMode()     const { return mode; }
+	Circle     GetHit()      const { return hit; }
 	//Œv‘ª.
 	double     GetMoveDist() const { 
 		return Calc::CalcDist(hit.pos, after[1].pos); //ˆÚ“®‚µ‚½‹——£.

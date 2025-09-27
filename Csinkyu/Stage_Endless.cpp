@@ -26,6 +26,7 @@ void EndlessStage::Init() {
 	p_itemMng      = &ItemManager::GetInst();
 	p_fireworksMng = &FireworksManager::GetInst();
 	p_effectMng    = &EffectManager::GetInst();
+	p_input        = &InputMng::GetInst();
 	p_sound        = &SoundMng::GetInst();
 }
 //リセット.
@@ -34,6 +35,13 @@ void EndlessStage::Reset() {
 }
 //更新.
 void EndlessStage::Update() {
+
+#if defined _DEBUG //Releaseでは入れない.
+	//タイマー加速(Debug)
+	if (p_input->IsPushKey(KeyID::L) == 1) {
+		p_data->counter += 30;
+	}
+#endif
 
 	//最初のみ.
 	if (p_data->counter == 0) {

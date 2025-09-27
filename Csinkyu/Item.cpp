@@ -20,7 +20,8 @@ void ItemManager::Init()
 	p_effectMng = &EffectManager::GetInst();
 
 	//画像.
-	imgItem.LoadFile(_T("Resources/Images/item.png"));	
+	imgItem.     LoadFile(_T("Resources/Images/item.png"));	
+	imgItemLight.LoadFile(_T("Resources/Images/laser_ref_light.png"));	
 }
 //リセット.
 void ItemManager::Reset()
@@ -88,8 +89,8 @@ void ItemManager::Draw()
 			
 			//強化演出.
 			if (items[i].type == Item_Super) {
-				Circle cir = { items[i].pos, 30, COLOR_PLY_REFLECT };
-				DrawCircleKR(&cir, false, true);
+				//アイテム発光.
+				imgItemLight.DrawExtend(items[i].pos, {0.05, 0.05});
 			}
 			//アイテム本体.
 			{
