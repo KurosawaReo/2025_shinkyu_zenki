@@ -84,7 +84,7 @@ void ItemManager::Draw()
 		//有効なアイテムを描画.
 		if (items[i].active) {
 			
-			SetDrawBlendModeKR(MODE_ADD, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
+			SetDrawBlendModeKR(MODE_ALPHA, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
 			
 			//強化演出.
 			if (items[i].type == Item_Super) {

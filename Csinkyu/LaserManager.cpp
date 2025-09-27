@@ -19,6 +19,9 @@ void LaserManager::Init() {
 	p_player    = &Player::GetInst();
 	p_meteorMng = &MeteorManager::GetInst();
 	p_effectMng = &EffectManager::GetInst();
+	//画像.
+	imgLight[0].LoadFile(_T("Resources/Images/laser_nor_light.png"));
+	imgLight[1].LoadFile(_T("Resources/Images/laser_ref_light.png"));
 }
 //リセット.
 void LaserManager::Reset() {
@@ -67,7 +70,7 @@ void LaserManager::Draw() {
 		DxLib::SetDrawBlendMode(DX_BLENDMODE_ADD, clr);
 
 		//軌跡の線設定.
-		Line tmpLine = { {line[i].x2, line[i].y2}, {line[i].x1, line[i].y1}, {} };
+		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, {} };
 		//線の色(時間経過で色が変化)
 		switch (line[i].type)
 		{
@@ -92,17 +95,30 @@ void LaserManager::Draw() {
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
 		UINT color;
-		//線の色(先端の色を使用)
+
+		const float lightSize = 0.015;
+
+		SetDrawBlendModeKR(MODE_ADD, 155 + 100*CalcNumWaveLoop(laser[i].Counter/30)); //点滅.
+
+		//レーザー先端の画像.
 		switch (laser[i].type)
 		{
-			case Laser_Normal:       color = GetColor(50, 255, 255); break;
-			case Laser_Straight:     color = GetColor(50, 255, 255); break;
-			case Laser_Reflect:      color = GetColor(255,  0, 255); break;
-			case Laser_SuperReflect: color = GetColor(255,  0, 255); break;
-			case Laser_Falling:      color = GetColor(50, 255, 255); break;
+			case Laser_Normal:
+			case Laser_Straight:
+			case Laser_Falling:
+				color = GetColor(50, 255, 255); //色の設定.
+				imgLight[0].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				break;
+			case Laser_Reflect:
+			case Laser_SuperReflect:
+				color = GetColor(255, 0, 255); //色の設定.
+				imgLight[1].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				break;
 
 			default: assert(FALSE); break;
 		}
+
+		ResetDrawBlendMode();
 
 		if (p_data->stage == STAGE_TUTORIAL) {
 			//有効なレーザーに表示する.
