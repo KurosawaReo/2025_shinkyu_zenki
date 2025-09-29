@@ -35,12 +35,21 @@ enum PlayerMode
 //プレイヤー.[継承不可]
 class Player final
 {
-public: //実体.
-	static Player* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static Player& GetInst() {
 		static Player inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	Player(const Player&) = delete;
+	Player& operator=(const Player&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	Player(){}
 
+//▼データ.
 private:
 	PlayerMode  mode{};     //モード.
 	
@@ -71,10 +80,10 @@ public:
 	void       SetMode      (PlayerMode _mode)   { mode       = _mode;   } //モード設定.
 	void       SetIsMoveAble(bool       _flag)   { isMoveAble = _flag;   }
 	//get. 
-	DBL_XY     GetPos()     const { return hit.pos; }
-	bool       GetActive()  const { return active; }
-	PlayerMode GetMode()    const { return mode; }
-	Circle     GetHit()     const { return hit; }
+	DBL_XY     GetPos()      const { return hit.pos; }
+	bool       GetActive()   const { return active; }
+	PlayerMode GetMode()     const { return mode; }
+	Circle     GetHit()      const { return hit; }
 	//計測.
 	double     GetMoveDist() const { 
 		return Calc::CalcDist(hit.pos, after[1].pos); //移動した距離.

@@ -13,9 +13,9 @@
 // 初期化
 void FireworksManager::Init() {
 
-	p_data     = GameData::GetPtr();
-	p_player   = Player::GetPtr();
-	p_laserMng = LaserManager::GetPtr();
+	p_data     = &GameData::GetInst();
+	p_player   = &Player::GetInst();
+	p_laserMng = &LaserManager::GetInst();
 
 	// 花火データの初期化
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
@@ -141,11 +141,10 @@ void FireworksManager::UpdateIndividualFireworks() {
 
 // 爆発処理
 void FireworksManager::ExplodeFireworks(int index) {
-	CreateFireworksSparks(fireworks[index].x, fireworks[index].y);
 
+	CreateFireworksSparks(fireworks[index].x, fireworks[index].y);
 	// 爆発音
-	SoundMng* sound = SoundMng::GetPtr();
-	sound->Play(_T("Explosion"), false, 70);
+	InstSoundMng.Play(_T("Explosion"), false, 70);
 }
 
 // 花火の火花作成（LaserManagerを使用）- 落下効果付き

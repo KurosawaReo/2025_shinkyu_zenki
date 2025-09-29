@@ -20,13 +20,22 @@ class UIManager;
 //チュートリアル.[継承不可]
 class TutorialStage final
 {
-public: //実体.
-	static TutorialStage* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static TutorialStage& GetInst() {
 		static TutorialStage inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	TutorialStage(const TutorialStage&) = delete;
+	TutorialStage& operator=(const TutorialStage&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	TutorialStage(){}
 
-private: //データ.
+//▼データ.
+private:
 
 	Font   font[2]{};
 	

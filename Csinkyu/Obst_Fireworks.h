@@ -32,12 +32,21 @@ struct FireworksData {
 //花火管理.[継承不可]
 class FireworksManager final 
 {
-public: //実体.
-	static FireworksManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static FireworksManager& GetInst() {
 		static FireworksManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	FireworksManager(const FireworksManager&) = delete;
+	FireworksManager& operator=(const FireworksManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	FireworksManager(){}
 
+//▼データ.
 private: //変数.
 	FireworksData fireworks[FIREWORKS_CNT_MAX];
 	float spawnTimer;

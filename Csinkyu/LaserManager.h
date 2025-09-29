@@ -52,17 +52,28 @@ struct LaserLineData
 //レーザー管理用.
 class LaserManager final
 {
-public: //実体.
-	static LaserManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static LaserManager& GetInst() {
 		static LaserManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	LaserManager(const LaserManager&) = delete;
+	LaserManager& operator=(const LaserManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	LaserManager(){}
 
+//▼データ.
 private:
 	LaserData     laser[LASER_CNT_MAX]{};      //ホーミングレーザーのデータ.
 	LaserLineData line [LASER_LINE_CNT_MAX]{}; //ライン描画用データ.
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
+
+	DrawImg imgLight[2]{};
 
 	GameData*      p_data{};
 	Player*        p_player{};

@@ -25,17 +25,27 @@ struct ItemData
 //アイテム管理クラス.[継承不可]
 class ItemManager final
 {
-public: //実体.
-	static ItemManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static ItemManager& GetInst() {
 		static ItemManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	ItemManager(const ItemManager&) = delete;
+	ItemManager& operator=(const ItemManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	ItemManager(){}
 
+//▼データ.
 private:
 	ItemData items[ITEM_COUNT]{};
 	int      itemMaxCnt{}; //出すアイテムの数.
 
-	DrawImg  imgItem{}; //アイテム画像.
+	DrawImg  imgItem{};      //アイテム画像.
+	DrawImg  imgItemLight{}; //アイテム発光.
 
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
 	bool     isSpawnAble{};   //召喚可能かどうか.

@@ -10,7 +10,7 @@
 using namespace Calc; 
 
 void Meteor::Init() {
-	p_data = GameData::GetPtr();
+	p_data = &GameData::GetInst();
 }
 
 void Meteor::Reset() {

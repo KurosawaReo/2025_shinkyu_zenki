@@ -11,13 +11,22 @@ class TutorialStage;
 //UI管理.[継承不可]
 class UIManager final
 {
-public: //実体.
-	static UIManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static UIManager& GetInst() {
 		static UIManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	UIManager(const UIManager&) = delete;
+	UIManager& operator=(const UIManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	UIManager(){}
 
-private: //データ.
+//▼データ.
+private:
 	DrawImg imgUI[4]{}; //UI画像.
 
 	int  disBestScore{}; //表示ベストスコア.

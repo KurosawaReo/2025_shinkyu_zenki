@@ -9,20 +9,19 @@
 // 初期化
 void MenuManager::Init() {
 
-	p_data = GameData::GetPtr();
-	p_sound = SoundMng::GetPtr();
+	p_data  = &GameData::GetInst();
+	p_sound = &SoundMng::GetInst();
 
 	// 入力アクション登録
-	InputMng* input = InputMng::GetPtr();
-	input->AddAction(_T("MENU_UP"),   KeyID::Up);
-	input->AddAction(_T("MENU_UP"),   KeyID::W);
-	input->AddAction(_T("MENU_UP"),   PadXboxID::Up);
-	input->AddAction(_T("MENU_DOWN"), KeyID::Down);
-	input->AddAction(_T("MENU_DOWN"), KeyID::S);
-	input->AddAction(_T("MENU_DOWN"), PadXboxID::Down);
-	input->AddAction(_T("MENU_NEXT"), KeyID::Space);
-	input->AddAction(_T("MENU_NEXT"), KeyID::Enter);
-	input->AddAction(_T("MENU_NEXT"), PadXboxID::A);
+	InstInputMng.AddAction(_T("MENU_UP"),   KeyID::Up);
+	InstInputMng.AddAction(_T("MENU_UP"),   KeyID::W);
+	InstInputMng.AddAction(_T("MENU_UP"),   PadXboxID::Up);
+	InstInputMng.AddAction(_T("MENU_DOWN"), KeyID::Down);
+	InstInputMng.AddAction(_T("MENU_DOWN"), KeyID::S);
+	InstInputMng.AddAction(_T("MENU_DOWN"), PadXboxID::Down);
+	InstInputMng.AddAction(_T("MENU_NEXT"), KeyID::Space);
+	InstInputMng.AddAction(_T("MENU_NEXT"), KeyID::Enter);
+	InstInputMng.AddAction(_T("MENU_NEXT"), PadXboxID::A);
 
 	//フォント作成.
 	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FONT_EDGE);
@@ -44,18 +43,16 @@ void MenuManager::Reset() {
 // 更新
 void MenuManager::Update() {
 
-	InputMng* input = InputMng::GetPtr();
-
 	//カーソル移動操作.
-	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) {
+	if (InstInputMng.IsPushActionTime(_T("MENU_UP")) % 20 == 1) {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 	}
-	if (input->IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
+	if (InstInputMng.IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;   //+1して、3の余り(0～2)をループ.
 	}
 
 	//決定操作.
-	if (input->IsPushActionTime(_T("MENU_NEXT")) == 1) {
+	if (InstInputMng.IsPushActionTime(_T("MENU_NEXT")) == 1) {
 
 		switch (selectedIndex)
 		{
@@ -75,7 +72,7 @@ void MenuManager::Update() {
 				break;
 			case 2:
 				p_data->scene = SCENE_TITLE;    //タイトルへ.
-				GameManager::GetPtr()->Reset(); //リセット.
+				GameManager::GetInst().Reset(); //リセット.
 				break;
 
 			default: assert(FALSE); break;
@@ -132,7 +129,7 @@ void MenuManager::Draw() {
 
 		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
-		int err = DrawTriangleKR(&tri, true, false);
+		int err = DrawTriangleKR(&tri, true, true);
 	}
 
 	//画像の座標(ここを中心とする)
@@ -160,9 +157,9 @@ void MenuManager::Draw() {
 		int menuItemRightX = menuX + boxWidth;
 		int menuItemCenterY = menuY + selectedIndex * menuSpacing + boxHeight / 2;
 
-		int imgLeftX   = (int)(imgPos.x - imgSize.x/2) - margin; // 画像の左端座標
+		int imgLeftX   = (int)(imgPos.x - imgSize.x/2) - margin/2; //画像の左端座標.
 		int imgCenterY = (int)imgPos.y;
-		int imgBottomY = (int)(imgPos.y + imgSize.y/2) + margin;
+		int imgBottomY = (int)(imgPos.y + imgSize.y/2) + margin/2; //画像の下端座標.
 
 		// 説明文エリアの上端中央座標
 		int textBoxCenterX = textBoxX + textBoxWidth / 2;

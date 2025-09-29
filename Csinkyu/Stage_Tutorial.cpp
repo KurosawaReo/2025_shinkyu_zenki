@@ -19,18 +19,18 @@
 //初期化.
 void TutorialStage::Init() {
 	//実体取得.
-	p_data         = GameData::GetPtr();
-	p_gameMng      = GameManager::GetPtr();
-	p_laserMng     = LaserManager::GetPtr();
-	p_meteorMng    = MeteorManager::GetPtr();
-	p_ripples      = Ripples::GetPtr();
-	p_itemMng      = ItemManager::GetPtr();
-	p_player       = Player::GetPtr();
-	p_fireworksMng = FireworksManager::GetPtr();
-	p_effectMng    = EffectManager::GetPtr();
-	p_uiMng        = UIManager::GetPtr();
-	p_input        = InputMng::GetPtr();
-	p_sound        = SoundMng::GetPtr();
+	p_data         = &GameData::GetInst();
+	p_gameMng      = &GameManager::GetInst();
+	p_laserMng     = &LaserManager::GetInst();
+	p_meteorMng    = &MeteorManager::GetInst();
+	p_ripples      = &Ripples::GetInst();
+	p_itemMng      = &ItemManager::GetInst();
+	p_player       = &Player::GetInst();
+	p_fireworksMng = &FireworksManager::GetInst();
+	p_effectMng    = &EffectManager::GetInst();
+	p_uiMng        = &UIManager::GetInst();
+	p_input        = &InputMng::GetInst();
+	p_sound        = &SoundMng::GetInst();
 
 	font[0].CreateFontH(_T(""), 25, 1, FONT_ANTI);
 	font[1].CreateFontH(_T(""), 30, 1, FONT_ANTI);
@@ -357,7 +357,7 @@ void TutorialStage::UpdateStep4() {
 		case 1:
 		{
 			//[終了条件] 一定時間が経過したら
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 6.0) {
+			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 5.0) {
 				//BGMフェードアウト.
 				p_sound->FadeOutPlay(_T("BGM_Tutorial"), TUTORIAL_END_NEXT_TIME);
 
@@ -366,7 +366,7 @@ void TutorialStage::UpdateStep4() {
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//チュートリアル終了.
 				p_data->scene = SCENE_TITLE;
-				GameManager::GetPtr()->Reset(); //全てリセット.
+				p_gameMng->Reset(); //全てリセット.
 			}
 		}
 		break;
@@ -504,7 +504,7 @@ void TutorialStage::DrawStep4() {
     {
         case 0:
         {
-            DrawTopText2(_T("隕石を壊すとスコアを貰えます。2000点稼いでみましょう。"), alpha);
+            DrawTopText2(_T("スコアを稼いで最後に2000点稼いでみましょう。"), alpha);
 			DrawTopText3(_T("アイテムを取る:+100, 隕石を壊す:+500"), alpha);
 
 			p_itemMng->Draw();
@@ -516,8 +516,8 @@ void TutorialStage::DrawStep4() {
 
 		case 1:
 		{
-			DrawTopText2(_T("これでチュートリアルを終わります。"), alpha);
-			DrawTopText3(_T("ハイスコアを目指して頑張ってください！"), alpha);
+			DrawTopText2(_T("これでチュートリアルは以上です。"), alpha);
+			DrawTopText3(_T("自動でタイトルに戻ります..."), alpha);
 		}
 		break;
     }
@@ -590,7 +590,7 @@ void TutorialStage::DrawTopText3(MY_STRING text, double alpha) {
 
 	DrawStr str(text, {WINDOW_WID/2, 155+70+55}, {255, 255, 255});
 	const int useFont = font[0].GetFont();
-
+	
 	{
 		const int margin = 24;
 		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();

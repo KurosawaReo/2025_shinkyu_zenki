@@ -18,8 +18,8 @@ private:
 
 	Timer timer = Timer(COUNT_DOWN, 3); //発光する時間.
 
-	GameData*   p_data{};
-	BackGround* p_bg{};
+	GameData*   p_data;
+	BackGround* p_bg;
 
 public:
 	void Init();                //初期化.
@@ -32,15 +32,25 @@ public:
 //背景クラス.[継承不可]
 class BackGround final
 {
-public: //実体.
-	static BackGround* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static BackGround& GetInst() {
 		static BackGround inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
-
+	//使用禁止.
+	BackGround(const BackGround&) = delete;
+	BackGround& operator=(const BackGround&) = delete;
 private:
-	vector<BG_Tile> tiles;      //背景タイルデータ.
-	DrawImg         imgBG[2]{}; //背景画像.
+	//constructor(新規作成をできなくする)
+	BackGround(){}
+
+//▼データ.
+private:
+	vector<BG_Tile> tiles;           //背景タイルデータ.
+	DrawImg         imgBG[2]{};      //背景画像.
+	DrawImg         imgFrameBG{};    //背景画像.
 
 	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //光る間隔.
 

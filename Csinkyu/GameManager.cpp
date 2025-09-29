@@ -92,7 +92,7 @@
 
    2025/09/21:
    [進捗]
-   ・アイテムの使用タイミングを変更
+   ・反射モードのスローになるタイミングを変更
    ・スローモードの対応を「speedRate」をかけるだけで良くしたこと
    　旧: counter -= (p_data->isSlow) ? SLOW_MODE_SPEED : 1;
 	 新: counter -= p_data->speedRate;
@@ -101,18 +101,10 @@
 
 /---------------------------------------------------------/
    [チュートリアル配分]
-   step1: さける 
-　   一定時間耐えたら次へ。
-   step2: とる
-　   アイテムを1回取って解除されたら次へ。
-   step3: こわす
-　   まずは自動でアイテムを取ってレーザーが反射する様子をみせる。
-　   その後、自分で操作させて実演させる。隕石をn個壊せたら次へ。
-   step4: 一通りプレイ
-　   最後に一通りプレイして確認させる。一定時間経ったらチュートリアル終了。
-
-   ※スコアの説明はチュートリアルにはいらない
-   ※メニューにモードごとの説明を入れる(ハイスコアを目指す～など)
+   step1: 移動, よける
+   step2: アイテム
+   step3: 反射モード
+   step4: スコア
 
    [現在のLevel配分]
    Level1: 通常レーザー×2, 隕石
@@ -120,6 +112,15 @@
    Level3: 波紋
    Level4: 花火, アイテム×2
    Level5: 通常レーザー×4, アイテムが強化
+/---------------------------------------------------------/
+   TGS展示後、変更内容メモ
+   
+   ・レーザーの先端が光るように
+   ・若干プレイヤーを拡大
+   ・プレイヤーの当たり判定を、レーザーが反射する時のみ大きくなるように(違和感がない程度)
+   ・レーザーにかなり接近した時のみスローになるように調整
+   ・反射モード中、継続中だと分かりやすくなるよう画面にグラデーションを追加
+   ・強化アイテムは発光するように
 /---------------------------------------------------------/
    【今後の制作予定】
 
@@ -140,6 +141,28 @@
    [BGM]
    youtube「Tak_mfk」から使用。
    steam販売の時にはライセンスに注意。
+   
+   [実績案]
+   ・直線レーザー
+     耐久モードでLevel2に到達する
+   ・波紋
+   　耐久モードでLevel3に到達する
+   ・花火
+   　耐久モードでLevel4に到達する
+   ・大波乱
+   　耐久モードでLevel5に到達する
+   ・即死王
+   　耐久モードでゲームオーバー時にスコアを20点未満にする
+   ・発売年
+     耐久モードでゲームオーバー時にスコアを2025点にする
+   ・チュートリアルマスター
+   　チュートリアルモードSTEP4でスコアを3000点獲得する
+   ・サバイバルマスター
+     耐久モードでアイテムを取らずにスコアを1000点獲得する
+   ・スーパーサバイバルマスター
+	 耐久モードでアイテムを取らずにスコアを1500点獲得する
+   ・REFLECT LINE
+     レーザー反射数が計10000回を超える
 /--------------------------------------------------------*/
 /*
    - GameManager.cpp -
@@ -168,19 +191,19 @@
 #include "GameManager.h"
 
 //ポインタ.
-GameData         *gameData     = GameData::GetPtr();
-BackGround       *bg           = BackGround::GetPtr();
-MenuManager      *menuMng      = MenuManager::GetPtr();
-TutorialStage    *tutorialStg  = TutorialStage::GetPtr();
-EndlessStage     *endlessStg   = EndlessStage::GetPtr();
-LaserManager     *laserMng     = LaserManager::GetPtr();
-MeteorManager    *meteorMng    = MeteorManager::GetPtr();
-Ripples          *ripples      = Ripples::GetPtr();
-FireworksManager *fireworksMng = FireworksManager::GetPtr();
-ItemManager      *item         = ItemManager::GetPtr();
-Player           *player       = Player::GetPtr();
-EffectManager    *effectMng    = EffectManager::GetPtr();
-UIManager        *uiMng        = UIManager::GetPtr();
+GameData         *gameData     = &GameData::GetInst();
+BackGround       *bg           = &BackGround::GetInst();
+MenuManager      *menuMng      = &MenuManager::GetInst();
+TutorialStage    *tutorialStg  = &TutorialStage::GetInst();
+EndlessStage     *endlessStg   = &EndlessStage::GetInst();
+LaserManager     *laserMng     = &LaserManager::GetInst();
+MeteorManager    *meteorMng    = &MeteorManager::GetInst();
+Ripples          *ripples      = &Ripples::GetInst();
+FireworksManager *fireworksMng = &FireworksManager::GetInst();
+ItemManager      *item         = &ItemManager::GetInst();
+Player           *player       = &Player::GetInst();
+EffectManager    *effectMng    = &EffectManager::GetInst();
+UIManager        *uiMng        = &UIManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
@@ -207,8 +230,8 @@ void GameManager::Init() {
 	laserStr[0] = new StraightLaser();
 	laserStr[1] = new StraightLaser();
 	//実体取得.
-	p_input = InputMng::GetPtr();
-	p_sound = SoundMng::GetPtr();
+	p_input = &InputMng::GetInst();
+	p_sound = &SoundMng::GetInst();
 
 	//フォント作成.
 	gameData->font1 = CreateFontToHandle(NULL, 26, 1);
@@ -242,7 +265,7 @@ void GameManager::Init() {
 
 	//アクション登録.
 	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //キー操作.
-	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作.
+	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作. z
 #if defined INPUT_CHANGE_ARCADE
 	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //アーケード操作.
 	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //アーケード操作.
@@ -250,7 +273,7 @@ void GameManager::Init() {
 #else
 	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //コントローラ操作.
 	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //コントローラ操作.
-	p_input->AddAction(_T("GameQuit"),  PadXboxID::Menu); //コントローラ操作.
+	p_input->AddAction(_T("GameQuit"),  PadXboxID::View); //コントローラ操作.
 #endif
 
 	//タイマー初期化.
@@ -371,10 +394,10 @@ void GameManager::Update() {
 
 	//特定の操作でゲーム終了
 	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
-		DxLibMain::GetPtr()->GameOver(); //ボタン長押しで終了.
+		App::GetInst().GameOver(); //ボタン長押しで終了.
 	}
 	else if (p_input->IsPushKey(KeyID::Esc)) {
-		DxLibMain::GetPtr()->GameOver(); //ESCAPEキーを押したら即終了.
+		App::GetInst().GameOver(); //ESCAPEキーを押したら即終了.
 	}
 }
 
@@ -431,13 +454,6 @@ void GameManager::UpdateMenu() {
 	menuMng->Update();
 }
 void GameManager::UpdateGame() {
-	
-#if defined _DEBUG //Releaseでは入れない.
-	//タイマー加速(Debug)
-	if (p_input->IsPushKey(KeyID::L) == 1) {
-		gameData->counter += 30;
-	}
-#endif
 
 	//シーンタイマー開始.
 	if (!tmScene[SCENE_GAME].GetIsMove()) {

@@ -6,15 +6,24 @@
 #pragma once
 #include "Obst_Meteor.h"
 
-//隕石管理.
-class MeteorManager
+//隕石管理[継承不可]
+class MeteorManager final
 {
-public: //実体.
-	static MeteorManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static MeteorManager& GetInst() {
 		static MeteorManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	MeteorManager(const MeteorManager&) = delete;
+	MeteorManager& operator=(const MeteorManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	MeteorManager(){}
 
+//▼データ.
 private:
 	Meteor meteor[METEOR_CNT_MAX]{}; //隕石データ.
 

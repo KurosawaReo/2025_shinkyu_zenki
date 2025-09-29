@@ -13,8 +13,8 @@
 void Ripples::Init()
 {
 	//実体のアドレスをもらう.
-	p_data   = GameData::GetPtr();
-	p_player = Player::GetPtr();
+	p_data   = &GameData::GetInst();
+	p_player = &Player::GetInst();
 
 	// フラッシュエフェクトの初期化
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
@@ -199,8 +199,7 @@ void Ripples::Hitjudgment()
 
 			//サウンド.
 			if (!isPlaySound) {
-				SoundMng* sound = SoundMng::GetPtr();
-				sound->Play(_T("Ripples"), false, 73);
+				InstSoundMng.Play(_T("Ripples"), false, 73);
 				isPlaySound = true; //もう再生しない.
 			}
 

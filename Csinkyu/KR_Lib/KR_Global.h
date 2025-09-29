@@ -34,8 +34,8 @@ using namespace std;
 #define _return(num, cond)        if (cond) { return num; }    //条件に合うならreturnする.(cond = 条件)
 #define _is_in_range(num, n1, n2) ((n1 <= num) && (num <= n2)) //範囲内に数値があるかどうか.
 #define _get_name(value)          #value                       //名前を取得(変数名など)
-//特殊マクロ(基本KR_Libで使う用)
-#define _type_num_only(T)		  typename = typename enable_if<is_arithmetic<T>::value>::type //int, float, double, char型のみOKとする.
+//template用マクロ.
+#define _type_num_only(T)		  typename = typename enable_if<is_arithmetic<T>::value>::type //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
 
 //KR_Libに使う用.
 namespace KR_Lib

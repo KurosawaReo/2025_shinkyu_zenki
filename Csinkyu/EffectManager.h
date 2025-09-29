@@ -46,12 +46,21 @@ struct Effect : public EffectData
 //エフェクト管理クラス.[継承不可]
 class EffectManager final
 {
-public: //実体.
-	static EffectManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static EffectManager& GetInst() {
 		static EffectManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	EffectManager(const EffectManager&) = delete;
+	EffectManager& operator=(const EffectManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	EffectManager(){}
 
+//▼データ.
 private:
 	Effect effect[EFFECT_MAX]{};
 

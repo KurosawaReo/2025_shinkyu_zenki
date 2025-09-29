@@ -14,13 +14,14 @@ using namespace Calc; //計算機能を使用.
 //初期化.
 void ItemManager::Init()
 {
-	p_gamedata  = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_laserMng  = LaserManager::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
+	p_gamedata  = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_laserMng  = &LaserManager::GetInst();
+	p_effectMng = &EffectManager::GetInst();
 
 	//画像.
-	imgItem.LoadFile(_T("Resources/Images/item.png"));	
+	imgItem.     LoadFile(_T("Resources/Images/item.png"));	
+	imgItemLight.LoadFile(_T("Resources/Images/laser_ref_light.png"));	
 }
 //リセット.
 void ItemManager::Reset()
@@ -84,12 +85,12 @@ void ItemManager::Draw()
 		//有効なアイテムを描画.
 		if (items[i].active) {
 			
-			SetDrawBlendModeKR(MODE_ADD, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
+			SetDrawBlendModeKR(MODE_ALPHA, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
 			
 			//強化演出.
 			if (items[i].type == Item_Super) {
-				Circle cir = { items[i].pos, 30, COLOR_PLY_REFLECT };
-				DrawCircleKR(&cir, false, true);
+				//アイテム発光.
+				imgItemLight.DrawExtend(items[i].pos, {0.05, 0.05});
 			}
 			//アイテム本体.
 			{
@@ -133,10 +134,9 @@ void ItemManager::ItemErase(int idx) {
 void ItemManager::ItemUse()
 {
 	//アイテムを使用.
-	GameManager::GetPtr()->ItemUsed();
+	GameManager::GetInst().ItemUsed();
 	//サウンド.
-	SoundMng* sound = SoundMng::GetPtr();
-	sound->Play(_T("ItemUse"), false, 76); //ポワーン.
+	InstSoundMng.Play(_T("ItemUse"), false, 76); //ポワーン.
 }
 
 // プレイヤーとの当たり判定

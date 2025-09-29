@@ -13,9 +13,9 @@ using namespace Calc; //計算機能を使用.
 //初期化(一回のみ行う)
 void Player::Init()
 {
-	p_data      = GameData::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
-	p_input     = InputMng::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_effectMng = &EffectManager::GetInst();
+	p_input     = &InputMng::GetInst();
 
 	isDebug = false;
 
@@ -26,7 +26,7 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit        = { _pos, PLAYER_SIZE/2, {} };
+	hit        = { _pos, PLAYER_SIZE, {} };
 	active     = _active;
 	mode       = Player_Normal;
 	afterCntr  = 1;
@@ -72,7 +72,7 @@ void Player::Update()
 		//反射モード中.
 		if (p_data->isReflectMode) {
 			//敵のレーザーが近くにあれば.
-			if (LaserManager::GetPtr()->IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
+			if (LaserManager::GetInst().IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
 				p_data->slowBufCntr = SLOW_MODE_BUF_F;
 			}
 		}
@@ -103,16 +103,18 @@ void Player::Draw()
 		DrawAfterImage();
 		DrawReflectEffects();  // エフェクトを先に描画
 
+		const float size = 0.17;
+
 		//画像描画.
 		if (mode == Player_Reflect ||
 			mode == Player_SuperReflect
 		){
 			//反射モードの画像.
-			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
+			imgPlayer[1].DrawRota(hit.pos, size, imgRot, {0, 0}, ANC_MID, true, true);
 		}
 		else {
 			//通常モードの画像.
-			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
+			imgPlayer[0].DrawRota(hit.pos, size, imgRot, {0, 0}, ANC_MID, true, true);
 		}
 
 		//チュートリアル用.
@@ -132,7 +134,7 @@ void Player::PlayerMove()
 		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
 		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
 		//移動限界.
-		FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+		FixPosInArea(&hit.pos, { PLAYER_SIZE*2, PLAYER_SIZE*2 }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
 	}
 }
 
@@ -146,15 +148,14 @@ void Player::PlayerDeath() {
 	if (active) {
 
 		//サウンド.
-		SoundMng* sound = SoundMng::GetPtr();
-		sound->Play(_T("PlayerDeath"), false, 80);
+		InstSoundMng.Play(_T("PlayerDeath"), false, 80);
 		//エフェクト.
 		EffectData data{};
 		data.type = Effect_PlayerDeath;
 		data.pos  = hit.pos;
 		p_effectMng->SpawnEffect(&data);
 		//GamaManagerの関数実行(includeだけすれば使える)
-		GameManager::GetPtr()->GameOver(); //ゲーム終了.
+		GameManager::GetInst().GameOver(); //ゲーム終了.
 	
 		active = false;
 	}
@@ -212,7 +213,7 @@ void Player::DrawAfterImage()
 			//透明度反映.
 			SetDrawBlendModeKR(MODE_ADD, 255*(1-alpha));
 
-			Circle cir = { after[i].pos, PLAYER_SIZE/2, {} };
+			Circle cir = { after[i].pos, PLAYER_SIZE, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect

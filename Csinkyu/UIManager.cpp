@@ -11,9 +11,9 @@ using namespace Calc; //ŒvŽZ‹@”\.
 void UIManager::Init() {
 
 	//ŽÀ‘ÌŽæ“¾.
-	p_gameMng     = GameManager::GetPtr();
-	p_gameData    = GameData::GetPtr();
-	p_tutorialStg = TutorialStage::GetPtr();
+	p_gameMng     = &GameManager::GetInst();
+	p_gameData    = &GameData::GetInst();
+	p_tutorialStg = &TutorialStage::GetInst();
 
 	//‰æ‘œ.
 	imgUI[0].LoadFile(_T("Resources/Images/ui_back_level.png"));

@@ -1,6 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/09/24
 
    オブジェクトを追加します, 継承して使うことも可です。
    Draw, Calc, Inputの一部機能をオブジェクト指向で使えます。
@@ -16,8 +16,6 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	InputMng* p_input = InputMng::GetPtr();
-
 // ▼*---=[ Object ]=---*▼ //
 
 	//移動限界を越えないよう位置修正.
@@ -43,16 +41,16 @@ namespace KR_Lib
 
 	//移動操作.
 	void ObjectShape::MoveKey4Dir(float speed) {
-		p_input->MoveKey4Dir(GetPosPtr(), speed);
+		InstInputMng.MoveKey4Dir(GetPosPtr(), speed);
 	}
 	void ObjectShape::MovePad4Dir(float speed) {
-		p_input->MovePad4Dir(GetPosPtr(), speed);
+		InstInputMng.MovePad4Dir(GetPosPtr(), speed);
 	}
 	void ObjectShape::MovePadStick(float speed) {
-		p_input->MovePadStick(GetPosPtr(), speed);
+		InstInputMng.MovePadStick(GetPosPtr(), speed);
 	}
 	void ObjectShape::MoveMousePos(bool isValidX, bool isValidY) {
-		SetPos(p_input->GetMousePos(isValidX, isValidY));
+		SetPos(InstInputMng.GetMousePos(isValidX, isValidY));
 	}
 	
 	//画像を描画.
