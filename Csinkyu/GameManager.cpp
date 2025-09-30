@@ -278,10 +278,10 @@ void GameManager::Init() {
 
 	//タイマー初期化.
 	for(int i = 0; i < SCENE_COUNT; i++){
-		tmScene[i] = Timer(COUNT_UP, 0);
+		tmScene[i] = Timer(TimerMode::CountUp, 0);
 	}
-	tmGameTime    = Timer(COUNT_UP, 0);
-	tmReflectMode = Timer(COUNT_DOWN, REFLECT_MODE_TIME);
+	tmGameTime    = Timer(TimerMode::CountUp, 0);
+	tmReflectMode = Timer(TimerMode::CountDown, REFLECT_MODE_TIME);
 
 	//Init処理
 	{

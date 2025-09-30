@@ -36,8 +36,8 @@ void TutorialStage::Init() {
 	font[1].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
 
 	//タイマー
-	startTimer = Timer(COUNT_UP, 0);
-	endTimer   = Timer(COUNT_UP, 0);
+	startTimer = Timer(TimerMode::CountUp, 0);
+	endTimer   = Timer(TimerMode::CountUp, 0);
 }
 //リセット.
 void TutorialStage::Reset() {
