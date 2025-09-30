@@ -85,7 +85,7 @@ void Player::Draw()
 	//デバッグ表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.Draw(ANC_MID, p_data->font1);
+		str.Draw(Anchor::Mid, p_data->font1);
 	}
 	// エフェクトのデバッグ情報表示
 	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
@@ -110,11 +110,11 @@ void Player::Draw()
 			mode == Player_SuperReflect
 		){
 			//反射モードの画像.
-			imgPlayer[1].DrawRota(hit.pos, size, imgRot, {0, 0}, ANC_MID, true, true);
+			imgPlayer[1].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
 		else {
 			//通常モードの画像.
-			imgPlayer[0].DrawRota(hit.pos, size, imgRot, {0, 0}, ANC_MID, true, true);
+			imgPlayer[0].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
 
 		//チュートリアル用.
@@ -211,7 +211,7 @@ void Player::DrawAfterImage()
 			//透明度の計算.
 			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
 			//透明度反映.
-			SetDrawBlendModeKR(MODE_ADD, 255*(1-alpha));
+			SetDrawBlendModeKR(BlendModeID::Add, 255*(1-alpha));
 
 			Circle cir = { after[i].pos, PLAYER_SIZE, {} };
 			//反射カラー.
@@ -297,7 +297,7 @@ void Player::DrawReflectEffects()
 			);
 
 			// アルファブレンドモード設定（エフェクトごとに設定）
-			SetDrawBlendModeKR(MODE_ALPHA, alpha);
+			SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 			// 四角い波紋を描画
 			for (int wave = 0; wave < 3; wave++) {
@@ -326,7 +326,7 @@ void Player::DrawReflectEffects()
 							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxKR(&thickBox, ANC_MID, false, true);
+						DrawBoxKR(&thickBox, Anchor::Mid, false, true);
 					}
 				}
 			}
@@ -344,7 +344,7 @@ void Player::DrawReflectEffects()
 				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
-			DrawBoxKR(&centerBox, ANC_MID, false, true);
+			DrawBoxKR(&centerBox, Anchor::Mid, false, true);
 
 			// 描画モードリセット
 			ResetDrawBlendMode();

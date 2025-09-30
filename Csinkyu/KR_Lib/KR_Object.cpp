@@ -170,7 +170,7 @@ namespace KR_Lib
 		Box tmpBox = box;
 		tmpBox.pos += offset;
 		//•`‰æ.
-		int err = DrawBoxKR(&tmpBox, ANC_MID, isFill, isAnti);
+		int err = DrawBoxKR(&tmpBox, Anchor::Mid, isFill, isAnti);
 		return err; //-1: ‰~•`‰æƒGƒ‰[.
 	}
 
@@ -187,7 +187,7 @@ namespace KR_Lib
 			gridPos.y + pos.y * gridSize.y
 		};
 		//‰æ‘œ•`‰æ.
-		int err = img->Draw(newPos.ToDblXY(), ANC_LU);
+		int err = img->Draw(newPos.ToDblXY(), Anchor::LU);
 		return err; //-1: DrawGraphST‚ÅƒGƒ‰[.
 	}
 }

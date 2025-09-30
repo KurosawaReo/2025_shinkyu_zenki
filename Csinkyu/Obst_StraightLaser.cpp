@@ -127,7 +127,7 @@ void StraightLaser::DrawPredictionLine()
 
 	// —\‘ªü‚Ì“§–¾“x.
 	double alpha = CalcNumEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
-	SetDrawBlendModeKR(MODE_ALPHA, 255*(1-alpha));
+	SetDrawBlendModeKR(BlendModeID::Alpha, 255*(1-alpha));
 
 	// ’†‰›‚Ì—\‘ªü‚Ì‚İ‚ğ•`‰æ
 	// ”­Ë•ûŒü‚É‰‚¶‚Ä—\‘ªü‚ğ•`‰æ

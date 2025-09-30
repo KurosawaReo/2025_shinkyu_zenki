@@ -24,8 +24,8 @@ void MenuManager::Init() {
 	InstInputMng.AddAction(_T("MENU_NEXT"), PadXboxID::A);
 
 	//フォント作成.
-	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FONT_EDGE);
-	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FONT_EDGE);
+	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Edge);
+	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Edge);
 
 	//モードごとの画像読み込み.
 	imgMenu[0].LoadFile(_T("Resources/Images/menu_start.png"));    //ゲーム開始.
@@ -143,7 +143,7 @@ void MenuManager::Draw() {
 	imgMenu[selectedIndex].Draw(imgPos);
 	//画像の枠線(位置とサイズは画像を元にする)
 	Box box = { imgPos, imgSize + margin, frameColor };
-	DrawBoxKR(&box, ANC_MID, false);
+	DrawBoxKR(&box, Anchor::Mid, false);
 
 	// ▼ 説明文の枠（右下）- 画像の幅に合わせる
 	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）

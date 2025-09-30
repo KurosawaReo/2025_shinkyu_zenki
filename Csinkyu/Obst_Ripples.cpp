@@ -263,7 +263,7 @@ void Ripples::DrawWarningEffect(int index)
 	}
 
 	// 予告エフェクトを描画.
-	SetDrawBlendModeKR(MODE_ALPHA, alphaValue);
+	SetDrawBlendModeKR(BlendModeID::Alpha, alphaValue);
 
 	Circle cir;
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize,   GetColor(150, 150, 150) };
@@ -296,7 +296,7 @@ void Ripples::DrawActiveEffect(int index)
 	int innerSize = effectSize / 2;
 
 	// アクティブエフェクトを円形で描画（シアン色で光る）
-	SetDrawBlendModeKR(MODE_ADD, alphaValue);
+	SetDrawBlendModeKR(BlendModeID::Add, alphaValue);
 
 	Circle cir;
 	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)effectSize, GetColor(0, 255, 255)};

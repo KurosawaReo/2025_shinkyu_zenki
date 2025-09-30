@@ -98,7 +98,7 @@ void LaserManager::Draw() {
 
 		const float lightSize = 0.015;
 
-		SetDrawBlendModeKR(MODE_ADD, 155 + 100*CalcNumWaveLoop(laser[i].Counter/30)); //点滅.
+		SetDrawBlendModeKR(BlendModeID::Add, 155 + 100*CalcNumWaveLoop(laser[i].Counter/30)); //点滅.
 
 		//レーザー先端の画像.
 		switch (laser[i].type)
@@ -107,12 +107,12 @@ void LaserManager::Draw() {
 			case Laser_Straight:
 			case Laser_Falling:
 				color = GetColor(50, 255, 255); //色の設定.
-				imgLight[0].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				//imgLight[0].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
 				break;
 			case Laser_Reflect:
 			case Laser_SuperReflect:
 				color = GetColor(255, 0, 255); //色の設定.
-				imgLight[1].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				//imgLight[1].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
 				break;
 
 			default: assert(FALSE); break;

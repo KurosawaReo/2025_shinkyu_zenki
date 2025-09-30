@@ -598,8 +598,8 @@ void GameManager::DrawTitle() {
 			//アニメーション値.
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
-			SetDrawBlendModeKR(MODE_ALPHA, 255 * anim);
-			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, imgSize, ANC_MID, true, true);
+			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim);
+			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, imgSize, Anchor::Mid, true, true);
 		}
 		//切り替え後.
 		else {
@@ -607,11 +607,11 @@ void GameManager::DrawTitle() {
 			double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
 			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
-			SetDrawBlendModeKR(MODE_ALPHA, 255 * (1-anim2));
-			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, ANC_MID, true, true);
+			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * (1-anim2));
+			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, Anchor::Mid, true, true);
 			//ロゴ2枚目.
-			SetDrawBlendModeKR(MODE_ALPHA, 255 * anim1);
-			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, ANC_MID, true, true);
+			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim1);
+			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, Anchor::Mid, true, true);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -631,11 +631,11 @@ void GameManager::DrawTitle() {
 		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
 		DrawStr str(text, {WINDOW_WID/2, drawY+1}, COLOR_BEST_SCORE);
 
-		SetDrawBlendModeKR(MODE_ALPHA, 255*anim1);
-		str.Draw(ANC_MID, gameData->font2); //スコア値.
-		SetDrawBlendModeKR(MODE_ALPHA, 255*anim2);
-		imgUI.DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
-		imgUI.DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, ANC_MID, true, true);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim1);
+		str.Draw(Anchor::Mid, gameData->font2); //スコア値.
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim2);
+		imgUI.DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
+		imgUI.DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
 		ResetDrawBlendMode();
 	}
 #endif
@@ -650,8 +650,8 @@ void GameManager::DrawTitle() {
 		DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
 //		Circle cir = { {WINDOW_WID/2+92, drawY-2}, 18, 0xFFFFFF };
 		
-		SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-		str.Draw(ANC_MID, gameData->font1); //テキスト.
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
+		str.Draw(Anchor::Mid, gameData->font1); //テキスト.
 //		DrawCircleKR(&cir, false, false);   //Xボタンの円.
 		ResetDrawBlendMode();
 	}
@@ -719,8 +719,8 @@ void GameManager::DrawEnd() {
 		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
-		SetDrawBlendModeKR(MODE_ALPHA, 128*anim);
-		DrawBoxKR(&box, ANC_LU); //画面を暗くする(UI以外)
+		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);
+		DrawBoxKR(&box, Anchor::Mid); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
 	uiMng->Draw(); //UI.
@@ -733,12 +733,12 @@ void GameManager::DrawEnd() {
 		//テキスト.
 		DrawStr str(_T("チュートリアルではその場で復活します..."), {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FFFF);
 
-		SetDrawBlendModeKR(MODE_ALPHA, 255 * anim);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim);
 
 		//GAME OVER
-		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true);
+		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true);
 		//テキスト.
-		str.Draw(ANC_MID, gameData->font2);
+		str.Draw(Anchor::Mid, gameData->font2);
 
 		ResetDrawBlendMode();
 	}
@@ -759,11 +759,11 @@ void GameManager::DrawEnd() {
 			DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
 			DrawStr str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
 
-			SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-			imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, ANC_MID, true, true); //GAME OVER
+			SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
+			imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true); //GAME OVER
 			//画面中央に文字を表示.
-			str1.Draw(ANC_MID, gameData->font1);
-			str2.Draw(ANC_MID, gameData->font1);
+			str1.Draw(Anchor::Mid, gameData->font1);
+			str2.Draw(Anchor::Mid, gameData->font1);
 			ResetDrawBlendMode();
 		}
 
@@ -778,8 +778,8 @@ void GameManager::DrawEnd() {
 				//アニメーション値.
 				double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 				//描画.
-				SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-				imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, ANC_MID, true, true); //NEW RECORD
+				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
+				imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, Anchor::Mid, true, true); //NEW RECORD
 				ResetDrawBlendMode();
 				//サウンド.
 				if (!isBestScoreSound) {
@@ -797,8 +797,8 @@ void GameManager::DrawEnd() {
 			DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
 	//		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
-			SetDrawBlendModeKR(MODE_ALPHA, 255*anim);
-			str.Draw(ANC_MID, gameData->font1); //テキスト.
+			SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
+			str.Draw(Anchor::Mid, gameData->font1); //テキスト.
 	//		DrawCircleKR(&cir, false, false);   //Aボタンの円.
 			ResetDrawBlendMode();
 		}
@@ -825,14 +825,14 @@ void GameManager::DrawReflectMode() {
 			double dec  = GetDecimal(tmReflectMode.GetPassTime()); //小数だけ取り出す.
 			double anim = CalcNumEaseOut(dec);
 			
-			SetDrawBlendModeKR(MODE_ALPHA, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
+			SetDrawBlendModeKR(BlendModeID::Alpha, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME-1) {
 				imgReflect.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2}, {0.3+0.2*anim, 0.3+0.2*anim});
 			}
 			//最後の3秒.
 			if (tmReflectMode.GetPassTime() <= 3) {
-				str.Draw(ANC_MID, gameData->font4); //数字.
+				str.Draw(Anchor::Mid, gameData->font4); //数字.
 			}
 			ResetDrawBlendMode();
 		}
