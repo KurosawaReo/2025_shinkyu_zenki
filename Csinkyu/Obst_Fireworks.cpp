@@ -199,22 +199,18 @@ void FireworksManager::Draw() {
 
 // 予告エフェクト描画
 void FireworksManager::DrawWarningEffect(int index) {
-
 	const float sepTime = 30; //区切り時間.
-
 	float elapsedTime = fireworks[index].Counter;
-
 	// 点滅エフェクト
 	int alphaValue;
 	if (elapsedTime < sepTime) {
 		double blinkPhase = fmod(elapsedTime, 20);
-		double blinkAlpha = sin(blinkPhase * M_PI/20);
+		double blinkAlpha = sin(blinkPhase * M_PI / 20);
 		alphaValue = (int)(255 - 150 * blinkAlpha);
 	}
 	else {
 		alphaValue = 255;
 	}
-
 	// 脈動サイズ
 	int warningSize;
 	if (elapsedTime >= sepTime) {
@@ -224,17 +220,31 @@ void FireworksManager::DrawWarningEffect(int index) {
 	else {
 		warningSize = 30;
 	}
-
 	SetDrawBlendModeKR(BlendModeID::Alpha, alphaValue);
 
-	Circle cir;
-	// 外側の円灰色
-	cir = { {fireworks[index].targetX, fireworks[index].targetY}, (float)warningSize, GetColor(128, 128, 128) };
-	DrawCircleKR(&cir, false, true);
-	// 内側の円灰色
-	cir = { {fireworks[index].targetX, fireworks[index].targetY}, (float)(warningSize / 2), GetColor(128, 128, 128) };
-	DrawCircleKR(&cir, false, true);
-	// 中心点灰色
-	cir = { {fireworks[index].targetX, fireworks[index].targetY}, 5, GetColor(128,128, 128) };
-	DrawCircleKR(&cir, false, true);
+	float centerX = fireworks[index].targetX;
+	float centerY = fireworks[index].targetY;
+	float size = (float)warningSize;
+
+	unsigned int color = GetColor(128, 128, 128);
+
+	// 上向きの三角形
+	Triangle tri;
+	tri.pos[0] = { centerX, centerY - size }; // 上の頂点
+	tri.pos[1] = { centerX - size * 0.866f, centerY + size * 0.5f }; // 左下の頂点
+	tri.pos[2] = { centerX + size * 0.866f, centerY + size * 0.5f }; // 右下の頂点
+	tri.color = color;
+	DrawTriangleKR(&tri, false, true);
+
+	// 下向きの三角形
+	Triangle tri2;
+	tri2.pos[0] = { centerX, centerY + size }; // 下の頂点
+	tri2.pos[1] = { centerX - size * 0.866f, centerY - size * 0.5f }; // 左上の頂点
+	tri2.pos[2] = { centerX + size * 0.866f, centerY - size * 0.5f }; // 右上の頂点
+	tri2.color = color;
+	DrawTriangleKR(&tri2, false, true);
+
+	// 中心点
+	//Circle cir = { {centerX, centerY}, 5, color };
+	//DrawCircleKR(&cir, false, true);
 }
