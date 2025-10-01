@@ -713,11 +713,11 @@ void GameManager::DrawEnd() {
 	}
 	//黒フィルター.
 	{
-		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
+		float anim = CalcNumEaseInOut(tmScene[SCENE_END].GetPassTime()); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);
-		DrawBoxKR(&box, Anchor::Mid); //画面を暗くする(UI以外)
+		DrawBoxKR(&box, Anchor::LU); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
 	uiMng->Draw(); //UI.

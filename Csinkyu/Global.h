@@ -47,6 +47,8 @@ enum StageType
 
 //#define DEBUG_LASER_ACTIVE //デバッグ用.
 //#define DEBUG_SPAWN_RATE   //デバッグ用.
+//#define DEBUG_METEOR_POINT //デバッグ用.
+//#define DEBUG_METEOR_SPAWN //デバッグ用.
 //#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
 #define SHOW_BEST_SCORE //これをコメントアウトでベストスコア表示を消せる.
 

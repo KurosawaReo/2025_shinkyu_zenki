@@ -36,13 +36,6 @@ void EndlessStage::Reset() {
 //更新.
 void EndlessStage::Update() {
 
-#if defined _DEBUG //Releaseでは入れない.
-	//タイマー加速(Debug)
-	if (p_input->IsPushKey(KeyID::L) == 1) {
-		p_data->counter += 30;
-	}
-#endif
-
 	//最初のみ.
 	if (p_data->counter == 0) {
 		//サウンド.
@@ -56,6 +49,14 @@ void EndlessStage::Update() {
 		//召喚可能にする.
 		p_meteorMng->SetIsSpawnAble(true);
 		p_itemMng->  SetIsSpawnAble(true);
+	}
+	else {
+#if defined _DEBUG //Releaseでは入れない.
+		//タイマー加速(Debug)
+		if (p_input->IsPushKey(KeyID::L) == 1) {
+			p_data->counter += 30;
+		}
+#endif
 	}
 
 	//カウンター増加.
