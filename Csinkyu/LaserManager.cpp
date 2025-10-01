@@ -98,7 +98,7 @@ void LaserManager::Draw() {
 
 		const float lightSize = 0.015;
 
-		SetDrawBlendModeKR(MODE_ADD, 155 + 100*CalcNumWaveLoop(laser[i].Counter/30)); //点滅.
+		SetDrawBlendModeKR(BlendModeID::Add, 155 + 100*CalcNumWaveLoop(laser[i].Counter/30)); //点滅.
 
 		//レーザー先端の画像.
 		switch (laser[i].type)
@@ -107,12 +107,12 @@ void LaserManager::Draw() {
 			case Laser_Straight:
 			case Laser_Falling:
 				color = GetColor(50, 255, 255); //色の設定.
-				imgLight[0].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				//imgLight[0].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
 				break;
 			case Laser_Reflect:
 			case Laser_SuperReflect:
 				color = GetColor(255, 0, 255); //色の設定.
-				imgLight[1].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				//imgLight[1].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
 				break;
 
 			default: assert(FALSE); break;
@@ -298,23 +298,29 @@ void LaserManager::UpdateLaser() {
 				//隕石と当たっているなら.
 				if (p_meteorMng->IsHitMeteors(hit, true)) {
 
-					double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
-
-					//エフェクトをいくつか出す.
+					EffectData data{}; //エフェクト用に用意.
+					
+					//現在のレーザー角度.
+					double dig = _deg(atan2(laser[i].vy, laser[i].vx));
+					//隕石破壊エフェクト.
+					data.type  = Effect_BreakMeteor;
+					data.pos   = { laser[i].x, laser[i].y };
+					//いくつか出す.
 					for (int j = 0; j < METEOR_BREAK_ANIM_CNT; j++) {
 
 						double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-
-						EffectData data{};
-						data.type  = Effect_BreakMeteo;
-						data.pos   = { laser[i].x, laser[i].y };
-						data.vec   = CalcVectorDeg(newDig);      //ずらした角度を反映.
-						data.speed = (float)RandNum(20, 100)/10; //速度抽選.
-						data.len   = (float)RandNum(10, 150)/10; //長さ抽選.
-						data.ang   = (float)RandNum(0, 3599)/10; //角度抽選.
-						//エフェクト召喚.
-						p_effectMng->SpawnEffect(&data);
+						data.vec   = CalcVectorDeg(newDig);                 //ずらした角度を反映.
+						data.speed = (float)RandNum(20, 100)/10;            //速度抽選.
+						data.len   = (float)RandNum(10, 150)/10;            //長さ抽選.
+						data.ang   = (float)RandNum(0, 3599)/10;            //角度抽選.
+						p_effectMng->SpawnEffect(&data);                    //エフェクト出現.
 					}
+					//スコアエフェクト.
+					data.type = Effect_Score500;
+					data.pos = { laser[i].x, laser[i].y };
+					p_effectMng->SpawnEffect(&data); //エフェクト出現.
+					//サウンド.
+					InstSoundMng.Play(_T("Break"), false, 74);
 
 					//どっちのタイプかで切り替え.
 					if (laser[i].type == Laser_Reflect) {

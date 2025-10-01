@@ -32,12 +32,12 @@ void TutorialStage::Init() {
 	p_input        = &InputMng::GetInst();
 	p_sound        = &SoundMng::GetInst();
 
-	font[0].CreateFontH(_T(""), 25, 1, FONT_ANTI);
-	font[1].CreateFontH(_T(""), 30, 1, FONT_ANTI);
+	font[0].CreateFontH(_T(""), 25, 1, FontTypeID::Anti);
+	font[1].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
 
 	//タイマー
-	startTimer = Timer(COUNT_UP, 0);
-	endTimer   = Timer(COUNT_UP, 0);
+	startTimer = Timer(TimerMode::CountUp, 0);
+	endTimer   = Timer(TimerMode::CountUp, 0);
 }
 //リセット.
 void TutorialStage::Reset() {
@@ -538,11 +538,11 @@ void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 		Box    box  = {pos, size, 0x000000};
 
 		//枠背景.
-		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
-		DrawBoxKR(&box, ANC_LU);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
+		DrawBoxKR(&box, Anchor::LU);
 		//テキスト.
-		SetDrawBlendModeKR(MODE_ALPHA, 255*alpha);
-		str.Draw(ANC_MID, useFont);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
+		str.Draw(Anchor::Mid, useFont);
 		ResetDrawBlendMode();
 
 		//枠線グラデーション.
@@ -568,11 +568,11 @@ void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 		Box    box  = {pos, size, 0x000000};
 
 		//枠背景.
-		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
-		DrawBoxKR(&box, ANC_LU);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
+		DrawBoxKR(&box, Anchor::LU);
 		//テキスト.
-		SetDrawBlendModeKR(MODE_ALPHA, 255*alpha);
-		str.Draw(ANC_MID, useFont);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
+		str.Draw(Anchor::Mid, useFont);
 		ResetDrawBlendMode();
 
 		//枠線グラデーション.
@@ -598,11 +598,11 @@ void TutorialStage::DrawTopText3(MY_STRING text, double alpha) {
 		Box    box  = {pos, size, 0x000000};
 
 		//枠背景.
-		SetDrawBlendModeKR(MODE_ALPHA, 100*alpha);
-		DrawBoxKR(&box, ANC_LU);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
+		DrawBoxKR(&box, Anchor::LU);
 		//テキスト.
-		SetDrawBlendModeKR(MODE_ALPHA, 255*alpha);
-		str.Draw(ANC_MID, useFont);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
+		str.Draw(Anchor::Mid, useFont);
 		ResetDrawBlendMode();
 
 		//枠線グラデーション.

@@ -85,7 +85,7 @@ void ItemManager::Draw()
 		//有効なアイテムを描画.
 		if (items[i].active) {
 			
-			SetDrawBlendModeKR(MODE_ALPHA, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
+			SetDrawBlendModeKR(BlendModeID::Alpha, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
 			
 			//強化演出.
 			if (items[i].type == Item_Super) {
@@ -94,7 +94,7 @@ void ItemManager::Draw()
 			}
 			//アイテム本体.
 			{
-				imgItem.DrawExtend(items[i].pos, {0.045, 0.045}, ANC_MID, true, true);
+				imgItem.DrawExtend(items[i].pos, {0.045, 0.045}, Anchor::Mid, true, true);
 			}
 			ResetDrawBlendMode();
 

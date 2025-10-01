@@ -27,14 +27,14 @@ void BG_Tile::Draw(double slowTime) {
 	//通常モード.
 	{
 		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
-		SetDrawBlendModeKR(MODE_ALPHA, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
-		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
+		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, Anchor::Mid);
 	}
 	//反射モード.
 	if (p_data->isReflectMode) {
 		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
-		SetDrawBlendModeKR(MODE_ALPHA, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
-		img[1]->DrawExtend(pos.ToDblXY(), sizeRate, ANC_MID);
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
+		img[1]->DrawExtend(pos.ToDblXY(), sizeRate, Anchor::Mid);
 	}
 	ResetDrawBlendMode(); //描画モードリセット.
 }
@@ -114,11 +114,11 @@ void BackGround::Draw() {
 	//スローモード中.
 	if (p_data->speedRate) {
 		//グラデーション枠.
-		SetDrawBlendModeKR(MODE_ALPHA, 255*time);
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*time);
 		imgFrameBG.Draw({WINDOW_WID/2, WINDOW_HEI/2});
 		ResetDrawBlendMode();
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-		DrawBoxKR(&box, ANC_MID, false, true);
+		DrawBoxKR(&box, Anchor::Mid, false, true);
 	}
 }

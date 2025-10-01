@@ -16,7 +16,7 @@ private:
 	DBL_XY   sizeRate{};
 	DrawImg* img[2]{};
 
-	Timer timer = Timer(COUNT_DOWN, 3); //”­Œõ‚·‚éŽžŠÔ.
+	Timer timer = Timer(TimerMode::CountDown, 3); //”­Œõ‚·‚éŽžŠÔ.
 
 	GameData*   p_data;
 	BackGround* p_bg;
@@ -52,7 +52,7 @@ private:
 	DrawImg         imgBG[2]{};      //”wŒi‰æ‘œ.
 	DrawImg         imgFrameBG{};    //”wŒi‰æ‘œ.
 
-	TimerMicro tmShine = TimerMicro(COUNT_DOWN, 1000000/60); //Œõ‚éŠÔŠu.
+	TimerMicro tmShine = TimerMicro(TimerMode::CountDown, 1000000/60); //Œõ‚éŠÔŠu.
 
 	float counter{}; //ŽžŠÔŒo‰ßŒv‘ª—p.
 

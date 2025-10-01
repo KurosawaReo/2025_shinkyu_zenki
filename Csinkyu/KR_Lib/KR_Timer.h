@@ -1,6 +1,6 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/10/01
 
    タイマー機能を追加します。
 */
@@ -10,10 +10,10 @@
 namespace KR_Lib
 {
 	//タイマーモード.
-	enum TimerMode
+	enum class TimerMode
 	{
-		COUNT_UP,
-		COUNT_DOWN,
+		CountUp,
+		CountDown,
 	};
 
 	//タイマー機能.

@@ -225,7 +225,7 @@ void FireworksManager::DrawWarningEffect(int index) {
 		warningSize = 30;
 	}
 
-	SetDrawBlendModeKR(MODE_ALPHA, alphaValue);
+	SetDrawBlendModeKR(BlendModeID::Alpha, alphaValue);
 
 	Circle cir;
 	// äOë§ÇÃâ~äDêF

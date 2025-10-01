@@ -1,6 +1,6 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/10/01
 
    タイマー機能を追加します。
 */
@@ -23,7 +23,7 @@ namespace KR_Lib
 			float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 
 			//経過時間を更新.
-			if (mode == COUNT_UP) {
+			if (mode == TimerMode::CountUp) {
 				tmSavePass += elapsed;           //タイマー増加.
 			}
 			else {
@@ -41,7 +41,7 @@ namespace KR_Lib
 			float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 			float pass = 0; //経過時間.
 
-			if (mode == COUNT_UP) {
+			if (mode == TimerMode::CountUp) {
 				pass = tmSavePass + elapsed; //タイマー増加.
 			}
 			else {
@@ -58,7 +58,7 @@ namespace KR_Lib
 	bool Timer::IntervalTime() {
 
 		//CountDownじゃない場合はfalseを返し続ける.
-		if (mode != COUNT_DOWN) {
+		if (mode != TimerMode::CountDown) {
 			return false;
 		}
 
@@ -83,7 +83,7 @@ namespace KR_Lib
 			LONGLONG elapsed = (tmEnd.QuadPart - tmStart.QuadPart) * 1000000/freq.QuadPart;
 
 			//経過時間を更新.
-			if (mode == COUNT_UP) {
+			if (mode == TimerMode::CountUp) {
 				tmSavePass += elapsed;           //タイマー増加.
 			}
 			else {
@@ -107,7 +107,7 @@ namespace KR_Lib
 			//経過時間.
 			LONGLONG pass;
 
-			if (mode == COUNT_UP) {
+			if (mode == TimerMode::CountUp) {
 				pass = tmSavePass + elapsed; //タイマー増加.
 			}
 			else{
@@ -124,7 +124,7 @@ namespace KR_Lib
 	bool TimerMicro::IntervalTime() {
 
 		//CountDownじゃない場合はfalseを返し続ける.
-		if (mode != COUNT_DOWN) {
+		if (mode != TimerMode::CountDown) {
 			return false;
 		}
 

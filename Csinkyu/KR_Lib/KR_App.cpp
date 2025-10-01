@@ -1,6 +1,6 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/09/24
+   ver: 2025/10/01
 
    プログラム全体(開始,終了など)の処理を行います。
 */
@@ -29,7 +29,7 @@ namespace KR_Lib
 		}
 
 		//fps計測用タイマー.
-		tmFps = TimerMicro(COUNT_DOWN, 1000000/fps);
+		tmFps = TimerMicro(TimerMode::CountDown, 1000000/fps);
 		tmFps.Start();
 		//変数の設定.
 		windowSize = { windowWid, windowHei };
