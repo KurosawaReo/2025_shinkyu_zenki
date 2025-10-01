@@ -64,7 +64,7 @@ void EffectManager::Update() {
 				}
 				break;
 
-				case Effect_BreakMeteo:
+				case Effect_BreakMeteor:
 				{
 					//カウンター加算.
 					effect[i].counter += p_data->speedRate;
@@ -161,7 +161,7 @@ void EffectManager::Draw() {
 				}
 				break;
 
-				case Effect_BreakMeteo:
+				case Effect_BreakMeteor:
 				{
 					//飛ばす線のデータ.
 					Line line{};
@@ -279,7 +279,7 @@ void EffectManager::Draw() {
 }
 
 //エフェクト出現.
-void EffectManager::SpawnEffect(EffectData* data) {
+void EffectManager::SpawnEffect(const EffectData* data) {
 
 	//未使用のエフェクトを探す.
 	for (int i = 0; i < EFFECT_MAX; i++) {

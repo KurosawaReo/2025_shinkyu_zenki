@@ -13,7 +13,7 @@ enum EffectType
 	Effect_Score500,
 	Effect_PlayerDeath,		//プレイヤー死亡.
 	Effect_ReflectLaser,	//レーザー反射.
-	Effect_BreakMeteo,		//隕石破壊.
+	Effect_BreakMeteor,		//隕石破壊.
 
 	Effect_Endless_Level1,	//耐久モード: Level1演出.
 	Effect_Endless_Level2,	//耐久モード: Level2演出.
@@ -74,6 +74,6 @@ public:
 	void Update();
 	void Draw();
 
-	void SpawnEffect(EffectData* data); //エフェクト出現.
-	void DeleteEffect(int idx);         //エフェクト消去.
+	void SpawnEffect (const EffectData* data); //エフェクト出現.
+	void DeleteEffect(int idx);                //エフェクト消去.
 };

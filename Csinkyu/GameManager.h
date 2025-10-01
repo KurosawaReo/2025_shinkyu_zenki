@@ -31,25 +31,25 @@ private:
 
 //▼データ.
 public:
-	Scene     scene;			//シーンの記録用.
-	StageType stage;			//ステージ種類.
+	Scene     scene{};			//シーンの記録用.
+	StageType stage{};			//ステージ種類.
 
-	int		  score;			//スコア.
-	int		  scoreBef;			//スコア(時間加算前)
-	int		  bestScore;		//ベストスコア.
-	int		  level;			//レベル.
+	int		  score{};			//スコア.
+	int		  scoreBef{};		//スコア(時間加算前)
+	int		  bestScore{};		//ベストスコア.
+	int		  level{};			//レベル.
 
-	float	  speedRate;		//ゲーム進行速度倍率.
-	float	  spawnRate;		//障害物の出現時間割合.
-	float	  counter;			//経過時間カウンター(スローの影響を受ける)
+	float	  speedRate{};		//ゲーム進行速度倍率.
+	float	  spawnRate{};		//障害物の出現時間割合.
+	float	  counter{};		//経過時間カウンター(スローの影響を受ける)
 
-	bool      isReflectMode;	//反射モードかどうか.
-	float     slowBufCntr;		//スロー続行時間.
+	bool      isReflectMode{};	//反射モードかどうか.
+	float     slowBufCntr{};	//スロー続行時間.
 
-	int		  font1;			//フォント.
-	int		  font2;			//フォント.
-	int		  font3;			//フォント.
-	int		  font4;			//フォント.
+	int		  font1{};			//フォント.
+	int		  font2{};			//フォント.
+	int		  font3{};			//フォント.
+	int		  font4{};			//フォント.
 };
 
 //ゲームマネージャー.[継承不可]
@@ -93,11 +93,11 @@ private:
 	SoundMng* p_sound{};
 
 public: //オブジェクト.
-	NormalLaser_1* laserNor1;
-	NormalLaser_2* laserNor2;
-	NormalLaser_3* laserNor3;
-	NormalLaser_4* laserNor4;
-	StraightLaser* laserStr[2];
+	NormalLaser_1* laserNor1{};
+	NormalLaser_2* laserNor2{};
+	NormalLaser_3* laserNor3{};
+	NormalLaser_4* laserNor4{};
+	StraightLaser* laserStr[2]{};
 
 public:
 	//destructor.

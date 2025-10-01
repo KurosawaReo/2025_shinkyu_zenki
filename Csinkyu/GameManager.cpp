@@ -648,16 +648,18 @@ void GameManager::DrawTitle() {
 		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
-//		Circle cir = { {WINDOW_WID/2+92, drawY-2}, 18, 0xFFFFFF };
 		
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
 		str.Draw(Anchor::Mid, gameData->font1); //テキスト.
-//		DrawCircleKR(&cir, false, false);   //Xボタンの円.
 		ResetDrawBlendMode();
 	}
 	//隕石破壊アニメーション.
 	if (!isTitleAnim) {
 		if (tmScene[SCENE_TITLE].GetPassTime() >= delay5) {
+
+			EffectData data{};
+			data.type  = Effect_BreakMeteor;
+			data.pos   = { 584, 290 };
 
 			double dig = -130; //角度.
 
@@ -665,16 +667,11 @@ void GameManager::DrawTitle() {
 			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
 				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-
-				EffectData data{};
-				data.type  = Effect_BreakMeteo;
-				data.pos   = { 584, 290 };
-				data.vec   = CalcVectorDeg(newDig);               //ずらした角度を反映.
-				data.speed = ((float)RandNum(20, 100)/10) * 1.4f; //速度抽選.
-				data.len   = ((float)RandNum(10, 150)/10) * 1.4f; //長さ抽選.
-				data.ang   =  (float)RandNum(0, 3599)/10;         //角度抽選.
-				//エフェクト召喚.
-				effectMng->SpawnEffect(&data);
+				data.vec   = CalcVectorDeg(newDig);                 //ずらした角度を反映.
+				data.speed = ((float)RandNum(20, 100)/10) * 1.4f;   //速度抽選.
+				data.len   = ((float)RandNum(10, 150)/10) * 1.4f;   //長さ抽選.
+				data.ang   =  (float)RandNum(0, 3599)/10;           //角度抽選.
+				effectMng->SpawnEffect(&data);                      //エフェクト召喚.
 			}
 			//サウンド.
 			p_sound->Play(_T("Break"), false, 65);
@@ -795,11 +792,9 @@ void GameManager::DrawEnd() {
 			double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 			//テキスト.
 			DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
-	//		Circle cir = { {WINDOW_WID/2+92, WINDOW_HEI/2+145-1}, 18, 0xFFFFFF };
 		
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
 			str.Draw(Anchor::Mid, gameData->font1); //テキスト.
-	//		DrawCircleKR(&cir, false, false);   //Aボタンの円.
 			ResetDrawBlendMode();
 		}
 	}

@@ -31,8 +31,8 @@ private:
 	bool  isSpawnAble{}; //召喚可能かどうか.
 
 	GameData*      p_data{};      //ゲームデータ.
-	Player*        p_player{};	  //プレイヤーデータ.
-	EffectManager* p_effectMng{};
+	Player*        p_player{};	  //プレイヤー.
+	EffectManager* p_effectMng{}; //エフェクト管理.
 
 public:
 	//set.
