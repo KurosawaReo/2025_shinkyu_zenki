@@ -18,15 +18,16 @@
 //初期化.
 void EndlessStage::Init() {
 	//実体取得.
-	p_data         = GameData::GetPtr();
-	p_gameMng      = GameManager::GetPtr();
-	p_laserMng     = LaserManager::GetPtr();
-	p_meteorMng    = MeteorManager::GetPtr();
-	p_ripples      = Ripples::GetPtr();
-	p_itemMng      = ItemManager::GetPtr();
-	p_fireworksMng = FireworksManager::GetPtr();
-	p_effectMng    = EffectManager::GetPtr();
-	p_sound        = SoundMng::GetPtr();
+	p_data         = &GameData::GetInst();
+	p_gameMng      = &GameManager::GetInst();
+	p_laserMng     = &LaserManager::GetInst();
+	p_meteorMng    = &MeteorManager::GetInst();
+	p_ripples      = &Ripples::GetInst();
+	p_itemMng      = &ItemManager::GetInst();
+	p_fireworksMng = &FireworksManager::GetInst();
+	p_effectMng    = &EffectManager::GetInst();
+	p_input        = &InputMng::GetInst();
+	p_sound        = &SoundMng::GetInst();
 }
 //リセット.
 void EndlessStage::Reset() {
@@ -34,6 +35,13 @@ void EndlessStage::Reset() {
 }
 //更新.
 void EndlessStage::Update() {
+
+#if defined _DEBUG //Releaseでは入れない.
+	//タイマー加速(Debug)
+	if (p_input->IsPushKey(KeyID::L) == 1) {
+		p_data->counter += 30;
+	}
+#endif
 
 	//最初のみ.
 	if (p_data->counter == 0) {
@@ -44,6 +52,10 @@ void EndlessStage::Update() {
 		data.type = Effect_Endless_Level1;
 		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
 		p_effectMng->SpawnEffect(&data);
+
+		//召喚可能にする.
+		p_meteorMng->SetIsSpawnAble(true);
+		p_itemMng->  SetIsSpawnAble(true);
 	}
 
 	//カウンター増加.
@@ -83,7 +95,7 @@ void EndlessStage::Update() {
 			if (p_data->counter >= 6000) { //6000 = 出現間隔約??%地点.
 				p_data->level = 4; //Lv4へ.
 
-				ItemManager::GetPtr()->AddItemCnt(); //アイテムを増やす.
+				p_itemMng->AddItemCnt(); //アイテムを増やす.
 
 				//サウンド.
 				p_sound->Play(_T("LevelUp"), false, 100);
@@ -98,7 +110,7 @@ void EndlessStage::Update() {
 			if (p_data->counter >= 9000) { //9000 = 出現間隔約??%地点.
 				p_data->level = 5; //Lv5へ.
 
-				GameManager::GetPtr()->ResetNorLaser();
+				p_gameMng->ResetNorLaser();
 
 				//サウンド.
 				p_sound->Play(_T("LevelUp"), false, 100);

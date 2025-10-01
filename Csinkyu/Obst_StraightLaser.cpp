@@ -18,10 +18,10 @@ using namespace Calc; //ŒvZ‹@”\‚ğg—p.
 void StraightLaser::Init()
 {
 	//À‘Ôæ“¾‚·‚é‚º.
-	p_data      = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_laserMng  = LaserManager::GetPtr();
-	p_meteorMng = MeteorManager::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_laserMng  = &LaserManager::GetInst();
+	p_meteorMng = &MeteorManager::GetInst();
 
 	currentDirection = 0;
 	nextDirection = 0;
@@ -127,7 +127,7 @@ void StraightLaser::DrawPredictionLine()
 
 	// —\‘ªü‚Ì“§–¾“x.
 	double alpha = CalcNumEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
-	SetDrawBlendModeKR(MODE_ALPHA, 255*(1-alpha));
+	SetDrawBlendModeKR(BlendModeID::Alpha, 255*(1-alpha));
 
 	// ’†‰›‚Ì—\‘ªü‚Ì‚İ‚ğ•`‰æ
 	// ”­Ë•ûŒü‚É‰‚¶‚Ä—\‘ªü‚ğ•`‰æ

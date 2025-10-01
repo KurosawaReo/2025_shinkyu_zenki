@@ -67,18 +67,20 @@ enum StageType
 
 //ゲーム設定.
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
-#define TUTORIAL_START_WAIT_TIME        (1.0)           //チュートリアルで項目が開始した時の停止時間.
+#define TUTORIAL_START_WAIT_TIME        (1.5)           //チュートリアルで項目が開始した時の停止時間.
 #define TUTORIAL_END_NEXT_TIME          (1.0)           //チュートリアルで次に進む間隔時間.
+#define TUTORIAL_RESPAWN_TIME           (1.8)           //チュートリアルでプレイヤーが復活する時間.
 
 #define REFLECT_MODE_TIME				(8)             //反射モード制限時間.
 #define SLOW_MODE_SPEED					(0.20f)			//スロー速度倍率.
-#define SLOW_MODE_DIS_LEN				(200)			//スローになるプレイヤーとレーザーの距離範囲.
+#define SLOW_MODE_DIS_LEN				(50)			//スローになるプレイヤーとレーザーの距離範囲.
 #define SLOW_MODE_BUF_F                 (50)            //スローが継続するフレーム数.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
 //プレイヤー.
-#define PLAYER_SIZE						(35)			//プレイヤーサイズ.
+#define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)
+#define PLAYER_REF_ADD_SIZE				(5)				//反射モード時に拡大する当たり判定.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
@@ -166,7 +168,7 @@ enum StageType
 
 //スコア.
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.
-#define SCORE_BREAK_METEO				(500)			//隕石を壊した時のスコア.
+#define SCORE_BREAK_METEOR				(500)			//隕石を壊した時のスコア.
 #define SCORE_ANIM_TIME					(50)			//スコアのアニメーション時間.
 
 //カラー.

@@ -15,27 +15,42 @@ class ItemManager;
 class Player;
 class FireworksManager;
 class EffectManager;
+class UIManager;
 
 //チュートリアル.[継承不可]
 class TutorialStage final
 {
-public: //実体.
-	static TutorialStage* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static TutorialStage& GetInst() {
 		static TutorialStage inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	TutorialStage(const TutorialStage&) = delete;
+	TutorialStage& operator=(const TutorialStage&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	TutorialStage(){}
 
-private: //データ.
+//▼データ.
+private:
 
 	Font   font[2]{};
 	
-	int    stepNo{};     //現在のステップ番号.
-	int    stepInNo{};   //現在のステップ内番号.
+	int    stepNo{};          //現在のステップ番号.
+	int    stepInNo{};        //現在のステップ内番号.
 
-	double plyMoveSum{}; //プレイヤーの移動距離.
+	double plyMoveSum{};      //プレイヤーの移動距離.
 
-	Timer  startTimer{}; //項目開始時に計測開始.
-	Timer  endTimer{};   //項目終了時に計測開始.
+	bool   isTakeItem{};      //アイテムを取ったかどうか.
+	bool   isReflectLaser{};  //レーザーを反射したかどうか.
+	bool   isReflectFinish{}; //反射モードが終わったかどうか.
+	bool   isBreakMeteor{};   //隕石を壊したかどうか.
+
+	Timer  startTimer{};      //項目開始時に計測開始.
+	Timer  endTimer{};        //項目終了時に計測開始.
 
 	GameData*         p_data{};
 	GameManager*      p_gameMng{};
@@ -46,17 +61,26 @@ private: //データ.
 	Player*           p_player{};
 	FireworksManager* p_fireworksMng{};
 	EffectManager*    p_effectMng{};
+	UIManager*        p_uiMng{};
 	InputMng*         p_input{};
 	SoundMng*         p_sound{};
 
 public:
-	//get.
+	//set.
+	void SetTakeItem     (bool _flag) { isTakeItem      = _flag; }
+	void SetReflectLaser (bool _flag) { isReflectLaser  = _flag; }
+	void SetReflectFinish(bool _flag) { isReflectFinish = _flag; }
+	void SetBreakMeteor  (bool _flag) { isBreakMeteor   = _flag; }
+	//get
 	int GetStepNo() const { return stepNo; }
 
 	void Init();
 	void Reset();
 	void Update();
 	void Draw();
+
+	void ResetSignFlag();
+	void StepInEnd();
 
 	void UpdateStep0();
 	void UpdateStep1();

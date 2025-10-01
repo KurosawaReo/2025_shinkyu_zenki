@@ -13,9 +13,9 @@ using namespace Calc; //計算機能を使用.
 //初期化(一回のみ行う)
 void Player::Init()
 {
-	p_data      = GameData::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
-	p_input     = InputMng::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_effectMng = &EffectManager::GetInst();
+	p_input     = &InputMng::GetInst();
 
 	isDebug = false;
 
@@ -26,18 +26,18 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
 {
-	hit        = { _pos, PLAYER_SIZE/2, {} };
+	hit        = { _pos, PLAYER_SIZE, {} };
 	active     = _active;
 	mode       = Player_Normal;
 	afterCntr  = 1;
 	isMoveAble = true;
 
-	//座標配列のリセット.
+	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
 		after[i].pos      = _pos;
 		after[i].isActive = false;
 	}
-	// 反射エフェクト初期化を追加
+	//反射エフェクトリセット.
 	reflectEffectIndex = 0;
 	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
 		reflectEffects[i].active = false;
@@ -72,7 +72,7 @@ void Player::Update()
 		//反射モード中.
 		if (p_data->isReflectMode) {
 			//敵のレーザーが近くにあれば.
-			if (LaserManager::GetPtr()->IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
+			if (LaserManager::GetInst().IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
 				p_data->slowBufCntr = SLOW_MODE_BUF_F;
 			}
 		}
@@ -85,7 +85,7 @@ void Player::Draw()
 	//デバッグ表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.Draw(ANC_MID, p_data->font1);
+		str.Draw(Anchor::Mid, p_data->font1);
 	}
 	// エフェクトのデバッグ情報表示
 	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
@@ -103,16 +103,18 @@ void Player::Draw()
 		DrawAfterImage();
 		DrawReflectEffects();  // エフェクトを先に描画
 
+		const float size = 0.17;
+
 		//画像描画.
 		if (mode == Player_Reflect ||
 			mode == Player_SuperReflect
 		){
 			//反射モードの画像.
-			imgPlayer[1].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
+			imgPlayer[1].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
 		else {
 			//通常モードの画像.
-			imgPlayer[0].DrawRota(hit.pos, 0.15, imgRot, {0, 0}, ANC_MID, true, true);
+			imgPlayer[0].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
 
 		//チュートリアル用.
@@ -120,6 +122,55 @@ void Player::Draw()
 			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToIntXY(), 0xFFFFFF );
 			str.Draw();
 		}
+	}
+}
+
+//移動処理(斜め対応)
+void Player::PlayerMove()
+{
+	//移動可能なら.
+	if (isMoveAble) {
+		//移動する.
+		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+		//移動限界.
+		FixPosInArea(&hit.pos, { PLAYER_SIZE*2, PLAYER_SIZE*2 }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+	}
+}
+
+//死亡処理.
+void Player::PlayerDeath() {
+
+	//デバッグモード中は無敵.
+	if (isDebug) { return; }
+
+	//まだ生存してるなら.
+	if (active) {
+
+		//サウンド.
+		InstSoundMng.Play(_T("PlayerDeath"), false, 80);
+		//エフェクト.
+		EffectData data{};
+		data.type = Effect_PlayerDeath;
+		data.pos  = hit.pos;
+		p_effectMng->SpawnEffect(&data);
+		//GamaManagerの関数実行(includeだけすれば使える)
+		GameManager::GetInst().GameOver(); //ゲーム終了.
+	
+		active = false;
+	}
+}
+
+//プレイヤー復活.
+void Player::PlayerRevival()
+{
+	hit.pos = {WINDOW_WID/2, WINDOW_HEI/2};
+	active  = true;
+
+	//残像配列のリセット.
+	for (int i = 0; i < _countof(after); i++) {
+		after[i].pos = hit.pos;
+		after[i].isActive = false;
 	}
 }
 
@@ -160,9 +211,9 @@ void Player::DrawAfterImage()
 			//透明度の計算.
 			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
 			//透明度反映.
-			SetDrawBlendModeKR(MODE_ADD, 255*(1-alpha));
+			SetDrawBlendModeKR(BlendModeID::Add, 255*(1-alpha));
 
-			Circle cir = { after[i].pos, PLAYER_SIZE/2, {} };
+			Circle cir = { after[i].pos, PLAYER_SIZE, {} };
 			//反射カラー.
 			if (mode == Player_Reflect ||
 				mode == Player_SuperReflect
@@ -181,19 +232,6 @@ void Player::DrawAfterImage()
 
 	//描画モードリセット.
 	ResetDrawBlendMode();
-}
-
-//移動処理(斜め対応)
-void Player::PlayerMove()
-{
-	//移動可能なら.
-	if (isMoveAble) {
-		//移動する.
-		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
-		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
-		//移動限界.
-		FixPosInArea(&hit.pos, { PLAYER_SIZE, PLAYER_SIZE }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
-	}
 }
 
 // 反射エフェクト生成
@@ -259,7 +297,7 @@ void Player::DrawReflectEffects()
 			);
 
 			// アルファブレンドモード設定（エフェクトごとに設定）
-			SetDrawBlendModeKR(MODE_ALPHA, alpha);
+			SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 			// 四角い波紋を描画
 			for (int wave = 0; wave < 3; wave++) {
@@ -288,7 +326,7 @@ void Player::DrawReflectEffects()
 							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
 							waveColor
 						};
-						DrawBoxKR(&thickBox, ANC_MID, false, true);
+						DrawBoxKR(&thickBox, Anchor::Mid, false, true);
 					}
 				}
 			}
@@ -306,34 +344,10 @@ void Player::DrawReflectEffects()
 				{ (double)centerSize, (double)centerSize },
 				centerColor
 			};
-			DrawBoxKR(&centerBox, ANC_MID, false, true);
+			DrawBoxKR(&centerBox, Anchor::Mid, false, true);
 
 			// 描画モードリセット
 			ResetDrawBlendMode();
 		}
-	}
-}
-
-//死亡処理.
-void Player::PlayerDeath() {
-
-	//デバッグモード中は無敵.
-	if (isDebug) { return; }
-
-	//まだ生存してるなら.
-	if (active) {
-
-		//サウンド.
-		SoundMng* sound = SoundMng::GetPtr();
-		sound->Play(_T("PlayerDeath"), false, 80);
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_PlayerDeath;
-		data.pos  = hit.pos;
-		p_effectMng->SpawnEffect(&data);
-		//GamaManagerの関数実行(includeだけすれば使える)
-		GameManager::GetPtr()->GameEnd(); //ゲーム終了.
-	
-		active = false;
 	}
 }

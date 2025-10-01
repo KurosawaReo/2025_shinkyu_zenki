@@ -30,7 +30,7 @@
     <ClCompile Include="Global.h" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="KR_Lib\KR_Debug.cpp" />
-    <ClCompile Include="KR_Lib\KR_Main.cpp" />
+    <ClCompile Include="KR_Lib\KR_App.cpp" />
     <ClCompile Include="KR_Lib\KR_Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obst_StraightLaser.cpp" />
@@ -65,7 +65,7 @@
     <ClInclude Include="KR_Lib\KR_Debug.h" />
     <ClInclude Include="KR_Lib\KR_Global.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="KR_Lib\KR_Main.h" />
+    <ClInclude Include="KR_Lib\KR_App.h" />
     <ClInclude Include="KR_Lib\KR_Scene.h" />
     <ClInclude Include="Obst_StraightLaser.h" />
     <ClInclude Include="KR_Lib\KR_Calc.h" />

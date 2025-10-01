@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/10/01
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -11,23 +11,23 @@
 namespace KR_Lib
 {
 	//フォントタイプID(入力しやすくする用)
-	enum FontTypeID
+	enum class FontTypeID
 	{
-		FONT_NORMAL    = DX_FONTTYPE_NORMAL,
-		FONT_EDGE      = DX_FONTTYPE_EDGE,
-		FONT_ANTI      = DX_FONTTYPE_ANTIALIASING,      //アンチエイリアス(滑らかになる)
-		FONT_ANTI_EDGE = DX_FONTTYPE_ANTIALIASING_EDGE, //アンチエイリアス & エッジ
+		Normal   = DX_FONTTYPE_NORMAL,
+		Edge     = DX_FONTTYPE_EDGE,
+		Anti     = DX_FONTTYPE_ANTIALIASING,      //アンチエイリアス(滑らかになる)
+		AntiEdge = DX_FONTTYPE_ANTIALIASING_EDGE, //アンチエイリアス & エッジ
 
-		FONT_NONE      = -1, //指定なし.
+		None     = -1, //指定なし.
 	};
 	//描画モードID(入力しやすくする用)
 	enum BlendModeID
 	{
-		MODE_NONE  = DX_BLENDMODE_NOBLEND, //デフォルト.
-		MODE_ALPHA = DX_BLENDMODE_ALPHA,   //αブレンド.  (重なると透過する)
-		MODE_ADD   = DX_BLENDMODE_ADD,     //加算ブレンド.(重なると明度が明るくなる)
-		MODE_SUB   = DX_BLENDMODE_SUB,     //減算ブレンド.(重なると明度が暗くなる)
-		MODE_MUL   = DX_BLENDMODE_MUL      //乗算ブレンド.
+		None  = DX_BLENDMODE_NOBLEND, //デフォルト.
+		Alpha = DX_BLENDMODE_ALPHA,   //αブレンド.  (重なると透過する)
+		Add   = DX_BLENDMODE_ADD,     //加算ブレンド.(重なると明度が明るくなる)
+		Sub   = DX_BLENDMODE_SUB,     //減算ブレンド.(重なると明度が暗くなる)
+		Mul   = DX_BLENDMODE_MUL      //乗算ブレンド.
 	};
 
 	//画像データ.
@@ -39,9 +39,9 @@ namespace KR_Lib
 	//アンカー(描画の基準点)
 	enum Anchor
 	{
-		ANC_LU,	ANC_U,   ANC_RU, //例:ANC_LU = Left Up.
-		ANC_L,  ANC_MID, ANC_R,
-		ANC_DL,	ANC_D,   ANC_DR,
+		LU,	U,   RU, //例:Anchor::LU = Left Up.
+		L,  Mid, R,
+		DL,	D,   DR,
 	};
 
 	//画像描画クラス.
@@ -59,11 +59,11 @@ namespace KR_Lib
 		//読み込み.
 		int LoadFile  (MY_STRING fileName);
 		//描画.
-		int Draw      (DBL_XY pos,                                                    Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawRect  (DBL_XY pos, int left, int up, int right, int down,             Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                   Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawRota  (DBL_XY pos, double extend,  double ang, INT_XY pivot = {0, 0}, Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                              bool isTrans = true, bool isFloat = false);
+		int Draw      (DBL_XY pos,                                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawRect  (DBL_XY pos, int left, int up, int right, int down,             Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawRota  (DBL_XY pos, double extend,  double ang, INT_XY pivot = {0, 0}, Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                  bool isTrans = true, bool isFloat = false);
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		DrawImg& operator=(const DrawImg&) = delete;
@@ -84,11 +84,11 @@ namespace KR_Lib
 		//読み込み.
 		int LoadFile  (MY_STRING fileName, INT_XY size, INT_XY cnt);
 		//描画.
-		int Draw      (int imgNo, DBL_XY pos,                                                   Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawRect  (int imgNo, DBL_XY pos, int left, int up, int right, int down,            Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawExtend(int imgNo, DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawRota  (int imgNo, DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0}, Anchor anc = ANC_MID, bool isTrans = true, bool isFloat = false);
-		int DrawModi  (int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                             bool isTrans = true, bool isFloat = false);
+		int Draw      (int imgNo, DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawRect  (int imgNo, DBL_XY pos, int left, int up, int right, int down,            Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawExtend(int imgNo, DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawRota  (int imgNo, DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0}, Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false);
+		int DrawModi  (int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool isFloat = false);
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		DrawDivImg& operator=(const DrawDivImg&) = delete;
@@ -106,7 +106,7 @@ namespace KR_Lib
 		DrawStr(MY_STRING _text, INT_XY _pos, MY_COLOR _color) : text(_text), pos(_pos), color(_color) {}
 
 		//描画.
-		int    Draw	   (Anchor anc = ANC_MID, int font = -1);
+		int    Draw	   (Anchor anc = Anchor::Mid, int font = -1);
 		int    DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font = -1);
 		int    DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font = -1);
 		//その他.
@@ -126,7 +126,7 @@ namespace KR_Lib
 		//get.
 		int GetFont() const { return handle; }
 		//フォント作成.
-		void CreateFontH(MY_STRING fontName, int size, int thick, FontTypeID fontId = FONT_NONE);
+		void CreateFontH(MY_STRING fontName, int size, int thick, FontTypeID fontId = FontTypeID::None);
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		Font& operator=(const Font&) = delete;
@@ -146,10 +146,10 @@ namespace KR_Lib
 	};
 
 	//図形.
-	int    DrawCircleKR		 (const Circle*   data,                       bool isFill = true, bool isAnti = false, float thick = 1);
-	int    DrawBoxKR		 (const Box*      data, Anchor anc = ANC_MID, bool isFill = true, bool isAnti = false);
-	int    DrawTriangleKR	 (const Triangle* data,                       bool isFill = true, bool isAnti = false);
-	int    DrawLineKR		 (const Line*     data,                                           bool isAnti = false, float thick = 1.0f);
+	int    DrawCircleKR		 (const Circle*   data,                           bool isFill = true, bool isAnti = false, float thick = 1);
+	int    DrawBoxKR		 (const Box*      data, Anchor anc = Anchor::Mid, bool isFill = true, bool isAnti = false);
+	int    DrawTriangleKR	 (const Triangle* data,                           bool isFill = true, bool isAnti = false);
+	int    DrawLineKR		 (const Line*     data,                                               bool isAnti = false, float thick = 1.0f);
 	int    DrawWindowGrid	 (int wid, int hei, int size, MY_COLOR clrWid = {160, 160, 255}, MY_COLOR clrHei = {255, 160, 160});
 
 	//描画モード.

@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "GameManager.h"
 #include "Obst_MeteorManager.h"
+#include "Stage_Tutorial.h"
 
 #include "LaserManager.h"
 
@@ -14,10 +15,13 @@ using namespace Calc; //計算機能を使用.
 void LaserManager::Init() {
 
 	//実体取得.
-	p_data      = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_meteorMng = MeteorManager::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_meteorMng = &MeteorManager::GetInst();
+	p_effectMng = &EffectManager::GetInst();
+	//画像.
+	imgLight[0].LoadFile(_T("Resources/Images/laser_nor_light.png"));
+	imgLight[1].LoadFile(_T("Resources/Images/laser_ref_light.png"));
 }
 //リセット.
 void LaserManager::Reset() {
@@ -66,7 +70,7 @@ void LaserManager::Draw() {
 		DxLib::SetDrawBlendMode(DX_BLENDMODE_ADD, clr);
 
 		//軌跡の線設定.
-		Line tmpLine = { {line[i].x2, line[i].y2}, {line[i].x1, line[i].y1}, {} };
+		Line tmpLine = { {line[i].x1, line[i].y1}, {line[i].x2, line[i].y2}, {} };
 		//線の色(時間経過で色が変化)
 		switch (line[i].type)
 		{
@@ -91,17 +95,30 @@ void LaserManager::Draw() {
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
 
 		UINT color;
-		//線の色(先端の色を使用)
+
+		const float lightSize = 0.015;
+
+		SetDrawBlendModeKR(BlendModeID::Add, 155 + 100*CalcNumWaveLoop(laser[i].Counter/30)); //点滅.
+
+		//レーザー先端の画像.
 		switch (laser[i].type)
 		{
-			case Laser_Normal:       color = GetColor(50, 255, 255); break;
-			case Laser_Straight:     color = GetColor(50, 255, 255); break;
-			case Laser_Reflect:      color = GetColor(255,  0, 255); break;
-			case Laser_SuperReflect: color = GetColor(255,  0, 255); break;
-			case Laser_Falling:      color = GetColor(50, 255, 255); break;
+			case Laser_Normal:
+			case Laser_Straight:
+			case Laser_Falling:
+				color = GetColor(50, 255, 255); //色の設定.
+				//imgLight[0].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				break;
+			case Laser_Reflect:
+			case Laser_SuperReflect:
+				color = GetColor(255, 0, 255); //色の設定.
+				//imgLight[1].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
+				break;
 
 			default: assert(FALSE); break;
 		}
+
+		ResetDrawBlendMode();
 
 		if (p_data->stage == STAGE_TUTORIAL) {
 			//有効なレーザーに表示する.
@@ -124,6 +141,10 @@ void LaserManager::UpdateLaser() {
 
 		//プレイヤー当たり判定.
 		Circle plyHit = p_player->GetHit();
+		//反射モードならサイズを大きくする.
+		if (p_player->GetMode() == Player_Reflect || p_player->GetMode() == Player_SuperReflect) {
+			plyHit.r += PLAYER_REF_ADD_SIZE;
+		}
 
 		//レーザータイプ別.
 		switch (laser[i].type)
@@ -132,7 +153,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -169,7 +190,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -207,7 +228,7 @@ void LaserManager::UpdateLaser() {
 			{
 				Line line = { {laser[i].x, laser[i].y}, {laser[i].bx, laser[i].by}, {} }; //レーザーの当たり判定.
 				// プレイヤーとレーザーの当たり判定
-				if (HitLineCir(&line, &plyHit)) {
+				if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
 
 					//反射あり.
 					if (p_player->GetMode() == Player_Reflect)
@@ -277,23 +298,29 @@ void LaserManager::UpdateLaser() {
 				//隕石と当たっているなら.
 				if (p_meteorMng->IsHitMeteors(hit, true)) {
 
-					double dig = _deg(atan2(laser[i].vy, laser[i].vx)); //現在のレーザー角度.
-
-					//エフェクトをいくつか出す.
+					EffectData data{}; //エフェクト用に用意.
+					
+					//現在のレーザー角度.
+					double dig = _deg(atan2(laser[i].vy, laser[i].vx));
+					//隕石破壊エフェクト.
+					data.type  = Effect_BreakMeteor;
+					data.pos   = { laser[i].x, laser[i].y };
+					//いくつか出す.
 					for (int j = 0; j < METEOR_BREAK_ANIM_CNT; j++) {
 
 						double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-
-						EffectData data{};
-						data.type  = Effect_BreakMeteo;
-						data.pos   = { laser[i].x, laser[i].y };
-						data.vec   = CalcVectorDeg(newDig);      //ずらした角度を反映.
-						data.speed = (float)RandNum(20, 100)/10; //速度抽選.
-						data.len   = (float)RandNum(10, 150)/10; //長さ抽選.
-						data.ang   = (float)RandNum(0, 3599)/10; //角度抽選.
-						//エフェクト召喚.
-						p_effectMng->SpawnEffect(&data);
+						data.vec   = CalcVectorDeg(newDig);                 //ずらした角度を反映.
+						data.speed = (float)RandNum(20, 100)/10;            //速度抽選.
+						data.len   = (float)RandNum(10, 150)/10;            //長さ抽選.
+						data.ang   = (float)RandNum(0, 3599)/10;            //角度抽選.
+						p_effectMng->SpawnEffect(&data);                    //エフェクト出現.
 					}
+					//スコアエフェクト.
+					data.type = Effect_Score500;
+					data.pos = { laser[i].x, laser[i].y };
+					p_effectMng->SpawnEffect(&data); //エフェクト出現.
+					//サウンド.
+					InstSoundMng.Play(_T("Break"), false, 74);
 
 					//どっちのタイプかで切り替え.
 					if (laser[i].type == Laser_Reflect) {
@@ -302,6 +329,11 @@ void LaserManager::UpdateLaser() {
 					else {
 						laser[i].Counter = LASER_REF_TRACK_ED_TM; //再反射後は追尾しない.
 						ReflectLaser(i); //再反射.
+					}
+
+					//チュートリアルなら指示送信.
+					if (p_data->stage == STAGE_TUTORIAL) {
+						TutorialStage::GetInst().SetBreakMeteor(true);	
 					}
 				}
 				else {
@@ -394,15 +426,14 @@ bool LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			laser[i].type = type;   // タイプの登録
 
 			//サウンド.
-			SoundMng* sound = SoundMng::GetPtr();
 			if (type == Laser_Normal) {
-				sound->Play(_T("Laser1"), false, 58); //通常レーザー.
+				InstSoundMng.Play(_T("Laser1"), false, 58); //通常レーザー.
 			}
 			if (type == Laser_Straight) {
-				sound->Play(_T("Laser2"), false, 60); //直線レーザー.
+				InstSoundMng.Play(_T("Laser2"), false, 60); //直線レーザー.
 			}
 			if (type == Laser_Falling) {
-				sound->Play(_T("Laser1"), false, 45); //落下レーザー（少し音量小さめ）.
+				InstSoundMng.Play(_T("Laser1"), false, 45); //落下レーザー（少し音量小さめ）.
 			}
 
 			return true; //召喚成功.
@@ -414,27 +445,13 @@ bool LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 void LaserManager::DeleteLaser(int idx) {
 
 	laser[idx].type = Laser_Normal; //ノーマルモードに戻す.
-	laser[idx].goalPos = { 0, 0 };    //目標地点リセット.
+	laser[idx].goalPos = { 0, 0 };  //目標地点リセット.
 	laser[idx].isGoGoal = false;    //目標地点なし.
 	laser[idx].ValidFlag = 0;       //無効にする.
 }
 //レーザー反射.
 void LaserManager::ReflectLaser(int idx)
 {
-	// レーザーからプレイヤーへのベクトルを計算
-	double dx = plyPos.x - laser[idx].x;
-	double dy = plyPos.y - laser[idx].y;
-
-	// ベクトルの長さを計算
-	double length = sqrt(dx * dx + dy * dy);
-
-	// 正規化（長さを1にする）
-	if (length > 0)
-	{
-		dx /= length;
-		dy /= length;
-	}
-
 	//反射時の元の角度.
 	double ang = _deg(atan2(laser[idx].vy, laser[idx].vx));
 	//角度を逆方向へ(少しだけランダムでずれる)
@@ -449,8 +466,15 @@ void LaserManager::ReflectLaser(int idx)
 	data.pos = { laser[idx].x, laser[idx].y };
 	p_effectMng->SpawnEffect(&data);
 	//サウンド.
-	SoundMng* sound = SoundMng::GetPtr();
-	sound->Play(_T("Laser3"), false, 58);
+	InstSoundMng.Play(_T("Laser3"), false, 58);
+
+	//少しの間スローにする.
+	//p_data->slowBufCntr = SLOW_MODE_BUF_F;
+
+	//チュートリアルなら指示送信.
+	if (p_data->stage == STAGE_TUTORIAL) {
+		TutorialStage::GetInst().SetReflectLaser(true);
+	}
 }
 
 //敵のレーザーが1つでも存在するかどうか.

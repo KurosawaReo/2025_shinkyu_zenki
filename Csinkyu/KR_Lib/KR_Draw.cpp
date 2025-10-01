@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/10/01
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -525,7 +525,7 @@ namespace KR_Lib
 	}
 	//フォント作成.
 	void Font::CreateFontH(MY_STRING fontName, int size, int thick, FontTypeID fontId) {
-		handle = CreateFontToHandle(fontName.c_str(), size, thick, fontId);
+		handle = CreateFontToHandle(fontName.c_str(), size, thick, _int(fontId));
 	}
 
 // ▼*---=[ GradLine ]=---*▼ //
@@ -534,10 +534,10 @@ namespace KR_Lib
 	void GradLine::AddPoint(DBL_XY pos, MY_COLOR color) {
 
 		VERTEX2D point;
-		point.pos = VGet(pos.x, pos.y, 0); //VECTOR型にして登録.
-		point.dif = color.GetColorU8();    //COLOR_U8で登録.
-		point.rhw = 1.0f;                  //2Dでは不要?
-		point.u = point.v = 0.0f;          //テクスチャUVは使わない.
+		point.pos = VGet(_flt(pos.x), _flt(pos.y), 0); //VECTOR型にして登録.
+		point.dif = color.GetColorU8();                //COLOR_U8で登録.
+		point.rhw = 1.0f;                              //2Dでは不要?
+		point.u = point.v = 0.0f;                      //テクスチャUVは使わない.
 
 		points.push_back(point); //頂点追加.
 	}
@@ -545,7 +545,7 @@ namespace KR_Lib
 	void GradLine::Draw(bool isClose) {
 
 		//頂点の数.
-		int count = (isClose) ? points.size() + 1 : points.size();
+		int count = _int((isClose) ? points.size()+1 : points.size());
 		//頂点配列.
 		vector<VERTEX2D> tmp(count);
 
@@ -558,7 +558,7 @@ namespace KR_Lib
 		}
 
 		//描画.
-		SetDrawBlendModeKR(MODE_ALPHA, 255); //透過を反映させるためにアルファモードにする.
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255); //透過を反映させるためにアルファモードにする.
 		DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE); //TODO: DX_PRIMTYPE_LINESTRIP以外の機能.
 		ResetDrawBlendMode();
 	}

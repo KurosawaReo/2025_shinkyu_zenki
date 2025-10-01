@@ -15,10 +15,10 @@ using namespace Calc; //計算機能を使用.
 void NormalLaserMain::Init()
 {
 	// オブジェクトを参照として保存
-	p_data      = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_laserMng  = LaserManager::GetPtr();
-	p_meteorMng = MeteorManager::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_laserMng  = &LaserManager::GetInst();
+	p_meteorMng = &MeteorManager::GetInst();
 }
 //リセット.
 void NormalLaserMain::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)

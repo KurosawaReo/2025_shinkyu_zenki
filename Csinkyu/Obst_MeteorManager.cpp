@@ -11,9 +11,9 @@ using namespace Calc; //計算機能を使用.
 
 void MeteorManager::Init() {
 
-	p_data      = GameData::GetPtr();
-	p_player    = Player::GetPtr();
-	p_effectMng = EffectManager::GetPtr();
+	p_data      = &GameData::GetInst();
+	p_player    = &Player::GetInst();
+	p_effectMng = &EffectManager::GetInst();
 
 	//全隕石ループ.
 	for (int i = 0; i < METEOR_CNT_MAX; i++) {
@@ -22,6 +22,8 @@ void MeteorManager::Init() {
 }
 
 void MeteorManager::Reset() {
+
+	isSpawnAble = false; //許可が出されるまで召喚不可.
 
 	timer = METEOR_SPAWN_SPAN; //初期時間.
 
@@ -33,14 +35,17 @@ void MeteorManager::Reset() {
 
 void MeteorManager::Update() {
 
-	//タイマーが残っていれば.
-	if (timer > 0) {
-		timer -= p_data->speedRate;
-	}
-	//タイマーが0になったら.
-	else {
-		SpawnMeteor(); //隕石生成.
-		timer = METEOR_SPAWN_SPAN * p_data->spawnRate; //タイマー再開(徐々に短くなる)
+	//召喚可能なら.
+	if (isSpawnAble) {
+		//タイマーが残っていれば.
+		if (timer > 0) {
+			timer -= p_data->speedRate;
+		}
+		//タイマーが0になったら.
+		else {
+			SpawnMeteor(); //隕石生成.
+			timer = METEOR_SPAWN_SPAN * p_data->spawnRate; //タイマー再開(徐々に短くなる)
+		}
 	}
 
 	//全隕石ループ.
@@ -69,7 +74,7 @@ void MeteorManager::SpawnMeteor(){
 		if (!meteor[i].GetActive()) {
 
 			meteor[i].Spawn(); //出現.
-			break;            //出現完了.
+			break;             //出現完了.
 		}
 	}
 }
@@ -89,16 +94,7 @@ bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 				if (meteor[i].GetState() == Meteor_Normal) {
 
 					meteor[i].Destroy();                 //隕石を破壊.
-					p_data->score += SCORE_BREAK_METEO; //スコア加算.
-
-					//エフェクト.
-					EffectData data{};
-					data.type = Effect_Score500;
-					data.pos = cir.pos;
-					p_effectMng->SpawnEffect(&data);
-					//サウンド.
-					SoundMng* sound = SoundMng::GetPtr();
-					sound->Play(_T("Break"), false, 74);
+					p_data->score += SCORE_BREAK_METEOR; //スコア加算.
 				}
 			}
 			return true; //1つでも当たっている.
@@ -118,7 +114,7 @@ bool MeteorManager::GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 		//有効かつ、破壊されてないなら.
 		if (meteor[i].GetActive() && meteor[i].GetState() == Meteor_Normal) {
 
-			DBL_XY tmpPos = meteor[i].GetPos();           //1つずつ座標取得.
+			DBL_XY tmpPos = meteor[i].GetPos();          //1つずつ座標取得.
 			double tmpDis = CalcDist(tmpPos, _startPos); //距離を計算.
 
 			//初回限定.

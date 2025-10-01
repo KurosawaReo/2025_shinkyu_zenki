@@ -13,8 +13,8 @@
 void Ripples::Init()
 {
 	//実体のアドレスをもらう.
-	p_data   = GameData::GetPtr();
-	p_player = Player::GetPtr();
+	p_data   = &GameData::GetInst();
+	p_player = &Player::GetInst();
 
 	// フラッシュエフェクトの初期化
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
@@ -199,8 +199,7 @@ void Ripples::Hitjudgment()
 
 			//サウンド.
 			if (!isPlaySound) {
-				SoundMng* sound = SoundMng::GetPtr();
-				sound->Play(_T("Ripples"), false, 73);
+				InstSoundMng.Play(_T("Ripples"), false, 73);
 				isPlaySound = true; //もう再生しない.
 			}
 
@@ -264,7 +263,7 @@ void Ripples::DrawWarningEffect(int index)
 	}
 
 	// 予告エフェクトを描画.
-	SetDrawBlendModeKR(MODE_ALPHA, alphaValue);
+	SetDrawBlendModeKR(BlendModeID::Alpha, alphaValue);
 
 	Circle cir;
 	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize,   GetColor(150, 150, 150) };
@@ -297,7 +296,7 @@ void Ripples::DrawActiveEffect(int index)
 	int innerSize = effectSize / 2;
 
 	// アクティブエフェクトを円形で描画（シアン色で光る）
-	SetDrawBlendModeKR(MODE_ADD, alphaValue);
+	SetDrawBlendModeKR(BlendModeID::Add, alphaValue);
 
 	Circle cir;
 	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)effectSize, GetColor(0, 255, 255)};

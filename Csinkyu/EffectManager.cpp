@@ -8,7 +8,7 @@
 using namespace Calc; //計算機能を使用.
 
 void EffectManager::Init() {
-	p_data = GameData::GetPtr();
+	p_data = &GameData::GetInst();
 
 	imgScore[0].LoadFile(_T("Resources/Images/score100.png"));
 	imgScore[1].LoadFile(_T("Resources/Images/score500.png"));
@@ -64,7 +64,7 @@ void EffectManager::Update() {
 				}
 				break;
 
-				case Effect_BreakMeteo:
+				case Effect_BreakMeteor:
 				{
 					//カウンター加算.
 					effect[i].counter += p_data->speedRate;
@@ -126,7 +126,7 @@ void EffectManager::Draw() {
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
 
 					//描画.
-					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
 					//画像切り替え.
 					if (effect[i].type == Effect_Score100) {
 						imgScore[0].DrawExtend(pos, {0.2, 0.2});
@@ -139,12 +139,12 @@ void EffectManager::Draw() {
 
 				case Effect_PlayerDeath:
 				{
-					Circle cir = { effect[i].pos, PLAYER_SIZE/2+effect[i].counter/2, 0xFFFFFF };
+					Circle cir = { effect[i].pos, PLAYER_SIZE+effect[i].counter/2, 0xFFFFFF };
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 
 					//描画.
-					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
 					DrawCircleKR(&cir, false, true);
 				}
 				break;
@@ -156,12 +156,12 @@ void EffectManager::Draw() {
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
 
 					//描画.
-					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
 					DrawCircleKR(&cir, false, true);
 				}
 				break;
 
-				case Effect_BreakMeteo:
+				case Effect_BreakMeteor:
 				{
 					//飛ばす線のデータ.
 					Line line{};
@@ -172,7 +172,7 @@ void EffectManager::Draw() {
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEOR_BREAK_ANIM_TIME));
 
 					//描画.
-					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
 					DrawLineKR(&line, true);
 				}
 				break;
@@ -204,7 +204,7 @@ void EffectManager::Draw() {
 					int lampFillCnt = 0;
 
 					//描画.
-					SetDrawBlendModeKR(MODE_ALPHA, pow);
+					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
 					DrawCircleKR(&mainCir, false, true);
 
 					switch (effect[i].type) 
@@ -257,7 +257,7 @@ void EffectManager::Draw() {
 							break;
 					}
 					//テキスト.
-					str.Draw(ANC_MID, p_data->font2);
+					str.Draw(Anchor::Mid, p_data->font2);
 					//ランプ(必要な数だけ描画)
 					for (int j = 0; j < lampUseCnt; j++) {
 						
@@ -279,7 +279,7 @@ void EffectManager::Draw() {
 }
 
 //エフェクト出現.
-void EffectManager::SpawnEffect(EffectData* data) {
+void EffectManager::SpawnEffect(const EffectData* data) {
 
 	//未使用のエフェクトを探す.
 	for (int i = 0; i < EFFECT_MAX; i++) {

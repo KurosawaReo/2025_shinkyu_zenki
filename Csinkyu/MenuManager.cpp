@@ -9,27 +9,26 @@
 // 初期化
 void MenuManager::Init() {
 
-	p_data = GameData::GetPtr();
-	p_sound = SoundMng::GetPtr();
+	p_data  = &GameData::GetInst();
+	p_sound = &SoundMng::GetInst();
 
 	// 入力アクション登録
-	InputMng* input = InputMng::GetPtr();
-	input->AddAction(_T("MENU_UP"),   KeyID::Up);
-	input->AddAction(_T("MENU_UP"),   KeyID::W);
-	input->AddAction(_T("MENU_UP"),   PadXboxID::Up);
-	input->AddAction(_T("MENU_DOWN"), KeyID::Down);
-	input->AddAction(_T("MENU_DOWN"), KeyID::S);
-	input->AddAction(_T("MENU_DOWN"), PadXboxID::Down);
-	input->AddAction(_T("MENU_NEXT"), KeyID::Space);
-	input->AddAction(_T("MENU_NEXT"), KeyID::Enter);
-	input->AddAction(_T("MENU_NEXT"), PadXboxID::A);
+	InstInputMng.AddAction(_T("MENU_UP"),   KeyID::Up);
+	InstInputMng.AddAction(_T("MENU_UP"),   KeyID::W);
+	InstInputMng.AddAction(_T("MENU_UP"),   PadXboxID::Up);
+	InstInputMng.AddAction(_T("MENU_DOWN"), KeyID::Down);
+	InstInputMng.AddAction(_T("MENU_DOWN"), KeyID::S);
+	InstInputMng.AddAction(_T("MENU_DOWN"), PadXboxID::Down);
+	InstInputMng.AddAction(_T("MENU_NEXT"), KeyID::Space);
+	InstInputMng.AddAction(_T("MENU_NEXT"), KeyID::Enter);
+	InstInputMng.AddAction(_T("MENU_NEXT"), PadXboxID::A);
 
 	//フォント作成.
-	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FONT_EDGE);
-	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FONT_EDGE);
+	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Edge);
+	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Edge);
 
 	//モードごとの画像読み込み.
-	imgMenu[0].LoadFile(_T("Resources/Images/menu_start.png"));   //ゲーム開始.
+	imgMenu[0].LoadFile(_T("Resources/Images/menu_start.png"));    //ゲーム開始.
 	imgMenu[1].LoadFile(_T("Resources/Images/menu_tutorial.png")); //チュートリアル.
 	imgMenu[2].LoadFile(_T("Resources/Images/menu_back.png"));     //タイトルに戻る.
 
@@ -44,39 +43,39 @@ void MenuManager::Reset() {
 // 更新
 void MenuManager::Update() {
 
-	InputMng* input = InputMng::GetPtr();
-
 	//カーソル移動操作.
-	if (input->IsPushActionTime(_T("MENU_UP")) % 20 == 1) {
+	if (InstInputMng.IsPushActionTime(_T("MENU_UP")) % 20 == 1) {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 	}
-	if (input->IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
+	if (InstInputMng.IsPushActionTime(_T("MENU_DOWN")) % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;   //+1して、3の余り(0～2)をループ.
 	}
 
 	//決定操作.
-	if (input->IsPushActionTime(_T("MENU_NEXT")) == 1) {
+	if (InstInputMng.IsPushActionTime(_T("MENU_NEXT")) == 1) {
 
 		switch (selectedIndex)
 		{
-		case 0:
-			p_data->scene = SCENE_GAME;
-			p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
-			p_sound->StopAll();
-			p_sound->Play(_T("BGM_Endless"), true, 68);
-			break;
-		case 1:
-			p_data->scene = SCENE_GAME;
-			p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
-			p_sound->StopAll();
-			p_sound->Play(_T("BGM_Tutorial"), true, 50);
-			break;
-		case 2:
-			p_data->scene = SCENE_TITLE;    //タイトルへ.
-			GameManager::GetPtr()->Reset(); //リセット.
-			break;
+			case 0:
+				p_data->scene = SCENE_GAME;
+				p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
+				//BGM.
+				p_sound->StopAll();
+				p_sound->Play(_T("BGM_Endless"), true, 68);
+				break;
+			case 1:
+				p_data->scene = SCENE_GAME;
+				p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
+				//BGM.
+				p_sound->StopAll();
+				p_sound->Play(_T("BGM_Tutorial"), true, 50);
+				break;
+			case 2:
+				p_data->scene = SCENE_TITLE;    //タイトルへ.
+				GameManager::GetInst().Reset(); //リセット.
+				break;
 
-		default: assert(FALSE); break;
+			default: assert(FALSE); break;
 		}
 	}
 
@@ -101,12 +100,12 @@ void MenuManager::Draw() {
 	int boxWidth = 400;
 	int boxHeight = 70;
 
-	unsigned int textColor = GetColor(255, 255, 255);   //テキスト色:
-	unsigned int frameColor = GetColor(0, 255, 255);   //枠色.
-	unsigned int normalColor = GetColor(150, 150, 150);   //未選択色.
-	unsigned int selectColor1 = GetColor(100, 255, 255);   //カーソル表.
-	unsigned int selectColor2 = GetColor(50, 150, 255);   //カーソル裏.
-	unsigned int lineColor = GetColor(0, 255, 255);      //線の色（黄色）.
+	unsigned int textColor    = GetColor(255, 255, 255); //テキスト色:
+	unsigned int frameColor   = GetColor(0, 255, 255);   //枠色.
+	unsigned int normalColor  = GetColor(150, 150, 150); //未選択色.
+	unsigned int selectColor1 = GetColor(100, 255, 255); //カーソル表.
+	unsigned int selectColor2 = GetColor(50, 150, 255);  //カーソル裏.
+	unsigned int lineColor    = GetColor(0, 255, 255);   //線の色（黄色）.
 
 	// 各項目描画
 	unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
@@ -130,9 +129,7 @@ void MenuManager::Draw() {
 
 		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
-		int err = DrawTriangleKR(&tri, true, false);
-
-		//		DxLib::DrawStringToHandle(menuX - 50, menuY + selectedIndex * menuSpacing + 15, _T("►"), selectColor, largeFont);
+		int err = DrawTriangleKR(&tri, true, true);
 	}
 
 	//画像の座標(ここを中心とする)
@@ -146,7 +143,7 @@ void MenuManager::Draw() {
 	imgMenu[selectedIndex].Draw(imgPos);
 	//画像の枠線(位置とサイズは画像を元にする)
 	Box box = { imgPos, imgSize + margin, frameColor };
-	DrawBoxKR(&box, ANC_MID, false);
+	DrawBoxKR(&box, Anchor::Mid, false);
 
 	// ▼ 説明文の枠（右下）- 画像の幅に合わせる
 	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）
@@ -160,9 +157,9 @@ void MenuManager::Draw() {
 		int menuItemRightX = menuX + boxWidth;
 		int menuItemCenterY = menuY + selectedIndex * menuSpacing + boxHeight / 2;
 
-		// 画像の左端座標
-		int imgLeftX = (int)(imgPos.x - imgSize.x / 2);
+		int imgLeftX   = (int)(imgPos.x - imgSize.x/2) - margin/2; //画像の左端座標.
 		int imgCenterY = (int)imgPos.y;
+		int imgBottomY = (int)(imgPos.y + imgSize.y/2) + margin/2; //画像の下端座標.
 
 		// 説明文エリアの上端中央座標
 		int textBoxCenterX = textBoxX + textBoxWidth / 2;
@@ -180,18 +177,19 @@ void MenuManager::Draw() {
 		// 1. メニュー項目から画像への線（水平線→垂直線）
 		// 水平線（メニュー項目右端から画像左端まで）
 		for (int i = 0; i < lineThickness; i++) {
-			DxLib::DrawLine(menuItemRightX, menuItemCenterY + i - lineThickness / 2,
-				imgLeftX, menuItemCenterY + i - lineThickness / 2, lineColor);
+			DxLib::DrawLine(
+				menuItemRightX, menuItemCenterY+i-lineThickness/2,
+				imgLeftX,       menuItemCenterY+i-lineThickness/2, lineColor
+			);
 		}
-
-		
 
 		// 2. 画像から説明文エリアへの線（垂直線のみ）
 		// 垂直線（画像下端から説明文上端まで）
-		int imgBottomY = (int)(imgPos.y + imgSize.y / 2);
 		for (int i = 0; i < lineThickness; i++) {
-			DxLib::DrawLine((int)imgPos.x + i - lineThickness / 2, imgBottomY,
-				(int)imgPos.x + i - lineThickness / 2, textBoxTopY, lineColor);
+			DxLib::DrawLine(
+				(int)imgPos.x+i-lineThickness/2, imgBottomY,
+				(int)imgPos.x+i-lineThickness/2, textBoxTopY, lineColor
+			);
 		}
 
 		DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

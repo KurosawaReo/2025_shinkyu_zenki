@@ -15,44 +15,62 @@ class StraightLaser;
 //ゲームデータ.[継承不可]
 class GameData final
 {
+//▼実体関係.
 public:
-	//実体.
-	static GameData* GetPtr() {
+	//実体取得用.
+	static GameData& GetInst() {
 		static GameData inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	GameData(const GameData&) = delete;
+	GameData& operator=(const GameData&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	GameData(){}
 
-	Scene     scene;			//シーンの記録用.
-	StageType stage;			//ステージ種類.
+//▼データ.
+public:
+	Scene     scene{};			//シーンの記録用.
+	StageType stage{};			//ステージ種類.
 
-	int		  score;			//スコア.
-	int		  scoreBef;			//スコア(時間加算前)
-	int		  bestScore;		//ベストスコア.
-	int		  level;			//レベル.
+	int		  score{};			//スコア.
+	int		  scoreBef{};		//スコア(時間加算前)
+	int		  bestScore{};		//ベストスコア.
+	int		  level{};			//レベル.
 
-	float	  speedRate;		//ゲーム進行速度倍率.
-	float	  spawnRate;		//障害物の出現時間割合.
-	float	  counter;			//経過時間カウンター(スローの影響を受ける)
+	float	  speedRate{};		//ゲーム進行速度倍率.
+	float	  spawnRate{};		//障害物の出現時間割合.
+	float	  counter{};		//経過時間カウンター(スローの影響を受ける)
 
-	bool      isReflectMode;	//反射モードかどうか.
-	float     slowBufCntr;		//スロー続行時間.
+	bool      isReflectMode{};	//反射モードかどうか.
+	float     slowBufCntr{};	//スロー続行時間.
 
-	int		  font1;			//フォント.
-	int		  font2;			//フォント.
-	int		  font3;			//フォント.
-	int		  font4;			//フォント.
+	int		  font1{};			//フォント.
+	int		  font2{};			//フォント.
+	int		  font3{};			//フォント.
+	int		  font4{};			//フォント.
 };
 
 //ゲームマネージャー.[継承不可]
 class GameManager final
 {
-public: //実体.
-	static GameManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static GameManager& GetInst() {
 		static GameManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	GameManager(const GameManager&) = delete;
+	GameManager& operator=(const GameManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	GameManager(){}
 
-private: //データ.
+//▼データ.
+private:
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
 	Timer tmGameTime{};     //ゲーム計測時間.
@@ -75,11 +93,11 @@ private: //データ.
 	SoundMng* p_sound{};
 
 public: //オブジェクト.
-	NormalLaser_1* laserNor1;
-	NormalLaser_2* laserNor2;
-	NormalLaser_3* laserNor3;
-	NormalLaser_4* laserNor4;
-	StraightLaser* laserStr[2];
+	NormalLaser_1* laserNor1{};
+	NormalLaser_2* laserNor2{};
+	NormalLaser_3* laserNor3{};
+	NormalLaser_4* laserNor4{};
+	StraightLaser* laserStr[2]{};
 
 public:
 	//destructor.
@@ -124,6 +142,7 @@ public:
 	void DrawReflectMode();
 
 	//その他.
-	void GameEnd();
+	void GameOver();
 	void ItemUsed();
+	void ReflectModeEnd();
 };

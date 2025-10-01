@@ -13,7 +13,7 @@ enum EffectType
 	Effect_Score500,
 	Effect_PlayerDeath,		//プレイヤー死亡.
 	Effect_ReflectLaser,	//レーザー反射.
-	Effect_BreakMeteo,		//隕石破壊.
+	Effect_BreakMeteor,		//隕石破壊.
 
 	Effect_Endless_Level1,	//耐久モード: Level1演出.
 	Effect_Endless_Level2,	//耐久モード: Level2演出.
@@ -46,12 +46,21 @@ struct Effect : public EffectData
 //エフェクト管理クラス.[継承不可]
 class EffectManager final
 {
-public: //実体.
-	static EffectManager* GetPtr() {
+//▼実体関係.
+public:
+	//実体取得用.
+	static EffectManager& GetInst() {
 		static EffectManager inst; //自身のインスタンス.
-		return &inst;
+		return inst;
 	}
+	//使用禁止.
+	EffectManager(const EffectManager&) = delete;
+	EffectManager& operator=(const EffectManager&) = delete;
+private:
+	//constructor(新規作成をできなくする)
+	EffectManager(){}
 
+//▼データ.
 private:
 	Effect effect[EFFECT_MAX]{};
 
@@ -65,6 +74,6 @@ public:
 	void Update();
 	void Draw();
 
-	void SpawnEffect(EffectData* data); //エフェクト出現.
-	void DeleteEffect(int idx);         //エフェクト消去.
+	void SpawnEffect (const EffectData* data); //エフェクト出現.
+	void DeleteEffect(int idx);                //エフェクト消去.
 };
