@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -671,10 +671,10 @@ namespace KR_Lib
 
 	//描画モード変更.
 	int SetDrawBlendModeKR(BlendModeID id, int power) {
-		return SetDrawBlendMode(id, power);
+		return SetDrawBlendMode(_int(id), power);
 	}
 	int SetDrawBlendModeKR(BlendModeID id, double power) {
-		return SetDrawBlendMode(id, _int_r(power));
+		return SetDrawBlendMode(_int(id), _int_r(power));
 	}
 	//描画モードリセット.
 	int ResetDrawBlendMode() {

@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -21,7 +21,7 @@ namespace KR_Lib
 		None     = -1, //指定なし.
 	};
 	//描画モードID(入力しやすくする用)
-	enum BlendModeID
+	enum class BlendModeID
 	{
 		None  = DX_BLENDMODE_NOBLEND, //デフォルト.
 		Alpha = DX_BLENDMODE_ALPHA,   //αブレンド.  (重なると透過する)
