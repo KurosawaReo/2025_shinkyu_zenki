@@ -1,6 +1,6 @@
 /*
    - KR_App.h - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    プログラム全体(開始,終了など)の処理を行います。
 */
@@ -35,7 +35,7 @@ namespace KR_Lib
 		INT_XY windowSize{}; //画面サイズ.    (記録用)
 		int    fps{};        //フレームレート.(記録用)
 
-		bool   isEnd{};      //ゲームを終了するか.
+		bool   isQuit{};     //ゲームを終了するか.
 
 	public:
 		//get.
@@ -49,7 +49,7 @@ namespace KR_Lib
 		void Update();
 		void Draw();
 
-		void GameOver(); //ゲームを終了する.
+		void Quit(); //ゲームを終了する.
 	};
 	//実体.
 	static App& InstApp = App::GetInst();	

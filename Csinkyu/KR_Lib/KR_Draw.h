@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/10/02
+   ver: 2025/10/03
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -39,7 +39,7 @@ namespace KR_Lib
 	//アンカー(描画の基準点)
 	enum Anchor
 	{
-		LU,	U,   RU, //例:Anchor::LU = Left Up.
+		LU,	U,   RU, //例: Anchor::LU = Left Up.
 		L,  Mid, R,
 		DL,	D,   DR,
 	};
@@ -146,10 +146,12 @@ namespace KR_Lib
 	};
 
 	//図形.
-	int    DrawCircleKR		 (const Circle*   data,                           bool isFill = true, bool isAnti = false, float thick = 1);
+	int    DrawCircleKR		 (const Circle*   data,                           bool isFill = true, bool isAnti = false, float thick = 1.0f);
 	int    DrawBoxKR		 (const Box*      data, Anchor anc = Anchor::Mid, bool isFill = true, bool isAnti = false);
 	int    DrawTriangleKR	 (const Triangle* data,                           bool isFill = true, bool isAnti = false);
 	int    DrawLineKR		 (const Line*     data,                                               bool isAnti = false, float thick = 1.0f);
+	int    DrawPieKR		 (const Pie* pie,                                                     bool isAnti = false, float thick = 1.0f);
+	int    DrawArcKR		 (const Pie* pie,                                                     bool isAnti = false, float thick = 1.0f);
 	int    DrawWindowGrid	 (int wid, int hei, int size, MY_COLOR clrWid = {160, 160, 255}, MY_COLOR clrHei = {255, 160, 160});
 
 	//描画モード.

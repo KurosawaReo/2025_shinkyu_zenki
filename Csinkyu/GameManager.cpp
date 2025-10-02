@@ -394,10 +394,10 @@ void GameManager::Update() {
 
 	//特定の操作でゲーム終了
 	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
-		App::GetInst().GameOver(); //ボタン長押しで終了.
+		App::GetInst().Quit(); //ボタン長押しで終了.
 	}
 	else if (p_input->IsPushKey(KeyID::Esc)) {
-		App::GetInst().GameOver(); //ESCAPEキーを押したら即終了.
+		App::GetInst().Quit(); //ESCAPEキーを押したら即終了.
 	}
 }
 

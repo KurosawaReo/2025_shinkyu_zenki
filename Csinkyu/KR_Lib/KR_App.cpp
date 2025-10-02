@@ -1,6 +1,6 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    プログラム全体(開始,終了など)の処理を行います。
 */
@@ -34,7 +34,7 @@ namespace KR_Lib
 		//変数の設定.
 		windowSize = { windowWid, windowHei };
 		this->fps = fps;
-		isEnd = false;
+		isQuit = false;
 
 		Init(); //初期化処理(main.cppへ)
 
@@ -45,7 +45,7 @@ namespace KR_Lib
 
 		//メインループ.
 		//ESCが押されるか、終了サインがあれば終了.
-		while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0 && !isEnd) {
+		while (ProcessMessage() == 0 && !isQuit) {
 			//一定時間ごとに処理.
 			if (tmFps.IntervalTime()) {
 				ClearDrawScreen(); //画面クリア.
@@ -59,7 +59,7 @@ namespace KR_Lib
 		DeleteFile(_T("Log.txt")); //Log.txtが生成されるので消去する.
 	}
 	//ゲームを終了する.
-	void App::GameOver() {
-		isEnd = true;
+	void App::Quit() {
+		isQuit = true;
 	}
 }
