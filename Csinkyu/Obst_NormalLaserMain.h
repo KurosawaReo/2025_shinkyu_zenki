@@ -52,6 +52,8 @@ public:
 	//移動系.
 	void enemy4Move();
 	virtual void Move() = 0; //砲台によって動きが違う→overrideを利用し、"動き"だけを変える.
+	//ランダムMove
+	void MoveRand();
 
 	//出る直前の点滅.
 	void CreateFlashEffect(double x, double y);
