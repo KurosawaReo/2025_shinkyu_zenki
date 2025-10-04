@@ -5,6 +5,7 @@
 #include "GameManager.h"
 #include "LaserManager.h"
 #include "Obst_NormalLaserMain.h"
+#include "Stage_Tutorial.h"
 
 #include "Player.h"
 
@@ -36,7 +37,6 @@ void Player::Reset(DBL_XY _pos, bool _active)
 	isDashing    = false;
 	dashTimer    = 0;
 	dashCooldown = 0;
-	dashDir      = { 0, 0 };
 
 	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
@@ -44,13 +44,13 @@ void Player::Reset(DBL_XY _pos, bool _active)
 		after[i].isActive = false;
 	}
 	//反射エフェクトリセット.
-	reflectEffectIndex = 0;
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		reflectEffects[i].active = false;
-		reflectEffects[i].timer = 0;
-		reflectEffects[i].alpha = 0.0f;
-		reflectEffects[i].scale = 1.0f;
-		reflectEffects[i].pos = _pos;
+	dashEffectIndex = 0;
+	for (int i = 0; i < PLAYER_DASH_EFFECT_MAX; i++) {
+		dashEffects[i].active = false;
+		dashEffects[i].timer = 0;
+		dashEffects[i].alpha = 0.0f;
+		dashEffects[i].scale = 1.0f;
+		dashEffects[i].pos = _pos;
 	}
 }
 //更新.
@@ -63,7 +63,7 @@ void Player::Update()
 	}
 	//テスト用：Eキーで反射エフェクトを生成
 	if (p_input->IsPushKeyTime(KeyID::E) == 1) {
-		CreateReflectEffect(hit.pos);
+		CreateDashEffect(hit.pos);
 	}
 #endif
 
@@ -72,7 +72,7 @@ void Player::Update()
 		imgRot += 1.5 * p_data->speedRate; //画像回転.
 
 		UpdateAfterImage();
-		UpdateReflectEffects();
+		UpdateDashEffects();
 		UpdateDash();
 		PlayerMove();
 		
@@ -95,11 +95,11 @@ void Player::Draw()
 		str.Draw(Anchor::Mid, p_data->font1);
 	}
 	// エフェクトのデバッグ情報表示
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		if (reflectEffects[i].active) {
+	for (int i = 0; i < PLAYER_DASH_EFFECT_MAX; i++) {
+		if (dashEffects[i].active) {
 			TCHAR debugStr[128];
 			_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
-				i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
+				i, dashEffects[i].timer, dashEffects[i].alpha, dashEffects[i].scale);
 			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
 		}
 	}
@@ -115,7 +115,7 @@ void Player::Draw()
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
-		DrawReflectEffects();  // エフェクトを先に描画
+		DrawDashEffects();  // エフェクトを先に描画
 
 		const float size = 0.17;
 
@@ -139,66 +139,24 @@ void Player::Draw()
 	}
 }
 
-void Player::UpdateDash()
-{
-	
-
-	if (dashCooldown > 0)
-	{
-		
-		dashCooldown  -= 1 * p_data->speedRate;
-	}
-
-	if (isDashing)
-	{
-		dashTimer -= 1 * p_data->speedRate ;
-		if (dashTimer <= 0)
-		{
-			isDashing = false;
-		    
-		}
-	}
-	else
-	{
-		if (dashCooldown <= 0)
-		{
-			bool dashkey = p_input->IsPushKeyTime(KeyID::R) == 1;
-			if (dashkey)
-			{
-				dashTimer = DASH_DURATION;
-				isDashing = true;
-				dashCooldown = DASH_COOLDOWN;
-				CreateReflectEffect(hit.pos);
-			}
-		}
-	}
-
-}
-
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	float speed;
+	float speed = PLAYER_MOVE_SPEED * p_data->speedRate;
+
 	//移動可能なら.
 	if (isMoveAble) {
+		//ダッシュ中は加速.
 		if (isDashing)
 		{
-			Debug::Log(_T("aaa"));
-			speed = PLAYER_MOVE_SPEED * 2 * p_data->speedRate;
+			speed *= PLAYER_DASH_SPEED;
 		}
-		else
-		{
-			speed = PLAYER_MOVE_SPEED * p_data->speedRate;
-		}
-		
+		//移動.
 		p_input->MoveKey4Dir(&hit.pos, speed);
 		p_input->MovePadStick(&hit.pos, speed);
-
 		//移動限界.
 		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, 0, 0, WINDOW_WID - 1, WINDOW_HEI - 1);
 	}
-
-	
 }
 
 //死亡処理.
@@ -297,10 +255,52 @@ void Player::DrawAfterImage()
 	ResetDrawBlendMode();
 }
 
-// 反射エフェクト生成
-void Player::CreateReflectEffect(DBL_XY pos)
+void Player::UpdateDash()
 {
-	ReflectEffect* effect = &reflectEffects[reflectEffectIndex];
+	//ダッシュクールダウン減少.
+	if (dashCooldown > 0){
+		dashCooldown -= 1 * p_data->speedRate;
+	}
+
+	//ダッシュ中なら.
+	if (isDashing)
+	{
+		dashTimer -= 1 * p_data->speedRate;
+		//ダッシュ時間切れ.
+		if (dashTimer <= 0)
+		{
+			isDashing = false; //ダッシュ終了.
+		}
+	}
+	//ダッシュしてないなら.
+	else
+	{
+		if (dashCooldown <= 0)
+		{
+			bool dashkey = p_input->IsPushActionTime(_T("PlayerDash")) == 1;
+			//ダッシュ開始.
+			if (dashkey)
+			{
+				dashTimer    = PLAYER_DASH_DURATION;
+				dashCooldown = PLAYER_DASH_COOLDOWN;
+				isDashing    = true;
+
+				//エフェクト.
+				CreateDashEffect(hit.pos);
+				//チュートリアルなら.
+				if (p_data->stage == STAGE_TUTORIAL) {
+					TutorialStage::GetInst().SetPlayerDash(true);
+				}
+			}
+		}
+	}
+
+}
+
+//ダッシュエフェクト生成.
+void Player::CreateDashEffect(DBL_XY pos)
+{
+	DashEffect* effect = &dashEffects[dashEffectIndex];
 
 	effect->pos = pos;
 	effect->scale = 1.0f;
@@ -309,32 +309,32 @@ void Player::CreateReflectEffect(DBL_XY pos)
 	effect->active = true;
 
 	// 次のインデックスに移動（循環）
-	reflectEffectIndex = (reflectEffectIndex + 1) % PLAYER_MAX_EFFECT;
+	dashEffectIndex = (dashEffectIndex + 1) % PLAYER_DASH_EFFECT_MAX;
 }
 
-// 反射エフェクト更新
-void Player::UpdateReflectEffects()
+//ダッシュエフェクト更新.
+void Player::UpdateDashEffects()
 {
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		if (reflectEffects[i].active) {
-			reflectEffects[i].timer--;
-			reflectEffects[i].scale += 0.1f;      // 拡大速度を少し遅く
-			reflectEffects[i].alpha -= 6.0f;     // フェードアウト速度を少し遅く
+	for (int i = 0; i < PLAYER_DASH_EFFECT_MAX; i++) {
+		if (dashEffects[i].active) {
+			dashEffects[i].timer--;
+			dashEffects[i].scale += 0.1f; // 拡大速度を少し遅く
+			dashEffects[i].alpha -= 6.0f; // フェードアウト速度を少し遅く
 
 			// タイマーが0になったか透明度が0以下になったら非アクティブ
-			if (reflectEffects[i].timer <= 0 || reflectEffects[i].alpha <= 0) {
-				reflectEffects[i].active = false;
+			if (dashEffects[i].timer <= 0 || dashEffects[i].alpha <= 0) {
+				dashEffects[i].active = false;
 			}
 		}
 	}
 }
 
-// 反射エフェクト描画
-void Player::DrawReflectEffects()
+//ダッシュエフェクト描画.
+void Player::DrawDashEffects()
 {
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		if (reflectEffects[i].active) {
-			ReflectEffect* effect = &reflectEffects[i];
+	for (int i = 0; i < PLAYER_DASH_EFFECT_MAX; i++) {
+		if (dashEffects[i].active) {
+			DashEffect* effect = &dashEffects[i];
 
 			// 点滅効果の計算（2フレームごとに点滅）
 			bool isFlashOn = ((effect->timer / 2) % 2) == 0;

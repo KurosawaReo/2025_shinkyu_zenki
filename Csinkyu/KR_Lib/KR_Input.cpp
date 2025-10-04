@@ -53,16 +53,6 @@ namespace KR_Lib
 	int  InputMng::IsPushActionTime(MY_STRING name) {
 		return actions[name].time;     //時間を返す.
 	}
-	//どれか1つでも押してるか判定.
-	bool InputMng::IsPushAnyKey() {
-		return isPushAnyKey;
-	}
-	bool InputMng::IsPushAnyMouse() {
-		return isPushAnyMouse;
-	}
-	bool InputMng::IsPushAnyPad() {
-		return isPushAnyPadBtn;
-	}
 
 	//アクション追加.
 	void InputMng::AddAction(MY_STRING name, KeyID id) {
@@ -175,7 +165,8 @@ namespace KR_Lib
 		for (int i = 0; i < KEY_MAX; i++) {
 			//押されているなら.
 			if (key[i] != 0) {
-				tmKey[i]++;   //カウント.
+				tmKey[i]++;          //カウント.
+				isPushAnyKey = true; //操作をしている.
 			}
 			else {
 				tmKey[i] = 0; //0秒にリセット.
@@ -196,7 +187,7 @@ namespace KR_Lib
 				isPushAnyMouse = true; //操作をしている.
 			}
 			else {
-				tmMouse[i] = 0;      //0秒にリセット.
+				tmMouse[i] = 0; //0秒にリセット.
 			}
 		}
 	}

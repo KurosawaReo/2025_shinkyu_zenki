@@ -44,6 +44,7 @@ private:
 
 	double plyMoveSum{};      //プレイヤーの移動距離.
 
+	bool   isPlayerDash{};    //プレイヤーがダッシュしたかどうか.
 	bool   isTakeItem{};      //アイテムを取ったかどうか.
 	bool   isReflectLaser{};  //レーザーを反射したかどうか.
 	bool   isReflectFinish{}; //反射モードが終わったかどうか.
@@ -67,6 +68,7 @@ private:
 
 public:
 	//set.
+	void SetPlayerDash   (bool _flag) { isPlayerDash    = _flag; }
 	void SetTakeItem     (bool _flag) { isTakeItem      = _flag; }
 	void SetReflectLaser (bool _flag) { isReflectLaser  = _flag; }
 	void SetReflectFinish(bool _flag) { isReflectFinish = _flag; }
@@ -96,4 +98,5 @@ public:
 	void DrawTopText1(MY_STRING text, double alpha);
 	void DrawTopText2(MY_STRING text, double alpha);
 	void DrawTopText3(MY_STRING text, double alpha);
+	void DrawTopText4(MY_STRING text, double alpha);
 };

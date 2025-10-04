@@ -264,21 +264,26 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //最高スコア更新.
 
 	//アクション登録.
-	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //キー操作.
-	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作. z
-	p_input->AddAction(_T("PlayerDash"),KeyID::R);  //キー操作.
+	{
+		//キー操作.
+		p_input->AddAction(_T("GameNext"),   KeyID::Space);
+		p_input->AddAction(_T("GamePause"),  KeyID::P);
+		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftL);
+		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftR);
 #if defined INPUT_CHANGE_ARCADE
-	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //アーケード操作.
-	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //アーケード操作.
-	p_input->AddAction(_T("GameQuit"),  PadArcadeID::BtnStart);  //アーケード操作.
-	p_input->AddAction(_T("PlayerDash"), PadArcadeID::BtnLower1);//アーケード操作.
-	p_input->AddAction(_T("PlayerDash"), PadArcadeID::);//パット操作.
+		//アーケード操作.
+		p_input->AddAction(_T("GameNext"),   PadArcadeID::BtnUpper1);
+		p_input->AddAction(_T("PlayerDash"), PadArcadeID::BtnUpper3);
+		p_input->AddAction(_T("GamePause") , PadArcadeID::BtnUpper2);
+		p_input->AddAction(_T("GameQuit"),   PadArcadeID::BtnStart);
 #else
-	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //コントローラ操作.
-	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //コントローラ操作.
-	p_input->AddAction(_T("GameQuit"),  PadXboxID::View); //コントローラ操作.
-	p_input->AddAction(_T("PlayerDash"),PadXboxID::B);//パット操作.
+		//コントローラ操作.
+		p_input->AddAction(_T("GameNext"),  PadXboxID::A);
+		p_input->AddAction(_T("PlayerDash"),PadXboxID::B);
+		p_input->AddAction(_T("GamePause"), PadXboxID::X);
+		p_input->AddAction(_T("GameQuit"),  PadXboxID::View);
 #endif
+	}
 
 	//タイマー初期化.
 	for(int i = 0; i < SCENE_COUNT; i++){
@@ -448,7 +453,6 @@ void GameManager::UpdateTitle()
 	if (!tmScene[SCENE_TITLE].GetIsMove()) {
 		tmScene[SCENE_TITLE].Start();
 	}
-
 	//特定の操作でゲーム開始.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1) {
 		gameData->scene = SCENE_MENU; //メニューシーンへ.
