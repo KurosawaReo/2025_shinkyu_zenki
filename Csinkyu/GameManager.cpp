@@ -266,14 +266,18 @@ void GameManager::Init() {
 	//アクション登録.
 	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //キー操作.
 	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作. z
+	p_input->AddAction(_T("PlayerDash"),KeyID::R);  //キー操作.
 #if defined INPUT_CHANGE_ARCADE
 	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //アーケード操作.
 	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //アーケード操作.
 	p_input->AddAction(_T("GameQuit"),  PadArcadeID::BtnStart);  //アーケード操作.
+	p_input->AddAction(_T("PlayerDash"), PadArcadeID::BtnLower1);//アーケード操作.
+	p_input->AddAction(_T("PlayerDash"), PadArcadeID::);//パット操作.
 #else
 	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //コントローラ操作.
 	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //コントローラ操作.
 	p_input->AddAction(_T("GameQuit"),  PadXboxID::View); //コントローラ操作.
+	p_input->AddAction(_T("PlayerDash"),PadXboxID::B);//パット操作.
 #endif
 
 	//タイマー初期化.
