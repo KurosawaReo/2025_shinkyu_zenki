@@ -1,6 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/10/02
+   ver: 2025/10/05
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -52,6 +52,16 @@ namespace KR_Lib
 	}
 	int  InputMng::IsPushActionTime(MY_STRING name) {
 		return actions[name].time;     //時間を返す.
+	}
+	//どれか1つでも押してるか判定.
+	bool InputMng::IsPushAnyKey() {
+		return isPushAnyKey;
+	}
+	bool InputMng::IsPushAnyMouse() {
+		return isPushAnyMouse;
+	}
+	bool InputMng::IsPushAnyPad() {
+		return isPushAnyPadBtn;
 	}
 
 	//アクション追加.
@@ -161,6 +171,7 @@ namespace KR_Lib
 		char key[KEY_MAX];
 		GetHitKeyStateAll(key); //押しているキー情報を取得.
 	
+		isPushAnyKey = false; //一旦falseにリセット.
 		for (int i = 0; i < KEY_MAX; i++) {
 			//押されているなら.
 			if (key[i] != 0) {
@@ -177,13 +188,15 @@ namespace KR_Lib
 		//マウス座標取得.
 		GetMousePoint(&mPos.x, &mPos.y);
 
+		isPushAnyMouse = false; //一旦falseにリセット.
 		for (int i = 0; i < MOUSE_MAX; i++) {
 			//押されているなら.
 			if ((GetMouseInput() & (1 << i)) != 0) { //And演算で抽出.
-				tmMouse[i]++;   //カウント.
+				tmMouse[i]++;          //カウント.
+				isPushAnyMouse = true; //操作をしている.
 			}
 			else {
-				tmMouse[i] = 0; //0秒にリセット.
+				tmMouse[i] = 0;      //0秒にリセット.
 			}
 		}
 	}
@@ -193,10 +206,12 @@ namespace KR_Lib
 		//スティック入力取得.
 		GetJoypadAnalogInput(&stickVec.x, &stickVec.y, DX_INPUT_PAD1);
 
+		isPushAnyPadBtn = false; //一旦falseにリセット.
 		for (int i = 0; i < PAD_BTN_MAX; i++) {
 			//押されているなら.
 			if (GetJoypadInputState(DX_INPUT_PAD1) & (1 << i)) { //And演算で抽出.
-				tmPadBtn[i]++;   //カウント.
+				tmPadBtn[i]++;          //カウント.
+				isPushAnyPadBtn = true; //操作をしている.
 			}
 			else {
 				tmPadBtn[i] = 0; //0秒にリセット.

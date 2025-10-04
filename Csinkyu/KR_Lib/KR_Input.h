@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/10/02
+   ver: 2025/10/05
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -169,12 +169,16 @@ namespace KR_Lib
 
 	//▼データ.
 	private:
-		int tmKey   [KEY_MAX]{};     //キーを押している時間.
-		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.            (index: bitフラグ)
-		int tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(index: bitフラグ)
+		int    tmKey   [KEY_MAX]{};     //キーを押している時間.
+		int    tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.            (index: bitフラグ)
+		int    tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(index: bitフラグ)
 
-		INT_XY mPos{};     //マウス座標.
-		INT_XY stickVec{}; //スティック入力.
+		bool   isPushAnyKey{};          //キー操作してるかどうか.
+		bool   isPushAnyMouse{};        //マウス操作してるかどうか.
+		bool   isPushAnyPadBtn{};       //パッド操作してるかどうか.
+
+		INT_XY mPos{};                  //マウス座標.
+		INT_XY stickVec{};              //スティック入力.
 
 		map<MY_STRING, ActionData> actions{}; //アクション記録用.
 
@@ -183,7 +187,7 @@ namespace KR_Lib
 
 	public:
 
-		//操作判定.
+		//各操作判定.
 		bool   IsPushKey       (KeyID id);
 		int    IsPushKeyTime   (KeyID id);
 		bool   IsPushMouse     (MouseID id);
@@ -196,6 +200,10 @@ namespace KR_Lib
 		int    IsPushPadBtnTime(PadArcadeID id);
 		bool   IsPushAction    (MY_STRING name);
 		int    IsPushActionTime(MY_STRING name);
+		//総合操作判定.
+		bool   IsPushAnyKey    ();
+		bool   IsPushAnyMouse  ();
+		bool   IsPushAnyPad    ();
 
 		//アクション.
 		void   AddAction       (MY_STRING name, KeyID       id);

@@ -265,7 +265,7 @@ void GameManager::Init() {
 
 	//アクション登録.
 	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //キー操作.
-	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作. z
+	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作.
 #if defined INPUT_CHANGE_ARCADE
 	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //アーケード操作.
 	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //アーケード操作.
