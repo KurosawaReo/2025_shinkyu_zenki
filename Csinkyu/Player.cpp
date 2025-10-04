@@ -32,6 +32,12 @@ void Player::Reset(DBL_XY _pos, bool _active)
 	afterCntr  = 1;
 	isMoveAble = true;
 
+	// ダッシュ関連の初期化.
+	isDashing    = false;
+	dashTimer    = 0;
+	dashCooldown = 0;
+	dashDir      = { 0, 0 };
+
 	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
 		after[i].pos      = _pos;
@@ -67,6 +73,7 @@ void Player::Update()
 
 		UpdateAfterImage();
 		UpdateReflectEffects();
+		UpdateDash();
 		PlayerMove();
 		
 		//反射モード中.
@@ -95,6 +102,13 @@ void Player::Draw()
 				i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
 			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
 		}
+	}
+
+	// ダッシュのデバッグ表示
+	if (isDashing || dashCooldown > 0) {
+		TCHAR dashStr[128];
+		_stprintf_s(dashStr, _T("Dash: timer=%d, cooldown=%d"), dashTimer, dashCooldown);
+		DrawString(0, 430, dashStr, isDashing ? 0x00FF00 : 0xFFFF00);
 	}
 #endif
 
@@ -125,17 +139,66 @@ void Player::Draw()
 	}
 }
 
+void Player::UpdateDash()
+{
+	
+
+	if (dashCooldown > 0)
+	{
+		
+		dashCooldown  -= 1 * p_data->speedRate;
+	}
+
+	if (isDashing)
+	{
+		dashTimer -= 1 * p_data->speedRate ;
+		if (dashTimer <= 0)
+		{
+			isDashing = false;
+		    
+		}
+	}
+	else
+	{
+		if (dashCooldown <= 0)
+		{
+			bool dashkey = p_input->IsPushKeyTime(KeyID::R) == 1;
+			if (dashkey)
+			{
+				dashTimer = DASH_DURATION;
+				isDashing = true;
+				dashCooldown = DASH_COOLDOWN;
+				CreateReflectEffect(hit.pos);
+			}
+		}
+	}
+
+}
+
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
+	float speed;
 	//移動可能なら.
 	if (isMoveAble) {
-		//移動する.
-		p_input->MoveKey4Dir (&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
-		p_input->MovePadStick(&hit.pos, PLAYER_MOVE_SPEED * p_data->speedRate);
+		if (isDashing)
+		{
+			Debug::Log(_T("aaa"));
+			speed = PLAYER_MOVE_SPEED * 2 * p_data->speedRate;
+		}
+		else
+		{
+			speed = PLAYER_MOVE_SPEED * p_data->speedRate;
+		}
+		
+		p_input->MoveKey4Dir(&hit.pos, speed);
+		p_input->MovePadStick(&hit.pos, speed);
+
 		//移動限界.
-		FixPosInArea(&hit.pos, { PLAYER_SIZE*2, PLAYER_SIZE*2 }, 0, 0, WINDOW_WID-1, WINDOW_HEI-1);
+		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, 0, 0, WINDOW_WID - 1, WINDOW_HEI - 1);
 	}
+
+	
 }
 
 //死亡処理.

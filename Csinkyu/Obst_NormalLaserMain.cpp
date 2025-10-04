@@ -34,6 +34,7 @@ void NormalLaserMain::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 		flashEffect[i].ValidFlag = 0;
 	}
+	MoveRand();
 }
 //更新.
 void NormalLaserMain::Update()
@@ -208,7 +209,37 @@ void NormalLaserMain::enemy4Move()
 			//発射開始時間より短くならないよう時間を設定.
 			Hsc   = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * p_data->spawnRate;
 			HscTm = LASER_NOR_SHOT_START;
+			MoveRand();
 		}
+	}
+}
+
+void NormalLaserMain::MoveRand()
+{
+	int edge = rand() % 4;
+
+	switch (edge)
+	{
+	case 0://上辺から開始.
+		Hx = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_WID - 2 * LASER_NOR_OUTER_MARGIN);
+		Hy = LASER_NOR_OUTER_MARGIN;
+		moveDir = MOVE_LEFT;
+		break;
+	case 1://右辺から開始.
+		Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
+		Hy = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_HEI - 2 * LASER_NOR_OUTER_MARGIN);
+		moveDir = MOVE_UP;
+		break;
+	case 2://下辺から開始.
+		Hx = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_WID - 2 * LASER_NOR_OUTER_MARGIN);
+		Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
+		moveDir = MOVE_RIGHT;
+		break;
+	case 3://左辺から開始.
+		Hx = LASER_NOR_OUTER_MARGIN;
+		Hy = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_HEI - 2 * LASER_NOR_OUTER_MARGIN);
+		moveDir = MOVE_DOWN;
+		break;
 	}
 }
 

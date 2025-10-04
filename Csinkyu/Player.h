@@ -57,6 +57,12 @@ private:
 	bool        active{};   //有効か.
 	bool        isDebug{};  //デバッグ用.
 
+	// ダッシュ関連.
+	bool isDashing;      // ダッシュ中かどうか.
+	int dashTimer;       // ダッシュの残り時間.
+	int dashCooldown;    // ダッシュのクールダウン.
+	DBL_XY dashDir;      // ダッシュの方向.
+
 	float       afterCntr{};	 		     //残像用時間カウンター.
 	AfterEffect after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
@@ -68,6 +74,7 @@ private:
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
 	InputMng*      p_input{};     //入力機能.
+
 
 	//エフェクト用(未使用)
 	ReflectEffect reflectEffects[PLAYER_MAX_EFFECT]{}; // エフェクト配列
@@ -101,6 +108,8 @@ public:
 
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
+
+	void UpdateDash();       //ダッシュ更新.
 
 	//エフェクト用(未使用)
 	void CreateReflectEffect(DBL_XY pos);

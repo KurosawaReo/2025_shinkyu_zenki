@@ -85,6 +85,10 @@ enum StageType
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 #define PLAYER_MAX_EFFECT               (5)             //最大エフェクト数
+// プレイヤーのダッシュ設定.
+#define DASH_SPEED                      (15.0)          //ダッシュ速度（通常の3倍程度）
+#define DASH_DURATION                   (8)             //ダッシュ持続時間（フレーム）
+#define DASH_COOLDOWN                   (30)            //ダッシュクールダウン（フレーム）
 
 //アイテム.
 #define ITEM_COUNT						(2)				//アイテムの数.
