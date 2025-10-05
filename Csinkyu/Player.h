@@ -7,19 +7,12 @@
 
 class GameData; //前方宣言.
 
-//ダッシュエフェクト.
-struct DashEffect
-{
-	DBL_XY pos;    // エフェクト位置
-	float  scale;  // スケール
-	float  alpha;  // 透明度
-	int    timer;  // 表示時間
-	bool   active; // 有効フラグ
-};
-//残像データ.
+//エフェクトデータ.
 struct AfterEffect
 {
 	DBL_XY pos;
+	double ang;
+	bool   isDash;   //ダッシュエフェクトにするか.
 	bool   isActive;
 };
 
@@ -65,10 +58,6 @@ private:
 	float          dashTimer;        // ダッシュの残り時間.
 	float          dashCooldown;     // ダッシュのクールダウン.
 
-	//エフェクト.
-	DashEffect     dashEffects[PLAYER_DASH_EFFECT_MAX]{}; // エフェクト配列
-	int            dashEffectIndex{};                     // 次に使用するエフェクトのインデックス
-
 	DrawImg        imgPlayer[2]{};      //プレイヤー画像.
 	DrawImg        imgPlayerLight[2]{}; //プレイヤーの光る画像.
 	double         imgRot{};            //プレイヤーの画像角度.
@@ -109,8 +98,4 @@ public:
 
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
-
-	//void CreateDashEffect(DBL_XY pos);
-	//void UpdateDashEffects();
-	//void DrawDashEffects();
 };

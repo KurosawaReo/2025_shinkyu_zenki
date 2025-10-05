@@ -268,8 +268,8 @@ void GameManager::Init() {
 		//キー操作.
 		p_input->AddAction(_T("GameNext"),   KeyID::Space);
 		p_input->AddAction(_T("GamePause"),  KeyID::P);
-		p_input->AddAction(_T("PlayerDash"), KeyID::CtrlL);
-		p_input->AddAction(_T("PlayerDash"), KeyID::CtrlR);
+		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftL); //固定キー機能を切っておくこと推奨.
+		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftR);
 #if defined INPUT_CHANGE_ARCADE
 		//アーケード操作.
 		p_input->AddAction(_T("GameNext"),   PadArcadeID::BtnUpper1);

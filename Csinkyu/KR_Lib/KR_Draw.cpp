@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/10/03
+   ver: 2025/10/05
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -606,14 +606,15 @@ namespace KR_Lib
 		return 0; //正常終了.
 	}
 	//DrawTriangleの改造版.
-	int DrawTriangleKR(const Triangle* data, bool isFill, bool isAnti) {
+	//thickは, isAntiがtrueの場合のみ使用可能.
+	int DrawTriangleKR(const Triangle* data, bool isFill, bool isAnti, float thick) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			int err = DrawTriangleAA(
 				_flt(data->pos[0].x), _flt(data->pos[0].y),
 				_flt(data->pos[1].x), _flt(data->pos[1].y),
-				_flt(data->pos[2].x), _flt(data->pos[2].y), data->color.GetColorCode(), isFill
+				_flt(data->pos[2].x), _flt(data->pos[2].y), data->color.GetColorCode(), isFill, thick
 			);
 			_return(-1, err < 0) //-1: DrawTriangleAAエラー.
 		}

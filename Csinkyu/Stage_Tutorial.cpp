@@ -411,7 +411,7 @@ void TutorialStage::DrawStep1() {
 		case 1:
 		{
 			DrawTopText1(_T("ダッシュする"), alpha);
-			DrawTopText2(_T("キーボード　　 : 移動 + CTRLキー  "), alpha);
+			DrawTopText2(_T("キーボード　　 : 移動 + SHIFTキー "), alpha);
 			DrawTopText3(_T("コントローラー : 移動 + Bボタン　 "), alpha);
 			DrawTopText4(_T("アーケード　　 : 移動 + 右上ボタン"), alpha);
 		}
