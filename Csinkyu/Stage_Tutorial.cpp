@@ -411,7 +411,7 @@ void TutorialStage::DrawStep1() {
 		case 1:
 		{
 			DrawTopText1(_T("ダッシュする"), alpha);
-			DrawTopText2(_T("キーボード　　 : 移動 + SHIFTキー "), alpha);
+			DrawTopText2(_T("キーボード　　 : 移動 + CTRLキー  "), alpha);
 			DrawTopText3(_T("コントローラー : 移動 + Bボタン　 "), alpha);
 			DrawTopText4(_T("アーケード　　 : 移動 + 右上ボタン"), alpha);
 		}
@@ -421,7 +421,7 @@ void TutorialStage::DrawStep1() {
         {
             DrawTopText1(_T("攻撃をよける"), alpha);
             DrawTopText2(_T("青いものは敵です。当たると即死します。"), alpha);
-            DrawTopText3(_T("灰色:予兆 / 青色:攻撃"), alpha);
+            DrawTopText3(_T("灰色:予告, 青色:攻撃"), alpha);
 
             p_gameMng->laserNor1->Draw();
             p_laserMng->Draw();
@@ -443,7 +443,7 @@ void TutorialStage::DrawStep2() {
         case 0:
         {
             DrawTopText1(_T("アイテムをとる"), alpha);
-            DrawTopText2(_T("アイテムは画面上から降ってきます。触れると取れます。"), alpha);
+            DrawTopText2(_T("アイテムは画面上から降ってきます。触れると自動で取れます。"), alpha);
 
 			p_itemMng->Draw();
         }
@@ -452,7 +452,7 @@ void TutorialStage::DrawStep2() {
         case 1:
         {
             DrawTopText1(_T("アイテム発動"), alpha);
-            DrawTopText2(_T("触れると自動で効果が発動し、一定時間経つと解除されます。"), alpha);
+            DrawTopText2(_T("触れると効果が発動し、一定時間経つと解除されます。"), alpha);
 
 			p_itemMng->Draw();
         }
@@ -506,7 +506,7 @@ void TutorialStage::DrawStep3() {
 		case 3:
 		{
 			DrawTopText1(_T("反射モードの注意"), alpha);
-			DrawTopText2(_T("無敵ではないので、レーザー以外に当たると死にます。"), alpha);
+			DrawTopText2(_T("無敵ではないので、レーザー以外には当たると死にます。ご注意ください。"), alpha);
 
 			p_itemMng->Draw();
 			p_laserMng->Draw();
@@ -529,7 +529,7 @@ void TutorialStage::DrawStep4() {
     {
         case 0:
         {
-            DrawTopText2(_T("スコアを稼いで最後に2000点稼いでみましょう。"), alpha);
+            DrawTopText2(_T("最後に、スコアを2000点稼いでみましょう。"), alpha);
 			DrawTopText3(_T("アイテムを取る:+100, 隕石を壊す:+500"), alpha);
 
 			p_itemMng->Draw();
@@ -542,7 +542,7 @@ void TutorialStage::DrawStep4() {
 		case 1:
 		{
 			DrawTopText2(_T("これでチュートリアルは以上です。"), alpha);
-			DrawTopText3(_T("自動でタイトルに戻ります..."), alpha);
+			DrawTopText3(_T("ハイスコアを目指して頑張ってください！"), alpha);
 		}
 		break;
     }

@@ -87,10 +87,11 @@ enum StageType
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 //プレイヤー > ダッシュ.
-#define PLAYER_DASH_SPEED               (5.0)			//ダッシュ速度.
-#define PLAYER_DASH_DURATION            (8)             //ダッシュ持続時間（フレーム）
+#define PLAYER_DASH_SPEED               (2.5)			//ダッシュ速度.
+#define PLAYER_DASH_DURATION            (12)            //ダッシュ持続時間（フレーム）
 #define PLAYER_DASH_COOLDOWN            (30)            //ダッシュクールダウン（フレーム）
 #define PLAYER_DASH_EFFECT_MAX          (5)             //最大エフェクト数.
+#define PLAYER_DASH_EFFECT_TIME			(10)			//エフェクト時間.
 
 //アイテム.
 #define ITEM_COUNT						(2)				//アイテムの数.

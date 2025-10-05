@@ -62,15 +62,16 @@ private:
 
 	//ダッシュ.
 	bool           isDashing;        // ダッシュ中かどうか.
-	int            dashTimer;        // ダッシュの残り時間.
-	int            dashCooldown;     // ダッシュのクールダウン.
+	float          dashTimer;        // ダッシュの残り時間.
+	float          dashCooldown;     // ダッシュのクールダウン.
 
 	//エフェクト.
 	DashEffect     dashEffects[PLAYER_DASH_EFFECT_MAX]{}; // エフェクト配列
 	int            dashEffectIndex{};                     // 次に使用するエフェクトのインデックス
 
-	DrawImg        imgPlayer[2]{};   //プレイヤー画像.
-	double         imgRot{};         //プレイヤーの画像角度.
+	DrawImg        imgPlayer[2]{};      //プレイヤー画像.
+	DrawImg        imgPlayerLight[2]{}; //プレイヤーの光る画像.
+	double         imgRot{};            //プレイヤーの画像角度.
 
 	bool           isMoveAble{};     //移動可能かどうか.
 
@@ -100,6 +101,8 @@ public:
 	void Update();
 	void Draw  ();
 
+	void UpdateDash();       //ダッシュ更新.
+
 	void PlayerMove();       //プレイヤー移動.
 	void PlayerDeath();      //プレイヤー死亡.
 	void PlayerRevival();    //プレイヤー復活.
@@ -107,8 +110,7 @@ public:
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
 
-	void UpdateDash();       //ダッシュ更新.
-	void CreateDashEffect(DBL_XY pos);
-	void UpdateDashEffects();
-	void DrawDashEffects();
+	//void CreateDashEffect(DBL_XY pos);
+	//void UpdateDashEffects();
+	//void DrawDashEffects();
 };

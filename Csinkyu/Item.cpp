@@ -21,7 +21,7 @@ void ItemManager::Init()
 
 	//‰æ‘œ.
 	imgItem.     LoadFile(_T("Resources/Images/item.png"));	
-	imgItemLight.LoadFile(_T("Resources/Images/laser_ref_light.png"));	
+	imgItemLight.LoadFile(_T("Resources/Images/light_color_2.png"));
 }
 //ƒŠƒZƒbƒg.
 void ItemManager::Reset()

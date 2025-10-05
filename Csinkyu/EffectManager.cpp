@@ -42,6 +42,17 @@ void EffectManager::Update() {
 				}
 				break;
 
+				case Effect_PlayerDash:
+				{
+					effect[i].counter++;
+
+					//時間経過で消滅.
+					if (effect[i].counter >= PLAYER_DASH_EFFECT_TIME) {
+						DeleteEffect(i);
+					}
+				}
+				break;
+
 				case Effect_PlayerDeath:
 				{
 					effect[i].counter++;
@@ -137,15 +148,35 @@ void EffectManager::Draw() {
 				}
 				break;
 
-				case Effect_PlayerDeath:
+				case Effect_PlayerDash:
 				{
-					Circle cir = { effect[i].pos, PLAYER_SIZE+effect[i].counter/2, 0xFFFFFF };
+					//三角形データ.
+					DBL_XY pos1 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang   )*10;
+					DBL_XY pos2 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang+90)*5;
+					DBL_XY pos3 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang-90)*5;
+					Triangle tri = {{pos1, pos2, pos3}, 0xFFFFFF};
 					//アニメーション値.
 					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
 
 					//描画.
 					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-					DrawCircleKR(&cir, false, true);
+					DrawTriangleKR(&tri, false, true);
+				}
+				break;
+
+				case Effect_PlayerDeath:
+				{
+					//三角形データ.
+					DBL_XY pos1 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang   )*10;
+					DBL_XY pos2 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang+90)*5;
+					DBL_XY pos3 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang-90)*5;
+					Triangle tri = {{pos1, pos2, pos3}, 0xFFFFFF};
+					//アニメーション値.
+					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
+
+					//描画.
+					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
+					DrawTriangleKR(&tri, false, true);
 				}
 				break;
 

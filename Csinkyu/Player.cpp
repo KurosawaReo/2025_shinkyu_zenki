@@ -21,8 +21,10 @@ void Player::Init()
 	isDebug = false;
 
 	//画像読み込み.
-	imgPlayer[0].LoadFile(_T("Resources/Images/player_normal.png"));
-	imgPlayer[1].LoadFile(_T("Resources/Images/player_reflect.png"));
+	imgPlayer[0].     LoadFile(_T("Resources/Images/player_normal.png"));
+	imgPlayer[1].     LoadFile(_T("Resources/Images/player_reflect.png"));
+	imgPlayerLight[0].LoadFile(_T("Resources/Images/light_color_2.png"));
+	imgPlayerLight[1].LoadFile(_T("Resources/Images/light_color_3.png"));
 }
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
@@ -57,13 +59,9 @@ void Player::Reset(DBL_XY _pos, bool _active)
 void Player::Update()
 {
 #if defined _DEBUG //Releaseでは入れない.
-	//デバッグモード切り替え.
+	//無敵モード.
 	if (p_input->IsPushKeyTime(KeyID::M) == 1) {
 		isDebug = !isDebug;
-	}
-	//テスト用：Eキーで反射エフェクトを生成
-	if (p_input->IsPushKeyTime(KeyID::E) == 1) {
-		CreateDashEffect(hit.pos);
 	}
 #endif
 
@@ -72,7 +70,6 @@ void Player::Update()
 		imgRot += 1.5 * p_data->speedRate; //画像回転.
 
 		UpdateAfterImage();
-		UpdateDashEffects();
 		UpdateDash();
 		PlayerMove();
 		
@@ -103,11 +100,10 @@ void Player::Draw()
 			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
 		}
 	}
-
 	// ダッシュのデバッグ表示
 	if (isDashing || dashCooldown > 0) {
 		TCHAR dashStr[128];
-		_stprintf_s(dashStr, _T("Dash: timer=%d, cooldown=%d"), dashTimer, dashCooldown);
+		_stprintf_s(dashStr, _T("Dash: timer=%f, cooldown=%f"), dashTimer, dashCooldown);
 		DrawString(0, 430, dashStr, isDashing ? 0x00FF00 : 0xFFFF00);
 	}
 #endif
@@ -115,18 +111,25 @@ void Player::Draw()
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
-		DrawDashEffects();  // エフェクトを先に描画
 
 		const float size = 0.17;
 
-		//画像描画.
+		//プレイヤー描画.
 		if (mode == Player_Reflect ||
 			mode == Player_SuperReflect
 		){
+			//ダッシュ演出.
+			if (isDashing) {
+				imgPlayerLight[0].DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+			}
 			//反射モードの画像.
 			imgPlayer[1].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
 		else {
+			//ダッシュ演出.
+			if (isDashing) {
+				imgPlayerLight[1].DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+			}
 			//通常モードの画像.
 			imgPlayer[0].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
@@ -135,6 +138,46 @@ void Player::Draw()
 		if (p_data->stage == STAGE_TUTORIAL) {
 			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToIntXY(), 0xFFFFFF );
 			str.Draw();
+		}
+	}
+}
+
+//ダッシュ処理.
+void Player::UpdateDash()
+{
+	//ダッシュクールダウン減少.
+	if (dashCooldown > 0){
+		dashCooldown -= 1 * p_data->speedRate;
+	}
+
+	//ダッシュ中なら.
+	if (isDashing)
+	{
+		dashTimer -= 1 * p_data->speedRate;
+		//ダッシュ時間切れ.
+		if (dashTimer <= 0)
+		{
+			isDashing = false; //ダッシュ終了.
+		}
+	}
+	//ダッシュしてないなら.
+	else
+	{
+		if (dashCooldown <= 0)
+		{
+			bool dashkey = p_input->IsPushActionTime(_T("PlayerDash")) == 1;
+			//ダッシュ開始.
+			if (dashkey)
+			{
+				dashTimer    = PLAYER_DASH_DURATION;
+				dashCooldown = PLAYER_DASH_COOLDOWN;
+				isDashing    = true;
+
+				//チュートリアルなら.
+				if (p_data->stage == STAGE_TUTORIAL) {
+					TutorialStage::GetInst().SetPlayerDash(true);
+				}
+			}
 		}
 	}
 }
@@ -149,7 +192,8 @@ void Player::PlayerMove()
 		//ダッシュ中は加速.
 		if (isDashing)
 		{
-			speed *= PLAYER_DASH_SPEED;
+			//残り時間に応じて段々減速.
+			speed *= 1.0 + PLAYER_DASH_SPEED * Calc::CalcNumEaseOut(dashTimer/PLAYER_DASH_DURATION);
 		}
 		//移動.
 		p_input->MoveKey4Dir(&hit.pos, speed);
@@ -178,7 +222,10 @@ void Player::PlayerDeath() {
 		//GamaManagerの関数実行(includeだけすれば使える)
 		GameManager::GetInst().GameOver(); //ゲーム終了.
 	
-		active = false;
+		isDashing    = false;
+		dashTimer    = 0;
+        dashCooldown = 0;
+		active       = false;
 	}
 }
 
@@ -209,13 +256,23 @@ void Player::UpdateAfterImage()
 		{
 			after[i] = after[i-1];
 		}
-		//位置が変わったら(移動したら)
-		if (hit.pos.x != after[1].pos.x || hit.pos.y != after[1].pos.y) {
-			after[0].pos      = hit.pos; //プレイヤー座標を1フレーム目に記録.
-			after[0].isActive = true;    //有効に.
+		after[0].pos      = hit.pos; //プレイヤー座標を1フレーム目に記録.
+		after[0].isActive = false;   //一旦無効にする.
+
+		//ダッシュ中.
+		if (isDashing) {
+			//エフェクト.
+			EffectData data;
+			data.type = Effect_PlayerDash;
+			data.pos  = hit.pos;
+			data.ang  = Calc::CalcFacingAng(after[0].pos, after[1].pos); //移動方向の逆向き.
+			p_effectMng->SpawnEffect(&data);
 		}
 		else {
-			after[0].isActive = false;   //無効に.
+			//位置が変わったら(移動したら)
+			if (after[0].pos.x != after[1].pos.x || after[0].pos.y != after[1].pos.y) {
+				after[0].isActive = true; //有効に.
+			}
 		}
 	}
 }
@@ -255,48 +312,7 @@ void Player::DrawAfterImage()
 	ResetDrawBlendMode();
 }
 
-void Player::UpdateDash()
-{
-	//ダッシュクールダウン減少.
-	if (dashCooldown > 0){
-		dashCooldown -= 1 * p_data->speedRate;
-	}
-
-	//ダッシュ中なら.
-	if (isDashing)
-	{
-		dashTimer -= 1 * p_data->speedRate;
-		//ダッシュ時間切れ.
-		if (dashTimer <= 0)
-		{
-			isDashing = false; //ダッシュ終了.
-		}
-	}
-	//ダッシュしてないなら.
-	else
-	{
-		if (dashCooldown <= 0)
-		{
-			bool dashkey = p_input->IsPushActionTime(_T("PlayerDash")) == 1;
-			//ダッシュ開始.
-			if (dashkey)
-			{
-				dashTimer    = PLAYER_DASH_DURATION;
-				dashCooldown = PLAYER_DASH_COOLDOWN;
-				isDashing    = true;
-
-				//エフェクト.
-				CreateDashEffect(hit.pos);
-				//チュートリアルなら.
-				if (p_data->stage == STAGE_TUTORIAL) {
-					TutorialStage::GetInst().SetPlayerDash(true);
-				}
-			}
-		}
-	}
-
-}
-
+/*
 //ダッシュエフェクト生成.
 void Player::CreateDashEffect(DBL_XY pos)
 {
@@ -321,9 +337,9 @@ void Player::UpdateDashEffects()
 			dashEffects[i].scale += 0.1f; // 拡大速度を少し遅く
 			dashEffects[i].alpha -= 6.0f; // フェードアウト速度を少し遅く
 
-			// タイマーが0になったか透明度が0以下になったら非アクティブ
+			//タイマーが0 or 透明度が0以下になったら.
 			if (dashEffects[i].timer <= 0 || dashEffects[i].alpha <= 0) {
-				dashEffects[i].active = false;
+				dashEffects[i].active = false; //非アクティブに.
 			}
 		}
 	}
@@ -334,6 +350,7 @@ void Player::DrawDashEffects()
 {
 	for (int i = 0; i < PLAYER_DASH_EFFECT_MAX; i++) {
 		if (dashEffects[i].active) {
+
 			DashEffect* effect = &dashEffects[i];
 
 			// 点滅効果の計算（2フレームごとに点滅）
@@ -350,14 +367,7 @@ void Player::DrawDashEffects()
 			// 点滅による輝度変化（強めの点滅）
 			float flashIntensity = (effect->timer % 4 < 2) ? 1.5f : 0.8f;
 			alpha = (int)(alpha * flashIntensity);
-			alpha = min(255, max(0, alpha));
-
-			// ピンク色の設定（より明るく、点滅で変化）
-			UINT color = GetColor(
-				min(255, (int)(alpha * flashIntensity)),
-				alpha * 80 / 255,
-				min(255, alpha * 150 / 255)
-			);
+			alpha = Calc::ClampNum(alpha, 0, 255); //0～255の範囲に収める.
 
 			// アルファブレンドモード設定（エフェクトごとに設定）
 			SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
@@ -414,3 +424,4 @@ void Player::DrawDashEffects()
 		}
 	}
 }
+*/
