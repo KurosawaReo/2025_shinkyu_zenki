@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/10/05
+   ver: 2025/10/03
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -606,15 +606,14 @@ namespace KR_Lib
 		return 0; //正常終了.
 	}
 	//DrawTriangleの改造版.
-	//thickは, isAntiがtrueの場合のみ使用可能.
-	int DrawTriangleKR(const Triangle* data, bool isFill, bool isAnti, float thick) {
+	int DrawTriangleKR(const Triangle* data, bool isFill, bool isAnti) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			int err = DrawTriangleAA(
 				_flt(data->pos[0].x), _flt(data->pos[0].y),
 				_flt(data->pos[1].x), _flt(data->pos[1].y),
-				_flt(data->pos[2].x), _flt(data->pos[2].y), data->color.GetColorCode(), isFill, thick
+				_flt(data->pos[2].x), _flt(data->pos[2].y), data->color.GetColorCode(), isFill
 			);
 			_return(-1, err < 0) //-1: DrawTriangleAAエラー.
 		}
@@ -678,12 +677,18 @@ namespace KR_Lib
 	//円弧を描画.
 	int DrawArcKR(const Pie* pie, bool isAnti, float thick) {
 
-		const double addAng = 1; //一度で描く線の長さ.
+		const double addAng = 1;                        //一度で描く線の長さ.
+		const double edAng  = pie->stAng + pie->arcAng; //弧の終わりの角度.
 
-		for (int i = pie->stAng; i <= (pie->stAng+ pie->arcAng)-addAng; i += addAng) {
+		for (int i = pie->stAng; i <= edAng-addAng; i += addAng) {
+			//角度の設定.
+			double ang1 = i - 1;
+			ang1 = max(ang1, pie->stAng); //下限.
+			double ang2 = i + addAng + 1;
+			ang2 = min(ang2, edAng);      //上限.
 			//座標の設定.
-			DBL_XY pos1 = Calc::CalcArcPos(pie->pos, i       -1, pie->r); //繋ぎ目が綺麗になるよう角度を-1する.
-			DBL_XY pos2 = Calc::CalcArcPos(pie->pos, i+addAng+1, pie->r); //繋ぎ目が綺麗になるよう角度を+1する.
+			DBL_XY pos1 = Calc::CalcArcPos(pie->pos, ang1, pie->r); //繋ぎ目が綺麗になるよう角度を-1する.
+			DBL_XY pos2 = Calc::CalcArcPos(pie->pos, ang2, pie->r); //繋ぎ目が綺麗になるよう角度を+1する.
 			Line line = { pos1, pos2, pie->color };
 			//線を描画.
 			int err = DrawLineKR(&line, isAnti, thick);

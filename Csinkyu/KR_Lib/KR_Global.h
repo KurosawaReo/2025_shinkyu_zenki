@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/10/03
+   ver: 2025/10/09
 
    KR_Lib全体で使う汎用機能を追加します。
 */
@@ -161,6 +161,23 @@ namespace KR_Lib
 	{
 		BYTE r, g, b, a;
 	};
+	//色.
+	enum class ColorID
+	{
+		Red,
+		Orange,
+		Yellow,
+		Lime,
+		Green,
+		Cyan,
+		Blue,
+		Purple,
+		Pink,
+		Magenta,
+		White,
+		Gray,
+		Black,
+	};
 	//色データ.
 	class MY_COLOR
 	{
@@ -173,13 +190,15 @@ namespace KR_Lib
 		MY_COLOR(int _r, int _g, int _b)         : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), 255} {}
 		MY_COLOR(int _r, int _g, int _b, int _a) : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), static_cast<BYTE>(_a)} {}
 		MY_COLOR(UINT _colorCode);
+		MY_COLOR(ColorID id);
 		//get.
-		COLOR_U8 GetColorU8()   const { return {color.b, color.g, color.r, color.a}; }
-		UINT     GetColorCode() const { return DxLib::GetColor(color.r, color.g, color.b); }
+		COLOR_U8 GetColorU8()   const;
+		UINT     GetColorCode() const;
 
 		//代入用.
 		void operator=(const RGBA& rgba);
 		void operator=(UINT colorCode);
+		void operator=(ColorID id);
 	};
 
 	//円データ.

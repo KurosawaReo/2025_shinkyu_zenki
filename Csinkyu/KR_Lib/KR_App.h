@@ -1,6 +1,6 @@
 /*
    - KR_App.h - (DxLib)
-   ver: 2025/10/02
+   ver: 2025/10/09
 
    プログラム全体(開始,終了など)の処理を行います。
 */
@@ -39,8 +39,10 @@ namespace KR_Lib
 
 	public:
 		//get.
-		INT_XY GetWindowSize() const { return windowSize; }
-		int    GetFps()        const { return fps; }
+		int    GetWindowX()  const { return windowSize.x; }
+		int    GetWindowY()  const { return windowSize.y; }
+		INT_XY GetWindowXY() const { return windowSize; }
+		int    GetFps()      const { return fps; }
 
 		int  InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync = TRUE);
 		void LoopDx();

@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/10/05
+   ver: 2025/10/03
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -148,7 +148,7 @@ namespace KR_Lib
 	//図形.
 	int    DrawCircleKR		 (const Circle*   data,                           bool isFill = true, bool isAnti = false, float thick = 1.0f);
 	int    DrawBoxKR		 (const Box*      data, Anchor anc = Anchor::Mid, bool isFill = true, bool isAnti = false);
-	int    DrawTriangleKR	 (const Triangle* data,                           bool isFill = true, bool isAnti = false, float thick = 1.0f);
+	int    DrawTriangleKR	 (const Triangle* data,                           bool isFill = true, bool isAnti = false);
 	int    DrawLineKR		 (const Line*     data,                                               bool isAnti = false, float thick = 1.0f);
 	int    DrawPieKR		 (const Pie* pie,                                                     bool isAnti = false, float thick = 1.0f);
 	int    DrawArcKR		 (const Pie* pie,                                                     bool isAnti = false, float thick = 1.0f);

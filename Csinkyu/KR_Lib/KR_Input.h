@@ -1,11 +1,9 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/10/05
+   ver: 2025/10/02
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
-
-   TODO: Actionに登録されている操作を、文字列で取得できるようにしたい(説明用に)
 */
 #pragma once
 
@@ -15,53 +13,49 @@ namespace KR_Lib
 	//キーボードID.
 	enum class KeyID
 	{
-		Down   = KEY_INPUT_DOWN,
-		Left   = KEY_INPUT_LEFT,
-		Right  = KEY_INPUT_RIGHT,
-		Up     = KEY_INPUT_UP,
-		Num0   = KEY_INPUT_0,
-		Num1   = KEY_INPUT_1,
-		Num2   = KEY_INPUT_2,
-		Num3   = KEY_INPUT_3,
-		Num4   = KEY_INPUT_4,
-		Num5   = KEY_INPUT_5,
-		Num6   = KEY_INPUT_6,
-		Num7   = KEY_INPUT_7,
-		Num8   = KEY_INPUT_8,
-		Num9   = KEY_INPUT_9,
-		A      = KEY_INPUT_A,
-		B      = KEY_INPUT_B,
-		C      = KEY_INPUT_C,
-		D      = KEY_INPUT_D,
-		E      = KEY_INPUT_E,
-		F      = KEY_INPUT_F,
-		G      = KEY_INPUT_G,
-		H      = KEY_INPUT_H,
-		I      = KEY_INPUT_I,
-		J      = KEY_INPUT_J,
-		K      = KEY_INPUT_K,
-		L      = KEY_INPUT_L,
-		M      = KEY_INPUT_M,
-		N      = KEY_INPUT_N,
-		O      = KEY_INPUT_O,
-		P      = KEY_INPUT_P,
-		Q      = KEY_INPUT_Q,
-		R      = KEY_INPUT_R,
-		S      = KEY_INPUT_S,
-		T      = KEY_INPUT_T,
-		U      = KEY_INPUT_U,
-		V      = KEY_INPUT_V,
-		W      = KEY_INPUT_W,
-		X      = KEY_INPUT_X,
-		Y      = KEY_INPUT_Y,
-		Z      = KEY_INPUT_Z,
-		ShiftL = KEY_INPUT_LSHIFT,   //SHIFT左キー.
-		ShiftR = KEY_INPUT_RSHIFT,   //SHIFT右キー.
-		CtrlL  = KEY_INPUT_LCONTROL, //SHIFT左キー.
-		CtrlR  = KEY_INPUT_RCONTROL, //SHIFT右キー.
-		Esc    = KEY_INPUT_ESCAPE,   //ESCキー.
-		Space  = KEY_INPUT_SPACE,
-		Enter  = KEY_INPUT_RETURN,   //ENTERキー.
+		Down  = KEY_INPUT_DOWN,
+		Left  = KEY_INPUT_LEFT,
+		Right = KEY_INPUT_RIGHT,
+		Up    = KEY_INPUT_UP,
+		Num0  = KEY_INPUT_0,
+		Num1  = KEY_INPUT_1,
+		Num2  = KEY_INPUT_2,
+		Num3  = KEY_INPUT_3,
+		Num4  = KEY_INPUT_4,
+		Num5  = KEY_INPUT_5,
+		Num6  = KEY_INPUT_6,
+		Num7  = KEY_INPUT_7,
+		Num8  = KEY_INPUT_8,
+		Num9  = KEY_INPUT_9,
+		A     = KEY_INPUT_A,
+		B     = KEY_INPUT_B,
+		C     = KEY_INPUT_C,
+		D     = KEY_INPUT_D,
+		E     = KEY_INPUT_E,
+		F     = KEY_INPUT_F,
+		G     = KEY_INPUT_G,
+		H     = KEY_INPUT_H,
+		I     = KEY_INPUT_I,
+		J     = KEY_INPUT_J,
+		K     = KEY_INPUT_K,
+		L     = KEY_INPUT_L,
+		M     = KEY_INPUT_M,
+		N     = KEY_INPUT_N,
+		O     = KEY_INPUT_O,
+		P     = KEY_INPUT_P,
+		Q     = KEY_INPUT_Q,
+		R     = KEY_INPUT_R,
+		S     = KEY_INPUT_S,
+		T     = KEY_INPUT_T,
+		U     = KEY_INPUT_U,
+		V     = KEY_INPUT_V,
+		W     = KEY_INPUT_W,
+		X     = KEY_INPUT_X,
+		Y     = KEY_INPUT_Y,
+		Z     = KEY_INPUT_Z,
+		Esc   = KEY_INPUT_ESCAPE, //ESCキー.
+		Space = KEY_INPUT_SPACE,
+		Enter = KEY_INPUT_RETURN, //ENTERキー.
 	};
 	//マウスID.
 	enum class MouseID
@@ -175,16 +169,12 @@ namespace KR_Lib
 
 	//▼データ.
 	private:
-		int    tmKey   [KEY_MAX]{};     //キーを押している時間.
-		int    tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.            (index: bitフラグ)
-		int    tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(index: bitフラグ)
+		int tmKey   [KEY_MAX]{};     //キーを押している時間.
+		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.            (index: bitフラグ)
+		int tmPadBtn[PAD_BTN_MAX]{}; //コントローラボタンを押下している時間.(index: bitフラグ)
 
-		bool   isPushAnyKey{};          //キー操作してるかどうか.
-		bool   isPushAnyMouse{};        //マウス操作してるかどうか.
-		bool   isPushAnyPadBtn{};       //パッド操作してるかどうか.
-
-		INT_XY mPos{};                  //マウス座標.
-		INT_XY stickVec{};              //スティック入力.
+		INT_XY mPos{};     //マウス座標.
+		INT_XY stickVec{}; //スティック入力.
 
 		map<MY_STRING, ActionData> actions{}; //アクション記録用.
 
@@ -193,41 +183,41 @@ namespace KR_Lib
 
 	public:
 
-		//各操作判定.
-		bool      IsPushKey       (KeyID id);
-		int       IsPushKeyTime   (KeyID id);
-		bool      IsPushMouse     (MouseID id);
-		int       IsPushMouseTime (MouseID id);
-		bool      IsPushPadBtn    (PadXboxID   id);
-		bool      IsPushPadBtn    (PadSwitchID id);
-	    bool      IsPushPadBtn    (PadArcadeID id);
-		int       IsPushPadBtnTime(PadXboxID   id);
-		int       IsPushPadBtnTime(PadSwitchID id);
-		int       IsPushPadBtnTime(PadArcadeID id);
-		bool      IsPushAction    (MY_STRING name);
-		int       IsPushActionTime(MY_STRING name);
+		//操作判定.
+		bool   IsPushKey       (KeyID id);
+		int    IsPushKeyTime   (KeyID id);
+		bool   IsPushMouse     (MouseID id);
+		int    IsPushMouseTime (MouseID id);
+		bool   IsPushPadBtn    (PadXboxID   id);
+		bool   IsPushPadBtn    (PadSwitchID id);
+	    bool   IsPushPadBtn    (PadArcadeID id);
+		int    IsPushPadBtnTime(PadXboxID   id);
+		int    IsPushPadBtnTime(PadSwitchID id);
+		int    IsPushPadBtnTime(PadArcadeID id);
+		bool   IsPushAction    (MY_STRING name);
+		int    IsPushActionTime(MY_STRING name);
 
 		//アクション.
-		void      AddAction       (MY_STRING name, KeyID       id);
-		void      AddAction       (MY_STRING name, MouseID     id);
-		void      AddAction       (MY_STRING name, PadXboxID   id);
-		void      AddAction       (MY_STRING name, PadSwitchID id);
-		void      AddAction       (MY_STRING name, PadArcadeID id);
+		void   AddAction       (MY_STRING name, KeyID       id);
+		void   AddAction       (MY_STRING name, MouseID     id);
+		void   AddAction       (MY_STRING name, PadXboxID   id);
+		void   AddAction       (MY_STRING name, PadSwitchID id);
+		void   AddAction       (MY_STRING name, PadArcadeID id);
 
 		//移動系.
-		void      MoveKey4Dir     (DBL_XY* pos, float speed);
-		void      MovePad4Dir     (DBL_XY* pos, float speed);
-		void      MovePadStick    (DBL_XY* pos, float speed);
+		void   MoveKey4Dir     (DBL_XY* pos, float speed);
+		void   MovePad4Dir     (DBL_XY* pos, float speed);
+		void   MovePadStick    (DBL_XY* pos, float speed);
 
 		//取得.
-		DBL_XY    GetMousePos();
-		DBL_XY    GetPadStickXY();
+		DBL_XY GetMousePos();
+		DBL_XY GetPadStickXY();
 
 		//更新.
-		void      UpdateKey();
-		void      UpdateMouse();
-		void      UpdatePad();
-		void      UpdateAction();
+		void   UpdateKey();
+		void   UpdateMouse();
+		void   UpdatePad();
+		void   UpdateAction();
 	};
 	//実体.
 	static InputMng& InstInputMng = InputMng::GetInst();
