@@ -1,1 +1,1 @@
-進級制作II(チーム) 前期作品 REFLECT LINE
+2年進級制作(チーム) 前期作品『REFLECT LINE』
