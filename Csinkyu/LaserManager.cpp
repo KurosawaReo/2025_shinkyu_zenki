@@ -96,7 +96,7 @@ void LaserManager::Draw() {
 
 		UINT color;
 
-		const float lightSize = 0.015;
+		const float lightSize = 0.015f;
 
 		SetDrawBlendModeKR(BlendModeID::Add, 155 + 100*CalcNumWaveLoop(laser[i].Counter/30)); //“_–Å.
 

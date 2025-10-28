@@ -221,23 +221,23 @@ void NormalLaserMain::MoveRand()
 	switch (edge)
 	{
 	case 0://上辺から開始.
-		Hx = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_WID - 2 * LASER_NOR_OUTER_MARGIN);
-		Hy = LASER_NOR_OUTER_MARGIN;
+		Hx = _flt(LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_WID - 2 * LASER_NOR_OUTER_MARGIN));
+		Hy = _flt(LASER_NOR_OUTER_MARGIN);
 		moveDir = MOVE_LEFT;
 		break;
 	case 1://右辺から開始.
-		Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
-		Hy = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_HEI - 2 * LASER_NOR_OUTER_MARGIN);
+		Hx = _flt(WINDOW_WID - LASER_NOR_OUTER_MARGIN);
+		Hy = _flt(LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_HEI - 2 * LASER_NOR_OUTER_MARGIN));
 		moveDir = MOVE_UP;
 		break;
 	case 2://下辺から開始.
-		Hx = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_WID - 2 * LASER_NOR_OUTER_MARGIN);
-		Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
+		Hx = _flt(LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_WID - 2 * LASER_NOR_OUTER_MARGIN));
+		Hy = _flt(WINDOW_HEI - LASER_NOR_OUTER_MARGIN);
 		moveDir = MOVE_RIGHT;
 		break;
 	case 3://左辺から開始.
-		Hx = LASER_NOR_OUTER_MARGIN;
-		Hy = LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_HEI - 2 * LASER_NOR_OUTER_MARGIN);
+		Hx = _flt(LASER_NOR_OUTER_MARGIN);
+		Hy = _flt(LASER_NOR_OUTER_MARGIN + rand() % (int)(WINDOW_HEI - 2 * LASER_NOR_OUTER_MARGIN));
 		moveDir = MOVE_DOWN;
 		break;
 	}

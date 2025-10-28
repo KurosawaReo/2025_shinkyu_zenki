@@ -48,12 +48,12 @@ private:
 
 //¥ƒf[ƒ^.
 private: //•Ï”.
-	FireworksData fireworks[FIREWORKS_CNT_MAX];
-	float spawnTimer;
+	FireworksData fireworks[FIREWORKS_CNT_MAX]{};
+	float spawnTimer{};
 
-	GameData*     p_data;
-	Player*       p_player;
-	LaserManager* p_laserMng;
+	GameData*     p_data{};
+	Player*       p_player{};
+	LaserManager* p_laserMng{};
 
 private: //ŠÖ”.
 	void GenerateRandomPosition(float& x, float& y);
