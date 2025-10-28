@@ -1,6 +1,6 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/09/24
+   ver: 2025/10/02
 
    シーン管理機能を追加します。(※ガチで設計する時用のため少し面倒)
 */
@@ -9,11 +9,6 @@
 //KR_Libに使う用.
 namespace KR_Lib
 {
-	//前方宣言.
-	class InputMng;
-	class SceneMng;
-	class SoundMng;
-
 	//シーンクラス(基本)[継承必須]
 	class SceneBasic
 	{

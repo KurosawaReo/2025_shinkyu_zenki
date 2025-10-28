@@ -7,20 +7,12 @@
 
 class GameData; //前方宣言.
 
-//ダッシュエフェクト.
-struct ReflectEffect
-{
-	DBL_XY pos;           // エフェクト位置
-	float  scale;         // スケール
-	float  alpha;         // 透明度
-	int    timer;         // 表示時間
-	bool   active;        // 有効フラグ
-};
-
-//残像データ.
+//エフェクトデータ.
 struct AfterEffect
 {
 	DBL_XY pos;
+	double ang;
+	bool   isDash;   //ダッシュエフェクトにするか.
 	bool   isActive;
 };
 
@@ -51,34 +43,30 @@ private:
 
 //▼データ.
 private:
-	PlayerMode  mode{};     //モード.
+	PlayerMode     mode{};     //モード.
 	
-	Circle      hit{};      //プレイヤーの当たり判定円.
-	bool        active{};   //有効か.
-	bool        isDebug{};  //デバッグ用.
+	Circle         hit{};      //プレイヤーの当たり判定円.
+	bool           active{};   //有効か.
+	bool           isDebug{};  //デバッグ用.
 
-	// ダッシュ関連.
-	bool isDashing;      // ダッシュ中かどうか.
-	int dashTimer;       // ダッシュの残り時間.
-	int dashCooldown;    // ダッシュのクールダウン.
-	DBL_XY dashDir;      // ダッシュの方向.
+	//残像.
+	float          afterCntr{};	 		        //残像用時間カウンター.
+	AfterEffect    after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
-	float       afterCntr{};	 		     //残像用時間カウンター.
-	AfterEffect after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
+	//ダッシュ.
+	bool           isDashing;        // ダッシュ中かどうか.
+	float          dashTimer;        // ダッシュの残り時間.
+	float          dashCooldown;     // ダッシュのクールダウン.
 
-	DrawImg     imgPlayer[2]{}; //プレイヤー画像.
-	double      imgRot{};       //プレイヤーの画像角度.
+	DrawImg        imgPlayer[2]{};      //プレイヤー画像.
+	DrawImg        imgPlayerLight[2]{}; //プレイヤーの光る画像.
+	double         imgRot{};            //プレイヤーの画像角度.
 
-	bool        isMoveAble{};   //移動可能かどうか.
+	bool           isMoveAble{};     //移動可能かどうか.
 
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
 	InputMng*      p_input{};     //入力機能.
-
-
-	//エフェクト用(未使用)
-	ReflectEffect reflectEffects[PLAYER_MAX_EFFECT]{}; // エフェクト配列
-	int reflectEffectIndex{};                          // 次に使用するエフェクトのインデックス
 
 public:
 	//set.
@@ -102,17 +90,12 @@ public:
 	void Update();
 	void Draw  ();
 
+	void UpdateDash();       //ダッシュ更新.
+
 	void PlayerMove();       //プレイヤー移動.
 	void PlayerDeath();      //プレイヤー死亡.
 	void PlayerRevival();    //プレイヤー復活.
 
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
-
-	void UpdateDash();       //ダッシュ更新.
-
-	//エフェクト用(未使用)
-	void CreateReflectEffect(DBL_XY pos);
-	void UpdateReflectEffects();
-	void DrawReflectEffects();
 };

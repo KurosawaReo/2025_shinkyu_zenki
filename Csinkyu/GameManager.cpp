@@ -264,21 +264,26 @@ void GameManager::Init() {
 	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //最高スコア更新.
 
 	//アクション登録.
-	p_input->AddAction(_T("GameNext"),  KeyID::Space);  //キー操作.
-	p_input->AddAction(_T("GamePause"), KeyID::P);      //キー操作. z
-	p_input->AddAction(_T("PlayerDash"),KeyID::R);  //キー操作.
+	{
+		//キー操作.
+		p_input->AddAction(_T("GameNext"),   KeyID::Space);
+		p_input->AddAction(_T("GamePause"),  KeyID::P);
+		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftL); //固定キー機能を切っておくこと推奨.
+		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftR);
 #if defined INPUT_CHANGE_ARCADE
-	p_input->AddAction(_T("GameNext"),  PadArcadeID::BtnUpper1); //アーケード操作.
-	p_input->AddAction(_T("GamePause"), PadArcadeID::BtnUpper2); //アーケード操作.
-	p_input->AddAction(_T("GameQuit"),  PadArcadeID::BtnStart);  //アーケード操作.
-	p_input->AddAction(_T("PlayerDash"), PadArcadeID::BtnLower1);//アーケード操作.
-	p_input->AddAction(_T("PlayerDash"), PadArcadeID::);//パット操作.
+		//アーケード操作.
+		p_input->AddAction(_T("GameNext"),   PadArcadeID::BtnUpper1);
+		p_input->AddAction(_T("PlayerDash"), PadArcadeID::BtnUpper3);
+		p_input->AddAction(_T("GamePause") , PadArcadeID::BtnUpper2);
+		p_input->AddAction(_T("GameQuit"),   PadArcadeID::BtnStart);
 #else
-	p_input->AddAction(_T("GameNext"),  PadXboxID::A);    //コントローラ操作.
-	p_input->AddAction(_T("GamePause"), PadXboxID::X);    //コントローラ操作.
-	p_input->AddAction(_T("GameQuit"),  PadXboxID::View); //コントローラ操作.
-	p_input->AddAction(_T("PlayerDash"),PadXboxID::B);//パット操作.
+		//コントローラ操作.
+		p_input->AddAction(_T("GameNext"),  PadXboxID::A);
+		p_input->AddAction(_T("PlayerDash"),PadXboxID::B);
+		p_input->AddAction(_T("GamePause"), PadXboxID::X);
+		p_input->AddAction(_T("GameQuit"),  PadXboxID::View);
 #endif
+	}
 
 	//タイマー初期化.
 	for(int i = 0; i < SCENE_COUNT; i++){
@@ -365,7 +370,7 @@ void GameManager::Reset() {
 		ripples->Reset();
 		fireworksMng->Reset();
 		item->Reset();
-		player->Reset({ WINDOW_WID/2, WINDOW_HEI/2+250 }, true);
+		player->Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, true);
 		effectMng->Reset();
 		uiMng->Reset();
 	}
@@ -398,10 +403,10 @@ void GameManager::Update() {
 
 	//特定の操作でゲーム終了
 	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
-		App::GetInst().GameOver(); //ボタン長押しで終了.
+		App::GetInst().Quit(); //ボタン長押しで終了.
 	}
 	else if (p_input->IsPushKey(KeyID::Esc)) {
-		App::GetInst().GameOver(); //ESCAPEキーを押したら即終了.
+		App::GetInst().Quit(); //ESCAPEキーを押したら即終了.
 	}
 }
 
@@ -448,7 +453,6 @@ void GameManager::UpdateTitle()
 	if (!tmScene[SCENE_TITLE].GetIsMove()) {
 		tmScene[SCENE_TITLE].Start();
 	}
-
 	//特定の操作でゲーム開始.
 	if (p_input->IsPushActionTime(_T("GameNext")) == 1) {
 		gameData->scene = SCENE_MENU; //メニューシーンへ.
@@ -594,7 +598,7 @@ void GameManager::DrawTitle() {
 
 	//画像の表示.
 	{
-		const int    logoY   = WINDOW_HEI/2 - 85;
+		const int    logoY   = WINDOW_HEI/2 - 80;
 		const DBL_XY imgSize = {0.7, 0.7};
 	
 		//切り替え前.
@@ -612,10 +616,10 @@ void GameManager::DrawTitle() {
 			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * (1-anim2));
-			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, Anchor::Mid, true, true);
+			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
 			//ロゴ2枚目.
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim1);
-			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*100}, imgSize, Anchor::Mid, true, true);
+			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
@@ -663,7 +667,7 @@ void GameManager::DrawTitle() {
 
 			EffectData data{};
 			data.type  = Effect_BreakMeteor;
-			data.pos   = { 584, 290 };
+			data.pos   = { 580, 310 };
 
 			double dig = -130; //角度.
 
@@ -717,11 +721,11 @@ void GameManager::DrawEnd() {
 	}
 	//黒フィルター.
 	{
-		float anim = min(tmScene[SCENE_END].GetPassTime(), 1); //アニメーション値.
+		float anim = CalcNumEaseInOut(tmScene[SCENE_END].GetPassTime()); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);
-		DrawBoxKR(&box, Anchor::Mid); //画面を暗くする(UI以外)
+		DrawBoxKR(&box, Anchor::LU); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
 	uiMng->Draw(); //UI.

@@ -1,6 +1,6 @@
 /*
    - KR_App.h - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/09
 
    プログラム全体(開始,終了など)の処理を行います。
 */
@@ -35,12 +35,14 @@ namespace KR_Lib
 		INT_XY windowSize{}; //画面サイズ.    (記録用)
 		int    fps{};        //フレームレート.(記録用)
 
-		bool   isEnd{};      //ゲームを終了するか.
+		bool   isQuit{};     //ゲームを終了するか.
 
 	public:
 		//get.
-		INT_XY GetWindowSize() const { return windowSize; }
-		int    GetFps()        const { return fps; }
+		int    GetWindowX()  const { return windowSize.x; }
+		int    GetWindowY()  const { return windowSize.y; }
+		INT_XY GetWindowXY() const { return windowSize; }
+		int    GetFps()      const { return fps; }
 
 		int  InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync = TRUE);
 		void LoopDx();
@@ -49,7 +51,7 @@ namespace KR_Lib
 		void Update();
 		void Draw();
 
-		void GameOver(); //ゲームを終了する.
+		void Quit(); //ゲームを終了する.
 	};
 	//実体.
 	static App& InstApp = App::GetInst();	

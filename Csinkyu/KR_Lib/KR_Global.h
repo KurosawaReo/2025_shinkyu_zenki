@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/09/22
+   ver: 2025/10/09
 
    KR_Lib全体で使う汎用機能を追加します。
 */
@@ -66,21 +66,24 @@ namespace KR_Lib
 			return {_dbl(x), _dbl(y)};
 		}
 		//加算した結果を返す.
-		XY<T> Add(T _x, T _y) {
+		XY<T> Add(T _x, T _y) const {
 			return {x+_x, y+_y};
+		}
+		XY<T> Add(XY<T> _xy) const {
+			return {x+_xy.x, y+_xy.y};
 		}
 
 		//演算子[+,-,*,/] [XY<T>・XY<T>]
-		XY<T> operator+(const XY<T>& value) {    //+の右側が引数に入り、返り値が左側に入る.
-			return { x + value.x, y + value.y }; //xとyを加算して返す.
+		XY<T> operator+(const XY<T>& value) const {  //+の右側が引数に入り、返り値が左側に入る.
+			return { x + value.x, y + value.y };     //xとyを加算して返す.
 		}
-		XY<T> operator-(const XY<T>& value) {
+		XY<T> operator-(const XY<T>& value) const {
 			return { x - value.x, y - value.y };
 		}
-		XY<T> operator*(const XY<T>& value) {
+		XY<T> operator*(const XY<T>& value) const {
 			return { x * value.x, y * value.y };
 		}
-		XY<T> operator/(const XY<T>& value) {
+		XY<T> operator/(const XY<T>& value) const {
 			return { x / value.x, y / value.y };
 		}
 		//演算子[+=,-=,*=,/=] [XY<T>・XY<T>]
@@ -108,19 +111,19 @@ namespace KR_Lib
 		//演算子[+,-,*,/] [XY<T>・数値]
 		//右側が数値でなければ無効にする.
 		template<typename T2, _type_num_only(T2)>
-		XY<T> operator+(T2 num) {
+		XY<T> operator+(T2 num) const {
 			return { x + static_cast<T>(num), y + static_cast<T>(num) }; //cast後にxとyを加算して返す.
 		}
 		template<typename T2, _type_num_only(T2)>
-		XY<T> operator-(T2 num) {
+		XY<T> operator-(T2 num) const {
 			return { x - static_cast<T>(num), y - static_cast<T>(num) };
 		}
 		template<typename T2, _type_num_only(T2)>
-		XY<T> operator*(T2 num) {
+		XY<T> operator*(T2 num) const {
 			return { x * static_cast<T>(num), y * static_cast<T>(num) };
 		}
 		template<typename T2, _type_num_only(T2)>
-		XY<T> operator/(T2 num) {
+		XY<T> operator/(T2 num) const {
 			return { x / static_cast<T>(num), y / static_cast<T>(num) };
 		}
 		//演算子[+=,-=,*=,/=] [XY<T>・数値]
@@ -158,6 +161,23 @@ namespace KR_Lib
 	{
 		BYTE r, g, b, a;
 	};
+	//色.
+	enum class ColorID
+	{
+		Red,
+		Orange,
+		Yellow,
+		Lime,
+		Green,
+		Cyan,
+		Blue,
+		Purple,
+		Pink,
+		Magenta,
+		White,
+		Gray,
+		Black,
+	};
 	//色データ.
 	class MY_COLOR
 	{
@@ -170,13 +190,15 @@ namespace KR_Lib
 		MY_COLOR(int _r, int _g, int _b)         : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), 255} {}
 		MY_COLOR(int _r, int _g, int _b, int _a) : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), static_cast<BYTE>(_a)} {}
 		MY_COLOR(UINT _colorCode);
+		MY_COLOR(ColorID id);
 		//get.
-		COLOR_U8 GetColorU8()   const { return {color.b, color.g, color.r, color.a}; }
-		UINT     GetColorCode() const { return DxLib::GetColor(color.r, color.g, color.b); }
+		COLOR_U8 GetColorU8()   const;
+		UINT     GetColorCode() const;
 
 		//代入用.
 		void operator=(const RGBA& rgba);
 		void operator=(UINT colorCode);
+		void operator=(ColorID id);
 	};
 
 	//円データ.
@@ -205,5 +227,14 @@ namespace KR_Lib
 		DBL_XY   stPos; //始点座標.
 		DBL_XY   edPos; //終点座標.
 		MY_COLOR color; //色.
+	};
+	//扇形データ.
+	struct Pie
+	{
+		DBL_XY   pos;    //中心座標.
+		double   r;      //半径.
+		double   stAng;  //開始角度.
+		double   arcAng; //弧の角度.
+		MY_COLOR color;  //色.
 	};
 }

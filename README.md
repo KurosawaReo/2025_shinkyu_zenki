@@ -1,1 +1,1 @@
-# 2GM_shinkyu_z01
+2年進級制作(チーム) 前期作品『REFLECT LINE』

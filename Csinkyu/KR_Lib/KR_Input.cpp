@@ -1,6 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -146,19 +146,8 @@ namespace KR_Lib
 	}
 
 	//マウス座標取得.
-	DBL_XY InputMng::GetMousePos(bool isValidX, bool isValidY) {
-	
-		DBL_XY pos{};
-
-		//xを反映させる.
-		if (isValidX) {
-			pos.x = _dbl(mPos.x); //double型にして反映.
-		}
-		//yを反映させる.
-		if (isValidY){
-			pos.y = _dbl(mPos.y); //double型にして反映.
-		}
-		return pos;
+	DBL_XY InputMng::GetMousePos() {
+		return mPos.ToDblXY();
 	}
 	//コントローラスティック操作取得.
 	DBL_XY InputMng::GetPadStickXY() {

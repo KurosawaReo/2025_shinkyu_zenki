@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/03
 
    描画機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -649,6 +649,53 @@ namespace KR_Lib
 		}
 		return 0; //正常終了.
 	}
+	//扇形を描画.
+	int DrawPieKR(const Pie* pie, bool isAnti, float thick) {
+
+		DrawArcKR(pie, isAnti, thick); //そのまま弧も描く.
+
+		Line line; //描画用の線.
+		int  err;  //エラー判定用.
+
+		//ベクトルを求める.
+		DBL_XY vec1 = Calc::CalcVectorDeg(pie->stAng);             //扇の始まりの角度.
+		DBL_XY vec2 = Calc::CalcVectorDeg(pie->stAng+pie->arcAng); //扇の終わりの角度.
+		//座標を求める.
+		DBL_XY pos1 = pie->pos + vec1 * pie->r;
+		DBL_XY pos2 = pie->pos + vec2 * pie->r;
+		//線を描画.
+		line = { pos1, pie->pos, pie->color };
+		err = DrawLineKR(&line, isAnti, thick);
+		_return(-1, err < 0) //-1: DrawLine 1つ目エラー.
+
+		line = { pos2, pie->pos, pie->color };
+		err = DrawLineKR(&line, isAnti, thick);
+		_return(-2, err < 0) //-2: DrawLine 2つ目エラー.
+
+		return 0;
+	}
+	//円弧を描画.
+	int DrawArcKR(const Pie* pie, bool isAnti, float thick) {
+
+		const double addAng = 1;                        //一度で描く線の長さ.
+		const double edAng  = pie->stAng + pie->arcAng; //弧の終わりの角度.
+
+		for (int i = pie->stAng; i <= edAng-addAng; i += addAng) {
+			//角度の設定.
+			double ang1 = i - 1;
+			ang1 = max(ang1, pie->stAng); //下限.
+			double ang2 = i + addAng + 1;
+			ang2 = min(ang2, edAng);      //上限.
+			//座標の設定.
+			DBL_XY pos1 = Calc::CalcArcPos(pie->pos, ang1, pie->r); //繋ぎ目が綺麗になるよう角度を-1する.
+			DBL_XY pos2 = Calc::CalcArcPos(pie->pos, ang2, pie->r); //繋ぎ目が綺麗になるよう角度を+1する.
+			Line line = { pos1, pos2, pie->color };
+			//線を描画.
+			int err = DrawLineKR(&line, isAnti, thick);
+			_return(-1, err < 0) //-1: DrawLineエラー.
+		}
+		return 0;
+	}
 	//画面全体にグリッド線を描画.
 	int DrawWindowGrid(int wid, int hei, int size, MY_COLOR clrWid, MY_COLOR clrHei) {
 
@@ -671,10 +718,10 @@ namespace KR_Lib
 
 	//描画モード変更.
 	int SetDrawBlendModeKR(BlendModeID id, int power) {
-		return SetDrawBlendMode(id, power);
+		return SetDrawBlendMode(_int(id), power);
 	}
 	int SetDrawBlendModeKR(BlendModeID id, double power) {
-		return SetDrawBlendMode(id, _int_r(power));
+		return SetDrawBlendMode(_int(id), _int_r(power));
 	}
 	//描画モードリセット.
 	int ResetDrawBlendMode() {

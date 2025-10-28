@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    入力操作機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -210,8 +210,8 @@ namespace KR_Lib
 		void   MovePadStick    (DBL_XY* pos, float speed);
 
 		//取得.
-		DBL_XY GetMousePos     (bool isValidX = true, bool isValidY = true);
-		DBL_XY GetPadStickXY   ();
+		DBL_XY GetMousePos();
+		DBL_XY GetPadStickXY();
 
 		//更新.
 		void   UpdateKey();

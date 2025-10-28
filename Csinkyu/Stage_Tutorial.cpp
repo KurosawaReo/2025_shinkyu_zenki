@@ -83,6 +83,8 @@ void TutorialStage::Draw() {
 
 //サインフラグのリセット.
 void TutorialStage::ResetSignFlag() {
+
+	isPlayerDash    = false;
 	isTakeItem      = false;
 	isReflectLaser  = false;
 	isReflectFinish = false;
@@ -135,6 +137,19 @@ void TutorialStage::UpdateStep1() {
 		break;
 
 		case 1:
+		{
+			//[終了条件] ダッシュしたら.
+			if (!endTimer.GetIsMove() && isPlayerDash) {
+				endTimer.Start();
+			}
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				StepInEnd(); //終了処理.
+				stepInNo++;
+			}
+		}
+		break;
+
+		case 2:
 		{
 			//最初の一定時間は停止.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
@@ -387,16 +402,26 @@ void TutorialStage::DrawStep1() {
         case 0:
         {
             DrawTopText1(_T("プレイヤーを移動させる"), alpha);
-            DrawTopText2(_T("キーボード操作: WASD / ↑↓←→"), alpha);
-            DrawTopText3(_T("コントローラー操作: 左スティック"), alpha);
+            DrawTopText2(_T("キーボード　　 : WASD / ↑↓←→"), alpha);
+            DrawTopText3(_T("コントローラー : 左スティック　 "), alpha);
+			DrawTopText4(_T("アーケード　　 : レバー　　　　 "), alpha);
         }
         break;
 
-        case 1:
+		case 1:
+		{
+			DrawTopText1(_T("ダッシュする"), alpha);
+			DrawTopText2(_T("キーボード　　 : 移動 + SHIFTキー "), alpha);
+			DrawTopText3(_T("コントローラー : 移動 + Bボタン　 "), alpha);
+			DrawTopText4(_T("アーケード　　 : 移動 + 右上ボタン"), alpha);
+		}
+		break;
+
+        case 2:
         {
             DrawTopText1(_T("攻撃をよける"), alpha);
             DrawTopText2(_T("青いものは敵です。当たると即死します。"), alpha);
-            DrawTopText3(_T("灰色:予兆 / 青色:攻撃"), alpha);
+            DrawTopText3(_T("灰色:予告, 青色:攻撃"), alpha);
 
             p_gameMng->laserNor1->Draw();
             p_laserMng->Draw();
@@ -418,7 +443,7 @@ void TutorialStage::DrawStep2() {
         case 0:
         {
             DrawTopText1(_T("アイテムをとる"), alpha);
-            DrawTopText2(_T("アイテムは画面上から降ってきます。触れると取れます。"), alpha);
+            DrawTopText2(_T("アイテムは画面上から降ってきます。触れると自動で取れます。"), alpha);
 
 			p_itemMng->Draw();
         }
@@ -427,7 +452,7 @@ void TutorialStage::DrawStep2() {
         case 1:
         {
             DrawTopText1(_T("アイテム発動"), alpha);
-            DrawTopText2(_T("触れると自動で効果が発動し、一定時間経つと解除されます。"), alpha);
+            DrawTopText2(_T("触れると効果が発動し、一定時間経つと解除されます。"), alpha);
 
 			p_itemMng->Draw();
         }
@@ -481,7 +506,7 @@ void TutorialStage::DrawStep3() {
 		case 3:
 		{
 			DrawTopText1(_T("反射モードの注意"), alpha);
-			DrawTopText2(_T("無敵ではないので、レーザー以外に当たると死にます。"), alpha);
+			DrawTopText2(_T("無敵ではないので、レーザー以外には当たると死にます。ご注意ください。"), alpha);
 
 			p_itemMng->Draw();
 			p_laserMng->Draw();
@@ -504,7 +529,7 @@ void TutorialStage::DrawStep4() {
     {
         case 0:
         {
-            DrawTopText2(_T("スコアを稼いで最後に2000点稼いでみましょう。"), alpha);
+            DrawTopText2(_T("最後に、スコアを2000点稼いでみましょう。"), alpha);
 			DrawTopText3(_T("アイテムを取る:+100, 隕石を壊す:+500"), alpha);
 
 			p_itemMng->Draw();
@@ -517,7 +542,7 @@ void TutorialStage::DrawStep4() {
 		case 1:
 		{
 			DrawTopText2(_T("これでチュートリアルは以上です。"), alpha);
-			DrawTopText3(_T("自動でタイトルに戻ります..."), alpha);
+			DrawTopText3(_T("ハイスコアを目指して頑張ってください！"), alpha);
 		}
 		break;
     }
@@ -589,6 +614,36 @@ void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 void TutorialStage::DrawTopText3(MY_STRING text, double alpha) {
 
 	DrawStr str(text, {WINDOW_WID/2, 155+70+55}, {255, 255, 255});
+	const int useFont = font[0].GetFont();
+	
+	{
+		const int margin = 24;
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		Box    box  = {pos, size, 0x000000};
+
+		//枠背景.
+		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
+		DrawBoxKR(&box, Anchor::LU);
+		//テキスト.
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
+		str.Draw(Anchor::Mid, useFont);
+		ResetDrawBlendMode();
+
+		//枠線グラデーション.
+		GradLine line;
+		line.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
+		line.AddPoint(pos.Add(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
+		line.Draw(true);
+	}
+}
+//画面上にテキストを出す(4行目)
+//alphaは0.0～1.0
+void TutorialStage::DrawTopText4(MY_STRING text, double alpha) {
+
+	DrawStr str(text, {WINDOW_WID/2, 155+70+55+55}, {255, 255, 255});
 	const int useFont = font[0].GetFont();
 	
 	{

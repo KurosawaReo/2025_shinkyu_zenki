@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/03
 
    計算機能を追加します。
    (オブジェクト指向ver → KR_Object)
@@ -99,10 +99,30 @@ namespace KR_Lib
 			){
 				return true;
 			}
-			else {
-				return false;
-			}
+			return false;
 		}
+		//当たり判定(扇形と点)
+		bool HitPie(const Pie* pie, DBL_XY pos) {
+
+			//扇形の中心からの距離.
+			double distLen = CalcDist(pie->pos, pos);
+
+			//扇形の中心からの角度.
+			double ang = CalcFacingAng(pie->pos, pos);
+			//扇形の中心角.
+			double centerAng = pie->stAng+pie->arcAng/2;
+			//角度差(1.0～-1.0の範囲, 距離差が少ないほど1.0に近づく)
+			double distAng = cos(_rad(centerAng-ang));
+
+			//hit条件.
+			if (distLen <= pie->r                   && //条件1: 扇形の半径内に入っている.
+				distAng >= cos(_rad(pie->arcAng/2))    //条件2: 扇形の角度の範囲に入っている.
+			){
+				return true;
+			}
+			return false;
+		}
+
 
 		//範囲内に座標を補正する.
 		void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
@@ -170,6 +190,7 @@ namespace KR_Lib
 		}
 		//始点座標から対象座標への方向を求める.
 		//[座標1,座標2 → 角度]
+		//[返り値:-180.0～180.0]
 		double CalcFacingAng(DBL_XY from, DBL_XY to) {
 			//座標差.
 			double disX = to.x - from.x;

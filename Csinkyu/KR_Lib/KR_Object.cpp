@@ -1,6 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    オブジェクトを追加します, 継承して使うことも可です。
    Draw, Calc, Inputの一部機能をオブジェクト指向で使えます。
@@ -49,8 +49,11 @@ namespace KR_Lib
 	void ObjectShape::MovePadStick(float speed) {
 		InstInputMng.MovePadStick(GetPosPtr(), speed);
 	}
-	void ObjectShape::MoveMousePos(bool isValidX, bool isValidY) {
-		SetPos(InstInputMng.GetMousePos(isValidX, isValidY));
+	void ObjectShape::MoveMousePos(bool isMoveX, bool isMoveY) {
+		//有効ならマウス座標を反映.
+		double x = (isMoveX) ? InstInputMng.GetMousePos().x : GetPos().x;
+		double y = (isMoveY) ? InstInputMng.GetMousePos().y : GetPos().y;
+		SetPos({x, y});
 	}
 	
 	//画像を描画.

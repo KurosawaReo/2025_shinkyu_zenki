@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/10/02
 
    オブジェクトを追加します。
 
@@ -106,7 +106,7 @@ namespace KR_Lib
 		void   MoveKey4Dir    (float speed);
 		void   MovePad4Dir    (float speed);
 		void   MovePadStick   (float speed);
-		void   MoveMousePos   (bool isValidX = true, bool isValidY = true);
+		void   MoveMousePos   (bool isMoveX = true, bool isMoveY = true);
 		//描画(Drawの機能)
 		int    DrawGraph      ();
 		int    DrawRectGraph  (int left, int up, int right, int down);
