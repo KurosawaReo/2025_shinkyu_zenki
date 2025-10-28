@@ -1,8 +1,8 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/10/02
+   ver: 2025/10/28
 
-   入力操作機能を追加します。
+   入力操作機能を追加。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
@@ -13,49 +13,53 @@ namespace KR_Lib
 	//キーボードID.
 	enum class KeyID
 	{
-		Down  = KEY_INPUT_DOWN,
-		Left  = KEY_INPUT_LEFT,
-		Right = KEY_INPUT_RIGHT,
-		Up    = KEY_INPUT_UP,
-		Num0  = KEY_INPUT_0,
-		Num1  = KEY_INPUT_1,
-		Num2  = KEY_INPUT_2,
-		Num3  = KEY_INPUT_3,
-		Num4  = KEY_INPUT_4,
-		Num5  = KEY_INPUT_5,
-		Num6  = KEY_INPUT_6,
-		Num7  = KEY_INPUT_7,
-		Num8  = KEY_INPUT_8,
-		Num9  = KEY_INPUT_9,
-		A     = KEY_INPUT_A,
-		B     = KEY_INPUT_B,
-		C     = KEY_INPUT_C,
-		D     = KEY_INPUT_D,
-		E     = KEY_INPUT_E,
-		F     = KEY_INPUT_F,
-		G     = KEY_INPUT_G,
-		H     = KEY_INPUT_H,
-		I     = KEY_INPUT_I,
-		J     = KEY_INPUT_J,
-		K     = KEY_INPUT_K,
-		L     = KEY_INPUT_L,
-		M     = KEY_INPUT_M,
-		N     = KEY_INPUT_N,
-		O     = KEY_INPUT_O,
-		P     = KEY_INPUT_P,
-		Q     = KEY_INPUT_Q,
-		R     = KEY_INPUT_R,
-		S     = KEY_INPUT_S,
-		T     = KEY_INPUT_T,
-		U     = KEY_INPUT_U,
-		V     = KEY_INPUT_V,
-		W     = KEY_INPUT_W,
-		X     = KEY_INPUT_X,
-		Y     = KEY_INPUT_Y,
-		Z     = KEY_INPUT_Z,
-		Esc   = KEY_INPUT_ESCAPE, //ESCキー.
-		Space = KEY_INPUT_SPACE,
-		Enter = KEY_INPUT_RETURN, //ENTERキー.
+		Down   = KEY_INPUT_DOWN,
+		Left   = KEY_INPUT_LEFT,
+		Right  = KEY_INPUT_RIGHT,
+		Up     = KEY_INPUT_UP,
+		Num0   = KEY_INPUT_0,
+		Num1   = KEY_INPUT_1,
+		Num2   = KEY_INPUT_2,
+		Num3   = KEY_INPUT_3,
+		Num4   = KEY_INPUT_4,
+		Num5   = KEY_INPUT_5,
+		Num6   = KEY_INPUT_6,
+		Num7   = KEY_INPUT_7,
+		Num8   = KEY_INPUT_8,
+		Num9   = KEY_INPUT_9,
+		A      = KEY_INPUT_A,
+		B      = KEY_INPUT_B,
+		C      = KEY_INPUT_C,
+		D      = KEY_INPUT_D,
+		E      = KEY_INPUT_E,
+		F      = KEY_INPUT_F,
+		G      = KEY_INPUT_G,
+		H      = KEY_INPUT_H,
+		I      = KEY_INPUT_I,
+		J      = KEY_INPUT_J,
+		K      = KEY_INPUT_K,
+		L      = KEY_INPUT_L,
+		M      = KEY_INPUT_M,
+		N      = KEY_INPUT_N,
+		O      = KEY_INPUT_O,
+		P      = KEY_INPUT_P,
+		Q      = KEY_INPUT_Q,
+		R      = KEY_INPUT_R,
+		S      = KEY_INPUT_S,
+		T      = KEY_INPUT_T,
+		U      = KEY_INPUT_U,
+		V      = KEY_INPUT_V,
+		W      = KEY_INPUT_W,
+		X      = KEY_INPUT_X,
+		Y      = KEY_INPUT_Y,
+		Z      = KEY_INPUT_Z,
+		Esc    = KEY_INPUT_ESCAPE,   //ESCキー.
+		ShiftL = KEY_INPUT_LSHIFT,   //SHIFTキー(左)
+		ShiftR = KEY_INPUT_RSHIFT,   //SHIFTキー(右)
+		CtrlL  = KEY_INPUT_LCONTROL, //CTRLキー(左)
+		CtrlR  = KEY_INPUT_RCONTROL, //CTRLキー(右)
+		Space  = KEY_INPUT_SPACE,
+		Enter  = KEY_INPUT_RETURN,   //ENTERキー.
 	};
 	//マウスID.
 	enum class MouseID
@@ -184,16 +188,16 @@ namespace KR_Lib
 	public:
 
 		//操作判定.
-		bool   IsPushKey       (KeyID id);
-		int    IsPushKeyTime   (KeyID id);
-		bool   IsPushMouse     (MouseID id);
-		int    IsPushMouseTime (MouseID id);
-		bool   IsPushPadBtn    (PadXboxID   id);
-		bool   IsPushPadBtn    (PadSwitchID id);
-	    bool   IsPushPadBtn    (PadArcadeID id);
-		int    IsPushPadBtnTime(PadXboxID   id);
-		int    IsPushPadBtnTime(PadSwitchID id);
-		int    IsPushPadBtnTime(PadArcadeID id);
+		bool   IsPushKey       (KeyID id)       const;
+		int    IsPushKeyTime   (KeyID id)       const;
+		bool   IsPushMouse     (MouseID id)     const;
+		int    IsPushMouseTime (MouseID id)     const;
+		bool   IsPushPadBtn    (PadXboxID   id) const;
+		bool   IsPushPadBtn    (PadSwitchID id) const;
+	    bool   IsPushPadBtn    (PadArcadeID id) const;
+		int    IsPushPadBtnTime(PadXboxID   id) const;
+		int    IsPushPadBtnTime(PadSwitchID id) const;
+		int    IsPushPadBtnTime(PadArcadeID id) const;
 		bool   IsPushAction    (MY_STRING name);
 		int    IsPushActionTime(MY_STRING name);
 

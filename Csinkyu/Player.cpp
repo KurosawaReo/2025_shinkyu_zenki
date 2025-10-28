@@ -88,7 +88,7 @@ void Player::Draw()
 	if (active) {
 		DrawAfterImage();
 
-		const float size = 0.17;
+		const float size = 0.17f;
 
 		//ƒvƒŒƒCƒ„[•`‰æ.
 		if (mode == Player_Reflect ||
