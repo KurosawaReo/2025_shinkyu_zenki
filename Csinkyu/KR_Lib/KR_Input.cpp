@@ -1,9 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/10/02
-
-   入力操作機能を追加します。
-   (オブジェクト指向ver → KR_Object)
+   ver: 2025/10/28
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -14,36 +11,36 @@
 namespace KR_Lib
 {
 	//キー入力の判定.
-	bool InputMng::IsPushKey(KeyID id) {
+	bool InputMng::IsPushKey(KeyID id) const {
 		return tmKey[_int(id)] > 0;
 	}
-	int  InputMng::IsPushKeyTime(KeyID id) {
+	int  InputMng::IsPushKeyTime(KeyID id) const {
 		return tmKey[_int(id)];
 	}
 	//マウス入力の判定.
-	bool InputMng::IsPushMouse(MouseID id) {
+	bool InputMng::IsPushMouse(MouseID id) const {
 		return tmMouse[_int(id)] > 0;
 	}
-	int  InputMng::IsPushMouseTime(MouseID id) {
+	int  InputMng::IsPushMouseTime(MouseID id) const {
 		return tmMouse[_int(id)];
 	}
 	//コントローラ入力の判定.
-	bool InputMng::IsPushPadBtn(PadXboxID id) {
+	bool InputMng::IsPushPadBtn(PadXboxID id) const {
 		return tmPadBtn[_int(id)] > 0;
 	}
-	bool InputMng::IsPushPadBtn(PadSwitchID id) {
+	bool InputMng::IsPushPadBtn(PadSwitchID id) const {
 		return tmPadBtn[_int(id)] > 0;
 	}
-	bool InputMng::IsPushPadBtn(PadArcadeID id) {
+	bool InputMng::IsPushPadBtn(PadArcadeID id) const {
 		return tmPadBtn[_int(id)] > 0;
 	}
-	int  InputMng::IsPushPadBtnTime(PadXboxID id) {
+	int  InputMng::IsPushPadBtnTime(PadXboxID id) const {
 		return tmPadBtn[_int(id)];
 	}
-	int  InputMng::IsPushPadBtnTime(PadSwitchID id) {
+	int  InputMng::IsPushPadBtnTime(PadSwitchID id) const {
 		return tmPadBtn[_int(id)];
 	}
-	int  InputMng::IsPushPadBtnTime(PadArcadeID id) {
+	int  InputMng::IsPushPadBtnTime(PadArcadeID id) const {
 		return tmPadBtn[_int(id)];
 	}
 	//アクション判定.

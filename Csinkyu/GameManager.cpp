@@ -721,7 +721,7 @@ void GameManager::DrawEnd() {
 	}
 	//黒フィルター.
 	{
-		float anim = CalcNumEaseInOut(tmScene[SCENE_END].GetPassTime()); //アニメーション値.
+		double anim = CalcNumEaseInOut(tmScene[SCENE_END].GetPassTime()); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);

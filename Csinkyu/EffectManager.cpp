@@ -151,7 +151,7 @@ void EffectManager::Draw() {
 				case Effect_PlayerDash:
 				{
 					//アニメーション値.
-					const float anim = CalcNumEaseOut(1-effect[i].counter/PLAYER_DASH_EFFECT_TIME);
+					const double anim = CalcNumEaseOut(1-effect[i].counter/PLAYER_DASH_EFFECT_TIME);
 					//三角形データ.
 					DBL_XY pos1 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang   ) * 40 * anim;
 					DBL_XY pos2 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang+90) * 20 * anim;

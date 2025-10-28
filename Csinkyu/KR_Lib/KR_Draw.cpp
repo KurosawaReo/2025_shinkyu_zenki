@@ -680,7 +680,7 @@ namespace KR_Lib
 		const double addAng = 1;                        //ˆê“x‚Å•`‚­ü‚Ì’·‚³.
 		const double edAng  = pie->stAng + pie->arcAng; //ŒÊ‚ÌI‚í‚è‚ÌŠp“x.
 
-		for (int i = pie->stAng; i <= edAng-addAng; i += addAng) {
+		for (double i = pie->stAng; i <= edAng-addAng; i += addAng) {
 			//Šp“x‚ÌÝ’è.
 			double ang1 = i - 1;
 			ang1 = max(ang1, pie->stAng); //‰ºŒÀ.
