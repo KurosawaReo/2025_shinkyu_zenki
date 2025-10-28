@@ -129,7 +129,7 @@ void MenuManager::Draw() {
 
 		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
-		int err = DrawTriangleKR(&tri, true, true);
+		DrawTriangleKR(&tri, true, true);
 	}
 
 	//画像の座標(ここを中心とする)

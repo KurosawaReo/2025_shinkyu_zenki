@@ -5,6 +5,7 @@
 #include "GameManager.h"
 #include "LaserManager.h"
 #include "Obst_NormalLaserMain.h"
+#include "Stage_Tutorial.h"
 
 #include "Player.h"
 
@@ -20,8 +21,10 @@ void Player::Init()
 	isDebug = false;
 
 	//画像読み込み.
-	imgPlayer[0].LoadFile(_T("Resources/Images/player_normal.png"));
-	imgPlayer[1].LoadFile(_T("Resources/Images/player_reflect.png"));
+	imgPlayer[0].     LoadFile(_T("Resources/Images/player_normal.png"));
+	imgPlayer[1].     LoadFile(_T("Resources/Images/player_reflect.png"));
+	imgPlayerLight[0].LoadFile(_T("Resources/Images/light_color_2.png"));
+	imgPlayerLight[1].LoadFile(_T("Resources/Images/light_color_3.png"));
 }
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
@@ -36,34 +39,20 @@ void Player::Reset(DBL_XY _pos, bool _active)
 	isDashing    = false;
 	dashTimer    = 0;
 	dashCooldown = 0;
-	dashDir      = { 0, 0 };
 
 	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
 		after[i].pos      = _pos;
 		after[i].isActive = false;
 	}
-	//反射エフェクトリセット.
-	reflectEffectIndex = 0;
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		reflectEffects[i].active = false;
-		reflectEffects[i].timer = 0;
-		reflectEffects[i].alpha = 0.0f;
-		reflectEffects[i].scale = 1.0f;
-		reflectEffects[i].pos = _pos;
-	}
 }
 //更新.
 void Player::Update()
 {
 #if defined _DEBUG //Releaseでは入れない.
-	//デバッグモード切り替え.
+	//無敵モード.
 	if (p_input->IsPushKeyTime(KeyID::M) == 1) {
 		isDebug = !isDebug;
-	}
-	//テスト用：Eキーで反射エフェクトを生成
-	if (p_input->IsPushKeyTime(KeyID::E) == 1) {
-		CreateReflectEffect(hit.pos);
 	}
 #endif
 
@@ -72,7 +61,6 @@ void Player::Update()
 		imgRot += 1.5 * p_data->speedRate; //画像回転.
 
 		UpdateAfterImage();
-		UpdateReflectEffects();
 		UpdateDash();
 		PlayerMove();
 		
@@ -94,39 +82,30 @@ void Player::Draw()
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
 		str.Draw(Anchor::Mid, p_data->font1);
 	}
-	// エフェクトのデバッグ情報表示
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		if (reflectEffects[i].active) {
-			TCHAR debugStr[128];
-			_stprintf_s(debugStr, _T("Effect[%d]: timer=%d, alpha=%.1f, scale=%.1f"),
-				i, reflectEffects[i].timer, reflectEffects[i].alpha, reflectEffects[i].scale);
-			DrawString(0, 450 + i * 20, debugStr, 0xFFFFFF);
-		}
-	}
-
-	// ダッシュのデバッグ表示
-	if (isDashing || dashCooldown > 0) {
-		TCHAR dashStr[128];
-		_stprintf_s(dashStr, _T("Dash: timer=%d, cooldown=%d"), dashTimer, dashCooldown);
-		DrawString(0, 430, dashStr, isDashing ? 0x00FF00 : 0xFFFF00);
-	}
 #endif
 
 	//有効なら.
 	if (active) {
 		DrawAfterImage();
-		DrawReflectEffects();  // エフェクトを先に描画
 
 		const float size = 0.17;
 
-		//画像描画.
+		//プレイヤー描画.
 		if (mode == Player_Reflect ||
 			mode == Player_SuperReflect
 		){
+			//ダッシュ演出.
+			if (isDashing) {
+				imgPlayerLight[0].DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+			}
 			//反射モードの画像.
 			imgPlayer[1].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
 		else {
+			//ダッシュ演出.
+			if (isDashing) {
+				imgPlayerLight[1].DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+			}
 			//通常モードの画像.
 			imgPlayer[0].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
 		}
@@ -139,66 +118,65 @@ void Player::Draw()
 	}
 }
 
+//ダッシュ処理.
 void Player::UpdateDash()
 {
-	
-
-	if (dashCooldown > 0)
-	{
-		
-		dashCooldown  -= 1 * p_data->speedRate;
+	//ダッシュクールダウン減少.
+	if (dashCooldown > 0){
+		dashCooldown -= 1 * p_data->speedRate;
 	}
 
+	//ダッシュ中なら.
 	if (isDashing)
 	{
-		dashTimer -= 1 * p_data->speedRate ;
+		dashTimer -= 1 * p_data->speedRate;
+		//ダッシュ時間切れ.
 		if (dashTimer <= 0)
 		{
-			isDashing = false;
-		    
+			isDashing = false; //ダッシュ終了.
 		}
 	}
+	//ダッシュしてないなら.
 	else
 	{
 		if (dashCooldown <= 0)
 		{
-			bool dashkey = p_input->IsPushKeyTime(KeyID::R) == 1;
+			bool dashkey = p_input->IsPushActionTime(_T("PlayerDash")) == 1;
+			//ダッシュ開始.
 			if (dashkey)
 			{
-				dashTimer = DASH_DURATION;
-				isDashing = true;
-				dashCooldown = DASH_COOLDOWN;
-				CreateReflectEffect(hit.pos);
+				dashTimer    = PLAYER_DASH_DURATION;
+				dashCooldown = PLAYER_DASH_COOLDOWN;
+				isDashing    = true;
+
+				//チュートリアルなら.
+				if (p_data->stage == STAGE_TUTORIAL) {
+					TutorialStage::GetInst().SetPlayerDash(true);
+				}
 			}
 		}
 	}
-
 }
 
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	float speed;
+	float speed = PLAYER_MOVE_SPEED * p_data->speedRate;
+
 	//移動可能なら.
 	if (isMoveAble) {
+		//ダッシュ中は加速.
 		if (isDashing)
 		{
-			Debug::Log(_T("aaa"));
-			speed = PLAYER_MOVE_SPEED * 2 * p_data->speedRate;
+			//残り時間に応じて段々減速.
+			speed *= 1.0 + PLAYER_DASH_SPEED * Calc::CalcNumEaseOut(dashTimer/PLAYER_DASH_DURATION);
 		}
-		else
-		{
-			speed = PLAYER_MOVE_SPEED * p_data->speedRate;
-		}
-		
+		//移動.
 		p_input->MoveKey4Dir(&hit.pos, speed);
 		p_input->MovePadStick(&hit.pos, speed);
-
 		//移動限界.
 		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, 0, 0, WINDOW_WID - 1, WINDOW_HEI - 1);
 	}
-
-	
 }
 
 //死亡処理.
@@ -220,7 +198,10 @@ void Player::PlayerDeath() {
 		//GamaManagerの関数実行(includeだけすれば使える)
 		GameManager::GetInst().GameOver(); //ゲーム終了.
 	
-		active = false;
+		isDashing    = false;
+		dashTimer    = 0;
+        dashCooldown = 0;
+		active       = false;
 	}
 }
 
@@ -251,13 +232,14 @@ void Player::UpdateAfterImage()
 		{
 			after[i] = after[i-1];
 		}
+		//1フレーム目の情報登録.
+		after[0].pos      = hit.pos;                                         //プレイヤー座標.
+		after[0].ang      = Calc::CalcFacingAng(after[0].pos, after[1].pos); //移動方向.
+		after[0].isDash   = isDashing;                                       //ダッシュ中ならダッシュエフェクトに.
+		after[0].isActive = false;                                           //一旦無効にする.
 		//位置が変わったら(移動したら)
-		if (hit.pos.x != after[1].pos.x || hit.pos.y != after[1].pos.y) {
-			after[0].pos      = hit.pos; //プレイヤー座標を1フレーム目に記録.
-			after[0].isActive = true;    //有効に.
-		}
-		else {
-			after[0].isActive = false;   //無効に.
+		if (after[0].pos.x != after[1].pos.x || after[0].pos.y != after[1].pos.y) {
+			after[0].isActive = true; //有効に.
 		}
 	}
 }
@@ -271,146 +253,57 @@ void Player::DrawAfterImage()
 		if (!after[i].isActive) { continue; }
 
 		if (hit.pos.x != after[i].pos.x || hit.pos.y != after[i].pos.y) {
-			//透明度の計算.
-			float alpha = (float)i/PLAYER_AFT_IMG_NUM;
+			//アニメーション値.
+			float anim = (float)i/PLAYER_AFT_IMG_NUM;
 			//透明度反映.
-			SetDrawBlendModeKR(BlendModeID::Add, 255*(1-alpha));
+			SetDrawBlendModeKR(BlendModeID::Add, 255*(1-anim));
 
-			Circle cir = { after[i].pos, PLAYER_SIZE, {} };
-			//反射カラー.
-			if (mode == Player_Reflect ||
-				mode == Player_SuperReflect
-			){
-				cir.color = COLOR_PLY_AFT_REF;
-			}
-			//通常カラー.
-			else
-			{
-				cir.color = COLOR_PLY_AFT_NOR;
-			}
+			MY_COLOR color;
 
-			DrawCircleKR(&cir, false, true);
+			//ダッシュエフェクト.
+			if (after[i].isDash) {
+				//三角形データ.
+				DBL_XY   pos1 = after[i].pos + Calc::CalcVectorDeg(after[i].ang)    * (30 * (1-anim));
+				DBL_XY   pos2 = after[i].pos + Calc::CalcVectorDeg(after[i].ang+90) * (20 * (1-anim));
+				DBL_XY   pos3 = after[i].pos + Calc::CalcVectorDeg(after[i].ang-90) * (20 * (1-anim));
+				GradLine line;
+				//反射カラー.
+				if (mode == Player_Reflect ||
+					mode == Player_SuperReflect
+				){
+					line.AddPoint(pos2, {255,   0, 255, _int_r(255*(1-anim))});
+					line.AddPoint(pos1, {100,   0, 100, _int_r(255*(1-anim))});
+					line.AddPoint(pos3, {255,   0, 255, _int_r(255*(1-anim))});
+				}
+				//通常カラー.
+				else
+				{
+					line.AddPoint(pos2, {255, 255, 255, _int_r(255*(1-anim))});
+					line.AddPoint(pos1, {100, 100, 100, _int_r(255*(1-anim))});
+					line.AddPoint(pos3, {255, 255, 255, _int_r(255*(1-anim))});
+				}
+				line.Draw();
+			}
+			//通常エフェクト.
+			else {
+				//反射カラー.
+				if (mode == Player_Reflect ||
+					mode == Player_SuperReflect
+				){
+					color = COLOR_PLY_AFT_REF;
+				}
+				//通常カラー.
+				else
+				{
+					color = COLOR_PLY_AFT_NOR;
+				}
+				//円描画.
+				Circle cir = { after[i].pos, PLAYER_SIZE, color };
+				DrawCircleKR(&cir, false, true);
+			}
 		}
 	}
 
 	//描画モードリセット.
-	ResetDrawBlendMode();
-}
-
-// 反射エフェクト生成
-void Player::CreateReflectEffect(DBL_XY pos)
-{
-	ReflectEffect* effect = &reflectEffects[reflectEffectIndex];
-
-	effect->pos = pos;
-	effect->scale = 1.0f;
-	effect->alpha = 255.0f;
-	effect->timer = 30;  // 30フレーム表示
-	effect->active = true;
-
-	// 次のインデックスに移動（循環）
-	reflectEffectIndex = (reflectEffectIndex + 1) % PLAYER_MAX_EFFECT;
-}
-
-// 反射エフェクト更新
-void Player::UpdateReflectEffects()
-{
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		if (reflectEffects[i].active) {
-			reflectEffects[i].timer--;
-			reflectEffects[i].scale += 0.1f;      // 拡大速度を少し遅く
-			reflectEffects[i].alpha -= 6.0f;     // フェードアウト速度を少し遅く
-
-			// タイマーが0になったか透明度が0以下になったら非アクティブ
-			if (reflectEffects[i].timer <= 0 || reflectEffects[i].alpha <= 0) {
-				reflectEffects[i].active = false;
-			}
-		}
-	}
-}
-
-// 反射エフェクト描画
-void Player::DrawReflectEffects()
-{
-	for (int i = 0; i < PLAYER_MAX_EFFECT; i++) {
-		if (reflectEffects[i].active) {
-			ReflectEffect* effect = &reflectEffects[i];
-
-			// 点滅効果の計算（2フレームごとに点滅）
-			bool isFlashOn = ((effect->timer / 2) % 2) == 0;
-			if (!isFlashOn) continue;  // 点滅のOFFフレームなら描画しない
-
-			// エフェクトのサイズ計算
-			int baseSize = (int)(PLAYER_SIZE * effect->scale);
-			int alpha = (int)max(0, min(255, effect->alpha));
-
-			// アルファが0以下なら描画しない
-			if (alpha <= 0) continue;
-
-			// 点滅による輝度変化（強めの点滅）
-			float flashIntensity = (effect->timer % 4 < 2) ? 1.5f : 0.8f;
-			alpha = (int)(alpha * flashIntensity);
-			alpha = min(255, max(0, alpha));
-
-			// ピンク色の設定（より明るく、点滅で変化）
-			UINT color = GetColor(
-				min(255, (int)(alpha * flashIntensity)),
-				alpha * 80 / 255,
-				min(255, alpha * 150 / 255)
-			);
-
-			// アルファブレンドモード設定（エフェクトごとに設定）
-			SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
-
-			// 四角い波紋を描画
-			for (int wave = 0; wave < 3; wave++) {
-				int waveSize = baseSize + wave * 8; // 各波紋のサイズ
-				int waveAlpha = alpha - wave * 50;  // 外側ほど薄く
-
-				if (waveAlpha > 0) {
-					// より明るいピンク色（点滅効果付き）
-					UINT waveColor = GetColor(
-						min(255, (int)(waveAlpha * 2 * flashIntensity)),
-						waveAlpha * 80 / 255,
-						min(255, (int)(waveAlpha * 150 / 255))
-					);
-
-					// 四角い枠線で波紋を描画（太い線）
-					Box waveBox = {
-						effect->pos,
-						{ (double)waveSize, (double)waveSize },
-						waveColor
-					};
-
-					// 枠線を太くするため複数回描画
-					for (int thickness = 0; thickness < 2; thickness++) {
-						Box thickBox = {
-							{ effect->pos.x - thickness, effect->pos.y - thickness },
-							{ (double)(waveSize + thickness * 2), (double)(waveSize + thickness * 2) },
-							waveColor
-						};
-						DrawBoxKR(&thickBox, Anchor::Mid, false, true);
-					}
-				}
-			}
-
-			// 中央の四角い光点（点滅で色と大きさが変化）
-			int centerSize = (int)(12 * flashIntensity);
-			UINT centerColor = GetColor(
-				min(255, (int)(255 * flashIntensity)),
-				min(255, (int)(150 * flashIntensity)),
-				min(255, (int)(255 * flashIntensity))
-			);
-
-			Box centerBox = {
-				effect->pos,
-				{ (double)centerSize, (double)centerSize },
-				centerColor
-			};
-			DrawBoxKR(&centerBox, Anchor::Mid, false, true);
-
-			// 描画モードリセット
-			ResetDrawBlendMode();
-		}
-	}
+	KR_Lib::ResetDrawBlendMode();
 }

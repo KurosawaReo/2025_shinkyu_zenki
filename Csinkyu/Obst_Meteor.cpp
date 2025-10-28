@@ -49,11 +49,11 @@ void Meteor::Update() {
 				//時間が終了したら.
 				if (destroyCntr >= METEOR_DEST_TIME) {
 					state  = Meteor_Normal; //元に戻す.
-					active = false;        //消滅.
+					active = false;         //消滅.
 				}
 				break;
 
-			default: assert(false); break;
+			default: assert(FALSE); break;
 		}
 		//隕石構成線の更新.
 		UpdateMeteoLine();
@@ -75,7 +75,21 @@ void Meteor::Draw() {
 			
 			shape.line[i].color = COLOR_METEOR(pos);
 			DrawLineKR(&shape.line[i], true, 2);
+
+#if defined DEBUG_METEOR_POINT
+			DrawCircle(shape.line[i].stPos.x, shape.line[i].stPos.y, 3, 0xFFFFFF);
+			DrawLine(shape.line[i].stPos.x, shape.line[i].stPos.y, pos.x, pos.y, 0x808080);
+#endif
 		}
+#if defined DEBUG_METEOR_POINT
+		DrawCircle(pos.x, pos.y, 5, 0xFFFFFF);
+#endif
+
+#if defined	DEBUG_METEOR_SPAWN
+		//隕石の経路.
+		Line line = {pos+vel*2000, pos-vel*2000, 0xFFFFFF};
+		DrawLineKR(&line, true, 2);
+#endif
 
 		//チュートリアル.
 		if (p_data->stage == STAGE_TUTORIAL) {
@@ -98,13 +112,13 @@ void Meteor::Spawn() {
 
 	//50%:上下端から出現.
 	if (rnd1 < 50) {
-		pos.x = RandNum(0, WINDOW_WID);                                                 //xの設定.
+		pos.x = RandNum(0, WINDOW_WID);                                                   //xの設定.
 		pos.y = (rnd2 < 50) ? 0 - METEOR_LINE_DIS_MAX : WINDOW_HEI + METEOR_LINE_DIS_MAX; //yの設定.
 	}
 	//50%:左右端から出現.
 	else {
 		pos.x = (rnd2 < 50) ? 0 - METEOR_LINE_DIS_MAX : WINDOW_WID + METEOR_LINE_DIS_MAX; //xの設定.
-		pos.y = RandNum(0, WINDOW_HEI);                                                 //yの設定.
+		pos.y = RandNum(0, WINDOW_HEI);                                                   //yの設定.
 	}
 
 	//目標地点の抽選.
@@ -133,7 +147,7 @@ void Meteor::Spawn() {
 //隕石破壊.
 void Meteor::Destroy() {
 	state = Meteor_Destroy; //破壊モードに.
-	destroyCntr = 0;       //0から開始.
+	destroyCntr = 0;        //0から開始.
 }
 
 //隕石の当たり判定.

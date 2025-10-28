@@ -60,6 +60,14 @@ void MeteorManager::Update() {
 
 void MeteorManager::Draw() {
 
+#if defined	DEBUG_METEOR_SPAWN
+	//隕石の目標地点範囲.
+	SetDrawBlendModeKR(BlendModeID::Alpha, 100);
+	Box box = {{WINDOW_WID/2, WINDOW_HEI/2}, {METEOR_GOAL_RAND_RANGE*2, METEOR_GOAL_RAND_RANGE*2}, 0xFFA0A0};
+	DrawBoxKR(&box, Anchor::Mid);
+	ResetDrawBlendMode();
+#endif
+
 	//全隕石ループ.
 	for (int i = 0; i < METEOR_CNT_MAX; i++) {
 		meteor[i].Draw(); //描画.

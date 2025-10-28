@@ -11,6 +11,7 @@ enum EffectType
 {
 	Effect_Score100,
 	Effect_Score500,
+	Effect_PlayerDash,		//プレイヤーダッシュ.
 	Effect_PlayerDeath,		//プレイヤー死亡.
 	Effect_ReflectLaser,	//レーザー反射.
 	Effect_BreakMeteor,		//隕石破壊.
