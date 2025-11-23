@@ -1,14 +1,14 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/10/03
+   ver: 2025/11/13
 
-   描画機能を追加します。
+   描画機能を追加。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//フォントタイプID(入力しやすくする用)
 	enum class FontTypeID
@@ -56,6 +56,7 @@ namespace KR_Lib
 		~DrawImg();
 		//get.
 		INT_XY GetSize() const { return data.size; }
+
 		//読み込み.
 		int LoadFile  (MY_STRING fileName);
 		//描画.
@@ -81,6 +82,7 @@ namespace KR_Lib
 		~DrawDivImg();
 		//get.
 		INT_XY GetSize(int imgNo) const { return data[imgNo].size; }
+
 		//読み込み.
 		int LoadFile  (MY_STRING fileName, INT_XY size, INT_XY cnt);
 		//描画.

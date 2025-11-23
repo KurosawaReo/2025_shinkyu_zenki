@@ -1,15 +1,17 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/10/28
+   ver: 2025/11/18
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
 #endif
 #include "KR_Input.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
+	InputMng InputMng::inst; //実体生成.
+
 	//キー入力の判定.
 	bool InputMng::IsPushKey(KeyID id) const {
 		return tmKey[_int(id)] > 0;

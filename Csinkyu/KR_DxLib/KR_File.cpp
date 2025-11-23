@@ -1,17 +1,15 @@
 /*
    - KR_File.cpp - (DxLib)
-   ver: 2025/09/21
-
-   ファイル操作機能を追加します。
+   ver: 2025/11/13
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
 #endif
 #include "KR_File.h"
 #include <direct.h> //フォルダ作成のため導入.
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//ファイルを開く.
 	int File::Open(MY_STRING fileName, MY_STRING mode) {
