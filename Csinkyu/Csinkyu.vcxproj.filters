@@ -4,17 +4,6 @@
     <ClInclude Include="KR_cpp\KR_Global.h" />
     <ClInclude Include="KR_cpp\KR_Memory.h" />
     <ClInclude Include="KR_cpp\KR_Num.h" />
-    <ClInclude Include="KR_DxLib\KR_App.h" />
-    <ClInclude Include="KR_DxLib\KR_Calc.h" />
-    <ClInclude Include="KR_DxLib\KR_Debug.h" />
-    <ClInclude Include="KR_DxLib\KR_Draw.h" />
-    <ClInclude Include="KR_DxLib\KR_File.h" />
-    <ClInclude Include="KR_DxLib\KR_Global.h" />
-    <ClInclude Include="KR_DxLib\KR_Input.h" />
-    <ClInclude Include="KR_DxLib\KR_Object.h" />
-    <ClInclude Include="KR_DxLib\KR_Scene.h" />
-    <ClInclude Include="KR_DxLib\KR_Sound.h" />
-    <ClInclude Include="KR_DxLib\KR_Timer.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="GameManager.h" />
@@ -34,21 +23,21 @@
     <ClInclude Include="Stage_Tutorial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="KR_DxLib\KR_App.h" />
+    <ClInclude Include="KR_DxLib\KR_Calc.h" />
+    <ClInclude Include="KR_DxLib\KR_Debug.h" />
+    <ClInclude Include="KR_DxLib\KR_Draw.h" />
+    <ClInclude Include="KR_DxLib\KR_File.h" />
+    <ClInclude Include="KR_DxLib\KR_Global.h" />
+    <ClInclude Include="KR_DxLib\KR_Input.h" />
+    <ClInclude Include="KR_DxLib\KR_Object.h" />
+    <ClInclude Include="KR_DxLib\KR_Scene.h" />
+    <ClInclude Include="KR_DxLib\KR_Sound.h" />
+    <ClInclude Include="KR_DxLib\KR_Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KR_cpp\KR_Memory.cpp" />
     <ClCompile Include="KR_cpp\KR_Num.cpp" />
-    <ClCompile Include="KR_DxLib\KR_App.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Calc.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Debug.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Draw.cpp" />
-    <ClCompile Include="KR_DxLib\KR_File.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Global.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Input.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Object.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Scene.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Sound.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Timer.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -68,5 +57,16 @@
     <ClCompile Include="Stage_Tutorial.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="KR_DxLib\KR_App.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Calc.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Debug.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Draw.cpp" />
+    <ClCompile Include="KR_DxLib\KR_File.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Global.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Input.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Object.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Scene.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Sound.cpp" />
+    <ClCompile Include="KR_DxLib\KR_Timer.cpp" />
   </ItemGroup>
 </Project>

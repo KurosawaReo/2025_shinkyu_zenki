@@ -55,15 +55,11 @@ namespace KR
 			return {_dbl(x), _dbl(y)};
 		}
 		//‰ÁZ‚µ‚½Œ‹‰Ê‚ğ•Ô‚·.
-		XY<T> Add(T _x, T _y) {
-			x += _x;
-			y += _y;
-			return *this;
+		XY<T> Add(T _x, T _y) const {
+			return { x + _x, y + _y};
 		}
-		XY<T> Add(XY<T> other) {
-			x += other.x;
-			y += other.y;
-			return *this;
+		XY<T> Add(XY<T> other) const {
+			return *this + other;
 		}
 
 		//‰‰Zq[+,-,*,/] [XY<T>EXY<T>]
