@@ -63,7 +63,7 @@ void LaserManager::Draw() {
 		if (line[i].ValidFlag == 0) continue;  // 無効な軌跡はスキップ
 
 		//時間経過で徐々に薄くする.
-		int clr = _int_r(255 - line[i].Counter * 4);
+		int clr = _int_r(255 * (1-line[i].Counter/LASER_LINE_DEL_TIME));
 		clr = max(clr, 0); //最低値を0にする.
 
 		//加算合成モードで軌跡を描画（発光エフェクト）
@@ -107,12 +107,10 @@ void LaserManager::Draw() {
 			case Laser_Straight:
 			case Laser_Falling:
 				color = GetColor(50, 255, 255); //色の設定.
-				//imgLight[0].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
 				break;
 			case Laser_Reflect:
 			case Laser_SuperReflect:
 				color = GetColor(255, 0, 255); //色の設定.
-				//imgLight[1].DrawExtend({laser[i].x, laser[i].y}, {lightSize, lightSize});
 				break;
 
 			default: assert(FALSE); break;
@@ -132,9 +130,7 @@ void LaserManager::Draw() {
 //各レーザーの更新.
 void LaserManager::UpdateLaser() {
 
-	//	const double pSizeHalf = PLAYER_SIZE / 2.0;  // プレイヤーの当たり判定サイズの半分
-
-		//各レーザーの更新.
+	//各レーザーの更新.
 	for (int i = 0; i < LASER_CNT_MAX; i++)
 	{
 		if (laser[i].ValidFlag == 0) continue;  // 無効なレーザーはスキップ
@@ -270,6 +266,11 @@ void LaserManager::UpdateLaser() {
 					laser[i].x += laser[i].vx * p_data->speedRate;
 					laser[i].y += laser[i].vy * p_data->speedRate;
 				}
+
+				//時間を超えたら.
+				if (laser[i].Counter >= LASER_FAL_DEL_TIME) {
+					DeleteLaser(i); //消去.
+				}
 			}
 			break;
 
@@ -353,44 +354,58 @@ void LaserManager::UpdateLaser() {
 			default: assert(FALSE); break;
 		}
 
-		//前回描画した位置からの距離.
-		DBL_XY pos1 = { laser[i].x,  laser[i].y };
-		DBL_XY pos2 = { laser[i].bx, laser[i].by };
-		double dis = CalcDist(pos1, pos2);
-		//長さが一定以上あれば描画する(DrawLineAAの関係上)
-		if (dis >= LASER_LINE_DRAW_LEN) {
-			//レーザーの軌跡を生成.
-			for (int j = 0; j < LASER_LINE_CNT_MAX; j++)
-			{
-				if (line[j].ValidFlag == 0)  //未使用の軌跡スロットを探す.
+		//レーザーがまだ有効なら.
+		if (laser[i].ValidFlag) {
+
+			//前回描画した位置からの距離.
+			DBL_XY pos1 = { laser[i].x,  laser[i].y };
+			DBL_XY pos2 = { laser[i].bx, laser[i].by };
+			double dis = CalcDist(pos1, pos2);
+			//長さが一定以上あれば描画する(DrawLineAAの関係上)
+			if (dis >= LASER_LINE_DRAW_LEN) {
+				//レーザーの軌跡を生成.
+				for (int j = 0; j < LASER_LINE_CNT_MAX; j++)
 				{
-					// 軌跡データの設定
-					line[j].x1 = laser[i].bx;	  //開始点X座標.
-					line[j].y1 = laser[i].by;	  //開始点Y座標.
-					line[j].x2 = laser[i].x;	  //終了点X座標.
-					line[j].y2 = laser[i].y;	  //終了点Y座標.
-					line[j].Counter = 0;		  //経過時間カウンタ初期化.
-					line[j].ValidFlag = 1;		  //軌跡を有効化.
-					line[j].type = laser[i].type; //レーザーのタイプに合わせる.
-					break;
+					if (line[j].ValidFlag == 0)  //未使用の軌跡スロットを探す.
+					{
+						// 軌跡データの設定
+						line[j].x1 = laser[i].bx;		//開始点X座標.
+						line[j].y1 = laser[i].by;		//開始点Y座標.
+						line[j].x2 = laser[i].x;		//終了点X座標.
+						line[j].y2 = laser[i].y;		//終了点Y座標.
+						line[j].Counter = 0;			//経過時間カウンタ初期化.
+						line[j].ValidFlag = 1;			//軌跡を有効化.
+						line[j].type = laser[i].type;	//レーザーのタイプに合わせる.
+
+						// 落下レーザーなら.
+						if (line[j].type == Laser_Falling) {
+							//レーザーの経過時間を反映.
+							//落下レーザー消滅時間が、レーザー描画線消滅時間に合わさるよう計算.
+							line[j].Counter = laser[i].Counter * LASER_LINE_DEL_TIME/LASER_FAL_DEL_TIME;
+							//アニメーション曲線の調整.
+							const double anim = CalcNumEaseOut(line[j].Counter/LASER_LINE_DEL_TIME);
+							line[j].Counter *= anim;
+						}
+						break;
+					}
 				}
+				//座標を記録.
+				laser[i].bx = laser[i].x;
+				laser[i].by = laser[i].y;
 			}
-			//座標を記録.
-			laser[i].bx = laser[i].x;
-			laser[i].by = laser[i].y;
-		}
 
-		//画面外判定.
-		int _x = (laser[i].x < -100) || (laser[i].x > WINDOW_WID + 100);
-		int _y = (laser[i].y < -100) || (laser[i].y > WINDOW_HEI + 100);
-		//画面外に出たレーザーを無効化.
-		if (_x || _y)
-		{
-			DeleteLaser(i);
-		}
+			//画面外判定.
+			const bool isOutX = (laser[i].x < -100) || (laser[i].x > WINDOW_WID + 100);
+			const bool isOutY = (laser[i].y < -100) || (laser[i].y > WINDOW_HEI + 100);
+			//画面外に出たレーザーを無効化.
+			if (isOutX || isOutY)
+			{
+				DeleteLaser(i);
+			}
 
-		// レーザーの経過時間カウンタを増加
-		laser[i].Counter += p_data->speedRate;
+			// レーザーの経過時間カウンタを増加
+			laser[i].Counter += p_data->speedRate;
+		}
 	}
 }
 //各レーザー描画線の更新.
@@ -400,8 +415,10 @@ void LaserManager::UpdateLaserLine() {
 
 		// 経過時間カウンタ増加
 		line[i].Counter += p_data->speedRate;
-		// 64フレーム経過したら軌跡を無効化
-		if (line[i].Counter >= 64) line[i].ValidFlag = 0;
+		// 一定フレーム経過したら軌跡を無効化
+		if (line[i].Counter >= LASER_LINE_DEL_TIME) {
+			line[i].ValidFlag = 0;
+		}
 	}
 }
 
@@ -448,6 +465,7 @@ void LaserManager::DeleteLaser(int idx) {
 	laser[idx].goalPos = { 0, 0 };  //目標地点リセット.
 	laser[idx].isGoGoal = false;    //目標地点なし.
 	laser[idx].ValidFlag = 0;       //無効にする.
+	laser[idx].Counter = 0;         //カウンターを0に.
 }
 //レーザー反射.
 void LaserManager::ReflectLaser(int idx)
