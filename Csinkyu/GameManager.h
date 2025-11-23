@@ -30,7 +30,8 @@ private:
 
 //▼データ.
 public:
-	Scene     scene{};			//シーンの記録用.
+	Scene     scene{};			//現在のシーン.
+	Scene     pauzeEndScene{};	//ポーズから戻ってくるシーン.
 	StageType stage{};			//ステージ種類.
 
 	int		  score{};			//スコア.
