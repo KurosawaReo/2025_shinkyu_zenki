@@ -3,7 +3,6 @@
    ゲーム全体管理.
 */
 #pragma once
-#include "KR_Lib/KR_Scene.h"
 
 //前方宣言.
 class NormalLaser_1;
@@ -31,7 +30,8 @@ private:
 
 //▼データ.
 public:
-	Scene     scene{};			//シーンの記録用.
+	Scene     scene{};			//現在のシーン.
+	Scene     pauzeEndScene{};	//ポーズから戻ってくるシーン.
 	StageType stage{};			//ステージ種類.
 
 	int		  score{};			//スコア.

@@ -1,11 +1,8 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/10/03
-
-   描画機能を追加します。
-   (オブジェクト指向ver → KR_Object)
+   ver: 2025/11/13
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Calc.h"
 #endif
@@ -31,7 +28,7 @@
 */
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	constexpr int NONE_HANDLE = -1; //ハンドルなし.
 
@@ -42,23 +39,27 @@ namespace KR_Lib
 		{0.0, 1.0}, {0.5, 1.0}, {1.0, 1.0}
 	};
 
-// ▼*---=[ DrawImgST / DrawDivImgST ]=---*▼ //
+// ▼*--=<[ DrawImgST / DrawDivImgST ]>=--*▼ //
 
-	//constructor, destructor.
+	//constructor.
 	DrawImg::DrawImg() {
 		data.handle = NONE_HANDLE;
 	}
+	//destructor.
 	DrawImg::~DrawImg() {
 		DeleteGraph(data.handle); //画像解放.
 	}
 
-	//constructor, destructor.
+	//constructor.
 	DrawDivImg::DrawDivImg() {
+		//全画像データ.
 		for (auto& i : data) {
 			i.handle = NONE_HANDLE;
 		}
 	}
+	//destructor.
 	DrawDivImg::~DrawDivImg() {
+		//全画像データ.
 		for (auto& i : data) {
 			DeleteGraph(i.handle); //画像解放.
 		}
@@ -423,7 +424,7 @@ namespace KR_Lib
 		return 0; //正常終了.
 	}
 
-// ▼*---=[ DrawStr ]=---*▼ //
+// ▼*--=<[ DrawStr ]>=--*▼ //
 
 	//DrawStringの改造版.
 	int DrawStr::Draw(Anchor anc, int font) {
@@ -511,7 +512,7 @@ namespace KR_Lib
 		return size;
 	}
 
-// ▼*---=[ Font ]=---*▼ //
+// ▼*--=<[ Font ]>=--*▼ //
 
 	//constructor, destructor.
 	Font::Font() {
@@ -528,7 +529,7 @@ namespace KR_Lib
 		handle = CreateFontToHandle(fontName.c_str(), size, thick, _int(fontId));
 	}
 
-// ▼*---=[ GradLine ]=---*▼ //
+// ▼*--=<[ GradLine ]>=--*▼ //
 	
 	//頂点追加.
 	void GradLine::AddPoint(DBL_XY pos, MY_COLOR color) {
@@ -563,7 +564,7 @@ namespace KR_Lib
 		ResetDrawBlendMode();
 	}
 
-// ▼*---=[ function ]=---*▼ //
+// ▼*--=<[ function ]>=--*▼ //
 
 	//DrawCircleの改造版.
 	int DrawCircleKR(const Circle* data, bool isFill, bool isAnti, float thick) {
@@ -680,7 +681,7 @@ namespace KR_Lib
 		const double addAng = 1;                        //一度で描く線の長さ.
 		const double edAng  = pie->stAng + pie->arcAng; //弧の終わりの角度.
 
-		for (double i = pie->stAng; i <= edAng-addAng; i += addAng) {
+		for (int i = pie->stAng; i <= edAng-addAng; i += addAng) {
 			//角度の設定.
 			double ang1 = i - 1;
 			ang1 = max(ang1, pie->stAng); //下限.

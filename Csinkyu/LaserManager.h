@@ -33,7 +33,7 @@ struct LaserData
 	bool      isGoGoal;  //目標地点に向かって進むか.
 
 	int       LogNum;    //記録した軌跡の数.
-	float     Counter;   //追尾を初めてから通過した時間.
+	float     Counter;   //経過時間.
 
 	int       ValidFlag; //このデータが使用中かフラグ.
 };

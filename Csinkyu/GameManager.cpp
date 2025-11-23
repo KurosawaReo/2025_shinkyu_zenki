@@ -492,7 +492,8 @@ void GameManager::UpdateGame() {
 		}
 		//ポーズ.
 		if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
-			gameData->scene = SCENE_PAUSE;
+			gameData->pauzeEndScene = gameData->scene; //現在のシーンを保存.
+			gameData->scene = SCENE_PAUSE;             //ポーズシーンへ.
 			tmGameTime.Stop();    //一時停止.
 			tmReflectMode.Stop(); //一時停止.
 		}
@@ -535,7 +536,7 @@ void GameManager::UpdatePause() {
 	//ポーズ解除.
 	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
 
-		gameData->scene = SCENE_GAME;
+		gameData->scene = gameData->pauzeEndScene;
 		tmGameTime.Start(); //再開.
 		//スローモード中だったなら.
 		if (tmReflectMode.GetPassTime() < REFLECT_MODE_TIME) {

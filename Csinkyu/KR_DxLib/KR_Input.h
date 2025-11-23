@@ -1,14 +1,17 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/10/28
+   ver: 2025/11/18
 
    入力操作機能を追加。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
 
+//実体取得用.
+#define InstInputMng KR::InputMng::GetInst()
+
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//キーボードID.
 	enum class KeyID
@@ -158,10 +161,11 @@ namespace KR_Lib
 	class InputMng final
 	{
 	//▼実体関係.
+	private:
+		static InputMng inst; //実体を入れる用.
 	public:
-		//実体取得用.
+		//実体を取得.
 		static InputMng& GetInst() {
-			static InputMng inst; //自身のインスタンス.
 			return inst;
 		}
 		//使用禁止.
@@ -182,7 +186,8 @@ namespace KR_Lib
 
 		map<MY_STRING, ActionData> actions{}; //アクション記録用.
 
-	private: //関数.
+	//▼関数.
+	private:
 		DBL_XY GetVector4Dir(INT_XY pow);
 
 	public:
@@ -223,6 +228,4 @@ namespace KR_Lib
 		void   UpdatePad();
 		void   UpdateAction();
 	};
-	//実体.
-	static InputMng& InstInputMng = InputMng::GetInst();
 }

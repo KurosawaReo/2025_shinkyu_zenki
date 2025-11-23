@@ -1,18 +1,16 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/10/01
-
-   タイマー機能を追加します。
+   ver: 2025/11/13
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
 #endif
 #include "KR_Timer.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
-// ▼*---=[ Timer ]=---*▼ //
+// ▼*--=<[ Timer ]>=--*▼ //
 
 	//タイマー停止.
 	void Timer::Stop() {
@@ -70,7 +68,7 @@ namespace KR_Lib
 		return true; //trueを返す.
 	}
 
-// ▼*---=[ TimerMicro ]=---*▼ //
+// ▼*--=<[ TimerMicro ]>=--*▼ //
 
 	void TimerMicro::Stop() {
 
