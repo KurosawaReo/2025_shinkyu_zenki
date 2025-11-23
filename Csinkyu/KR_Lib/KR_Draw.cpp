@@ -1,9 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/10/03
-
-   描画機能を追加します。
-   (オブジェクト指向ver → KR_Object)
+   ver: 2025/10/23
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -680,7 +677,7 @@ namespace KR_Lib
 		const double addAng = 1;                        //一度で描く線の長さ.
 		const double edAng  = pie->stAng + pie->arcAng; //弧の終わりの角度.
 
-		for (double i = pie->stAng; i <= edAng-addAng; i += addAng) {
+		for (int i = pie->stAng; i <= edAng-addAng; i += addAng) {
 			//角度の設定.
 			double ang1 = i - 1;
 			ang1 = max(ang1, pie->stAng); //下限.

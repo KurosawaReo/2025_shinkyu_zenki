@@ -1,8 +1,8 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/10/03
+   ver: 2025/10/23
 
-   計算機能を追加します。
+   計算機能を追加。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once

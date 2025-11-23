@@ -1,8 +1,6 @@
 /*
    - KR_File.cpp - (DxLib)
-   ver: 2025/09/21
-
-   ファイル操作機能を追加します。
+   ver: 2025/10/23
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.

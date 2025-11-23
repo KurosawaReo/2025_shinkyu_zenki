@@ -1,9 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/10/02
-
-   オブジェクトを追加します, 継承して使うことも可です。
-   Draw, Calc, Inputの一部機能をオブジェクト指向で使えます。
+   ver: 2025/10/23
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.

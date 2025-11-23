@@ -1,8 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/10.09
-
-   KR_Lib全体で使う汎用機能を追加します。
+   ver: 2025/10/23
 */
 #include "KR_Global.h"
 

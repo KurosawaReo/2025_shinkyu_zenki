@@ -1,9 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/10/03
-
-   計算機能を追加します。
-   (オブジェクト指向ver → KR_Object)
+   ver: 2025/10/23
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.

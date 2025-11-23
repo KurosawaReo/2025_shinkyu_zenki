@@ -1,13 +1,14 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/10/02
+   ver: 2025/10/23
 
-   オブジェクトを追加します。
+   オブジェクトを追加。(継承して使うことも可)
+   Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
 
    [使い方]
-   ObjectMng: マネージャークラスに使うと便利です。
-   ObjectCir: 円形。　継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使えます。
-   ObjectBox: 四角形。継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使えます。
+   ObjectMng: マネージャークラスに使うと便利。
+   ObjectCir: 円形。　継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
+   ObjectBox: 四角形。継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
 */
 #pragma once
 

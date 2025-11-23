@@ -1,8 +1,6 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/10/09
-
-   プログラム全体(開始,終了など)の処理を行います。
+   ver: 2025/10/23
 */
 #if !defined DEF_KR_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
