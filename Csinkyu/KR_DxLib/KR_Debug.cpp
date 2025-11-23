@@ -1,15 +1,15 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/18
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Input.h"
 #endif
 #include "KR_Debug.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//デバッグ用の関数群.
 	namespace Debug 

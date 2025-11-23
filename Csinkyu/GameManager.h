@@ -3,7 +3,6 @@
    ƒQ[ƒ€‘S‘ÌŠÇ—.
 */
 #pragma once
-#include "KR_Lib/KR_Scene.h"
 
 //‘O•ûéŒ¾.
 class NormalLaser_1;

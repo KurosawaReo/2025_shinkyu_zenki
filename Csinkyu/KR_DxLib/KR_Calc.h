@@ -1,9 +1,8 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/24
 
    計算機能を追加。
-   (オブジェクト指向ver → KR_Object)
 */
 #pragma once
 
@@ -12,7 +11,7 @@
 #define _deg(x) (x)*(180/M_PI)
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//計算用の関数群.
 	namespace Calc
@@ -44,8 +43,8 @@ namespace KR_Lib
 		double		CalcNumWaveLoop	(double time);
 
 		//値の操作.
-		int         RandNum			(int st, int ed,            bool isDxRand = false);
-		vector<int> RandNums		(int st, int ed, int count, bool isDxRand = false);
+		int         RandNum(int st, int ed, bool isDxRand = false);
+		vector<int> RandNums(int st, int ed, int count, bool isDxRand = false);
 		double      GetDecimal		(double num);
 
 		//<T> 値が上限下限を越えないようにする.

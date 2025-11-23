@@ -10,7 +10,7 @@
 #if !defined GLOBAL
 #define GLOBAL
 
-using namespace KR_Lib;
+using namespace KR;
 
 //====================================================================//
 //y—ñ‹“‘Ìz

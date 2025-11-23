@@ -1,15 +1,16 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/24
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_CPP_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
 #endif
 #include "KR_Calc.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
+	//計算用の関数群.
 	namespace Calc
 	{
 		//当たり判定(円と円)
@@ -119,7 +120,6 @@ namespace KR_Lib
 			}
 			return false;
 		}
-
 
 		//範囲内に座標を補正する.
 		void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {

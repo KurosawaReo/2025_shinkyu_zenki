@@ -1,8 +1,8 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/13
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Calc.h"
   #include "KR_Draw.h"
@@ -11,9 +11,9 @@
 #include "KR_Object.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
-// ▼*---=[ Object ]=---*▼ //
+// ▼*--=<[ Object ]>=--*▼ //
 
 	//移動限界を越えないよう位置修正.
 	void ObjectShape::FixPosInArea(int left, int up, int right, int down) {
@@ -124,7 +124,7 @@ namespace KR_Lib
 		return 0; //正常終了.
 	}
 
-// ▼*---=[ ObjectCir ]=---*▼ //
+// ▼*--=<[ ObjectCir ]>=--*▼ //
 
 	//円との判定.
 	bool ObjectCir::HitCheckCir(const Circle* cir) {
@@ -151,7 +151,7 @@ namespace KR_Lib
 		return err; //-1: 円描画エラー.
 	}
 
-// ▼*---=[ ObjectBox ]=---*▼ //
+// ▼*--=<[ ObjectBox ]>=--*▼ //
 
 	//円との判定.
 	bool ObjectBox::HitCheckCir(const Circle* cir) {
@@ -174,7 +174,7 @@ namespace KR_Lib
 		return err; //-1: 円描画エラー.
 	}
 
-// ▼*---=[ ObjectGrid ]=---*▼ //
+// ▼*--=<[ ObjectGrid ]>=--*▼ //
 
 	//オブジェクト(ObjectGrid型)の描画.
 	int ObjectGrid::Draw(DrawImg* img, INT_XY gridPos, INT_XY gridSize) {

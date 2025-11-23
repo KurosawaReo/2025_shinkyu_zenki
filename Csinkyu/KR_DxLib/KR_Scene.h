@@ -1,6 +1,6 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/18
 
    シーン管理機能を追加。
    ※ガチで設計をする時用。手軽にプログラムを組む時にはおすすめしない。
@@ -8,7 +8,7 @@
 #pragma once
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//シーンクラス(基本)[継承必須]
 	class SceneBasic
@@ -26,10 +26,11 @@ namespace KR_Lib
 	class SceneMng final
 	{
 	//▼実体関係.
-	public:
-		//実体取得用.
+	private:
+		static SceneMng inst; //実体を入れる用.
+	public:	
+		//実体を取得.
 		static SceneMng& GetInst() {
-			static SceneMng inst; //自身のインスタンス.
 			return inst;
 		}
 		//使用禁止.

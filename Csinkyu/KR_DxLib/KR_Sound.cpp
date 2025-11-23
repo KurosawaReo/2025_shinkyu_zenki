@@ -1,33 +1,32 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/18
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Timer.h"
 #endif
 #include "KR_Sound.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
-// ▼*---=[ SoundData ]=---*▼ //
+// ▼*--=<[ SoundData ]>=--*▼ //
 
-	//コンストラクタ.
+	//constructor.
 	SoundData::SoundData() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
 		//.hの方でコンストラクタを使えないため、動的確保させる.
 		timer = new TimerMicro(TimerMode::CountUp, 0);
 	};
-	//デストラクタ.
+	//destructor.
 	SoundData::~SoundData() {
 		delete timer; timer = nullptr;
 	};
 
 	//サウンド解放.
 	void SoundData::Release() {
-	
 		//データが登録されていれば.
 		if (handle >= 0) {
 			DeleteSoundMem(handle); //解放.
@@ -116,17 +115,19 @@ namespace KR_Lib
 		return vol255;
 	}
 
-// ▼*---=[ Sound ]=---*▼ //
+// ▼*--=<[ SoundMng ]>=--*▼ //
 
-	//デストラクタ.
+	SoundMng SoundMng::inst; //実体生成.
+
+	//destructor.
 	SoundMng::~SoundMng() {
-
 		//サウンドデータを全て取り出す.
 		for (auto& i : sound) {
 			i.second.Release(); //各サウンドの解放.
 		}
 		sound.clear(); //データを空にする.
 	}
+
 	//サウンド読み込み.
 	int SoundMng::LoadFile(MY_STRING fileName, MY_STRING saveName) {
 	

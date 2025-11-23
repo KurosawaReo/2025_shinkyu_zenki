@@ -305,5 +305,5 @@ void Player::DrawAfterImage()
 	}
 
 	//描画モードリセット.
-	KR_Lib::ResetDrawBlendMode();
+	ResetDrawBlendMode();
 }

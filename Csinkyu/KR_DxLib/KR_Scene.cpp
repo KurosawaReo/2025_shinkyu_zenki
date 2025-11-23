@@ -1,8 +1,8 @@
 /*
    - KR_Scene.cpp - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/18
 */
-#if !defined DEF_KR_GLOBAL
+#if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
   #include "KR_Calc.h"
   #include "KR_Input.h"
@@ -12,11 +12,13 @@
 #include "KR_Scene.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
-// ▼*---=[ SceneBasic ]=---*▼ //
+// ▼*--=<[ SceneBasic ]>=--*▼ //
 
-// ▼*---=[ SceneMng ]=---*▼ //
+// ▼*--=<[ SceneMng ]>=--*▼ //
+
+	SceneMng SceneMng::inst; //実体生成.
 
 	//シーンの追加.
 	void SceneMng::AddScene(SceneBasic* sceneClass, MY_STRING name) {

@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/13
 
    オブジェクトを追加。(継承して使うことも可)
    Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
@@ -22,7 +22,7 @@
 */
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	class DrawImg; //前方宣言.
 

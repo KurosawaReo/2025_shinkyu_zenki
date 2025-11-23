@@ -1,11 +1,11 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/24
 */
 #include "KR_Global.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//constructor.
 	MY_COLOR::MY_COLOR(UINT _colorCode) {
@@ -14,12 +14,11 @@ namespace KR_Lib
 	MY_COLOR::MY_COLOR(ColorID id) {
 		*this = id;         //「=」演算子内で変換.
 	}
-
 	//get.
 	COLOR_U8 MY_COLOR::GetColorU8()   const { return { color.b, color.g, color.r, color.a }; }
 	UINT     MY_COLOR::GetColorCode() const { return DxLib::GetColor(color.r, color.g, color.b); }
 
-	//代入用.
+	//代入演算子.
 	void MY_COLOR::operator=(const RGBA& rgba) {
 		color = rgba; //そのまま.
 	}
@@ -32,6 +31,7 @@ namespace KR_Lib
 	}
 	void MY_COLOR::operator=(ColorID id) {
 
+		//IDでカラーコードを指定.
 		switch (id) {
 			case ColorID::Red:     color = { 255,   0,   0, 255 }; break;
 			case ColorID::Orange:  color = { 255, 128,   0, 255 }; break;

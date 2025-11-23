@@ -1,13 +1,13 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/10/23
+   ver: 2025/11/13
 
    タイマー機能を追加。
 */
 #pragma once
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//タイマーモード.
 	enum class TimerMode
