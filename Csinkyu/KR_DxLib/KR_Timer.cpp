@@ -1,6 +1,6 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/11/13
+   ver: 2025/11/24
 */
 #if !defined DEF_KR_DXLIB_GLOBAL
   #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
@@ -116,6 +116,28 @@ namespace KR
 		}
 		else {
 			return tmSavePass; //保存時間を返す.
+		}
+	}
+	//fps取得.
+	double TimerMicro::GetFps() {
+
+		//計測中なら.
+		if (isMove) {
+
+			LARGE_INTEGER tmEnd;
+			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.
+
+			//時間差(freqでカウントをマイクロ秒に変換する)
+			LONGLONG elapsed = (tmEnd.QuadPart - tmStart.QuadPart) * 1000000/freq.QuadPart;
+			//fpsの計算.
+			const double fps = _flt(1000000)/elapsed;
+
+			Start(); //時間リセット.
+
+			return fps; //fpsを返す.
+		}
+		else {
+			return 0; //計測中じゃない時はfps0
 		}
 	}
 	//一定時間ごとにtrueを返す(CountDown専用)

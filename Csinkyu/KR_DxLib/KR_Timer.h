@@ -1,6 +1,6 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/11/13
+   ver: 2025/11/24
 
    タイマー機能を追加。
 */
@@ -90,6 +90,7 @@ namespace KR
 		}
 
 		LONGLONG GetPassTime (); //時間取得.
+		double   GetFps();       //fps取得.
 		bool     IntervalTime(); //一定時間ごとにtrueを返す.
 	};
 }

@@ -91,10 +91,12 @@ public:
 	
 	bool SpawnLaser       (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
 	void DeleteLaser      (int idx);                                //消去.
+	bool HitLaser		  (int idx);								//当たり判定.
 	void ReflectLaser     (int idx);               	                //反射.
 
 	bool IsExistEnemyLaser(DBL_XY pos, float len);                  //敵のレーザーが1つでも存在するかどうか.
 
+	void GenerateLaserLine(int idx);                                //レーザー描画線を生成.
 	void LaserRefTracking (int idx);                                //レーザー(reflected)の隕石追尾.
 	void LaserReflectRange(Circle* cir);						    //レーザーの一括反射.
 };

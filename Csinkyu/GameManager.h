@@ -30,26 +30,26 @@ private:
 
 //▼データ.
 public:
-	Scene     scene{};			//現在のシーン.
-	Scene     pauzeEndScene{};	//ポーズから戻ってくるシーン.
-	StageType stage{};			//ステージ種類.
+	Scene      scene{};			//現在のシーン.
+	Scene      pauzeEndScene{};	//ポーズから戻ってくるシーン.
+	StageType  stage{};			//ステージ種類.
 
-	int		  score{};			//スコア.
-	int		  scoreBef{};		//スコア(時間加算前)
-	int		  bestScore{};		//ベストスコア.
-	int		  level{};			//レベル.
+	int		   score{};			//スコア.
+	int		   scoreBef{};		//スコア(時間加算前)
+	int		   bestScore{};		//ベストスコア.
+	int		   level{};			//レベル.
 
-	float	  speedRate{};		//ゲーム進行速度倍率.
-	float	  spawnRate{};		//障害物の出現時間割合.
-	float	  counter{};		//経過時間カウンター(スローの影響を受ける)
+	float	   speedRate{};		//ゲーム進行速度倍率.
+	float	   spawnRate{};		//障害物の出現時間割合.
+	float	   counter{};		//経過時間カウンター(スローの影響を受ける)
 
-	bool      isReflectMode{};	//反射モードかどうか.
-	float     slowBufCntr{};	//スロー続行時間.
+	bool       isReflectMode{};	//反射モードかどうか.
+	float      slowBufCntr{};	//スロー続行時間.
 
-	int		  font1{};			//フォント.
-	int		  font2{};			//フォント.
-	int		  font3{};			//フォント.
-	int		  font4{};			//フォント.
+	int		   font1{};			//フォント.
+	int		   font2{};			//フォント.
+	int		   font3{};			//フォント.
+	int		   font4{};			//フォント.
 };
 
 //ゲームマネージャー.[継承不可]
@@ -73,8 +73,12 @@ private:
 private:
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
-	Timer tmGameTime{};     //ゲーム計測時間.
-	Timer tmReflectMode{};  //スロー継続時間.
+	Timer      tmGameTime{};    //ゲーム計測時間.
+	Timer      tmReflectMode{}; //スロー継続時間.
+
+#if defined DEBUG_SHOW_FPS
+	TimerMicro tmFps{};         //fps計測用タイマー.
+#endif
 
 	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
 	DrawImg imgUI{};        //UI画像.
