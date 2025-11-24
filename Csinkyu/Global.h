@@ -136,7 +136,7 @@ enum StageType
 #define LASER_FAL_DEL_TIME				(100)			//消えるまでの時間.
 
 //障害物: 隕石.
-#define METEOR_CNT_MAX					(50)			//隕石の最大出現数.
+//#define METEOR_CNT_MAX				(50)			//隕石の最大出現数.
 #define METEOR_SPAWN_SPAN				(150)			//隕石の出現時間間隔.
 #define METEOR_SPEED					(2)				//移動速度.
 #define METEOR_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
@@ -166,7 +166,7 @@ enum StageType
 #define RIPPLES_MIN_DISTANCE			(100)			//最小距離.
 
 //障害物: 花火.
-#define FIREWORKS_CNT_MAX				(10)			//最大同時出現数
+//#define FIREWORKS_CNT_MAX				(10)			//最大同時出現数
 #define FIREWORKS_RND_MAX				(2)				//花火出現最大数
 #define FIREWORKS_SPAWN_SPAN			(600)			//花火生成間隔（フレーム）
 #define FIREWORKS_WARNING_DURATION		(120)			//予告を出す長さ（フレーム）
@@ -177,7 +177,7 @@ enum StageType
 #define FIREWORKS_GRAVITY				(0.3f)			//重力加速度
 
 //エフェクト.
-#define EFFECT_MAX						(70)			//エフェクトの最大出現数.
+//#define EFFECT_MAX					(70)			//エフェクトの最大出現数.
 
 //スコア.
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.

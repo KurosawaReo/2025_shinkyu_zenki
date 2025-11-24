@@ -31,7 +31,7 @@ protected:
 	float   HscTm{};     //砲台がショットする時間.
 	MoveDir moveDir{};   //現在の移動方向.
 
-	FlashEffect flashEffect[LASER_NOR_FLASH_MAX]{};	// クラスのメンバ変数として追加
+	FlashEffect    flash[LASER_NOR_FLASH_MAX]{};
 
 	GameData*      p_data{};
 	Player*        p_player{};

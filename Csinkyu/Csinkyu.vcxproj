@@ -38,7 +38,6 @@
     <ClInclude Include="KR_DxLib\KR_Scene.h" />
     <ClInclude Include="KR_DxLib\KR_Sound.h" />
     <ClInclude Include="KR_DxLib\KR_Timer.h" />
-    <ClInclude Include="Laser.h" />
     <ClInclude Include="LaserManager.h" />
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="Obst_Fireworks.h" />
@@ -72,7 +71,6 @@
     <ClCompile Include="KR_DxLib\KR_Scene.cpp" />
     <ClCompile Include="KR_DxLib\KR_Sound.cpp" />
     <ClCompile Include="KR_DxLib\KR_Timer.cpp" />
-    <ClCompile Include="Laser.cpp" />
     <ClCompile Include="LaserManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuManager.cpp" />

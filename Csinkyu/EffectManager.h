@@ -41,7 +41,6 @@ struct EffectData
 struct Effect : public EffectData
 {
 	float      counter{}; //時間計測用.
-	bool       active{};
 };
 
 //エフェクト管理クラス.[継承不可]
@@ -63,11 +62,9 @@ private:
 
 //▼データ.
 private:
-	Effect effect[EFFECT_MAX]{};
-
-	DrawImg imgScore[2]{}; //スコア画像.
-
-	GameData* p_data{};
+	list<Effect> effect;	    //エフェクト配列.
+	DrawImg		 imgScore[2]{}; //スコア画像.
+	GameData*	 p_data{};
 
 public:
 	void Init();
@@ -76,5 +73,4 @@ public:
 	void Draw();
 
 	void SpawnEffect (const EffectData* data); //エフェクト出現.
-	void DeleteEffect(int idx);                //エフェクト消去.
 };

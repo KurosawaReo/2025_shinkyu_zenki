@@ -44,8 +44,8 @@ void LaserManager::Draw() {
 
 #if defined DEBUG_OBJ_ACTIVE
 	//デバッグ表示.
-	DrawFormatString(0,  80, 0xFF00FF, _T("レーザー　　　 : %d"), laser.size());
-	DrawFormatString(0, 100, 0xFF00FF, _T("レーザー描画線 : %d"), line.size());
+	DrawFormatString(0, 100, 0xFF00FF, _T("レーザー　　　 : %d"), laser.size());
+	DrawFormatString(0, 120, 0xFF00FF, _T("レーザー描画線 : %d"), line.size());
 #endif
 
 	//レーザー描画線.
@@ -72,7 +72,7 @@ void LaserManager::Draw() {
 			default: assert(FALSE); break;
 		}
 
-		DrawLineKR(&tmpLine, true, 1.5f); //描画.
+		DrawLineKR(&tmpLine, true, 2); //描画.
 	}
 
 	//通常の描画モードに戻す
@@ -114,7 +114,7 @@ void LaserManager::UpdateLaser() {
 	//各レーザーの更新.
 	for (auto i = laser.begin(); i != laser.end(); )
 	{
-		bool isErase = false; //レーザーを消去するかどうか.
+		bool isErase = false; //消去するかどうか.
 
 		//レーザータイプ別.
 		switch (i->type)
@@ -266,10 +266,9 @@ void LaserManager::UpdateLaser() {
 			isErase = true; //消去する.
 		}
 
-		//消去フラグがtrueなら.
+		//次の要素に進む.
 		if (isErase) {
-			i = laser.erase(i); //消去.
-			continue;           //次へ.
+			i = laser.erase(i); //消去して次へ.
 		}
 		else {
 			GenerateLaserLine(i);            //レーザー描画線の生成.
