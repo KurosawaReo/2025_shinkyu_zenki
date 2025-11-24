@@ -435,7 +435,7 @@ void GameManager::Draw() {
 
 	//fps表示用.
 #if defined DEBUG_SHOW_FPS
-	DrawFormatString(20, InstApp.GetWindowY() - 20, 0xFFFFFF, _T("%f"), tmFps.GetFps());
+	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("FPS: %f"), tmFps.GetFps());
 #endif
 
 	effectMng->Draw(); //エフェクト.
