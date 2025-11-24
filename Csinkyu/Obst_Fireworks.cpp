@@ -19,14 +19,14 @@ void FireworksManager::Init() {
 
 	// 花火データの初期化
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		fireworks[i].ValidFlag = 0;
+		fireworks[i].validFlag = 0;
 		fireworks[i].x = 0.0f;
 		fireworks[i].y = 0.0f;
 		fireworks[i].targetX = 0.0f;
 		fireworks[i].targetY = 0.0f;
 		fireworks[i].vx = 0.0f;
 		fireworks[i].vy = 0.0f;
-		fireworks[i].Counter = 0.0f;
+		fireworks[i].counter = 0.0f;
 		fireworks[i].state = FIREWORKS_STATE_WARNING;
 		fireworks[i].sparkCount = 0;
 	}
@@ -38,8 +38,8 @@ void FireworksManager::Reset() {
 
 	// 既存の花火をすべてクリア
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		fireworks[i].ValidFlag = 0;
-		fireworks[i].Counter = 0.0f;
+		fireworks[i].validFlag = 0;
+		fireworks[i].counter = 0.0f;
 		fireworks[i].state = FIREWORKS_STATE_WARNING;
 	}
 }
@@ -54,7 +54,7 @@ void FireworksManager::GenerateRandomPosition(float& x, float& y) {
 // 距離チェック(近すぎる花火がなければtrue)
 bool FireworksManager::CheckDistance(float x, float y) {
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 1) {
+		if (fireworks[i].validFlag == 1) {
 			float dx = x - fireworks[i].targetX;
 			float dy = y - fireworks[i].targetY;
 			float distance = sqrt(dx * dx + dy * dy);
@@ -69,7 +69,7 @@ bool FireworksManager::CheckDistance(float x, float y) {
 // 花火開始
 void FireworksManager::StartFireworks(float x, float y) {
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 0) {
+		if (fireworks[i].validFlag == 0) {
 			fireworks[i].targetX = x;
 			fireworks[i].targetY = y;
 			fireworks[i].x = x;
@@ -77,10 +77,10 @@ void FireworksManager::StartFireworks(float x, float y) {
 			fireworks[i].vx = 0.0f;
 			fireworks[i].vy = 0.0f;
 //			fireworks[i].Duration = FIREWORKS_WARNING_DURATION + 120; // 予告+爆発時間 //追記:いらない気がする
-			fireworks[i].Counter = FIREWORKS_WARNING_DURATION;
+			fireworks[i].counter = FIREWORKS_WARNING_DURATION;
 			fireworks[i].state = FIREWORKS_STATE_WARNING;
 			fireworks[i].sparkCount = FIREWORKS_SPARKS_COUNT + (rand() % 8);
-			fireworks[i].ValidFlag = 1;
+			fireworks[i].validFlag = 1;
 			break;
 		}
 	}
@@ -118,12 +118,12 @@ void FireworksManager::UpdateFireworksGeneration() {
 void FireworksManager::UpdateIndividualFireworks() {
 
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 0) continue;
+		if (fireworks[i].validFlag == 0) continue;
 
-		fireworks[i].Counter -= p_data->speedRate;
+		fireworks[i].counter -= p_data->speedRate;
 
 		//警告表示.
-		if (fireworks[i].Counter > 0) {
+		if (fireworks[i].counter > 0) {
 			fireworks[i].state = FIREWORKS_STATE_WARNING;
 		}
 		//爆発.
@@ -133,7 +133,7 @@ void FireworksManager::UpdateIndividualFireworks() {
 			//	fireworks[i].state = FIREWORKS_STATE_EXPLODING;
 			//	ExplodeFireworks(i);
 			//}
-			fireworks[i].ValidFlag = 0; //花火本体消滅.
+			fireworks[i].validFlag = 0; //花火本体消滅.
 			ExplodeFireworks(i);
 		}
 	}
@@ -183,7 +183,7 @@ void FireworksManager::Update() {
 // 描画
 void FireworksManager::Draw() {
 	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 0) continue;
+		if (fireworks[i].validFlag == 0) continue;
 
 		DrawWarningEffect(i);
 
@@ -200,7 +200,7 @@ void FireworksManager::Draw() {
 // 予告エフェクト描画
 void FireworksManager::DrawWarningEffect(int index) {
 	const float sepTime = 30; //区切り時間.
-	float elapsedTime = fireworks[index].Counter;
+	float elapsedTime = fireworks[index].counter;
 	// 点滅エフェクト
 	int alphaValue;
 	if (elapsedTime < sepTime) {

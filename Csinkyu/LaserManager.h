@@ -1,53 +1,15 @@
 /*
    - LaserManager.h -
-   元々Obstacle4mainとしてまとめられてたレーザー.
+   レーザー管理クラス.
 */
 #pragma once
+#include "Laser.h"
 
 //前方宣言.
 class GameData;
 class Player;
 class MeteorManager;
 class EffectManager;
-
-//レーザータイプ.
-enum LaserType
-{
-	Laser_Normal,       //通常レーザー.
-	Laser_Straight,     //直線レーザー.
-	Laser_Reflect,      //反射レーザー.
-	Laser_SuperReflect, //反射レーザー強化版.
-	Laser_Falling,      //落下レーザー(花火用)
-};
-
-//レーザー本体データ.
-struct LaserData
-{
-	LaserType type;      //レーザータイプ.
-
-	double    x,  y;     //現在の座標.
-	double    bx, by;    //前回描画した時にいた座標.
-	double    vx, vy;    //進行方向ベクトル.
-
-	DBL_XY    goalPos;   //目標地点の座標.
-	bool      isGoGoal;  //目標地点に向かって進むか.
-
-	int       LogNum;    //記録した軌跡の数.
-	float     Counter;   //経過時間.
-
-	int       ValidFlag; //このデータが使用中かフラグ.
-};
-
-//レーザーが描く軌道ラインデータ.
-struct LaserLineData
-{
-	LaserType type;         //レーザータイプ.
-
-	double x1, y1, x2, y2;  //描くラインの座標.
-	float  Counter;         //描くラインの色決定用値.
-
-	int    ValidFlag;       //このデータが使用中かフラグ
-};
 
 //レーザー管理用.
 class LaserManager final
@@ -68,8 +30,9 @@ private:
 
 //▼データ.
 private:
-	LaserData     laser[LASER_CNT_MAX]{};      //ホーミングレーザーのデータ.
-	LaserLineData line [LASER_LINE_CNT_MAX]{}; //ライン描画用データ.
+	//listで適宜サイズを増減する.
+	list<LaserData>     laser; //レーザー.
+	list<LaserLineData> line;  //レーザー描画線.
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
@@ -89,14 +52,15 @@ public:
 	void UpdateLaser();                                             //各レーザーの更新.
 	void UpdateLaserLine();                                         //各レーザー描画線の更新.
 	
-	bool SpawnLaser       (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
-	void DeleteLaser      (int idx);                                //消去.
-	bool HitLaser		  (int idx);								//当たり判定.
-	void ReflectLaser     (int idx);               	                //反射.
+	void SpawnLaser       (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
+
+	bool HitLaser		  (list<LaserData>::iterator);				//当たり判定.
+	void ReflectLaser     (list<LaserData>::iterator);              //反射.
+	void GenerateLaserLine(list<LaserData>::iterator);              //レーザー描画線を生成.
+	void LaserRefTracking (list<LaserData>::iterator);              //レーザー(reflected)の隕石追尾.
 
 	bool IsExistEnemyLaser(DBL_XY pos, float len);                  //敵のレーザーが1つでも存在するかどうか.
 
-	void GenerateLaserLine(int idx);                                //レーザー描画線を生成.
-	void LaserRefTracking (int idx);                                //レーザー(reflected)の隕石追尾.
-	void LaserReflectRange(Circle* cir);						    //レーザーの一括反射.
+	//未使用.
+	void LaserReflectRange(Circle* cir);						    //レーザーを一括反射.
 };

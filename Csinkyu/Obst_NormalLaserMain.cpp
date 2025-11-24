@@ -32,7 +32,7 @@ void NormalLaserMain::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 
 	//フラッシュを無効化.
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
-		flashEffect[i].ValidFlag = 0;
+		flashEffect[i].validFlag = 0;
 	}
 	MoveRand();
 }
@@ -48,9 +48,9 @@ void NormalLaserMain::Update()
 		//エフェクトのカウンタを更新.
 		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 			//有効なら.
-			if (flashEffect[i].ValidFlag)
+			if (flashEffect[i].validFlag)
 			{
-				flashEffect[i].Counter += p_data->speedRate;
+				flashEffect[i].counter += p_data->speedRate;
 			}
 		}
 
@@ -80,21 +80,21 @@ void NormalLaserMain::DrawObstFlash() {
 
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
 	{
-		if (flashEffect[i].ValidFlag == 0)
+		if (flashEffect[i].validFlag == 0)
 		{
 			continue;//無効なエフェクトをスキップ.
 		}
 
 		//エフェクトの透明度を時間に応じて計算.
 		float alpha = 1.0f - (
-			flashEffect[i].Counter * LASER_NOR_FLASH_ALPHA_TM / flashEffect[i].Duration
+			flashEffect[i].counter * LASER_NOR_FLASH_ALPHA_TM / flashEffect[i].Duration
 		);
 		int alphaValue = _int_r(255 * alpha);
 		alphaValue = max(alphaValue, 0); //下限は0.
 
 		//エフェクトのサイズを時間に応じて拡大.
 		float sizeMultiplier = LASER_NOR_FLASH_SIZE_INIT + (
-			flashEffect[i].Counter * LASER_NOR_FLASH_SIZE_SPREAD / flashEffect[i].Duration
+			flashEffect[i].counter * LASER_NOR_FLASH_SIZE_SPREAD / flashEffect[i].Duration
 		);
 		int effectSize = _int_r(flashEffect[i].BaseSize * sizeMultiplier);
 		int innerSize = effectSize / 2;
@@ -139,9 +139,9 @@ void NormalLaserMain::DrawObstFlash() {
 		DrawLineKR(&line2, true);
 
 		//エフェクト時間が終了したら無効化
-		if (flashEffect[i].Counter >= flashEffect[i].Duration)
+		if (flashEffect[i].counter >= flashEffect[i].Duration)
 		{
-			flashEffect[i].ValidFlag = 0;
+			flashEffect[i].validFlag = 0;
 		}
 	}
 
@@ -195,11 +195,8 @@ void NormalLaserMain::enemy4Move()
 			DBL_XY vel = {cos(angle), sin(angle)};
 
 			//通常レーザー召喚.
-			bool ret = p_laserMng->SpawnLaser({Hx, Hy}, vel, Laser_Normal);
-			//発射成功したら.
-			if (ret) {
-				CreateFlashEffect(Hx, Hy); //エフェクトを出す.
-			}
+			p_laserMng->SpawnLaser({ Hx, Hy }, vel, Laser_Normal);
+			CreateFlashEffect(Hx, Hy); //エフェクトを出す.
 
 			HscTm -= LASER_NOR_SHOT_SPAN; //発射タイミングを変更.
 		}
@@ -251,7 +248,7 @@ void NormalLaserMain::CreateFlashEffect(double fx, double fy)
 	//未使用のエフェクトスロットを探す.
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
 	{
-		if (flashEffect[i].ValidFlag == 0)
+		if (flashEffect[i].validFlag == 0)
 		{
 			double dx = pPos.x - fx;
 			double dy = pPos.y - fy;
@@ -261,10 +258,10 @@ void NormalLaserMain::CreateFlashEffect(double fx, double fy)
 			flashEffect[i].x = fx;
 			flashEffect[i].y = fy;
 			flashEffect[i].angle = angle; // プレイヤーへの角度を保存
-			flashEffect[i].Counter = 0;
+			flashEffect[i].counter = 0;
 			flashEffect[i].Duration = LASER_NOR_FLASH_VALID_TM; //一定フレーム光る.
 			flashEffect[i].BaseSize = 20; //基本サイズ
-			flashEffect[i].ValidFlag = 1;
+			flashEffect[i].validFlag = 1;
 			break;
 		}
 	}

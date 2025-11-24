@@ -13,7 +13,6 @@
 #define _USE_MATH_DEFINES
 #define _CRT_SECURE_NO_WARNINGS
 //C++用.
-#include <map>
 #include <cassert>   //assert.h をラップしたもの.
 #include <cstdlib>   //stdlib.h をラップしたもの.
 #include <ctime>     //time.h   をラップしたもの.

@@ -8,10 +8,10 @@
 typedef struct tagFLASHEFFECT5
 {
 	double x, y;    // エフェクト位置.
-	float Counter;  // 経過時間.
+	float counter;  // 経過時間.
 	float Duration; // エフェクトの持続時間.
 	int BaseSize;   // 基本サイズ
-	int ValidFlag;  // 有効フラグ
+	int validFlag;  // 有効フラグ
 	bool AlreadyHit;
 }FLASHEFFECT5;
 

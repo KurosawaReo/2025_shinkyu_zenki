@@ -45,7 +45,7 @@ enum StageType
 //====================================================================//
 //【設定】
 
-//#define DEBUG_LASER_ACTIVE //デバッグ用.
+#define DEBUG_OBJ_ACTIVE //デバッグ用.
 //#define DEBUG_SPAWN_RATE   //デバッグ用.
 //#define DEBUG_METEOR_POINT //デバッグ用.
 //#define DEBUG_METEOR_SPAWN //デバッグ用.
@@ -108,8 +108,8 @@ enum StageType
 #define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
-#define LASER_CNT_MAX					(80)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(14000)			//レーザー描画線の最大数.
+//#define LASER_CNT_MAX					(80)			//レーザーの最大数.
+//#define LASER_LINE_CNT_MAX			(14000)			//レーザー描画線の最大数.
 #define LASER_LINE_DEL_TIME				(64)			//レーザー描画線が消える時間.
 #define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.

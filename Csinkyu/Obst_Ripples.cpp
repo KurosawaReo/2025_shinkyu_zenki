@@ -18,8 +18,8 @@ void Ripples::Init()
 
 	// フラッシュエフェクトの初期化
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		flashEffect[i].ValidFlag = 0;
-		flashEffect[i].Counter = 0.0f;
+		flashEffect[i].validFlag = 0;
+		flashEffect[i].counter = 0.0f;
 		flashEffect[i].Duration = 0.0f;
 		flashEffect[i].x = 0.0;
 		flashEffect[i].y = 0.0;
@@ -32,8 +32,8 @@ void Ripples::Reset()
 
 	// リセット時に既存のフラッシュエフェクトをすべてクリア
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		flashEffect[i].ValidFlag = 0;
-		flashEffect[i].Counter = 0.0f;
+		flashEffect[i].validFlag = 0;
+		flashEffect[i].counter = 0.0f;
 		flashEffect[i].Duration = 0.0f;
 		flashEffect[i].x = 0.0;
 		flashEffect[i].y = 0.0;
@@ -54,7 +54,7 @@ bool Ripples::CheckDistance(double x, double y)
 {
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++)
 	{
-		if (flashEffect[i].ValidFlag == 1)
+		if (flashEffect[i].validFlag == 1)
 		{
 			double dx = x - flashEffect[i].x;
 			double dy = y - flashEffect[i].y;
@@ -72,13 +72,13 @@ void Ripples::StartFlashEffect(double x, double y)
 {
 	// 空いているスロットを探す
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		if (flashEffect[i].ValidFlag == 0) {
+		if (flashEffect[i].validFlag == 0) {
 			flashEffect[i].x = x;
 			flashEffect[i].y = y;
 			flashEffect[i].Duration = RIPPLES_WARNING_DURATION + RIPPLES_ACTIVE_DURATION;
-			flashEffect[i].Counter = flashEffect[i].Duration;  // 持続時間から開始（カウントダウン）
+			flashEffect[i].counter = flashEffect[i].Duration;  // 持続時間から開始（カウントダウン）
 			flashEffect[i].BaseSize = 20;     // 適切な基本サイズに調整
-			flashEffect[i].ValidFlag = 1;
+			flashEffect[i].validFlag = 1;
 			break;
 		}
 	}
@@ -107,7 +107,7 @@ void Ripples::SpawnObstaclegroup()
 }
 int Ripples::GetEffectState(int index)
 {
-	if (flashEffect[index].Counter > RIPPLES_ACTIVE_DURATION)  // 残り時間がアクティブ時間より大きければ警告状態
+	if (flashEffect[index].counter > RIPPLES_ACTIVE_DURATION)  // 残り時間がアクティブ時間より大きければ警告状態
 	{
 		return RIPPLES_STATE_WARNING;
 	}
@@ -134,17 +134,17 @@ void Ripples::UpdateFlashGeneration()
 	//全フラッシュ.
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++)
 	{
-		if (flashEffect[i].ValidFlag == 0)
+		if (flashEffect[i].validFlag == 0)
 		{
 			continue;//無効なエフェクトをスキップ.
 		}
 
 		//カウントダウン.
-		flashEffect[i].Counter -= p_data->speedRate;
+		flashEffect[i].counter -= p_data->speedRate;
 		//エフェクト時間が終了したら無効化.
-		if (flashEffect[i].Counter <= 0)  // 0以下になったら終了
+		if (flashEffect[i].counter <= 0)  // 0以下になったら終了
 		{
-			flashEffect[i].ValidFlag = 0;
+			flashEffect[i].validFlag = 0;
 			flashEffect[i].AlreadyHit = false; //当たり判定のリセット.
 		}
 	}
@@ -167,7 +167,7 @@ void Ripples::Hitjudgment()
 	bool isPlaySound = false; //一度のみサウンドを流す用.
 
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		if (flashEffect[i].ValidFlag == 0 || flashEffect[i].Counter <= 0) {
+		if (flashEffect[i].validFlag == 0 || flashEffect[i].counter <= 0) {
 			continue;
 		}
 
@@ -177,7 +177,7 @@ void Ripples::Hitjudgment()
 		}
 
 		// 経過時間の計算
-		float elapsedTime = flashEffect[i].Duration - flashEffect[i].Counter;
+		float elapsedTime = flashEffect[i].Duration - flashEffect[i].counter;
 		float activeElapsedTime = elapsedTime - RIPPLES_WARNING_DURATION;
 		float activeProgress = activeElapsedTime / RIPPLES_ACTIVE_DURATION;
 
@@ -213,7 +213,7 @@ void Ripples::DrawObstFlash()
 {
 	for (int i = 0; i < RIPPLES_FLASH_MAX; i++)
 	{
-		if (flashEffect[i].ValidFlag == 0)
+		if (flashEffect[i].validFlag == 0)
 		{
 			continue;//無効なエフェクトをスキップ.
 		}
@@ -236,7 +236,7 @@ void Ripples::DrawObstFlash()
 void Ripples::DrawWarningEffect(int index)
 {
 	//残り時間から経過時間を計算.
-	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
+	float elapsedTime = flashEffect[index].Duration - flashEffect[index].counter;
 
 	//1: 透明度の計算(点滅)
 	int alphaValue;
@@ -280,7 +280,7 @@ void Ripples::DrawWarningEffect(int index)
 void Ripples::DrawActiveEffect(int index)
 {
 	// 残り時間から経過時間を計算
-	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
+	float elapsedTime = flashEffect[index].Duration - flashEffect[index].counter;
 	float activeElapsedTime = elapsedTime - RIPPLES_WARNING_DURATION;
 
 	// アクティブ状態での進行度

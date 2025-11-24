@@ -17,11 +17,11 @@ enum FireworksState {
 
 // 花火データ構造
 struct FireworksData {
-	int ValidFlag;              // 有効フラグ
+	int validFlag;              // 有効フラグ
 	float x, y;                 // 座標
 	float targetX, targetY;     // 目標座標（爆発位置）
 	float vx, vy;              // 速度
-	float Counter;             // カウンタ
+	float counter;             // カウンタ
 	FireworksState state;      // 現在の状態
 	int sparkCount;            // 火花数
 
