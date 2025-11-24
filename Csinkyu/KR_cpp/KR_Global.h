@@ -12,6 +12,8 @@
 //C++—p.
 #include <iostream>
 #include <vector>
+#include <list>
+#include <map>
 #include <string>
 #include <cmath>    //math.h‚ðƒ‰ƒbƒv‚µ‚½‚à‚Ì.
 using namespace std;

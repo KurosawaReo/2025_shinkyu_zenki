@@ -9,39 +9,22 @@
 #include "Obst_Ripples.h"
 
 //初期化(一回のみ行う)
-//リセット(何回でも行う)
 void Ripples::Init()
 {
 	//実体のアドレスをもらう.
 	p_data   = &GameData::GetInst();
 	p_player = &Player::GetInst();
-
-	// フラッシュエフェクトの初期化
-	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		flashEffect[i].ValidFlag = 0;
-		flashEffect[i].Counter = 0.0f;
-		flashEffect[i].Duration = 0.0f;
-		flashEffect[i].x = 0.0;
-		flashEffect[i].y = 0.0;
-		flashEffect[i].BaseSize = 0;
-	}
 }
+//リセット(何回でも行う)
 void Ripples::Reset()
 {
-	flashTimer = 80; //最初は少しだけ待機.
-
-	// リセット時に既存のフラッシュエフェクトをすべてクリア
-	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		flashEffect[i].ValidFlag = 0;
-		flashEffect[i].Counter = 0.0f;
-		flashEffect[i].Duration = 0.0f;
-		flashEffect[i].x = 0.0;
-		flashEffect[i].y = 0.0;
-		flashEffect[i].BaseSize = 0;
-	}
+	//最初は少しだけ待機.
+	flashTimer = 80;
+	//波紋を全て消去.
+	ripples.clear();
 }
 
-void Ripples::GenerateRandomPosition(double& x, double& y)  // 参照渡しに修正
+void Ripples::GenerateRandomPosition(double& x, double& y)
 {
 	//画面サイズ
 	int screnWidth = WINDOW_WID;
@@ -52,41 +35,35 @@ void Ripples::GenerateRandomPosition(double& x, double& y)  // 参照渡しに修正
 }
 bool Ripples::CheckDistance(double x, double y)
 {
-	for (int i = 0; i < RIPPLES_FLASH_MAX; i++)
+	for (const auto& i : ripples)
 	{
-		if (flashEffect[i].ValidFlag == 1)
+		double dx = x - i.x;
+		double dy = y - i.y;
+		double distance = dx*dx + dy*dy;
+		if (distance < pow(RIPPLES_MIN_DISTANCE, 2))
 		{
-			double dx = x - flashEffect[i].x;
-			double dy = y - flashEffect[i].y;
-			double distance = sqrt(dx * dx + dy * dy);  // dy * dy に修正
-			if (distance < RIPPLES_MIN_DISTANCE)
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 	return true;
 }
-// フラッシュエフェクトを開始する関数を追加
-void Ripples::StartFlashEffect(double x, double y)
+//波紋生成.
+void Ripples::SpawnRipples(double x, double y)
 {
-	// 空いているスロットを探す
-	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		if (flashEffect[i].ValidFlag == 0) {
-			flashEffect[i].x = x;
-			flashEffect[i].y = y;
-			flashEffect[i].Duration = RIPPLES_WARNING_DURATION + RIPPLES_ACTIVE_DURATION;
-			flashEffect[i].Counter = flashEffect[i].Duration;  // 持続時間から開始（カウントダウン）
-			flashEffect[i].BaseSize = 20;     // 適切な基本サイズに調整
-			flashEffect[i].ValidFlag = 1;
-			break;
-		}
-	}
+	RipplesData tmp; //波紋生成.
+
+	tmp.x = x;
+	tmp.y = y;
+	tmp.duration = RIPPLES_WARNING_DURATION + RIPPLES_ACTIVE_DURATION;
+	tmp.counter  = tmp.duration;	// 持続時間から開始（カウントダウン）
+	tmp.baseSize = 20;				// 適切な基本サイズに調整
+
+	ripples.push_back(tmp); //listに追加.
 }
 void Ripples::SpawnObstaclegroup()
 {
 	//同時出現をランダムに決定.
-	int spawnCount = 1 + (rand() % RIPPLES_MAX_SIMULTANEOUS);
+	const int spawnCount = (rand() % RIPPLES_MAX_SIMULTANEOUS) + 1;
 	for (int i = 0; i < spawnCount; i++)
 	{
 		double x{}, y{};
@@ -101,18 +78,17 @@ void Ripples::SpawnObstaclegroup()
 		}
 		if (validPosition)
 		{
-			StartFlashEffect(x, y);
+			SpawnRipples(x, y);
 		}
 	}
 }
-int Ripples::GetEffectState(int index)
+int Ripples::GetEffectState(list<RipplesData>::iterator it)
 {
-	if (flashEffect[index].Counter > RIPPLES_ACTIVE_DURATION)  // 残り時間がアクティブ時間より大きければ警告状態
-	{
+	// 残り時間がアクティブ時間より大きければ警告状態
+	if (it->counter > RIPPLES_ACTIVE_DURATION) {
 		return RIPPLES_STATE_WARNING;
 	}
-	else
-	{
+	else{
 		return RIPPLES_STATE_ACTIVE;
 	}
 }
@@ -131,21 +107,17 @@ void Ripples::UpdateFlashGeneration()
 		flashTimer = RIPPLES_SPAWN_SPAN * p_data->spawnRate;
 	}
 
-	//全フラッシュ.
-	for (int i = 0; i < RIPPLES_FLASH_MAX; i++)
+	//全波紋.
+	for (auto i = ripples.begin(); i != ripples.end(); )
 	{
-		if (flashEffect[i].ValidFlag == 0)
-		{
-			continue;//無効なエフェクトをスキップ.
-		}
-
-		//カウントダウン.
-		flashEffect[i].Counter -= p_data->speedRate;
+		//経過カウンター減少.
+		i->counter -= p_data->speedRate;
 		//エフェクト時間が終了したら無効化.
-		if (flashEffect[i].Counter <= 0)  // 0以下になったら終了
-		{
-			flashEffect[i].ValidFlag = 0;
-			flashEffect[i].AlreadyHit = false; //当たり判定のリセット.
+		if (i->counter <= 0) {
+			i = ripples.erase(i);
+		}
+		else {
+			i++;
 		}
 	}
 }
@@ -155,19 +127,24 @@ void Ripples::Update()
 	UpdateFlashGeneration();
 	Hitjudgment();
 }
-
 //描画.
 void Ripples::Draw()
 {
+#if defined DEBUG_OBJ_ACTIVE
+	//デバッグ表示.
+	DrawFormatString(0, 160, 0xFF00FF, _T("波紋　　　　　 : %d"), ripples.size());
+#endif
 	DrawObstFlash();
 }
+
 //当たり判定.
 void Ripples::Hitjudgment()
 {
 	bool isPlaySound = false; //一度のみサウンドを流す用.
-
-	for (int i = 0; i < RIPPLES_FLASH_MAX; i++) {
-		if (flashEffect[i].ValidFlag == 0 || flashEffect[i].Counter <= 0) {
+	
+	//全波紋.
+	for (auto i = ripples.begin(); i != ripples.end(); i++) {
+		if (i->counter <= 0) {
 			continue;
 		}
 
@@ -177,19 +154,19 @@ void Ripples::Hitjudgment()
 		}
 
 		// 経過時間の計算
-		float elapsedTime = flashEffect[i].Duration - flashEffect[i].Counter;
+		float elapsedTime = i->duration - i->counter;
 		float activeElapsedTime = elapsedTime - RIPPLES_WARNING_DURATION;
 		float activeProgress = activeElapsedTime / RIPPLES_ACTIVE_DURATION;
 
-		// アクティブ状態になった直後だけ判定
-		if (effectState == RIPPLES_STATE_ACTIVE && !flashEffect[i].AlreadyHit) {
+		//波紋が広がった瞬間のみダメージ判定.
+		if (effectState == RIPPLES_STATE_ACTIVE && !i->alreadyHit) {
 
 			float sizeMultiplier = RIPPLES_FLASH_SIZE_INIT + (activeProgress * RIPPLES_FLASH_SIZE_SPREAD);
-			int effectSize = (int)(flashEffect[i].BaseSize * sizeMultiplier);
+			int effectSize = (int)(i->baseSize * sizeMultiplier);
 
 			DBL_XY playerPos = p_player->GetPos();
-			double dx = playerPos.x - flashEffect[i].x;
-			double dy = playerPos.y - flashEffect[i].y;
+			double dx = playerPos.x - i->x;
+			double dy = playerPos.y - i->y;
 			double distance = sqrt(dx * dx + dy * dy);
 			float playerRadius = 10.0f;
 
@@ -203,20 +180,17 @@ void Ripples::Hitjudgment()
 				isPlaySound = true; //もう再生しない.
 			}
 
-			// 一度判定を行ったらフラグを立てて、以後は無効に
-			flashEffect[i].AlreadyHit = true;
+			//波紋のダメージ判定終了.
+			i->alreadyHit = true;
 		}
 	}
 }
 
 void Ripples::DrawObstFlash()
 {
-	for (int i = 0; i < RIPPLES_FLASH_MAX; i++)
+	//全波紋.
+	for (auto i = ripples.begin(); i != ripples.end(); i++)
 	{
-		if (flashEffect[i].ValidFlag == 0)
-		{
-			continue;//無効なエフェクトをスキップ.
-		}
 		int effetState = GetEffectState(i);
 		if (effetState == RIPPLES_STATE_WARNING)
 		{
@@ -233,10 +207,10 @@ void Ripples::DrawObstFlash()
 	ResetDrawBlendMode();
 }
 
-void Ripples::DrawWarningEffect(int index)
+void Ripples::DrawWarningEffect(list<RipplesData>::iterator it)
 {
 	//残り時間から経過時間を計算.
-	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
+	float elapsedTime = it->duration - it->counter;
 
 	//1: 透明度の計算(点滅)
 	int alphaValue;
@@ -256,31 +230,31 @@ void Ripples::DrawWarningEffect(int index)
 	if (elapsedTime >= 90) {
 		const float pulseRate = 4.0f;
 		double pulseFactor = 1.0f + 0.4f * sin(elapsedTime * pulseRate * M_PI/60.0f);
-		warningSize = (int)(flashEffect[index].BaseSize * pulseFactor);
+		warningSize = (int)(it->baseSize * pulseFactor);
 	}
 	else {
-		warningSize = flashEffect[index].BaseSize; //固定サイズ.
+		warningSize = it->baseSize; //固定サイズ.
 	}
 
 	// 予告エフェクトを描画.
 	SetDrawBlendModeKR(BlendModeID::Alpha, alphaValue);
 
 	Circle cir;
-	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize,   GetColor(150, 150, 150) };
+	cir = { {it->x, it->y}, (float)warningSize,   GetColor(150, 150, 150) };
 	DrawCircleKR(&cir, false, true);
-	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize/2, GetColor(200, 200, 200) };
+	cir = { {it->x, it->y}, (float)warningSize/2, GetColor(200, 200, 200) };
 	DrawCircleKR(&cir, false, true);
-	cir = { {flashEffect[index].x, flashEffect[index].y}, (float)warningSize+5, GetColor(120, 120, 120) }; // 外周リング
+	cir = { {it->x, it->y}, (float)warningSize+5, GetColor(120, 120, 120) }; // 外周リング
 	DrawCircleKR(&cir, false, true);
 
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();
 }
 
-void Ripples::DrawActiveEffect(int index)
+void Ripples::DrawActiveEffect(list<RipplesData>::iterator it)
 {
 	// 残り時間から経過時間を計算
-	float elapsedTime = flashEffect[index].Duration - flashEffect[index].Counter;
+	float elapsedTime = it->duration - it->counter;
 	float activeElapsedTime = elapsedTime - RIPPLES_WARNING_DURATION;
 
 	// アクティブ状態での進行度
@@ -292,16 +266,16 @@ void Ripples::DrawActiveEffect(int index)
 
 	// エフェクトのサイズを時間に応じて拡大
 	float sizeMultiplier = RIPPLES_FLASH_SIZE_INIT + (activeProgress * RIPPLES_FLASH_SIZE_SPREAD);
-	int effectSize = (int)(flashEffect[index].BaseSize * sizeMultiplier);
+	int effectSize = (int)(it->baseSize * sizeMultiplier);
 	int innerSize = effectSize / 2;
 
 	// アクティブエフェクトを円形で描画（シアン色で光る）
 	SetDrawBlendModeKR(BlendModeID::Add, alphaValue);
 
 	Circle cir;
-	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)effectSize, GetColor(0, 255, 255)};
+	cir = {{it->x, it->y}, (float)effectSize, GetColor(0, 255, 255)};
 	DrawCircleKR(&cir, false, true);
-	cir = {{flashEffect[index].x, flashEffect[index].y}, (float)innerSize,  GetColor(0, 255, 200)};
+	cir = {{it->x, it->y}, (float)innerSize,  GetColor(0, 255, 200)};
 	DrawCircleKR(&cir, false, true);
 
 	//通常の描画モードに戻す

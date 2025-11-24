@@ -45,10 +45,12 @@ enum StageType
 //====================================================================//
 //【設定】
 
-//#define DEBUG_LASER_ACTIVE //デバッグ用.
+#define DEBUG_OBJ_ACTIVE //デバッグ用.
 //#define DEBUG_SPAWN_RATE   //デバッグ用.
 //#define DEBUG_METEOR_POINT //デバッグ用.
 //#define DEBUG_METEOR_SPAWN //デバッグ用.
+//#define DEBUG_SHOW_FPS //デバッグ用.
+
 //#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
 #define SHOW_BEST_SCORE //これをコメントアウトでベストスコア表示を消せる.
 
@@ -106,8 +108,8 @@ enum StageType
 #define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
-#define LASER_CNT_MAX					(80)			//レーザーの最大数.
-#define LASER_LINE_CNT_MAX				(14000)			//レーザー描画線の最大数.
+//#define LASER_CNT_MAX					(80)			//レーザーの最大数.
+//#define LASER_LINE_CNT_MAX			(14000)			//レーザー描画線の最大数.
 #define LASER_LINE_DEL_TIME				(64)			//レーザー描画線が消える時間.
 #define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
@@ -134,7 +136,7 @@ enum StageType
 #define LASER_FAL_DEL_TIME				(100)			//消えるまでの時間.
 
 //障害物: 隕石.
-#define METEOR_CNT_MAX					(50)			//隕石の最大出現数.
+//#define METEOR_CNT_MAX				(50)			//隕石の最大出現数.
 #define METEOR_SPAWN_SPAN				(150)			//隕石の出現時間間隔.
 #define METEOR_SPEED					(2)				//移動速度.
 #define METEOR_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
@@ -164,7 +166,7 @@ enum StageType
 #define RIPPLES_MIN_DISTANCE			(100)			//最小距離.
 
 //障害物: 花火.
-#define FIREWORKS_CNT_MAX				(10)			//最大同時出現数
+//#define FIREWORKS_CNT_MAX				(10)			//最大同時出現数
 #define FIREWORKS_RND_MAX				(2)				//花火出現最大数
 #define FIREWORKS_SPAWN_SPAN			(600)			//花火生成間隔（フレーム）
 #define FIREWORKS_WARNING_DURATION		(120)			//予告を出す長さ（フレーム）
@@ -175,7 +177,7 @@ enum StageType
 #define FIREWORKS_GRAVITY				(0.3f)			//重力加速度
 
 //エフェクト.
-#define EFFECT_MAX						(70)			//エフェクトの最大出現数.
+//#define EFFECT_MAX					(70)			//エフェクトの最大出現数.
 
 //スコア.
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.

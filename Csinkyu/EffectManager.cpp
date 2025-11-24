@@ -15,318 +15,317 @@ void EffectManager::Init() {
 }
 
 void EffectManager::Reset() {
-	//全てのエフェクトをリセット.
-	for (int i = 0; i < EFFECT_MAX; i++) {
-		effect[i].active = false;
-	}
+	//エフェクトを全て消去.
+	effect.clear();
 }
 
 void EffectManager::Update() {
 	
-	//有効なエフェクトのみ更新.
-	for (int i = 0; i < EFFECT_MAX; i++) {
-		if (effect[i].active) {
+	//全てのエフェクト.
+	for (auto i = effect.begin(); i != effect.end(); ) {
 
-			//タイプ別.
-			switch (effect[i].type) 
+		bool isErase = false; //消去するかどうか.
+
+		//タイプ別.
+		switch (i->type) 
+		{
+			case Effect_Score100:
+			case Effect_Score500:
 			{
-				case Effect_Score100:
-				case Effect_Score500:
-				{
-					effect[i].counter++;
+				i->counter++;
 
-					//時間経過で消滅.
-					if (effect[i].counter >= SCORE_ANIM_TIME) {
-						DeleteEffect(i);
-					}
+				//時間経過で消滅.
+				if (i->counter >= SCORE_ANIM_TIME) {
+					isErase = true;
 				}
-				break;
-
-				case Effect_PlayerDash:
-				{
-					effect[i].counter++;
-
-					//時間経過で消滅.
-					if (effect[i].counter >= PLAYER_DASH_EFFECT_TIME) {
-						DeleteEffect(i);
-					}
-				}
-				break;
-
-				case Effect_PlayerDeath:
-				{
-					effect[i].counter++;
-
-					//時間経過で消滅.
-					if (effect[i].counter >= PLAYER_DEATH_ANIM_TIME) {
-						DeleteEffect(i);
-					}
-				}
-				break;
-
-				case Effect_ReflectLaser:
-				{
-					effect[i].counter++;
-
-					//時間経過で消滅.
-					if (effect[i].counter >= LASER_REF_ANIM_TIME) {
-						DeleteEffect(i);
-					}
-				}
-				break;
-
-				case Effect_BreakMeteor:
-				{
-					//カウンター加算.
-					effect[i].counter += p_data->speedRate;
-					//回転.
-					effect[i].ang += 3 * p_data->speedRate;
-					//減速.
-					float newSpeed = effect[i].speed/(1+(effect[i].counter/10));
-					//移動.
-					effect[i].pos.x += effect[i].vec.x * newSpeed * p_data->speedRate;
-					effect[i].pos.y += effect[i].vec.y * newSpeed * p_data->speedRate;
-
-					//時間経過で消滅.
-					if (effect[i].counter >= METEOR_BREAK_ANIM_TIME) {
-						DeleteEffect(i);
-					}
-				}
-				break;
-
-				case Effect_Endless_Level1:
-				case Effect_Endless_Level2:
-				case Effect_Endless_Level3:
-				case Effect_Endless_Level4:
-				case Effect_Endless_Level5:
-				case Effect_Tutorial_Step1:
-				case Effect_Tutorial_Step2:
-				case Effect_Tutorial_Step3:
-				case Effect_Tutorial_Step4:
-				{
-					effect[i].counter++;
-
-					//時間経過で消滅.
-					if (effect[i].counter >= MIDDLE_ANIM_TIME) {
-						DeleteEffect(i);
-					}
-				}
-				break;
-
-				default: assert(FALSE); break;
 			}
+			break;
+
+			case Effect_PlayerDash:
+			{
+				i->counter++;
+
+				//時間経過で消滅.
+				if (i->counter >= PLAYER_DASH_EFFECT_TIME) {
+					isErase = true;
+				}
+			}
+			break;
+
+			case Effect_PlayerDeath:
+			{
+				i->counter++;
+
+				//時間経過で消滅.
+				if (i->counter >= PLAYER_DEATH_ANIM_TIME) {
+					isErase = true;
+				}
+			}
+			break;
+
+			case Effect_ReflectLaser:
+			{
+				i->counter++;
+
+				//時間経過で消滅.
+				if (i->counter >= LASER_REF_ANIM_TIME) {
+					isErase = true;
+				}
+			}
+			break;
+
+			case Effect_BreakMeteor:
+			{
+				//カウンター加算.
+				i->counter += p_data->speedRate;
+				//回転.
+				i->ang += 3 * p_data->speedRate;
+				//減速.
+				float newSpeed = i->speed/(1+(i->counter/10));
+				//移動.
+				i->pos.x += i->vec.x * newSpeed * p_data->speedRate;
+				i->pos.y += i->vec.y * newSpeed * p_data->speedRate;
+
+				//時間経過で消滅.
+				if (i->counter >= METEOR_BREAK_ANIM_TIME) {
+					isErase = true;
+				}
+			}
+			break;
+
+			case Effect_Endless_Level1:
+			case Effect_Endless_Level2:
+			case Effect_Endless_Level3:
+			case Effect_Endless_Level4:
+			case Effect_Endless_Level5:
+			case Effect_Tutorial_Step1:
+			case Effect_Tutorial_Step2:
+			case Effect_Tutorial_Step3:
+			case Effect_Tutorial_Step4:
+			{
+				i->counter++;
+
+				//時間経過で消滅.
+				if (i->counter >= MIDDLE_ANIM_TIME) {
+					isErase = true;
+				}
+			}
+			break;
+
+			default: assert(FALSE); break;
+		}
+
+		//次の要素に進む.
+		if (isErase) {
+			i = effect.erase(i); //消去して次へ.
+		}
+		else {
+			i++;
 		}
 	}
 }
 
 void EffectManager::Draw() {
 
-	//有効なエフェクトのみ描画.
-	for (int i = 0; i < EFFECT_MAX; i++) {
-		if (effect[i].active) {
+#if defined DEBUG_OBJ_ACTIVE
+	//デバッグ表示.
+	DrawFormatString(0, 80, 0xFF00FF, _T("エフェクト　　 : %d"), effect.size());
+#endif
 
-			//タイプ別.
-			switch (effect[i].type)
+	//全てのエフェクト.
+	for (const auto& i : effect) {
+
+		//タイプ別.　
+		switch (i.type)
+		{
+			case Effect_Score100:
+			case Effect_Score500:
 			{
-				case Effect_Score100:
-				case Effect_Score500:
-				{
-					//座標.
-					DBL_XY pos = {effect[i].pos.x, effect[i].pos.y - CalcNumEaseOut(effect[i].counter/SCORE_ANIM_TIME)*30};
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/SCORE_ANIM_TIME));
+				//座標.
+				DBL_XY pos = {i.pos.x, i.pos.y - CalcNumEaseOut(i.counter/SCORE_ANIM_TIME)*30};
+				//アニメーション値.
+				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/SCORE_ANIM_TIME));
 
-					//描画.
-					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-					//画像切り替え.
-					if (effect[i].type == Effect_Score100) {
-						imgScore[0].DrawExtend(pos, {0.2, 0.2});
-					}
-					else {
-						imgScore[1].DrawExtend(pos, {0.2, 0.2});
-					}
+				//描画.
+				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
+				//画像切り替え.
+				if (i.type == Effect_Score100) {
+					imgScore[0].DrawExtend(pos, {0.2, 0.2});
 				}
-				break;
-
-				case Effect_PlayerDash:
-				{
-					//アニメーション値.
-					const double anim = CalcNumEaseOut(1-effect[i].counter/PLAYER_DASH_EFFECT_TIME);
-					//三角形データ.
-					DBL_XY pos1 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang   ) * 40 * anim;
-					DBL_XY pos2 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang+90) * 20 * anim;
-					DBL_XY pos3 = effect[i].pos + Calc::CalcVectorDeg(effect[i].ang-90) * 20 * anim;
-					Triangle tri = {{pos1, pos2, pos3}, 0xFFFFFF};
-
-					//描画.
-					SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-					DrawTriangleKR(&tri, false, true);
+				else {
+					imgScore[1].DrawExtend(pos, {0.2, 0.2});
 				}
-				break;
-
-				case Effect_PlayerDeath:
-				{
-					Circle cir= { effect[i].pos, PLAYER_SIZE+effect[i].counter/2, 0xFFFFFF };
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/PLAYER_DEATH_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-					DrawCircleKR(&cir, false, true);
-				}
-				break;
-
-				case Effect_ReflectLaser:
-				{
-					Circle cir = { effect[i].pos, _flt(5+effect[i].counter*1.5), COLOR_PLY_REFLECT };
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/LASER_REF_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-					DrawCircleKR(&cir, false, true);
-				}
-				break;
-
-				case Effect_BreakMeteor:
-				{
-					//飛ばす線のデータ.
-					Line line{};
-					line.stPos = CalcArcPos(effect[i].pos, effect[i].ang,     effect[i].len);
-					line.edPos = CalcArcPos(effect[i].pos, effect[i].ang+180, effect[i].len);
-			        line.color = COLOR_METEOR(effect[i].pos);
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumEaseOut(1 - effect[i].counter/METEOR_BREAK_ANIM_TIME));
-
-					//描画.
-					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-					DrawLineKR(&line, true);
-				}
-				break;
-
-				case Effect_Endless_Level1:
-				case Effect_Endless_Level2:
-				case Effect_Endless_Level3:
-				case Effect_Endless_Level4:
-				case Effect_Endless_Level5:
-				case Effect_Tutorial_Step1:
-				case Effect_Tutorial_Step2:
-				case Effect_Tutorial_Step3:
-				case Effect_Tutorial_Step4:
-				{
-					//共通設定.
-					DrawStr str = { _T("Unknown"), {_int_r(effect[i].pos.x), _int_r(effect[i].pos.y-20)}, 0xFFFFFF};
-					Circle mainCir = { effect[i].pos, effect[i].counter*5, 0xFFFFFF };
-					Circle lampCir[5] = {
-						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF},
-						{{-1, effect[i].pos.y+20}, 10, 0xFFFFFF}
-					};
-					//アニメーション値.
-					int pow = _int_r(255 * CalcNumWaveLoop(1 - effect[i].counter/MIDDLE_ANIM_TIME));
-					//何個ランプを使うか.
-					int lampUseCnt  = 0;
-					int lampFillCnt = 0;
-
-					//描画.
-					SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-					DrawCircleKR(&mainCir, false, true);
-
-					switch (effect[i].type) 
-					{
-						case Effect_Endless_Level1:
-							str.text = _T("Level 1");
-							lampUseCnt  = 5;
-							lampFillCnt = 1;
-							break;
-						case Effect_Endless_Level2:
-							str.text = _T("Level 2");
-							lampUseCnt  = 5;
-							lampFillCnt = 2;
-							break;
-						case Effect_Endless_Level3:
-							str.text = _T("Level 3");
-							lampUseCnt  = 5;
-							lampFillCnt = 3;
-							break;
-						case Effect_Endless_Level4:
-							str.text = _T("Level 4");
-							lampUseCnt  = 5;
-							lampFillCnt = 4;
-							break;
-						case Effect_Endless_Level5:
-							str.text = _T("Level 5");
-							lampUseCnt  = 5;
-							lampFillCnt = 5;
-							break;
-
-						case Effect_Tutorial_Step1:
-							str.text = _T("Step 1");
-							lampUseCnt  = 4;
-							lampFillCnt = 1;
-							break;
-						case Effect_Tutorial_Step2:
-							str.text = _T("Step 2");
-							lampUseCnt  = 4;
-							lampFillCnt = 2;
-							break;
-						case Effect_Tutorial_Step3:
-							str.text = _T("Step 3");
-							lampUseCnt  = 4;
-							lampFillCnt = 3;
-							break;
-						case Effect_Tutorial_Step4:
-							str.text = _T("Step 4");
-							lampUseCnt  = 4;
-							lampFillCnt = 4;
-							break;
-					}
-					//テキスト.
-					str.Draw(Anchor::Mid, p_data->font2);
-					//ランプ(必要な数だけ描画)
-					for (int j = 0; j < lampUseCnt; j++) {
-						
-						const int interval = 30; //間隔.
-						//均等になるように配置する.
-						lampCir[j].pos.x = effect[i].pos.x + interval * (j - _flt(lampUseCnt-1)/2);
-						//円描画.
-						DrawCircleKR(&lampCir[j], (lampFillCnt >= j+1), true); 
-					}
-				}
-				break;
-
-				default: assert(FALSE); break;
 			}
+			break;
 
-			ResetDrawBlendMode(); //描画モードリセット.
+			case Effect_PlayerDash:
+			{
+				//アニメーション値.
+				const double anim = CalcNumEaseOut(1-i.counter/PLAYER_DASH_EFFECT_TIME);
+				//三角形データ.
+				DBL_XY pos1 = i.pos + Calc::CalcVectorDeg(i.ang   ) * 40 * anim;
+				DBL_XY pos2 = i.pos + Calc::CalcVectorDeg(i.ang+90) * 20 * anim;
+				DBL_XY pos3 = i.pos + Calc::CalcVectorDeg(i.ang-90) * 20 * anim;
+				Triangle tri = {{pos1, pos2, pos3}, 0xFFFFFF};
+
+				//描画.
+				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
+				DrawTriangleKR(&tri, false, true);
+			}
+			break;
+
+			case Effect_PlayerDeath:
+			{
+				Circle cir= { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF };
+				//アニメーション値.
+				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME));
+
+				//描画.
+				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
+				DrawCircleKR(&cir, false, true);
+			}
+			break;
+
+			case Effect_ReflectLaser:
+			{
+				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT };
+				//アニメーション値.
+				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/LASER_REF_ANIM_TIME));
+
+				//描画.
+				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
+				DrawCircleKR(&cir, false, true);
+			}
+			break;
+
+			case Effect_BreakMeteor:
+			{
+				//飛ばす線のデータ.
+				Line line{};
+				line.stPos = CalcArcPos(i.pos, i.ang,     i.len);
+				line.edPos = CalcArcPos(i.pos, i.ang+180, i.len);
+			    line.color = COLOR_METEOR(i.pos);
+				//アニメーション値.
+				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME));
+
+				//描画.
+				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
+				DrawLineKR(&line, true);
+			}
+			break;
+
+			case Effect_Endless_Level1:
+			case Effect_Endless_Level2:
+			case Effect_Endless_Level3:
+			case Effect_Endless_Level4:
+			case Effect_Endless_Level5:
+			case Effect_Tutorial_Step1:
+			case Effect_Tutorial_Step2:
+			case Effect_Tutorial_Step3:
+			case Effect_Tutorial_Step4:
+			{
+				//共通設定.
+				DrawStr str = { _T("Unknown"), {_int_r(i.pos.x), _int_r(i.pos.y-20)}, 0xFFFFFF};
+				Circle mainCir = { i.pos, i.counter*5, 0xFFFFFF };
+				Circle lampCir[5] = {
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF}
+				};
+				//アニメーション値.
+				int pow = _int_r(255 * CalcNumWaveLoop(1 - i.counter/MIDDLE_ANIM_TIME));
+				//何個ランプを使うか.
+				int lampUseCnt  = 0;
+				int lampFillCnt = 0;
+
+				//描画.
+				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
+				DrawCircleKR(&mainCir, false, true);
+
+				switch (i.type) 
+				{
+					case Effect_Endless_Level1:
+						str.text = _T("Level 1");
+						lampUseCnt  = 5;
+						lampFillCnt = 1;
+						break;
+					case Effect_Endless_Level2:
+						str.text = _T("Level 2");
+						lampUseCnt  = 5;
+						lampFillCnt = 2;
+						break;
+					case Effect_Endless_Level3:
+						str.text = _T("Level 3");
+						lampUseCnt  = 5;
+						lampFillCnt = 3;
+						break;
+					case Effect_Endless_Level4:
+						str.text = _T("Level 4");
+						lampUseCnt  = 5;
+						lampFillCnt = 4;
+						break;
+					case Effect_Endless_Level5:
+						str.text = _T("Level 5");
+						lampUseCnt  = 5;
+						lampFillCnt = 5;
+						break;
+
+					case Effect_Tutorial_Step1:
+						str.text = _T("Step 1");
+						lampUseCnt  = 4;
+						lampFillCnt = 1;
+						break;
+					case Effect_Tutorial_Step2:
+						str.text = _T("Step 2");
+						lampUseCnt  = 4;
+						lampFillCnt = 2;
+						break;
+					case Effect_Tutorial_Step3:
+						str.text = _T("Step 3");
+						lampUseCnt  = 4;
+						lampFillCnt = 3;
+						break;
+					case Effect_Tutorial_Step4:
+						str.text = _T("Step 4");
+						lampUseCnt  = 4;
+						lampFillCnt = 4;
+						break;
+				}
+				//テキスト.
+				str.Draw(Anchor::Mid, p_data->font2);
+				//ランプ(必要な数だけ描画)
+				for (int j = 0; j < lampUseCnt; j++) {
+						
+					const int interval = 30; //間隔.
+					//均等になるように配置する.
+					lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt-1)/2);
+					//円描画.
+					DrawCircleKR(&lampCir[j], (lampFillCnt >= j+1), true); 
+				}
+			}
+			break;
+
+			default: assert(FALSE); break;
 		}
+
+		ResetDrawBlendMode(); //描画モードリセット.
 	}
 }
 
 //エフェクト出現.
 void EffectManager::SpawnEffect(const EffectData* data) {
 
-	//未使用のエフェクトを探す.
-	for (int i = 0; i < EFFECT_MAX; i++) {
-		if (!effect[i].active) {
+	Effect tmp; //エフェクト作成.
 
-			effect[i].type    = data->type;
-			effect[i].pos     = data->pos;
-			effect[i].vec     = data->vec;
-			effect[i].speed   = data->speed;
-			effect[i].ang     = data->ang;
-			effect[i].len     = data->len;
-			effect[i].counter = 0;         //0から開始. 
-			effect[i].active  = true;      //有効にする.
+	tmp.type  = data->type;
+	tmp.pos   = data->pos;
+	tmp.vec   = data->vec;
+	tmp.speed = data->speed;
+	tmp.ang   = data->ang;
+	tmp.len   = data->len;
+	tmp.counter = 0;       //0から開始.
 
-			break; //召喚完了.
-		}
-	}
-}
-//エフェクト消去.
-void EffectManager::DeleteEffect(int idx) {
-
-	effect[idx].active = false;
+	effect.push_back(tmp); //listに追加.
 }

@@ -99,6 +99,12 @@
    [改善点]
    ・LevelUp演出, Step演出もエフェクトのため、エフェクトが上限まで出てると表示が出なくなる問題
 
+   2025/11/24:
+   [変更点]
+   ・花火の落下レーザーをだんだん薄くなって消えるように変更
+   ・レーザーやエフェクトなどで使ってた配列を、list配列に変更(→軽量化が期待できる)
+   ・レーザーの太さを1→2に変更(お試し)
+
 /---------------------------------------------------------/
    [チュートリアル配分]
    step1: 移動, よける
@@ -289,8 +295,14 @@ void GameManager::Init() {
 	for(int i = 0; i < SCENE_COUNT; i++){
 		tmScene[i] = Timer(TimerMode::CountUp, 0);
 	}
-	tmGameTime    = Timer(TimerMode::CountUp, 0);
-	tmReflectMode = Timer(TimerMode::CountDown, REFLECT_MODE_TIME);
+	tmGameTime    = Timer     (TimerMode::CountUp, 0);
+	tmReflectMode = Timer     (TimerMode::CountDown, REFLECT_MODE_TIME);
+
+	//fps表示用.
+#if defined DEBUG_SHOW_FPS
+	tmFps         = TimerMicro(TimerMode::CountUp, 0);
+	tmFps.Start();
+#endif
 
 	//Init処理
 	{
@@ -426,6 +438,11 @@ void GameManager::Draw() {
 
 		default: assert(FALSE); break;
 	}
+
+	//fps表示用.
+#if defined DEBUG_SHOW_FPS
+	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("FPS: %f"), tmFps.GetFps());
+#endif
 
 	effectMng->Draw(); //エフェクト.
 }

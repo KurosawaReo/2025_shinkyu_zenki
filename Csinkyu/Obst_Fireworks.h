@@ -16,17 +16,18 @@ enum FireworksState {
 };
 
 // 花火データ構造
-struct FireworksData {
-	int ValidFlag;              // 有効フラグ
-	float x, y;                 // 座標
-	float targetX, targetY;     // 目標座標（爆発位置）
-	float vx, vy;              // 速度
-	float Counter;             // カウンタ
-	FireworksState state;      // 現在の状態
-	int sparkCount;            // 火花数
+struct FireworksData 
+{
+	FireworksState state;      // 現在の状態.
 
-	int fallDelay;   // 落下までの遅延
-	bool hasFallen;  // 落下済みか
+	float x, y;                // 座標
+	float targetX, targetY;    // 目標座標（爆発位置）
+	float vx, vy;              // 速度
+	float counter;             // カウンタ
+	int   sparkCount;          // 火花数
+
+	int   fallDelay;           // 落下までの遅延
+	bool  hasFallen;           // 落下済みか
 };
 
 //花火管理.[継承不可]
@@ -47,25 +48,25 @@ private:
 	FireworksManager(){}
 
 //▼データ.
-private: //変数.
-	FireworksData fireworks[FIREWORKS_CNT_MAX]{};
-	float spawnTimer{};
+private:
+	list<FireworksData> fireworks;
+	float				spawnTimer{};
 
 	GameData*     p_data{};
 	Player*       p_player{};
 	LaserManager* p_laserMng{};
 
-private: //関数.
-	void GenerateRandomPosition(float& x, float& y);
-	bool CheckDistance(float x, float y);
-	void StartFireworks(float x, float y);
+//▼関数.
+private:
+	void GenerateRandomPosition   (float& x, float& y);
+	bool CheckDistance            (float x, float y);
+	void SpawnFireworks           (float x, float y);
 	void UpdateFireworksGeneration();
 	void UpdateIndividualFireworks();
-	void ExplodeFireworks(int index);
-	void CreateFireworksSparks(float x, float y);
+	void CreateFireworksSparks    (float x, float y);
 
-	// 描画関数
-	void DrawWarningEffect(int index);
+	//描画用.
+	void DrawWarningEffect(list<FireworksData>::iterator it);
 
 public:
 	void Init();
