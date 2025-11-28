@@ -51,7 +51,7 @@ enum StageType
 //#define DEBUG_METEOR_SPAWN //デバッグ用.
 //#define DEBUG_SHOW_FPS //デバッグ用.
 
-//#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
+#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
 #define SHOW_BEST_SCORE //これをコメントアウトでベストスコア表示を消せる.
 
 //====================================================================//
