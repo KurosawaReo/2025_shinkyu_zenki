@@ -1,12 +1,16 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/11/24
+   ver: 2025/11/29
 
    タイマー機能を追加。
 */
 #pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_DXLIB_GLOBAL
+  #include "KR_Global.h"
+#endif
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	//タイマーモード.
@@ -30,9 +34,11 @@ namespace KR
 
 	public:
 		//constructor.
-		Timer(){}
+		Timer() {
+			Timer(TimerMode::CountUp, 0);
+		}
 		Timer(TimerMode _mode, float _init) :
-			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化子.
+			mode(_mode), tmInit(_init), tmSavePass(_init)      //初期化.
 		{}
 
 		void Start() {
@@ -68,9 +74,11 @@ namespace KR
 
 	public:
 		//constructor.
-		TimerMicro(){}
+		TimerMicro() {
+			TimerMicro(TimerMode::CountUp, 0);
+		}
 		TimerMicro(TimerMode _mode, LONGLONG _init) :
-			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化子.
+			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化.
 		{
 			QueryPerformanceFrequency(&freq); //頻度の取得.
 		}

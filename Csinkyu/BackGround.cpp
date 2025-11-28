@@ -28,13 +28,13 @@ void BG_Tile::Draw(double slowTime) {
 	{
 		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
-		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, Anchor::Mid);
+		img[0]->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 	}
 	//反射モード.
 	if (p_data->isReflectMode) {
 		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
-		img[1]->DrawExtend(pos.ToDblXY(), sizeRate, Anchor::Mid);
+		img[1]->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 	}
 	ResetDrawBlendMode(); //描画モードリセット.
 }
@@ -119,6 +119,6 @@ void BackGround::Draw() {
 		ResetDrawBlendMode();
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-		DrawBoxKR(&box, Anchor::Mid, false, true);
+		DrawBoxKR(box, Anchor::Mid, false, true);
 	}
 }

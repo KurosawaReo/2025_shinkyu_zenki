@@ -12,7 +12,7 @@
    2025/05/26:
    スローモード完成。レーザーの動きの怪しさも解決。
    ・アイテムの実装
-   ・スローモードの時間制限 <<< now
+   ・スローモードの時間制限
    ・障害物4の砲台を画面一周動かす(ゲーム時間??秒以降)
 
    2025/06/02:
@@ -99,6 +99,14 @@
    [改善点]
    ・LevelUp演出, Step演出もエフェクトのため、エフェクトが上限まで出てると表示が出なくなる問題
 
+   TGS2025発表後:
+   [変更点]
+   ・若干プレイヤーを拡大
+   ・プレイヤーの当たり判定を、レーザーが反射する時のみ大きくなるように(違和感がない程度)
+   ・レーザーにかなり接近した時のみスローになるように調整
+   ・反射モード中、継続中だと分かりやすくなるよう画面にグラデーションを追加
+   ・強化アイテムは発光するように
+
    2025/11/24:
    [変更点]
    ・花火の落下レーザーをだんだん薄くなって消えるように変更
@@ -118,15 +126,6 @@
    Level3: 波紋
    Level4: 花火, アイテム×2
    Level5: 通常レーザー×4, アイテムが強化
-/---------------------------------------------------------/
-   TGS展示後、変更内容メモ
-   
-   ・レーザーの先端が光るように
-   ・若干プレイヤーを拡大
-   ・プレイヤーの当たり判定を、レーザーが反射する時のみ大きくなるように(違和感がない程度)
-   ・レーザーにかなり接近した時のみスローになるように調整
-   ・反射モード中、継続中だと分かりやすくなるよう画面にグラデーションを追加
-   ・強化アイテムは発光するように
 /---------------------------------------------------------/
    【今後の制作予定】
 
@@ -332,10 +331,11 @@ void GameManager::Init() {
 	//スコア読み込み.
 	{
 		File file;
-		file.Open(FILE_DATA, _T("r"));        //ファイルを開く.
-		gameData->bestScore = file.ReadInt(); //数字を読み込んで登録.
-
-		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
+		//ファイルを開く.
+		if (file.Open(FILE_DATA, _T("r")).GetCode() == 0) {
+			gameData->bestScore = file.ReadInt();        //数字を読み込んで登録.
+			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
+		}
 	}
 
 	Reset();
@@ -743,7 +743,7 @@ void GameManager::DrawEnd() {
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);
-		DrawBoxKR(&box, Anchor::LU); //画面を暗くする(UI以外)
+		DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
 	uiMng->Draw(); //UI.
@@ -894,10 +894,10 @@ void GameManager::GameOver() {
 				if (gameData->score > gameData->bestScore) {
 
 					File file;
-					file.MakeDir(FILE_DATA_PATH);   //フォルダ作成.
-					file.Open(FILE_DATA, _T("w"));  //ファイルを開く.
-					file.WriteInt(gameData->score); //スコアを保存.
-
+					//ファイルを開く.
+					if (file.Open(FILE_DATA, _T("w"), true).GetCode() == 0) {
+						file.WriteInt(gameData->score);    //スコアを保存.
+					}
 					gameData->bestScore = gameData->score; //スコア更新.
 					isBestScore = true;
 				}

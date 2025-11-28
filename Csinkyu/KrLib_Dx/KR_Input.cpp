@@ -1,13 +1,10 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-#endif
 #include "KR_Input.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	InputMng InputMng::inst; //実体生成.
@@ -146,7 +143,7 @@ namespace KR
 
 	//マウス座標取得.
 	DBL_XY InputMng::GetMousePos() {
-		return mPos.ToDblXY();
+		return mPos.ToDbl();
 	}
 	//コントローラスティック操作取得.
 	DBL_XY InputMng::GetPadStickXY() {

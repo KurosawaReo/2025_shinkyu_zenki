@@ -24,20 +24,21 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="KR_cpp\KR_Global.h" />
-    <ClInclude Include="KR_cpp\KR_Memory.h" />
-    <ClInclude Include="KR_cpp\KR_Num.h" />
-    <ClInclude Include="KR_DxLib\KR_App.h" />
-    <ClInclude Include="KR_DxLib\KR_Calc.h" />
-    <ClInclude Include="KR_DxLib\KR_Debug.h" />
-    <ClInclude Include="KR_DxLib\KR_Draw.h" />
-    <ClInclude Include="KR_DxLib\KR_File.h" />
-    <ClInclude Include="KR_DxLib\KR_Global.h" />
-    <ClInclude Include="KR_DxLib\KR_Input.h" />
-    <ClInclude Include="KR_DxLib\KR_Object.h" />
-    <ClInclude Include="KR_DxLib\KR_Scene.h" />
-    <ClInclude Include="KR_DxLib\KR_Sound.h" />
-    <ClInclude Include="KR_DxLib\KR_Timer.h" />
+    <ClInclude Include="KrLib_cpp\KR_Global.h" />
+    <ClInclude Include="KrLib_cpp\KR_Memory.h" />
+    <ClInclude Include="KrLib_cpp\KR_Num.h" />
+    <ClInclude Include="KrLib_Dx\KR_App.h" />
+    <ClInclude Include="KrLib_Dx\KR_Calc.h" />
+    <ClInclude Include="KrLib_Dx\KR_Debug.h" />
+    <ClInclude Include="KrLib_Dx\KR_Draw.h" />
+    <ClInclude Include="KrLib_cpp\KR_File.h" />
+    <ClInclude Include="KrLib_Dx\KR_Global.h" />
+    <ClInclude Include="KrLib_Dx\KR_Input.h" />
+    <ClInclude Include="KrLib_Dx\KR_Object.h" />
+    <ClInclude Include="KrLib_Dx\KR_ObjectMng.h" />
+    <ClInclude Include="KrLib_Dx\KR_Scene.h" />
+    <ClInclude Include="KrLib_Dx\KR_Sound.h" />
+    <ClInclude Include="KrLib_Dx\KR_Timer.h" />
     <ClInclude Include="LaserManager.h" />
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="Obst_Fireworks.h" />
@@ -58,19 +59,20 @@
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
-    <ClCompile Include="KR_cpp\KR_Memory.cpp" />
-    <ClCompile Include="KR_cpp\KR_Num.cpp" />
-    <ClCompile Include="KR_DxLib\KR_App.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Calc.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Debug.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Draw.cpp" />
-    <ClCompile Include="KR_DxLib\KR_File.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Global.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Input.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Object.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Scene.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Sound.cpp" />
-    <ClCompile Include="KR_DxLib\KR_Timer.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_App.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Calc.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Debug.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Draw.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_File.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Global.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_ObjectMng.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Scene.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
     <ClCompile Include="LaserManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuManager.cpp" />
@@ -184,6 +186,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -203,6 +206,7 @@
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>C:/DxLib_VC/プロジェクトに追加すべきファイル_VC用;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

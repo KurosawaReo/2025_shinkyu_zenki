@@ -1,14 +1,10 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-  #include "KR_Input.h"
-#endif
 #include "KR_Debug.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	//デバッグ用の関数群.
@@ -35,9 +31,10 @@ namespace KR
 			//表示.
 			DrawFormatString(100, 300, 0xFFFFFF, _T("マウス座標: %d, %d"), mx, my);
 			//円.
-			DrawCircle(mx, my, 7, 0x303030);
-			DrawCircle(mx, my, 5, 0xA0A0A0);
-			DrawCircle(mx, my, 3, 0xFFFFFF);
+			DrawCircle(mx, my, 10, 0x60FFFF, false, 1);
+			DrawCircle(mx, my, 7,  0x30A0A0);
+			DrawCircle(mx, my, 5,  0x60FFFF);
+			DrawCircle(mx, my, 3,  0xC0FFFF);
 		}
 		//コントローラIDの表示.
 		void LogPadID() {

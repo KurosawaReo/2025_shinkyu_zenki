@@ -72,7 +72,7 @@ void LaserManager::Draw() {
 			default: assert(FALSE); break;
 		}
 
-		DrawLineKR(&tmpLine, true, 2); //描画.
+		DrawLineKR(tmpLine, true, 2); //描画.
 	}
 
 	//通常の描画モードに戻す
@@ -102,7 +102,7 @@ void LaserManager::Draw() {
 			}
 
 			//有効なレーザーに表示する.
-			DrawStr str(_T("レーザー"), i.nowPos.ToIntXY(), color);
+			DrawStr str(_T("レーザー"), i.nowPos.ToInt(), color);
 			str.Draw();
 		}
 	}
@@ -336,7 +336,7 @@ bool LaserManager::HitLaser(list<LaserData>::iterator it) {
 	Line line = { it->nowPos, it->befPos, {} };
 
 	// プレイヤーとレーザーの当たり判定
-	if (p_player->GetActive() && HitLineCir(&line, &plyHit)) {
+	if (p_player->GetActive() && HitLineCir(line, plyHit)) {
 
 		//反射あり.
 		if (p_player->GetMode() == Player_Reflect)
@@ -407,7 +407,7 @@ void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 			tmp.counter = it->counter * LASER_LINE_DEL_TIME / LASER_FAL_DEL_TIME;
 			//アニメーション曲線の調整.
 			const double anim = CalcNumEaseOut(tmp.counter / LASER_LINE_DEL_TIME);
-			tmp.counter *= anim;
+			tmp.counter *= _flt(anim);
 		}
 
 		line.push_back(tmp); //listに追加.
@@ -476,13 +476,13 @@ bool LaserManager::IsExistEnemyLaser(DBL_XY pos, float len) {
 }
 
 //レーザーを一括反射(未使用)
-void LaserManager::LaserReflectRange(Circle* cir) {
+void LaserManager::LaserReflectRange(Circle cir) {
 	
 	//有効なレーザー.
 	for (auto i = laser.begin(); i != laser.end(); i++) {
 		const Circle cir2 = { i->nowPos, 1, {} };
 		//範囲内なら.
-		if (HitCirCir(cir, &cir2)) {
+		if (HitCirCir(cir, cir2)) {
 			ReflectLaser(i); //その場で反射.
 		}
 	}

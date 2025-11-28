@@ -558,13 +558,13 @@ void TutorialStage::DrawTopText1(MY_STRING text, double alpha) {
 
 	{
 		const int margin = 24;
-		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
-		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDbl();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
 		Box    box  = {pos, size, 0x000000};
 
 		//ògîwåi.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
-		DrawBoxKR(&box, Anchor::LU);
+		DrawBoxKR(box, Anchor::LU);
 		//ÉeÉLÉXÉg.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
 		str.Draw(Anchor::Mid, useFont);
@@ -588,13 +588,13 @@ void TutorialStage::DrawTopText2(MY_STRING text, double alpha) {
 
 	{
 		const int margin = 24;
-		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
-		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDbl();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
 		Box    box  = {pos, size, 0x000000};
 
 		//ògîwåi.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
-		DrawBoxKR(&box, Anchor::LU);
+		DrawBoxKR(box, Anchor::LU);
 		//ÉeÉLÉXÉg.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
 		str.Draw(Anchor::Mid, useFont);
@@ -618,13 +618,13 @@ void TutorialStage::DrawTopText3(MY_STRING text, double alpha) {
 	
 	{
 		const int margin = 24;
-		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
-		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDbl();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
 		Box    box  = {pos, size, 0x000000};
 
 		//ògîwåi.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
-		DrawBoxKR(&box, Anchor::LU);
+		DrawBoxKR(box, Anchor::LU);
 		//ÉeÉLÉXÉg.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
 		str.Draw(Anchor::Mid, useFont);
@@ -648,13 +648,13 @@ void TutorialStage::DrawTopText4(MY_STRING text, double alpha) {
 	
 	{
 		const int margin = 24;
-		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDblXY();
-		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDblXY();
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDbl();
+		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
 		Box    box  = {pos, size, 0x000000};
 
 		//ògîwåi.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 100*alpha);
-		DrawBoxKR(&box, Anchor::LU);
+		DrawBoxKR(box, Anchor::LU);
 		//ÉeÉLÉXÉg.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*alpha);
 		str.Draw(Anchor::Mid, useFont);

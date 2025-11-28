@@ -1,13 +1,13 @@
 /*
    - KR_Memory.cpp - (C++)
-   ver.2025/11/18
+   ver.2025/11/29
 */
 #if !defined DEF_KR_CPP_GLOBAL
   #include "KR_Global.h" //stdafx.h‚É“ü‚Á‚Ä‚È‚¯‚ê‚Î‚±‚±‚Å“±“ü.
 #endif
 #include "KR_Memory.h"
 
-//KR_Lib‚Ég‚¤—p.
+//KrLib–¼‘O‹óŠÔ.
 namespace KR
 {
 // ¥*--=<[ MemoryLeak ]>=--*¥ //

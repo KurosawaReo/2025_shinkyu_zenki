@@ -1,19 +1,22 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 
    サウンド機能を追加。
 */
 #pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_DXLIB_GLOBAL
+  #include "KR_Global.h"
+#endif
+#include "KR_Timer.h"
 
 //実体取得用.
 #define InstSoundMng KR::SoundMng::GetInst()
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
-	class TimerMicro; //前方宣言.
-
 	//サウンドデータ.
 	class SoundData
 	{
@@ -74,14 +77,14 @@ namespace KR
 		//destructor.
 		~SoundMng();
 
-		int  LoadFile(MY_STRING fileName, MY_STRING saveName);
-		int  Play    (MY_STRING saveName, bool isLoop, int volume = 100);
-		int  Stop    (MY_STRING saveName);
-		void StopAll ();
-		void Update  ();
+		ResultInt LoadFile(MY_STRING fileName, MY_STRING saveName);
+		ResultInt Play    (MY_STRING saveName, bool isLoop, int volume = 100);
+		ResultInt Stop    (MY_STRING saveName);
+		void      StopAll ();
+		void      Update  ();
 
-		void ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	       //音量を変更.
-		void FadeInPlay  (MY_STRING saveName, bool isLoop, int volume, float sec); //フェードイン再生.
-		void FadeOutPlay (MY_STRING saveName, float sec);						   //フェードアウトする.
+		void      ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	        //音量を変更.
+		void      FadeInPlay  (MY_STRING saveName, bool isLoop, int volume, float sec); //フェードイン再生.
+		void      FadeOutPlay (MY_STRING saveName, float sec);						    //フェードアウトする.
 	};
 }

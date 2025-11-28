@@ -1,27 +1,26 @@
 /*
-   - KR_File.cpp - (DxLib)
-   ver: 2025/11/13
+   - KR_File.cpp - (C++)
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-#endif
 #include "KR_File.h"
 #include <direct.h> //フォルダ作成のため導入.
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	//ファイルを開く.
-	int File::Open(MY_STRING fileName, MY_STRING mode) {
+	ResultInt File::Open(MY_STRING path, MY_STRING mode, bool isMakeDir) {
 
 		//先にファイルを閉じる.
 		Close();
+		//フォルダ作成.
+		if (isMakeDir) { MakeDir(path); }
 		//ファイルを開く(fopen)
-		fp = _tfopen(fileName.c_str(), mode.c_str());
+		fp = _tfopen(path.c_str(), mode.c_str());
 		if (fp == nullptr) {
-			return -1; //読み込みエラー.
+			return {-1, _T("File::Open"), _T("読み込みエラー")};
 		}
-		return 0; //正常終了.
+		return {0, _T("File::Open"), _T("正常終了")};
 	}
 	//ファイルを閉じる.
 	void File::Close() {
@@ -33,8 +32,18 @@ namespace KR
 		}
 	}
 	//フォルダを作成(なければ)
-	int File::MakeDir(MY_STRING folderName) {
-		return _tmkdir(folderName.c_str()); //_mkdirマクロのTCHAR版.
+	ResultInt File::MakeDir(MY_STRING path) {
+		//文字数ループ.
+		for (int i = 0; i < path.size(); i++) {
+			//「/」区切りでフォルダ作成.
+			if (path[i] == '/') {
+				int err = _tmkdir(path.substr(0, i).c_str());
+				if (err < 0) {
+					return {-1, _T("File::MakeDir"), _T("_tmkdirエラー")};
+				}
+			}
+		}
+		return {0, _T("File::MakeDir"), _T("正常終了")};
 	}
 
 	//読み込み(文字列)

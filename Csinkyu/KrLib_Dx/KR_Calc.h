@@ -1,31 +1,35 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/11/24
+   ver: 2025/11/29
 
    計算機能を追加。
 */
 #pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_DXLIB_GLOBAL
+  #include "KR_Global.h"
+#endif
 
 //角度変換用.
 #define _rad(x) (x)*(M_PI/180)
 #define _deg(x) (x)*(180/M_PI)
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	//計算用の関数群.
 	namespace Calc
 	{
 		//当たり判定.
-		bool		HitCirCir		(const Circle* cir1, const Circle* cir2);
-		bool		HitBoxBox		(const Box*    box1, const Box*    box2);
-		bool		HitBoxCir		(const Box*    box,  const Circle* cir);
-		bool		HitLineCir		(const Line*   line, const Circle* cir);
-		bool        HitPie          (const Pie*    pie,  DBL_XY pos);
+		bool		HitCirCir		(const Circle& cir1, const Circle& cir2);
+		bool		HitBoxBox		(const Box&    box1, const Box&    box2);
+		bool		HitBoxCir		(const Box&    box,  const Circle& cir);
+		bool		HitLineCir		(const Line&   line, const Circle& cir);
+		bool        HitPie          (const Pie&    pie,  DBL_XY pos);
 
 		//範囲限界.
-		void		FixPosInArea	(DBL_XY* pos, INT_XY size, int left, int up, int right, int down);
-		bool		IsOutInArea		(DBL_XY  pos, INT_XY size, int left, int up, int right, int down, bool isCompOut);
+		void		FixPosInArea	(DBL_XY* pos, INT_XY size, DBL_RECT rect);
+		bool		IsOutInArea		(DBL_XY  pos, INT_XY size, DBL_RECT rect, bool isCompOut);
 
 		//計算(座標,角度,長さ,ベクトル)
 		double		CalcDist		(INT_XY pos1,  INT_XY pos2);

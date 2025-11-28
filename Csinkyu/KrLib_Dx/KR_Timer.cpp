@@ -1,13 +1,10 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/11/24
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.h‚É“ü‚Á‚Ä‚È‚¯‚ê‚Î‚±‚±‚Å“±“ü.
-#endif
 #include "KR_Timer.h"
 
-//KR_Lib‚Ég‚¤—p.
+//KrLib–¼‘O‹óŠÔ.
 namespace KR
 {
 // ¥*--=<[ Timer ]>=--*¥ //

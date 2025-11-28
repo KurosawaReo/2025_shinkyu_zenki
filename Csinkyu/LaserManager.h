@@ -96,5 +96,5 @@ public:
 	bool IsExistEnemyLaser(DBL_XY pos, float len);                  //敵のレーザーが1つでも存在するかどうか.
 
 	//未使用.
-	void LaserReflectRange(Circle* cir);						    //レーザーを一括反射.
+	void LaserReflectRange(Circle cir);							    //レーザーを一括反射.
 };

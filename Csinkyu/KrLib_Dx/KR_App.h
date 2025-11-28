@@ -1,19 +1,22 @@
 /*
    - KR_App.h - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 
    プログラム全体(開始,終了など)の処理を行う。
 */
 #pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_DXLIB_GLOBAL
+  #include "KR_Global.h"
+#endif
+#include "KR_Timer.h"
 
 //実体取得用.
 #define InstApp KR::App::GetInst()
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
-	class TimerMicro; //前方宣言.
-
 	//プログラム全体処理[継承不可]
 	class App final
 	{
@@ -34,7 +37,7 @@ namespace KR
 		//destructor.
 		~App();
 
-	//▼データ.
+	//▼変数.
 	private:
 		TimerMicro* tmFps{}; //fps計測用タイマー.
 		
@@ -45,22 +48,22 @@ namespace KR
 
 	//▼関数.
 	private:
-		void   EndDx();
+		void      EndDx();
 
 	public:
 		//get.
-		int    GetWindowX()  const { return windowSize.x; }
-		int    GetWindowY()  const { return windowSize.y; }
-		INT_XY GetWindowXY() const { return windowSize; }
-		int    GetFps()      const { return fps; }
+		INT_RECT  GetWindowRect() const { return {0, 0, windowSize.x, windowSize.y}; }
+		int		  GetWindowX()    const { return windowSize.x; }
+		int		  GetWindowY()    const { return windowSize.y; }
+		int		  GetFps()        const { return fps; }
 
-		int    InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync = TRUE);
-		void   LoopDx();
+		ResultInt InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync = TRUE);
+		void	  LoopDx();
 
-		void   Init();
-		void   Update();
-		void   Draw();
+		void	  Init  ();
+		void	  Update();
+		void	  Draw  ();
 
-		void   Quit(); //ゲームを終了する.
+		void	  Quit  (); //ゲームを終了する.
 	};
 }

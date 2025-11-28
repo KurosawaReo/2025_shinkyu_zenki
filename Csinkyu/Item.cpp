@@ -100,7 +100,7 @@ void ItemManager::Draw()
 
 			//チュートリアル用.
 			if (p_gamedata->stage == STAGE_TUTORIAL) {
-				DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToIntXY(), COLOR_ITEM);
+				DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToInt(), COLOR_ITEM);
 				str.Draw();
 			}
 		}
@@ -153,7 +153,7 @@ void ItemManager::CheckHitPlayer(int idx)
 	Box itemBox = { items[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {} };
 	
 	//当たった場合.
-	if (HitBoxCir(&itemBox, &plyHit)) {
+	if (HitBoxCir(itemBox, plyHit)) {
 
 		//エフェクト召喚.
 		EffectData effect{};

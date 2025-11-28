@@ -1,14 +1,10 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-  #include "KR_Timer.h"
-#endif
 #include "KR_Sound.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 // ▼*--=<[ SoundData ]>=--*▼ //
@@ -17,7 +13,7 @@ namespace KR
 	SoundData::SoundData() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
-		//.hの方でコンストラクタを使えないため、動的確保させる.
+		//.hの方でコンストラクタを使わないよう動的確保する.
 		timer = new TimerMicro(TimerMode::CountUp, 0);
 	};
 	//destructor.
@@ -129,35 +125,35 @@ namespace KR
 	}
 
 	//サウンド読み込み.
-	int SoundMng::LoadFile(MY_STRING fileName, MY_STRING saveName) {
+	ResultInt SoundMng::LoadFile(MY_STRING fileName, MY_STRING saveName) {
 	
 		//読み込み.
 		int load = LoadSoundMem(fileName.c_str());
 		if (load < 0) {
-			return -1; //-1: 読み込み失敗.
+			return {-1, _T("SoundMng::LoadFile"), _T("読み込み失敗")};
 		}
 		//ハンドルを保存.
 		sound[saveName].SetHandle(load);
 
-		return 0; //正常終了.
+		return {0, _T("SoundMng::LoadFile"), _T("正常終了")};
 	}
 	//サウンド再生.
-	int SoundMng::Play(MY_STRING saveName, bool isLoop, int volume) {
+	ResultInt SoundMng::Play(MY_STRING saveName, bool isLoop, int volume) {
 		//存在すれば.
 		if (sound.count(saveName) > 0) {
 			sound[saveName].Play(isLoop, volume); //再生.
-			return 0;
+			return {0, _T("SoundMng::Play"), _T("正常終了")};
 		}
-		return -1; //-1: saveNameが見つからない.
+		return {-1, _T("SoundMng::Play"), _T("saveNameが見つからない")};
 	}
 	//サウンド停止.
-	int SoundMng::Stop(MY_STRING saveName) {
+	ResultInt SoundMng::Stop(MY_STRING saveName) {
 		//存在すれば.
 		if (sound.count(saveName) > 0) {
 			sound[saveName].Stop(); //停止.
-			return 0;
+			return {0, _T("SoundMng::Stop"), _T("正常終了")};
 		}
-		return -1; //-1: saveNameが見つからない.
+		return {-1, _T("SoundMng::Stop"), _T("saveNameが見つからない")};
 	}
 	//サウンド停止(全てのBGM)
 	void SoundMng::StopAll() {
