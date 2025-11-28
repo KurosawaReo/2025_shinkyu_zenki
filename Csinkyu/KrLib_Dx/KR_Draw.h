@@ -60,16 +60,16 @@ namespace KR
 		DrawImg();
 		~DrawImg();
 		//get.
-		INT_XY GetSize() const { return data.size; }
+		INT_XY    GetSize() const { return data.size; }
 
 		//読み込み.
-		int LoadFile  (MY_STRING fileName);
+		ResultInt LoadFile  (MY_STRING fileName);
 		//描画.
-		int Draw      (DBL_XY pos,                                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawRect  (DBL_XY pos, DBL_RECT rect,                                     Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawRota  (DBL_XY pos, double extend,  double ang, INT_XY pivot = {0, 0}, Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                  bool isTrans = true, bool isFloat = false) const;
+		ResultInt Draw      (DBL_XY pos,                                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawRect  (DBL_XY pos, DBL_RECT rect,                                     Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawRota  (DBL_XY pos, double extend,  double ang, INT_XY pivot = {0, 0}, Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                  bool isTrans = true, bool isFloat = false) const;
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		DrawImg& operator=(const DrawImg&) = delete;
@@ -86,16 +86,16 @@ namespace KR
 		DrawDivImg();
 		~DrawDivImg();
 		//get.
-		INT_XY GetSize(int imgNo) const { return data[imgNo].size; }
+		INT_XY    GetSize(int imgNo) const { return data[imgNo].size; }
 
 		//読み込み.
-		int LoadFile  (MY_STRING fileName, INT_XY size, INT_XY cnt);
+		ResultInt LoadFile  (MY_STRING fileName, INT_XY size, INT_XY cnt);
 		//描画.
-		int Draw      (int imgNo, DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawRect  (int imgNo, DBL_XY pos, DBL_RECT rect,                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawExtend(int imgNo, DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawRota  (int imgNo, DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0}, Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
-		int DrawModi  (int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool isFloat = false) const;
+		ResultInt Draw      (int imgNo, DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawRect  (int imgNo, DBL_XY pos, DBL_RECT rect,                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawExtend(int imgNo, DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawRota  (int imgNo, DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0}, Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false) const;
+		ResultInt DrawModi  (int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool isFloat = false) const;
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		DrawDivImg& operator=(const DrawDivImg&) = delete;
@@ -113,11 +113,11 @@ namespace KR
 		DrawStr(MY_STRING _text, INT_XY _pos, MY_COLOR _color) : text(_text), pos(_pos), color(_color) {}
 
 		//描画.
-		int    Draw	   (Anchor anc = Anchor::Mid, int font = -1);
-		int    DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font = -1);
-		int    DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font = -1);
+		ResultInt Draw	  (Anchor anc = Anchor::Mid, int font = -1);
+		ResultInt DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font = -1);
+		ResultInt DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font = -1);
 		//その他.
-		INT_XY GetTextSize(int font = -1);
+		INT_XY    GetTextSize(int font = -1);
 	};
 
 	//フォントクラス.
@@ -153,16 +153,16 @@ namespace KR
 	};
 
 	//図形.
-	int    DrawCircleKR		 (const Circle&   cir,                            bool isFill = true, bool isAnti = false, float thick = 1.0f);
-	int    DrawBoxKR		 (const Box&      box,  Anchor anc = Anchor::Mid, bool isFill = true, bool isAnti = false);
-	int    DrawTriangleKR	 (const Triangle& tri,                            bool isFill = true, bool isAnti = false);
-	int    DrawLineKR		 (const Line&     line,                                               bool isAnti = false, float thick = 1.0f);
-	int    DrawPieKR		 (const Pie&      pie,                                                bool isAnti = false, float thick = 1.0f);
-	int    DrawArcKR		 (const Pie&      pie,                                                bool isAnti = false, float thick = 1.0f);
-	int    DrawWindowGrid	 (int wid, int hei, int size, MY_COLOR clrWid = {160, 160, 255}, MY_COLOR clrHei = {255, 160, 160});
+	ResultInt DrawCircleKR		(const Circle&   cir,                            bool isFill = true, bool isAnti = false, float thick = 1.0f);
+	ResultInt DrawBoxKR			(const Box&      box,  Anchor anc = Anchor::Mid, bool isFill = true, bool isAnti = false);
+	ResultInt DrawTriangleKR	(const Triangle& tri,                            bool isFill = true, bool isAnti = false);
+	ResultInt DrawLineKR		(const Line&     line,                                               bool isAnti = false, float thick = 1.0f);
+	ResultInt DrawPieKR			(const Pie&      pie,                                                bool isAnti = false, float thick = 1.0f);
+	ResultInt DrawArcKR			(const Pie&      pie,                                                bool isAnti = false, float thick = 1.0f);
+	ResultInt DrawWindowGrid	(int wid, int hei, int size, MY_COLOR clrWid = {160, 160, 255}, MY_COLOR clrHei = {255, 160, 160});
 
 	//描画モード.
-	int    SetDrawBlendModeKR(BlendModeID id, int    power = 255);
-	int    SetDrawBlendModeKR(BlendModeID id, double power = 255);
-	int    ResetDrawBlendMode();
+	ResultInt SetDrawBlendModeKR(BlendModeID id, int    power = 255);
+	ResultInt SetDrawBlendModeKR(BlendModeID id, double power = 255);
+	ResultInt ResetDrawBlendMode();
 }

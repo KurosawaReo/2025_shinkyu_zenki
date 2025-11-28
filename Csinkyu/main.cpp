@@ -30,8 +30,8 @@ int WINAPI WinMain(
 ){
 #endif
 
-	int err = InstApp.InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
-	_return(-1, err < 0); //初期化エラー.
+	ResultInt err = InstApp.InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
+	_return(-1, err.GetCode() < 0); //初期化エラー.
 
 	InstApp.LoopDx();
 

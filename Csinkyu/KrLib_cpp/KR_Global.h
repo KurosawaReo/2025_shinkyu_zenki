@@ -16,6 +16,8 @@
 #include <map>
 #include <string>
 #include <cmath>    //math.hをラップしたもの.
+//C言語用.
+#include <tchar.h>
 
 //名前空間なしで使えるように.
 using std::list;
@@ -35,16 +37,18 @@ using std::wstring;
 #define _return(num, condi) if (condi) { return num; }   //条件に合うならreturnする.(cond = 条件)
 #define _get_name(value)    #value                       //名前を取得(変数名など)
 //template用マクロ.
-#define _type_num_only(T)	typename = typename std::enable_if<std::is_arithmetic<T>::value>::type //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
+#define _type_num_only(T)	typename = typename std::enable_if_t<std::is_arithmetic<T>::value> //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
 
 //KrLib名前空間.
 namespace KR
 {
 	//文字コードで切り替え.
 #if defined UNICODE
-	using MY_STRING = wstring; //wchar_t型.
+	using MY_STRING = wstring;        //wchar_t型.
+	#define _to_mystr std::to_wstring //to_wstring用.
 #else
-	using MY_STRING = string;  //char型.
+	using MY_STRING = string;         //char型.
+	#define _to_mystr std::to_string  //to_string用.
 #endif
 
 	//xとyの凝縮.
@@ -73,7 +77,7 @@ namespace KR
 			return *this + other;
 		}
 
-		//演算子[+,-,*,/] [XY<T>・XY<T>]
+		//演算子[+,-,*,/,%] [XY<T>・XY<T>]
 		XY<T> operator+(const XY<T>& other) const {  //+の右側が引数に入り、返り値が左側に入る.
 			return { x + other.x, y + other.y };     //xとyを加算して返す.
 		}
@@ -89,7 +93,7 @@ namespace KR
 		XY<T> operator%(const XY<T>& other) const {
 			return { x % other.x, y % other.y };
 		}
-		//演算子[+=,-=,*=,/=] [XY<T>・XY<T>]
+		//演算子[+=,-=,*=,/=,%=] [XY<T>・XY<T>]
 		XY<T>& operator+=(const XY<T>& other) {
 			*this = *this + other;
 			return *this; //自身の実体.
@@ -111,7 +115,7 @@ namespace KR
 			return *this;
 		}
 
-		//演算子[+,-,*,/] [XY<T>・数値]
+		//演算子[+,-,*,/,%] [XY<T>・数値]
 		//右側が数値でなければ無効にする.
 		template<typename T2, _type_num_only(T2)>
 		XY<T> operator+(T2 num) const {
@@ -133,7 +137,7 @@ namespace KR
 		XY<T> operator%(T2 num) const {
 			return { x % static_cast<T>(num), y % static_cast<T>(num) };
 		}
-		//演算子[+=,-=,*=,/=] [XY<T>・数値]
+		//演算子[+=,-=,*=,/=,%=] [XY<T>・数値]
 		//右側が数値でなければ無効にする.
 		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator+=(T2 num) {
@@ -184,6 +188,30 @@ namespace KR
 	};
 	using INT_RECT = RECT<int>;    //int型.
 	using DBL_RECT = RECT<double>; //double型.
+
+	//処理の結果(返り値用)
+	class ResultInt final
+	{
+	private:
+		int       codeNum;  //コード値.
+		MY_STRING funcName; //関数名.
+		MY_STRING msg;      //メッセージ.
+
+	public:
+		//constructor.
+		ResultInt() {
+			ResultInt(0, _T("None"), _T("No Msg"));
+		}
+		ResultInt(int _codeNum, MY_STRING _funcName, MY_STRING _msg) :
+			codeNum(_codeNum), funcName(_funcName), msg(_msg)
+		{};
+		//コード値取得.
+		int GetCode() const { return codeNum; }
+		//結果取得.
+		MY_STRING GetResult() const {
+			return _T("[") + funcName + _T("] code:") + _to_mystr(codeNum) + _T(", msg:") + msg;
+		}
+	};
 
 	//値が範囲内かどうか.
 	template<typename T, _type_num_only(T)>

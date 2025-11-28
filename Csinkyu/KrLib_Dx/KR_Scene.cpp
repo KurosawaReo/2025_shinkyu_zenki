@@ -18,13 +18,13 @@ namespace KR
 		scenes[name] = sceneClass; //クラスのポインタを登録.
 	}
 	//シーンの変更.
-	int SceneMng::SetScene(MY_STRING name) {
+	ResultInt SceneMng::SetScene(MY_STRING name) {
 		//登録していれば変更.
 		if (scenes.count(name) > 0) {
 			nowScene = name;
-			return 0; //正常終了.
+			return {0, _T("SceneMng::SetScene"), _T("正常終了")};
 		}
-		return -1; //-1: シーン未登録.
+		return {-1, _T("SceneMng::SetScene"), _T("シーン未登録")};
 	}
 	//基本処理.
 	void SceneMng::UpdateScene() {

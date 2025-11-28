@@ -9,7 +9,7 @@
 namespace KR
 {
 	//ファイルを開く.
-	int File::Open(MY_STRING path, MY_STRING mode, bool isMakeDir) {
+	ResultInt File::Open(MY_STRING path, MY_STRING mode, bool isMakeDir) {
 
 		//先にファイルを閉じる.
 		Close();
@@ -18,9 +18,9 @@ namespace KR
 		//ファイルを開く(fopen)
 		fp = _tfopen(path.c_str(), mode.c_str());
 		if (fp == nullptr) {
-			return -1; //読み込みエラー.
+			return {-1, _T("File::Open"), _T("読み込みエラー")};
 		}
-		return 0; //正常終了.
+		return {0, _T("File::Open"), _T("正常終了")};
 	}
 	//ファイルを閉じる.
 	void File::Close() {
@@ -32,16 +32,18 @@ namespace KR
 		}
 	}
 	//フォルダを作成(なければ)
-	int File::MakeDir(MY_STRING path) {
+	ResultInt File::MakeDir(MY_STRING path) {
 		//文字数ループ.
 		for (int i = 0; i < path.size(); i++) {
 			//「/」区切りでフォルダ作成.
 			if (path[i] == '/') {
 				int err = _tmkdir(path.substr(0, i).c_str());
-				_return(-1, err < 0); //-1: _tmkdirエラー.
+				if (err < 0) {
+					return {-1, _T("File::MakeDir"), _T("_tmkdirエラー")};
+				}
 			}
 		}
-		return 0; //正常終了.
+		return {0, _T("File::MakeDir"), _T("正常終了")};
 	}
 
 	//読み込み(文字列)

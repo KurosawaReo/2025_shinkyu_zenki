@@ -77,14 +77,14 @@ namespace KR
 		//destructor.
 		~SoundMng();
 
-		int  LoadFile(MY_STRING fileName, MY_STRING saveName);
-		int  Play    (MY_STRING saveName, bool isLoop, int volume = 100);
-		int  Stop    (MY_STRING saveName);
-		void StopAll ();
-		void Update  ();
+		ResultInt LoadFile(MY_STRING fileName, MY_STRING saveName);
+		ResultInt Play    (MY_STRING saveName, bool isLoop, int volume = 100);
+		ResultInt Stop    (MY_STRING saveName);
+		void      StopAll ();
+		void      Update  ();
 
-		void ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	       //音量を変更.
-		void FadeInPlay  (MY_STRING saveName, bool isLoop, int volume, float sec); //フェードイン再生.
-		void FadeOutPlay (MY_STRING saveName, float sec);						   //フェードアウトする.
+		void      ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	        //音量を変更.
+		void      FadeInPlay  (MY_STRING saveName, bool isLoop, int volume, float sec); //フェードイン再生.
+		void      FadeOutPlay (MY_STRING saveName, float sec);						    //フェードアウトする.
 	};
 }

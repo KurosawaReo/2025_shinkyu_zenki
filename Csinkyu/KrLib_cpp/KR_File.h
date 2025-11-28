@@ -22,7 +22,7 @@ namespace KR
 
 	//▼関数.
 	private:
-		int MakeDir(MY_STRING path); //フォルダを作成(なければ)
+		ResultInt MakeDir(MY_STRING path); //フォルダを作成(なければ)
 
 	public:
 		//destructor.
@@ -30,8 +30,8 @@ namespace KR
 			Close(); //自動で閉じる.
 		}
 
-		int  Open   (MY_STRING path, MY_STRING mode, bool isMakeDir = false); //ファイルを開く.
-		void Close  ();								                          //ファイルを閉じる.
+		ResultInt Open   (MY_STRING path, MY_STRING mode, bool isMakeDir = false); //ファイルを開く.
+		void	  Close  ();								                       //ファイルを閉じる.
 
 		MY_STRING ReadString ();               //読み込み(文字列)
 		int       ReadInt    ();               //読み込み(数字)

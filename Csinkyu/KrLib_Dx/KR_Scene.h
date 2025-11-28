@@ -53,10 +53,10 @@ namespace KR
 
 	//▼関数.
 	public:
-		void UpdateScene();
-		void DrawScene();
+		void	  UpdateScene();
+		void	  DrawScene();
 
-		void AddScene(SceneBasic* sceneClass, MY_STRING name); //シーンの追加.
-		int  SetScene(MY_STRING name);                         //シーンの変更.
+		void      AddScene(SceneBasic* sceneClass, MY_STRING name); //シーンの追加.
+		ResultInt SetScene(MY_STRING name);                         //シーンの変更.
 	};
 }

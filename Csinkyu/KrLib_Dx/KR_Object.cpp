@@ -48,74 +48,90 @@ namespace KR
 	}
 	
 	//画像を描画.
-	int ObjectShape::DrawGraph() {
+	ResultInt ObjectShape::DrawGraph() {
 
-		_return(-1, !isActive); //-1: 非アクティブ.
+		if (!isActive) {
+			return {-1, _T("ObjectShape::DrawGraph"), _T("非アクティブ")};
+		}
 
 		//画像データがない.
 		if (img == nullptr) {
 			DrawShape(); //代わりに図形を描画.
-			return -2;   //-2: 画像なし.
+			return {-2, _T("ObjectShape::DrawGraph"), _T("画像なし") };
 		}
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		int err = img->Draw(pos);
-		_return(-3, err < 0); //-3: 画像描画エラー.
+		ResultInt err = img->Draw(pos);
+		if (err.GetCode() < 0) {
+			return {-3, _T("ObjectShape::DrawGraph"), _T("描画エラー")};
+		}
 
-		return 0; //正常終了.
+		return {0, _T("ObjectShape::DrawGraph"), _T("正常終了")};
 	}
-	int ObjectShape::DrawRectGraph(DBL_RECT rect) {
+	ResultInt ObjectShape::DrawRectGraph(DBL_RECT rect) {
 
-		_return(-1, !isActive); //-1: 非アクティブ.
+		if (!isActive) {
+			return {-1, _T("ObjectShape::DrawRectGraph"), _T("非アクティブ")};
+		}
 
 		//画像データがない.
 		if (img == nullptr) {
 			DrawShape(); //代わりに図形を描画.
-			return -2;   //-2: 画像なし.
+			return {-2, _T("ObjectShape::DrawRectGraph"), _T("画像なし")};
 		}
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		int err = img->DrawRect(pos, rect);
-		_return(-3, err < 0); //-3: 画像描画エラー.
+		ResultInt err = img->DrawRect(pos, rect);
+		if (err.GetCode() < 0) {
+			return {-3, _T("ObjectShape::DrawRectGraph"), _T("描画エラー")};
+		}
 
-		return 0; //正常終了.
+		return {0, _T("ObjectShape::DrawRectGraph"), _T("正常終了")};
 	}
-	int ObjectShape::DrawExtendGraph(DBL_XY sizeRate) {
+	ResultInt ObjectShape::DrawExtendGraph(DBL_XY sizeRate) {
 
-		_return(-1, !isActive); //-1: 非アクティブ.
+		if (!isActive) {
+			return {-1, _T("ObjectShape::DrawExtendGraph"), _T("非アクティブ")};
+		}
 
 		//画像データがない.
 		if (img == nullptr) {
 			DrawShape(); //代わりに図形を描画.
-			return -2;   //-2: 画像なし.
+			return {-2, _T("ObjectShape::DrawExtendGraph"), _T("画像なし")};
 		}
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		int err = img->DrawExtend(pos, sizeRate);
-		_return(-3, err < 0); //-3: 画像描画エラー.
+		ResultInt err = img->DrawExtend(pos, sizeRate);
+		if (err.GetCode() < 0) {
+			return {-3, _T("ObjectShape::DrawExtendGraph"), _T("描画エラー")};
+		}
 
-		return 0; //正常終了.
+		return {0, _T("ObjectShape::DrawExtendGraph"), _T("正常終了")};
 	}
-	int ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot) {
+	ResultInt ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot) {
 
-		_return(-1, !isActive); //-1: 非アクティブ.
+		if (!isActive) {
+			return {-1, _T("ObjectShape::DrawRotaGraph"), _T("非アクティブ")};
+		}
 
 		//画像データがない.
 		if (img == nullptr) {
 			DrawShape(); //代わりに図形を描画.
-			return -2;   //-2: 画像なし.
+			return {-2, _T("ObjectShape::DrawRotaGraph"), _T("画像なし")};
 		}
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 
 		//描画.
-		int err = img->DrawRota(pos, sizeRate, ang, pivot);
-		_return(-3, err < 0); //-3: 画像描画エラー.
+		ResultInt err = img->DrawRota(pos, sizeRate, ang, pivot);
+		if (err.GetCode() < 0) {
+			return {-3, _T("ObjectShape::DrawRotaGraph"), _T("描画エラー")};
+		}
 
-		return 0; //正常終了.
+		return {0, _T("ObjectShape::DrawRotaGraph"), _T("正常終了")};
 	}
 
 // ▼*--=<[ ObjectCir ]>=--*▼ //
@@ -133,16 +149,21 @@ namespace KR
 		return Calc::HitLineCir(line, this->cir);
 	}
 	//図形: 円を描画.
-	int ObjectCir::DrawShape(bool isFill, bool isAnti) {
+	ResultInt ObjectCir::DrawShape(bool isFill, bool isAnti) {
 
-		_return(0, !isActive); //非アクティブなら描画しない.
+		if (!isActive) {
+			return {-1, _T("ObjectCir::DrawShape"), _T("非アクティブ")};
+		}
 
 		//座標にoffsetを足す.
 		Circle tmpCir = cir;
 		tmpCir.pos += offset;
 		//描画.
-		int err = DrawCircleKR(tmpCir, isFill, isAnti);
-		return err; //-1: 円描画エラー.
+		ResultInt err = DrawCircleKR(tmpCir, isFill, isAnti);
+		if (err.GetCode() < 0) {
+			return {-2, _T("ObjectCir::DrawShape"), _T("DrawCircleKRエラー")};
+		}
+		return {0, _T("ObjectCir::DrawShape"), _T("正常終了") };
 	}
 
 // ▼*--=<[ ObjectBox ]>=--*▼ //
@@ -156,24 +177,31 @@ namespace KR
 		return Calc::HitBoxBox(this->box, box);
 	}
 	//図形: 四角形を描画.
-	int ObjectBox::DrawShape(bool isFill, bool isAnti) {
+	ResultInt ObjectBox::DrawShape(bool isFill, bool isAnti) {
 
-		_return(0, !isActive); //非アクティブなら描画しない.
+		if (!isActive) {
+			return {-1, _T("ObjectBox::DrawShape"), _T("非アクティブ")};
+		}
 
 		//座標にoffsetを足す.
 		Box tmpBox = box;
 		tmpBox.pos += offset;
 		//描画.
-		int err = DrawBoxKR(tmpBox, Anchor::Mid, isFill, isAnti);
-		return err; //-1: 円描画エラー.
+		ResultInt err = DrawBoxKR(tmpBox, Anchor::Mid, isFill, isAnti);
+		if (err.GetCode() < 0) {
+			return {-2, _T("ObjectBox::DrawShape"), _T("DrawBoxKRエラー")};
+		}
+		return {0, _T("ObjectBox::DrawShape"), _T("正常終了")};
 	}
 
 // ▼*--=<[ ObjectGrid ]>=--*▼ //
 
 	//オブジェクト(ObjectGrid型)の描画.
-	int ObjectGrid::Draw(const DrawImg& img, INT_XY gridPos, INT_XY gridSize) {
+	ResultInt ObjectGrid::Draw(const DrawImg& img, INT_XY gridPos, INT_XY gridSize) {
 
-		_return(0, !isActive); //非アクティブなら描画しない.
+		if (!isActive) {
+			return {-1, _T("ObjectGrid::Draw"), _T("非アクティブ") };
+		}
 
 		//座標.
 		INT_XY newPos = {
@@ -181,7 +209,10 @@ namespace KR
 			gridPos.y + pos.y * gridSize.y
 		};
 		//画像描画.
-		int err = img.Draw(newPos.ToDbl(), Anchor::LU);
-		return err; //-1: DrawGraphSTでエラー.
+		ResultInt err = img.Draw(newPos.ToDbl(), Anchor::LU);
+		if (err.GetCode() < 0) {
+			return {-2, _T("ObjectGrid::Draw"), _T("画像描画エラー")};
+		}
+		return {0, _T("ObjectGrid::Draw"), _T("正常終了")};
 	}
 }

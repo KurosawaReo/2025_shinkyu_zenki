@@ -332,7 +332,7 @@ void GameManager::Init() {
 	{
 		File file;
 		//ファイルを開く.
-		if (file.Open(FILE_DATA, _T("r")) == 0) {
+		if (file.Open(FILE_DATA, _T("r")).GetCode() == 0) {
 			gameData->bestScore = file.ReadInt();        //数字を読み込んで登録.
 			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
 		}
@@ -895,7 +895,7 @@ void GameManager::GameOver() {
 
 					File file;
 					//ファイルを開く.
-					if (file.Open(FILE_DATA, _T("w"), true) == 0) {
+					if (file.Open(FILE_DATA, _T("w"), true).GetCode() == 0) {
 						file.WriteInt(gameData->score);    //スコアを保存.
 					}
 					gameData->bestScore = gameData->score; //スコア更新.

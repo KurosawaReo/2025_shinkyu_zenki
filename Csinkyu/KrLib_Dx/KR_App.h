@@ -48,22 +48,22 @@ namespace KR
 
 	//▼関数.
 	private:
-		void     EndDx();
+		void      EndDx();
 
 	public:
 		//get.
-		INT_RECT GetWindowRect() const { return {0, 0, windowSize.x, windowSize.y}; }
-		int		 GetWindowX()    const { return windowSize.x; }
-		int		 GetWindowY()    const { return windowSize.y; }
-		int		 GetFps()        const { return fps; }
+		INT_RECT  GetWindowRect() const { return {0, 0, windowSize.x, windowSize.y}; }
+		int		  GetWindowX()    const { return windowSize.x; }
+		int		  GetWindowY()    const { return windowSize.y; }
+		int		  GetFps()        const { return fps; }
 
-		int		 InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync = TRUE);
-		void	 LoopDx();
+		ResultInt InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync = TRUE);
+		void	  LoopDx();
 
-		void	 Init  ();
-		void	 Update();
-		void	 Draw  ();
+		void	  Init  ();
+		void	  Update();
+		void	  Draw  ();
 
-		void	 Quit  (); //ゲームを終了する.
+		void	  Quit  (); //ゲームを終了する.
 	};
 }
