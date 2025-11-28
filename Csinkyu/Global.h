@@ -45,7 +45,7 @@ enum StageType
 //====================================================================//
 //【設定】
 
-#define DEBUG_OBJ_ACTIVE //デバッグ用.
+//#define DEBUG_OBJ_ACTIVE //デバッグ用.
 //#define DEBUG_SPAWN_RATE   //デバッグ用.
 //#define DEBUG_METEOR_POINT //デバッグ用.
 //#define DEBUG_METEOR_SPAWN //デバッグ用.
