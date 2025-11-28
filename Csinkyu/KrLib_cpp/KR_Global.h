@@ -25,6 +25,8 @@ using std::vector;
 using std::map;
 using std::string;
 using std::wstring;
+using std::to_string;
+using std::to_wstring;
 
 //å^ïœä∑É}ÉNÉç.
 #define _int(n)   static_cast<int>   (n)        //intå^ïœä∑É}ÉNÉç.
@@ -44,11 +46,11 @@ namespace KR
 {
 	//ï∂éöÉRÅ[ÉhÇ≈êÿÇËë÷Ç¶.
 #if defined UNICODE
-	using MY_STRING = wstring;        //wchar_tå^.
-	#define _to_mystr std::to_wstring //to_wstringóp.
+	using MY_STRING = wstring;   //wchar_tå^.
+	#define _to_mystr to_wstring //to_wstringóp.
 #else
-	using MY_STRING = string;         //charå^.
-	#define _to_mystr std::to_string  //to_stringóp.
+	using MY_STRING = string;    //charå^.
+	#define _to_mystr to_string  //to_stringóp.
 #endif
 
 	//xÇ∆yÇÃã√èk.
@@ -199,9 +201,9 @@ namespace KR
 
 	public:
 		//constructor.
-		ResultInt() {
-			ResultInt(0, _T("None"), _T("No Msg"));
-		}
+		ResultInt() :
+			codeNum(0), funcName(_T("None")), msg(_T("No Msg"))
+		{};
 		ResultInt(int _codeNum, MY_STRING _funcName, MY_STRING _msg) :
 			codeNum(_codeNum), funcName(_funcName), msg(_msg)
 		{};
