@@ -15,91 +15,78 @@ void Meteor::Init() {
 
 void Meteor::Reset() {
 
-	state       = Meteor_Normal;
-	pos         = {0, 0};
-	vel         = {0, 0};
-	active      = false;
-	destroyCntr = 0;
 }
 
 void Meteor::Update() {
 
-	//隕石本体が有効なら.
-	if (active) {
+	//移動.
+	pos.x += vel.x * METEOR_SPEED * p_data->speedRate;
+	pos.y += vel.y * METEOR_SPEED * p_data->speedRate;
+	//回転.
+	ang += p_data->speedRate;
 
-		//移動.
-		pos.x += vel.x * METEOR_SPEED * p_data->speedRate;
-		pos.y += vel.y * METEOR_SPEED * p_data->speedRate;
-		//回転.
-		ang += p_data->speedRate;
+	//状態別処理.
+	switch (state)
+	{
+		case Meteor_Normal:
+			//画面外で消去.
+			if (IsOutInArea(pos, { METEOR_LINE_DIS_MAX*2, METEOR_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, true)){
+				isErase = true; //消去する.
+			}
+			break;
 
-		//状態別処理.
-		switch (state) 
-		{
-			case Meteor_Normal:
-				//画面外で消去.
-				if (IsOutInArea(pos, { METEOR_LINE_DIS_MAX*2, METEOR_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, true)){
-					active = false; //無効にする.
-				}
-				break;
+		case Meteor_Destroy:
+			//破壊量の度合.
+			destroyCntr += p_data->speedRate;
+			//時間が終了したら.
+			if (destroyCntr >= METEOR_DEST_TIME) {
+				state   = Meteor_Normal; //元に戻す.
+				isErase = true;          //消去する.
+			}
+			break;
 
-			case Meteor_Destroy:
-				//破壊量の度合.
-				destroyCntr += p_data->speedRate;
-				//時間が終了したら.
-				if (destroyCntr >= METEOR_DEST_TIME) {
-					state  = Meteor_Normal; //元に戻す.
-					active = false;         //消滅.
-				}
-				break;
-
-			default: assert(FALSE); break;
-		}
-		//隕石構成線の更新.
-		UpdateMeteoLine();
+		default: assert(FALSE); break;
 	}
+	//隕石構成線の更新.
+	UpdateMeteoLine();
 }
 
 void Meteor::Draw() {
 	
-	//隕石本体が有効なら.
-	if (active) {
-		//破壊モード限定.
-		if (state == Meteor_Destroy) {
-			int pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
-			SetDrawBlendModeKR(BlendModeID::Add, pow);
-		}
+	//破壊モード限定.
+	if (state == Meteor_Destroy) {
+		int pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
+		SetDrawBlendModeKR(BlendModeID::Add, pow);
+	}
 
-		//有効な線を全て描画.
-		for (int i = 0; i < shape.lineCnt; i++) {
+	//全ての描画線.
+	for (auto& i : shape.line) {
 			
-			shape.line[i].color = COLOR_METEOR(pos);
-			DrawLineKR(&shape.line[i], true, 2);
+		i.color = COLOR_METEOR(pos);
+		DrawLineKR(&i, true, 2);
 
 #if defined DEBUG_METEOR_POINT
-			DrawCircle(shape.line[i].stPos.x, shape.line[i].stPos.y, 3, 0xFFFFFF);
-			DrawLine(shape.line[i].stPos.x, shape.line[i].stPos.y, pos.x, pos.y, 0x808080);
+		DrawCircle(i.stPos.x, i.stPos.y, 3, 0xFFFFFF);
+		DrawLine(i.stPos.x, i.stPos.y, pos.x, pos.y, 0x808080);
 #endif
-		}
+	}
 #if defined DEBUG_METEOR_POINT
-		DrawCircle(pos.x, pos.y, 5, 0xFFFFFF);
+	DrawCircle(pos.x, pos.y, 5, 0xFFFFFF);
 #endif
 
 #if defined	DEBUG_METEOR_SPAWN
-		//隕石の経路.
-		Line line = {pos+vel*2000, pos-vel*2000, 0xFFFFFF};
-		DrawLineKR(&line, true, 2);
+	//隕石の経路.
+	Line line = {pos+vel*2000, pos-vel*2000, 0xFFFFFF};
+	DrawLineKR(&line, true, 2);
 #endif
 
-		//チュートリアル.
-		if (p_data->stage == STAGE_TUTORIAL) {
-			DBL_XY txtPos = pos.Add(0, 0);
-			DrawStr str(_T("隕石"), txtPos.ToIntXY(), COLOR_METEOR(txtPos));
-			str.Draw();
-		}
-
-		ResetDrawBlendMode(); //描画モードリセット.
+	//チュートリアル.
+	if (p_data->stage == STAGE_TUTORIAL) {
+		DrawStr str(_T("隕石"), pos.ToIntXY(), COLOR_METEOR(pos));
+		str.Draw();
 	}
+
+	ResetDrawBlendMode(); //描画モードリセット.
 }
 
 //隕石出現.
@@ -133,15 +120,15 @@ void Meteor::Spawn() {
 
 	//隕石の設定.
 	{
-		//何角形にするか.
-		shape.lineCnt = RandNum(METEOR_LINE_CNT_MIN, METEOR_LINE_CNT_MAX);
-		//頂点の位置を抽選.
-		for (int i = 0; i < shape.lineCnt; i++) {
-			shape.lineDis[i] = (float)RandNum(METEOR_LINE_DIS_MIN*10, METEOR_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
+		//①何角形にするか抽選.
+		const int lineCnt = RandNum(METEOR_LINE_CNT_MIN, METEOR_LINE_CNT_MAX);
+		shape.line.   resize(lineCnt);
+		shape.lineDis.resize(lineCnt);
+		//②頂点の位置を抽選.
+		for (auto& i : shape.lineDis) {
+			i = (float)RandNum(METEOR_LINE_DIS_MIN*10, METEOR_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
 		}
 	}
-
-	active = true; //隕石を有効にする.
 }
 
 //隕石破壊.
@@ -151,14 +138,14 @@ void Meteor::Destroy() {
 }
 
 //隕石の当たり判定.
-bool Meteor::IsHitMeteor(Circle cir) {
+bool Meteor::IsHitMeteor(Circle cir) const {
 
-	//有効な隕石なら.
-	if (active && state == Meteor_Normal) {
+	//破壊されてない隕石なら.
+	if (state == Meteor_Normal) {
 		//全ての線で判定.
-		for (int i = 0; i < shape.lineCnt; i++) {
+		for (const auto& i : shape.line) {
 			//線とプレイヤーが当たったら.
-			if (HitLineCir(&shape.line[i], &cir)) {
+			if (HitLineCir(&i, &cir)) {
 				return true; //当たった.
 			}
 		}
@@ -171,13 +158,13 @@ bool Meteor::IsHitMeteor(Circle cir) {
 void Meteor::UpdateMeteoLine() {
 
 	//何度ずつずれるか.
-	float rot = (float)360/shape.lineCnt; //360度÷描く線の数.
+	float rot = (float)360/shape.line.size(); //360度÷描く線の数.
 
 	//回転しながら始点と終点を設定していく.
-	for (int i = 0; i < shape.lineCnt; i++) {
+	for (int i = 0; i < shape.line.size(); i++) {
 
 		//要素数が0未満なら最大値へ移動する.
-		int bef = ((i-1) < 0) ? shape.lineCnt-1 : (i-1);
+		int bef = ((i-1) < 0) ? shape.line.size()-1 : (i-1);
 
 		shape.line[i].stPos = CalcArcPos(pos, ang+  i*rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
 		shape.line[i].edPos = CalcArcPos(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.

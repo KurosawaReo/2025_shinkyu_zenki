@@ -1,44 +1,32 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/10/09
+   ver: 2025/11/24
 
-   KR_Lib全体で使う汎用機能を追加します。
+   KR_Lib全体で使う汎用機能を追加。
 */
 #pragma once
 
 //このヘッダが定義されているか判別する用.
-#define DEF_KR_GLOBAL
+#define DEF_KR_DXLIB_GLOBAL
 
 //C言語用.
 #define _USE_MATH_DEFINES
 #define _CRT_SECURE_NO_WARNINGS
 //C++用.
-#include <vector>
-#include <map>
-#include <string>
 #include <cassert>   //assert.h をラップしたもの.
-#include <cmath>     //math.h   をラップしたもの.
 #include <cstdlib>   //stdlib.h をラップしたもの.
 #include <ctime>     //time.h   をラップしたもの.
 using namespace std;
 //DxLib.
 #include "DxLib.h"
 
-//型変換マクロ.
-#define _int(n)   static_cast<int>   (n)        //int型変換マクロ.
-#define _int_r(n) static_cast<int>   (round(n)) //int型変換マクロ(四捨五入)
-#define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
-#define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
-//便利マクロ.
-#define _if_check(n)              assert(n); if(n)             //if文の前に同条件のassertを挟む.
-#define _return(num, cond)        if (cond) { return num; }    //条件に合うならreturnする.(cond = 条件)
-#define _is_in_range(num, n1, n2) ((n1 <= num) && (num <= n2)) //範囲内に数値があるかどうか.
-#define _get_name(value)          #value                       //名前を取得(変数名など)
-//template用マクロ.
-#define _type_num_only(T)		  typename = typename enable_if<is_arithmetic<T>::value>::type //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
+//C++用KR_Libを導入.
+#if !defined DEF_KR_CPP_GLOBAL
+  #include "../KR_cpp/KR_Global.h"
+#endif
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//文字コードで切り替え.
 #if defined UNICODE
@@ -67,44 +55,44 @@ namespace KR_Lib
 		}
 		//加算した結果を返す.
 		XY<T> Add(T _x, T _y) const {
-			return {x+_x, y+_y};
+			return { x + _x, y + _y};
 		}
-		XY<T> Add(XY<T> _xy) const {
-			return {x+_xy.x, y+_xy.y};
+		XY<T> Add(XY<T> other) const {
+			return *this + other;
 		}
 
 		//演算子[+,-,*,/] [XY<T>・XY<T>]
-		XY<T> operator+(const XY<T>& value) const {  //+の右側が引数に入り、返り値が左側に入る.
-			return { x + value.x, y + value.y };     //xとyを加算して返す.
+		XY<T> operator+(const XY<T>& other) const {  //+の右側が引数に入り、返り値が左側に入る.
+			return { x + other.x, y + other.y };     //xとyを加算して返す.
 		}
-		XY<T> operator-(const XY<T>& value) const {
-			return { x - value.x, y - value.y };
+		XY<T> operator-(const XY<T>& other) const {
+			return { x - other.x, y - other.y };
 		}
-		XY<T> operator*(const XY<T>& value) const {
-			return { x * value.x, y * value.y };
+		XY<T> operator*(const XY<T>& other) const {
+			return { x * other.x, y * other.y };
 		}
-		XY<T> operator/(const XY<T>& value) const {
-			return { x / value.x, y / value.y };
+		XY<T> operator/(const XY<T>& other) const {
+			return { x / other.x, y / other.y };
 		}
 		//演算子[+=,-=,*=,/=] [XY<T>・XY<T>]
-		XY<T>& operator+=(const XY<T>& xy) {
-			x += xy.x;
-			y += xy.y;
+		XY<T>& operator+=(const XY<T>& other) {
+			x += other.x;
+			y += other.y;
 			return *this; //自身の実体.
 		}
-		XY<T>& operator-=(const XY<T>& xy) {
-			x -= xy.x;
-			y -= xy.y;
+		XY<T>& operator-=(const XY<T>& other) {
+			x -= other.x;
+			y -= other.y;
 			return *this;
 		}
-		XY<T>& operator*=(const XY<T>& xy) {
-			x *= xy.x;
-			y *= xy.y;
+		XY<T>& operator*=(const XY<T>& other) {
+			x *= other.x;
+			y *= other.y;
 			return *this;
 		}
-		XY<T>& operator/=(const XY<T>& xy) {
-			x /= xy.x;
-			y /= xy.y;
+		XY<T>& operator/=(const XY<T>& other) {
+			x /= other.x;
+			y /= other.y;
 			return *this;
 		}
 
@@ -195,7 +183,7 @@ namespace KR_Lib
 		COLOR_U8 GetColorU8()   const;
 		UINT     GetColorCode() const;
 
-		//代入用.
+		//代入演算子.
 		void operator=(const RGBA& rgba);
 		void operator=(UINT colorCode);
 		void operator=(ColorID id);

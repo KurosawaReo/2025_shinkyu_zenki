@@ -1,18 +1,26 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/10/09
-
-   プログラム全体(開始,終了など)の処理を行います。
+   ver: 2025/11/18
 */
-#if !defined DEF_KR_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
+//他ヘッダファイル.
+#if !defined DEF_KR_DXLIB_GLOBAL
+  //stdafx.hに入ってなければここで導入.
+  #include "KR_Global.h"
   #include "KR_Timer.h"
 #endif
 #include "KR_App.h"
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR 
 {
+	App App::inst; //実体生成.
+
+	//destructor.
+	App::~App() {
+		//解放.
+		delete tmFps; tmFps = nullptr;
+	}
+
 	//DxLibの初期化処理.
 	int App::InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync) {
 
@@ -29,11 +37,12 @@ namespace KR_Lib
 		}
 
 		//fps計測用タイマー.
-		tmFps = TimerMicro(TimerMode::CountDown, 1000000/fps);
-		tmFps.Start();
-		//変数の設定.
-		windowSize = { windowWid, windowHei };
+		tmFps = new TimerMicro(TimerMode::CountDown, 1000000/fps);
+		tmFps->Start();
+		//値の保存.
+		this->windowSize = { windowWid, windowHei };
 		this->fps = fps;
+		//変数初期化.
 		isQuit = false;
 
 		Init(); //初期化処理(main.cppへ)
@@ -47,7 +56,7 @@ namespace KR_Lib
 		//ESCが押されるか、終了サインがあれば終了.
 		while (ProcessMessage() == 0 && !isQuit) {
 			//一定時間ごとに処理.
-			if (tmFps.IntervalTime()) {
+			if (tmFps->IntervalTime()) {
 				ClearDrawScreen(); //画面クリア.
 				Update();          //更新処理(main.cppへ)
 				Draw();			   //描画処理(main.cppへ)
@@ -55,9 +64,14 @@ namespace KR_Lib
 			}
 		}
 
+		EndDx(); //終了処理.
+	}
+	//DxLibの終了処理.
+	void App::EndDx() {
 		DxLib_End();               //DxLibの終了処理.
 		DeleteFile(_T("Log.txt")); //Log.txtが生成されるので消去する.
 	}
+
 	//ゲームを終了する.
 	void App::Quit() {
 		isQuit = true;

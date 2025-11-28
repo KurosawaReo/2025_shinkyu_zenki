@@ -29,15 +29,15 @@
 #include <cstdio>
 #include <cstring>
 
-#include "KR_Lib/KR_Global.h"
-#include "KR_Lib/KR_Calc.h"
-#include "KR_Lib/KR_Debug.h"
-#include "KR_Lib/KR_Draw.h"
-#include "KR_Lib/KR_File.h"
-#include "KR_Lib/KR_Input.h"
-#include "KR_Lib/KR_Object.h"
-#include "KR_Lib/KR_Sound.h"
-#include "KR_Lib/KR_Timer.h"
-#include "KR_Lib/KR_App.h"
+#include "KR_DxLib/KR_Global.h"
+#include "KR_DxLib/KR_Calc.h"
+#include "KR_DxLib/KR_Debug.h"
+#include "KR_DxLib/KR_Draw.h"
+#include "KR_DxLib/KR_File.h"
+#include "KR_DxLib/KR_Input.h"
+#include "KR_DxLib/KR_Object.h"
+#include "KR_DxLib/KR_Sound.h"
+#include "KR_DxLib/KR_Timer.h"
+#include "KR_DxLib/KR_App.h"
 
 #include "Global.h"

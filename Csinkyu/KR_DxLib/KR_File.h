@@ -1,13 +1,13 @@
 /*
    - KR_File.h - (DxLib)
-   ver: 2025/09/21
+   ver: 2025/11/13
 
-   ファイル操作機能を追加します。
+   ファイル操作機能を追加。
 */
 #pragma once
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//ファイルクラス.
 	class File

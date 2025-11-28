@@ -7,8 +7,6 @@
 #include "GameManager.h"
 #include "LaserManager.h"
 #include "Obst_Fireworks.h"
-//#include <cmath>    KRライブラリに定義が入ってるため不要.
-//#include <cstdlib>
 
 // 初期化
 void FireworksManager::Init() {
@@ -16,32 +14,14 @@ void FireworksManager::Init() {
 	p_data     = &GameData::GetInst();
 	p_player   = &Player::GetInst();
 	p_laserMng = &LaserManager::GetInst();
-
-	// 花火データの初期化
-	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		fireworks[i].ValidFlag = 0;
-		fireworks[i].x = 0.0f;
-		fireworks[i].y = 0.0f;
-		fireworks[i].targetX = 0.0f;
-		fireworks[i].targetY = 0.0f;
-		fireworks[i].vx = 0.0f;
-		fireworks[i].vy = 0.0f;
-		fireworks[i].Counter = 0.0f;
-		fireworks[i].state = FIREWORKS_STATE_WARNING;
-		fireworks[i].sparkCount = 0;
-	}
 }
 
 // リセット
 void FireworksManager::Reset() {
-	spawnTimer = 120; // 最初は少し待機
-
-	// 既存の花火をすべてクリア
-	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		fireworks[i].ValidFlag = 0;
-		fireworks[i].Counter = 0.0f;
-		fireworks[i].state = FIREWORKS_STATE_WARNING;
-	}
+	//最初は少し待機.
+	spawnTimer = 120;
+	//花火を全て消去.
+	fireworks.clear();
 }
 
 // ランダム位置生成
@@ -53,37 +33,37 @@ void FireworksManager::GenerateRandomPosition(float& x, float& y) {
 
 // 距離チェック(近すぎる花火がなければtrue)
 bool FireworksManager::CheckDistance(float x, float y) {
-	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 1) {
-			float dx = x - fireworks[i].targetX;
-			float dy = y - fireworks[i].targetY;
-			float distance = sqrt(dx * dx + dy * dy);
-			if (distance < FIREWORKS_MIN_DISTANCE) {
-				return false;
-			}
+
+	//全花火.
+	for (const auto& i: fireworks) {
+
+		float dx = x - i.targetX;
+		float dy = y - i.targetY;
+		float distance = dx*dx + dy*dy;
+		//最小距離内なら.
+		if (distance < pow(FIREWORKS_MIN_DISTANCE, 2)) {
+			return false;
 		}
 	}
 	return true;
 }
 
-// 花火開始
-void FireworksManager::StartFireworks(float x, float y) {
-	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 0) {
-			fireworks[i].targetX = x;
-			fireworks[i].targetY = y;
-			fireworks[i].x = x;
-			fireworks[i].y = y;
-			fireworks[i].vx = 0.0f;
-			fireworks[i].vy = 0.0f;
-//			fireworks[i].Duration = FIREWORKS_WARNING_DURATION + 120; // 予告+爆発時間 //追記:いらない気がする
-			fireworks[i].Counter = FIREWORKS_WARNING_DURATION;
-			fireworks[i].state = FIREWORKS_STATE_WARNING;
-			fireworks[i].sparkCount = FIREWORKS_SPARKS_COUNT + (rand() % 8);
-			fireworks[i].ValidFlag = 1;
-			break;
-		}
-	}
+// 花火生成.
+void FireworksManager::SpawnFireworks(float x, float y) {
+
+	FireworksData tmp; //花火生成.
+
+	tmp.targetX = x;
+	tmp.targetY = y;
+	tmp.x = x;
+	tmp.y = y;
+	tmp.vx = 0.0f;
+	tmp.vy = 0.0f;
+	tmp.counter = FIREWORKS_WARNING_DURATION;
+	tmp.state = FIREWORKS_STATE_WARNING;
+	tmp.sparkCount = FIREWORKS_SPARKS_COUNT + (rand() % 8);
+
+	fireworks.push_back(tmp); //listに追加.
 }
 
 // 花火生成更新
@@ -106,7 +86,7 @@ void FireworksManager::UpdateFireworksGeneration() {
 			}
 
 			if (validPosition) {
-				StartFireworks(x, y);
+				SpawnFireworks(x, y);
 			}
 		}
 		//出現カウンターリセット.
@@ -117,39 +97,32 @@ void FireworksManager::UpdateFireworksGeneration() {
 // 個別花火更新
 void FireworksManager::UpdateIndividualFireworks() {
 
-	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 0) continue;
+	for (auto i = fireworks.begin(); i != fireworks.end(); ) {
 
-		fireworks[i].Counter -= p_data->speedRate;
+		i->counter -= p_data->speedRate; //カウンター減少.
 
 		//警告表示.
-		if (fireworks[i].Counter > 0) {
-			fireworks[i].state = FIREWORKS_STATE_WARNING;
+		if (i->counter > 0) {
+			i->state = FIREWORKS_STATE_WARNING;
+			i++; //次の要素へ.
 		}
 		//爆発.
 		else {
-			////爆発モードじゃないなら変更.
-			//if (fireworks[i].state != FIREWORKS_STATE_EXPLODING) {
-			//	fireworks[i].state = FIREWORKS_STATE_EXPLODING;
-			//	ExplodeFireworks(i);
-			//}
-			fireworks[i].ValidFlag = 0; //花火本体消滅.
-			ExplodeFireworks(i);
+			//花火のレーザーを生成.
+			CreateFireworksSparks(i->x, i->y);
+			//爆発音.
+			InstSoundMng.Play(_T("Explosion"), false, 70);
+
+			i = fireworks.erase(i); //消去.
 		}
 	}
 }
 
-// 爆発処理
-void FireworksManager::ExplodeFireworks(int index) {
-
-	CreateFireworksSparks(fireworks[index].x, fireworks[index].y);
-	// 爆発音
-	InstSoundMng.Play(_T("Explosion"), false, 70);
-}
-
 // 花火の火花作成（LaserManagerを使用）- 落下効果付き
 void FireworksManager::CreateFireworksSparks(float x, float y) {
-	int sparkCount = fireworks[0].sparkCount; // 仮で0番の火花数を使用
+
+	//仮で0番の火花数を使用(←追記:これがなにかは不明)
+	const int sparkCount = fireworks.begin()->sparkCount;
 
 	for (int i = 0; i < sparkCount; i++) {
 		float angle = _flt((2.0f * M_PI * i) / sparkCount);
@@ -182,25 +155,26 @@ void FireworksManager::Update() {
 
 // 描画
 void FireworksManager::Draw() {
-	for (int i = 0; i < FIREWORKS_CNT_MAX; i++) {
-		if (fireworks[i].ValidFlag == 0) continue;
 
+#if defined DEBUG_OBJ_ACTIVE
+	//デバッグ表示.
+	DrawFormatString(0, 180, 0xFF00FF, _T("花火　　　　　 : %d"), fireworks.size());
+#endif
+
+	//全花火.
+	for (auto i = fireworks.begin(); i != fireworks.end(); i++) {
 		DrawWarningEffect(i);
-
-//		if (fireworks[i].state == FIREWORKS_STATE_WARNING) {
-//			DrawWarningEffect(i);
-//		}
-		// 爆発エフェクトは描画しない（波紋削除のため）
 	}
-
-	// 描画モードをリセット
+	//描画モードをリセット.
 	ResetDrawBlendMode();
 }
 
 // 予告エフェクト描画
-void FireworksManager::DrawWarningEffect(int index) {
-	const float sepTime = 30; //区切り時間.
-	float elapsedTime = fireworks[index].Counter;
+void FireworksManager::DrawWarningEffect(list<FireworksData>::iterator it) {
+
+	const float sepTime     = 30; //区切り時間.
+	const float elapsedTime = it->counter;
+
 	// 点滅エフェクト
 	int alphaValue;
 	if (elapsedTime < sepTime) {
@@ -222,8 +196,8 @@ void FireworksManager::DrawWarningEffect(int index) {
 	}
 	SetDrawBlendModeKR(BlendModeID::Alpha, alphaValue);
 
-	float centerX = fireworks[index].targetX;
-	float centerY = fireworks[index].targetY;
+	float centerX = it->targetX;
+	float centerY = it->targetY;
 	float size = (float)warningSize;
 
 	unsigned int color = GetColor(128, 128, 128);

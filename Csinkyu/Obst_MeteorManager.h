@@ -25,10 +25,10 @@ private:
 
 //▼データ.
 private:
-	Meteor meteor[METEOR_CNT_MAX]{}; //隕石データ.
+	list<Meteor>   meteor;		  //隕石配列.
 
-	float timer{};       //隕石生成用.
-	bool  isSpawnAble{}; //召喚可能かどうか.
+	float		   timer{};       //隕石生成用.
+	bool		   isSpawnAble{}; //召喚可能かどうか.
 
 	GameData*      p_data{};      //ゲームデータ.
 	Player*        p_player{};	  //プレイヤー.
@@ -45,6 +45,6 @@ public:
 
 	void SpawnMeteor(); //隕石生成.
 
-	bool IsHitMeteors(Circle cir, bool isDestroy); //隕石のどれか1つでも当たっているか.
-	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos); //最寄りの隕石座標を探す.
+	bool IsHitMeteors       (Circle cir, bool isDestroy);			//隕石のどれか1つでも当たっているか.
+	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos);	//最寄りの隕石座標を探す.
 };

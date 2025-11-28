@@ -1,13 +1,13 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/10/01
+   ver: 2025/11/24
 
-   タイマー機能を追加します。
+   タイマー機能を追加。
 */
 #pragma once
 
 //KR_Libに使う用.
-namespace KR_Lib
+namespace KR
 {
 	//タイマーモード.
 	enum class TimerMode
@@ -90,6 +90,7 @@ namespace KR_Lib
 		}
 
 		LONGLONG GetPassTime (); //時間取得.
+		double   GetFps();       //fps取得.
 		bool     IntervalTime(); //一定時間ごとにtrueを返す.
 	};
 }

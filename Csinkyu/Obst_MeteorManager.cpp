@@ -14,23 +14,15 @@ void MeteorManager::Init() {
 	p_data      = &GameData::GetInst();
 	p_player    = &Player::GetInst();
 	p_effectMng = &EffectManager::GetInst();
-
-	//全隕石ループ.
-	for (int i = 0; i < METEOR_CNT_MAX; i++) {
-		meteor[i].Init();
-	}
 }
 
 void MeteorManager::Reset() {
 
-	isSpawnAble = false; //許可が出されるまで召喚不可.
+	isSpawnAble = false;             //許可が出されるまで召喚不可.
+	timer       = METEOR_SPAWN_SPAN; //初期時間.
 
-	timer = METEOR_SPAWN_SPAN; //初期時間.
-
-	//全隕石ループ.
-	for (int i = 0; i < METEOR_CNT_MAX; i++) {
-		meteor[i].Reset();
-	}
+	//隕石を全て消去.
+	meteor.clear();
 }
 
 void MeteorManager::Update() {
@@ -49,8 +41,15 @@ void MeteorManager::Update() {
 	}
 
 	//全隕石ループ.
-	for (int i = 0; i < METEOR_CNT_MAX; i++) {
-		meteor[i].Update(); //更新.
+	for (auto i = meteor.begin(); i != meteor.end(); ) {
+		i->Update(); //更新.
+		//次の要素へ.
+		if (i->GetIsErase()) {
+			i = meteor.erase(i);
+		}
+		else{
+			i++;
+		}
 	}
 	//プレイヤーとの当たり判定.
 	if (IsHitMeteors(p_player->GetHit(), false)) {
@@ -68,23 +67,24 @@ void MeteorManager::Draw() {
 	ResetDrawBlendMode();
 #endif
 
+#if defined DEBUG_OBJ_ACTIVE
+	//デバッグ表示.
+	DrawFormatString(0, 140, 0xFF00FF, _T("隕石　　　　　 : %d"), meteor.size());
+#endif
+
 	//全隕石ループ.
-	for (int i = 0; i < METEOR_CNT_MAX; i++) {
-		meteor[i].Draw(); //描画.
+	for (auto& i : meteor) {
+		i.Draw(); //描画.
 	}
 }
 
 //隕石生成.
 void MeteorManager::SpawnMeteor(){
 	
-	//空いてる所を探す.
-	for (int i = 0; i < METEOR_CNT_MAX; i++) {
-		if (!meteor[i].GetActive()) {
-
-			meteor[i].Spawn(); //出現.
-			break;             //出現完了.
-		}
-	}
+	Meteor tmp;
+	tmp.Init();  //初期化.
+	tmp.Spawn(); //スポーン処理.
+	meteor.push_back(tmp);
 }
 
 //隕石のどれか1つでも当たっているか.
@@ -93,15 +93,14 @@ bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 	bool hit;
 
 	//全隕石ループ.
-	for (int i = 0; i < METEOR_CNT_MAX; i++) {
-		hit = meteor[i].IsHitMeteor(cir); //1こずつ判定.
+	for (auto& i : meteor) {
+		hit = i.IsHitMeteor(cir); //1こずつ判定.
 		//当たれば.
 		if (hit) {
 			if (isDestroy) {
 				//壊れてない隕石であれば.
-				if (meteor[i].GetState() == Meteor_Normal) {
-
-					meteor[i].Destroy();                 //隕石を破壊.
+				if (i.GetState() == Meteor_Normal) {
+					i.Destroy();						 //隕石を破壊.
 					p_data->score += SCORE_BREAK_METEOR; //スコア加算.
 				}
 			}
@@ -114,15 +113,15 @@ bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 //最寄りの隕石座標を探す.
 bool MeteorManager::GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 
-	bool isExistMeteo = false; //1つでも隕石があるか.
-	double shortest = -1; //暫定の最短距離.
+	bool   isExistMeteo = false; //1つでも隕石があるか.
+	double shortest     = -1;    //暫定の最短距離.
 
 	//全隕石ループ.
-	for (int i = 0; i < METEOR_CNT_MAX; i++) {
-		//有効かつ、破壊されてないなら.
-		if (meteor[i].GetActive() && meteor[i].GetState() == Meteor_Normal) {
+	for (const auto& i : meteor) {
+		//破壊されてないなら.
+		if (i.GetState() == Meteor_Normal) {
 
-			DBL_XY tmpPos = meteor[i].GetPos();          //1つずつ座標取得.
+			DBL_XY tmpPos = i.GetPos();                  //1つずつ座標取得.
 			double tmpDis = CalcDist(tmpPos, _startPos); //距離を計算.
 
 			//初回限定.
