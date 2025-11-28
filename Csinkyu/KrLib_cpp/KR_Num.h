@@ -1,12 +1,12 @@
 /*
    - KR_Num.h - (C++)
-   ver.2025/11/23
+   ver.2025/11/29
 
    –c‘å‚È”’l‚ğˆµ‚¦‚éŒ^‚Ì’Ç‰ÁB
 */
 #pragma once
 
-//KR_Lib‚Ég‚¤—p.
+//KrLib–¼‘O‹óŠÔ.
 namespace KR
 {
     /*
@@ -31,25 +31,25 @@ namespace KR
         BigInt(string _num);
         BigInt(int    _num);
         //get.
-        string GetStr() const; //•¶š—ñ‚Åæ“¾.
-        BigInt GetAbs() const; //â‘Î’l‚Åæ“¾.
+        string  GetStr() const; //•¶š—ñ‚Åæ“¾.
+        BigInt  GetAbs() const; //â‘Î’l‚Åæ“¾.
         //set.
-        void   SetStr(string _num);
-        void   SetNum(int    _num);
+        void    SetStr(string _num);
+        void    SetNum(int    _num);
 
         //•„†”½“].
-        void   ReverseSign();
+        void    ReverseSign();
         //Œ…’Ç‰Á(~10^n)
-        void   AddDigit(unsigned int n);
+        void    AddDigit(unsigned int n);
         //Œ…íœ(~0.1^n)
-        void   RemDigit(unsigned int n);
+        void    RemDigit(unsigned int n);
         //Œ…‚ÌŒvZ.
-        void   Digit();
+        void    Digit();
 
         //Š„‚èZ.
-        void   Division  (const BigInt&, BigInt* syou, BigInt* amari) const;
+        void    Division  (const BigInt&, BigInt* syou, BigInt* amari) const;
         //”äŠr.
-        bool   Comparison(const BigInt&, bool bigger, bool smaller, bool equal) const;
+        bool    Comparison(const BigInt&, bool bigger, bool smaller, bool equal) const;
         
         //l‘¥‰‰Zq.
         BigInt  operator+ (const BigInt& other) const;

@@ -1,31 +1,43 @@
 /*
-   - KR_Global.h - (DxLib)
-   ver: 2025/11/24
+   - KR_Global.h - (C++)
+   ver.2025/11/29
 
-   KR_Lib全体で使う汎用機能を追加。
+   KrLib全体で使う汎用機能を追加。
 */
 #pragma once
 
 //このヘッダが定義されているか判別する用.
-#define DEF_KR_DXLIB_GLOBAL
+#define DEF_KR_CPP_GLOBAL
 
-//C言語用.
-#define _USE_MATH_DEFINES
-#define _CRT_SECURE_NO_WARNINGS
 //C++用.
-#include <cassert>   //assert.h をラップしたもの.
-#include <cstdlib>   //stdlib.h をラップしたもの.
-#include <ctime>     //time.h   をラップしたもの.
-using namespace std;
-//DxLib.
-#include "DxLib.h"
+#include <iostream>
+#include <vector>
+#include <list>
+#include <map>
+#include <string>
+#include <cmath>    //math.hをラップしたもの.
 
-//C++用KR_Libを導入.
-#if !defined DEF_KR_CPP_GLOBAL
-  #include "../KR_cpp/KR_Global.h"
-#endif
+//名前空間なしで使えるように.
+using std::list;
+using std::vector;
+using std::map;
+using std::string;
+using std::wstring;
 
-//KR_Libに使う用.
+//型変換マクロ.
+#define _int(n)   static_cast<int>   (n)        //int型変換マクロ.
+#define _int_r(n) static_cast<int>   (round(n)) //int型変換マクロ(四捨五入)
+#define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
+#define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
+#define _byte(n)  static_cast<BYTE>  (n)        //BYTE型変換マクロ.
+//便利マクロ.
+#define _if_check(n)        assert(n); if(n)             //if文の前に同条件のassertを挟む.
+#define _return(num, condi) if (condi) { return num; }   //条件に合うならreturnする.(cond = 条件)
+#define _get_name(value)    #value                       //名前を取得(変数名など)
+//template用マクロ.
+#define _type_num_only(T)	typename = typename std::enable_if<std::is_arithmetic<T>::value>::type //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
+
+//KrLib名前空間.
 namespace KR
 {
 	//文字コードで切り替え.
@@ -46,11 +58,11 @@ namespace KR
 		XY(T _x, T _y) : x(_x), y(_y) {} //INT_XY n = {1, 0}; この書き方ができる.
 
 		//int型に変換.
-		XY<int> ToIntXY() const {
+		XY<int>    ToInt() const {
 			return {_int_r(x), _int_r(y)};
 		}
 		//double型に変換.
-		XY<double> ToDblXY() const {
+		XY<double> ToDbl() const {
 			return {_dbl(x), _dbl(y)};
 		}
 		//加算した結果を返す.
@@ -74,25 +86,28 @@ namespace KR
 		XY<T> operator/(const XY<T>& other) const {
 			return { x / other.x, y / other.y };
 		}
+		XY<T> operator%(const XY<T>& other) const {
+			return { x % other.x, y % other.y };
+		}
 		//演算子[+=,-=,*=,/=] [XY<T>・XY<T>]
 		XY<T>& operator+=(const XY<T>& other) {
-			x += other.x;
-			y += other.y;
+			*this = *this + other;
 			return *this; //自身の実体.
 		}
 		XY<T>& operator-=(const XY<T>& other) {
-			x -= other.x;
-			y -= other.y;
+			*this = *this - other;
 			return *this;
 		}
 		XY<T>& operator*=(const XY<T>& other) {
-			x *= other.x;
-			y *= other.y;
+			*this = *this * other;
 			return *this;
 		}
 		XY<T>& operator/=(const XY<T>& other) {
-			x /= other.x;
-			y /= other.y;
+			*this = *this / other;
+			return *this;
+		}
+		XY<T>& operator%=(const XY<T>& other) {
+			*this = *this % other;
 			return *this;
 		}
 
@@ -114,115 +129,65 @@ namespace KR
 		XY<T> operator/(T2 num) const {
 			return { x / static_cast<T>(num), y / static_cast<T>(num) };
 		}
+		template<typename T2, _type_num_only(T2)>
+		XY<T> operator%(T2 num) const {
+			return { x % static_cast<T>(num), y % static_cast<T>(num) };
+		}
 		//演算子[+=,-=,*=,/=] [XY<T>・数値]
 		//右側が数値でなければ無効にする.
 		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator+=(T2 num) {
-			x += num;
-			y += num;
+			*this = *this + num;
 			return *this; //自身の実体.
 		}
 		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator-=(T2 num) {
-			x -= num;
-			y -= num;
+			*this = *this - num;
 			return *this;
 		}
 		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator*=(T2 num) {
-			x *= num;
-			y *= num;
+			*this = *this * num;
 			return *this;
 		}
 		template<typename T2, _type_num_only(T2)>
 		XY<T>& operator/=(T2 num) {
-			x /= num;
-			y /= num;
+			*this = *this / num;
+			return *this;
+		}
+		template<typename T2, _type_num_only(T2)>
+		XY<T>& operator%=(T2 num) {
+			*this = *this % num;
 			return *this;
 		}
 	};
 	using INT_XY = XY<int>;    //int型.
 	using DBL_XY = XY<double>; //double型.
-	
-	//RGBAデータ(COLOR_U8とほぼ同じだが、こっちでは順をrgbにする)
-	struct RGBA
-	{
-		BYTE r, g, b, a;
-	};
-	//色.
-	enum class ColorID
-	{
-		Red,
-		Orange,
-		Yellow,
-		Lime,
-		Green,
-		Cyan,
-		Blue,
-		Purple,
-		Pink,
-		Magenta,
-		White,
-		Gray,
-		Black,
-	};
-	//色データ.
-	class MY_COLOR
-	{
-	private:
-		RGBA color;
 
-	public:
-		//constructor.
-		MY_COLOR()                               : color{255, 255, 255, 255} {}
-		MY_COLOR(int _r, int _g, int _b)         : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), 255} {}
-		MY_COLOR(int _r, int _g, int _b, int _a) : color{static_cast<BYTE>(_r), static_cast<BYTE>(_g), static_cast<BYTE>(_b), static_cast<BYTE>(_a)} {}
-		MY_COLOR(UINT _colorCode);
-		MY_COLOR(ColorID id);
-		//get.
-		COLOR_U8 GetColorU8()   const;
-		UINT     GetColorCode() const;
+	//上下左右.
+	template<typename T, _type_num_only(T)>
+	struct RECT
+	{
+		T left;
+		T up;
+		T right;
+		T down;
 
-		//代入演算子.
-		void operator=(const RGBA& rgba);
-		void operator=(UINT colorCode);
-		void operator=(ColorID id);
+		//int型に変換.
+		RECT<int>    ToInt() const {
+			return { _int_r(left), _int_r(up), _int_r(right), _int_r(down) };
+		}
+		//double型に変換.
+		RECT<double> ToDbl() const {
+			return { _dbl(left), _dbl(up), _dbl(right), _dbl(down) };
+		}
 	};
+	using INT_RECT = RECT<int>;    //int型.
+	using DBL_RECT = RECT<double>; //double型.
 
-	//円データ.
-	struct Circle
-	{
-		DBL_XY   pos;    //座標.
-		float    r;      //半径.
-		MY_COLOR color;  //色.
-	};
-	//四角形データ.
-	struct Box
-	{
-		DBL_XY   pos;    //座標.
-		DBL_XY   size;   //サイズ.
-		MY_COLOR color;  //色.
-	};
-	//三角形データ.
-	struct Triangle
-	{
-		DBL_XY   pos[3]; //3点の座標.
-		MY_COLOR color;  //色.
-	};
-	//線データ.
-	struct Line
-	{
-		DBL_XY   stPos; //始点座標.
-		DBL_XY   edPos; //終点座標.
-		MY_COLOR color; //色.
-	};
-	//扇形データ.
-	struct Pie
-	{
-		DBL_XY   pos;    //中心座標.
-		double   r;      //半径.
-		double   stAng;  //開始角度.
-		double   arcAng; //弧の角度.
-		MY_COLOR color;  //色.
-	};
+	//値が範囲内かどうか.
+	template<typename T, _type_num_only(T)>
+	bool IsInRange(T num, T min, T max) {
+		return (min <= num && num <= max);
+	}
 }

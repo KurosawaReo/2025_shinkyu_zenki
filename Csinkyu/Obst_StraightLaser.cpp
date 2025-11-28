@@ -139,7 +139,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(&predictionLine, true);
+			DrawLineKR(predictionLine, true);
 		}
 		break;
 	case 1: // âEÇ©ÇÁç∂Ç÷
@@ -148,7 +148,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(&predictionLine, true);
+			DrawLineKR(predictionLine, true);
 		}
 		break;
 	case 2: // è„Ç©ÇÁâ∫Ç÷
@@ -157,7 +157,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(&predictionLine, true);
+			DrawLineKR(predictionLine, true);
 		}
 		break;
 	case 3: // â∫Ç©ÇÁè„Ç÷
@@ -166,7 +166,7 @@ void StraightLaser::DrawPredictionLine()
 		{
 			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
 			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(&predictionLine, true);
+			DrawLineKR(predictionLine, true);
 		}
 		break;
 	}

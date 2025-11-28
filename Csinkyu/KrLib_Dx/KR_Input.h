@@ -1,16 +1,20 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 
    入力操作機能を追加。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_DXLIB_GLOBAL
+  #include "KR_Global.h"
+#endif
 
 //実体取得用.
 #define InstInputMng KR::InputMng::GetInst()
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	//キーボードID.
@@ -175,7 +179,7 @@ namespace KR
 		//constructor(新規作成をできなくする)
 		InputMng(){}
 
-	//▼データ.
+	//▼変数.
 	private:
 		int tmKey   [KEY_MAX]{};     //キーを押している時間.
 		int tmMouse [MOUSE_MAX]{};   //マウスを押下している時間.            (index: bitフラグ)

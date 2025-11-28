@@ -1,14 +1,10 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-  #include "KR_Timer.h"
-#endif
 #include "KR_Sound.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 // ▼*--=<[ SoundData ]>=--*▼ //
@@ -17,7 +13,7 @@ namespace KR
 	SoundData::SoundData() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
-		//.hの方でコンストラクタを使えないため、動的確保させる.
+		//.hの方でコンストラクタを使わないよう動的確保する.
 		timer = new TimerMicro(TimerMode::CountUp, 0);
 	};
 	//destructor.

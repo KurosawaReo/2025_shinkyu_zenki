@@ -1,26 +1,23 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/11/24
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_CPP_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-#endif
 #include "KR_Calc.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	//計算用の関数群.
 	namespace Calc
 	{
 		//当たり判定(円と円)
-		bool HitCirCir(const Circle* cir1, const Circle* cir2) {
+		bool HitCirCir(const Circle& cir1, const Circle& cir2) {
 
 			//距離差.
-			double x = cir1->pos.x - cir2->pos.x;
-			double y = cir1->pos.y - cir2->pos.y;
+			double x = cir1.pos.x - cir2.pos.x;
+			double y = cir1.pos.y - cir2.pos.y;
 			//距離が半径の合計以下なら(√を削減するために2乗して計算)
-			if (x*x + y*y <= pow(cir1->r+cir2->r, 2)) {
+			if (x*x + y*y <= pow(cir1.r+cir2.r, 2)) {
 				return true; //hit.
 			}
 			else {
@@ -28,11 +25,11 @@ namespace KR
 			}
 		}
 		//当たり判定(四角と四角)
-		bool HitBoxBox(const Box* box1, const Box* box2) {
+		bool HitBoxBox(const Box& box1, const Box& box2) {
 
 			//中央基準座標での判定.
-			if (fabs(box1->pos.x - box2->pos.x) <= (box1->size.x + box2->size.x)/2 &&
-				fabs(box1->pos.y - box2->pos.y) <= (box1->size.y + box2->size.y)/2
+			if (fabs(box1.pos.x - box2.pos.x) <= (box1.size.x + box2.size.x)/2 &&
+				fabs(box1.pos.y - box2.pos.y) <= (box1.size.y + box2.size.y)/2
 			){
 				return true; //hit.
 			}
@@ -41,26 +38,26 @@ namespace KR
 			}
 		}
 		//当たり判定(四角と円)
-		bool HitBoxCir(const Box* box, const Circle* cir) {
+		bool HitBoxCir(const Box& box, const Circle& cir) {
 
 			DBL_XY nearest;
 
 			//円の中心から一番近い四角形の点を求める.
-			nearest.x = ClampNum(cir->pos.x, box->pos.x - box->size.x/2, box->pos.x + box->size.x/2);
-			nearest.y = ClampNum(cir->pos.y, box->pos.y - box->size.y/2, box->pos.y + box->size.y/2);
+			nearest.x = ClampNum(cir.pos.x, box.pos.x - box.size.x/2, box.pos.x + box.size.x/2);
+			nearest.y = ClampNum(cir.pos.y, box.pos.y - box.size.y/2, box.pos.y + box.size.y/2);
 			//円の中心との距離.
-			double dis = CalcDist(cir->pos, nearest);
+			double dis = CalcDist(cir.pos, nearest);
 
-			return (dis <= cir->r); //距離が半径以下ならhit.
+			return (dis <= cir.r); //距離が半径以下ならhit.
 		}
 		//当たり判定(線と円)
-		bool HitLineCir(const Line* line, const Circle* cir) {
+		bool HitLineCir(const Line& line, const Circle& cir) {
 
 			//線の始点と終点から傾きを求める.
 			double katamuki;
 			{
-				double x = line->edPos.x - line->stPos.x;
-				double y = line->edPos.y - line->stPos.y;
+				double x = line.edPos.x - line.stPos.x;
+				double y = line.edPos.y - line.stPos.y;
 				if (x != 0) {
 					katamuki = y / x;
 				}
@@ -69,7 +66,7 @@ namespace KR
 				}
 			}
 			//線を方程式にした時の切片.
-			double seppen = line->stPos.y - line->stPos.x * katamuki;
+			double seppen = line.stPos.y - line.stPos.x * katamuki;
 
 			//線～円の距離.
 			double dis1;
@@ -80,41 +77,41 @@ namespace KR
 				double b = 1;
 				double c = -seppen;
 				//公式: d = |ax + by + c|/√(a^2 + b^2)
-				dis1 = fabs(a*cir->pos.x + b*cir->pos.y + c) / sqrt(a*a + b*b);
+				dis1 = fabs(a*cir.pos.x + b*cir.pos.y + c) / sqrt(a*a + b*b);
 			}
 			//線の中点～円の中心の距離.
 			double dis2;
 			{
-				double x = cir->pos.x - CalcMidPos(line->stPos, line->edPos).x;
-				double y = cir->pos.y - CalcMidPos(line->stPos, line->edPos).y;
+				double x = cir.pos.x - CalcMidPos(line.stPos, line.edPos).x;
+				double y = cir.pos.y - CalcMidPos(line.stPos, line.edPos).y;
 				//距離: d = √(x^2 + y^2) (三平方の定理)
 				dis2 = sqrt(x*x + y*y);
 			}
 
 			//hit条件.
-			if (dis1 <= cir->r &&                                     //条件1: 線に触れている.
-				dis2 <= CalcDist(line->stPos, line->edPos)/2 + cir->r //条件2: 線を直径とする円に触れている.
+			if (dis1 <= cir.r &&                                   //条件1: 線に触れている.
+				dis2 <= CalcDist(line.stPos, line.edPos)/2 + cir.r //条件2: 線を直径とする円に触れている.
 			){
 				return true;
 			}
 			return false;
 		}
 		//当たり判定(扇形と点)
-		bool HitPie(const Pie* pie, DBL_XY pos) {
+		bool HitPie(const Pie& pie, DBL_XY pos) {
 
 			//扇形の中心からの距離.
-			double distLen = CalcDist(pie->pos, pos);
+			double distLen = CalcDist(pie.pos, pos);
 
 			//扇形の中心からの角度.
-			double ang = CalcFacingAng(pie->pos, pos);
+			double ang = CalcFacingAng(pie.pos, pos);
 			//扇形の中心角.
-			double centerAng = pie->stAng+pie->arcAng/2;
+			double centerAng = pie.stAng+pie.arcAng/2;
 			//角度差(1.0～-1.0の範囲, 距離差が少ないほど1.0に近づく)
 			double distAng = cos(_rad(centerAng-ang));
 
 			//hit条件.
-			if (distLen <= pie->r                   && //条件1: 扇形の半径内に入っている.
-				distAng >= cos(_rad(pie->arcAng/2))    //条件2: 扇形の角度の範囲に入っている.
+			if (distLen <= pie.r                   && //条件1: 扇形の半径内に入っている.
+				distAng >= cos(_rad(pie.arcAng/2))    //条件2: 扇形の角度の範囲に入っている.
 			){
 				return true;
 			}
@@ -122,29 +119,29 @@ namespace KR
 		}
 
 		//範囲内に座標を補正する.
-		void FixPosInArea(DBL_XY* pos, INT_XY size, int left, int up, int right, int down) {
+		void FixPosInArea(DBL_XY* pos, INT_XY size, DBL_RECT rect) {
 
-			if (pos->x < left  + size.x/2) { pos->x = left  + size.x/2; }
-			if (pos->y < up    + size.y/2) { pos->y = up    + size.y/2; }
-			if (pos->x > right - size.x/2) { pos->x = right - size.x/2; }
-			if (pos->y > down  - size.y/2) { pos->y = down  - size.y/2; }
+			if (pos->x < rect.left  + size.x/2) { pos->x = rect.left  + size.x/2; }
+			if (pos->y < rect.up    + size.y/2) { pos->y = rect.up    + size.y/2; }
+			if (pos->x > rect.right - size.x/2) { pos->x = rect.right - size.x/2; }
+			if (pos->y > rect.down  - size.y/2) { pos->y = rect.down  - size.y/2; }
 		}
 		//エリアの範囲外かどうか.
-		bool IsOutInArea(DBL_XY pos, INT_XY size, int left, int up, int right, int down, bool isCompOut) {
+		bool IsOutInArea(DBL_XY pos, INT_XY size, DBL_RECT rect, bool isCompOut) {
 
 			//完全に出たら範囲外とする.
 			if (isCompOut) {
-				if (pos.x < left  - size.x/2) { return true; }
-				if (pos.y < up    - size.y/2) { return true; }
-				if (pos.x > right + size.x/2) { return true; }
-				if (pos.y > down  + size.y/2) { return true; }
+				if (pos.x < rect.left  - size.x/2) { return true; }
+				if (pos.y < rect.up    - size.y/2) { return true; }
+				if (pos.x > rect.right + size.x/2) { return true; }
+				if (pos.y > rect.down  + size.y/2) { return true; }
 			}
 			//ちょっとでも出たら範囲外とする.
 			else {
-				if (pos.x < left  + size.x/2) { return true; }
-				if (pos.y < up    + size.y/2) { return true; }
-				if (pos.x > right - size.x/2) { return true; }
-				if (pos.y > down  - size.y/2) { return true; }
+				if (pos.x < rect.left  + size.x/2) { return true; }
+				if (pos.y < rect.up    + size.y/2) { return true; }
+				if (pos.x > rect.right - size.x/2) { return true; }
+				if (pos.y > rect.down  - size.y/2) { return true; }
 			}
 
 			return false; //範囲内.

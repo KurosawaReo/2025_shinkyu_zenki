@@ -112,7 +112,7 @@ void Player::Draw()
 
 		//チュートリアル用.
 		if (p_data->stage == STAGE_TUTORIAL) {
-			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToIntXY(), 0xFFFFFF );
+			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToInt(), 0xFFFFFF );
 			str.Draw();
 		}
 	}
@@ -169,13 +169,13 @@ void Player::PlayerMove()
 		if (isDashing)
 		{
 			//残り時間に応じて段々減速.
-			speed *= 1.0 + PLAYER_DASH_SPEED * Calc::CalcNumEaseOut(dashTimer/PLAYER_DASH_DURATION);
+			speed *= 1.0f + PLAYER_DASH_SPEED * Calc::CalcNumEaseOut(dashTimer/PLAYER_DASH_DURATION);
 		}
 		//移動.
 		p_input->MoveKey4Dir(&hit.pos, speed);
 		p_input->MovePadStick(&hit.pos, speed);
 		//移動限界.
-		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, 0, 0, WINDOW_WID - 1, WINDOW_HEI - 1);
+		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
 	}
 }
 
@@ -299,7 +299,7 @@ void Player::DrawAfterImage()
 				}
 				//円描画.
 				Circle cir = { after[i].pos, PLAYER_SIZE, color };
-				DrawCircleKR(&cir, false, true);
+				DrawCircleKR(cir, false, true);
 			}
 		}
 	}

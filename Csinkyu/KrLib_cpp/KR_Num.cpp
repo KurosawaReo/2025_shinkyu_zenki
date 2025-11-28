@@ -1,6 +1,6 @@
 /*
    - KR_Num.cpp - (C++)
-   ver.2025/11/23
+   ver.2025/11/29
 
    膨大な数値を扱える型の追加。
 */
@@ -9,7 +9,7 @@
 #endif
 #include "KR_Num.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
     //コンストラクタ.
@@ -52,8 +52,8 @@ namespace KR
 
         BigInt tmp = *this;
 
-        tmp.isMinus = false;                         //符号はなし.
-        for (auto i : tmp.num) { i = abs(_int(i)); } //全ての桁を絶対値に.
+        tmp.isMinus = false;                          //符号はなし.
+        for (auto& i : tmp.num) { i = abs(_int(i)); } //全ての桁を絶対値に.
 
         return tmp;
     }
@@ -91,8 +91,8 @@ namespace KR
 
     //符号反転.
     void BigInt::ReverseSign() {
-        isMinus = !isMinus;             //「-」→「+」/「+」→「-」.
-        for (auto i : num) { i *= -1; } //各桁を符号反転する.
+        isMinus = !isMinus;              //「-」→「+」/「+」→「-」.
+        for (auto& i : num) { i *= -1; } //各桁を符号反転する.
     }
     //×10^n.
     void BigInt::AddDigit(unsigned int n) {
@@ -150,7 +150,7 @@ namespace KR
             if (num[i] < 0) {
                 //Error: 1番上の桁で繰り下げが発生.
                 if (i+1 == num.size()) {
-                    cout << "[Error] 最上位の桁で繰り下げが発生しました。" << endl;
+                    std::cout << "[Error] 最上位の桁で繰り下げが発生しました。" << std::endl;
                     break;
                 }
                 num[i+1] -=  (num[i]/-10)+1;     //繰り下げる数.

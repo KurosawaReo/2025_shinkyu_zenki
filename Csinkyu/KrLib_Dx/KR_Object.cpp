@@ -1,27 +1,21 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/11/13
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-  #include "KR_Calc.h"
-  #include "KR_Draw.h"
-  #include "KR_Input.h"
-#endif
 #include "KR_Object.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
-// ▼*--=<[ Object ]>=--*▼ //
+// ▼*--=<[ ObjectShape ]>=--*▼ //
 
 	//移動限界を越えないよう位置修正.
-	void ObjectShape::FixPosInArea(int left, int up, int right, int down) {
-		Calc::FixPosInArea(GetPosPtr(), GetSize().ToIntXY(), left, up, right, down);
+	void ObjectShape::FixPosInArea(DBL_RECT rect) {
+		Calc::FixPosInArea(GetPosPtr(), GetSize().ToInt(), rect);
 	}
 	//エリアを越えているかどうか.
-	bool ObjectShape::IsOutInArea(int left, int up, int right, int down, bool isCompOut) {
-		return Calc::IsOutInArea(GetPos(), GetSize().ToIntXY(), left, up, right, down, isCompOut);
+	bool ObjectShape::IsOutInArea(DBL_RECT rect, bool isCompOut) {
+		return Calc::IsOutInArea(GetPos(), GetSize().ToInt(), rect, isCompOut);
 	}
 	//距離を求める.
 	double ObjectShape::CalcDist(DBL_XY pos) {
@@ -71,7 +65,7 @@ namespace KR
 
 		return 0; //正常終了.
 	}
-	int ObjectShape::DrawRectGraph(int left, int up, int right, int down) {
+	int ObjectShape::DrawRectGraph(DBL_RECT rect) {
 
 		_return(-1, !isActive); //-1: 非アクティブ.
 
@@ -83,7 +77,7 @@ namespace KR
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		int err = img->DrawRect(pos, left, up, right, down);
+		int err = img->DrawRect(pos, rect);
 		_return(-3, err < 0); //-3: 画像描画エラー.
 
 		return 0; //正常終了.
@@ -127,16 +121,16 @@ namespace KR
 // ▼*--=<[ ObjectCir ]>=--*▼ //
 
 	//円との判定.
-	bool ObjectCir::HitCheckCir(const Circle* cir) {
-		return Calc::HitCirCir(cir, &this->cir);
+	bool ObjectCir::HitCheckCir(const Circle& cir) {
+		return Calc::HitCirCir(cir, this->cir);
 	}
 	//四角形との判定.
-	bool ObjectCir::HitCheckBox(const Box* box) {
-		return Calc::HitBoxCir(box, &this->cir);
+	bool ObjectCir::HitCheckBox(const Box& box) {
+		return Calc::HitBoxCir(box, this->cir);
 	}
 	//線との当たり判定.
-	bool ObjectCir::HitCheckLine(const Line* line) {
-		return Calc::HitLineCir(line, &this->cir);
+	bool ObjectCir::HitCheckLine(const Line& line) {
+		return Calc::HitLineCir(line, this->cir);
 	}
 	//図形: 円を描画.
 	int ObjectCir::DrawShape(bool isFill, bool isAnti) {
@@ -147,19 +141,19 @@ namespace KR
 		Circle tmpCir = cir;
 		tmpCir.pos += offset;
 		//描画.
-		int err = DrawCircleKR(&tmpCir, isFill, isAnti);
+		int err = DrawCircleKR(tmpCir, isFill, isAnti);
 		return err; //-1: 円描画エラー.
 	}
 
 // ▼*--=<[ ObjectBox ]>=--*▼ //
 
 	//円との判定.
-	bool ObjectBox::HitCheckCir(const Circle* cir) {
-		return Calc::HitBoxCir(&this->box, cir);
+	bool ObjectBox::HitCheckCir(const Circle& cir) {
+		return Calc::HitBoxCir(this->box, cir);
 	}
 	//四角形との判定.
-	bool ObjectBox::HitCheckBox(const Box* box) {
-		return Calc::HitBoxBox(&this->box, box);
+	bool ObjectBox::HitCheckBox(const Box& box) {
+		return Calc::HitBoxBox(this->box, box);
 	}
 	//図形: 四角形を描画.
 	int ObjectBox::DrawShape(bool isFill, bool isAnti) {
@@ -170,14 +164,14 @@ namespace KR
 		Box tmpBox = box;
 		tmpBox.pos += offset;
 		//描画.
-		int err = DrawBoxKR(&tmpBox, Anchor::Mid, isFill, isAnti);
+		int err = DrawBoxKR(tmpBox, Anchor::Mid, isFill, isAnti);
 		return err; //-1: 円描画エラー.
 	}
 
 // ▼*--=<[ ObjectGrid ]>=--*▼ //
 
 	//オブジェクト(ObjectGrid型)の描画.
-	int ObjectGrid::Draw(DrawImg* img, INT_XY gridPos, INT_XY gridSize) {
+	int ObjectGrid::Draw(const DrawImg& img, INT_XY gridPos, INT_XY gridSize) {
 
 		_return(0, !isActive); //非アクティブなら描画しない.
 
@@ -187,7 +181,7 @@ namespace KR
 			gridPos.y + pos.y * gridSize.y
 		};
 		//画像描画.
-		int err = img->Draw(newPos.ToDblXY(), Anchor::LU);
+		int err = img.Draw(newPos.ToDbl(), Anchor::LU);
 		return err; //-1: DrawGraphSTでエラー.
 	}
 }

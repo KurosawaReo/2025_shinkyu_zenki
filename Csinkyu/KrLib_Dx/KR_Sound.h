@@ -1,19 +1,22 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 
    サウンド機能を追加。
 */
 #pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_DXLIB_GLOBAL
+  #include "KR_Global.h"
+#endif
+#include "KR_Timer.h"
 
 //実体取得用.
 #define InstSoundMng KR::SoundMng::GetInst()
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
-	class TimerMicro; //前方宣言.
-
 	//サウンドデータ.
 	class SoundData
 	{

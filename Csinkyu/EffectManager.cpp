@@ -170,7 +170,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-				DrawTriangleKR(&tri, false, true);
+				DrawTriangleKR(tri, false, true);
 			}
 			break;
 
@@ -182,7 +182,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(&cir, false, true);
+				DrawCircleKR(cir, false, true);
 			}
 			break;
 
@@ -194,7 +194,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(&cir, false, true);
+				DrawCircleKR(cir, false, true);
 			}
 			break;
 
@@ -210,7 +210,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawLineKR(&line, true);
+				DrawLineKR(line, true);
 			}
 			break;
 
@@ -242,7 +242,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(&mainCir, false, true);
+				DrawCircleKR(mainCir, false, true);
 
 				switch (i.type) 
 				{
@@ -302,7 +302,7 @@ void EffectManager::Draw() {
 					//‹Ï“™‚É‚È‚é‚æ‚¤‚É”z’u‚·‚é.
 					lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt-1)/2);
 					//‰~•`‰æ.
-					DrawCircleKR(&lampCir[j], (lampFillCnt >= j+1), true); 
+					DrawCircleKR(lampCir[j], (lampFillCnt >= j+1), true); 
 				}
 			}
 			break;

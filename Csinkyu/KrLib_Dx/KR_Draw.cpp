@@ -1,11 +1,7 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/11/13
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-  #include "KR_Calc.h"
-#endif
 #include "KR_Draw.h"
 
 /*
@@ -27,7 +23,7 @@
    -1が必要かどうかは悩ましいが、これがないと画像をタイルのように並べた時にずれが起きる。
 */
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 	constexpr int NONE_HANDLE = -1; //ハンドルなし.
@@ -112,46 +108,46 @@ namespace KR
 	}
 
 	//DrawGraphの改造版.
-	int DrawImg::Draw(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawImg::Draw(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data.handle == NONE_HANDLE) //-3: handle未設定.
 
 		//float型かどうか.
 		if (isFloat) {
 			//基準点に座標をずらす.
-			float x = _flt(pos.x - (data.size.x) * ANCHOR_POS[anc].x);
-			float y = _flt(pos.y - (data.size.y) * ANCHOR_POS[anc].y);
+			float x = _flt(pos.x - (data.size.x) * ANCHOR_POS[_int(anc)].x);
+			float y = _flt(pos.y - (data.size.y) * ANCHOR_POS[_int(anc)].y);
 			//描画.
 			int err = DrawGraphF(x, y, data.handle, isTrans);
 			_return(-1, err < 0) //-1: DrawGraphFエラー.
 		}
 		else {
 			//基準点に座標をずらす.
-			int x = _int(pos.x - (data.size.x-1) * ANCHOR_POS[anc].x);
-			int y = _int(pos.y - (data.size.y-1) * ANCHOR_POS[anc].y);
+			int x = _int(pos.x - (data.size.x-1) * ANCHOR_POS[_int(anc)].x);
+			int y = _int(pos.y - (data.size.y-1) * ANCHOR_POS[_int(anc)].y);
 			//描画.
 			int err = DrawGraph(x, y, data.handle, isTrans);
 			_return(-2, err < 0) //-2: DrawGraphエラー.
 		}
 		return 0; //正常終了.
 	}
-	int DrawDivImg::Draw(int imgNo, DBL_XY pos, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawDivImg::Draw(int imgNo, DBL_XY pos, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data[imgNo].handle == NONE_HANDLE) //-3: handle未設定.
 
 		//float型かどうか.
 		if (isFloat) {
 			//基準点に座標をずらす.
-			float x = _flt(pos.x - (data[imgNo].size.x) * ANCHOR_POS[anc].x);
-			float y = _flt(pos.y - (data[imgNo].size.y) * ANCHOR_POS[anc].y);
+			float x = _flt(pos.x - (data[imgNo].size.x) * ANCHOR_POS[_int(anc)].x);
+			float y = _flt(pos.y - (data[imgNo].size.y) * ANCHOR_POS[_int(anc)].y);
 			//描画.
 			int err = DrawGraphF(x, y, data[imgNo].handle, isTrans);
 			_return(-1, err < 0) //-1: DrawGraphFエラー.
 		}
 		else {
 			//基準点に座標をずらす.
-			int x = _int(pos.x - (data[imgNo].size.x-1) * ANCHOR_POS[anc].x);
-			int y = _int(pos.y - (data[imgNo].size.y-1) * ANCHOR_POS[anc].y);
+			int x = _int(pos.x - (data[imgNo].size.x-1) * ANCHOR_POS[_int(anc)].x);
+			int y = _int(pos.y - (data[imgNo].size.y-1) * ANCHOR_POS[_int(anc)].y);
 			//描画.
 			int err = DrawGraph(x, y, data[imgNo].handle, isTrans);
 			_return(-2, err < 0) //-2: DrawGraphエラー.
@@ -161,35 +157,35 @@ namespace KR
 
 	//DrawRectGraphの改造版.
 	//Rect = 矩形(正方形や長方形のこと)
-	int DrawImg::DrawRect(DBL_XY pos, int left, int up, int right, int down, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawImg::DrawRect(DBL_XY pos, DBL_RECT rect, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data.handle == NONE_HANDLE) //-3: handle未設定.
 
 		//アンカーを含めた描画座標.
 		DBL_XY drawPos = {
-			pos.x - data.size.x * ANCHOR_POS[anc].x,
-			pos.y - data.size.y * ANCHOR_POS[anc].y
+			pos.x - data.size.x * ANCHOR_POS[_int(anc)].x,
+			pos.y - data.size.y * ANCHOR_POS[_int(anc)].y
 		};
 		//画像の矩形.
 		INT_XY stPxl = {0, 0};
 		INT_XY size  = data.size;
 
 		//クリッピング(画像の切り取り処理)
-		if (drawPos.x < left) {
-			stPxl.x += _int(left - drawPos.x);
-			size.x  -= _int(left - drawPos.x);
-			drawPos.x = left;
+		if (drawPos.x < rect.left) {
+			stPxl.x += _int(rect.left - drawPos.x);
+			size.x  -= _int(rect.left - drawPos.x);
+			drawPos.x = rect.left;
 		}
-		if (drawPos.y < up) {
-			stPxl.y += _int(up - drawPos.y);
-			size.y  -= _int(up - drawPos.y);
-			drawPos.y = up;
+		if (drawPos.y < rect.up) {
+			stPxl.y += _int(rect.up - drawPos.y);
+			size.y  -= _int(rect.up - drawPos.y);
+			drawPos.y = rect.up;
 		}
-		if (drawPos.x + size.x > right) {
-			size.x -= _int((drawPos.x + size.x) - right);
+		if (drawPos.x + size.x > rect.right) {
+			size.x -= _int((drawPos.x + size.x) - rect.right);
 		}
-		if (drawPos.y + size.y > down) {
-			size.y -= _int((drawPos.y + size.y) - down);
+		if (drawPos.y + size.y > rect.down) {
+			size.y -= _int((drawPos.y + size.y) - rect.down);
 		}
 
 		//描画する範囲があるなら描画.
@@ -206,7 +202,7 @@ namespace KR
 
 		return 0; //正常終了.
 	}
-	int DrawDivImg::DrawRect(int imgNo, DBL_XY pos, int left, int up, int right, int down, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawDivImg::DrawRect(int imgNo, DBL_XY pos, DBL_RECT rect, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data[imgNo].handle == NONE_HANDLE) //-3: handle未設定.
 
@@ -215,30 +211,30 @@ namespace KR
 		INT_XY size  = data[imgNo].size; //始点からのサイズ.
 
 		//左にはみ出てるなら.
-		if (pos.x < left) {
+		if (pos.x < rect.left) {
 			stPxl.x -= _int_r(pos.x); //ソースを右にずらす.
 			size .x += _int_r(pos.x); //描画幅を減らす(pos.xは負の値なので加算)
 		}
 		//上にはみ出てるなら.
-		if (pos.y < up) {
+		if (pos.y < rect.up) {
 			stPxl.y -= _int_r(pos.y);
 			size .y += _int_r(pos.y);
 		}
 		//右にはみ出てるなら.
-		if (pos.x + data[imgNo].size.x * ANCHOR_POS[anc].x > right) {
-			size.x = _int_r((right - pos.x) * ANCHOR_POS[anc].x); //幅を削る.
+		if (pos.x + data[imgNo].size.x * ANCHOR_POS[_int(anc)].x > rect.right) {
+			size.x = _int_r((rect.right - pos.x) * ANCHOR_POS[_int(anc)].x); //幅を削る.
 		}
 		//下にはみ出てるなら.
-		if (pos.y + data[imgNo].size.y * ANCHOR_POS[anc].y > down) {
-			size.y = _int_r((down - pos.y) * ANCHOR_POS[anc].y); //幅を削る.
+		if (pos.y + data[imgNo].size.y * ANCHOR_POS[_int(anc)].y > rect.down) {
+			size.y = _int_r((rect.down - pos.y) * ANCHOR_POS[_int(anc)].y); //幅を削る.
 		}
 		//描画する範囲があるなら.
 		if (size.x > 0 && size.y > 0) {
 			//float型かどうか.
 			if (isFloat) {
 				//基準点に座標をずらす.
-				float x = _flt(pos.x - (data[imgNo].size.x) * ANCHOR_POS[anc].x);
-				float y = _flt(pos.y - (data[imgNo].size.y) * ANCHOR_POS[anc].y);
+				float x = _flt(pos.x - (data[imgNo].size.x) * ANCHOR_POS[_int(anc)].x);
+				float y = _flt(pos.y - (data[imgNo].size.y) * ANCHOR_POS[_int(anc)].y);
 				//描画.
 				int err = DrawRectGraphF(
 					x, y, stPxl.x, stPxl.y, size.x, size.y, data[imgNo].handle, isTrans
@@ -247,8 +243,8 @@ namespace KR
 			}
 			else {
 				//基準点に座標をずらす.
-				int x = _int(pos.x - (data[imgNo].size.x-1) * ANCHOR_POS[anc].x);
-				int y = _int(pos.y - (data[imgNo].size.y-1) * ANCHOR_POS[anc].y);
+				int x = _int(pos.x - (data[imgNo].size.x-1) * ANCHOR_POS[_int(anc)].x);
+				int y = _int(pos.y - (data[imgNo].size.y-1) * ANCHOR_POS[_int(anc)].y);
 				//描画.
 				int err = DrawRectGraph(
 					_int_r(pos.x), _int_r(pos.y), stPxl.x, stPxl.y, size.x, size.y, data[imgNo].handle, isTrans
@@ -260,15 +256,15 @@ namespace KR
 	}
 
 	//DrawExtendGraphの改造版.
-	int DrawImg::DrawExtend(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawImg::DrawExtend(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data.handle == NONE_HANDLE) //-3: handle未設定.
 
 		//float型かどうか.
 		if (isFloat) {
 			//始点を求める.
-			float x1 = _flt(pos.x - (data.size.x * sizeRate.x) * ANCHOR_POS[anc].x);
-			float y1 = _flt(pos.y - (data.size.y * sizeRate.y) * ANCHOR_POS[anc].y);
+			float x1 = _flt(pos.x - (data.size.x * sizeRate.x) * ANCHOR_POS[_int(anc)].x);
+			float y1 = _flt(pos.y - (data.size.y * sizeRate.y) * ANCHOR_POS[_int(anc)].y);
 			//終点を求める.
 			float x2 = _flt(x1 + data.size.x * sizeRate.x);
 			float y2 = _flt(y1 + data.size.y * sizeRate.y);
@@ -278,8 +274,8 @@ namespace KR
 		}
 		else {
 			//始点を求める.
-			int x1 = _int(pos.x - ((data.size.x * sizeRate.x)-1) * ANCHOR_POS[anc].x);
-			int y1 = _int(pos.y - ((data.size.y * sizeRate.y)-1) * ANCHOR_POS[anc].y);
+			int x1 = _int(pos.x - ((data.size.x * sizeRate.x)-1) * ANCHOR_POS[_int(anc)].x);
+			int y1 = _int(pos.y - ((data.size.y * sizeRate.y)-1) * ANCHOR_POS[_int(anc)].y);
 			//終点を求める.
 			int x2 = _int(x1 + ((data.size.x * sizeRate.x)-1));
 			int y2 = _int(y1 + ((data.size.y * sizeRate.y)-1));
@@ -289,15 +285,15 @@ namespace KR
 		}
 		return 0; //正常終了.
 	}
-	int DrawDivImg::DrawExtend(int imgNo, DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawDivImg::DrawExtend(int imgNo, DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data[imgNo].handle == NONE_HANDLE) //-3: handle未設定.
 
 		//float型かどうか.
 		if (isFloat) {
 			//始点を求める.
-			float x1 = _flt(pos.x - (data[imgNo].size.x * sizeRate.x) * ANCHOR_POS[anc].x);
-			float y1 = _flt(pos.y - (data[imgNo].size.y * sizeRate.y) * ANCHOR_POS[anc].y);
+			float x1 = _flt(pos.x - (data[imgNo].size.x * sizeRate.x) * ANCHOR_POS[_int(anc)].x);
+			float y1 = _flt(pos.y - (data[imgNo].size.y * sizeRate.y) * ANCHOR_POS[_int(anc)].y);
 			//終点を求める.
 			float x2 = _flt(x1 + data[imgNo].size.x * sizeRate.x);
 			float y2 = _flt(y1 + data[imgNo].size.y * sizeRate.y);
@@ -307,8 +303,8 @@ namespace KR
 		}
 		else {
 			//始点を求める.
-			int x1 = _int_r(pos.x - ((data[imgNo].size.x * sizeRate.x)-1) * ANCHOR_POS[anc].x);
-			int y1 = _int_r(pos.y - ((data[imgNo].size.y * sizeRate.y)-1) * ANCHOR_POS[anc].y);
+			int x1 = _int_r(pos.x - ((data[imgNo].size.x * sizeRate.x)-1) * ANCHOR_POS[_int(anc)].x);
+			int y1 = _int_r(pos.y - ((data[imgNo].size.y * sizeRate.y)-1) * ANCHOR_POS[_int(anc)].y);
 			//終点を求める.
 			int x2 = _int_r(x1 + ((data[imgNo].size.x * sizeRate.x)-1));
 			int y2 = _int_r(y1 + ((data[imgNo].size.y * sizeRate.y)-1));
@@ -321,15 +317,15 @@ namespace KR
 
 	//DrawRotaGraphの改造版.
 	//DrawRotaGraphはデフォルトで中央基準のため、アンカーを-0.5する.
-	int DrawImg::DrawRota(DBL_XY pos, double extend, double ang, INT_XY pivot, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawImg::DrawRota(DBL_XY pos, double extend, double ang, INT_XY pivot, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data.handle == NONE_HANDLE) //-3: handle未設定.
 
 		//float型かどうか.
 		if (isFloat) {
 			//基準点に座標をずらす.
-			float x = _flt(pos.x - (data.size.x-1) * (ANCHOR_POS[anc].x-0.5));
-			float y = _flt(pos.y - (data.size.y-1) * (ANCHOR_POS[anc].y-0.5));
+			float x = _flt(pos.x - (data.size.x-1) * (ANCHOR_POS[_int(anc)].x-0.5));
+			float y = _flt(pos.y - (data.size.y-1) * (ANCHOR_POS[_int(anc)].y-0.5));
 			//pivot(デフォルトは画像の中心)
 			float px = _flt(data.size.x/2 + pivot.x);
 			float py = _flt(data.size.y/2 + pivot.y);
@@ -339,8 +335,8 @@ namespace KR
 		}
 		else {
 			//基準点に座標をずらす.
-			int x = _int(pos.x - (data.size.x-1) * (ANCHOR_POS[anc].x-0.5));
-			int y = _int(pos.y - (data.size.y-1) * (ANCHOR_POS[anc].y-0.5));
+			int x = _int(pos.x - (data.size.x-1) * (ANCHOR_POS[_int(anc)].x-0.5));
+			int y = _int(pos.y - (data.size.y-1) * (ANCHOR_POS[_int(anc)].y-0.5));
 			//pivot(デフォルトは画像の中心)
 			int px = data.size.x/2 + pivot.x;
 			int py = data.size.y/2 + pivot.y;
@@ -350,15 +346,15 @@ namespace KR
 		}
 		return 0; //正常終了.
 	}
-	int DrawDivImg::DrawRota(int imgNo, DBL_XY pos, double extend, double ang, INT_XY pivot, Anchor anc, bool isTrans, bool isFloat) {
+	int DrawDivImg::DrawRota(int imgNo, DBL_XY pos, double extend, double ang, INT_XY pivot, Anchor anc, bool isTrans, bool isFloat) const {
 
 		_return(-3, data[imgNo].handle == NONE_HANDLE) //-3: handle未設定.
 
 		//float型かどうか.
 		if (isFloat) {
 			//基準点に座標をずらす.
-			float x = _flt(pos.x - (data[imgNo].size.x-1) * (ANCHOR_POS[anc].x-0.5));
-			float y = _flt(pos.y - (data[imgNo].size.y-1) * (ANCHOR_POS[anc].y-0.5));
+			float x = _flt(pos.x - (data[imgNo].size.x-1) * (ANCHOR_POS[_int(anc)].x-0.5));
+			float y = _flt(pos.y - (data[imgNo].size.y-1) * (ANCHOR_POS[_int(anc)].y-0.5));
 			//pivot(デフォルトは画像の中心)
 			float px = _flt(data[imgNo].size.x/2 + pivot.x);
 			float py = _flt(data[imgNo].size.y/2 + pivot.y);
@@ -368,8 +364,8 @@ namespace KR
 		}
 		else {
 			//基準点に座標をずらす.
-			int x = _int(pos.x - (data[imgNo].size.x-1) * (ANCHOR_POS[anc].x-0.5));
-			int y = _int(pos.y - (data[imgNo].size.y-1) * (ANCHOR_POS[anc].y-0.5));
+			int x = _int(pos.x - (data[imgNo].size.x-1) * (ANCHOR_POS[_int(anc)].x-0.5));
+			int y = _int(pos.y - (data[imgNo].size.y-1) * (ANCHOR_POS[_int(anc)].y-0.5));
 			//pivot(デフォルトは画像の中心)
 			int px = data[imgNo].size.x/2 + pivot.x;
 			int py = data[imgNo].size.y/2 + pivot.y;
@@ -381,7 +377,7 @@ namespace KR
 	}
 
 	//DrawModiGraphの改造版.
-	int DrawImg::DrawModi(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat) {
+	int DrawImg::DrawModi(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat) const {
 	
 		_return(-3, data.handle == NONE_HANDLE) //-3: handle未設定.
 
@@ -402,7 +398,7 @@ namespace KR
 		}
 		return 0; //正常終了.
 	}
-	int DrawDivImg::DrawModi(int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat) {
+	int DrawDivImg::DrawModi(int imgNo, DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat) const {
 
 		_return(-3, data[imgNo].handle == NONE_HANDLE) //-3: handle未設定.
 
@@ -430,8 +426,8 @@ namespace KR
 	int DrawStr::Draw(Anchor anc, int font) {
 	
 		//基準点に座標をずらす.
-		float x = _flt(pos.x - (GetTextSize(font).x-1) * ANCHOR_POS[anc].x);
-		float y = _flt(pos.y - (GetTextSize(font).y-1) * ANCHOR_POS[anc].y);
+		float x = _flt(pos.x - (GetTextSize(font).x-1) * ANCHOR_POS[_int(anc)].x);
+		float y = _flt(pos.y - (GetTextSize(font).y-1) * ANCHOR_POS[_int(anc)].y);
 
 		//デフォルトフォント.
 		if (font < 0) {
@@ -567,91 +563,91 @@ namespace KR
 // ▼*--=<[ function ]>=--*▼ //
 
 	//DrawCircleの改造版.
-	int DrawCircleKR(const Circle* data, bool isFill, bool isAnti, float thick) {
+	int DrawCircleKR(const Circle& cir, bool isFill, bool isAnti, float thick) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			//posnum(角形数)は60に設定する.
-			int err = DrawCircleAA(_flt(data->pos.x), _flt(data->pos.y), data->r, 60, data->color.GetColorCode(), isFill, thick);
+			int err = DrawCircleAA(_flt(cir.pos.x), _flt(cir.pos.y), cir.r, 60, cir.color.GetColorCode(), isFill, thick);
 			_return(-1, err < 0) //-1: DrawCircleAAエラー.
 		}
 		//アンチエイリアスなし.
 		else{
-			int err = DrawCircle(_int_r(data->pos.x), _int_r(data->pos.y), _int_r(data->r), data->color.GetColorCode(), isFill, _int_r(thick));
+			int err = DrawCircle(_int_r(cir.pos.x), _int_r(cir.pos.y), _int_r(cir.r), cir.color.GetColorCode(), isFill, _int_r(thick));
 			_return(-2, err < 0) //-2: DrawCircleエラー.
 		}
 		return 0; //正常終了.
 	}
 	//DrawBoxの改造版.
-	int DrawBoxKR(const Box* data, Anchor anc, bool isFill, bool isAnti) {
+	int DrawBoxKR(const Box& box, Anchor anc, bool isFill, bool isAnti) {
 
-		_return(-3, data->size.x <= 0.0 || data->size.y <= 0.0) //-3: サイズが0.0以下.
+		_return(-3, box.size.x <= 0.0 || box.size.y <= 0.0) //-3: サイズが0.0以下.
 
 		//始点を求める.
-		float x1 = _flt(data->pos.x - (data->size.x-1) * ANCHOR_POS[anc].x);
-		float y1 = _flt(data->pos.y - (data->size.y-1) * ANCHOR_POS[anc].y);
+		float x1 = _flt(box.pos.x - (box.size.x-1) * ANCHOR_POS[_int(anc)].x);
+		float y1 = _flt(box.pos.y - (box.size.y-1) * ANCHOR_POS[_int(anc)].y);
 		//終点を求める.
-		float x2 = _flt(x1 + data->size.x-1);
-		float y2 = _flt(y1 + data->size.y-1);
+		float x2 = _flt(x1 + box.size.x-1);
+		float y2 = _flt(y1 + box.size.y-1);
 
 		//アンチエイリアスあり.
 		if (isAnti) {
-			int err = DrawBoxAA(x1, y1, x2+1, y2+1, data->color.GetColorCode(), isFill);
+			int err = DrawBoxAA(x1, y1, x2+1, y2+1, box.color.GetColorCode(), isFill);
 			_return(-1, err < 0) //-1: DrawBoxAAエラー.
 		}
 		//アンチエイリアスなし.
 		else {
-			int err = DrawBox(_int(x1), _int(y1), _int(x2+1), _int(y2+1), data->color.GetColorCode(), isFill);
+			int err = DrawBox(_int(x1), _int(y1), _int(x2+1), _int(y2+1), box.color.GetColorCode(), isFill);
 			_return(-2, err < 0) //-2: DrawBoxエラー.
 		}
 		return 0; //正常終了.
 	}
 	//DrawTriangleの改造版.
-	int DrawTriangleKR(const Triangle* data, bool isFill, bool isAnti) {
+	int DrawTriangleKR(const Triangle& tri, bool isFill, bool isAnti) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			int err = DrawTriangleAA(
-				_flt(data->pos[0].x), _flt(data->pos[0].y),
-				_flt(data->pos[1].x), _flt(data->pos[1].y),
-				_flt(data->pos[2].x), _flt(data->pos[2].y), data->color.GetColorCode(), isFill
+				_flt(tri.pos[0].x), _flt(tri.pos[0].y),
+				_flt(tri.pos[1].x), _flt(tri.pos[1].y),
+				_flt(tri.pos[2].x), _flt(tri.pos[2].y), tri.color.GetColorCode(), isFill
 			);
 			_return(-1, err < 0) //-1: DrawTriangleAAエラー.
 		}
 		//アンチエイリアスなし.
 		else {
 			int err = DrawTriangle(
-				_int_r(data->pos[0].x), _int_r(data->pos[0].y),
-				_int_r(data->pos[1].x), _int_r(data->pos[1].y),
-				_int_r(data->pos[2].x), _int_r(data->pos[2].y), data->color.GetColorCode(), isFill
+				_int_r(tri.pos[0].x), _int_r(tri.pos[0].y),
+				_int_r(tri.pos[1].x), _int_r(tri.pos[1].y),
+				_int_r(tri.pos[2].x), _int_r(tri.pos[2].y), tri.color.GetColorCode(), isFill
 			);
 			_return(-2, err < 0) //-2: DrawTriangleエラー.
 		}
 		return 0; //正常終了.
 	}
 	//DrawLineの改造版.
-	int DrawLineKR(const Line* data, bool isAnti, float thick) {
+	int DrawLineKR(const Line& line, bool isAnti, float thick) {
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			int err = DrawLineAA(
-				_flt(data->stPos.x), _flt(data->stPos.y),
-				_flt(data->edPos.x), _flt(data->edPos.y), data->color.GetColorCode(), thick
+				_flt(line.stPos.x), _flt(line.stPos.y),
+				_flt(line.edPos.x), _flt(line.edPos.y), line.color.GetColorCode(), thick
 			);
 			_return(-1, err < 0) //-1: DrawLineAAエラー.
 		}
 		//アンチエイリアスなし.
 		else {
 			int err = DrawLine(
-				_int_r(data->stPos.x), _int_r(data->stPos.y), 
-				_int_r(data->edPos.x), _int_r(data->edPos.y), data->color.GetColorCode(), _int(thick)
+				_int_r(line.stPos.x), _int_r(line.stPos.y), 
+				_int_r(line.edPos.x), _int_r(line.edPos.y), line.color.GetColorCode(), _int(thick)
 			);
 			_return(-2, err < 0) //-2: DrawLineエラー.
 		}
 		return 0; //正常終了.
 	}
 	//扇形を描画.
-	int DrawPieKR(const Pie* pie, bool isAnti, float thick) {
+	int DrawPieKR(const Pie& pie, bool isAnti, float thick) {
 
 		DrawArcKR(pie, isAnti, thick); //そのまま弧も描く.
 
@@ -659,40 +655,40 @@ namespace KR
 		int  err;  //エラー判定用.
 
 		//ベクトルを求める.
-		DBL_XY vec1 = Calc::CalcVectorDeg(pie->stAng);             //扇の始まりの角度.
-		DBL_XY vec2 = Calc::CalcVectorDeg(pie->stAng+pie->arcAng); //扇の終わりの角度.
+		DBL_XY vec1 = Calc::CalcVectorDeg(pie.stAng);             //扇の始まりの角度.
+		DBL_XY vec2 = Calc::CalcVectorDeg(pie.stAng+pie.arcAng); //扇の終わりの角度.
 		//座標を求める.
-		DBL_XY pos1 = pie->pos + vec1 * pie->r;
-		DBL_XY pos2 = pie->pos + vec2 * pie->r;
+		DBL_XY pos1 = pie.pos + vec1 * pie.r;
+		DBL_XY pos2 = pie.pos + vec2 * pie.r;
 		//線を描画.
-		line = { pos1, pie->pos, pie->color };
-		err = DrawLineKR(&line, isAnti, thick);
+		line = { pos1, pie.pos, pie.color };
+		err = DrawLineKR(line, isAnti, thick);
 		_return(-1, err < 0) //-1: DrawLine 1つ目エラー.
 
-		line = { pos2, pie->pos, pie->color };
-		err = DrawLineKR(&line, isAnti, thick);
+		line = { pos2, pie.pos, pie.color };
+		err = DrawLineKR(line, isAnti, thick);
 		_return(-2, err < 0) //-2: DrawLine 2つ目エラー.
 
 		return 0;
 	}
 	//円弧を描画.
-	int DrawArcKR(const Pie* pie, bool isAnti, float thick) {
+	int DrawArcKR(const Pie& pie, bool isAnti, float thick) {
 
-		const double addAng = 1;                        //一度で描く線の長さ.
-		const double edAng  = pie->stAng + pie->arcAng; //弧の終わりの角度.
+		const double addAng = 1.0;                    //一度で描く線の長さ.
+		const double edAng  = pie.stAng + pie.arcAng; //弧の終わりの角度.
 
-		for (int i = pie->stAng; i <= edAng-addAng; i += addAng) {
+		for (double i = pie.stAng; i <= edAng-addAng; i += addAng) {
 			//角度の設定.
 			double ang1 = i - 1;
-			ang1 = max(ang1, pie->stAng); //下限.
+			ang1 = max(ang1, pie.stAng); //下限.
 			double ang2 = i + addAng + 1;
 			ang2 = min(ang2, edAng);      //上限.
 			//座標の設定.
-			DBL_XY pos1 = Calc::CalcArcPos(pie->pos, ang1, pie->r); //繋ぎ目が綺麗になるよう角度を-1する.
-			DBL_XY pos2 = Calc::CalcArcPos(pie->pos, ang2, pie->r); //繋ぎ目が綺麗になるよう角度を+1する.
-			Line line = { pos1, pos2, pie->color };
+			DBL_XY pos1 = Calc::CalcArcPos(pie.pos, ang1, pie.r); //繋ぎ目が綺麗になるよう角度を-1する.
+			DBL_XY pos2 = Calc::CalcArcPos(pie.pos, ang2, pie.r); //繋ぎ目が綺麗になるよう角度を+1する.
+			Line line = { pos1, pos2, pie.color };
 			//線を描画.
-			int err = DrawLineKR(&line, isAnti, thick);
+			int err = DrawLineKR(line, isAnti, thick);
 			_return(-1, err < 0) //-1: DrawLineエラー.
 		}
 		return 0;
@@ -704,14 +700,14 @@ namespace KR
 		for (int x = 0; x < wid; x += size) {
 
 			Line line = { {_dbl(x), 0}, {_dbl(x), _dbl(hei)}, clrHei };
-			int err = DrawLineKR(&line);
+			int err = DrawLineKR(line);
 			_return(-1, err < 0) //-1: 縦線でエラー.
 		}
 		//横線の描画.
 		for (int y = 0; y < hei; y += size) {
 
 			Line line = { {0, _dbl(y)}, {_dbl(wid), _dbl(y)}, clrWid };
-			int err = DrawLineKR(&line);
+			int err = DrawLineKR(line);
 			_return(-2, err < 0) //-2: 横線でエラー.
 		}
 		return 0; //正常終了.

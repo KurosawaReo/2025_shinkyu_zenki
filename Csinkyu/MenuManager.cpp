@@ -129,13 +129,13 @@ void MenuManager::Draw() {
 
 		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
 		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
-		DrawTriangleKR(&tri, true, true);
+		DrawTriangleKR(tri, true, true);
 	}
 
 	//画像の座標(ここを中心とする)
 	DBL_XY imgPos = { WINDOW_WID - 450, 450 };
 	//画像のサイズ.
-	DBL_XY imgSize = imgMenu[selectedIndex].GetSize().ToDblXY();
+	DBL_XY imgSize = imgMenu[selectedIndex].GetSize().ToDbl();
 	//枠を画像よりどれだけ大きくするか.
 	const int margin = 10;
 
@@ -143,7 +143,7 @@ void MenuManager::Draw() {
 	imgMenu[selectedIndex].Draw(imgPos);
 	//画像の枠線(位置とサイズは画像を元にする)
 	Box box = { imgPos, imgSize + margin, frameColor };
-	DrawBoxKR(&box, Anchor::Mid, false);
+	DrawBoxKR(box, Anchor::Mid, false);
 
 	// ▼ 説明文の枠（右下）- 画像の幅に合わせる
 	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）

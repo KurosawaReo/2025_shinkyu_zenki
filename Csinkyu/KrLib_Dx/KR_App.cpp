@@ -1,16 +1,11 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 */
-//他ヘッダファイル.
-#if !defined DEF_KR_DXLIB_GLOBAL
-  //stdafx.hに入ってなければここで導入.
-  #include "KR_Global.h"
-  #include "KR_Timer.h"
-#endif
 #include "KR_App.h"
+#include "KR_Scene.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR 
 {
 	App App::inst; //実体生成.

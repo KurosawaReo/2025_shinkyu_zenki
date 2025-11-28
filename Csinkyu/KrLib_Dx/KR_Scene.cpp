@@ -1,17 +1,10 @@
 /*
    - KR_Scene.cpp - (DxLib)
-   ver: 2025/11/18
+   ver: 2025/11/29
 */
-#if !defined DEF_KR_DXLIB_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-  #include "KR_Calc.h"
-  #include "KR_Input.h"
-  #include "KR_Scene.h"
-  #include "KR_Sound.h"
-#endif
 #include "KR_Scene.h"
 
-//KR_Libに使う用.
+//KrLib名前空間.
 namespace KR
 {
 // ▼*--=<[ SceneBasic ]>=--*▼ //
@@ -22,12 +15,12 @@ namespace KR
 
 	//シーンの追加.
 	void SceneMng::AddScene(SceneBasic* sceneClass, MY_STRING name) {
-		sceneData[name] = sceneClass; //クラスのポインタを登録.
+		scenes[name] = sceneClass; //クラスのポインタを登録.
 	}
 	//シーンの変更.
 	int SceneMng::SetScene(MY_STRING name) {
 		//登録していれば変更.
-		if (sceneData.count(name) > 0) {
+		if (scenes.count(name) > 0) {
 			nowScene = name;
 			return 0; //正常終了.
 		}
@@ -35,9 +28,9 @@ namespace KR
 	}
 	//基本処理.
 	void SceneMng::UpdateScene() {
-		sceneData[nowScene]->Update();
+		scenes[nowScene]->Update();
 	}
 	void SceneMng::DrawScene() {
-		sceneData[nowScene]->Draw();
+		scenes[nowScene]->Draw();
 	}
 }

@@ -1,10 +1,10 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/11/24
+   ver: 2025/11/29
 */
 #include "KR_Global.h"
 
-//KR_Lib‚ÉŽg‚¤—p.
+//KrLib–¼‘O‹óŠÔ.
 namespace KR
 {
 	//constructor.
