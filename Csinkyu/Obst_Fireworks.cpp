@@ -111,7 +111,9 @@ void FireworksManager::UpdateIndividualFireworks() {
 			//‰Ô‰Î‚ÌƒŒ[ƒU[‚ğ¶¬.
 			CreateFireworksSparks(i->x, i->y);
 			//”š”­‰¹.
-			InstSoundMng.Play(_T("Explosion"), false, 70);
+			if (auto i = SoundMng::Get("Explosion")) {
+				i->Play(false, 70); //Ä¶.
+			}
 
 			i = fireworks.erase(i); //Á‹.
 		}

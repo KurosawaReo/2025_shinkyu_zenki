@@ -58,15 +58,12 @@ private:
 	float          dashTimer;        // ダッシュの残り時間.
 	float          dashCooldown;     // ダッシュのクールダウン.
 
-	DrawImg        imgPlayer[2]{};      //プレイヤー画像.
-	DrawImg        imgPlayerLight[2]{}; //プレイヤーの光る画像.
 	double         imgRot{};            //プレイヤーの画像角度.
 
 	bool           isMoveAble{};     //移動可能かどうか.
 
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
-	InputMng*      p_input{};     //入力機能.
 
 public:
 	//set.

@@ -10,8 +10,8 @@ using namespace Calc; //計算機能を使用.
 void EffectManager::Init() {
 	p_data = &GameData::GetInst();
 
-	imgScore[0].LoadFile(_T("Resources/Images/score100.png"));
-	imgScore[1].LoadFile(_T("Resources/Images/score500.png"));
+	DrawImgMng::LoadFile(_T("Resources/Images/score100.png"), "score100");
+	DrawImgMng::LoadFile(_T("Resources/Images/score500.png"), "score500");
 }
 
 void EffectManager::Reset() {
@@ -150,10 +150,10 @@ void EffectManager::Draw() {
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
 				//画像切り替え.
 				if (i.type == Effect_Score100) {
-					imgScore[0].DrawExtend(pos, {0.2, 0.2});
+					DrawImgMng::Get("score100")->DrawExtend(pos, {0.2, 0.2});
 				}
 				else {
-					imgScore[1].DrawExtend(pos, {0.2, 0.2});
+					DrawImgMng::Get("score500")->DrawExtend(pos, {0.2, 0.2});
 				}
 			}
 			break;

@@ -1,6 +1,6 @@
 /*
    - KR_App.h - (DxLib)
-   ver: 2025/12/05
+   ver: 2025/12/07
 
    プログラム全体(開始,終了など)の処理を行う。
 */
@@ -27,12 +27,10 @@ namespace KR
 	private: 
 		//constructor(新規作成できなくする)
 		App(){}
-		//destructor.
-		~App();
 
 	//▼変数.
 	private:
-		TimerMicro* tmFps{}; //fps計測用タイマー.
+		TimerMicro tmFps{}; //fps計測用タイマー.
 		
 		INT_XY windowSize{}; //画面サイズ.    (記録用)
 		int    fps{};        //フレームレート.(記録用)

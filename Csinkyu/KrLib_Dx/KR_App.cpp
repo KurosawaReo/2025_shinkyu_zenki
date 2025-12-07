@@ -1,6 +1,6 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/12/05
+   ver: 2025/12/07
 */
 #include "KR_App.h"
 
@@ -8,12 +8,6 @@
 namespace KR 
 {
 	App App::inst; //実体生成.
-
-	//destructor.
-	App::~App() {
-		//解放.
-		delete tmFps; tmFps = nullptr;
-	}
 
 	//DxLibの初期化処理.
 	ResultInt App::InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync) {
@@ -31,8 +25,8 @@ namespace KR
 		}
 
 		//fps計測用タイマー.
-		inst.tmFps = new TimerMicro(TimerMode::CountDown, 1000000/fps);
-		inst.tmFps->Start();
+		inst.tmFps = TimerMicro(TimerMode::CountDown, 1000000/fps);
+		inst.tmFps.Start();
 		//値の保存.
 		inst.windowSize = { windowWid, windowHei };
 		inst.fps = fps;
@@ -50,7 +44,7 @@ namespace KR
 		//ESCが押されるか、終了サインがあれば終了.
 		while (ProcessMessage() == 0 && !inst.isQuit) {
 			//一定時間ごとに処理.
-			if (inst.tmFps->IntervalTime()) {
+			if (inst.tmFps.IntervalTime()) {
 				ClearDrawScreen(); //画面クリア.
 				Update();		   //更新処理(main.cppへ)
 				Draw();			   //描画処理(main.cppへ)

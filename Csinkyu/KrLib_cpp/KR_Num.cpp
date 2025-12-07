@@ -1,6 +1,6 @@
 /*
    - KR_Num.cpp - (C++)
-   ver.2025/12/06
+   ver.2025/12/07
 
    膨大な数値を扱える型の追加。
 */
@@ -160,7 +160,7 @@ namespace KR
         }
         //不要な0の桁は詰める.
         if (maxDigit < num.size()) {
-            num.resize(std::max(maxDigit, 1)); //桁を減らす(最低1桁は残す)
+            num.resize(__max(maxDigit, 1)); //桁を減らす(最低1桁は残す)
         }
     }
 

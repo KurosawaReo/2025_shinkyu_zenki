@@ -27,8 +27,6 @@ private:
 
 //▼データ.
 private:
-	DrawImg imgUI[4]{}; //UI画像.
-
 	int  disBestScore{}; //表示ベストスコア.
 	int  disScore{};     //表示スコア.
 

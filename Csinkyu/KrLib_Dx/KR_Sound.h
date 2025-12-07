@@ -1,6 +1,6 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/12/06
+   ver: 2025/12/07
 
    サウンド機能を追加。
 */
@@ -22,13 +22,13 @@ namespace KR
 
 	//▼変数.
 	private:
-		int         handle{};    //サウンドハンドル.
+		int        handle{};    //サウンドハンドル.
 		
-		int         nowVol{};    //現在の音量.
-		int         aftVol{};    //変化後の音量.
-		LONGLONG    aftUS{};     //変化時間(マイクロ秒)
-		TimerMicro* timer{};     //タイマー計測用.
-		bool        isFadeOut{}; //フェードアウトで音を消すか.
+		int        nowVol{};    //現在の音量.
+		int        aftVol{};    //変化後の音量.
+		LONGLONG   aftUS{};     //変化時間(マイクロ秒)
+		TimerMicro timer{};     //タイマー計測用.
+		bool       isFadeOut{}; //フェードアウトで音を消すか.
 
 	//▼関数.
 	private:

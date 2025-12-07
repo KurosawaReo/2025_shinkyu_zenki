@@ -29,6 +29,7 @@
     <ClInclude Include="KrLib_cpp\KR_Num.h" />
     <ClInclude Include="KrLib_Dx\KR_App.h" />
     <ClInclude Include="KrLib_Dx\KR_Calc.h" />
+    <ClInclude Include="KrLib_Dx\KR_Camera.h" />
     <ClInclude Include="KrLib_Dx\KR_Debug.h" />
     <ClInclude Include="KrLib_Dx\KR_Draw.h" />
     <ClInclude Include="KrLib_cpp\KR_File.h" />
@@ -63,6 +64,7 @@
     <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
     <ClCompile Include="KrLib_Dx\KR_App.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Calc.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Camera.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Debug.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Draw.cpp" />
     <ClCompile Include="KrLib_cpp\KR_File.cpp" />

@@ -24,9 +24,7 @@ private:
 //▼データ.
 private:
 	GameData* p_data{};    //GameDataのポインタ.
-	SoundMng* p_sound{};   //サウンド管理.
 
-	DrawImg imgMenu [3]{}; //メニュー用画像.
 	Font    fontMenu[2]{}; //メニュー用フォント.
 
 	int   selectedIndex = 0;  // 選択中のインデックス

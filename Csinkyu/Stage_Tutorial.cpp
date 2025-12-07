@@ -29,8 +29,6 @@ void TutorialStage::Init() {
 	p_fireworksMng = &FireworksManager::GetInst();
 	p_effectMng    = &EffectManager::GetInst();
 	p_uiMng        = &UIManager::GetInst();
-	p_input        = &InputMng::GetInst();
-	p_sound        = &SoundMng::GetInst();
 
 	font[0].CreateFontH(_T(""), 25, 1, FontTypeID::Anti);
 	font[1].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
@@ -104,7 +102,9 @@ void TutorialStage::StepInEnd() {
 void TutorialStage::UpdateStep0() {
 
 	//サウンド.
-	p_sound->Play(_T("LevelUp"), false, 100);
+	if (auto i = SoundMng::Get("LevelUp")) {
+		i->Play(false, 100); //再生.
+	}
 	//エフェクト.
 	EffectData data{};
 	data.type = Effect_Tutorial_Step1;
@@ -163,7 +163,9 @@ void TutorialStage::UpdateStep1() {
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
+				if (auto i = SoundMng::Get("LevelUp")) {
+					i->Play(false, 100); //再生.
+				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step2;
@@ -221,7 +223,9 @@ void TutorialStage::UpdateStep2() {
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
+				if (auto i = SoundMng::Get("LevelUp")) {
+					i->Play(false, 100); //再生.
+				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step3;
@@ -317,7 +321,9 @@ void TutorialStage::UpdateStep3() {
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
+				if (auto i = SoundMng::Get("LevelUp")) {
+					i->Play(false, 100); //再生.
+				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step4;
@@ -374,8 +380,9 @@ void TutorialStage::UpdateStep4() {
 			//[終了条件] 一定時間が経過したら
 			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 5.0) {
 				//BGMフェードアウト.
-				p_sound->FadeOutPlay(_T("BGM_Tutorial"), TUTORIAL_END_NEXT_TIME);
-
+				if (auto i = SoundMng::Get("BGM_Tutorial")) {
+					i->FadeOutPlay(TUTORIAL_END_NEXT_TIME); //再生.
+				}
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {

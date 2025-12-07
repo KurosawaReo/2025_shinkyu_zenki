@@ -20,8 +20,8 @@ void ItemManager::Init()
 	p_effectMng = &EffectManager::GetInst();
 
 	//画像.
-	imgItem.     LoadFile(_T("Resources/Images/item.png"));	
-	imgItemLight.LoadFile(_T("Resources/Images/light_color_2.png"));
+	DrawImgMng::LoadFile(_T("Resources/Images/item.png"),          "item");
+	DrawImgMng::LoadFile(_T("Resources/Images/light_color_2.png"), "item_light");
 }
 //リセット.
 void ItemManager::Reset()
@@ -90,11 +90,11 @@ void ItemManager::Draw()
 			//強化演出.
 			if (items[i].type == Item_Super) {
 				//アイテム発光.
-				imgItemLight.DrawExtend(items[i].pos, {0.05, 0.05});
+				DrawImgMng::Get("item_light")->DrawExtend(items[i].pos, {0.05, 0.05});
 			}
 			//アイテム本体.
 			{
-				imgItem.DrawExtend(items[i].pos, {0.045, 0.045}, Anchor::Mid, true, true);
+				DrawImgMng::Get("item")->DrawExtend(items[i].pos, {0.045, 0.045}, Anchor::Mid, true, true);
 			}
 			ResetDrawBlendMode();
 
@@ -136,7 +136,9 @@ void ItemManager::ItemUse()
 	//アイテムを使用.
 	GameManager::GetInst().ItemUsed();
 	//サウンド.
-	InstSoundMng.Play(_T("ItemUse"), false, 76); //ポワーン.
+	if (auto i = SoundMng::Get("ItemUse")) {
+		i->Play(false, 76); //ポワーン.
+	}
 }
 
 // プレイヤーとの当たり判定

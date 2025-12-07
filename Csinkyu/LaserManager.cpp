@@ -19,9 +19,6 @@ void LaserManager::Init() {
 	p_player    = &Player::GetInst();
 	p_meteorMng = &MeteorManager::GetInst();
 	p_effectMng = &EffectManager::GetInst();
-	//画像.
-	imgLight[0].LoadFile(_T("Resources/Images/laser_nor_light.png"));
-	imgLight[1].LoadFile(_T("Resources/Images/laser_ref_light.png"));
 }
 //リセット.
 void LaserManager::Reset() {
@@ -226,7 +223,9 @@ void LaserManager::UpdateLaser() {
 					data.pos = i->nowPos;
 					p_effectMng->SpawnEffect(&data); //エフェクト出現.
 					//サウンド.
-					InstSoundMng.Play(_T("Break"), false, 74);
+					if (auto i = SoundMng::Get("Break")) {
+						i->Play(false, 74); //再生.
+					}
 
 					//どっちのタイプかで切り替え.
 					if (i->type == Laser_Reflect) {
@@ -310,13 +309,19 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 
 	//サウンド.
 	if (type == Laser_Normal) {
-		InstSoundMng.Play(_T("Laser1"), false, 58); //通常レーザー.
+		if (auto i = SoundMng::Get("Laser1")) {
+			i->Play(false, 58); //通常レーザー.
+		}
 	}
 	if (type == Laser_Straight) {
-		InstSoundMng.Play(_T("Laser2"), false, 60); //直線レーザー.
+		if (auto i = SoundMng::Get("Laser2")) {
+			i->Play(false, 60); //直線レーザー.
+		}
 	}
 	if (type == Laser_Falling) {
-		InstSoundMng.Play(_T("Laser1"), false, 45); //落下レーザー（少し音量小さめ）.
+		if (auto i = SoundMng::Get("Laser1")) {
+			i->Play(false, 45); //落下レーザー（少し音量小さめ）.
+		}
 	}
 }
 
@@ -377,7 +382,9 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator it)
 	data.pos  = it->nowPos;
 	p_effectMng->SpawnEffect(&data);
 	//サウンド.
-	InstSoundMng.Play(_T("Laser3"), false, 58);
+	if (auto i = SoundMng::Get("Laser3")) {
+		i->Play(false, 58);
+	}
 
 	//チュートリアルなら指示送信.
 	if (p_data->stage == STAGE_TUTORIAL) {

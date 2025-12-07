@@ -63,8 +63,6 @@ private:
 	FireworksManager* p_fireworksMng{};
 	EffectManager*    p_effectMng{};
 	UIManager*        p_uiMng{};
-	InputMng*         p_input{};
-	SoundMng*         p_sound{};
 
 public:
 	//set.

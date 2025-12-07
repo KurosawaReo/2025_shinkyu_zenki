@@ -1,6 +1,6 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/12/06
+   ver: 2025/12/07
 */
 #include "KR_Sound.h"
 
@@ -13,8 +13,7 @@ namespace KR
 	Sound::Sound() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
-		//.hの方でコンストラクタを使わないよう動的確保する.
-		timer = new TimerMicro(TimerMode::CountUp, 0);
+		timer = TimerMicro(TimerMode::CountUp, 0);
 	};
 	//destructor.
 	Sound::~Sound() {
@@ -42,7 +41,6 @@ namespace KR
 			DeleteSoundMem(handle); //解放.
 			handle = 0;
 		}
-		delete timer; timer = nullptr;
 	}
 	//サウンド更新.
 	void Sound::Update() {
@@ -52,7 +50,7 @@ namespace KR
 			//変化時間がある.
 			if (aftUS > 0) {
 
-				LONGLONG us = timer->GetPassTime(); //経過時間入手.
+				LONGLONG us = timer.GetPassTime(); //経過時間入手.
 
 				//現在のボリュームを求める.
 				assert(aftUS != 0);                                          //0割対策.
@@ -124,7 +122,7 @@ namespace KR
 		aftUS  = (LONGLONG)(1000000 * sec);  //変化時間.
 		//変化時間があるなら.
 		if (aftUS > 0) {
-			timer->Start(); //タイマー開始.
+			timer.Start(); //タイマー開始.
 		}
 	}
 	//フェードイン再生.
