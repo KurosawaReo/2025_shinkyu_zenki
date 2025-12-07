@@ -1,32 +1,29 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/06
 
    KrLib全体で使う汎用機能を追加。
 */
 #pragma once
 
 //このヘッダが定義されているか判別する用.
-#define DEF_KR_DXLIB_GLOBAL
+#define DEF_KR_DX_GLOBAL
 
-//C言語用.
-#define _USE_MATH_DEFINES
-#define _CRT_SECURE_NO_WARNINGS
-//C++用.
-#include <cassert>   //assert.h をラップしたもの.
-#include <cstdlib>   //stdlib.h をラップしたもの.
-#include <ctime>     //time.h   をラップしたもの.
 //C++用のKrLibを導入.
 #if !defined DEF_KR_CPP_GLOBAL
   #include "../KrLib_cpp/KR_Global.h"
 #endif
+//C++用.
+#include <cassert>   //assert.h をラップしたもの.
+#include <cstdlib>   //stdlib.h をラップしたもの.
+#include <ctime>     //time.h   をラップしたもの.
 //DxLib.
 #include "DxLib.h"
 
 //KrLib名前空間.
 namespace KR
 {
-	//RGBAデータ(COLOR_U8とほぼ同じだが、こっちでは順をrgbにする)
+	//RGBAデータ(COLOR_U8とほぼ同じだが、こっちはrgbaの順)
 	struct RGBA
 	{
 		BYTE r, g, b, a;
@@ -106,5 +103,14 @@ namespace KR
 		double   stAng;  //開始角度.
 		double   arcAng; //弧の角度.
 		MY_COLOR color;  //色.
+	};
+
+	//四角形データ(3D)
+	struct Box3D
+	{
+		DBL_XYZ  stPos;    //始点座標.
+		DBL_XYZ  edPos;    //終点座標.
+		MY_COLOR difColor; //Diffuse  Color(ディフューズカラー) | 光源からまっすぐ当たる光の色.
+		MY_COLOR spcColor; //Specular Color(スペキュラカラー)   | 鏡面反射の色.
 	};
 }

@@ -35,6 +35,7 @@
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
     <ClInclude Include="KrLib_cpp\KR_Num.h" />
+    <ClInclude Include="KrLib_Dx\KR_Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
@@ -70,5 +71,6 @@
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Camera.cpp" />
   </ItemGroup>
 </Project>

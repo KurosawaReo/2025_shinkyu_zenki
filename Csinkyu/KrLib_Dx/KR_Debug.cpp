@@ -1,8 +1,12 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/04
 */
 #include "KR_Debug.h"
+
+//[include] cppでのみ使うもの.
+#include "KR_App.h"
+#include "KR_Camera.h"
 
 //KrLib名前空間.
 namespace KR
@@ -23,6 +27,12 @@ namespace KR
 		void Log(MY_STRING text, double value) {
 			printfDx(_T("%s: %f\n"), text.c_str(), value);
 		}
+		void Log(MY_STRING text, INT_XY pos) {
+			printfDx(_T("%s: %d %d\n"),     text.c_str(), pos.x, pos.y);
+		}
+		void Log(MY_STRING text, DBL_XY pos) {
+			printfDx(_T("%s: %.2f %.2f\n"), text.c_str(), pos.x, pos.y);
+		}
 
 		//マウス座標の表示(座標調べにおすすめ)
 		void LogMousePos() {
@@ -39,6 +49,21 @@ namespace KR
 		//コントローラIDの表示.
 		void LogPadID() {
 			DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
+		}
+
+		//マウスカーソルに合わせてカメラを動かす.
+		void MouseToMoveCamera() {
+
+			int mx = -1, my = -1;
+			GetMousePoint(&mx, &my); //マウス座標取得.
+
+			//中央基準にする.
+			DBL_XY pos = {
+				mx - _dbl(App::GetWindowX())/2,
+				my - _dbl(App::GetWindowY())/2
+			};
+			//カメラを動かす.
+			Camera::SetPos(pos);
 		}
 	}
 }

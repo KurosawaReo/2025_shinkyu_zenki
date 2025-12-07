@@ -1,42 +1,56 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/07
 */
 #include "KR_Sound.h"
 
 //KrLib名前空間.
 namespace KR
 {
-// ▼*--=<[ SoundData ]>=--*▼ //
+// ▼*--=<[ Sound ]>=--*▼ //
 
 	//constructor.
-	SoundData::SoundData() 
+	Sound::Sound() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
-		//.hの方でコンストラクタを使わないよう動的確保する.
-		timer = new TimerMicro(TimerMode::CountUp, 0);
+		timer = TimerMicro(TimerMode::CountUp, 0);
 	};
 	//destructor.
-	SoundData::~SoundData() {
-		delete timer; timer = nullptr;
+	Sound::~Sound() {
+		Release();
 	};
 
+	//ファイル読み込み.
+	ResultInt Sound::LoadFile(MY_STRING fileName) {
+
+		//読み込み済のものは解放.
+		Release();
+		//サウンド読み込み.
+		handle = LoadSoundMem(fileName.c_str());
+
+		//結果を返す.
+		if (handle < 0) {
+			return {-1, _T("Sound::LoadFile"), _T("読み込み失敗")};
+		}
+		return {0, _T("Sound::LoadFile"), _T("正常終了")};
+	}
 	//サウンド解放.
-	void SoundData::Release() {
+	void Sound::Release() {
 		//データが登録されていれば.
 		if (handle >= 0) {
 			DeleteSoundMem(handle); //解放.
+			handle = 0;
 		}
 	}
 	//サウンド更新.
-	void SoundData::Update() {
+	void Sound::Update() {
 	
 		//音量が変化するなら.
 		if (nowVol != aftVol) {
 			//変化時間がある.
 			if (aftUS > 0) {
 
-				LONGLONG us = timer->GetPassTime(); //経過時間入手.
+				LONGLONG us = timer.GetPassTime(); //経過時間入手.
 
 				//現在のボリュームを求める.
 				assert(aftUS != 0);                                          //0割対策.
@@ -66,8 +80,16 @@ namespace KR
 			}
 		}
 	}
+	//ボリューム値を有効範囲に変換.
+	int Sound::GetVolumeRange(int volume) {
+
+		int vol255 = 255 * volume/100;        //有効範囲(0～255)に変換.
+		assert(0 <= vol255 && vol255 <= 255); //範囲内チェック.
+		return vol255;
+	}
+
 	//サウンド再生.
-	void SoundData::Play(bool isLoop, int volume) {
+	void Sound::Play(bool isLoop, int volume) {
 
 		//データが登録されていれば.
 		if (handle >= 0) {
@@ -80,7 +102,7 @@ namespace KR
 		}
 	}
 	//サウンド停止.
-	void SoundData::Stop() {
+	void Sound::Stop() {
 
 		//データが登録されていれば.
 		if (handle >= 0) {
@@ -93,22 +115,27 @@ namespace KR
 		}
 	}
 	//音量変更設定.
-	void SoundData::ChangeVolume(int volume, float sec) {
+	void Sound::ChangeVolume(int volume, float sec) {
 	
 		nowVol = GetVolumeSoundMem2(handle); //現在の音量.
 		aftVol = GetVolumeRange(volume);     //変化後の音量.
 		aftUS  = (LONGLONG)(1000000 * sec);  //変化時間.
 		//変化時間があるなら.
 		if (aftUS > 0) {
-			timer->Start(); //タイマー開始.
+			timer.Start(); //タイマー開始.
 		}
 	}
-	//ボリューム値を有効範囲に変換.
-	int SoundData::GetVolumeRange(int volume) {
+	//フェードイン再生.
+	void Sound::FadeInPlay(bool isLoop, int volume, float sec) {
 
-		int vol255 = 255 * volume/100;        //有効範囲(0～255)に変換.
-		assert(0 <= vol255 && vol255 <= 255); //範囲内チェック.
-		return vol255;
+		Play(isLoop, 0);           //最初は音量0で再生.
+		ChangeVolume(volume, sec); //徐々に大きく.
+	}
+	//フェードアウトする.
+	void Sound::FadeOutPlay(float sec) {
+
+		ChangeVolume(0, sec); //徐々に小さく.
+		isFadeOut = true;     //フェードアウトモードにする.
 	}
 
 // ▼*--=<[ SoundMng ]>=--*▼ //
@@ -118,74 +145,54 @@ namespace KR
 	//destructor.
 	SoundMng::~SoundMng() {
 		//サウンドデータを全て取り出す.
-		for (auto& i : sound) {
+		for (auto& i : sounds) {
 			i.second.Release(); //各サウンドの解放.
 		}
-		sound.clear(); //データを空にする.
+		sounds.clear(); //データを空にする.
+	}
+
+	//サウンド取得.
+	Sound* SoundMng::Get(string saveName) {
+		//存在すれば.
+		if (inst.sounds.count(saveName) > 0) {
+			return &inst.sounds[saveName]; //返す.
+		}
+		return nullptr;
+	}
+	//サウンド取得(チェックあり)
+	bool SoundMng::TryGet(string saveName, Sound* ptr) {
+		//存在すれば.
+		if (inst.sounds.count(saveName) > 0) {
+			ptr = &inst.sounds[saveName]; //返す.
+			return true;             //取得成功.
+		}
+		return false; //取得失敗.
 	}
 
 	//サウンド読み込み.
-	ResultInt SoundMng::LoadFile(MY_STRING fileName, MY_STRING saveName) {
+	ResultInt SoundMng::LoadFile(MY_STRING fileName, string saveName) {
 	
-		//読み込み.
-		int load = LoadSoundMem(fileName.c_str());
-		if (load < 0) {
-			return {-1, _T("SoundMng::LoadFile"), _T("読み込み失敗")};
+		//既に存在すれば.
+		if (inst.sounds.count(saveName) > 0) {
+			return {-1, _T("SoundMng::LoadFile"), _T("使用済みの保存名")};
 		}
-		//ハンドルを保存.
-		sound[saveName].SetHandle(load);
-
+		//ファイル読み込み.
+		ResultInt err = inst.sounds[saveName].LoadFile(fileName);
+		if (err.GetCode() < 0) {
+			return {-2, _T("SoundMng::LoadFile"), _T("LoadFileエラー")};
+		}
 		return {0, _T("SoundMng::LoadFile"), _T("正常終了")};
 	}
-	//サウンド再生.
-	ResultInt SoundMng::Play(MY_STRING saveName, bool isLoop, int volume) {
-		//存在すれば.
-		if (sound.count(saveName) > 0) {
-			sound[saveName].Play(isLoop, volume); //再生.
-			return {0, _T("SoundMng::Play"), _T("正常終了")};
-		}
-		return {-1, _T("SoundMng::Play"), _T("saveNameが見つからない")};
-	}
-	//サウンド停止.
-	ResultInt SoundMng::Stop(MY_STRING saveName) {
-		//存在すれば.
-		if (sound.count(saveName) > 0) {
-			sound[saveName].Stop(); //停止.
-			return {0, _T("SoundMng::Stop"), _T("正常終了")};
-		}
-		return {-1, _T("SoundMng::Stop"), _T("saveNameが見つからない")};
-	}
-	//サウンド停止(全てのBGM)
-	void SoundMng::StopAll() {
-		//全て停止する.
-		for (auto& i : sound) {
-			i.second.Stop();
-		}
-	}
-	//サウンド更新.
+	//全サウンド更新.
 	void SoundMng::Update() {
-
-		//サウンドデータを全て取り出す.
-		for (auto& i : sound) {
+		for (auto& i : inst.sounds) {
 			i.second.Update(); //各サウンドの更新.
 		}
 	}
-
-	//音量を変更.
-	void SoundMng::ChangeVolume(MY_STRING saveName, int volume, float sec) {
-	
-		sound[saveName].ChangeVolume(volume, sec); //変更設定.
-	}
-	//フェードイン再生.
-	void SoundMng::FadeInPlay(MY_STRING saveName, bool isLoop, int volume, float sec) {
-
-		sound[saveName].Play(isLoop, 0);           //最初は音量0で再生.
-		sound[saveName].ChangeVolume(volume, sec); //徐々に大きく.
-	}
-	//フェードアウトする.
-	void SoundMng::FadeOutPlay(MY_STRING saveName, float sec) {
-
-		sound[saveName].ChangeVolume(0, sec); //徐々に小さく.
-		sound[saveName].SetIsFadeOut(true);   //フェードアウトモードに.
+	//全サウンド停止.
+	void SoundMng::StopAll() {
+		for (auto& i : inst.sounds) {
+			i.second.Stop();
+		}
 	}
 }

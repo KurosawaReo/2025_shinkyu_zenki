@@ -1,10 +1,7 @@
 /*
    - KR_Memory.cpp - (C++)
-   ver.2025/11/29
+   ver.2025/12/06
 */
-#if !defined DEF_KR_CPP_GLOBAL
-  #include "KR_Global.h" //stdafx.h‚É“ü‚Á‚Ä‚È‚¯‚ê‚Î‚±‚±‚Å“±“ü.
-#endif
 #include "KR_Memory.h"
 
 //KrLib–¼‘O‹óŠÔ.

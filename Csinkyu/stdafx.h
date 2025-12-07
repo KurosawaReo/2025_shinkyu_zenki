@@ -31,10 +31,10 @@
 
 #include "KrLib_Dx/KR_Global.h"
 #include "KrLib_Dx/KR_Calc.h"
+#include "KrLib_Dx/KR_Camera.h"
 #include "KrLib_Dx/KR_Debug.h"
 #include "KrLib_Dx/KR_Draw.h"
 #include "KrLib_Dx/KR_Input.h"
-#include "KrLib_Dx/KR_Object.h"
 #include "KrLib_Dx/KR_Sound.h"
 #include "KrLib_Dx/KR_Timer.h"
 #include "KrLib_Dx/KR_App.h"

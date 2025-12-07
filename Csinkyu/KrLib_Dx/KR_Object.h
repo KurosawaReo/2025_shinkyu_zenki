@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/07
 
    オブジェクトを追加。(継承して使うことも可)
    Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
@@ -12,26 +12,23 @@
 */
 #pragma once
 //KR_Globalが入ってなければここで導入.
-#if !defined DEF_KR_DXLIB_GLOBAL
+#if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
-#include "KR_Calc.h"
+//[include] 定義で使ってるもの.
 #include "KR_Draw.h"
-#include "KR_Input.h"
 
 /*
    [画像について]
-
    DrawImgで「=」演算子を禁止にしてるため
    Objectのメンバに入れるとObject自体も「=」演算子が使えなくなる.
-
    そのため、外部からポインタで送る方式を使っている.
 */
 
 //KrLib名前空間.
 namespace KR
 {
-	//オブジェクト(図形)[継承必須]
+	//オブジェクト(図形)[継承想定]
 	class ObjectShape
 	{
 	//▼変数.
@@ -48,14 +45,14 @@ namespace KR
 
 	public:
 		//virtual(中身が変わるため、派生クラスで設定する)
-		virtual void      SetPos(DBL_XY)       = 0;
-		virtual DBL_XY    GetPos()       const = 0;
-		virtual DBL_XY*   GetPosPtr()          = 0;
-		virtual DBL_XY    GetSize()      const = 0;
-		virtual ResultInt DrawShape(bool isFill = true, bool isAnti = false) = 0;
+		virtual void      SetPos   (DBL_XY)       = 0;
+		virtual DBL_XY    GetPos   ()       const = 0;
+		virtual DBL_XY*   GetPosPtr()             = 0;
+		virtual DBL_XY    GetSize  ()       const = 0;
+		virtual ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const = 0;
 
 		//set.
-		void      SetDrawImg     (DrawImg& _img) { img = &_img; }
+		void      SetDrawImg     (DrawImg* _img) { img = _img; }
 		//計算(Calcの機能)
 		void      FixPosInArea   (DBL_RECT rect);
 		bool      IsOutInArea    (DBL_RECT rect, bool isCompOut);
@@ -68,13 +65,13 @@ namespace KR
 		void      MovePadStick   (float speed);
 		void      MoveMousePos   (bool isMoveX = true, bool isMoveY = true);
 		//描画(Drawの機能)
-		ResultInt DrawGraph      ();
-		ResultInt DrawRectGraph  (DBL_RECT rect);
-		ResultInt DrawExtendGraph(DBL_XY sizeRate);
-		ResultInt DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0});
+		ResultInt DrawGraph      (                                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true) const;
+		ResultInt DrawRectGraph  (DBL_RECT rect,                                            Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true) const;
+		ResultInt DrawExtendGraph(DBL_XY sizeRate,                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true) const;
+		ResultInt DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0},                           bool isFloat = false, bool isCameraDis = true) const;
 	};
 
-	//オブジェクト(円)
+	//オブジェクト(円)[継承想定]
 	class ObjectCir : public ObjectShape
 	{
 	//▼変数.
@@ -84,24 +81,26 @@ namespace KR
 	//▼関数.
 	public:
 		//constructor.
-		ObjectCir() : ObjectShape() {
+		ObjectCir() {
 			cir.r     = 10;       //デフォルト半径.
 			cir.color = 0xFFFFFF; //デフォルト色.
 		}
+		//get.
+		Circle    GetCir   () const { return cir; }
 		//override.
-		void      SetPos(DBL_XY _pos)       override { cir.pos = _pos; }
-		DBL_XY    GetPos()            const override { return cir.pos; }
-		DBL_XY*   GetPosPtr()               override { return &cir.pos; }
-		DBL_XY    GetSize()           const override { return {cir.r, cir.r}; }
-		ResultInt DrawShape(bool isFill = true, bool isAnti = false) override;
+		void      SetPos   (DBL_XY _pos)       override { cir.pos = _pos; }
+		DBL_XY    GetPos   ()            const override { return cir.pos; }
+		DBL_XY*   GetPosPtr()                  override { return &cir.pos; }
+		DBL_XY    GetSize  ()            const override { return {cir.r, cir.r}; }
+		ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const override;
 
 		//当たり判定(Calcの機能)
-		bool      HitCheckCir (const Circle& cir);
-		bool      HitCheckBox (const Box&    box);
-		bool      HitCheckLine(const Line&   line);
+		bool      HitCheckCir (const Circle& cir)  const;
+		bool      HitCheckBox (const Box&    box)  const;
+		bool      HitCheckLine(const Line&   line) const;
 	};
 
-	//オブジェクト(四角形)
+	//オブジェクト(四角形)[継承想定]
 	class ObjectBox : public ObjectShape
 	{
 	//▼変数.
@@ -111,20 +110,22 @@ namespace KR
 	//▼関数.
 	public:
 		//constructor.
-		ObjectBox() : ObjectShape() {
+		ObjectBox() {
 			box.size  = {20, 20}; //デフォルトサイズ.
 			box.color = 0xFFFFFF; //デフォルト色.
 		}
+		//get.
+		Box       GetBox() const { return box; }
 		//override.
 		void      SetPos(DBL_XY _pos)       override { box.pos = _pos; }
 		DBL_XY    GetPos()            const override { return box.pos; }
 		DBL_XY*   GetPosPtr()               override { return &box.pos; }
 		DBL_XY    GetSize()           const override { return box.size; }
-		ResultInt DrawShape(bool isFill = true, bool isAnti = false) override;
+		ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const override;
 
 		//当たり判定(Calcの機能)
-		bool      HitCheckCir(const Circle& cir);
-		bool      HitCheckBox(const Box&    box);
+		bool      HitCheckCir(const Circle& cir) const;
+		bool      HitCheckBox(const Box&    box) const;
 	};
 
 	//オブジェクト(グリッド上専用)

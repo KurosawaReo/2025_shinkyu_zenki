@@ -70,8 +70,6 @@ private:
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
-	DrawImg imgLight[2]{};
-
 	GameData*      p_data{};
 	Player*        p_player{};
 	MeteorManager* p_meteorMng{};

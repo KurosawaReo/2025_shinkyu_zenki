@@ -1,6 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/05
 */
 #include "KR_Input.h"
 
@@ -10,61 +10,61 @@ namespace KR
 	InputMng InputMng::inst; //実体生成.
 
 	//キー入力の判定.
-	bool InputMng::IsPushKey(KeyID id) const {
-		return tmKey[_int(id)] > 0;
+	bool InputMng::IsPushKey(KeyID id) {
+		return inst.tmKey[_int(id)] > 0;
 	}
-	int  InputMng::IsPushKeyTime(KeyID id) const {
-		return tmKey[_int(id)];
+	int  InputMng::IsPushKeyTime(KeyID id) {
+		return inst.tmKey[_int(id)];
 	}
 	//マウス入力の判定.
-	bool InputMng::IsPushMouse(MouseID id) const {
-		return tmMouse[_int(id)] > 0;
+	bool InputMng::IsPushMouse(MouseID id) {
+		return inst.tmMouse[_int(id)] > 0;
 	}
-	int  InputMng::IsPushMouseTime(MouseID id) const {
-		return tmMouse[_int(id)];
+	int  InputMng::IsPushMouseTime(MouseID id) {
+		return inst.tmMouse[_int(id)];
 	}
 	//コントローラ入力の判定.
-	bool InputMng::IsPushPadBtn(PadXboxID id) const {
-		return tmPadBtn[_int(id)] > 0;
+	bool InputMng::IsPushPadBtn(PadXboxID id) {
+		return inst.tmPadBtn[_int(id)] > 0;
 	}
-	bool InputMng::IsPushPadBtn(PadSwitchID id) const {
-		return tmPadBtn[_int(id)] > 0;
+	bool InputMng::IsPushPadBtn(PadSwitchID id) {
+		return inst.tmPadBtn[_int(id)] > 0;
 	}
-	bool InputMng::IsPushPadBtn(PadArcadeID id) const {
-		return tmPadBtn[_int(id)] > 0;
+	bool InputMng::IsPushPadBtn(PadArcadeID id) {
+		return inst.tmPadBtn[_int(id)] > 0;
 	}
-	int  InputMng::IsPushPadBtnTime(PadXboxID id) const {
-		return tmPadBtn[_int(id)];
+	int  InputMng::IsPushPadBtnTime(PadXboxID id) {
+		return inst.tmPadBtn[_int(id)];
 	}
-	int  InputMng::IsPushPadBtnTime(PadSwitchID id) const {
-		return tmPadBtn[_int(id)];
+	int  InputMng::IsPushPadBtnTime(PadSwitchID id) {
+		return inst.tmPadBtn[_int(id)];
 	}
-	int  InputMng::IsPushPadBtnTime(PadArcadeID id) const {
-		return tmPadBtn[_int(id)];
+	int  InputMng::IsPushPadBtnTime(PadArcadeID id) {
+		return inst.tmPadBtn[_int(id)];
 	}
 	//アクション判定.
-	bool InputMng::IsPushAction(MY_STRING name) {
-		return actions[name].time > 0; //押してる時間があればtrue.
+	bool InputMng::IsPushAction(string name) {
+		return inst.actions[name].time > 0; //押してる時間があればtrue.
 	}
-	int  InputMng::IsPushActionTime(MY_STRING name) {
-		return actions[name].time;     //時間を返す.
+	int  InputMng::IsPushActionTime(string name) {
+		return inst.actions[name].time;     //時間を返す.
 	}
 
 	//アクション追加.
-	void InputMng::AddAction(MY_STRING name, KeyID id) {
-		actions[name].inputs.push_back({ InputType::Key,       _int(id) }); //Key操作で登録.
+	void InputMng::AddAction(string name, KeyID id) {
+		inst.actions[name].inputs.push_back({ InputType::Key,       _int(id) }); //Key操作で登録.
 	}
-	void InputMng::AddAction(MY_STRING name, MouseID id) {
-		actions[name].inputs.push_back({ InputType::Mouse,     _int(id) }); //Mouse操作で登録.
+	void InputMng::AddAction(string name, MouseID id) {
+		inst.actions[name].inputs.push_back({ InputType::Mouse,     _int(id) }); //Mouse操作で登録.
 	}
-	void InputMng::AddAction(MY_STRING name, PadXboxID id) {
-		actions[name].inputs.push_back({ InputType::PadXbox,   _int(id) }); //Pad操作(xbox)で登録.
+	void InputMng::AddAction(string name, PadXboxID id) {
+		inst.actions[name].inputs.push_back({ InputType::PadXbox,   _int(id) }); //Pad操作(xbox)で登録.
 	}
-	void InputMng::AddAction(MY_STRING name, PadSwitchID id) {
-		actions[name].inputs.push_back({ InputType::PadSwitch, _int(id) }); //Pad操作(switch)で登録.
+	void InputMng::AddAction(string name, PadSwitchID id) {
+		inst.actions[name].inputs.push_back({ InputType::PadSwitch, _int(id) }); //Pad操作(switch)で登録.
 	}
-	void InputMng::AddAction(MY_STRING name, PadArcadeID id) {
-		actions[name].inputs.push_back({ InputType::PadArcade, _int(id) }); //Pad操作(arcade)で登録.
+	void InputMng::AddAction(string name, PadArcadeID id) {
+		inst.actions[name].inputs.push_back({ InputType::PadArcade, _int(id) }); //Pad操作(arcade)で登録.
 	}
 
 	//キーボード:十字キー操作.
@@ -87,8 +87,8 @@ namespace KR
 		}
 
 		//座標移動.
-		pos->x += GetVector4Dir(pow).x * speed;
-		pos->y += GetVector4Dir(pow).y * speed;
+		pos->x += inst.GetVector4Dir(pow).x * speed;
+		pos->y += inst.GetVector4Dir(pow).y * speed;
 	}
 	//コントローラ:十字キー操作.
 	void InputMng::MovePad4Dir(DBL_XY* pos, float speed) {
@@ -110,8 +110,8 @@ namespace KR
 		}
 
 		//座標移動.
-		pos->x += GetVector4Dir(pow).x * speed;
-		pos->y += GetVector4Dir(pow).y * speed;
+		pos->x += inst.GetVector4Dir(pow).x * speed;
+		pos->y += inst.GetVector4Dir(pow).y * speed;
 	}
 	//コントローラ:スティック操作.
 	void InputMng::MovePadStick(DBL_XY* pos, float speed) {
@@ -143,12 +143,12 @@ namespace KR
 
 	//マウス座標取得.
 	DBL_XY InputMng::GetMousePos() {
-		return mPos.ToDbl();
+		return inst.mPos.ToDbl();
 	}
 	//コントローラスティック操作取得.
 	DBL_XY InputMng::GetPadStickXY() {
 		//範囲-1000～1000を-1.0～1.0に変換.
-		return { _dbl(stickVec.x)/1000, _dbl(stickVec.y)/1000 };
+		return inst.stickVec.ToDbl() / 1000;
 	}
 
 	//ボタンの更新処理.
@@ -160,10 +160,10 @@ namespace KR
 		for (int i = 0; i < KEY_MAX; i++) {
 			//押されているなら.
 			if (key[i] != 0) {
-				tmKey[i]++;   //カウント.
+				inst.tmKey[i]++;   //カウント.
 			}
 			else {
-				tmKey[i] = 0; //0秒にリセット.
+				inst.tmKey[i] = 0; //0秒にリセット.
 			}
 		}
 	}
@@ -171,15 +171,15 @@ namespace KR
 	void InputMng::UpdateMouse() {
 
 		//マウス座標取得.
-		GetMousePoint(&mPos.x, &mPos.y);
+		GetMousePoint(&inst.mPos.x, &inst.mPos.y);
 
 		for (int i = 0; i < MOUSE_MAX; i++) {
 			//押されているなら.
 			if ((GetMouseInput() & (1 << i)) != 0) { //And演算で抽出.
-				tmMouse[i]++;   //カウント.
+				inst.tmMouse[i]++;   //カウント.
 			}
 			else {
-				tmMouse[i] = 0; //0秒にリセット.
+				inst.tmMouse[i] = 0; //0秒にリセット.
 			}
 		}
 	}
@@ -187,15 +187,15 @@ namespace KR
 	void InputMng::UpdatePad() {
 
 		//スティック入力取得.
-		GetJoypadAnalogInput(&stickVec.x, &stickVec.y, DX_INPUT_PAD1);
+		GetJoypadAnalogInput(&inst.stickVec.x, &inst.stickVec.y, DX_INPUT_PAD1);
 
 		for (int i = 0; i < PAD_BTN_MAX; i++) {
 			//押されているなら.
 			if (GetJoypadInputState(DX_INPUT_PAD1) & (1 << i)) { //And演算で抽出.
-				tmPadBtn[i]++;   //カウント.
+				inst.tmPadBtn[i]++;   //カウント.
 			}
 			else {
-				tmPadBtn[i] = 0; //0秒にリセット.
+				inst.tmPadBtn[i] = 0; //0秒にリセット.
 			}
 		}
 	}
@@ -203,7 +203,7 @@ namespace KR
 	void InputMng::UpdateAction() {
 
 		//ActionDataを全ループ.
-		for (auto& i : actions) {
+		for (auto& i : inst.actions) {
 
 			bool isPush = false; //何かを押しているかどうか.
 

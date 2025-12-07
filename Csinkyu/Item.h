@@ -44,9 +44,6 @@ private:
 	ItemData items[ITEM_COUNT]{};
 	int      itemMaxCnt{}; //出すアイテムの数.
 
-	DrawImg  imgItem{};      //アイテム画像.
-	DrawImg  imgItemLight{}; //アイテム発光.
-
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
 	bool     isSpawnAble{};   //召喚可能かどうか.
 

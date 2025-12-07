@@ -62,8 +62,7 @@ private:
 
 //▼データ.
 private:
-	list<Effect> effect;	    //エフェクト配列.
-	DrawImg		 imgScore[2]{}; //スコア画像.
+	list<Effect> effect;   //エフェクト配列.
 	GameData*	 p_data{};
 
 public:

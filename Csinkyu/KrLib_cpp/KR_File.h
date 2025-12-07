@@ -6,7 +6,7 @@
 */
 #pragma once
 //KR_Global‚ª“ü‚Á‚Ä‚È‚¯‚ê‚Î‚±‚±‚Å“±“ü.
-#if !defined DEF_KR_DXLIB_GLOBAL
+#if !defined DEF_KR_CPP_GLOBAL
   #include "KR_Global.h"
 #endif
 

@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2025/11/29
+   ver.2025/12/01
 
    KrLib全体で使う汎用機能を追加。
 */
@@ -9,13 +9,17 @@
 //このヘッダが定義されているか判別する用.
 #define DEF_KR_CPP_GLOBAL
 
+//定義用.
+#define _USE_MATH_DEFINES
+#define _CRT_SECURE_NO_WARNINGS
 //C++用.
 #include <iostream>
 #include <vector>
 #include <list>
 #include <map>
-#include <string>
-#include <cmath>    //math.hをラップしたもの.
+#include <string>     //string型用.
+#include <cmath>      //math.hをラップしたもの.
+//#include <functional> //ラムダ式用.
 //C言語用.
 #include <tchar.h>
 
@@ -25,6 +29,8 @@ using std::vector;
 using std::map;
 using std::string;
 using std::wstring;
+using std::to_string;
+using std::to_wstring;
 
 //型変換マクロ.
 #define _int(n)   static_cast<int>   (n)        //int型変換マクロ.
@@ -44,14 +50,14 @@ namespace KR
 {
 	//文字コードで切り替え.
 #if defined UNICODE
-	using MY_STRING = wstring;        //wchar_t型.
-	#define _to_mystr std::to_wstring //to_wstring用.
+	using MY_STRING = wstring;   //wchar_t型.
+	#define _to_mystr to_wstring //to_wstring用.
 #else
-	using MY_STRING = string;         //char型.
-	#define _to_mystr std::to_string  //to_string用.
+	using MY_STRING = string;    //char型.
+	#define _to_mystr to_string  //to_string用.
 #endif
 
-	//xとyの凝縮.
+	//[2D] xとyの凝縮型.
 	template<typename T> //型を<>で入力して使う.
 	struct XY
 	{
@@ -168,6 +174,123 @@ namespace KR
 	using INT_XY = XY<int>;    //int型.
 	using DBL_XY = XY<double>; //double型.
 
+	//[3D] xとyとzの凝縮型.
+	template<typename T> //型を<>で入力して使う.
+	struct XYZ
+	{
+		T x, y, z;
+
+		//constructor.
+		XYZ()                 : x(0),  y(0),  z(0)  {}
+		XYZ(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {} 
+
+		//int型に変換.
+		XYZ<int>    ToInt() const {
+			return {_int_r(x), _int_r(y), _int_r(z)};
+		}
+		//double型に変換.
+		XYZ<double> ToDbl() const {
+			return {_dbl(x), _dbl(y), _dbl(z)};
+		}
+		//加算した結果を返す.
+		XYZ<T> Add(T _x, T _y, T _z) const {
+			return { x + _x, y + _y, z + _z};
+		}
+		XYZ<T> Add(XYZ<T> other) const {
+			return *this + other;
+		}
+
+		//演算子[+,-,*,/,%] [XYZ<T>・XYZ<T>]
+		XYZ<T> operator+(const XYZ<T>& other) const { 
+			return { x + other.x, y + other.y, z + other.z };
+		}
+		XYZ<T> operator-(const XYZ<T>& other) const {
+			return { x - other.x, y - other.y, z - other.z };
+		}
+		XYZ<T> operator*(const XYZ<T>& other) const {
+			return { x * other.x, y * other.y, z * other.z };
+		}
+		XYZ<T> operator/(const XYZ<T>& other) const {
+			return { x / other.x, y / other.y, z / other.z };
+		}
+		XYZ<T> operator%(const XYZ<T>& other) const {
+			return { x % other.x, y % other.y, z % other.z };
+		}
+		//演算子[+=,-=,*=,/=,%=] [XYZ<T>・XYZ<T>]
+		XYZ<T>& operator+=(const XYZ<T>& other) {
+			*this = *this + other;
+			return *this; //自身の実体.
+		}
+		XYZ<T>& operator-=(const XYZ<T>& other) {
+			*this = *this - other;
+			return *this;
+		}
+		XYZ<T>& operator*=(const XYZ<T>& other) {
+			*this = *this * other;
+			return *this;
+		}
+		XYZ<T>& operator/=(const XYZ<T>& other) {
+			*this = *this / other;
+			return *this;
+		}
+		XYZ<T>& operator%=(const XYZ<T>& other) {
+			*this = *this % other;
+			return *this;
+		}
+
+		//演算子[+,-,*,/,%] [XYZ<T>・数値]
+		//右側が数値でなければ無効にする.
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T> operator+(T2 num) const {
+			return { x + static_cast<T>(num), y + static_cast<T>(num), z + static_cast<T>(num) }; //cast後にxとyを加算して返す.
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T> operator-(T2 num) const {
+			return { x - static_cast<T>(num), y - static_cast<T>(num), z - static_cast<T>(num) };
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T> operator*(T2 num) const {
+			return { x * static_cast<T>(num), y * static_cast<T>(num), z * static_cast<T>(num) };
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T> operator/(T2 num) const {
+			return { x / static_cast<T>(num), y / static_cast<T>(num), z / static_cast<T>(num) };
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T> operator%(T2 num) const {
+			return { x % static_cast<T>(num), y % static_cast<T>(num), z % static_cast<T>(num) };
+		}
+		//演算子[+=,-=,*=,/=,%=] [XYZ<T>・数値]
+		//右側が数値でなければ無効にする.
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T>& operator+=(T2 num) {
+			*this = *this + num;
+			return *this; //自身の実体.
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T>& operator-=(T2 num) {
+			*this = *this - num;
+			return *this;
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T>& operator*=(T2 num) {
+			*this = *this * num;
+			return *this;
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T>& operator/=(T2 num) {
+			*this = *this / num;
+			return *this;
+		}
+		template<typename T2, _type_num_only(T2)>
+		XYZ<T>& operator%=(T2 num) {
+			*this = *this % num;
+			return *this;
+		}
+	};
+	using INT_XYZ = XYZ<int>;    //int型.
+	using DBL_XYZ = XYZ<double>; //double型.
+
 	//上下左右.
 	template<typename T, _type_num_only(T)>
 	struct RECT
@@ -185,6 +308,10 @@ namespace KR
 		RECT<double> ToDbl() const {
 			return { _dbl(left), _dbl(up), _dbl(right), _dbl(down) };
 		}
+		//中央位置を取得.
+		XY<T> GetMiddle() {
+			return {(right+left)/2, (up+down)/2};
+		}
 	};
 	using INT_RECT = RECT<int>;    //int型.
 	using DBL_RECT = RECT<double>; //double型.
@@ -199,9 +326,9 @@ namespace KR
 
 	public:
 		//constructor.
-		ResultInt() {
-			ResultInt(0, _T("None"), _T("No Msg"));
-		}
+		ResultInt() :
+			codeNum(0), funcName(_T("None")), msg(_T("No Msg"))
+		{};
 		ResultInt(int _codeNum, MY_STRING _funcName, MY_STRING _msg) :
 			codeNum(_codeNum), funcName(_funcName), msg(_msg)
 		{};

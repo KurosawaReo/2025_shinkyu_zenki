@@ -1,8 +1,12 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/07
 */
 #include "KR_Object.h"
+
+//[include] cppでのみ使うもの.
+#include "KR_Calc.h"
+#include "KR_Input.h"
 
 //KrLib名前空間.
 namespace KR
@@ -32,23 +36,23 @@ namespace KR
 
 	//移動操作.
 	void ObjectShape::MoveKey4Dir(float speed) {
-		InstInputMng.MoveKey4Dir(GetPosPtr(), speed);
+		InputMng::MoveKey4Dir(GetPosPtr(), speed);
 	}
 	void ObjectShape::MovePad4Dir(float speed) {
-		InstInputMng.MovePad4Dir(GetPosPtr(), speed);
+		InputMng::MovePad4Dir(GetPosPtr(), speed);
 	}
 	void ObjectShape::MovePadStick(float speed) {
-		InstInputMng.MovePadStick(GetPosPtr(), speed);
+		InputMng::MovePadStick(GetPosPtr(), speed);
 	}
 	void ObjectShape::MoveMousePos(bool isMoveX, bool isMoveY) {
 		//有効ならマウス座標を反映.
-		double x = (isMoveX) ? InstInputMng.GetMousePos().x : GetPos().x;
-		double y = (isMoveY) ? InstInputMng.GetMousePos().y : GetPos().y;
+		double x = (isMoveX) ? InputMng::GetMousePos().x : GetPos().x;
+		double y = (isMoveY) ? InputMng::GetMousePos().y : GetPos().y;
 		SetPos({x, y});
 	}
 	
-	//画像を描画.
-	ResultInt ObjectShape::DrawGraph() {
+	//DrawGraph描画.
+	ResultInt ObjectShape::DrawGraph(Anchor anc, bool isFloat, bool isCameraDis) const {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawGraph"), _T("非アクティブ")};
@@ -62,14 +66,15 @@ namespace KR
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		ResultInt err = img->Draw(pos);
+		ResultInt err = img->Draw(pos, anc, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawGraph"), _T("描画エラー")};
 		}
 
 		return {0, _T("ObjectShape::DrawGraph"), _T("正常終了")};
 	}
-	ResultInt ObjectShape::DrawRectGraph(DBL_RECT rect) {
+	//DrawRectGraph描画.
+	ResultInt ObjectShape::DrawRectGraph(DBL_RECT rect, Anchor anc, bool isFloat, bool isCameraDis) const {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawRectGraph"), _T("非アクティブ")};
@@ -83,14 +88,15 @@ namespace KR
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		ResultInt err = img->DrawRect(pos, rect);
+		ResultInt err = img->DrawRect(pos, rect, anc, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawRectGraph"), _T("描画エラー")};
 		}
 
 		return {0, _T("ObjectShape::DrawRectGraph"), _T("正常終了")};
 	}
-	ResultInt ObjectShape::DrawExtendGraph(DBL_XY sizeRate) {
+	//DrawExtendGraph描画.
+	ResultInt ObjectShape::DrawExtendGraph(DBL_XY sizeRate, Anchor anc, bool isFloat, bool isCameraDis) const {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawExtendGraph"), _T("非アクティブ")};
@@ -104,14 +110,15 @@ namespace KR
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		ResultInt err = img->DrawExtend(pos, sizeRate);
+		ResultInt err = img->DrawExtend(pos, sizeRate, anc, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawExtendGraph"), _T("描画エラー")};
 		}
 
 		return {0, _T("ObjectShape::DrawExtendGraph"), _T("正常終了")};
 	}
-	ResultInt ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot) {
+	//DrawRotaGraph描画.
+	ResultInt ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot, bool isFloat, bool isCameraDis) const {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawRotaGraph"), _T("非アクティブ")};
@@ -126,7 +133,7 @@ namespace KR
 		DBL_XY pos = GetPos() + offset;
 
 		//描画.
-		ResultInt err = img->DrawRota(pos, sizeRate, ang, pivot);
+		ResultInt err = img->DrawRota(pos, sizeRate, ang, pivot, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawRotaGraph"), _T("描画エラー")};
 		}
@@ -137,19 +144,19 @@ namespace KR
 // ▼*--=<[ ObjectCir ]>=--*▼ //
 
 	//円との判定.
-	bool ObjectCir::HitCheckCir(const Circle& cir) {
+	bool ObjectCir::HitCheckCir(const Circle& cir) const {
 		return Calc::HitCirCir(cir, this->cir);
 	}
 	//四角形との判定.
-	bool ObjectCir::HitCheckBox(const Box& box) {
+	bool ObjectCir::HitCheckBox(const Box& box) const {
 		return Calc::HitBoxCir(box, this->cir);
 	}
 	//線との当たり判定.
-	bool ObjectCir::HitCheckLine(const Line& line) {
+	bool ObjectCir::HitCheckLine(const Line& line) const {
 		return Calc::HitLineCir(line, this->cir);
 	}
 	//図形: 円を描画.
-	ResultInt ObjectCir::DrawShape(bool isFill, bool isAnti) {
+	ResultInt ObjectCir::DrawShape(bool isFill, bool isAnti, bool isCameraDis) const {
 
 		if (!isActive) {
 			return {-1, _T("ObjectCir::DrawShape"), _T("非アクティブ")};
@@ -159,7 +166,7 @@ namespace KR
 		Circle tmpCir = cir;
 		tmpCir.pos += offset;
 		//描画.
-		ResultInt err = DrawCircleKR(tmpCir, isFill, isAnti);
+		ResultInt err = DrawCircleKR(tmpCir, isFill, isAnti, 1.0, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-2, _T("ObjectCir::DrawShape"), _T("DrawCircleKRエラー")};
 		}
@@ -169,15 +176,15 @@ namespace KR
 // ▼*--=<[ ObjectBox ]>=--*▼ //
 
 	//円との判定.
-	bool ObjectBox::HitCheckCir(const Circle& cir) {
+	bool ObjectBox::HitCheckCir(const Circle& cir) const {
 		return Calc::HitBoxCir(this->box, cir);
 	}
 	//四角形との判定.
-	bool ObjectBox::HitCheckBox(const Box& box) {
+	bool ObjectBox::HitCheckBox(const Box& box) const {
 		return Calc::HitBoxBox(this->box, box);
 	}
 	//図形: 四角形を描画.
-	ResultInt ObjectBox::DrawShape(bool isFill, bool isAnti) {
+	ResultInt ObjectBox::DrawShape(bool isFill, bool isAnti, bool isCameraDis) const {
 
 		if (!isActive) {
 			return {-1, _T("ObjectBox::DrawShape"), _T("非アクティブ")};
@@ -187,7 +194,7 @@ namespace KR
 		Box tmpBox = box;
 		tmpBox.pos += offset;
 		//描画.
-		ResultInt err = DrawBoxKR(tmpBox, Anchor::Mid, isFill, isAnti);
+		ResultInt err = DrawBoxKR(tmpBox, Anchor::Mid, isFill, isAnti, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-2, _T("ObjectBox::DrawShape"), _T("DrawBoxKRエラー")};
 		}

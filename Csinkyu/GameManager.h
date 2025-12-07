@@ -80,21 +80,12 @@ private:
 	TimerMicro tmFps{};         //fps計測用タイマー.
 #endif
 
-	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
-	DrawImg imgUI{};        //UI画像.
-	DrawImg imgNewRecord{}; //new record.
-	DrawImg imgGameOver{};  //gameover.
-	DrawImg imgReflect{};   //reflect.
-
 	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
 	bool isGameStart{};             //ゲーム開始サイン.
 	bool isBestScore{};             //ベストスコア更新したか.
-
-	InputMng* p_input{};
-	SoundMng* p_sound{};
 
 public: //オブジェクト.
 	NormalLaser_1* laserNor1{};

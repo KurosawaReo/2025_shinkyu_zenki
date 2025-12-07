@@ -42,8 +42,6 @@ private:
 	ItemManager*      p_itemMng{};
 	FireworksManager* p_fireworksMng{};
 	EffectManager*    p_effectMng{};
-	InputMng*         p_input{};
-	SoundMng*         p_sound{};
 
 public:
 	void Init();
