@@ -1,10 +1,14 @@
 /*
    - KR_Num.h - (C++)
-   ver.2025/11/29
+   ver.2025/12/06
 
    –c‘å‚È”’l‚ğˆµ‚¦‚éŒ^‚Ì’Ç‰ÁB
 */
 #pragma once
+//KR_Global‚ª“ü‚Á‚Ä‚È‚¯‚ê‚Î‚±‚±‚Å“±“ü.
+#if !defined DEF_KR_CPP_GLOBAL
+  #include "KR_Global.h"
+#endif
 
 //KrLib–¼‘O‹óŠÔ.
 namespace KR

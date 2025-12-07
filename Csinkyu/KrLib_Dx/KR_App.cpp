@@ -1,9 +1,8 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/05
 */
 #include "KR_App.h"
-#include "KR_Scene.h"
 
 //KrLib名前空間.
 namespace KR 
@@ -32,13 +31,13 @@ namespace KR
 		}
 
 		//fps計測用タイマー.
-		tmFps = new TimerMicro(TimerMode::CountDown, 1000000/fps);
-		tmFps->Start();
+		inst.tmFps = new TimerMicro(TimerMode::CountDown, 1000000/fps);
+		inst.tmFps->Start();
 		//値の保存.
-		this->windowSize = { windowWid, windowHei };
-		this->fps = fps;
+		inst.windowSize = { windowWid, windowHei };
+		inst.fps = fps;
 		//変数初期化.
-		isQuit = false;
+		inst.isQuit = false;
 
 		Init(); //初期化処理(main.cppへ)
 
@@ -49,11 +48,11 @@ namespace KR
 
 		//メインループ.
 		//ESCが押されるか、終了サインがあれば終了.
-		while (ProcessMessage() == 0 && !isQuit) {
+		while (ProcessMessage() == 0 && !inst.isQuit) {
 			//一定時間ごとに処理.
-			if (tmFps->IntervalTime()) {
+			if (inst.tmFps->IntervalTime()) {
 				ClearDrawScreen(); //画面クリア.
-				Update();          //更新処理(main.cppへ)
+				Update();		   //更新処理(main.cppへ)
 				Draw();			   //描画処理(main.cppへ)
 				ScreenFlip();      //表画面へ描画.
 			}
@@ -69,6 +68,6 @@ namespace KR
 
 	//ゲームを終了する.
 	void App::Quit() {
-		isQuit = true;
+		inst.isQuit = true;
 	}
 }

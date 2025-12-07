@@ -1,6 +1,6 @@
 /*
    - KR_ObjectMng.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/05
 */
 #include "KR_ObjectMng.h"
 

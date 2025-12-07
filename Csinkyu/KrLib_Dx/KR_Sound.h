@@ -1,25 +1,26 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/06
 
    サウンド機能を追加。
 */
 #pragma once
 //KR_Globalが入ってなければここで導入.
-#if !defined DEF_KR_DXLIB_GLOBAL
+#if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
+//[include] 定義で使ってるもの.
 #include "KR_Timer.h"
-
-//実体取得用.
-#define InstSoundMng KR::SoundMng::GetInst()
 
 //KrLib名前空間.
 namespace KR
 {
-	//サウンドデータ.
-	class SoundData
+	//サウンドクラス.
+	class Sound
 	{
+		friend class SoundMng;   //アクセス許可.
+
+	//▼変数.
 	private:
 		int         handle{};    //サウンドハンドル.
 		
@@ -29,62 +30,57 @@ namespace KR
 		TimerMicro* timer{};     //タイマー計測用.
 		bool        isFadeOut{}; //フェードアウトで音を消すか.
 
+	//▼関数.
+	private:
+		ResultInt LoadFile(MY_STRING fileName);	//読み込み.
+		void      Release();					//解放.
+		void	  Update();						//更新.
+		int		  GetVolumeRange(int volume);	//ボリューム値を有効範囲に変換.
+		 
 	public:
 		//constructor, destructor.
-		SoundData();
-		~SoundData();
-		//set.
-		void SetHandle(int _handle) {
-			handle = _handle;
-		}
-		void SetIsFadeOut(bool _isFadeOut) {
-			isFadeOut = _isFadeOut;
-		}
+		//std::mapを使う関係でpublicに入れておく.
+		Sound();
+		~Sound();
 
-		void Release(); //解放.
-		void Update();  //更新.
+		void	  Play        (bool isLoop, int volume = 100);      //再生.
+		void      Stop        ();									//停止.
+		void	  ChangeVolume(int volume, float sec = 0);			//音量変更設定.
+		void	  FadeInPlay  (bool isLoop, int volume, float sec); //フェードイン再生.
+		void	  FadeOutPlay (float sec);						    //フェードアウトする.
 
-		void Play(bool isLoop, int volume);       //再生.
-		void Stop();                              //停止.
-		void ChangeVolume(int volume, float sec); //音量変更設定.
-
-		int  GetVolumeRange(int volume);          //ボリューム値を有効範囲に変換.
+		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
+		Sound& operator=(const Sound&) = delete;
 	};
 
-	//サウンド管理クラス[継承不可]
+	//サウンド管理クラス[staticクラス]
 	class SoundMng final
 	{
 	//▼実体関係.
 	private:
 		static SoundMng inst; //実体を入れる用.
 	public:
-		//実体を取得.
-		static SoundMng& GetInst() {
-			return inst;
-		}
 		//使用禁止.
 		SoundMng(const SoundMng&) = delete;
 		SoundMng& operator=(const SoundMng&) = delete;
 	private: 
 		//constructor(新規作成をできなくする)
 		SoundMng(){}
-
-	//▼データ.
-	private: 
-		map<MY_STRING, SoundData> sound;
-
-	public:
 		//destructor.
 		~SoundMng();
 
-		ResultInt LoadFile(MY_STRING fileName, MY_STRING saveName);
-		ResultInt Play    (MY_STRING saveName, bool isLoop, int volume = 100);
-		ResultInt Stop    (MY_STRING saveName);
-		void      StopAll ();
-		void      Update  ();
+	//▼変数.
+	private: 
+		map<string, Sound> sounds;
 
-		void      ChangeVolume(MY_STRING saveName, int volume, float sec = 0);	        //音量を変更.
-		void      FadeInPlay  (MY_STRING saveName, bool isLoop, int volume, float sec); //フェードイン再生.
-		void      FadeOutPlay (MY_STRING saveName, float sec);						    //フェードアウトする.
+	//▼関数.
+	public:
+		//get.
+		static Sound*    Get     (string saveName);
+		static bool      TryGet  (string saveName, Sound* ptr);
+
+		static ResultInt LoadFile(MY_STRING fileName, string saveName); //読み込み.
+		static void      Update  ();									//全サウンド更新.
+		static void      StopAll ();									//全サウンド停止.
 	};
 }

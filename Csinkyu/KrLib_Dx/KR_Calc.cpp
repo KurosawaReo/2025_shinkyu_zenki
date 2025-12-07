@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/07
 */
 #include "KR_Calc.h"
 
@@ -40,11 +40,11 @@ namespace KR
 		//ìñÇΩÇËîªíË(éläpÇ∆â~)
 		bool HitBoxCir(const Box& box, const Circle& cir) {
 
-			DBL_XY nearest;
+			DBL_XY nearest = cir.pos;
 
 			//â~ÇÃíÜêSÇ©ÇÁàÍî‘ãﬂÇ¢éläpå`ÇÃì_ÇãÅÇﬂÇÈ.
-			nearest.x = ClampNum(cir.pos.x, box.pos.x - box.size.x/2, box.pos.x + box.size.x/2);
-			nearest.y = ClampNum(cir.pos.y, box.pos.y - box.size.y/2, box.pos.y + box.size.y/2);
+			ClampNum(&nearest.x, box.pos.x - box.size.x/2, box.pos.x + box.size.x/2);
+			ClampNum(&nearest.y, box.pos.y - box.size.y/2, box.pos.y + box.size.y/2);
 			//â~ÇÃíÜêSÇ∆ÇÃãóó£.
 			double dis = CalcDist(cir.pos, nearest);
 
@@ -189,7 +189,7 @@ namespace KR
 			//ç¿ïWç∑.
 			double disX = to.x - from.x;
 			double disY = to.y - from.y;
-			//radÇdigÇ…ÇµÇƒï‘Ç∑.
+			//radÇdegÇ…ÇµÇƒï‘Ç∑.
 			return _deg(atan2(disY, disX));
 		}
 		//äpìxÇ©ÇÁç¿ïWÇãÅÇﬂÇÈ.
@@ -203,23 +203,34 @@ namespace KR
 			return { cos(rad), sin(rad) };
 		}
 
+		//äµê´ÇÃñ@ë•.
+		//accel = â¡ë¨ìx, flic = ñÄéC.
+		void CalcSpeedInertia(double* speed, double maxSpeed, double accel, double fric) {
+
+			ClampNum(&fric, 0.0, 1.0); //1.0Å`0.0ÇÃîÕàÕ.
+			accel = max(accel, 0.0);   //â∫å¿ÇÕ0.0
+
+			*speed += accel;
+			*speed *= (1.0 - fric);
+
+			if (*speed > maxSpeed) { *speed = maxSpeed; } //ë¨ìxè„å¿.
+			if (*speed < 0.0001)   { *speed = 0; }        //ÇŸÇ⁄0ÇÃílÇ»ÇÁÅA0Ç∆Ç›Ç»Ç∑.
+		}
+
 		//ease-int: èôÅXÇ…â¡ë¨.
 		double CalcNumEaseIn(double time) {
-			time = min(time, 1.0); //è„å¿ÇÕ1.0
-			time = max(time, 0.0); //â∫å¿ÇÕ0.0
+			ClampNum(&time, 0.0, 1.0); //1.0Å`0.0ÇÃîÕàÕ.
 			return time * time;
 		}
 		//ease-out: èôÅXÇ…å∏ë¨.
 		double CalcNumEaseOut(double time) {
-			time = min(time, 1.0); //è„å¿ÇÕ1.0
-			time = max(time, 0.0); //â∫å¿ÇÕ0.0
+			ClampNum(&time, 0.0, 1.0); //1.0Å`0.0ÇÃîÕàÕ.
 			return 1 - (1-time) * (1-time);
 		}
 		//ease-in-out: èôÅXÇ…â¡ë¨ÇµÇƒå∏ë¨.
 		double CalcNumEaseInOut(double time) {
-			time = min(time, 1.0); //è„å¿ÇÕ1.0
-			time = max(time, 0.0); //â∫å¿ÇÕ0.0
-			return 0.5 * (1.0 - cos(M_PI*time)); //cosÇÃï‘ÇËílÇÕ1.0 Å® -1.0
+			ClampNum(&time, 0.0, 1.0);           //1.0Å`0.0ÇÃîÕàÕ.
+			return 0.5 * (1.0 - cos(M_PI*time)); //cosÇÃï‘ÇËílÇÕ 1.0 Å® -1.0
 		}
 		//wave loop: cosîgÇÃÉãÅ[Év(0.0Å`1.0)
 		double CalcNumWaveLoop(double time) {

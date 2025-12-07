@@ -1,6 +1,6 @@
 /*
    - KR_Scene.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/05
 */
 #include "KR_Scene.h"
 
@@ -15,22 +15,22 @@ namespace KR
 
 	//シーンの追加.
 	void SceneMng::AddScene(SceneBasic* sceneClass, MY_STRING name) {
-		scenes[name] = sceneClass; //クラスのポインタを登録.
+		inst.scenes[name] = sceneClass; //クラスのポインタを登録.
 	}
 	//シーンの変更.
 	ResultInt SceneMng::SetScene(MY_STRING name) {
 		//登録していれば変更.
-		if (scenes.count(name) > 0) {
-			nowScene = name;
+		if (inst.scenes.count(name) > 0) {
+			inst.nowScene = name;
 			return {0, _T("SceneMng::SetScene"), _T("正常終了")};
 		}
 		return {-1, _T("SceneMng::SetScene"), _T("シーン未登録")};
 	}
 	//基本処理.
 	void SceneMng::UpdateScene() {
-		scenes[nowScene]->Update();
+		inst.scenes[inst.nowScene]->Update();
 	}
 	void SceneMng::DrawScene() {
-		scenes[nowScene]->Draw();
+		inst.scenes[inst.nowScene]->Draw();
 	}
 }

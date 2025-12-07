@@ -1,12 +1,12 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/07
 
    計算機能を追加。
 */
 #pragma once
 //KR_Globalが入ってなければここで導入.
-#if !defined DEF_KR_DXLIB_GLOBAL
+#if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
 
@@ -40,6 +40,9 @@ namespace KR
 		DBL_XY		CalcVectorDeg	(double deg);
 		DBL_XY		CalcVectorRad	(double rad);
 
+		//物理系.
+		void        CalcSpeedInertia(double* speed, double maxSpeed, double accel, double fric);
+
 		//値の曲線変動(アニメーション用)
 		double		CalcNumEaseIn	(double time);
 		double		CalcNumEaseOut	(double time);
@@ -47,14 +50,14 @@ namespace KR
 		double		CalcNumWaveLoop	(double time);
 
 		//値の操作.
-		int         RandNum(int st, int ed, bool isDxRand = false);
-		vector<int> RandNums(int st, int ed, int count, bool isDxRand = false);
+		int         RandNum         (int st, int ed, bool isDxRand = false);
+		vector<int> RandNums        (int st, int ed, int count, bool isDxRand = false);
 		double      GetDecimal		(double num);
 
 		//<T> 値が上限下限を越えないようにする.
 		template<typename T, _type_num_only(T)>
-		T ClampNum(T num, T low, T high) {
-			return max(low, min(num, high));
+		void ClampNum(T* num, T low, T high) {
+			*num = max(low, min(*num, high));
 		}
 	};
 }

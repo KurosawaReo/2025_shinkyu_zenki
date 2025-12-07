@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/04
 */
 #include "KR_Global.h"
 
@@ -15,8 +15,8 @@ namespace KR
 		*this = id;         //「=」演算子内で変換.
 	}
 	//get.
-	COLOR_U8 MY_COLOR::GetColorU8()   const { return { color.b, color.g, color.r, color.a }; }
-	UINT     MY_COLOR::GetColorCode() const { return DxLib::GetColor(color.r, color.g, color.b); }
+	COLOR_U8 MY_COLOR::GetColorU8()   const { return DxLib::GetColorU8(color.r, color.g, color.b, color.a); }
+	UINT     MY_COLOR::GetColorCode() const { return DxLib::GetColor  (color.r, color.g, color.b); }
 
 	//代入演算子.
 	void MY_COLOR::operator=(const RGBA& rgba) {
@@ -27,6 +27,7 @@ namespace KR
 		color.r =  colorCode / 0x010000;
 		color.g = (colorCode / 0x000100) % 0x100;
 		color.b =  colorCode % 0x100;
+		//透明度は255に.
 		color.a = 255;
 	}
 	void MY_COLOR::operator=(ColorID id) {

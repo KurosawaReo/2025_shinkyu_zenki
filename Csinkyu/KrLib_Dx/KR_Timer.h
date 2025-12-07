@@ -1,12 +1,12 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/04
 
    タイマー機能を追加。
 */
 #pragma once
 //KR_Globalが入ってなければここで導入.
-#if !defined DEF_KR_DXLIB_GLOBAL
+#if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
 

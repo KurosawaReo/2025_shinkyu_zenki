@@ -3,6 +3,8 @@
    ver: 2025/11/29
 */
 #include "KR_File.h"
+
+//[include] cppでのみ使うもの.
 #include <direct.h> //フォルダ作成のため導入.
 
 //KrLib名前空間.

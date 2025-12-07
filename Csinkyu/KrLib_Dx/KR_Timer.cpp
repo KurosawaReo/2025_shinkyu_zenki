@@ -1,6 +1,6 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/04
 */
 #include "KR_Timer.h"
 
@@ -57,6 +57,10 @@ namespace KR
 			return false;
 		}
 
+		//まだ動いてなかったら.
+		if (!isMove) {
+			Start(); //タイマー開始.
+		}
 		//タイマーが0になるまで.
 		if (GetPassTime() > 0) {
 			return false; //falseを返す.
@@ -145,6 +149,10 @@ namespace KR
 			return false;
 		}
 
+		//まだ動いてなかったら.
+		if (!isMove) {
+			Start(); //タイマー開始.
+		}
 		//タイマーが0になるまで.
 		if (GetPassTime() > 0) {
 			return false; //falseを返す.

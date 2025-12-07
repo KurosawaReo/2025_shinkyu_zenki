@@ -1,6 +1,6 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/11/29
+   ver: 2025/12/05
 
    シーン管理機能を追加。
 
@@ -9,17 +9,14 @@
 */
 #pragma once
 //KR_Globalが入ってなければここで導入.
-#if !defined DEF_KR_DXLIB_GLOBAL
+#if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
-
-//実体取得用.
-#define InstSceneMng KR::SceneMng::GetInst()
 
 //KrLib名前空間.
 namespace KR
 {
-	//シーンクラス(基本)[継承必須]
+	//シーンクラス(基本)[継承想定]
 	class SceneBasic
 	{
 	public:
@@ -28,17 +25,13 @@ namespace KR
 		virtual void Draw()   const = 0;
 	};
 
-	//シーン管理クラス[継承不可]
+	//シーン管理クラス[staticクラス]
 	class SceneMng final
 	{
 	//▼実体関係.
 	private:
 		static SceneMng inst; //実体を入れる用.
-	public:	
-		//実体を取得.
-		static SceneMng& GetInst() {
-			return inst;
-		}
+	public:
 		//使用禁止.
 		SceneMng(const SceneMng&) = delete;
 		SceneMng& operator=(const SceneMng&) = delete;
@@ -53,10 +46,10 @@ namespace KR
 
 	//▼関数.
 	public:
-		void	  UpdateScene();
-		void	  DrawScene();
+		static void		 UpdateScene();
+		static void		 DrawScene();
 
-		void      AddScene(SceneBasic* sceneClass, MY_STRING name); //シーンの追加.
-		ResultInt SetScene(MY_STRING name);                         //シーンの変更.
+		static void      AddScene(SceneBasic* sceneClass, MY_STRING name); //シーンの追加.
+		static ResultInt SetScene(MY_STRING name);                         //シーンの変更.
 	};
 }

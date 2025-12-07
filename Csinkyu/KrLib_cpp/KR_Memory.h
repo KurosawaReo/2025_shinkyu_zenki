@@ -1,10 +1,14 @@
 /*
    - KR_Memory.h - (C++)
-   ver.2025/11/29
+   ver.2025/12/06
 
    メモリ管理機能を追加。
 */
 #pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_CPP_GLOBAL
+  #include "KR_Global.h"
+#endif
 
 /*----------------------------------*/
 //メモリリーク検出用.
@@ -20,17 +24,13 @@
 //KrLib名前空間.
 namespace KR
 {
-    //メモリリーク検出設定用.[継承不可]
+    //メモリリーク検出設定用[継承不可]
     class MemoryLeak final
     {
     //▼実体関係.
     private:
         static MemoryLeak inst; //実体を入れる用.
     public:
-        //実体を取得.
-        static MemoryLeak& GetInst() {
-            return inst;
-        }
         //使用禁止.
         MemoryLeak(const MemoryLeak&) = delete;
         MemoryLeak& operator=(const MemoryLeak&) = delete;
@@ -44,7 +44,7 @@ namespace KR
         }
     };
 
-    //[試作品]ポインタ型を扱うクラス.
+    //ポインタ型を扱うクラス[試作品]
     template<typename T>
     class TypePtr
     {

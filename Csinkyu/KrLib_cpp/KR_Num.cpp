@@ -1,12 +1,9 @@
 /*
    - KR_Num.cpp - (C++)
-   ver.2025/11/29
+   ver.2025/12/06
 
    膨大な数値を扱える型の追加。
 */
-#if !defined DEF_KR_CPP_GLOBAL
-  #include "KR_Global.h" //stdafx.hに入ってなければここで導入.
-#endif
 #include "KR_Num.h"
 
 //KrLib名前空間.
@@ -37,7 +34,7 @@ namespace KR
             str.insert(str.end(), '-'); //数字の前に「-」を入れる.
         }
         //桁数分ループ.
-        for (size_t i = 0; i < num.size(); i++) {
+        for (int i = 0; i < num.size(); i++) {
             //Error: 負の値を見つけたら.
             if (num[i] < 0) { return "[Invalid num] 表示できない値です。"; }
             str[i] += num[i]; //1桁を1字に変換.
@@ -97,8 +94,8 @@ namespace KR
     //×10^n.
     void BigInt::AddDigit(unsigned int n) {
 
-        const size_t befDigit = num.size(); //元の桁数.
-        num.resize(befDigit + n);           //n桁増やす.
+        const int befDigit = _int(num.size()); //元の桁数.
+        num.resize(befDigit + n);              //n桁増やす.
 
         //元の桁数ループ.
         for (int i = befDigit-1; i >= 0; i--) {
@@ -109,8 +106,8 @@ namespace KR
     //×0.1^n.
     void BigInt::RemDigit(unsigned int n) {
 
-        const size_t aftDigit = num.size() - n; //何桁に減るか.
-        if (aftDigit < 0) { return; }           //0桁未満になるなら中断.
+        const int aftDigit = _int(num.size()) - n; //何桁に減るか.
+        if (aftDigit < 0) { return; }              //0桁未満になるなら中断.
 
         //元の桁数ループ.
         for (int i = n; i < num.size(); i++) {
@@ -123,7 +120,7 @@ namespace KR
     void BigInt::Digit() {
 
         //符号が入れ替わったか判定.
-        for (int i = num.size()-1; i >= 0; i--) {
+        for (int i = _int(num.size())-1; i >= 0; i--) {
             //初めに着いた桁が+か-かで判定.
             if (num[i] < 0) {
                 ReverseSign(); //符号反転.
@@ -163,7 +160,7 @@ namespace KR
         }
         //不要な0の桁は詰める.
         if (maxDigit < num.size()) {
-            num.resize(max(maxDigit, 1)); //桁を減らす(最低1桁は残す)
+            num.resize(std::max(maxDigit, 1)); //桁を減らす(最低1桁は残す)
         }
     }
 
@@ -179,7 +176,7 @@ namespace KR
         const BigInt right = other.GetAbs(); //右辺(割る数)
 
         //全桁を上からループ.
-        for (int i = num.size()-1; i >= 0; i--) {
+        for (int i = _int(num.size())-1; i >= 0; i--) {
             tmp1.AddDigit(1);     //×10(桁をずらす)
             tmp2.AddDigit(1);     //×10(桁をずらす)
             tmp1.num[0] = num[i]; //1桁ずつ入れる.
@@ -220,7 +217,7 @@ namespace KR
             }
         }
         //③桁を上から比較.
-        for (int i = num.size()-1; i >= 0; i--) {
+        for (int i = _int(num.size())-1; i >= 0; i--) {
             if (num[i] == other.num[i]) { continue; } //一致していたら次へ.
             if (!isMinus) { return (num[i] > other.num[i]) ? bigger : smaller; } //例:+103 > +102
             else          { return (num[i] > other.num[i]) ? smaller : bigger; } //例:-103 < -102
