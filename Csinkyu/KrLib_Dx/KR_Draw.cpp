@@ -565,8 +565,8 @@ namespace KR
 			tmp[i] = points[i]; //’¸“_‚ğ“o˜^.
 			//ƒJƒƒ‰Šî€‚É•ÏŠ·.
 			if (isCameraDis) {
-				tmp[i].pos.x += _flt(Camera::GetCameraPos().x);
-				tmp[i].pos.y += _flt(Camera::GetCameraPos().y);
+				tmp[i].pos.x -= _flt(Camera::GetCameraPos().x);
+				tmp[i].pos.y -= _flt(Camera::GetCameraPos().y);
 			}
 		}
 		if (isClose) {

@@ -86,15 +86,21 @@ void MenuManager::Update() {
 }
 
 // 描画
-//なぜかここだけ「あいまいです」エラーが出るため、"DxLib::"というnamespaceをつけている.
 void MenuManager::Draw() {
 
-	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
-	DxLib::DrawBox(0, 0, WINDOW_WID, WINDOW_HEI, GetColor(0, 0, 0), TRUE);
-	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	//背景を暗くする.
+	SetDrawBlendModeKR(BlendModeID::Alpha, 128);
+	{
+		Box box = {{0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000};
+		DrawBoxKR(box, Anchor::LU, true);
+	}
+	ResetDrawBlendMode();
 
 	// メニュータイトル（中央）
-	DxLib::DrawStringToHandle(WINDOW_WID / 2 - 100, 100, _T("モード選択"), GetColor(0, 255, 255), fontMenu[1].GetFont());
+	{
+		DrawStr str(_T("モード選択"), { WINDOW_WID/2-100, 100 }, 0x00FFFF);
+		str.Draw(Anchor::LU, fontMenu[1].GetFont());
+	}
 
 	// メニュー項目
 	int menuX = 100;
@@ -111,22 +117,35 @@ void MenuManager::Draw() {
 	unsigned int lineColor    = GetColor(0, 255, 255);   //線の色（黄色）.
 
 	// 各項目描画
-	unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
-	DxLib::DrawBox(menuX, menuY, menuX + boxWidth, menuY + boxHeight, selectColor1, FALSE);
-	DxLib::DrawStringToHandle(menuX + 30, menuY + 15, _T("     ゲーム開始"), color1, fontMenu[1].GetFont());
+	{
+		unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
+		unsigned int color2 = (selectedIndex == 1) ? selectColor1 : normalColor;
+		unsigned int color3 = (selectedIndex == 2) ? selectColor1 : normalColor;
 
-	unsigned int color2 = (selectedIndex == 1) ? selectColor1 : normalColor;
-	DxLib::DrawBox(menuX, menuY + menuSpacing, menuX + boxWidth, menuY + menuSpacing + boxHeight, selectColor1, FALSE);
-	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing + 15, _T("   チュートリアル"), color2, fontMenu[1].GetFont());
+		Box box = {DBL_XY(menuX, menuY), DBL_XY(boxWidth, boxHeight), selectColor1};
+		DrawStr str(_T("     ゲーム開始"), { menuX+30, menuY+15 }, color1);
+		DrawBoxKR(box, Anchor::LU, false);
+		str.Draw(Anchor::LU, fontMenu[1].GetFont());
 
-	unsigned int color3 = (selectedIndex == 2) ? selectColor1 : normalColor;
-	DxLib::DrawBox(menuX, menuY + menuSpacing * 2, menuX + boxWidth, menuY + menuSpacing * 2 + boxHeight, selectColor1, FALSE);
-	DxLib::DrawStringToHandle(menuX + 30, menuY + menuSpacing * 2 + 15, _T("   タイトルに戻る"), color3, fontMenu[1].GetFont());
+		box.pos.y += menuSpacing; //スペースを空ける.
+		str.pos.y += menuSpacing; //スペースを空ける.
+		str.text  = _T(" 　チュートリアル");
+		str.color = color2;
+		DrawBoxKR(box, Anchor::LU, false);
+		str.Draw(Anchor::LU, fontMenu[1].GetFont());
+
+		box.pos.y += menuSpacing; //スペースを空ける.
+		str.pos.y += menuSpacing; //スペースを空ける.
+		str.text  = _T("   タイトルに戻る");
+		str.color = color3;
+		DrawBoxKR(box, Anchor::LU, false);
+		str.Draw(Anchor::LU, fontMenu[1].GetFont());
+	}
 
 	// 選択中の矢印（大きめ）
 	{
 		//基準座標.
-		DBL_XY base = { _dbl(menuX - 25), _dbl(menuY + selectedIndex * menuSpacing + 35) };
+		DBL_XY base = DBL_XY(menuX - 25, menuY + selectedIndex * menuSpacing + 35);
 		//アニメーション値.
 		double anim = sin(counter / 50 * M_PI);
 
@@ -155,7 +174,6 @@ void MenuManager::Draw() {
 		DrawBoxKR(box, Anchor::Mid, false);
 	}
 
-
 	// ▼ 説明文の枠（右下）- 画像の幅に合わせる
 	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）
 	int textBoxHeight = 260;
@@ -183,63 +201,107 @@ void MenuManager::Draw() {
 		double pulseAnim = (sin(counter * 0.1) + 1.0) / 2.0; // 0.0～1.0の範囲
 		int alpha = (int)(128 + 127 * pulseAnim); // 128～255の範囲でアルファ値変化
 
-		DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 		// 1. メニュー項目から画像への線（水平線→垂直線）
 		// 水平線（メニュー項目右端から画像左端まで）
 		for (int i = 0; i < lineThickness; i++) {
-			DxLib::DrawLine(
-				menuItemRightX, menuItemCenterY+i-lineThickness/2,
-				imgLeftX,       menuItemCenterY+i-lineThickness/2, lineColor
-			);
+			Line line = {
+				DBL_XY(menuItemRightX, menuItemCenterY + i - lineThickness / 2),
+				DBL_XY(imgLeftX, menuItemCenterY + i - lineThickness / 2), 
+				lineColor
+			};
+			DrawLineKR(line);
 		}
 
 		// 2. 画像から説明文エリアへの線（垂直線のみ）
 		// 垂直線（画像下端から説明文上端まで）
 		for (int i = 0; i < lineThickness; i++) {
-			DxLib::DrawLine(
-				(int)imgPos.x+i-lineThickness/2, imgBottomY,
-				(int)imgPos.x+i-lineThickness/2, textBoxTopY, lineColor
-			);
+			Line line = {
+				DBL_XY(imgPos.x + i - lineThickness / 2, imgBottomY),
+				DBL_XY(imgPos.x + i - lineThickness / 2, textBoxTopY), 
+				lineColor
+			};
+			DrawLineKR(line);
 		}
 
-		DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		ResetDrawBlendMode();
 	}
 
 	// モード説明タイトル（説明文枠の上に表示）
 	int titleY = textBoxY - 40;  // 説明文枠の40ピクセル上に配置
-	DxLib::DrawStringToHandle(textBoxX + 20, titleY, _T("モード説明"), GetColor(0, 255, 255), fontMenu[1].GetFont());
+	DrawStr str(_T("モード説明"), { textBoxX + 20, titleY }, 0x00FFFF);
+	str.Draw(Anchor::LU, fontMenu[1].GetFont());
 
 	// 説明文枠の背景（半透明黒）
-	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-	DxLib::DrawBox(textBoxX, textBoxY, textBoxX + textBoxWidth, textBoxY + textBoxHeight, GetColor(0, 0, 0), TRUE);
-	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	// 説明文枠の枠線（水色）
-	DxLib::DrawBox(textBoxX, textBoxY, textBoxX + textBoxWidth, textBoxY + textBoxHeight, frameColor, FALSE);
-
-	int textX = textBoxX + 10;
-	int textY = textBoxY + 20;
-
-	switch (selectedIndex)
+	SetDrawBlendModeKR(BlendModeID::Alpha, 150);
 	{
-	case 0:
-		DxLib::DrawStringToHandle(textX, textY + 0, _T("時間経過でLevelが上がり、"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 30, _T("ゲームオーバーになるまで続く"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 60, _T("エンドレスモード。"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 90, _T("・隕石を壊す : +500"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 120, _T("・アイテムを取る : +100"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 150, _T("・タイムボーナス : 1秒ごとに +10"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 180, _T("ハイスコアを目指して頑張ろう！"), normalColor, fontMenu[0].GetFont());
-		break;
-	case 1:
-		DxLib::DrawStringToHandle(textX, textY + 0, _T("ゲームの基本操作を学べます。"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 40, _T("初めての方は最初に"), normalColor, fontMenu[0].GetFont());
-		DxLib::DrawStringToHandle(textX, textY + 80, _T("プレイしてください。"), normalColor, fontMenu[0].GetFont());
-		break;
-	case 2:
-		DxLib::DrawStringToHandle(textX, textY + 0, _T("タイトル画面に戻ります。"), normalColor, fontMenu[0].GetFont());
-		break;
+		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), 0x000000};
+		DrawBoxKR(box, Anchor::LU, true);
+	}
+	ResetDrawBlendMode();
+	// 説明文枠の枠線（水色）
+	{
+		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), frameColor};
+		DrawBoxKR(box, Anchor::LU, false);
+	}
+
+	{
+		int textX = textBoxX + 10;
+		int textY = textBoxY + 20;
+
+		//説明文用.
+		DrawStr str(_T(""), {textX, textY}, normalColor);
+
+		switch (selectedIndex)
+		{
+		case 0:
+			str.text = _T("時間経過でLevelが上がり、");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("ゲームオーバーになるまで続く");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("エンドレスモード。");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("・隕石を壊す : +500");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("・アイテムを取る : +100");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("・タイムボーナス : 1秒ごとに +10");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("ハイスコアを目指して頑張ろう！");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			break;
+
+		case 1:
+			str.text = _T("ゲームの基本操作を学べます。");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("初めての方は最初に");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += 30; //次の行へ.
+			str.text = _T("プレイしてください。");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			break;
+
+		case 2:
+			str.text = _T("タイトル画面に戻ります。");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			break;
+		}
 	}
 
 	// ▼ 操作説明（左下）
@@ -247,8 +309,18 @@ void MenuManager::Draw() {
 	int infoY = WINDOW_HEI - 200;
 	int infoWidth = 500;
 	int infoHeight = 180;
+	
+	{
+		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), selectColor1 };
+		DrawStr str = { _T(""), {infoX, infoY}, normalColor };
 
-	DxLib::DrawBox(infoX, infoY, infoX + infoWidth, infoY + infoHeight, selectColor1, FALSE);
-	DxLib::DrawStringToHandle(infoX + 20, infoY + 20, _T("選択 :↑↓ or W/S:"), normalColor, fontMenu[0].GetFont());
-	DxLib::DrawStringToHandle(infoX + 20, infoY + 70, _T("決定 :SPACE/ENTER/Ⓐ"), normalColor, fontMenu[0].GetFont());
+		DrawBoxKR(box, Anchor::LU, false);
+
+		str.text = _T("選択 :↑↓ or W/S:");
+		str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+		str.pos.y += 50; //次の行へ.
+		str.text = _T("決定 :SPACE/ENTER/Ⓐ");
+		str.Draw(Anchor::LU, fontMenu[0].GetFont());
+	}
 }
