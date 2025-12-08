@@ -1,6 +1,6 @@
 /*
    - KR_File.cpp - (C++)
-   ver: 2025/11/29
+   ver: 2025/12/08
 */
 #include "KR_File.h"
 

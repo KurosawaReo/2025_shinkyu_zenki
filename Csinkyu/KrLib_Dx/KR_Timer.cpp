@@ -1,6 +1,6 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/12/04
+   ver: 2025/12/08
 */
 #include "KR_Timer.h"
 

@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/08
 
    オブジェクトを追加。(継承して使うことも可)
    Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
@@ -31,14 +31,14 @@ namespace KR
 	//オブジェクト(図形)[継承想定]
 	class ObjectShape
 	{
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
 		DrawImg* img{};      //画像データ.
 	public:
 		DBL_XY   offset{};   //画像をずらす量.
 		bool     isActive{}; //有効かどうか.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	protected:
 		//constructor.
 		ObjectShape() : img(nullptr), offset(0, 0), isActive(true) {}
@@ -74,11 +74,11 @@ namespace KR
 	//オブジェクト(円)[継承想定]
 	class ObjectCir : public ObjectShape
 	{
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	public:
 		Circle cir{}; //当たり判定と座標.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	public:
 		//constructor.
 		ObjectCir() {
@@ -103,11 +103,11 @@ namespace KR
 	//オブジェクト(四角形)[継承想定]
 	class ObjectBox : public ObjectShape
 	{
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	public:
 		Box box{}; //当たり判定と座標.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	public:
 		//constructor.
 		ObjectBox() {

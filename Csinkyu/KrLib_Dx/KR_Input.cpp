@@ -1,6 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/12/05
+   ver: 2025/12/08
 */
 #include "KR_Input.h"
 

@@ -1,6 +1,6 @@
 /*
    - KR_Camera.h - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/08
 
    カメラ機能を追加。
 */
@@ -16,27 +16,23 @@ namespace KR
 	/*
 	   カメラ管理[staticクラス]
 
-	   全ての描画関数(→KR_Draw)は、このカメラの位置を元に描画されます.
+	   全ての描画関数(→KR_Draw)は、このカメラの位置を元に描画される.
 	   (UIのようにカメラに追従することも可)
 
-	   またDrawRota関数を使うと、カメラの角度も考慮して描画されます.
+	   またDrawRota関数を使うと、カメラの角度も考慮して描画される.
 	*/
 	class Camera final
 	{
-	//▼実体関係.
+	//▼ ===== 実体 ===== ▼.
 	private:
-		static Camera inst; //実体を入れる用.
-	public:
-		//使用禁止.
-		Camera(const Camera&) = delete;
-		Camera& operator=(const Camera&) = delete;
+		static Camera inst;  //実体を入れる用.
 
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
 		DBL_XYZ cameraPos{}; //カメラ座標.
 		double  cameraAng{}; //カメラ角度(2D用)
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	private:
 		//constructor.
 		Camera() : cameraPos(0, 0, 0), cameraAng(0) {}
@@ -57,5 +53,9 @@ namespace KR
 
 		//カメラ座標.
 		static DBL_XY GetCameraPos();
+
+		//使用禁止.
+		Camera(const Camera&) = delete;
+		Camera& operator=(const Camera&) = delete;
 	};
 }

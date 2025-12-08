@@ -400,9 +400,7 @@ void GameManager::Update() {
 	SoundMng::Update();       //サウンド更新.
 
 	//背景, エフェクト更新.
-	if (gameData->scene != SCENE_PAUSE &&
-		gameData->scene != SCENE_END) 
-	{
+	if (gameData->scene != SCENE_PAUSE) {
 		bg->Update();
 		effectMng->Update(); 
 	}
@@ -426,10 +424,6 @@ void GameManager::Update() {
 	else if (InputMng::IsPushKey(KeyID::Esc)) {
 		App::Quit(); //ESCAPEキーを押したら即終了.
 	}
-
-////////////////////////////////////
-//	Debug::MouseToMoveCamera(); //カメラ実験.
-////////////////////////////////////
 }
 
 //描画.

@@ -1,6 +1,6 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/08
 
    サウンド機能を追加。
 */
@@ -20,7 +20,7 @@ namespace KR
 	{
 		friend class SoundMng;   //アクセス許可.
 
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
 		int        handle{};    //サウンドハンドル.
 		
@@ -30,7 +30,7 @@ namespace KR
 		TimerMicro timer{};     //タイマー計測用.
 		bool       isFadeOut{}; //フェードアウトで音を消すか.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	private:
 		ResultInt LoadFile(MY_STRING fileName);	//読み込み.
 		void      Release();					//解放.
@@ -56,24 +56,21 @@ namespace KR
 	//サウンド管理クラス[staticクラス]
 	class SoundMng final
 	{
-	//▼実体関係.
+	//▼ ===== 実体 ===== ▼.
 	private:
 		static SoundMng inst; //実体を入れる用.
-	public:
-		//使用禁止.
-		SoundMng(const SoundMng&) = delete;
-		SoundMng& operator=(const SoundMng&) = delete;
+
+	//▼ ===== 変数 ===== ▼.
+	private: 
+		map<string, Sound> sounds;
+	
+	//▼ ===== 関数 ===== ▼.
 	private: 
 		//constructor(新規作成をできなくする)
 		SoundMng(){}
 		//destructor.
 		~SoundMng();
 
-	//▼変数.
-	private: 
-		map<string, Sound> sounds;
-
-	//▼関数.
 	public:
 		//get.
 		static Sound*    Get     (string saveName);
@@ -82,5 +79,9 @@ namespace KR
 		static ResultInt LoadFile(MY_STRING fileName, string saveName); //読み込み.
 		static void      Update  ();									//全サウンド更新.
 		static void      StopAll ();									//全サウンド停止.
+	
+		//使用禁止.
+		SoundMng(const SoundMng&) = delete;
+		SoundMng& operator=(const SoundMng&) = delete;
 	};
 }

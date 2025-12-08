@@ -1,6 +1,6 @@
 /*
    - KR_App.h - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/08
 
    プログラム全体(開始,終了など)の処理を行う。
 */
@@ -17,28 +17,24 @@ namespace KR
 	//プログラム全体処理[staticクラス]
 	class App final
 	{
-	//▼実体関係.
+	//▼ ===== 実体 ===== ▼.
 	private:
-		static App inst; //実体を入れる用.
-	public:
-		//使用禁止.
-		App(const App&) = delete;
-		App& operator=(const App&) = delete;
-	private: 
-		//constructor(新規作成できなくする)
-		App(){}
+		static App inst;     //実体を入れる用.
 
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
-		TimerMicro tmFps{}; //fps計測用タイマー.
+		TimerMicro tmFps{};  //fps計測用タイマー.
 		
 		INT_XY windowSize{}; //画面サイズ.    (記録用)
 		int    fps{};        //フレームレート.(記録用)
 
 		bool   isQuit{};     //ゲームを終了するか.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	private:
+		//constructor(新規作成できなくする)
+		App() {}
+
 		static void      EndDx();
 
 	public:
@@ -56,5 +52,9 @@ namespace KR
 		static void	     Draw  ();
 
 		static void      Quit  (); //ゲームを終了する.
+
+		//使用禁止.
+		App(const App&) = delete;
+		App& operator=(const App&) = delete;
 	};
 }
