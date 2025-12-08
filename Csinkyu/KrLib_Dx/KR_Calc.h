@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/09
 
    計算機能を追加。
 */
@@ -47,6 +47,7 @@ namespace KR
 		double		CalcNumEaseIn	(double time);
 		double		CalcNumEaseOut	(double time);
 		double		CalcNumEaseInOut(double time);
+		double      CalcNumEaseOutIn(double time);
 		double		CalcNumWaveLoop	(double time);
 
 		//値の操作.

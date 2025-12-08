@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/09
 */
 #include "KR_Calc.h"
 
@@ -217,20 +217,32 @@ namespace KR
 			if (*speed < 0.0001)   { *speed = 0; }        //‚Ù‚Ú0‚Ì’l‚È‚çA0‚Æ‚Ý‚È‚·.
 		}
 
-		//ease-int: ™X‚É‰Á‘¬.
+		//ease-in: ™X‚É‰Á‘¬.
 		double CalcNumEaseIn(double time) {
-			ClampNum(&time, 0.0, 1.0); //1.0`0.0‚Ì”ÍˆÍ.
+			ClampNum(&time, 0.0, 1.0); //0.0`1.0‚Ì”ÍˆÍ.
 			return time * time;
 		}
 		//ease-out: ™X‚ÉŒ¸‘¬.
 		double CalcNumEaseOut(double time) {
-			ClampNum(&time, 0.0, 1.0); //1.0`0.0‚Ì”ÍˆÍ.
+			ClampNum(&time, 0.0, 1.0); //0.0`1.0‚Ì”ÍˆÍ.
 			return 1 - (1-time) * (1-time);
 		}
 		//ease-in-out: ™X‚É‰Á‘¬‚µ‚ÄŒ¸‘¬.
 		double CalcNumEaseInOut(double time) {
-			ClampNum(&time, 0.0, 1.0);           //1.0`0.0‚Ì”ÍˆÍ.
-			return 0.5 * (1.0 - cos(M_PI*time)); //cos‚Ì•Ô‚è’l‚Í 1.0 ¨ -1.0
+			ClampNum(&time, 0.0, 1.0); //0.0`1.0‚Ì”ÍˆÍ.
+			return 0.5 * (1.0 - cos(M_PI*time)); //cos‚Ì•Ô‚è’l‚Í 1.0¨-1.0
+		}
+		//ease-out-in: ™X‚ÉŒ¸‘¬‚µ‚Ä‰Á‘¬.
+		double CalcNumEaseOutIn(double time) {
+			ClampNum(&time, 0.0, 1.0); //0.0`1.0‚Ì”ÍˆÍ.
+			if (time < 0.5) {
+				//0.0¨0.5‚Ü‚Å.
+				return 0.5 * sin(M_PI*time);
+			}
+			else {
+				//0.5¨1.0‚Ü‚Å.
+				return 0.5 + 0.5*(1.0 - cos(M_PI*(time-0.5)));
+			}
 		}
 		//wave loop: cos”g‚Ìƒ‹[ƒv(0.0`1.0)
 		double CalcNumWaveLoop(double time) {

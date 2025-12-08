@@ -25,6 +25,7 @@ private:
 
 	//点滅処理.
 	Timer     tmBlink = Timer(TimerMode::CountDown, 0.1f); //点滅間隔.
+	Timer     tmTitle = Timer(TimerMode::CountDown, 2.5f); //タイトルアニメ用.
 	bool      isBlink = 0;                                 //点滅させる用.
 
 private:

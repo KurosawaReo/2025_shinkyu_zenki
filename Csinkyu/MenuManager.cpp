@@ -27,9 +27,9 @@ void MenuManager::Init() {
 	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Edge);
 
 	//モードごとの画像読み込み.
-	DrawImgMng::LoadFile(_T("Resources/Images/menu_start.png"),    "menu0"); //ゲーム開始.
+	DrawImgMng::LoadFile(_T("Resources/Images/menu_endless.png"),  "menu0"); //ゲーム開始.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_tutorial.png"), "menu1"); //チュートリアル.
-	DrawImgMng::LoadFile(_T("Resources/Images/menu_back.png"),     "menu2"); //タイトルに戻る.
+	DrawImgMng::LoadFile(_T("Resources/Images/menu_title.png"),    "menu2"); //タイトルに戻る.
 
 	Reset();
 }
@@ -48,7 +48,7 @@ void MenuManager::Update() {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 	}
 	if (InputMng::IsPushActionTime("MENU_DOWN") % 20 == 1) { //長押しにも対応.
-		selectedIndex = (selectedIndex + 1) % 3;   //+1して、3の余り(0～2)をループ.
+		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
 	}
 
 	//決定操作.
@@ -99,7 +99,7 @@ void MenuManager::Draw() {
 		isBlink = Calc::RandNum(0, 100) < 10;
 	}
 
-	//メニュー全体の背景.
+	//▼メニュー全体の背景.
 	SetDrawBlendModeKR(BlendModeID::Alpha, 128);
 	{
 		Box box = {{0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000};
@@ -107,13 +107,41 @@ void MenuManager::Draw() {
 	}
 	ResetDrawBlendMode();
 
-	//メニュータイトル（中央）
+	//▼メニュータイトル.
 	{
-		DrawStr str(_T("モード選択"), { WINDOW_WID/2-100, 100 }, 0x00FFFF);
-		str.Draw(Anchor::LU, fontMenu[1].GetFont());
+		//基準地.
+		const DBL_XY basePos = { WINDOW_WID / 2, 80 };
+		//アニメーション値.
+		const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter, 120)/120);
+		const double anim2 = sin(fmod(counter, 120)/120 * M_PI);
+
+		Line lines[4] = {
+		//「<」.
+			{ basePos.Add(-55-100*anim1, 30), basePos.Add(-85-100*anim1,   0), 0x00FFFF },
+			{ basePos.Add(-85-100*anim1,  0), basePos.Add(-55-100*anim1, -30), 0x00FFFF },
+		//「>」.
+			{ basePos.Add(+55+100*anim1, 30), basePos.Add(+85+100*anim1,   0), 0x00FFFF },
+			{ basePos.Add(+85+100*anim1,  0), basePos.Add(+55+100*anim1, -30), 0x00FFFF }
+		};
+
+		//線描画.
+		SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim2 * ((isBlink) ? 0.5 : 1.0));
+		for (auto& i : lines) {
+			//点滅時は位置をずらす.
+			if (isBlink) {
+				const int add = Calc::RandNum(-5, 5);
+				i.stPos += add;
+				i.edPos += add;
+			}
+			DrawLineKR(i, true, 2);
+		}
+		ResetDrawBlendMode();
+
+		DrawStr str(_T("モード選択"), basePos.ToInt(), 0x00FFFF);
+		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
 	}
 
-	//メニュー項目.
+	//▼メニュー項目.
 	int menuX = 100;
 	int menuY = 250;
 	int menuSpacing = 100;
@@ -127,7 +155,7 @@ void MenuManager::Draw() {
 	unsigned int selectColor2 = GetColor(50, 150, 255);  //カーソル裏.
 	unsigned int lineColor    = GetColor(0, 255, 255);   //線の色（黄色）.
 
-	// 各項目描画
+	//▼各選択肢.
 	{
 		unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
 		unsigned int color2 = (selectedIndex == 1) ? selectColor1 : normalColor;
@@ -153,7 +181,7 @@ void MenuManager::Draw() {
 		str.Draw(Anchor::LU, fontMenu[1].GetFont());
 	}
 
-	// 選択中の矢印（大きめ）
+	//▼カーソルの三角.
 	{
 		//基準座標.
 		DBL_XY base = DBL_XY(menuX - 25, menuY + selectedIndex * menuSpacing + 35);
@@ -165,26 +193,27 @@ void MenuManager::Draw() {
 
 	//画像の座標(ここを中心とする)
 	DBL_XY imgPos = { WINDOW_WID - 450, 450 };
-	//枠を画像よりどれだけ大きくするか.
-	const int margin = 10;
-	
 	DBL_XY imgSize;
 
-	//画像取得.
-	string name = "menu" + to_string(selectedIndex);
-	if (auto i = DrawImgMng::Get(name)) {
-
-		//画像のサイズ.
-		imgSize = i->GetSize().ToDbl();
-		//描画.
-		i->Draw(imgPos);
-		//画像の枠線(位置とサイズは画像を元にする)
-		Box box = { imgPos, imgSize + margin, frameColor };
-		DrawBoxKR(box, Anchor::Mid, false);
+	//▼サムネ画像.
+	{
+		const double ext    = 0.4; //画像描画倍率.
+		const int    margin = 10;  //枠を画像よりどれだけ大きくするか.
+	
+		string name = "menu" + to_string(selectedIndex);
+		if (auto i = DrawImgMng::Get(name)) {
+			//画像描画.
+			i->DrawExtend(imgPos, {ext , ext});
+			//画像のサイズ(Extend倍率分小さくする)
+			imgSize = i->GetSize().ToDbl() * ext + margin;
+			//画像の枠線(位置とサイズは画像を元にする)
+			Box box = { imgPos, imgSize, frameColor };
+			DrawBoxKR(box, Anchor::Mid, false);
+		}
 	}
 
 	//▼説明文の枠（右下）- 画像の幅に合わせる
-	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）
+	int textBoxWidth = (int)imgSize.x;  // 画像の幅 + 余白（両端）
 	int textBoxHeight = 260;
 	int textBoxX = (int)(imgPos.x - textBoxWidth / 2);  // 画像と同じ中心位置
 	int textBoxY = WINDOW_HEI - 300;
@@ -195,9 +224,9 @@ void MenuManager::Draw() {
 		int menuItemRightX = menuX + boxWidth;
 		int menuItemCenterY = menuY + selectedIndex * menuSpacing + boxHeight / 2;
 
-		int imgLeftX   = (int)(imgPos.x - imgSize.x/2) - margin/2; //画像の左端座標.
+		int imgLeftX   = (int)(imgPos.x - imgSize.x/2); //画像の左端座標.
 		int imgCenterY = (int)imgPos.y;
-		int imgBottomY = (int)(imgPos.y + imgSize.y/2) + margin/2; //画像の下端座標.
+		int imgBottomY = (int)(imgPos.y + imgSize.y/2); //画像の下端座標.
 
 		// 説明文エリアの上端中央座標
 		int textBoxCenterX = textBoxX + textBoxWidth / 2;
@@ -218,6 +247,7 @@ void MenuManager::Draw() {
 				DBL_XY(imgLeftX,       menuItemCenterY + i - lineThickness / 2), 
 				lineColor
 			};
+			//点滅時が位置をずらす.
 			if (isBlink) {
 				const int add = Calc::RandNum(-5, 5);
 				line.stPos += add;
@@ -234,6 +264,7 @@ void MenuManager::Draw() {
 				DBL_XY(imgPos.x + i - lineThickness / 2, textBoxTopY), 
 				lineColor
 			};
+			//点滅時が位置をずらす.
 			if (isBlink) {
 				const int add = Calc::RandNum(-5, 5);
 				line.stPos += add;
@@ -245,7 +276,7 @@ void MenuManager::Draw() {
 		ResetDrawBlendMode();
 	}
 
-	// モード説明タイトル（説明文枠の上に表示）
+	//▼モード説明タイトル（説明文枠の上に表示）
 	int titleY = textBoxY - 40;  // 説明文枠の40ピクセル上に配置
 	DrawStr str(_T("モード説明"), { textBoxX + 20, titleY }, 0x00FFFF);
 	str.Draw(Anchor::LU, fontMenu[1].GetFont());
@@ -322,7 +353,7 @@ void MenuManager::Draw() {
 		}
 	}
 
-	// ▼ 操作説明（左下）
+	//▼操作説明（左下）
 	int infoX = 50;
 	int infoY = WINDOW_HEI - 200;
 	int infoWidth = 500;
