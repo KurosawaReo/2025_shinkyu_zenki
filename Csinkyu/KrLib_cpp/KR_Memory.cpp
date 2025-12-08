@@ -1,6 +1,6 @@
 /*
    - KR_Memory.cpp - (C++)
-   ver.2025/12/06
+   ver.2025/12/08
 */
 #include "KR_Memory.h"
 

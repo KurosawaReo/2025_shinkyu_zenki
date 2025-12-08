@@ -1,6 +1,6 @@
 /*
    - KR_ObjectMng.h - (DxLib)
-   ver: 2025/12/05
+   ver: 2025/12/08
 */
 #pragma once
 //KR_Globalが入ってなければここで導入.
@@ -14,7 +14,7 @@ namespace KR
 	//管理対象クラス[多重継承想定]
 	class ObjectMngTarget
 	{
-		//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	protected:
 		//constructor.
 		ObjectMngTarget() {}
@@ -30,11 +30,11 @@ namespace KR
 	template<typename T> requires std::derived_from<T, ObjectMngTarget>
 	class ObjectMng
 	{
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
 		list<T> objects; //object配列.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	protected:
 		//constructor.
 		ObjectMng() {}

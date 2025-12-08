@@ -33,17 +33,10 @@ class BackGround final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static BackGround& GetInst() {
 		static BackGround inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	BackGround(const BackGround&) = delete;
-	BackGround& operator=(const BackGround&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	BackGround(){}
 
 //▼データ.
 private:
@@ -55,6 +48,10 @@ private:
 
 	GameData* p_data{}; //ゲームデータ.
 
+private:
+	//constructor(新規作成をできなくする)
+	BackGround(){}
+
 public:
 	//get.
 	float GetCounter() const { return counter; }
@@ -62,4 +59,8 @@ public:
 	void Init();
 	void Update();
 	void Draw();
+
+	//使用禁止.
+	BackGround(const BackGround&) = delete;
+	BackGround& operator=(const BackGround&) = delete;
 };

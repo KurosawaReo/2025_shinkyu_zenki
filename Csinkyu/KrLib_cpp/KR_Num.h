@@ -1,6 +1,6 @@
 /*
    - KR_Num.h - (C++)
-   ver.2025/12/07
+   ver.2025/12/08
 
    膨大な数値を扱える型の追加。
 */
@@ -25,10 +25,12 @@ namespace KR
     */
     class BigInt
     {
+    //▼ ===== 変数 ===== ▼.
     private:
         vector<char> num; //符号なしの値(1桁ずつ管理)
         bool isMinus;     //符号(trueなら-)
 
+    //▼ ===== 関数 ===== ▼.
     public:
         //コンストラクタ.
         BigInt();

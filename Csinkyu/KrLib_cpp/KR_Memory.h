@@ -1,6 +1,6 @@
 /*
    - KR_Memory.h - (C++)
-   ver.2025/12/06
+   ver.2025/12/08
 
    メモリ管理機能を追加。
 */
@@ -27,21 +27,21 @@ namespace KR
     //メモリリーク検出設定用[継承不可]
     class MemoryLeak final
     {
-    //▼実体関係.
+    //▼ ===== 実体 ===== ▼.
     private:
         static MemoryLeak inst; //実体を入れる用.
-    public:
-        //使用禁止.
-        MemoryLeak(const MemoryLeak&) = delete;
-        MemoryLeak& operator=(const MemoryLeak&) = delete;
 
-    //▼関数.
+    //▼ ===== 関数 ===== ▼.
     public:
         //constructor.
         MemoryLeak() {
             //デバッグ欄にログを出す設定.
             _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
         }
+
+        //使用禁止.
+        MemoryLeak(const MemoryLeak&) = delete;
+        MemoryLeak& operator=(const MemoryLeak&) = delete;
     };
 
     //ポインタ型を扱うクラス[試作品]

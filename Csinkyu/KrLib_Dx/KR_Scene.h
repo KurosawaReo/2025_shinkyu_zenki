@@ -1,6 +1,6 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/12/05
+   ver: 2025/12/08
 
    シーン管理機能を追加。
 
@@ -28,28 +28,29 @@ namespace KR
 	//シーン管理クラス[staticクラス]
 	class SceneMng final
 	{
-	//▼実体関係.
+	//▼ ===== 実体 ===== ▼.
 	private:
 		static SceneMng inst; //実体を入れる用.
-	public:
-		//使用禁止.
-		SceneMng(const SceneMng&) = delete;
-		SceneMng& operator=(const SceneMng&) = delete;
-	private: 
-		//constructor(新規作成をできなくする)
-		SceneMng(){}
 
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
 		map<MY_STRING, SceneBasic*> scenes;   //シーンリスト.
 		MY_STRING                   nowScene; //現在のシーン名.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
+	private:
+		//constructor(新規作成をできなくする)
+		SceneMng() {}
+
 	public:
 		static void		 UpdateScene();
 		static void		 DrawScene();
 
 		static void      AddScene(SceneBasic* sceneClass, MY_STRING name); //シーンの追加.
 		static ResultInt SetScene(MY_STRING name);                         //シーンの変更.
+
+		//使用禁止.
+		SceneMng(const SceneMng&) = delete;
+		SceneMng& operator=(const SceneMng&) = delete;
 	};
 }

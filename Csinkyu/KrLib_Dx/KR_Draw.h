@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/09
 
    描画機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -45,7 +45,7 @@ namespace KR
 	{
 		LU,	U,   RU, //例: Anchor::LU = Left Up.
 		L,  Mid, R,
-		DL,	D,   DR,
+		LD,	D,   RD,
 	};
 
 	//画像クラス.
@@ -53,11 +53,11 @@ namespace KR
 	{
 		friend class DrawImgMng; //アクセス許可.
 
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
 		Image img{}; //画像データ.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	private:
 		ResultInt LoadFile(MY_STRING fileName); //読み込み.
 		void      Release ();                   //解放.
@@ -84,30 +84,31 @@ namespace KR
 	//画像管理クラス[staticクラス]
 	class DrawImgMng final
 	{
-	//▼実体関係.
+	//▼ ===== 実体 ===== ▼.
 	private:
 		static DrawImgMng inst; //実体を入れる用.
-	public:
-		//使用禁止.
-		DrawImgMng(const DrawImgMng&) = delete;
-		DrawImgMng& operator=(const DrawImgMng&) = delete;
+
+	//▼ ===== 変数 ===== ▼.
+	private:
+		map<string, DrawImg> images; //画像データ.
+
+	//▼ ===== 関数 ===== ▼.
 	private:
 		//constructor(新規作成できなくする)
 		DrawImgMng(){}
 		//destructor.
 		~DrawImgMng();
 
-	//▼変数.
-	private:
-		map<string, DrawImg> images; //画像データ.
-
-	//▼関数.
 	public:
 		//get.
 		static DrawImg*  Get     (string saveName);
 		static bool      TryGet  (string saveName, DrawImg* ptr);
 		
 		static ResultInt LoadFile(MY_STRING fileName, string saveName); //読み込み.
+
+		//使用禁止.
+		DrawImgMng(const DrawImgMng&) = delete;
+		DrawImgMng& operator=(const DrawImgMng&) = delete;
 	};
 
 	//テキスト描画クラス.

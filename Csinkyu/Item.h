@@ -27,17 +27,10 @@ class ItemManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static ItemManager& GetInst() {
 		static ItemManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	ItemManager(const ItemManager&) = delete;
-	ItemManager& operator=(const ItemManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	ItemManager(){}
 
 //▼データ.
 private:
@@ -51,6 +44,10 @@ private:
 	Player*        p_player{};    //プレイヤーデータ.
 	LaserManager*  p_laserMng{};
 	EffectManager* p_effectMng{};
+
+private:
+	//constructor(新規作成をできなくする)
+	ItemManager(){}
 
 public:
 	//set.
@@ -68,4 +65,8 @@ public:
 	void ItemUse  ();        //アイテム発動.
 
 	void CheckHitPlayer(int idx); //プレイヤーとの当たり判定.
+
+	//使用禁止.
+	ItemManager(const ItemManager&) = delete;
+	ItemManager& operator=(const ItemManager&) = delete;
 };

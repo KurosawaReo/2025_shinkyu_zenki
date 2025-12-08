@@ -1,6 +1,6 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver: 2025/12/04
+   ver: 2025/12/07
 */
 #include "KR_Debug.h"
 
@@ -54,16 +54,14 @@ namespace KR
 		//マウスカーソルに合わせてカメラを動かす.
 		void MouseToMoveCamera() {
 
+			static DBL_XY initPos = Camera::GetCameraPos();
+
 			int mx = -1, my = -1;
 			GetMousePoint(&mx, &my); //マウス座標取得.
 
-			//中央基準にする.
-			DBL_XY pos = {
-				mx - _dbl(App::GetWindowX())/2,
-				my - _dbl(App::GetWindowY())/2
-			};
+			INT_XY move = {mx, my};
 			//カメラを動かす.
-			Camera::SetPos(pos);
+			Camera::SetPos(initPos + move.ToDbl());
 		}
 	}
 }

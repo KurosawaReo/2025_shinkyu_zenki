@@ -16,17 +16,10 @@ class GameData final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static GameData& GetInst() {
 		static GameData inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	GameData(const GameData&) = delete;
-	GameData& operator=(const GameData&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	GameData(){}
 
 //▼データ.
 public:
@@ -50,6 +43,15 @@ public:
 	int		   font2{};			//フォント.
 	int		   font3{};			//フォント.
 	int		   font4{};			//フォント.
+	
+private:
+	//constructor(新規作成をできなくする)
+	GameData(){}
+
+public:
+	//使用禁止.
+	GameData(const GameData&) = delete;
+	GameData& operator=(const GameData&) = delete;
 };
 
 //ゲームマネージャー.[継承不可]
@@ -57,17 +59,10 @@ class GameManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static GameManager& GetInst() {
 		static GameManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	GameManager(const GameManager&) = delete;
-	GameManager& operator=(const GameManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	GameManager(){}
 
 //▼データ.
 private:
@@ -94,9 +89,13 @@ public: //オブジェクト.
 	NormalLaser_4* laserNor4{};
 	StraightLaser* laserStr[2]{};
 
-public:
+private:
+	//constructor(新規作成をできなくする)
+	GameManager(){}
 	//destructor.
 	~GameManager();
+
+public:
 	//get.
 	float GetReflectModeTime() {
 		return tmReflectMode.GetPassTime();
@@ -140,4 +139,8 @@ public:
 	void GameOver();
 	void ItemUsed();
 	void ReflectModeEnd();
+
+	//使用禁止.
+	GameManager(const GameManager&) = delete;
+	GameManager& operator=(const GameManager&) = delete;
 };

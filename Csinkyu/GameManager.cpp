@@ -111,7 +111,12 @@
    [変更点]
    ・花火の落下レーザーをだんだん薄くなって消えるように変更
    ・レーザーやエフェクトなどで使ってた配列を、list配列に変更(→軽量化が期待できる)
-   ・レーザーの太さを1→2に変更(お試し)
+   ・レーザーの太さを1→2に変更
+
+   2025/12/09:
+   モードを選択した後、ゲームが始まる前に軽いルールを表示したい。
+   「生き延びてスコアを得よう」⇒「最大Level 5 / 時間経過でレベルが上がります」⇒「Level 1」
+   という感じで。
 
 /---------------------------------------------------------/
    [チュートリアル配分]
@@ -148,6 +153,8 @@
    steam販売の時にはライセンスに注意。
    
    [実績案]
+   ゲーム内に実績を作ってもいいかも。steam販売するならsteamと連携する形で。
+
    ・直線レーザー
      耐久モードでLevel2に到達する
    ・波紋
@@ -158,13 +165,13 @@
    　耐久モードでLevel5に到達する
    ・即死王
    　耐久モードでゲームオーバー時にスコアを20点未満にする
-   ・発売年
+   ・リリースイヤー
      耐久モードでゲームオーバー時にスコアを2025点にする
    ・チュートリアルマスター
-   　チュートリアルモードSTEP4でスコアを3000点獲得する
-   ・サバイバルマスター
+   　チュートリアルモードSTEP4でスコアを4000点獲得する
+   ・スーパーサバイバー
      耐久モードでアイテムを取らずにスコアを1000点獲得する
-   ・スーパーサバイバルマスター
+   ・マスターサバイバー
 	 耐久モードでアイテムを取らずにスコアを1500点獲得する
    ・REFLECT LINE
      レーザー反射数が計10000回を超える
@@ -195,6 +202,8 @@
 
 #include "GameManager.h"
 
+using namespace Calc; //計算機能を使用.
+
 //ポインタ.
 GameData         *gameData     = &GameData::GetInst();
 BackGround       *bg           = &BackGround::GetInst();
@@ -209,8 +218,6 @@ ItemManager      *item         = &ItemManager::GetInst();
 Player           *player       = &Player::GetInst();
 EffectManager    *effectMng    = &EffectManager::GetInst();
 UIManager        *uiMng        = &UIManager::GetInst();
-
-using namespace Calc; //計算機能を使用.
 
 //destructor.
 GameManager::~GameManager() {
@@ -399,11 +406,12 @@ void GameManager::Update() {
 	InputMng::UpdateAction(); //アクション更新.
 	SoundMng::Update();       //サウンド更新.
 
-	//ポーズしてなければ.
+	//背景, エフェクト更新.
 	if (gameData->scene != SCENE_PAUSE) {
-		bg->Update();        //背景.
-		effectMng->Update(); //エフェクト.
+		bg->Update();
+		effectMng->Update(); 
 	}
+
 	//シーン別.
 	switch (gameData->scene) 
 	{

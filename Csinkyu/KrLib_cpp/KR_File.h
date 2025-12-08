@@ -1,6 +1,6 @@
 /*
    - KR_File.h - (C++)
-   ver: 2025/11/29
+   ver: 2025/12/08
 
    ファイル操作機能を追加。
 */
@@ -16,11 +16,11 @@ namespace KR
 	//ファイルクラス.
 	class File
 	{
-	//▼変数.
+	//▼ ===== 変数 ===== ▼.
 	private:
 		FILE* fp; //ファイルポインタ.
 
-	//▼関数.
+	//▼ ===== 関数 ===== ▼.
 	private:
 		ResultInt MakeDir(MY_STRING path); //フォルダを作成(なければ)
 

@@ -1,6 +1,6 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/12/04
+   ver: 2025/12/08
 
    タイマー機能を追加。
 */
@@ -23,6 +23,7 @@ namespace KR
 	//タイマー機能.
 	class Timer
 	{
+	//▼ ===== 変数 ===== ▼.
 	private:
 		TimerMode mode{};       //計測モード.
 		bool      isMove{};     //計測中か.
@@ -32,6 +33,7 @@ namespace KR
 
 		float     tmSavePass{}; //時刻保存用(Stop後にStartしたら再開できるように)
 
+	//▼ ===== 関数 ===== ▼.
 	public:
 		//constructor.
 		Timer() {
@@ -62,6 +64,7 @@ namespace KR
 	//タイマー機能(マイクロ秒)
 	class TimerMicro
 	{
+	//▼ ===== 変数 ===== ▼.
 	private:
 		TimerMode     mode{};       //計測モード.
 		bool          isMove{};     //計測中か.
@@ -72,6 +75,7 @@ namespace KR
 
 		LONGLONG      tmSavePass{}; //時刻保存用(Stop後にStartしたら再開できるように)
 
+	//▼ ===== 関数 ===== ▼.
 	public:
 		//constructor.
 		TimerMicro() {
