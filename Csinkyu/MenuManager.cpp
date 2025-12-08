@@ -36,7 +36,8 @@ void MenuManager::Init() {
 
 // リセット
 void MenuManager::Reset() {
-	selectedIndex = 0; // 0:ゲーム開始、1:チュートリアル、2:タイトルに戻る
+	selectedIndex = 0;
+	tmBlink.Start();
 }
 
 // 更新
@@ -88,7 +89,17 @@ void MenuManager::Update() {
 // 描画
 void MenuManager::Draw() {
 
-	//背景を暗くする.
+	//アニメーション値.
+	//この値を基準にメニューのアニメーションを制御する.
+	const double cntrAnim1 = sin(counter/ 50 * M_PI);
+	const double cntrAnim2 = sin(counter/100 * M_PI);
+	//デジタル風の点滅用.
+	if (tmBlink.IntervalTime()) {
+		//一定確率で点滅する.
+		isBlink = Calc::RandNum(0, 100) < 10;
+	}
+
+	//メニュー全体の背景.
 	SetDrawBlendModeKR(BlendModeID::Alpha, 128);
 	{
 		Box box = {{0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000};
@@ -96,13 +107,13 @@ void MenuManager::Draw() {
 	}
 	ResetDrawBlendMode();
 
-	// メニュータイトル（中央）
+	//メニュータイトル（中央）
 	{
 		DrawStr str(_T("モード選択"), { WINDOW_WID/2-100, 100 }, 0x00FFFF);
 		str.Draw(Anchor::LU, fontMenu[1].GetFont());
 	}
 
-	// メニュー項目
+	//メニュー項目.
 	int menuX = 100;
 	int menuY = 250;
 	int menuSpacing = 100;
@@ -146,11 +157,9 @@ void MenuManager::Draw() {
 	{
 		//基準座標.
 		DBL_XY base = DBL_XY(menuX - 25, menuY + selectedIndex * menuSpacing + 35);
-		//アニメーション値.
-		double anim = sin(counter / 50 * M_PI);
 
-		Triangle tri = { {base, base.Add(-20, 10 * anim), base.Add(-20, -10 * anim)}, {} };
-		tri.color = (anim >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
+		Triangle tri = { {base, base.Add(-20, 10 * cntrAnim1), base.Add(-20, -10 * cntrAnim1)}, {} };
+		tri.color = (cntrAnim1 >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
 		DrawTriangleKR(tri, true, true);
 	}
 
@@ -174,13 +183,13 @@ void MenuManager::Draw() {
 		DrawBoxKR(box, Anchor::Mid, false);
 	}
 
-	// ▼ 説明文の枠（右下）- 画像の幅に合わせる
+	//▼説明文の枠（右下）- 画像の幅に合わせる
 	int textBoxWidth = (int)imgSize.x + margin * 2;  // 画像の幅 + 余白（両端）
 	int textBoxHeight = 260;
 	int textBoxX = (int)(imgPos.x - textBoxWidth / 2);  // 画像と同じ中心位置
 	int textBoxY = WINDOW_HEI - 300;
 
-	// ▼ 選択項目から画像、説明文エリアまでの線を描画
+	//▼選択項目から画像、説明文エリアまでの線を描画
 	{
 		// 選択されたメニュー項目の右端座標
 		int menuItemRightX = menuX + boxWidth;
@@ -197,20 +206,23 @@ void MenuManager::Draw() {
 		// 線の太さ
 		int lineThickness = 3;
 
-		// アニメーション効果（点滅）
-		double pulseAnim = (sin(counter * 0.1) + 1.0) / 2.0; // 0.0～1.0の範囲
-		int alpha = (int)(128 + 127 * pulseAnim); // 128～255の範囲でアルファ値変化
-
-		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
+		//線の透明度(155～255)
+		const int alpha = 155 + 100 * (cntrAnim2 + 1.0) / 2.0;
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * ((isBlink) ? 0.5 : 1));
 
 		// 1. メニュー項目から画像への線（水平線→垂直線）
 		// 水平線（メニュー項目右端から画像左端まで）
 		for (int i = 0; i < lineThickness; i++) {
 			Line line = {
 				DBL_XY(menuItemRightX, menuItemCenterY + i - lineThickness / 2),
-				DBL_XY(imgLeftX, menuItemCenterY + i - lineThickness / 2), 
+				DBL_XY(imgLeftX,       menuItemCenterY + i - lineThickness / 2), 
 				lineColor
 			};
+			if (isBlink) {
+				const int add = Calc::RandNum(-5, 5);
+				line.stPos += add;
+				line.edPos += add;
+			}
 			DrawLineKR(line);
 		}
 
@@ -222,6 +234,11 @@ void MenuManager::Draw() {
 				DBL_XY(imgPos.x + i - lineThickness / 2, textBoxTopY), 
 				lineColor
 			};
+			if (isBlink) {
+				const int add = Calc::RandNum(-5, 5);
+				line.stPos += add;
+				line.edPos += add;
+			}
 			DrawLineKR(line);
 		}
 
@@ -233,13 +250,14 @@ void MenuManager::Draw() {
 	DrawStr str(_T("モード説明"), { textBoxX + 20, titleY }, 0x00FFFF);
 	str.Draw(Anchor::LU, fontMenu[1].GetFont());
 
-	// 説明文枠の背景（半透明黒）
-	SetDrawBlendModeKR(BlendModeID::Alpha, 150);
-	{
-		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), 0x000000};
-		DrawBoxKR(box, Anchor::LU, true);
-	}
-	ResetDrawBlendMode();
+	////説明文枠の背景.
+	//SetDrawBlendModeKR(BlendModeID::Alpha, 150);
+	//{
+	//	Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), 0x000000 };
+	//	DrawBoxKR(box, Anchor::LU, true);
+	//}
+	//ResetDrawBlendMode();
+
 	// 説明文枠の枠線（水色）
 	{
 		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), frameColor};

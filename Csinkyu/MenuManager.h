@@ -16,12 +16,16 @@ public:
 
 //▼データ.
 private:
-	GameData* p_data{};    //GameDataのポインタ.
+	GameData* p_data{};           //GameDataのポインタ.
 
-	Font    fontMenu[2]{}; //メニュー用フォント.
+	Font      fontMenu[2]{};      //メニュー用フォント.
 
-	int   selectedIndex = 0;  // 選択中のインデックス
-	float counter = 0;        // 経過時間カウンター.
+	int       selectedIndex = 0;  //カーソルの選択位置 | 0:ゲーム開始 | 1:チュートリアル | 2:タイトルに戻る |
+	float     counter = 0;        //経過時間.
+
+	//点滅処理.
+	Timer     tmBlink = Timer(TimerMode::CountDown, 0.1f); //点滅間隔.
+	bool      isBlink = 0;                                 //点滅させる用.
 
 private:
 	//constructor(新規作成をできなくする)
