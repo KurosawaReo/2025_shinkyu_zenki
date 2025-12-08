@@ -111,88 +111,101 @@ void MenuManager::Draw() {
 	{
 		//基準地.
 		const DBL_XY basePos = { WINDOW_WID / 2, 80 };
-		//アニメーション値.
-		const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter, 120)/120);
-		const double anim2 = sin(fmod(counter, 120)/120 * M_PI);
 
-		Line lines[4] = {
-		//「<」.
-			{ basePos.Add(-55-100*anim1, 30), basePos.Add(-85-100*anim1,   0), 0x00FFFF },
-			{ basePos.Add(-85-100*anim1,  0), basePos.Add(-55-100*anim1, -30), 0x00FFFF },
-		//「>」.
-			{ basePos.Add(+55+100*anim1, 30), basePos.Add(+85+100*anim1,   0), 0x00FFFF },
-			{ basePos.Add(+85+100*anim1,  0), basePos.Add(+55+100*anim1, -30), 0x00FFFF }
-		};
+		{
+			//アニメーション値.
+			const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter, 120)/120);
+			const double anim2 = sin(fmod(counter, 120)/120 * M_PI);
 
-		//線描画.
-		SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim2 * ((isBlink) ? 0.5 : 1.0));
-		for (auto& i : lines) {
-			//点滅時は位置をずらす.
-			if (isBlink) {
-				const int add = Calc::RandNum(-5, 5);
-				i.stPos += add;
-				i.edPos += add;
+			Line lines[4] = {
+			//「<」.
+				{ basePos.Add(-55-100*anim1, 30), basePos.Add(-85-100*anim1,   0), 0x00FFFF },
+				{ basePos.Add(-85-100*anim1,  0), basePos.Add(-55-100*anim1, -30), 0x00FFFF },
+			//「>」.
+				{ basePos.Add(+55+100*anim1, 30), basePos.Add(+85+100*anim1,   0), 0x00FFFF },
+				{ basePos.Add(+85+100*anim1,  0), basePos.Add(+55+100*anim1, -30), 0x00FFFF }
+			};
+
+			//線描画.
+			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim2);
+			for (auto& i : lines) {
+				DrawLineKR(i, true, 2);
 			}
-			DrawLineKR(i, true, 2);
+			ResetDrawBlendMode();
 		}
-		ResetDrawBlendMode();
+		{
+			//アニメーション値.
+			const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter-20, 120)/120);
+			const double anim2 = sin(fmod(counter-20, 120)/120 * M_PI);
+
+			Line lines[4] = {
+			//「<」.
+				{ basePos.Add(-55-100*anim1, 30), basePos.Add(-85-100*anim1,   0), 0x00FFFF },
+				{ basePos.Add(-85-100*anim1,  0), basePos.Add(-55-100*anim1, -30), 0x00FFFF },
+			//「>」.
+				{ basePos.Add(+55+100*anim1, 30), basePos.Add(+85+100*anim1,   0), 0x00FFFF },
+				{ basePos.Add(+85+100*anim1,  0), basePos.Add(+55+100*anim1, -30), 0x00FFFF }
+			};
+
+			//線描画.
+			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim2);
+			for (auto& i : lines) {
+				DrawLineKR(i, true, 2);
+			}
+			ResetDrawBlendMode();
+		}
 
 		DrawStr str(_T("モード選択"), basePos.ToInt(), 0x00FFFF);
 		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
 	}
 
-	//▼メニュー項目.
-	int menuX = 100;
-	int menuY = 250;
-	int menuSpacing = 100;
-	int boxWidth = 400;
-	int boxHeight = 70;
-
-	unsigned int textColor    = GetColor(255, 255, 255); //テキスト色:
-	unsigned int frameColor   = GetColor(0, 255, 255);   //枠色.
-	unsigned int normalColor  = GetColor(150, 150, 150); //未選択色.
-	unsigned int selectColor1 = GetColor(100, 255, 255); //カーソル表.
-	unsigned int selectColor2 = GetColor(50, 150, 255);  //カーソル裏.
-	unsigned int lineColor    = GetColor(0, 255, 255);   //線の色（黄色）.
-
 	//▼各選択肢.
 	{
-		unsigned int color1 = (selectedIndex == 0) ? selectColor1 : normalColor;
-		unsigned int color2 = (selectedIndex == 1) ? selectColor1 : normalColor;
-		unsigned int color3 = (selectedIndex == 2) ? selectColor1 : normalColor;
+		unsigned int color1 = (selectedIndex == 0) ? mColor.select1 : mColor.normal;
+		unsigned int color2 = (selectedIndex == 1) ? mColor.select1 : mColor.normal;
+		unsigned int color3 = (selectedIndex == 2) ? mColor.select1 : mColor.normal;
 
-		Box box = {DBL_XY(menuX, menuY), DBL_XY(boxWidth, boxHeight), selectColor1};
-		DrawStr str(_T("     ゲーム開始"), { menuX+30, menuY+15 }, color1);
-		DrawBoxKR(box, Anchor::LU, false);
-		str.Draw(Anchor::LU, fontMenu[1].GetFont());
+		//テキスト & 枠線用.
+		Box box = { mLayout.menuPos.ToDbl(), mLayout.menuBoxSize.ToDbl(), mColor.select1};
+		DrawStr str(_T(""), mLayout.menuPos, {});
 
-		box.pos.y += menuSpacing; //スペースを空ける.
-		str.pos.y += menuSpacing; //スペースを空ける.
-		str.text  = _T(" 　チュートリアル");
+		//選択肢1
+		str.text = _T("ゲーム開始");
+		str.color = color1;
+		DrawBoxKR(box, Anchor::Mid, false);
+		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+
+		//選択肢2
+		box.pos.y += mLayout.menuSpace; //スペースを空ける.
+		str.pos.y += mLayout.menuSpace; //スペースを空ける.
+		str.text  = _T("チュートリアル");
 		str.color = color2;
-		DrawBoxKR(box, Anchor::LU, false);
-		str.Draw(Anchor::LU, fontMenu[1].GetFont());
+		DrawBoxKR(box, Anchor::Mid, false);
+		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
 
-		box.pos.y += menuSpacing; //スペースを空ける.
-		str.pos.y += menuSpacing; //スペースを空ける.
-		str.text  = _T("   タイトルに戻る");
+		//選択肢3
+		box.pos.y += mLayout.menuSpace; //スペースを空ける.
+		str.pos.y += mLayout.menuSpace; //スペースを空ける.
+		str.text  = _T(" タイトルに戻る");
 		str.color = color3;
-		DrawBoxKR(box, Anchor::LU, false);
-		str.Draw(Anchor::LU, fontMenu[1].GetFont());
+		DrawBoxKR(box, Anchor::Mid, false);
+		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
 	}
 
 	//▼カーソルの三角.
 	{
 		//基準座標.
-		DBL_XY base = DBL_XY(menuX - 25, menuY + selectedIndex * menuSpacing + 35);
+		DBL_XY base = mLayout.menuPos.ToDbl().Add(
+			-mLayout.menuBoxSize.x/2 - 20,      //xの移動量.
+			+mLayout.menuSpace * selectedIndex  //yの移動量.
+		);
 
 		Triangle tri = { {base, base.Add(-20, 10 * cntrAnim1), base.Add(-20, -10 * cntrAnim1)}, {} };
-		tri.color = (cntrAnim1 >= 0) ? selectColor1 : selectColor2; //表か裏かで色を変える.
+		tri.color = (cntrAnim1 >= 0) ? mColor.select1 : mColor.select2; //表か裏かで色を変える.
 		DrawTriangleKR(tri, true, true);
 	}
 
-	//画像の座標(ここを中心とする)
-	DBL_XY imgPos = { WINDOW_WID - 450, 450 };
+	//画像サイズ保存用.
 	DBL_XY imgSize;
 
 	//▼サムネ画像.
@@ -203,146 +216,168 @@ void MenuManager::Draw() {
 		string name = "menu" + to_string(selectedIndex);
 		if (auto i = DrawImgMng::Get(name)) {
 			//画像描画.
-			i->DrawExtend(imgPos, {ext , ext});
+			i->DrawExtend(mLayout.imgPos, {ext , ext});
 			//画像のサイズ(Extend倍率分小さくする)
 			imgSize = i->GetSize().ToDbl() * ext + margin;
-			//画像の枠線(位置とサイズは画像を元にする)
-			Box box = { imgPos, imgSize, frameColor };
+			//画像の枠線(位置とサイズは画像に合わせる)
+			Box box = { mLayout.imgPos, imgSize, mColor.frame };
 			DrawBoxKR(box, Anchor::Mid, false);
 		}
 	}
 
 	//▼説明文の枠（右下）- 画像の幅に合わせる
-	int textBoxWidth = (int)imgSize.x;  // 画像の幅 + 余白（両端）
+	int textBoxWidth = (int)imgSize.x;
 	int textBoxHeight = 260;
-	int textBoxX = (int)(imgPos.x - textBoxWidth / 2);  // 画像と同じ中心位置
+	int textBoxX = (int)(mLayout.imgPos.x - textBoxWidth/2);  // 画像と同じ中心位置
 	int textBoxY = WINDOW_HEI - 300;
 
 	//▼選択項目から画像、説明文エリアまでの線を描画
 	{
 		// 選択されたメニュー項目の右端座標
-		int menuItemRightX = menuX + boxWidth;
-		int menuItemCenterY = menuY + selectedIndex * menuSpacing + boxHeight / 2;
+		int menuItemRightX  = mLayout.menuPos.x + mLayout.menuBoxSize.x/2;
+		int menuItemCenterY = mLayout.menuPos.y + mLayout.menuSpace * selectedIndex;
 
-		int imgLeftX   = (int)(imgPos.x - imgSize.x/2); //画像の左端座標.
-		int imgCenterY = (int)imgPos.y;
-		int imgBottomY = (int)(imgPos.y + imgSize.y/2); //画像の下端座標.
+		int imgLeftX   = (int)(mLayout.imgPos.x - imgSize.x/2); //画像の左端座標.
+		int imgCenterY = (int) mLayout.imgPos.y;
+		int imgBottomY = (int)(mLayout.imgPos.y + imgSize.y/2); //画像の下端座標.
 
 		// 説明文エリアの上端中央座標
 		int textBoxCenterX = textBoxX + textBoxWidth / 2;
 		int textBoxTopY = textBoxY;
 
-		// 線の太さ
-		int lineThickness = 3;
-
 		//線の透明度(155～255)
 		const int alpha = 155 + 100 * (cntrAnim2 + 1.0) / 2.0;
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * ((isBlink) ? 0.5 : 1));
 
-		// 1. メニュー項目から画像への線（水平線→垂直線）
-		// 水平線（メニュー項目右端から画像左端まで）
+		//線の太さ.
+		//(DrawLineにも太さの設定はあるが、ブレの雰囲気が出てるためあえてこのままのやり方で)
+		const int lineThickness = 3;
+
+		//1.メニュー項目から画像への線（メニュー項目右端から画像左端まで）
 		for (int i = 0; i < lineThickness; i++) {
+			//線データ.
 			Line line = {
-				DBL_XY(menuItemRightX, menuItemCenterY + i - lineThickness / 2),
-				DBL_XY(imgLeftX,       menuItemCenterY + i - lineThickness / 2), 
-				lineColor
+				DBL_XY(menuItemRightX, menuItemCenterY + i - lineThickness / 2), //pos1
+				DBL_XY(imgLeftX,       menuItemCenterY + i - lineThickness / 2), //pos2
+				mColor.line                                                      //color
 			};
-			//点滅時が位置をずらす.
+			//ブレる時に位置をずらす.
 			if (isBlink) {
 				const int add = Calc::RandNum(-5, 5);
 				line.stPos += add;
 				line.edPos += add;
 			}
+			//線描画.
 			DrawLineKR(line);
 		}
 
-		// 2. 画像から説明文エリアへの線（垂直線のみ）
-		// 垂直線（画像下端から説明文上端まで）
+		//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
 		for (int i = 0; i < lineThickness; i++) {
 			Line line = {
-				DBL_XY(imgPos.x + i - lineThickness / 2, imgBottomY),
-				DBL_XY(imgPos.x + i - lineThickness / 2, textBoxTopY), 
-				lineColor
+				DBL_XY(mLayout.imgPos.x + i - lineThickness / 2, imgBottomY),
+				DBL_XY(mLayout.imgPos.x + i - lineThickness / 2, textBoxTopY),
+				mColor.line
 			};
-			//点滅時が位置をずらす.
+			//ブレる時に位置をずらす.
 			if (isBlink) {
 				const int add = Calc::RandNum(-5, 5);
 				line.stPos += add;
 				line.edPos += add;
 			}
+			//線描画.
 			DrawLineKR(line);
 		}
 
 		ResetDrawBlendMode();
 	}
 
-	//▼モード説明タイトル（説明文枠の上に表示）
-	int titleY = textBoxY - 40;  // 説明文枠の40ピクセル上に配置
-	DrawStr str(_T("モード説明"), { textBoxX + 20, titleY }, 0x00FFFF);
-	str.Draw(Anchor::LU, fontMenu[1].GetFont());
-
-	////説明文枠の背景.
-	//SetDrawBlendModeKR(BlendModeID::Alpha, 150);
-	//{
-	//	Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), 0x000000 };
-	//	DrawBoxKR(box, Anchor::LU, true);
-	//}
-	//ResetDrawBlendMode();
-
-	// 説明文枠の枠線（水色）
+	//▼操作説明（左下）
 	{
-		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), frameColor};
+		int infoWidth = 500;
+		int infoHeight = textBoxHeight;
+		int infoX = mLayout.menuPos.x - infoWidth/2;
+		int infoY = textBoxY;
+
+		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1 };
+		DrawStr str = { _T(""), INT_XY(infoX, infoY) + mLayout.loreInner, mColor.normal };
+
+		DrawStr str2(_T("操作"), { infoX + 10, infoY - 10 }, 0x00FFFF);
+		str2.Draw(Anchor::LD, fontMenu[0].GetFont());
+
 		DrawBoxKR(box, Anchor::LU, false);
+
+		str.text = _T("選択: ↑↓ or W/S");
+		str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+		str.pos.y += mLayout.loreLineSpace; //次の行へ.
+		str.pos.y += mLayout.loreLineSpace; //次の行へ.
+		str.text = _T("決定: SPACE/ENTER/Ⓐ");
+		str.Draw(Anchor::LU, fontMenu[0].GetFont());
 	}
 
+	//▼モード説明タイトル（説明文枠の上に表示）
 	{
-		int textX = textBoxX + 10;
-		int textY = textBoxY + 20;
+		DrawStr str2(_T("モード説明"), { textBoxX+10, textBoxY-10 }, 0x00FFFF);
+		str2.Draw(Anchor::LD, fontMenu[0].GetFont());
+
+		// 説明文枠の枠線（水色）	
+		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), mColor.frame};
+		DrawBoxKR(box, Anchor::LU, false);
 
 		//説明文用.
-		DrawStr str(_T(""), {textX, textY}, normalColor);
+		DrawStr str(_T(""), INT_XY(textBoxX, textBoxY)+mLayout.loreInner, mColor.normal);
 
 		switch (selectedIndex)
 		{
 		case 0:
-			str.text = _T("時間経過でLevelが上がり、");
+			str.text = _T("ゲームオーバーになるまで続くエンドレスモード。");
 			str.Draw(Anchor::LU, fontMenu[0].GetFont());
 			
-			str.pos.y += 30; //次の行へ.
-			str.text = _T("ゲームオーバーになるまで続く");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += 30; //次の行へ.
-			str.text = _T("エンドレスモード。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += 30; //次の行へ.
-			str.text = _T("・隕石を壊す : +500");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += 30; //次の行へ.
-			str.text = _T("・アイテムを取る : +100");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += 30; //次の行へ.
-			str.text = _T("・タイムボーナス : 1秒ごとに +10");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += 30; //次の行へ.
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
 			str.text = _T("ハイスコアを目指して頑張ろう！");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("[スコア]");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("- 隕石を壊す　　: +500");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("- アイテムを取る: +100");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("- タイムボーナス: 1秒ごとに +10");
 			str.Draw(Anchor::LU, fontMenu[0].GetFont());
 			break;
 
 		case 1:
-			str.text = _T("ゲームの基本操作を学べます。");
+			str.text = _T("基本操作とルールを確認できます。");
 			str.Draw(Anchor::LU, fontMenu[0].GetFont());
 
-			str.pos.y += 30; //次の行へ.
-			str.text = _T("初めての方は最初に");
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("STEP1～4まであり、目安は数分で終わります。");
 			str.Draw(Anchor::LU, fontMenu[0].GetFont());
 
-			str.pos.y += 30; //次の行へ.
-			str.text = _T("プレイしてください。");
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("- STEP1: 基本について");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("- STEP2: アイテムについて");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("- STEP3: 反射について");
+			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+			str.text = _T("- STEP4: スコアについて");
 			str.Draw(Anchor::LU, fontMenu[0].GetFont());
 			break;
 
@@ -351,25 +386,5 @@ void MenuManager::Draw() {
 			str.Draw(Anchor::LU, fontMenu[0].GetFont());
 			break;
 		}
-	}
-
-	//▼操作説明（左下）
-	int infoX = 50;
-	int infoY = WINDOW_HEI - 200;
-	int infoWidth = 500;
-	int infoHeight = 180;
-	
-	{
-		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), selectColor1 };
-		DrawStr str = { _T(""), {infoX, infoY}, normalColor };
-
-		DrawBoxKR(box, Anchor::LU, false);
-
-		str.text = _T("選択 :↑↓ or W/S:");
-		str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-		str.pos.y += 50; //次の行へ.
-		str.text = _T("決定 :SPACE/ENTER/Ⓐ");
-		str.Draw(Anchor::LU, fontMenu[0].GetFont());
 	}
 }

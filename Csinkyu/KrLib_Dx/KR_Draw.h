@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/09
 
    描画機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -45,7 +45,7 @@ namespace KR
 	{
 		LU,	U,   RU, //例: Anchor::LU = Left Up.
 		L,  Mid, R,
-		DL,	D,   DR,
+		LD,	D,   RD,
 	};
 
 	//画像クラス.
