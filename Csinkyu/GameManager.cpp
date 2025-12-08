@@ -195,6 +195,8 @@
 
 #include "GameManager.h"
 
+using namespace Calc; //計算機能を使用.
+
 //ポインタ.
 GameData         *gameData     = &GameData::GetInst();
 BackGround       *bg           = &BackGround::GetInst();
@@ -209,8 +211,6 @@ ItemManager      *item         = &ItemManager::GetInst();
 Player           *player       = &Player::GetInst();
 EffectManager    *effectMng    = &EffectManager::GetInst();
 UIManager        *uiMng        = &UIManager::GetInst();
-
-using namespace Calc; //計算機能を使用.
 
 //destructor.
 GameManager::~GameManager() {

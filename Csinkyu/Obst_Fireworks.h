@@ -35,17 +35,10 @@ class FireworksManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static FireworksManager& GetInst() {
 		static FireworksManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	FireworksManager(const FireworksManager&) = delete;
-	FireworksManager& operator=(const FireworksManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	FireworksManager(){}
 
 //▼データ.
 private:
@@ -58,6 +51,9 @@ private:
 
 //▼関数.
 private:
+	//constructor(新規作成をできなくする)
+	FireworksManager(){}
+
 	void GenerateRandomPosition   (float& x, float& y);
 	bool CheckDistance            (float x, float y);
 	void SpawnFireworks           (float x, float y);
@@ -73,4 +69,8 @@ public:
 	void Reset();
 	void Update();
 	void Draw();
+
+	//使用禁止.
+	FireworksManager(const FireworksManager&) = delete;
+	FireworksManager& operator=(const FireworksManager&) = delete;
 };

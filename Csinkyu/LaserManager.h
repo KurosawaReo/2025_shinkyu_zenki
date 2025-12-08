@@ -50,17 +50,10 @@ class LaserManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static LaserManager& GetInst() {
 		static LaserManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	LaserManager(const LaserManager&) = delete;
-	LaserManager& operator=(const LaserManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	LaserManager(){}
 
 //▼データ.
 private:
@@ -74,6 +67,10 @@ private:
 	Player*        p_player{};
 	MeteorManager* p_meteorMng{};
 	EffectManager* p_effectMng{};
+
+private:
+	//constructor(新規作成をできなくする)
+	LaserManager(){}
 
 public:
 	void Init();
@@ -95,4 +92,8 @@ public:
 
 	//未使用.
 	void LaserReflectRange(Circle cir);							    //レーザーを一括反射.
+
+	//使用禁止.
+	LaserManager(const LaserManager&) = delete;
+	LaserManager& operator=(const LaserManager&) = delete;
 };

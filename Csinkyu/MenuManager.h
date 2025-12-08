@@ -9,17 +9,10 @@ class MenuManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static MenuManager& GetInst() {
 		static MenuManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	MenuManager(const MenuManager&) = delete;
-	MenuManager& operator=(const MenuManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	MenuManager(){}
 
 //▼データ.
 private:
@@ -30,9 +23,17 @@ private:
 	int   selectedIndex = 0;  // 選択中のインデックス
 	float counter = 0;        // 経過時間カウンター.
 
+private:
+	//constructor(新規作成をできなくする)
+	MenuManager(){}
+
 public:
 	void Init();
 	void Reset();
 	void Update();
 	void Draw();
+	
+	//使用禁止.
+	MenuManager(const MenuManager&) = delete;
+	MenuManager& operator=(const MenuManager&) = delete;
 };

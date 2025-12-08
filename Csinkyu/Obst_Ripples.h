@@ -20,17 +20,10 @@ class Ripples final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static Ripples& GetInst() {
 		static Ripples inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	Ripples(const Ripples&) = delete;
-	Ripples& operator=(const Ripples&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	Ripples(){}
 
 //▼データ.
 private:
@@ -40,6 +33,10 @@ private:
 
 	GameData* p_data{};
 	Player*   p_player{};
+
+private:
+	//constructor(新規作成をできなくする)
+	Ripples(){}
 
 public:
 	void Init();
@@ -59,4 +56,8 @@ public:
 	int  GetEffectState   (list<RipplesData>::iterator it);
 	void DrawWarningEffect(list<RipplesData>::iterator it);
 	void DrawActiveEffect (list<RipplesData>::iterator it);
+
+	//使用禁止.
+	Ripples(const Ripples&) = delete;
+	Ripples& operator=(const Ripples&) = delete;
 };
