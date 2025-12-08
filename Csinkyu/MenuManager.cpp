@@ -274,8 +274,23 @@ void MenuManager::Draw() {
 		//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
 		for (int i = 0; i < lineThickness; i++) {
 			Line line = {
-				DBL_XY(mLayout.imgPos.x + i - lineThickness / 2, imgBottomY),
-				DBL_XY(mLayout.imgPos.x + i - lineThickness / 2, textBoxTopY),
+				DBL_XY(mLayout.imgPos.x-30 + i - lineThickness / 2, imgBottomY),
+				DBL_XY(mLayout.imgPos.x-30 + i - lineThickness / 2, textBoxTopY),
+				mColor.line
+			};
+			//ブレる時に位置をずらす.
+			if (isBlink) {
+				const int add = Calc::RandNum(-5, 5);
+				line.stPos += add;
+				line.edPos += add;
+			}
+			//線描画.
+			DrawLineKR(line);
+		}
+		for (int i = 0; i < lineThickness; i++) {
+			Line line = {
+				DBL_XY(mLayout.imgPos.x+30 + i - lineThickness / 2, imgBottomY),
+				DBL_XY(mLayout.imgPos.x+30 + i - lineThickness / 2, textBoxTopY),
 				mColor.line
 			};
 			//ブレる時に位置をずらす.
