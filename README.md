@@ -99,10 +99,14 @@
 アニメーションやサウンドにもこだわり、見ていて飽きない**動き**のあるゲームデザインを目指しました。
 
 ↓ 背景アニメーション
+
 <img src="_readme_img/背景アニメ.gif">
 <br>
+
 ↓ Levelアニメーション
+
 <img src="_readme_img/Levelアニメ.gif">
+<br>
 
 #### 隕石
 形と線の数は独自のアルゴリズムでランダム生成しています。
@@ -121,5 +125,6 @@
 ゲーム開発をスムーズにすることを目的とした、自作ラッパーライブラリです。
 
 こちらをクリックすると、ライブラリのソースへ移動します。
-・[KrLib - DXライブラリ用](https://github.com/KurosawaReo/2025_shinkyu_zenki/tree/main/Csinkyu/KrLib_Dx)
-・[KrLib - C++用](https://github.com/KurosawaReo/2025_shinkyu_zenki/tree/main/Csinkyu/KrLib_Dx)
+
+・[KrLib - DXライブラリ用](https://github.com/KurosawaReo/2025_shinkyu_zenki/tree/main/Csinkyu/KrLib_Dx)<br>
+・[KrLib - C++用](https://github.com/KurosawaReo/2025_shinkyu_zenki/tree/main/Csinkyu/KrLib_cpp)<br>
