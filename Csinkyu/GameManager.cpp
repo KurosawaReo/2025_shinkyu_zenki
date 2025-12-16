@@ -118,6 +118,12 @@
    「生き延びてスコアを得よう」⇒「最大Level 5 / 時間経過でレベルが上がります」⇒「Level 1」
    という感じで。
 
+   2025/12/17:
+   思いついた案。
+   レーザーを跳ね返して隕石を破壊するというのが限定的すぎる気がした。
+   説明もしにくいし、直感的に理解しにくい。
+   から、他の障害物も反射したり破壊できるようにしてもいいかもとは思った。
+
 /---------------------------------------------------------/
    [チュートリアル配分]
    step1: 移動, よける
@@ -251,8 +257,8 @@ void GameManager::Init() {
 	gameData->font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData->font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
-	DrawImgMng::LoadFile(_T("Resources/Images/REFLINEロゴ_一部.png"),   "logo");
-	DrawImgMng::LoadFile(_T("Resources/Images/REFLINEロゴ.png"),        "logo_all");
+	DrawImgMng::LoadFile(_T("Resources/Images/logo_text_only.png"),     "logo");
+	DrawImgMng::LoadFile(_T("Resources/Images/logo_all.png"),           "logo_all");
 	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_best_score.png"), "ui_back_best_score");
 	DrawImgMng::LoadFile(_T("Resources/Images/new_record.png"),         "new_record");
 	DrawImgMng::LoadFile(_T("Resources/Images/gameover.png"),           "gameover");
