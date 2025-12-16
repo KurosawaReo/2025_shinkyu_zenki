@@ -40,16 +40,53 @@
 <br>
 
 > ### ルール
-以下のサイクルを繰り返しながら、ハイスコアを目指します。
+以下のサイクルをゲームオーバーになるまで繰り返すエンドレスゲームです。
+最終スコアでハイスコアを競います。
 
-**避ける → 取る → 反射 → 壊す**
+<div style="display:flex; align-items:center; gap:16px;">
+  <img src="_readme_img/rule1_避ける.gif" width=200>
+  <div>
+    <b>1. 避ける</b><br>
+    レーザーや隕石などの障害物に1回でも当たるとゲームオーバー。<br>
+    <font color=00ffff>青いもの</font>が障害物のサインです。
+  </div>
+</div>
+<br>
 
-* 障害物（レーザー・隕石など）に1回でも当たるとゲームオーバー
-* アイテムを取ると「反射モード」になり、レーザーを反射可能
-* 反射したレーザーは隕石に自動追尾し、破壊するとスコア獲得
+<div style="display:flex; align-items:center; gap:16px;">
+  <img src="_readme_img/rule2_取る.gif" width=200>
+  <div>
+    <b>2. 取る</b><br>
+    画面上部からアイテムが降ってきます。<br>
+    アイテムを取ると、反射モードへ変化します。<br>
+    プレイヤーが<font color=ff00ff>ピンク色</font>になったら、反射モードのサインです。
+  </div>
+</div>
+<br>
 
-操作は移動とダッシュのみ。
-シンプルながら、状況判断とリスク管理が問われる設計になっています。
+<div style="display:flex; align-items:center; gap:16px;">
+  <img src="_readme_img/rule3_反射.gif" width=200>
+  <div>
+    <b>3. 反射</b><br>
+    反射モード中は、レーザーにわざと当たりに行くことで反射することができます。<br>
+    ただし、反射モードには制限時間があるため、切れる前に逃げることも重要です。<br>
+    ※レーザーのみ当たってもOKで、無敵ではありません
+  </div>
+</div>
+<br>
+
+<div style="display:flex; align-items:center; gap:16px;">
+  <img src="_readme_img/rule4_壊す.gif" width=200>
+  <div>
+    <b>4. 壊す</b><br>
+    反射したレーザーは、近くの隕石に向かって自動で追尾します。<br>
+    レーザーが隕石に衝突すると破壊され、スコアを得ることができます。
+  </div>
+</div>
+<br>
+
+これらのルールは、ゲーム本編の『**チュートリアル**』モードからでも確認できます。
+<img src="_readme_img/メニュー_チュートリアル.png">
 
 ---
 
@@ -63,6 +100,7 @@
 
 ↓ 背景アニメーション
 <img src="_readme_img/背景アニメ.gif">
+<br>
 ↓ Levelアニメーション
 <img src="_readme_img/Levelアニメ.gif">
 
