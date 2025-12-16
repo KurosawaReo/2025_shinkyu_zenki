@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="_readme_img/タイトルロゴ.png" width="500"><br>
+  <img src="_readme_img/logo_all_black.png" width="500"><br>
 </p>
 
 ---
@@ -11,6 +11,7 @@
 <br>
 
 > ### ゲーム概要
+<img src="_readme_img/ゲーム画面.png">
 <table>
     <tr>
         <th>ジャンル</th>

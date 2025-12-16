@@ -251,8 +251,8 @@ void GameManager::Init() {
 	gameData->font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData->font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
-	DrawImgMng::LoadFile(_T("Resources/Images/REFLINEロゴ_一部.png"),   "logo");
-	DrawImgMng::LoadFile(_T("Resources/Images/REFLINEロゴ.png"),        "logo_all");
+	DrawImgMng::LoadFile(_T("Resources/Images/logo_text_only.png"),     "logo");
+	DrawImgMng::LoadFile(_T("Resources/Images/logo_all.png"),           "logo_all");
 	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_best_score.png"), "ui_back_best_score");
 	DrawImgMng::LoadFile(_T("Resources/Images/new_record.png"),         "new_record");
 	DrawImgMng::LoadFile(_T("Resources/Images/gameover.png"),           "gameover");
