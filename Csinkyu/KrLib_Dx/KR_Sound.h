@@ -1,6 +1,6 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/10
 
    サウンド機能を追加。
 */
@@ -62,7 +62,7 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private: 
-		map<string, Sound> sounds;
+		umap<string, Sound> sounds;
 	
 	//▼ ===== 関数 ===== ▼.
 	private: 

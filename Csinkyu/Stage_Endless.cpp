@@ -53,7 +53,7 @@ void EndlessStage::Update() {
 	else {
 #if defined _DEBUG //Releaseでは入れない.
 		//タイマー加速(Debug)
-		if (p_input->IsPushKey(KeyID::L) == 1) {
+		if (InputMng::IsPushKey(KeyID::L) == 1) {
 			p_data->counter += 30;
 		}
 #endif

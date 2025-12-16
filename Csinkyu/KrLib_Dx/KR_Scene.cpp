@@ -1,6 +1,6 @@
 /*
    - KR_Scene.cpp - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/10
 */
 #include "KR_Scene.h"
 

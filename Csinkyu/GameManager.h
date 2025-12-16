@@ -24,8 +24,8 @@ public:
 //▼データ.
 public:
 	Scene      scene{};			//現在のシーン.
-	Scene      pauzeEndScene{};	//ポーズから戻ってくるシーン.
 	StageType  stage{};			//ステージ種類.
+	bool       isPause{};       //ポーズ中かどうか.
 
 	int		   score{};			//スコア.
 	int		   scoreBef{};		//スコア(時間加算前)
@@ -122,7 +122,6 @@ public:
 	void UpdateMenu();
 	void UpdateGame();
 	void UpdateEnd();
-	void UpdatePause();
 
 	void UpdateReflectMode();
 
@@ -131,11 +130,12 @@ public:
 	void DrawMenu();
 	void DrawGame();
 	void DrawEnd();
-	void DrawPause();
 
 	void DrawReflectMode();
 
 	//その他.
+	void GamePause();
+	void GamePauseEnd();
 	void GameOver();
 	void ItemUsed();
 	void ReflectModeEnd();

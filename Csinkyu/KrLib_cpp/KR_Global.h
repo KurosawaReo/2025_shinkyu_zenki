@@ -17,6 +17,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <string>     //stringŒ^—p.
 #include <cmath>      //math.h‚ğƒ‰ƒbƒv‚µ‚½‚à‚Ì.
 //#include <functional> //ƒ‰ƒ€ƒ_®—p.
@@ -27,6 +28,7 @@
 using std::list;
 using std::vector;
 using std::map;
+using std::unordered_map;
 using std::string;
 using std::wstring;
 using std::to_string;
@@ -56,6 +58,10 @@ namespace KR
 	using MY_STRING = string;    //charŒ^.
 	#define _to_mystr to_string  //to_string—p.
 #endif
+
+	//È—ª–¼.
+	template<class Key, class Value>
+	using umap = unordered_map<Key, Value>;
 
 	//[2D] x‚Æy‚Ì‹ÃkŒ^.
 	template<typename T> //Œ^‚ğ<>‚Å“ü—Í‚µ‚Äg‚¤.

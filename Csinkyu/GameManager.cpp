@@ -285,15 +285,15 @@ void GameManager::Init() {
 #if defined INPUT_CHANGE_ARCADE
 		//アーケード操作.
 		InputMng::AddAction("GameNext",   PadArcadeID::BtnUpper1);
+//		InputMng::AddAction("GamePause",  PadArcadeID::BtnUpper2);
 		InputMng::AddAction("PlayerDash", PadArcadeID::BtnUpper3);
-		InputMng::AddAction("GamePause",  PadArcadeID::BtnUpper2);
 		InputMng::AddAction("GameQuit",   PadArcadeID::BtnStart);
 #else
 		//コントローラ操作.
 		InputMng::AddAction("GameNext",   PadXboxID::A);
+//		InputMng::AddAction("GamePause",  PadXboxID::X);
 		InputMng::AddAction("PlayerDash", PadXboxID::B);
-		InputMng::AddAction("GamePause",  PadXboxID::X);
-		InputMng::AddAction("GameQuit",   PadXboxID::View);
+		InputMng::AddAction("GameQuit",   PadXboxID::Menu);
 #endif
 	}
 
@@ -301,12 +301,12 @@ void GameManager::Init() {
 	for(int i = 0; i < SCENE_COUNT; i++){
 		tmScene[i] = Timer(TimerMode::CountUp, 0);
 	}
-	tmGameTime    = Timer     (TimerMode::CountUp, 0);
-	tmReflectMode = Timer     (TimerMode::CountDown, REFLECT_MODE_TIME);
+	tmGameTime    = Timer(TimerMode::CountUp, 0);
+	tmReflectMode = Timer(TimerMode::CountDown, REFLECT_MODE_TIME);
 
 	//fps表示用.
 #if defined DEBUG_SHOW_FPS
-	tmFps         = TimerMicro(TimerMode::CountUp, 0);
+	tmFps = TimerMicro(TimerMode::CountUp, 0);
 	tmFps.Start();
 #endif
 
@@ -406,24 +406,33 @@ void GameManager::Update() {
 	InputMng::UpdateAction(); //アクション更新.
 	SoundMng::Update();       //サウンド更新.
 
-	//背景, エフェクト更新.
-	if (gameData->scene != SCENE_PAUSE) {
+	//ポーズしてなければ更新.
+	if (!gameData->isPause) {
+
+		//背景, エフェクト.
 		bg->Update();
 		effectMng->Update(); 
-	}
-
-	//シーン別.
-	switch (gameData->scene) 
-	{
-		case SCENE_TITLE: UpdateTitle(); break;
-		case SCENE_MENU:  UpdateMenu();  break;
-		case SCENE_GAME:  UpdateGame();  break;
-		case SCENE_END:   UpdateEnd();   break;
-		case SCENE_PAUSE: UpdatePause(); break;
+		//シーン別.
+		switch (gameData->scene) 
+		{
+			case SCENE_TITLE: UpdateTitle(); break;
+			case SCENE_MENU:  UpdateMenu();  break;
+			case SCENE_GAME:  UpdateGame();  break;
+			case SCENE_END:   UpdateEnd();   break;
 	
-		default: assert(FALSE); break;
+			default: assert(FALSE); break;
+		}
 	}
 
+	//ポーズ操作.
+	if (InputMng::IsPushActionTime("GamePause") == 1) {
+		if (gameData->isPause) {
+			GamePauseEnd(); //ポーズ解除.
+		}
+		else {
+			GamePause();    //ポーズする.
+		}
+	}
 	//特定の操作でゲーム終了
 	if (InputMng::IsPushActionTime("GameQuit") >= FPS * 1) {
 		App::Quit(); //ボタン長押しで終了.
@@ -445,7 +454,6 @@ void GameManager::Draw() {
 		case SCENE_MENU:  DrawMenu();  break;
 		case SCENE_GAME:  DrawGame();  break;
 		case SCENE_END:   DrawEnd();   break;
-		case SCENE_PAUSE: DrawPause(); break;
 
 		default: assert(FALSE); break;
 	}
@@ -518,13 +526,6 @@ void GameManager::UpdateGame() {
 
 			default: assert(FALSE); break;
 		}
-		//ポーズ.
-		if (InputMng::IsPushActionTime("GamePause") == 1) {
-			gameData->pauzeEndScene = gameData->scene; //現在のシーンを保存.
-			gameData->scene = SCENE_PAUSE;             //ポーズシーンへ.
-			tmGameTime.Stop();    //一時停止.
-			tmReflectMode.Stop(); //一時停止.
-		}
 	}
 
 	player->Update(); //プレイヤー.
@@ -556,19 +557,6 @@ void GameManager::UpdateEnd() {
 			gameData->scene = SCENE_TITLE;
 			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
 			Reset();
-		}
-	}
-}
-void GameManager::UpdatePause() {
-	
-	//ポーズ解除.
-	if (InputMng::IsPushActionTime("GamePause") == 1) {
-
-		gameData->scene = gameData->pauzeEndScene;
-		tmGameTime.Start(); //再開.
-		//スローモード中だったなら.
-		if (tmReflectMode.GetPassTime() < REFLECT_MODE_TIME) {
-			tmReflectMode.Start(); //再開.
 		}
 	}
 }
@@ -660,7 +648,6 @@ void GameManager::DrawTitle() {
 		ResetDrawBlendMode();
 	}
 
-#if defined SHOW_BEST_SCORE
 	//best score.
 	if (tmScene[SCENE_TITLE].GetPassTime() >= delay2) {
 
@@ -684,7 +671,6 @@ void GameManager::DrawTitle() {
 			DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
 		ResetDrawBlendMode();
 	}
-#endif
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() >= delay4) {
 
@@ -849,10 +835,6 @@ void GameManager::DrawEnd() {
 		}
 	}
 }
-void GameManager::DrawPause() {
-
-	DrawGame(); //ゲームシーンと同じ.
-}
 
 //反射モード演出.
 void GameManager::DrawReflectMode() {
@@ -883,6 +865,26 @@ void GameManager::DrawReflectMode() {
 	}
 }
 
+//ポーズする.
+void GameManager::GamePause() {
+	gameData->isPause = true;
+	//稼働中のタイマーを一時停止.
+	tmGameTime.Pause();
+	tmReflectMode.Pause();
+	bg->StopAnim();
+}
+//ポーズ解除.
+void GameManager::GamePauseEnd() {
+	gameData->isPause = false;
+	//稼働中だったタイマーは再開.
+	if (tmGameTime.GetIsMove()) {
+		tmGameTime.Start();
+	}
+	if (tmReflectMode.GetIsMove()) {
+		tmReflectMode.Start();
+	}
+	bg->RestartAnim();
+}
 //ゲーム終了(死亡)
 void GameManager::GameOver() {
 

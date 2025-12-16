@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/10
 
    入力操作機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -174,7 +174,7 @@ namespace KR
 		INT_XY mPos{};     //マウス座標.
 		INT_XY stickVec{}; //スティック入力.
 
-		map<string, ActionData> actions{}; //アクション記録用.
+		umap<string, ActionData> actions{}; //アクション記録用.
 
 	//▼ ===== 関数 ===== ▼.
 	private:

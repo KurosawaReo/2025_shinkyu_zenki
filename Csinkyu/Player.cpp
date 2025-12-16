@@ -50,7 +50,7 @@ void Player::Update()
 {
 #if defined _DEBUG //Release‚Å‚Í“ü‚ê‚È‚¢.
 	//–³“Gƒ‚[ƒh.
-	if (p_input->IsPushKeyTime(KeyID::M) == 1) {
+	if (InputMng::IsPushKeyTime(KeyID::M) == 1) {
 		isDebug = !isDebug;
 	}
 #endif
