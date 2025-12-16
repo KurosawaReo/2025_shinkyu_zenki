@@ -1,6 +1,6 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/16
 */
 #include "KR_Timer.h"
 
@@ -10,10 +10,10 @@ namespace KR
 // ▼*--=<[ Timer ]>=--*▼ //
 
 	//タイマー停止.
-	void Timer::Stop() {
+	void Timer::Pause() {
 
 		//計測中なら.
-		if (isMove) {
+		if (isMoveNow) {
 
 			float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 
@@ -25,14 +25,14 @@ namespace KR
 				tmSavePass -= elapsed;           //タイマー減少.
 				tmSavePass = max(tmSavePass, 0); //下限は0秒.
 			}
-			isMove = false; //停止.
+			isMoveNow = false; //停止.
 		}
 	}
 	//経過時間取得.
 	float Timer::GetPassTime() {
 
 		//計測中なら.
-		if (isMove) { 
+		if (isMoveNow) { 
 			float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 			float pass = 0; //経過時間.
 
@@ -71,9 +71,9 @@ namespace KR
 
 // ▼*--=<[ TimerMicro ]>=--*▼ //
 
-	void TimerMicro::Stop() {
+	void TimerMicro::Pause() {
 
-		if (isMove) {
+		if (isMoveNow) {
 		
 			LARGE_INTEGER tmEnd;
 			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.
@@ -89,14 +89,14 @@ namespace KR
 				tmSavePass -= elapsed;           //タイマー減少.
 				tmSavePass = max(tmSavePass, 0); //下限は0秒.
 			}
-			isMove = false; //停止.
+			isMoveNow = false; //停止.
 		}
 	}
 	//経過時間取得(マイクロ秒)
 	LONGLONG TimerMicro::GetPassTime() {
 
 		//計測中なら.
-		if (isMove) { 
+		if (isMoveNow) { 
 
 			LARGE_INTEGER tmEnd;
 			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.
@@ -123,7 +123,7 @@ namespace KR
 	double TimerMicro::GetFps() {
 
 		//計測中なら.
-		if (isMove) {
+		if (isMoveNow) {
 
 			LARGE_INTEGER tmEnd;
 			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.

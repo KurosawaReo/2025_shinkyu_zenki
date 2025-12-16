@@ -15,7 +15,6 @@ void BG_Tile::Init() {
 }
 //更新.
 void BG_Tile::Update() {
-
 	//0になったら停止.
 	if (timer.GetPassTime() <= 0) {
 		timer.Reset();
@@ -85,6 +84,11 @@ void BackGround::Update() {
 	
 	counter += p_data->speedRate;
 
+	//一定間隔ごと.
+	if (tmShine.IntervalTime()) {
+		int idx = RandNum(0, (int)tiles.size()-1);
+		tiles[idx].Shine(); //ランダムでタイルを発光させる.
+	}
 	//各タイル更新.
 	for (auto& i : tiles) {
 		i.Update();
@@ -99,16 +103,10 @@ void BackGround::Draw() {
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
 	time = CalcNumEaseOut(time); //値の曲線変動.
 
-	//一定間隔ごと.
-	if (tmShine.IntervalTime()) {
-		int idx = RandNum(0, (int)tiles.size()-1);
-		tiles[idx].Shine(); //ランダムでタイルを発光させる.
-	}
 	//各タイル描画.
 	for (auto& i : tiles) {
 		i.Draw(time);
 	}
-
 	//スローモード中.
 	if (p_data->speedRate) {
 		//グラデーション枠.
@@ -118,5 +116,21 @@ void BackGround::Draw() {
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
 		DrawBoxKR(box, Anchor::Mid, false, true);
+	}
+}
+
+//ポーズする.
+void BackGround::StopAnim() {
+	for (auto& i : tiles) {
+		i.timer.Stop();
+	}
+}
+//ポーズ解除.
+void BackGround::RestartAnim() {
+	for (auto& i : tiles) {
+		//稼働中だったならリスタート.
+		if (i.timer.GetIsMove()) {
+			i.timer.Start();
+		}
 	}
 }

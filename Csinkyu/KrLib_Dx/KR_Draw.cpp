@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/12/09
+   ver: 2025/12/10
 */
 #include "KR_Draw.h"
 

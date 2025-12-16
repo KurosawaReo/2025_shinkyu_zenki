@@ -22,7 +22,6 @@ enum Scene
 	SCENE_MENU,     //メニュー画面.
 	SCENE_GAME,
 	SCENE_END,
-	SCENE_PAUSE,    //ポーズ画面.
 
 	SCENE_COUNT,    //総数.
 };
@@ -51,8 +50,11 @@ enum StageType
 //#define DEBUG_METEOR_SPAWN //デバッグ用.
 //#define DEBUG_SHOW_FPS //デバッグ用.
 
-#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
-#define SHOW_BEST_SCORE //これをコメントアウトでベストスコア表示を消せる.
+//#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
+
+//DEBUG用操作.
+//Mキー: 無敵.
+//Lキー: レベルタイマー加速.
 
 //====================================================================//
 //【定数】

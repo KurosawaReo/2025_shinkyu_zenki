@@ -1,6 +1,6 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/10
 
    シーン管理機能を追加。
 
@@ -34,8 +34,8 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private:
-		map<MY_STRING, SceneBasic*> scenes;   //シーンリスト.
-		MY_STRING                   nowScene; //現在のシーン名.
+		umap<MY_STRING, SceneBasic*> scenes;   //シーンリスト.
+		MY_STRING                    nowScene; //現在のシーン名.
 
 	//▼ ===== 関数 ===== ▼.
 	private:

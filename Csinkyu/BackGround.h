@@ -60,6 +60,10 @@ public:
 	void Update();
 	void Draw();
 
+	//ポーズ用.
+	void StopAnim();
+	void RestartAnim();
+
 	//使用禁止.
 	BackGround(const BackGround&) = delete;
 	BackGround& operator=(const BackGround&) = delete;

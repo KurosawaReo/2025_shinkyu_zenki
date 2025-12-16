@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/12/09
+   ver: 2025/12/10
 
    描画機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -90,7 +90,7 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private:
-		map<string, DrawImg> images; //画像データ.
+		umap<string, DrawImg> images; //画像データ.
 
 	//▼ ===== 関数 ===== ▼.
 	private:
