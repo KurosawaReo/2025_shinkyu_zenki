@@ -78,7 +78,7 @@
 <div style="display:flex; align-items:center; gap:16px;">
   <img src="_readme_img/rule4_壊す.gif" width=200>
   <div>
-    <b>4. 反射</b><br>
+    <b>4. 壊す</b><br>
     反射したレーザーは、近くの隕石に向かって自動で追尾します。<br>
     レーザーが隕石に衝突すると破壊され、スコアを得ることができます。
   </div>
