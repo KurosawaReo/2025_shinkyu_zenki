@@ -29,17 +29,10 @@ class Player final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static Player& GetInst() {
 		static Player inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	Player(const Player&) = delete;
-	Player& operator=(const Player&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	Player(){}
 
 //▼データ.
 private:
@@ -58,15 +51,16 @@ private:
 	float          dashTimer;        // ダッシュの残り時間.
 	float          dashCooldown;     // ダッシュのクールダウン.
 
-	DrawImg        imgPlayer[2]{};      //プレイヤー画像.
-	DrawImg        imgPlayerLight[2]{}; //プレイヤーの光る画像.
 	double         imgRot{};            //プレイヤーの画像角度.
 
 	bool           isMoveAble{};     //移動可能かどうか.
 
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
-	InputMng*      p_input{};     //入力機能.
+
+private:
+	//constructor(新規作成をできなくする)
+	Player(){}
 
 public:
 	//set.
@@ -98,4 +92,8 @@ public:
 
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
+
+	//使用禁止.
+	Player(const Player&) = delete;
+	Player& operator=(const Player&) = delete;
 };

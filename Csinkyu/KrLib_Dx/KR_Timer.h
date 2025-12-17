@@ -1,0 +1,120 @@
+/*
+   - KR_Timer.h - (DxLib)
+   ver: 2025/12/16
+
+   タイマー機能を追加。
+*/
+#pragma once
+//KR_Globalが入ってなければここで導入.
+#if !defined DEF_KR_DX_GLOBAL
+  #include "KR_Global.h"
+#endif
+
+//KrLib名前空間.
+namespace KR
+{
+	//タイマーモード.
+	enum class TimerMode
+	{
+		CountUp,
+		CountDown,
+	};
+
+	//タイマー機能.
+	class Timer
+	{
+	//▼ ===== 変数 ===== ▼.
+	private:
+		TimerMode mode{};       //計測モード.
+		bool      isMove{};     //計測中か.
+		bool      isMoveNow{};  //計測中で, ポーズしていない状態か.
+
+		float     tmInit{};     //init : 初期時刻.
+		clock_t   tmStart{};    //start: 開始時刻.
+
+		float     tmSavePass{}; //時刻保存用(Stop後にStartしたら再開できるように)
+
+	//▼ ===== 関数 ===== ▼.
+	public:
+		//constructor.
+		Timer() {
+			Timer(TimerMode::CountUp, 0);
+		}
+		Timer(TimerMode _mode, float _init) :
+			mode(_mode), tmInit(_init), tmSavePass(_init)      //初期化.
+		{}
+		//get.
+		bool GetIsMove()    const { return isMove; }
+		bool GetIsMoveNow() const {	return isMoveNow; }
+
+		void Start() {
+			tmStart   = clock(); //開始時刻の取得.
+			isMove    = true;    //計測中.
+			isMoveNow = true;    //計測中.
+		}
+		void Stop() {
+			isMove = false; //完全に停止.
+			Pause();
+		}
+		void Pause();
+		void Reset() {
+			tmStart    = 0;
+			tmSavePass = tmInit; //初期時刻.
+			isMove     = false;
+			isMoveNow  = false;
+		}
+		float GetPassTime();  //時間取得.
+		bool  IntervalTime(); //一定時間ごとにtrueを返す.
+	};
+
+	//タイマー機能(マイクロ秒)
+	class TimerMicro
+	{
+	//▼ ===== 変数 ===== ▼.
+	private:
+		TimerMode     mode{};       //計測モード.
+		bool          isMove{};     //計測中か.
+		bool          isMoveNow{};  //計測中で, ポーズしていない状態か.
+
+		LONGLONG      tmInit{};     //init     : 初期時刻(マイクロ秒)
+		LARGE_INTEGER tmStart{};    //start    : 開始時刻(カウント)
+		LARGE_INTEGER freq{};       //frequency: 1秒で何カウント進むか.
+
+		LONGLONG      tmSavePass{}; //時刻保存用(Stop後にStartしたら再開できるように)
+
+	//▼ ===== 関数 ===== ▼.
+	public:
+		//constructor.
+		TimerMicro() {
+			TimerMicro(TimerMode::CountUp, 0);
+		}
+		TimerMicro(TimerMode _mode, LONGLONG _init) :
+			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化.
+		{
+			QueryPerformanceFrequency(&freq); //頻度の取得.
+		}
+		//get.
+		bool GetIsMove()    const { return isMove; }
+		bool GetIsMoveNow() const { return isMoveNow; }
+
+		void Start() {
+			QueryPerformanceCounter(&tmStart); //開始時刻の取得.
+			isMove    = true; //計測中.
+			isMoveNow = true; //計測中.
+		}
+		void Stop() {
+			isMove = false; //完全に停止.
+			Pause();
+		}
+		void Pause();
+		void Reset() {
+			tmStart.QuadPart = 0;
+			tmSavePass = tmInit; //初期時刻.
+			isMove     = false;
+			isMoveNow  = false;
+		}
+		LONGLONG GetPassTime (); //時間取得.
+		double   GetFps();       //fps取得.
+		bool     IntervalTime(); //一定時間ごとにtrueを返す.
+	};
+}

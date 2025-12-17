@@ -111,7 +111,9 @@ void FireworksManager::UpdateIndividualFireworks() {
 			//花火のレーザーを生成.
 			CreateFireworksSparks(i->x, i->y);
 			//爆発音.
-			InstSoundMng.Play(_T("Explosion"), false, 70);
+			if (auto i = SoundMng::Get("Explosion")) {
+				i->Play(false, 70); //再生.
+			}
 
 			i = fireworks.erase(i); //消去.
 		}
@@ -208,7 +210,7 @@ void FireworksManager::DrawWarningEffect(list<FireworksData>::iterator it) {
 	tri.pos[1] = { centerX - size * 0.866f, centerY + size * 0.5f }; // 左下の頂点
 	tri.pos[2] = { centerX + size * 0.866f, centerY + size * 0.5f }; // 右下の頂点
 	tri.color = color;
-	DrawTriangleKR(&tri, false, true);
+	DrawTriangleKR(tri, false, true);
 
 	// 下向きの三角形
 	Triangle tri2;
@@ -216,7 +218,7 @@ void FireworksManager::DrawWarningEffect(list<FireworksData>::iterator it) {
 	tri2.pos[1] = { centerX - size * 0.866f, centerY - size * 0.5f }; // 左上の頂点
 	tri2.pos[2] = { centerX + size * 0.866f, centerY - size * 0.5f }; // 右上の頂点
 	tri2.color = color;
-	DrawTriangleKR(&tri2, false, true);
+	DrawTriangleKR(tri2, false, true);
 
 	// 中心点
 	//Circle cir = { {centerX, centerY}, 5, color };

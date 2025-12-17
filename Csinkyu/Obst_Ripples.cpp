@@ -176,7 +176,9 @@ void Ripples::Hitjudgment()
 
 			//サウンド.
 			if (!isPlaySound) {
-				InstSoundMng.Play(_T("Ripples"), false, 73);
+				if (auto i = SoundMng::Get("Ripples")) {
+					i->Play(false, 73); //再生.
+				}
 				isPlaySound = true; //もう再生しない.
 			}
 
@@ -241,11 +243,11 @@ void Ripples::DrawWarningEffect(list<RipplesData>::iterator it)
 
 	Circle cir;
 	cir = { {it->x, it->y}, (float)warningSize,   GetColor(150, 150, 150) };
-	DrawCircleKR(&cir, false, true);
+	DrawCircleKR(cir, false, true);
 	cir = { {it->x, it->y}, (float)warningSize/2, GetColor(200, 200, 200) };
-	DrawCircleKR(&cir, false, true);
+	DrawCircleKR(cir, false, true);
 	cir = { {it->x, it->y}, (float)warningSize+5, GetColor(120, 120, 120) }; // 外周リング
-	DrawCircleKR(&cir, false, true);
+	DrawCircleKR(cir, false, true);
 
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();
@@ -274,9 +276,9 @@ void Ripples::DrawActiveEffect(list<RipplesData>::iterator it)
 
 	Circle cir;
 	cir = {{it->x, it->y}, (float)effectSize, GetColor(0, 255, 255)};
-	DrawCircleKR(&cir, false, true);
+	DrawCircleKR(cir, false, true);
 	cir = {{it->x, it->y}, (float)innerSize,  GetColor(0, 255, 200)};
-	DrawCircleKR(&cir, false, true);
+	DrawCircleKR(cir, false, true);
 
 	//通常の描画モードに戻す
 	ResetDrawBlendMode();

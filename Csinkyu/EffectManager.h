@@ -48,23 +48,19 @@ class EffectManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static EffectManager& GetInst() {
 		static EffectManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	EffectManager(const EffectManager&) = delete;
-	EffectManager& operator=(const EffectManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	EffectManager(){}
 
 //▼データ.
 private:
-	list<Effect> effect;	    //エフェクト配列.
-	DrawImg		 imgScore[2]{}; //スコア画像.
+	list<Effect> effect;   //エフェクト配列.
 	GameData*	 p_data{};
+
+private:
+	//constructor(新規作成をできなくする)
+	EffectManager(){}
 
 public:
 	void Init();
@@ -73,4 +69,8 @@ public:
 	void Draw();
 
 	void SpawnEffect (const EffectData* data); //エフェクト出現.
+
+	//使用禁止.
+	EffectManager(const EffectManager&) = delete;
+	EffectManager& operator=(const EffectManager&) = delete;
 };

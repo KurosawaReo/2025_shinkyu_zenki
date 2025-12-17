@@ -26,8 +26,6 @@ void EndlessStage::Init() {
 	p_itemMng      = &ItemManager::GetInst();
 	p_fireworksMng = &FireworksManager::GetInst();
 	p_effectMng    = &EffectManager::GetInst();
-	p_input        = &InputMng::GetInst();
-	p_sound        = &SoundMng::GetInst();
 }
 //リセット.
 void EndlessStage::Reset() {
@@ -39,7 +37,9 @@ void EndlessStage::Update() {
 	//最初のみ.
 	if (p_data->counter == 0) {
 		//サウンド.
-		p_sound->Play(_T("LevelUp"), false, 100);
+		if (auto i = SoundMng::Get("LevelUp")) {
+			i->Play(false, 100);
+		}
 		//エフェクト.
 		EffectData data{};
 		data.type = Effect_Endless_Level1;
@@ -53,7 +53,7 @@ void EndlessStage::Update() {
 	else {
 #if defined _DEBUG //Releaseでは入れない.
 		//タイマー加速(Debug)
-		if (p_input->IsPushKey(KeyID::L) == 1) {
+		if (InputMng::IsPushKey(KeyID::L) == 1) {
 			p_data->counter += 30;
 		}
 #endif
@@ -71,7 +71,9 @@ void EndlessStage::Update() {
 				p_data->level = 2; //Lv2へ.
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
+				if (auto i = SoundMng::Get("LevelUp")) {
+					i->Play(false, 100);
+				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level2;
@@ -84,7 +86,9 @@ void EndlessStage::Update() {
 				p_data->level = 3; //Lv3へ.
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
+				if (auto i = SoundMng::Get("LevelUp")) {
+					i->Play(false, 100);
+				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level3;
@@ -99,7 +103,9 @@ void EndlessStage::Update() {
 				p_itemMng->AddItemCnt(); //アイテムを増やす.
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
+				if (auto i = SoundMng::Get("LevelUp")) {
+					i->Play(false, 100);
+				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level4;
@@ -114,7 +120,9 @@ void EndlessStage::Update() {
 				p_gameMng->ResetNorLaser();
 
 				//サウンド.
-				p_sound->Play(_T("LevelUp"), false, 100);
+				if (auto i = SoundMng::Get("LevelUp")) {
+					i->Play(false, 100);
+				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level5;

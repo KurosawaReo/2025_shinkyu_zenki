@@ -13,22 +13,13 @@ class UIManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static UIManager& GetInst() {
 		static UIManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	UIManager(const UIManager&) = delete;
-	UIManager& operator=(const UIManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	UIManager(){}
 
 //▼データ.
 private:
-	DrawImg imgUI[4]{}; //UI画像.
-
 	int  disBestScore{}; //表示ベストスコア.
 	int  disScore{};     //表示スコア.
 
@@ -37,6 +28,10 @@ private:
 	GameManager*   p_gameMng{};
 	GameData*      p_gameData{};
 	TutorialStage* p_tutorialStg{};
+
+private:
+	//constructor(新規作成をできなくする)
+	UIManager(){}
 
 public:
 	//sign.
@@ -48,4 +43,8 @@ public:
 	void Reset();
 	void Update();
 	void Draw();
+
+	//使用禁止.
+	UIManager(const UIManager&) = delete;
+	UIManager& operator=(const UIManager&) = delete;
 };

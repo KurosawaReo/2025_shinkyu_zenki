@@ -12,7 +12,7 @@
    2025/05/26:
    スローモード完成。レーザーの動きの怪しさも解決。
    ・アイテムの実装
-   ・スローモードの時間制限 <<< now
+   ・スローモードの時間制限
    ・障害物4の砲台を画面一周動かす(ゲーム時間??秒以降)
 
    2025/06/02:
@@ -99,11 +99,30 @@
    [改善点]
    ・LevelUp演出, Step演出もエフェクトのため、エフェクトが上限まで出てると表示が出なくなる問題
 
+   TGS2025発表後:
+   [変更点]
+   ・若干プレイヤーを拡大
+   ・プレイヤーの当たり判定を、レーザーが反射する時のみ大きくなるように(違和感がない程度)
+   ・レーザーにかなり接近した時のみスローになるように調整
+   ・反射モード中、継続中だと分かりやすくなるよう画面にグラデーションを追加
+   ・強化アイテムは発光するように
+
    2025/11/24:
    [変更点]
    ・花火の落下レーザーをだんだん薄くなって消えるように変更
    ・レーザーやエフェクトなどで使ってた配列を、list配列に変更(→軽量化が期待できる)
-   ・レーザーの太さを1→2に変更(お試し)
+   ・レーザーの太さを1→2に変更
+
+   2025/12/09:
+   モードを選択した後、ゲームが始まる前に軽いルールを表示したい。
+   「生き延びてスコアを得よう」⇒「最大Level 5 / 時間経過でレベルが上がります」⇒「Level 1」
+   という感じで。
+
+   2025/12/17:
+   思いついた案。
+   レーザーを跳ね返して隕石を破壊するというのが限定的すぎる気がした。
+   説明もしにくいし、直感的に理解しにくい。
+   から、他の障害物も反射したり破壊できるようにしてもいいかもとは思った。
 
 /---------------------------------------------------------/
    [チュートリアル配分]
@@ -118,15 +137,6 @@
    Level3: 波紋
    Level4: 花火, アイテム×2
    Level5: 通常レーザー×4, アイテムが強化
-/---------------------------------------------------------/
-   TGS展示後、変更内容メモ
-   
-   ・レーザーの先端が光るように
-   ・若干プレイヤーを拡大
-   ・プレイヤーの当たり判定を、レーザーが反射する時のみ大きくなるように(違和感がない程度)
-   ・レーザーにかなり接近した時のみスローになるように調整
-   ・反射モード中、継続中だと分かりやすくなるよう画面にグラデーションを追加
-   ・強化アイテムは発光するように
 /---------------------------------------------------------/
    【今後の制作予定】
 
@@ -149,6 +159,8 @@
    steam販売の時にはライセンスに注意。
    
    [実績案]
+   ゲーム内に実績を作ってもいいかも。steam販売するならsteamと連携する形で。
+
    ・直線レーザー
      耐久モードでLevel2に到達する
    ・波紋
@@ -159,13 +171,13 @@
    　耐久モードでLevel5に到達する
    ・即死王
    　耐久モードでゲームオーバー時にスコアを20点未満にする
-   ・発売年
+   ・リリースイヤー
      耐久モードでゲームオーバー時にスコアを2025点にする
    ・チュートリアルマスター
-   　チュートリアルモードSTEP4でスコアを3000点獲得する
-   ・サバイバルマスター
+   　チュートリアルモードSTEP4でスコアを4000点獲得する
+   ・スーパーサバイバー
      耐久モードでアイテムを取らずにスコアを1000点獲得する
-   ・スーパーサバイバルマスター
+   ・マスターサバイバー
 	 耐久モードでアイテムを取らずにスコアを1500点獲得する
    ・REFLECT LINE
      レーザー反射数が計10000回を超える
@@ -196,6 +208,8 @@
 
 #include "GameManager.h"
 
+using namespace Calc; //計算機能を使用.
+
 //ポインタ.
 GameData         *gameData     = &GameData::GetInst();
 BackGround       *bg           = &BackGround::GetInst();
@@ -211,8 +225,6 @@ Player           *player       = &Player::GetInst();
 EffectManager    *effectMng    = &EffectManager::GetInst();
 UIManager        *uiMng        = &UIManager::GetInst();
 
-using namespace Calc; //計算機能を使用.
-
 //destructor.
 GameManager::~GameManager() {
 	//解放.
@@ -227,6 +239,9 @@ GameManager::~GameManager() {
 void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
+
+	//カメラ位置.
+	Camera::SetPos(App::GetWindowRect().GetMiddle().ToDbl());
 	
 	//実体生成.
 	laserNor1   = new NormalLaser_1();
@@ -235,9 +250,6 @@ void GameManager::Init() {
 	laserNor4   = new NormalLaser_4();
 	laserStr[0] = new StraightLaser();
 	laserStr[1] = new StraightLaser();
-	//実体取得.
-	p_input = &InputMng::GetInst();
-	p_sound = &SoundMng::GetInst();
 
 	//フォント作成.
 	gameData->font1 = CreateFontToHandle(NULL, 26, 1);
@@ -245,49 +257,49 @@ void GameManager::Init() {
 	gameData->font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData->font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
 	//画像読み込み.
-	imgLogo[0].  LoadFile(_T("Resources/Images/REFLINEロゴ_一部.png"));
-	imgLogo[1].  LoadFile(_T("Resources/Images/REFLINEロゴ.png"));
-	imgUI.       LoadFile(_T("Resources/Images/ui_back_best_score.png"));
-	imgNewRecord.LoadFile(_T("Resources/Images/new_record.png"));
-	imgGameOver. LoadFile(_T("Resources/Images/gameover.png"));
-	imgReflect.  LoadFile(_T("Resources/Images/reflect.png"));
+	DrawImgMng::LoadFile(_T("Resources/Images/logo_text_only.png"),     "logo");
+	DrawImgMng::LoadFile(_T("Resources/Images/logo_all.png"),           "logo_all");
+	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_best_score.png"), "ui_back_best_score");
+	DrawImgMng::LoadFile(_T("Resources/Images/new_record.png"),         "new_record");
+	DrawImgMng::LoadFile(_T("Resources/Images/gameover.png"),           "gameover");
+	DrawImgMng::LoadFile(_T("Resources/Images/reflect.png"),            "reflect");
 	//サウンド読み込み.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Virtual Terminal.mp3"),	    _T("BGM_Menu"));     //メニューBGM.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial")); //チュートリアルBGM.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless"));  //耐久モードBGM.
-	p_sound->LoadFile(_T("Resources/Sounds/bgm/命ナキ者ノ詩.mp3"),		    _T("BGM_Over"));     //ゲームオーバーBGM.
+	SoundMng::LoadFile(_T("Resources/Sounds/bgm/Virtual Terminal.mp3"),	     "BGM_Menu");     //メニューBGM.
+	SoundMng::LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	 "BGM_Tutorial"); //チュートリアルBGM.
+	SoundMng::LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		 "BGM_Endless");  //耐久モードBGM.
+	SoundMng::LoadFile(_T("Resources/Sounds/bgm/命ナキ者ノ詩.mp3"),		     "BGM_Over");     //ゲームオーバーBGM.
 
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		_T("ItemUse")); 	 //アイテム発動.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"),	_T("CountDown"));	 //カウントダウン.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		_T("PowerDown"));	 //アイテム解除.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),		_T("Laser1"));		 //レーザー(発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),		_T("Laser2"));		 //レーザー(強発射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		_T("Laser3"));		 //レーザー(反射)
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		_T("Ripples"));		 //波紋.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		_T("Break"));		 //隕石破壊.
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		_T("PlayerDeath"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
-	p_sound->LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		_T("BestScore"));	 //最高スコア更新.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		 "ItemUse"); 	  //アイテム発動.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"), "CountDown");	  //カウントダウン.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		 "PowerDown");	  //アイテム解除.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),	 "Laser1");		  //レーザー(発射)
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),	 "Laser2");		  //レーザー(強発射)
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		 "Laser3");		  //レーザー(反射)
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		 "Ripples");	  //波紋.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		 "Break");		  //隕石破壊.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		 "PlayerDeath");
+	SoundMng::LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),	 "LevelUp");
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		 "BestScore");	  //最高スコア更新.
 
 	//アクション登録.
 	{
 		//キー操作.
-		p_input->AddAction(_T("GameNext"),   KeyID::Space);
-		p_input->AddAction(_T("GamePause"),  KeyID::P);
-		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftL); //固定キー機能を切っておくこと推奨.
-		p_input->AddAction(_T("PlayerDash"), KeyID::ShiftR);
+		InputMng::AddAction("GameNext",   KeyID::Space);
+		InputMng::AddAction("GamePause",  KeyID::P);
+		InputMng::AddAction("PlayerDash", KeyID::ShiftL); //固定キー機能を切っておくこと推奨.
+		InputMng::AddAction("PlayerDash", KeyID::ShiftR);
 #if defined INPUT_CHANGE_ARCADE
 		//アーケード操作.
-		p_input->AddAction(_T("GameNext"),   PadArcadeID::BtnUpper1);
-		p_input->AddAction(_T("PlayerDash"), PadArcadeID::BtnUpper3);
-		p_input->AddAction(_T("GamePause") , PadArcadeID::BtnUpper2);
-		p_input->AddAction(_T("GameQuit"),   PadArcadeID::BtnStart);
+		InputMng::AddAction("GameNext",   PadArcadeID::BtnUpper1);
+//		InputMng::AddAction("GamePause",  PadArcadeID::BtnUpper2);
+		InputMng::AddAction("PlayerDash", PadArcadeID::BtnUpper3);
+		InputMng::AddAction("GameQuit",   PadArcadeID::BtnStart);
 #else
 		//コントローラ操作.
-		p_input->AddAction(_T("GameNext"),  PadXboxID::A);
-		p_input->AddAction(_T("PlayerDash"),PadXboxID::B);
-		p_input->AddAction(_T("GamePause"), PadXboxID::X);
-		p_input->AddAction(_T("GameQuit"),  PadXboxID::View);
+		InputMng::AddAction("GameNext",   PadXboxID::A);
+//		InputMng::AddAction("GamePause",  PadXboxID::X);
+		InputMng::AddAction("PlayerDash", PadXboxID::B);
+		InputMng::AddAction("GameQuit",   PadXboxID::Menu);
 #endif
 	}
 
@@ -295,12 +307,12 @@ void GameManager::Init() {
 	for(int i = 0; i < SCENE_COUNT; i++){
 		tmScene[i] = Timer(TimerMode::CountUp, 0);
 	}
-	tmGameTime    = Timer     (TimerMode::CountUp, 0);
-	tmReflectMode = Timer     (TimerMode::CountDown, REFLECT_MODE_TIME);
+	tmGameTime    = Timer(TimerMode::CountUp, 0);
+	tmReflectMode = Timer(TimerMode::CountDown, REFLECT_MODE_TIME);
 
 	//fps表示用.
 #if defined DEBUG_SHOW_FPS
-	tmFps         = TimerMicro(TimerMode::CountUp, 0);
+	tmFps = TimerMicro(TimerMode::CountUp, 0);
 	tmFps.Start();
 #endif
 
@@ -332,10 +344,11 @@ void GameManager::Init() {
 	//スコア読み込み.
 	{
 		File file;
-		file.Open(FILE_DATA, _T("r"));        //ファイルを開く.
-		gameData->bestScore = file.ReadInt(); //数字を読み込んで登録.
-
-		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
+		//ファイルを開く.
+		if (file.Open(FILE_DATA, _T("r")).GetCode() == 0) {
+			gameData->bestScore = file.ReadInt();        //数字を読み込んで登録.
+			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
+		}
 	}
 
 	Reset();
@@ -367,8 +380,11 @@ void GameManager::Reset() {
 	tmReflectMode.Reset();
 
 	//サウンド.
-	p_sound->StopAll();
-	p_sound->Play(_T("BGM_Menu"), true, 90); //メニューBGMを流す.
+	SoundMng::StopAll();
+	//メニューBGMを流す.
+	if (auto i = SoundMng::Get("BGM_Menu")) {
+		i->Play(true, 90);
+	}
 
 	{
 		//レーザー系.
@@ -391,34 +407,44 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	p_input->UpdateKey();    //キー入力更新.
-	p_input->UpdatePad();    //コントローラ入力更新.
-	p_input->UpdateAction(); //アクション更新.
-	p_sound->Update();       //サウンド更新.
+	InputMng::UpdateKey();    //キー入力更新.
+	InputMng::UpdatePad();    //コントローラ入力更新.
+	InputMng::UpdateAction(); //アクション更新.
+	SoundMng::Update();       //サウンド更新.
 
-	//ポーズしてなければ.
-	if (gameData->scene != SCENE_PAUSE) {
-		bg->Update();        //背景.
-		effectMng->Update(); //エフェクト.
-	}
-	//シーン別.
-	switch (gameData->scene) 
-	{
-		case SCENE_TITLE: UpdateTitle(); break;
-		case SCENE_MENU:  UpdateMenu();  break;
-		case SCENE_GAME:  UpdateGame();  break;
-		case SCENE_END:   UpdateEnd();   break;
-		case SCENE_PAUSE: UpdatePause(); break;
+	//ポーズしてなければ更新.
+	if (!gameData->isPause) {
+
+		//背景, エフェクト.
+		bg->Update();
+		effectMng->Update(); 
+		//シーン別.
+		switch (gameData->scene) 
+		{
+			case SCENE_TITLE: UpdateTitle(); break;
+			case SCENE_MENU:  UpdateMenu();  break;
+			case SCENE_GAME:  UpdateGame();  break;
+			case SCENE_END:   UpdateEnd();   break;
 	
-		default: assert(FALSE); break;
+			default: assert(FALSE); break;
+		}
 	}
 
-	//特定の操作でゲーム終了
-	if (p_input->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
-		App::GetInst().Quit(); //ボタン長押しで終了.
+	//ポーズ操作.
+	if (InputMng::IsPushActionTime("GamePause") == 1) {
+		if (gameData->isPause) {
+			GamePauseEnd(); //ポーズ解除.
+		}
+		else {
+			GamePause();    //ポーズする.
+		}
 	}
-	else if (p_input->IsPushKey(KeyID::Esc)) {
-		App::GetInst().Quit(); //ESCAPEキーを押したら即終了.
+	//特定の操作でゲーム終了
+	if (InputMng::IsPushActionTime("GameQuit") >= FPS * 1) {
+		App::Quit(); //ボタン長押しで終了.
+	}
+	else if (InputMng::IsPushKey(KeyID::Esc)) {
+		App::Quit(); //ESCAPEキーを押したら即終了.
 	}
 }
 
@@ -434,7 +460,6 @@ void GameManager::Draw() {
 		case SCENE_MENU:  DrawMenu();  break;
 		case SCENE_GAME:  DrawGame();  break;
 		case SCENE_END:   DrawEnd();   break;
-		case SCENE_PAUSE: DrawPause(); break;
 
 		default: assert(FALSE); break;
 	}
@@ -471,7 +496,7 @@ void GameManager::UpdateTitle()
 		tmScene[SCENE_TITLE].Start();
 	}
 	//特定の操作でゲーム開始.
-	if (p_input->IsPushActionTime(_T("GameNext")) == 1) {
+	if (InputMng::IsPushActionTime("GameNext") == 1) {
 		gameData->scene = SCENE_MENU; //メニューシーンへ.
 	}
 }
@@ -507,13 +532,6 @@ void GameManager::UpdateGame() {
 
 			default: assert(FALSE); break;
 		}
-		//ポーズ.
-		if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
-			gameData->pauzeEndScene = gameData->scene; //現在のシーンを保存.
-			gameData->scene = SCENE_PAUSE;             //ポーズシーンへ.
-			tmGameTime.Stop();    //一時停止.
-			tmReflectMode.Stop(); //一時停止.
-		}
 	}
 
 	player->Update(); //プレイヤー.
@@ -540,24 +558,11 @@ void GameManager::UpdateEnd() {
 	//チュートリアル以外の場合.
 	else {
 		//特定の操作でタイトルへ.
-		if (p_input->IsPushActionTime(_T("GameNext")) == 1)
+		if (InputMng::IsPushActionTime("GameNext") == 1)
 		{
 			gameData->scene = SCENE_TITLE;
 			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
 			Reset();
-		}
-	}
-}
-void GameManager::UpdatePause() {
-	
-	//ポーズ解除.
-	if (p_input->IsPushActionTime(_T("GamePause")) == 1) {
-
-		gameData->scene = gameData->pauzeEndScene;
-		tmGameTime.Start(); //再開.
-		//スローモード中だったなら.
-		if (tmReflectMode.GetPassTime() < REFLECT_MODE_TIME) {
-			tmReflectMode.Start(); //再開.
 		}
 	}
 }
@@ -579,21 +584,27 @@ void GameManager::UpdateReflectMode() {
 		//3秒以下になったばかりの時.
 		if (tmReflectMode.GetPassTime() <= 3) {
 			if (!isItemCountDownSound[2]) {
-				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				if (auto i = SoundMng::Get("CountDown")){
+					i->Play(false, 78); //再生.
+				}
 				isItemCountDownSound[2] = true;
 			}
 		}
 		//2秒以下になったばかりの時.
 		if (tmReflectMode.GetPassTime() <= 2) {
 			if (!isItemCountDownSound[1]) {
-				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				if (auto i = SoundMng::Get("CountDown")) {
+					i->Play(false, 78); //再生.
+				}
 				isItemCountDownSound[1] = true;
 			}
 		}
 		//1秒以下になったばかりの時.
 		if (tmReflectMode.GetPassTime() <= 1) {
 			if (!isItemCountDownSound[0]) {
-				p_sound->Play(_T("CountDown"), false, 78); //再生.
+				if (auto i = SoundMng::Get("CountDown")) {
+					i->Play(false, 78); //再生.
+				}
 				isItemCountDownSound[0] = true;
 			}
 		}
@@ -625,7 +636,7 @@ void GameManager::DrawTitle() {
 			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim);
-			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY}, imgSize, Anchor::Mid, true, true);
+			DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY}, imgSize, Anchor::Mid, true, true);
 		}
 		//切り替え後.
 		else {
@@ -634,16 +645,15 @@ void GameManager::DrawTitle() {
 			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * (1-anim2));
-			imgLogo[0].DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
+			DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
 			//ロゴ2枚目.
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim1);
-			imgLogo[1].DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
+			DrawImgMng::Get("logo_all")->DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
 		}
 		//描画モードリセット.
 		ResetDrawBlendMode();
 	}
 
-#if defined SHOW_BEST_SCORE
 	//best score.
 	if (tmScene[SCENE_TITLE].GetPassTime() >= delay2) {
 
@@ -660,11 +670,13 @@ void GameManager::DrawTitle() {
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim1);
 		str.Draw(Anchor::Mid, gameData->font2); //スコア値.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim2);
-		imgUI.DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
-		imgUI.DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
+		//UI
+		DrawImgMng::Get("ui_back_best_score")->
+			DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
+		DrawImgMng::Get("ui_back_best_score")->
+			DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
 		ResetDrawBlendMode();
 	}
-#endif
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() >= delay4) {
 
@@ -700,7 +712,9 @@ void GameManager::DrawTitle() {
 				effectMng->SpawnEffect(&data);                      //エフェクト召喚.
 			}
 			//サウンド.
-			p_sound->Play(_T("Break"), false, 65);
+			if (auto i = SoundMng::Get("Break")) {
+				i->Play(false, 65); //再生.
+			}
 
 			isTitleAnim = true;
 		}
@@ -743,7 +757,7 @@ void GameManager::DrawEnd() {
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);
-		DrawBoxKR(&box, Anchor::LU); //画面を暗くする(UI以外)
+		DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
 		ResetDrawBlendMode();
 	}
 	uiMng->Draw(); //UI.
@@ -759,7 +773,7 @@ void GameManager::DrawEnd() {
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim);
 
 		//GAME OVER
-		imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true);
+		DrawImgMng::Get("gameover")->DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true);
 		//テキスト.
 		str.Draw(Anchor::Mid, gameData->font2);
 
@@ -783,7 +797,7 @@ void GameManager::DrawEnd() {
 			DrawStr str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
 
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-			imgGameOver.DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true); //GAME OVER
+			DrawImgMng::Get("gameover")->DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true); //GAME OVER
 			//画面中央に文字を表示.
 			str1.Draw(Anchor::Mid, gameData->font1);
 			str2.Draw(Anchor::Mid, gameData->font1);
@@ -802,11 +816,13 @@ void GameManager::DrawEnd() {
 				double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-				imgNewRecord.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, Anchor::Mid, true, true); //NEW RECORD
+				DrawImgMng::Get("new_record")->DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, Anchor::Mid, true, true); //NEW RECORD
 				ResetDrawBlendMode();
 				//サウンド.
 				if (!isBestScoreSound) {
-					p_sound->Play(_T("BestScore"), false, 65);
+					if (auto i = SoundMng::Get("BestScore")) {
+						i->Play(false, 65); //再生.
+					}
 					isBestScoreSound = true; //一度のみ.
 				}
 			}
@@ -825,10 +841,6 @@ void GameManager::DrawEnd() {
 		}
 	}
 }
-void GameManager::DrawPause() {
-
-	DrawGame(); //ゲームシーンと同じ.
-}
 
 //反射モード演出.
 void GameManager::DrawReflectMode() {
@@ -837,8 +849,7 @@ void GameManager::DrawReflectMode() {
 	if (tmReflectMode.GetIsMove() && tmReflectMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
-		TCHAR text[256];
-		_stprintf(text, _T("%d"), (int)ceil(tmReflectMode.GetPassTime())); //TCHAR型に変数を代入.
+		MY_STRING text = _to_mystr((int)ceil(tmReflectMode.GetPassTime()));
 		DrawStr str(text, {WINDOW_WID/2, WINDOW_HEI/2}, COLOR_ITEM);
 
 		//画面中央に数字を表示.
@@ -849,7 +860,7 @@ void GameManager::DrawReflectMode() {
 			SetDrawBlendModeKR(BlendModeID::Alpha, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
 			if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME-1) {
-				imgReflect.DrawExtend({WINDOW_WID/2, WINDOW_HEI/2}, {0.3+0.2*anim, 0.3+0.2*anim});
+				DrawImgMng::Get("reflect")->DrawExtend({WINDOW_WID / 2, WINDOW_HEI / 2}, {0.3 + 0.2 * anim, 0.3 + 0.2 * anim});
 			}
 			//最後の3秒.
 			if (tmReflectMode.GetPassTime() <= 3) {
@@ -860,6 +871,26 @@ void GameManager::DrawReflectMode() {
 	}
 }
 
+//ポーズする.
+void GameManager::GamePause() {
+	gameData->isPause = true;
+	//稼働中のタイマーを一時停止.
+	tmGameTime.Pause();
+	tmReflectMode.Pause();
+	bg->StopAnim();
+}
+//ポーズ解除.
+void GameManager::GamePauseEnd() {
+	gameData->isPause = false;
+	//稼働中だったタイマーは再開.
+	if (tmGameTime.GetIsMove()) {
+		tmGameTime.Start();
+	}
+	if (tmReflectMode.GetIsMove()) {
+		tmReflectMode.Start();
+	}
+	bg->RestartAnim();
+}
 //ゲーム終了(死亡)
 void GameManager::GameOver() {
 
@@ -894,18 +925,22 @@ void GameManager::GameOver() {
 				if (gameData->score > gameData->bestScore) {
 
 					File file;
-					file.MakeDir(FILE_DATA_PATH);   //フォルダ作成.
-					file.Open(FILE_DATA, _T("w"));  //ファイルを開く.
-					file.WriteInt(gameData->score); //スコアを保存.
-
+					//ファイルを開く.
+					if (file.Open(FILE_DATA, _T("w"), true).GetCode() == 0) {
+						file.WriteInt(gameData->score);    //スコアを保存.
+					}
 					gameData->bestScore = gameData->score; //スコア更新.
 					isBestScore = true;
 				}
 
 				//BGM停止.
-				p_sound->FadeOutPlay(_T("BGM_Endless"), 2);
-				//ゲームオーバーBGM.
-				p_sound->Play(_T("BGM_Over"), true, 68);
+				if (auto i = SoundMng::Get("BGM_Endless")) {
+					i->FadeOutPlay(2); //再生.
+				}
+				//ゲームオーバーBGM.;
+				if (auto i = SoundMng::Get("BGM_Over")) {
+					i->Play(true, 68); //再生.
+				}
 			}
 			break;
 
@@ -940,7 +975,10 @@ void GameManager::ReflectModeEnd() {
 	gameData->slowBufCntr   = 0;     //カウンターを0に.
 	player->SetMode(Player_Normal);  //通常状態に戻す.
 			
-	p_sound->Play(_T("PowerDown"), false, 78); //再生.
+	//ゲームオーバーBGM.;
+	if (auto i = SoundMng::Get("PowerDown")) {
+		i->Play(false, 78); //再生.
+	}
 	
 	//記録リセット.
 	for (int i = 0; i < _countof(isItemCountDownSound); i++) {

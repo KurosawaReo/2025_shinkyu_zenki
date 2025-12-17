@@ -16,23 +16,16 @@ class GameData final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static GameData& GetInst() {
 		static GameData inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	GameData(const GameData&) = delete;
-	GameData& operator=(const GameData&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	GameData(){}
 
 //▼データ.
 public:
 	Scene      scene{};			//現在のシーン.
-	Scene      pauzeEndScene{};	//ポーズから戻ってくるシーン.
 	StageType  stage{};			//ステージ種類.
+	bool       isPause{};       //ポーズ中かどうか.
 
 	int		   score{};			//スコア.
 	int		   scoreBef{};		//スコア(時間加算前)
@@ -50,6 +43,15 @@ public:
 	int		   font2{};			//フォント.
 	int		   font3{};			//フォント.
 	int		   font4{};			//フォント.
+	
+private:
+	//constructor(新規作成をできなくする)
+	GameData(){}
+
+public:
+	//使用禁止.
+	GameData(const GameData&) = delete;
+	GameData& operator=(const GameData&) = delete;
 };
 
 //ゲームマネージャー.[継承不可]
@@ -57,17 +59,10 @@ class GameManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static GameManager& GetInst() {
 		static GameManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	GameManager(const GameManager&) = delete;
-	GameManager& operator=(const GameManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	GameManager(){}
 
 //▼データ.
 private:
@@ -80,21 +75,12 @@ private:
 	TimerMicro tmFps{};         //fps計測用タイマー.
 #endif
 
-	DrawImg imgLogo[2]{};   //タイトルロゴ画像.
-	DrawImg imgUI{};        //UI画像.
-	DrawImg imgNewRecord{}; //new record.
-	DrawImg imgGameOver{};  //gameover.
-	DrawImg imgReflect{};   //reflect.
-
 	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
 	bool isGameStart{};             //ゲーム開始サイン.
 	bool isBestScore{};             //ベストスコア更新したか.
-
-	InputMng* p_input{};
-	SoundMng* p_sound{};
 
 public: //オブジェクト.
 	NormalLaser_1* laserNor1{};
@@ -103,9 +89,13 @@ public: //オブジェクト.
 	NormalLaser_4* laserNor4{};
 	StraightLaser* laserStr[2]{};
 
-public:
+private:
+	//constructor(新規作成をできなくする)
+	GameManager(){}
 	//destructor.
 	~GameManager();
+
+public:
 	//get.
 	float GetReflectModeTime() {
 		return tmReflectMode.GetPassTime();
@@ -132,7 +122,6 @@ public:
 	void UpdateMenu();
 	void UpdateGame();
 	void UpdateEnd();
-	void UpdatePause();
 
 	void UpdateReflectMode();
 
@@ -141,12 +130,17 @@ public:
 	void DrawMenu();
 	void DrawGame();
 	void DrawEnd();
-	void DrawPause();
 
 	void DrawReflectMode();
 
 	//その他.
+	void GamePause();
+	void GamePauseEnd();
 	void GameOver();
 	void ItemUsed();
 	void ReflectModeEnd();
+
+	//使用禁止.
+	GameManager(const GameManager&) = delete;
+	GameManager& operator=(const GameManager&) = delete;
 };

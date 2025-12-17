@@ -11,17 +11,10 @@ class MeteorManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static MeteorManager& GetInst() {
 		static MeteorManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	MeteorManager(const MeteorManager&) = delete;
-	MeteorManager& operator=(const MeteorManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	MeteorManager(){}
 
 //▼データ.
 private:
@@ -33,6 +26,10 @@ private:
 	GameData*      p_data{};      //ゲームデータ.
 	Player*        p_player{};	  //プレイヤー.
 	EffectManager* p_effectMng{}; //エフェクト管理.
+
+private:
+	//constructor(新規作成をできなくする)
+	MeteorManager(){}
 
 public:
 	//set.
@@ -47,4 +44,8 @@ public:
 
 	bool IsHitMeteors       (Circle cir, bool isDestroy);			//隕石のどれか1つでも当たっているか.
 	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos);	//最寄りの隕石座標を探す.
+
+	//使用禁止.
+	MeteorManager(const MeteorManager&) = delete;
+	MeteorManager& operator=(const MeteorManager&) = delete;
 };

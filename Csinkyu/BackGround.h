@@ -14,7 +14,6 @@ class BG_Tile
 private:
 	INT_XY   pos{};
 	DBL_XY   sizeRate{};
-	DrawImg* img[2]{};
 
 	Timer timer = Timer(TimerMode::CountDown, 3); //発光する時間.
 
@@ -34,29 +33,24 @@ class BackGround final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static BackGround& GetInst() {
 		static BackGround inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	BackGround(const BackGround&) = delete;
-	BackGround& operator=(const BackGround&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	BackGround(){}
 
 //▼データ.
 private:
-	vector<BG_Tile> tiles;           //背景タイルデータ.
-	DrawImg         imgBG[2]{};      //背景画像.
-	DrawImg         imgFrameBG{};    //背景画像.
+	vector<BG_Tile> tiles; //背景タイルデータ.
 
 	TimerMicro tmShine = TimerMicro(TimerMode::CountDown, 1000000/60); //光る間隔.
 
 	float counter{}; //時間経過計測用.
 
 	GameData* p_data{}; //ゲームデータ.
+
+private:
+	//constructor(新規作成をできなくする)
+	BackGround(){}
 
 public:
 	//get.
@@ -65,4 +59,12 @@ public:
 	void Init();
 	void Update();
 	void Draw();
+
+	//ポーズ用.
+	void StopAnim();
+	void RestartAnim();
+
+	//使用禁止.
+	BackGround(const BackGround&) = delete;
+	BackGround& operator=(const BackGround&) = delete;
 };

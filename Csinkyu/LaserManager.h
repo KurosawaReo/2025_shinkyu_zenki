@@ -50,17 +50,10 @@ class LaserManager final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static LaserManager& GetInst() {
 		static LaserManager inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	LaserManager(const LaserManager&) = delete;
-	LaserManager& operator=(const LaserManager&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	LaserManager(){}
 
 //▼データ.
 private:
@@ -70,12 +63,14 @@ private:
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
-	DrawImg imgLight[2]{};
-
 	GameData*      p_data{};
 	Player*        p_player{};
 	MeteorManager* p_meteorMng{};
 	EffectManager* p_effectMng{};
+
+private:
+	//constructor(新規作成をできなくする)
+	LaserManager(){}
 
 public:
 	void Init();
@@ -96,5 +91,9 @@ public:
 	bool IsExistEnemyLaser(DBL_XY pos, float len);                  //敵のレーザーが1つでも存在するかどうか.
 
 	//未使用.
-	void LaserReflectRange(Circle* cir);						    //レーザーを一括反射.
+	void LaserReflectRange(Circle cir);							    //レーザーを一括反射.
+
+	//使用禁止.
+	LaserManager(const LaserManager&) = delete;
+	LaserManager& operator=(const LaserManager&) = delete;
 };

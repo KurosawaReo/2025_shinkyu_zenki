@@ -30,7 +30,7 @@ void Meteor::Update() {
 	{
 		case Meteor_Normal:
 			//画面外で消去.
-			if (IsOutInArea(pos, { METEOR_LINE_DIS_MAX*2, METEOR_LINE_DIS_MAX*2 }, 0, 0, WINDOW_WID, WINDOW_HEI, true)){
+			if (IsOutInArea(pos, { METEOR_LINE_DIS_MAX*2, METEOR_LINE_DIS_MAX*2 }, {0, 0, WINDOW_WID, WINDOW_HEI}, true)){
 				isErase = true; //消去する.
 			}
 			break;
@@ -63,7 +63,7 @@ void Meteor::Draw() {
 	for (auto& i : shape.line) {
 			
 		i.color = COLOR_METEOR(pos);
-		DrawLineKR(&i, true, 2);
+		DrawLineKR(i, true, 2);
 
 #if defined DEBUG_METEOR_POINT
 		DrawCircle(i.stPos.x, i.stPos.y, 3, 0xFFFFFF);
@@ -82,7 +82,7 @@ void Meteor::Draw() {
 
 	//チュートリアル.
 	if (p_data->stage == STAGE_TUTORIAL) {
-		DrawStr str(_T("隕石"), pos.ToIntXY(), COLOR_METEOR(pos));
+		DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
 		str.Draw();
 	}
 
@@ -145,7 +145,7 @@ bool Meteor::IsHitMeteor(Circle cir) const {
 		//全ての線で判定.
 		for (const auto& i : shape.line) {
 			//線とプレイヤーが当たったら.
-			if (HitLineCir(&i, &cir)) {
+			if (HitLineCir(i, cir)) {
 				return true; //当たった.
 			}
 		}

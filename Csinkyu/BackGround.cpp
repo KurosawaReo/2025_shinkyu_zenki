@@ -15,7 +15,6 @@ void BG_Tile::Init() {
 }
 //更新.
 void BG_Tile::Update() {
-
 	//0になったら停止.
 	if (timer.GetPassTime() <= 0) {
 		timer.Reset();
@@ -28,13 +27,13 @@ void BG_Tile::Draw(double slowTime) {
 	{
 		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
-		img[0]->DrawExtend(pos.ToDblXY(), sizeRate, Anchor::Mid);
+		DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 	}
 	//反射モード.
 	if (p_data->isReflectMode) {
 		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
-		img[1]->DrawExtend(pos.ToDblXY(), sizeRate, Anchor::Mid);
+		DrawImgMng::Get("bg_reflect")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 	}
 	ResetDrawBlendMode(); //描画モードリセット.
 }
@@ -53,13 +52,13 @@ void BackGround::Init() {
 
 	p_data = &GameData::GetInst();
 
-	imgBG[0].  LoadFile(_T("Resources/Images/bg_normal.png"));
-	imgBG[1].  LoadFile(_T("Resources/Images/bg_reflect.png"));
-	imgFrameBG.LoadFile(_T("Resources/Images/reflect_mode_frame.png"));
+	DrawImgMng::LoadFile(_T("Resources/Images/bg_normal.png"),          "bg_normal");
+	DrawImgMng::LoadFile(_T("Resources/Images/bg_reflect.png"),         "bg_reflect");
+	DrawImgMng::LoadFile(_T("Resources/Images/reflect_mode_frame.png"), "reflect_mode_frame");
 
 	{
-		INT_XY imgSize  = imgBG[0].GetSize(); //画像サイズ取得.
-		DBL_XY sizeRate = { 0.1, 0.1 };       //サイズ倍率.
+		INT_XY imgSize  = DrawImgMng::Get("bg_normal")->GetSize(); //画像サイズ取得.
+		DBL_XY sizeRate = { 0.1, 0.1 };                            //サイズ倍率.
 
 		INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
 
@@ -72,8 +71,6 @@ void BackGround::Init() {
 				tile.pos.x = x; 
 				tile.pos.y = y;
 				tile.sizeRate = sizeRate;
-				tile.img[0] = &imgBG[0];
-				tile.img[1] = &imgBG[1];
 				tile.Init();
  				tiles.push_back(tile); //配列に追加.
 			}
@@ -87,6 +84,11 @@ void BackGround::Update() {
 	
 	counter += p_data->speedRate;
 
+	//一定間隔ごと.
+	if (tmShine.IntervalTime()) {
+		int idx = RandNum(0, (int)tiles.size()-1);
+		tiles[idx].Shine(); //ランダムでタイルを発光させる.
+	}
 	//各タイル更新.
 	for (auto& i : tiles) {
 		i.Update();
@@ -101,24 +103,34 @@ void BackGround::Draw() {
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
 	time = CalcNumEaseOut(time); //値の曲線変動.
 
-	//一定間隔ごと.
-	if (tmShine.IntervalTime()) {
-		int idx = RandNum(0, (int)tiles.size()-1);
-		tiles[idx].Shine(); //ランダムでタイルを発光させる.
-	}
 	//各タイル描画.
 	for (auto& i : tiles) {
 		i.Draw(time);
 	}
-
 	//スローモード中.
 	if (p_data->speedRate) {
 		//グラデーション枠.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*time);
-		imgFrameBG.Draw({WINDOW_WID/2, WINDOW_HEI/2});
+		DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
 		ResetDrawBlendMode();
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
-		DrawBoxKR(&box, Anchor::Mid, false, true);
+		DrawBoxKR(box, Anchor::Mid, false, true);
+	}
+}
+
+//ポーズする.
+void BackGround::StopAnim() {
+	for (auto& i : tiles) {
+		i.timer.Stop();
+	}
+}
+//ポーズ解除.
+void BackGround::RestartAnim() {
+	for (auto& i : tiles) {
+		//稼働中だったならリスタート.
+		if (i.timer.GetIsMove()) {
+			i.timer.Start();
+		}
 	}
 }

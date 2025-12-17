@@ -20,17 +20,10 @@ class EndlessStage final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static EndlessStage& GetInst() {
 		static EndlessStage inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	EndlessStage(const EndlessStage&) = delete;
-	EndlessStage& operator=(const EndlessStage&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	EndlessStage(){}
 
 //▼データ.
 private:
@@ -42,8 +35,10 @@ private:
 	ItemManager*      p_itemMng{};
 	FireworksManager* p_fireworksMng{};
 	EffectManager*    p_effectMng{};
-	InputMng*         p_input{};
-	SoundMng*         p_sound{};
+
+private:
+	//constructor(新規作成をできなくする)
+	EndlessStage(){}
 
 public:
 	void Init();
@@ -53,4 +48,8 @@ public:
 
 	void UpdateObjects();
 	void DrawObjects();
+
+	//使用禁止.
+	EndlessStage(const EndlessStage&) = delete;
+	EndlessStage& operator=(const EndlessStage&) = delete;
 };

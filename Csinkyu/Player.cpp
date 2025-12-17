@@ -16,15 +16,14 @@ void Player::Init()
 {
 	p_data      = &GameData::GetInst();
 	p_effectMng = &EffectManager::GetInst();
-	p_input     = &InputMng::GetInst();
 
 	isDebug = false;
 
 	//画像読み込み.
-	imgPlayer[0].     LoadFile(_T("Resources/Images/player_normal.png"));
-	imgPlayer[1].     LoadFile(_T("Resources/Images/player_reflect.png"));
-	imgPlayerLight[0].LoadFile(_T("Resources/Images/light_color_2.png"));
-	imgPlayerLight[1].LoadFile(_T("Resources/Images/light_color_3.png"));
+	DrawImgMng::LoadFile(_T("Resources/Images/player_normal.png"),   "player_nor");
+	DrawImgMng::LoadFile(_T("Resources/Images/player_reflect.png"),  "player_ref");
+	DrawImgMng::LoadFile(_T("Resources/Images/light_color_nor.png"), "player_light_nor");
+	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "player_light_ref");
 }
 //リセット(何回でも行う)
 void Player::Reset(DBL_XY _pos, bool _active)
@@ -51,7 +50,7 @@ void Player::Update()
 {
 #if defined _DEBUG //Releaseでは入れない.
 	//無敵モード.
-	if (p_input->IsPushKeyTime(KeyID::M) == 1) {
+	if (InputMng::IsPushKeyTime(KeyID::M) == 1) {
 		isDebug = !isDebug;
 	}
 #endif
@@ -96,23 +95,23 @@ void Player::Draw()
 		){
 			//ダッシュ演出.
 			if (isDashing) {
-				imgPlayerLight[0].DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+				DrawImgMng::Get("player_light_ref")->DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
 			}
 			//反射モードの画像.
-			imgPlayer[1].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
+			DrawImgMng::Get("player_ref")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
 		}
 		else {
 			//ダッシュ演出.
 			if (isDashing) {
-				imgPlayerLight[1].DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+				DrawImgMng::Get("player_light_nor")->DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
 			}
 			//通常モードの画像.
-			imgPlayer[0].DrawRota(hit.pos, size, imgRot, {0, 0}, Anchor::Mid, true, true);
+			DrawImgMng::Get("player_nor")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
 		}
 
 		//チュートリアル用.
 		if (p_data->stage == STAGE_TUTORIAL) {
-			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToIntXY(), 0xFFFFFF );
+			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToInt(), 0xFFFFFF );
 			str.Draw();
 		}
 	}
@@ -141,7 +140,7 @@ void Player::UpdateDash()
 	{
 		if (dashCooldown <= 0)
 		{
-			bool dashkey = p_input->IsPushActionTime(_T("PlayerDash")) == 1;
+			bool dashkey = InputMng::IsPushActionTime("PlayerDash") == 1;
 			//ダッシュ開始.
 			if (dashkey)
 			{
@@ -169,13 +168,13 @@ void Player::PlayerMove()
 		if (isDashing)
 		{
 			//残り時間に応じて段々減速.
-			speed *= 1.0 + PLAYER_DASH_SPEED * Calc::CalcNumEaseOut(dashTimer/PLAYER_DASH_DURATION);
+			speed *= 1.0f + PLAYER_DASH_SPEED * Calc::CalcNumEaseOut(dashTimer/PLAYER_DASH_DURATION);
 		}
 		//移動.
-		p_input->MoveKey4Dir(&hit.pos, speed);
-		p_input->MovePadStick(&hit.pos, speed);
+		InputMng::MoveKey4Dir (&hit.pos, speed);
+		InputMng::MovePadStick(&hit.pos, speed);
 		//移動限界.
-		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, 0, 0, WINDOW_WID - 1, WINDOW_HEI - 1);
+		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
 	}
 }
 
@@ -189,7 +188,9 @@ void Player::PlayerDeath() {
 	if (active) {
 
 		//サウンド.
-		InstSoundMng.Play(_T("PlayerDeath"), false, 80);
+		if (auto i = SoundMng::Get("PlayerDeath")) {
+			i->Play(false, 80); //再生.
+		}
 		//エフェクト.
 		EffectData data{};
 		data.type = Effect_PlayerDeath;
@@ -299,7 +300,7 @@ void Player::DrawAfterImage()
 				}
 				//円描画.
 				Circle cir = { after[i].pos, PLAYER_SIZE, color };
-				DrawCircleKR(&cir, false, true);
+				DrawCircleKR(cir, false, true);
 			}
 		}
 	}

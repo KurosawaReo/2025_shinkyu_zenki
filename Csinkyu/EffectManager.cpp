@@ -10,8 +10,8 @@ using namespace Calc; //ŒvZ‹@”\‚ğg—p.
 void EffectManager::Init() {
 	p_data = &GameData::GetInst();
 
-	imgScore[0].LoadFile(_T("Resources/Images/score100.png"));
-	imgScore[1].LoadFile(_T("Resources/Images/score500.png"));
+	DrawImgMng::LoadFile(_T("Resources/Images/score100.png"), "score100");
+	DrawImgMng::LoadFile(_T("Resources/Images/score500.png"), "score500");
 }
 
 void EffectManager::Reset() {
@@ -150,10 +150,10 @@ void EffectManager::Draw() {
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
 				//‰æ‘œØ‚è‘Ö‚¦.
 				if (i.type == Effect_Score100) {
-					imgScore[0].DrawExtend(pos, {0.2, 0.2});
+					DrawImgMng::Get("score100")->DrawExtend(pos, {0.2, 0.2});
 				}
 				else {
-					imgScore[1].DrawExtend(pos, {0.2, 0.2});
+					DrawImgMng::Get("score500")->DrawExtend(pos, {0.2, 0.2});
 				}
 			}
 			break;
@@ -170,7 +170,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-				DrawTriangleKR(&tri, false, true);
+				DrawTriangleKR(tri, false, true);
 			}
 			break;
 
@@ -182,7 +182,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(&cir, false, true);
+				DrawCircleKR(cir, false, true);
 			}
 			break;
 
@@ -194,7 +194,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(&cir, false, true);
+				DrawCircleKR(cir, false, true);
 			}
 			break;
 
@@ -210,7 +210,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawLineKR(&line, true);
+				DrawLineKR(line, true);
 			}
 			break;
 
@@ -242,7 +242,7 @@ void EffectManager::Draw() {
 
 				//•`‰æ.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(&mainCir, false, true);
+				DrawCircleKR(mainCir, false, true);
 
 				switch (i.type) 
 				{
@@ -302,7 +302,7 @@ void EffectManager::Draw() {
 					//‹Ï“™‚É‚È‚é‚æ‚¤‚É”z’u‚·‚é.
 					lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt-1)/2);
 					//‰~•`‰æ.
-					DrawCircleKR(&lampCir[j], (lampFillCnt >= j+1), true); 
+					DrawCircleKR(lampCir[j], (lampFillCnt >= j+1), true); 
 				}
 			}
 			break;

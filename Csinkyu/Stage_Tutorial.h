@@ -22,17 +22,10 @@ class TutorialStage final
 {
 //▼実体関係.
 public:
-	//実体取得用.
 	static TutorialStage& GetInst() {
 		static TutorialStage inst; //自身のインスタンス.
 		return inst;
 	}
-	//使用禁止.
-	TutorialStage(const TutorialStage&) = delete;
-	TutorialStage& operator=(const TutorialStage&) = delete;
-private:
-	//constructor(新規作成をできなくする)
-	TutorialStage(){}
 
 //▼データ.
 private:
@@ -63,8 +56,10 @@ private:
 	FireworksManager* p_fireworksMng{};
 	EffectManager*    p_effectMng{};
 	UIManager*        p_uiMng{};
-	InputMng*         p_input{};
-	SoundMng*         p_sound{};
+
+private:
+	//constructor(新規作成をできなくする)
+	TutorialStage(){}
 
 public:
 	//set.
@@ -99,4 +94,8 @@ public:
 	void DrawTopText2(MY_STRING text, double alpha);
 	void DrawTopText3(MY_STRING text, double alpha);
 	void DrawTopText4(MY_STRING text, double alpha);
+
+	//使用禁止.
+	TutorialStage(const TutorialStage&) = delete;
+	TutorialStage& operator=(const TutorialStage&) = delete;
 };
