@@ -386,10 +386,12 @@ void GameManager::Reset() {
 
 	//サウンド.
 	SoundMng::StopAll();
+#if !defined BGM_NONE
 	//メニューBGMを流す.
 	if (auto i = SoundMng::Get("BGM_Menu")) {
 		i->Play(true, 90);
 	}
+#endif
 
 	{
 		//レーザー系.
@@ -938,6 +940,7 @@ void GameManager::GameOver() {
 					isBestScore = true;
 				}
 
+#if !defined BGM_NONE
 				//BGM停止.
 				if (auto i = SoundMng::Get("BGM_Endless")) {
 					i->FadeOutPlay(2); //再生.
@@ -946,6 +949,7 @@ void GameManager::GameOver() {
 				if (auto i = SoundMng::Get("BGM_Over")) {
 					i->Play(true, 68); //再生.
 				}
+#endif
 			}
 			break;
 

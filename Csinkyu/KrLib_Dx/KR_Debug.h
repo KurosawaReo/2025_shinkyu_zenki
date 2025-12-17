@@ -1,6 +1,6 @@
 /*
    - KR_Debug.h - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/17
 
    デバッグ機能を追加。
 */
@@ -21,6 +21,7 @@ namespace KR
 		void Log        (MY_STRING text, int    value);
 		void Log        (MY_STRING text, float  value);
 		void Log        (MY_STRING text, double value);
+		void Log        (MY_STRING text, bool   value);
 		void Log        (MY_STRING text, INT_XY pos);
 		void Log        (MY_STRING text, DBL_XY pos);
 		void LogMousePos();

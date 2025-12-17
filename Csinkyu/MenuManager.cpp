@@ -68,20 +68,24 @@ void MenuManager::Update() {
 			case 0:
 				p_data->scene = SCENE_GAME;
 				p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
+#if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
 				if (auto i = SoundMng::Get("BGM_Endless")) {
 					i->Play(true, 68); //再生.
 				}
+#endif
 				break;
 			case 1:
 				p_data->scene = SCENE_GAME;
 				p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
+#if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
 				if (auto i = SoundMng::Get("BGM_Tutorial")) {
 					i->Play(true, 68); //再生.
 				}
+#endif
 				break;
 			case 2:
 				p_data->scene = SCENE_TITLE;    //タイトルへ.

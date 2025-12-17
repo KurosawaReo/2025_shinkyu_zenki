@@ -1,6 +1,6 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver: 2025/12/07
+   ver: 2025/12/17
 */
 #include "KR_Debug.h"
 
@@ -26,6 +26,9 @@ namespace KR
 		}
 		void Log(MY_STRING text, double value) {
 			printfDx(_T("%s: %f\n"), text.c_str(), value);
+		}
+		void Log(MY_STRING text, bool   value) {
+			printfDx(_T("%s: %s\n"), text.c_str(), (value) ? _T("true") : _T("false"));
 		}
 		void Log(MY_STRING text, INT_XY pos) {
 			printfDx(_T("%s: %d %d\n"),     text.c_str(), pos.x, pos.y);

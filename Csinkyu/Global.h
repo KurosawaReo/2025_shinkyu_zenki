@@ -52,6 +52,8 @@ enum StageType
 
 //#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
 
+#define BGM_NONE //定義するとBGMをoffに.
+
 //DEBUG用操作.
 //Mキー: 無敵.
 //Lキー: レベルタイマー加速.
