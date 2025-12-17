@@ -133,9 +133,12 @@ public:
 
 	void DrawReflectMode();
 
-	//ÇªÇÃëº.
+	//É|Å[ÉYâÊñ .
 	void GamePause();
 	void GamePauseEnd();
+	void DrawPause();
+
+	//ÇªÇÃëº.
 	void GameOver();
 	void ItemUsed();
 	void ReflectModeEnd();

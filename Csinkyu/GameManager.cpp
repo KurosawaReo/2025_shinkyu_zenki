@@ -472,13 +472,17 @@ void GameManager::Draw() {
 
 		default: assert(FALSE); break;
 	}
+	effectMng->Draw(); //エフェクト.
 
+	//ポーズ画面.
+	if (gameData->isPause) {
+		DrawPause();
+	}
+	
 	//fps表示用.
 #if defined DEBUG_SHOW_FPS
 	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("FPS: %f"), tmFps.GetFps());
 #endif
-
-	effectMng->Draw(); //エフェクト.
 }
 
 //通常レーザーのリセット.
@@ -900,6 +904,12 @@ void GameManager::GamePauseEnd() {
 	}
 	bg->RestartAnim();
 }
+//ポーズ画面.
+void GameManager::DrawPause() {
+	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
+	str.Draw(Anchor::Mid, gameData->font4);
+}
+
 //ゲーム終了(死亡)
 void GameManager::GameOver() {
 
