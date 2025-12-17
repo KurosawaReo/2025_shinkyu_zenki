@@ -91,7 +91,11 @@ void MenuManager::Update() {
 		}
 	}
 
+	//経過時間.
 	counter += 1;
+	//電気の進行率.
+	electrRate += MENU_ELECTR_MOVE_SPEED * p_data->speedRate;
+	Calc::NumLimMax(&electrRate, 1.0); //上限は1.0
 }
 
 // 描画
@@ -99,8 +103,11 @@ void MenuManager::Draw() {
 
 	//アニメーション値.
 	//この値を基準にメニューのアニメーションを制御する.
-	const double cntrAnim1 = sin(counter/ 50 * M_PI);
-	const double cntrAnim2 = sin(counter/100 * M_PI);
+	const double anim1 = sin(counter/ 50 * M_PI);
+	const double anim2 = sin(counter/100 * M_PI);
+
+//	const double anim3 = Calc::AnimEaseIn();
+	const double anim3 = electrRate;
 
 	//▼メニュー全体の背景.
 	SetDrawBlendModeKR(BlendModeID::Alpha, 128);
@@ -117,7 +124,7 @@ void MenuManager::Draw() {
 
 		{
 			//アニメーション値.
-			const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter, 120)/120);
+			const double anim1 = Calc::AnimEaseOutIn(fmod(counter, 120)/120);
 			const double anim2 = sin(fmod(counter, 120)/120 * M_PI);
 
 			Line lines[4] = {
@@ -138,7 +145,7 @@ void MenuManager::Draw() {
 		}
 		{
 			//アニメーション値.
-			const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter-20, 120)/120);
+			const double anim1 = Calc::AnimEaseOutIn(fmod(counter-20, 120)/120);
 			const double anim2 = sin(fmod(counter-20, 120)/120 * M_PI);
 
 			Line lines[4] = {
@@ -211,8 +218,8 @@ void MenuManager::Draw() {
 			+mLayout.menuSpace * selectedIndex  //yの移動量.
 		);
 
-		Triangle tri = { {base, base.Add(-20, 10 * cntrAnim1), base.Add(-20, -10 * cntrAnim1)}, {} };
-		tri.color = (cntrAnim1 >= 0) ? mColor.select1 : mColor.select2; //表か裏かで色を変える.
+		Triangle tri = { {base, base.Add(-20, 10 * anim1), base.Add(-20, -10 * anim1)}, {} };
+		tri.color = (anim1 >= 0) ? mColor.select1 : mColor.select2; //表か裏かで色を変える.
 		DrawTriangleKR(tri, true, true);
 	}
 
@@ -257,7 +264,7 @@ void MenuManager::Draw() {
 		int textBoxTopY = textBoxY;
 
 		//線の透明度(155～255)
-		const int alpha = 155 + 100 * (cntrAnim2 + 1.0) / 2.0;
+		const int alpha = 155 + 100 * (anim2 + 1.0) / 2.0;
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 		//線の太さ.

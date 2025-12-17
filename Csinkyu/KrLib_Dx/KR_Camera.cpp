@@ -34,8 +34,8 @@ namespace KR
 	void Camera::AddPos(DBL_XY _pos, bool isLocal) {
 		//local: äpìxÇçló∂ÇµÇƒâ¡éZ.
 		if (isLocal) {
-			DBL_XY vec  = Calc::CalcVectorDeg(inst.cameraAng-90);
-			double dist = Calc::CalcDist     (DBL_XY(0, 0), _pos);
+			DBL_XY vec  = Calc::VectorDeg(inst.cameraAng-90);
+			double dist = Calc::Dist     (DBL_XY(0, 0), _pos);
 			inst.cameraPos.x += vec.x * dist;
 			inst.cameraPos.y += vec.y * dist;
 		}

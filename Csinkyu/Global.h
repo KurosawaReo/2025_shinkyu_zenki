@@ -177,6 +177,9 @@ enum StageType
 #define FIREWORKS_MIN_DISTANCE			(120)			//花火同士の最小距離
 #define FIREWORKS_GRAVITY				(0.3f)			//重力加速度
 
+//メニュー.
+#define MENU_ELECTR_MOVE_SPEED			(0.1)			//電気の動く速度.
+
 //エフェクト.
 //#define EFFECT_MAX					(70)			//エフェクトの最大出現数.
 
@@ -193,7 +196,7 @@ enum StageType
 //#define COLOR_ITEM					(GetColor( 60, 255,  60))
 #define COLOR_ITEM						(GetColor(255, 155, 255))
 #define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))   //予測演出.
-#define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::CalcNumWaveLoop(pos.x/250)), 255)) //隕石.
+#define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::AnimWaveLoop(pos.x/250)), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)

@@ -142,9 +142,9 @@ void EffectManager::Draw() {
 			case Effect_Score500:
 			{
 				//座標.
-				DBL_XY pos = {i.pos.x, i.pos.y - CalcNumEaseOut(i.counter/SCORE_ANIM_TIME)*30};
+				DBL_XY pos = {i.pos.x, i.pos.y - AnimEaseOut(i.counter/SCORE_ANIM_TIME)*30};
 				//アニメーション値.
-				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/SCORE_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/SCORE_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -161,11 +161,11 @@ void EffectManager::Draw() {
 			case Effect_PlayerDash:
 			{
 				//アニメーション値.
-				const double anim = CalcNumEaseOut(1-i.counter/PLAYER_DASH_EFFECT_TIME);
+				const double anim = AnimEaseOut(1-i.counter/PLAYER_DASH_EFFECT_TIME);
 				//三角形データ.
-				DBL_XY pos1 = i.pos + Calc::CalcVectorDeg(i.ang   ) * 40 * anim;
-				DBL_XY pos2 = i.pos + Calc::CalcVectorDeg(i.ang+90) * 20 * anim;
-				DBL_XY pos3 = i.pos + Calc::CalcVectorDeg(i.ang-90) * 20 * anim;
+				DBL_XY pos1 = i.pos + Calc::VectorDeg(i.ang   ) * 40 * anim;
+				DBL_XY pos2 = i.pos + Calc::VectorDeg(i.ang+90) * 20 * anim;
+				DBL_XY pos3 = i.pos + Calc::VectorDeg(i.ang-90) * 20 * anim;
 				Triangle tri = {{pos1, pos2, pos3}, 0xFFFFFF};
 
 				//描画.
@@ -178,7 +178,7 @@ void EffectManager::Draw() {
 			{
 				Circle cir= { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF };
 				//アニメーション値.
-				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -190,7 +190,7 @@ void EffectManager::Draw() {
 			{
 				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT };
 				//アニメーション値.
-				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/LASER_REF_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/LASER_REF_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -202,11 +202,11 @@ void EffectManager::Draw() {
 			{
 				//飛ばす線のデータ.
 				Line line{};
-				line.stPos = CalcArcPos(i.pos, i.ang,     i.len);
-				line.edPos = CalcArcPos(i.pos, i.ang+180, i.len);
+				line.stPos = ArcPos(i.pos, i.ang,     i.len);
+				line.edPos = ArcPos(i.pos, i.ang+180, i.len);
 			    line.color = COLOR_METEOR(i.pos);
 				//アニメーション値.
-				int pow = _int_r(255 * CalcNumEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -235,7 +235,7 @@ void EffectManager::Draw() {
 					{{-1, i.pos.y+20}, 10, 0xFFFFFF}
 				};
 				//アニメーション値.
-				int pow = _int_r(255 * CalcNumWaveLoop(1 - i.counter/MIDDLE_ANIM_TIME));
+				int pow = _int_r(255 * AnimWaveLoop(1 - i.counter/MIDDLE_ANIM_TIME));
 				//何個ランプを使うか.
 				int lampUseCnt  = 0;
 				int lampFillCnt = 0;

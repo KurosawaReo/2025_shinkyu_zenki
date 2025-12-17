@@ -47,9 +47,9 @@ private:
 	AfterEffect    after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
 	//ダッシュ.
-	bool           isDashing;        // ダッシュ中かどうか.
-	float          dashTimer;        // ダッシュの残り時間.
-	float          dashCooldown;     // ダッシュのクールダウン.
+	bool           isDashing{};        // ダッシュ中かどうか.
+	float          dashTimer{};        // ダッシュの残り時間.
+	float          dashCooldown{};     // ダッシュのクールダウン.
 
 	double         imgRot{};            //プレイヤーの画像角度.
 
@@ -75,7 +75,7 @@ public:
 	Circle     GetHit()      const { return hit; }
 	//計測.
 	double     GetMoveDist() const { 
-		return Calc::CalcDist(hit.pos, after[1].pos); //移動した距離.
+		return Calc::Dist(hit.pos, after[1].pos); //移動した距離.
 	}
 
 	//その他.

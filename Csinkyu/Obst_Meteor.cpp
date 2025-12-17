@@ -115,7 +115,7 @@ void Meteor::Spawn() {
 		//目標地点までの角度を求める.
 		double rad = atan2(goalPos.y - pos.y, goalPos.x - pos.x);
 		//xとyのvectorに分解.
-		vel = CalcVectorRad(rad);
+		vel = VectorRad(rad);
 	}
 
 	//隕石の設定.
@@ -166,23 +166,23 @@ void Meteor::UpdateMeteoLine() {
 		//要素数が0未満なら最大値へ移動する.
 		int bef = ((i-1) < 0) ? shape.line.size()-1 : (i-1);
 
-		shape.line[i].stPos = CalcArcPos(pos, ang+  i*rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
-		shape.line[i].edPos = CalcArcPos(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
+		shape.line[i].stPos = ArcPos(pos, ang+  i*rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
+		shape.line[i].edPos = ArcPos(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
 
 		//破壊時の回転アニメーション.
 		if (state == Meteor_Destroy) {
 
 			//①隕石を構成する線の情報.
-			DBL_XY lineMidPos = CalcMidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
-			double lineLen    = CalcDist(shape.line[i].stPos, lineMidPos);            //長さの半分.
-			double lineAng    = CalcFacingAng(lineMidPos, shape.line[i].stPos);		  //角度.
+			DBL_XY lineMidPos = MidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
+			double lineLen    = Dist(shape.line[i].stPos, lineMidPos);            //長さの半分.
+			double lineAng    = FacingAng(lineMidPos, shape.line[i].stPos);		  //角度.
 			//②隕石の中央からどんどん離していく.
-			double pivotDis   = CalcDist(pos, lineMidPos);                            //隕石の中央からの距離.
-			double pivotAng   = CalcFacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.
-			DBL_XY newPos     = CalcArcPos(pos, pivotAng, pivotDis+destroyCntr);      //距離を増やす.
+			double pivotDis   = Dist(pos, lineMidPos);                            //隕石の中央からの距離.
+			double pivotAng   = FacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.
+			DBL_XY newPos     = ArcPos(pos, pivotAng, pivotDis+destroyCntr);      //距離を増やす.
 			//③新たな線の始点と終点.
-			shape.line[i].stPos = CalcArcPos(newPos, lineAng    +destroyCntr, lineLen);
-			shape.line[i].edPos = CalcArcPos(newPos, lineAng+180+destroyCntr, lineLen);
+			shape.line[i].stPos = ArcPos(newPos, lineAng    +destroyCntr, lineLen);
+			shape.line[i].edPos = ArcPos(newPos, lineAng+180+destroyCntr, lineLen);
 		}
 	}
 }

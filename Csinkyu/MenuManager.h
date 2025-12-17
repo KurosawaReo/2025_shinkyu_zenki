@@ -48,10 +48,13 @@ private:
 	int       selectedIndex = 0;  //カーソルの選択位置 | 0:ゲーム開始 | 1:チュートリアル | 2:タイトルに戻る |
 	float     counter = 0;        //経過時間.
 
-	//点滅処理.
+	//点滅アニメーション.
 	Timer     tmBlink = Timer(TimerMode::CountDown, 0.1f); //点滅間隔.
 	Timer     tmTitle = Timer(TimerMode::CountDown, 2.5f); //タイトルアニメ用.
 	bool      isBlink = 0;                                 //点滅させる用.
+
+	//電気アニメーション.
+	double    electrRate = 0.0;  //電気が線の何割まで進んだか.
 
 	//描画用設定.
 	const MenuLayout mLayout;

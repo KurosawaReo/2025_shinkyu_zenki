@@ -22,16 +22,16 @@ namespace KR
 		return Calc::IsOutInArea(GetPos(), GetSize().ToInt(), rect, isCompOut);
 	}
 	//‹——£‚ğ‹‚ß‚é.
-	double ObjectShape::CalcDist(DBL_XY pos) {
-		return Calc::CalcDist(GetPos(), pos);
+	double ObjectShape::Dist(DBL_XY pos) {
+		return Calc::Dist(GetPos(), pos);
 	}
 	//Šp“x‚Æ’·‚³‚©‚ç‰~üã‚ÌÀ•W‚ğ‹‚ß‚é.
-	DBL_XY ObjectShape::CalcArcPos(double ang, double len) {
-		return Calc::CalcArcPos(GetPos(), ang, len);
+	DBL_XY ObjectShape::ArcPos(double ang, double len) {
+		return Calc::ArcPos(GetPos(), ang, len);
 	}
 	//‘ÎÛÀ•W‚ğŒ©‚½‚Ì•ûŒü‚ğ‹‚ß‚é.
-	double ObjectShape::CalcFacingAng(DBL_XY targetPos) {
-		return Calc::CalcFacingAng(GetPos(), targetPos);
+	double ObjectShape::FacingAng(DBL_XY targetPos) {
+		return Calc::FacingAng(GetPos(), targetPos);
 	}
 
 	//ˆÚ“®‘€ì.

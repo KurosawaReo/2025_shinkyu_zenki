@@ -168,7 +168,7 @@ void Player::PlayerMove()
 		if (isDashing)
 		{
 			//残り時間に応じて段々減速.
-			speed *= 1.0f + PLAYER_DASH_SPEED * Calc::CalcNumEaseOut(dashTimer/PLAYER_DASH_DURATION);
+			speed *= 1.0f + PLAYER_DASH_SPEED * Calc::AnimEaseOut(dashTimer/PLAYER_DASH_DURATION);
 		}
 		//移動.
 		InputMng::MoveKey4Dir (&hit.pos, speed);
@@ -235,7 +235,7 @@ void Player::UpdateAfterImage()
 		}
 		//1フレーム目の情報登録.
 		after[0].pos      = hit.pos;                                         //プレイヤー座標.
-		after[0].ang      = Calc::CalcFacingAng(after[0].pos, after[1].pos); //移動方向.
+		after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
 		after[0].isDash   = isDashing;                                       //ダッシュ中ならダッシュエフェクトに.
 		after[0].isActive = false;                                           //一旦無効にする.
 		//位置が変わったら(移動したら)
@@ -264,9 +264,9 @@ void Player::DrawAfterImage()
 			//ダッシュエフェクト.
 			if (after[i].isDash) {
 				//三角形データ.
-				DBL_XY   pos1 = after[i].pos + Calc::CalcVectorDeg(after[i].ang)    * (30 * (1-anim));
-				DBL_XY   pos2 = after[i].pos + Calc::CalcVectorDeg(after[i].ang+90) * (20 * (1-anim));
-				DBL_XY   pos3 = after[i].pos + Calc::CalcVectorDeg(after[i].ang-90) * (20 * (1-anim));
+				DBL_XY   pos1 = after[i].pos + Calc::VectorDeg(after[i].ang)    * (30 * (1-anim));
+				DBL_XY   pos2 = after[i].pos + Calc::VectorDeg(after[i].ang+90) * (20 * (1-anim));
+				DBL_XY   pos3 = after[i].pos + Calc::VectorDeg(after[i].ang-90) * (20 * (1-anim));
 				GradLine line;
 				//反射カラー.
 				if (mode == Player_Reflect ||
