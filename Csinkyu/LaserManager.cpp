@@ -476,6 +476,12 @@ bool LaserManager::IsExistEnemyLaser(DBL_XY pos, float len) {
 			i.type == Laser_Straight ||
 			i.type == Laser_Falling)
 		{
+			//消えかかってる落下レーザーは除外.
+			if (i.type == Laser_Falling &&
+				i.counter > LASER_FAL_HIT_ABLE) 
+			{
+				continue;
+			}
 			//距離が範囲内ならtrueを返す.
 			if (Dist(pos, i.nowPos) <= len) {
 				return true; 
