@@ -46,9 +46,17 @@ void MenuManager::Update() {
 	//カーソル移動操作.
 	if (InputMng::IsPushActionTime("MENU_UP") % 20 == 1) {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
+		isBlink = true;								 //点滅させる.
+		tmBlink.Start();
 	}
 	if (InputMng::IsPushActionTime("MENU_DOWN") % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
+		isBlink = true;								 //点滅させる.
+		tmBlink.Start();
+	}
+	//点滅終了.
+	if (tmBlink.GetPassTime() <= 0) {
+		isBlink = false;
 	}
 
 	//決定操作.
@@ -93,11 +101,6 @@ void MenuManager::Draw() {
 	//この値を基準にメニューのアニメーションを制御する.
 	const double cntrAnim1 = sin(counter/ 50 * M_PI);
 	const double cntrAnim2 = sin(counter/100 * M_PI);
-	//デジタル風の点滅用.
-	if (tmBlink.IntervalTime()) {
-		//一定確率で点滅する.
-		isBlink = Calc::RandNum(0, 100) < 10;
-	}
 
 	//▼メニュー全体の背景.
 	SetDrawBlendModeKR(BlendModeID::Alpha, 128);
@@ -161,35 +164,43 @@ void MenuManager::Draw() {
 
 	//▼各選択肢.
 	{
-		unsigned int color1 = (selectedIndex == 0) ? mColor.select1 : mColor.normal;
-		unsigned int color2 = (selectedIndex == 1) ? mColor.select1 : mColor.normal;
-		unsigned int color3 = (selectedIndex == 2) ? mColor.select1 : mColor.normal;
-
 		//テキスト & 枠線用.
 		Box box = { mLayout.menuPos.ToDbl(), mLayout.menuBoxSize.ToDbl(), mColor.select1};
 		DrawStr str(_T(""), mLayout.menuPos, {});
+		//選択肢テキスト.
+		MY_STRING texts[] = {
+			__T("ゲーム開始"), _T("チュートリアル"), _T("タイトルに戻る")
+		};
+		//テキスト色.
+		unsigned int colors[] = {
+			(selectedIndex == 0) ? mColor.select1 : mColor.normal,
+			(selectedIndex == 1) ? mColor.select1 : mColor.normal,
+			(selectedIndex == 2) ? mColor.select1 : mColor.normal
+		};
 
-		//選択肢1
-		str.text = _T("ゲーム開始");
-		str.color = color1;
-		DrawBoxKR(box, Anchor::Mid, false);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
-
-		//選択肢2
-		box.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.text  = _T("チュートリアル");
-		str.color = color2;
-		DrawBoxKR(box, Anchor::Mid, false);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
-
-		//選択肢3
-		box.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.text  = _T(" タイトルに戻る");
-		str.color = color3;
-		DrawBoxKR(box, Anchor::Mid, false);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+		INT_XY savePos; //保存用.
+		//全選択肢ループ.
+		for (int i = 0; i < 3; i++) {
+			str.text  = texts[i];
+			str.color = colors[i];
+			savePos   = str.pos;  //前の座標を保存.
+			//枠.
+			DrawBoxKR(box, Anchor::Mid, false);
+			//ブレる処理.
+			if (isBlink && selectedIndex == i) {
+				const int add = Calc::RandNum(-5, 5);		 //ずらす量.
+				str.pos += add;								 //位置をずらす.
+				SetDrawBlendModeKR(BlendModeID::Alpha, 128); //透明度変更.
+			}
+			//テキスト.
+			str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+			//戻す.
+			str.pos = savePos;
+			ResetDrawBlendMode();
+			//スペースを空ける.
+			box.pos.y += mLayout.menuSpace;
+			str.pos.y += mLayout.menuSpace;
+		}
 	}
 
 	//▼カーソルの三角.
@@ -247,7 +258,7 @@ void MenuManager::Draw() {
 
 		//線の透明度(155～255)
 		const int alpha = 155 + 100 * (cntrAnim2 + 1.0) / 2.0;
-		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * ((isBlink) ? 0.5 : 1));
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 		//線の太さ.
 		//(DrawLineにも太さの設定はあるが、ブレの雰囲気が出てるためあえてこのままのやり方で)
@@ -261,12 +272,6 @@ void MenuManager::Draw() {
 				DBL_XY(imgLeftX,       menuItemCenterY + i - lineThickness / 2), //pos2
 				mColor.line                                                      //color
 			};
-			//ブレる時に位置をずらす.
-			if (isBlink) {
-				const int add = Calc::RandNum(-5, 5);
-				line.stPos += add;
-				line.edPos += add;
-			}
 			//線描画.
 			DrawLineKR(line);
 		}
@@ -278,12 +283,6 @@ void MenuManager::Draw() {
 				DBL_XY(mLayout.imgPos.x-30 + i - lineThickness / 2, textBoxTopY),
 				mColor.line
 			};
-			//ブレる時に位置をずらす.
-			if (isBlink) {
-				const int add = Calc::RandNum(-5, 5);
-				line.stPos += add;
-				line.edPos += add;
-			}
 			//線描画.
 			DrawLineKR(line);
 		}
@@ -293,12 +292,6 @@ void MenuManager::Draw() {
 				DBL_XY(mLayout.imgPos.x+30 + i - lineThickness / 2, textBoxTopY),
 				mColor.line
 			};
-			//ブレる時に位置をずらす.
-			if (isBlink) {
-				const int add = Calc::RandNum(-5, 5);
-				line.stPos += add;
-				line.edPos += add;
-			}
 			//線描画.
 			DrawLineKR(line);
 		}
@@ -344,56 +337,43 @@ void MenuManager::Draw() {
 
 		switch (selectedIndex)
 		{
-		case 0:
-			str.text = _T("ゲームオーバーになるまで続くエンドレスモード。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-			
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("ハイスコアを目指して頑張ろう！");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("[スコア]");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- 隕石を壊す　　: +500");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- アイテムを取る: +100");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- タイムボーナス: 1秒ごとに +10");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			case 0:
+			{
+				MY_STRING texts[] = {
+					_T("ゲームオーバーになるまで続くエンドレスモード。"),
+					_T("ハイスコアを目指して頑張ろう！"),
+					_T(""),
+					_T("[スコア]"),
+					_T("- 隕石を壊す　　: +500"),
+					_T("- アイテムを取る: +100"),
+					_T("- タイムボーナス: 1秒ごとに +10")
+				};
+				//1行ずつ表示.
+				for (auto& i : texts) {
+					str.text = i;
+					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.pos.y += mLayout.loreLineSpace; //次の行へ.
+				}
+			}
 			break;
 
-		case 1:
-			str.text = _T("基本操作とルールを確認できます。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("STEP1～4まであり、目安は数分で終わります。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP1: 基本について");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP2: アイテムについて");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP3: 反射について");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP4: スコアについて");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			case 1:
+			{
+				MY_STRING texts[] = {
+					_T("基本操作とルールを確認できます。"),
+					_T("STEP1～4まであり、目安は数分で終わります。"),
+					_T("- STEP1: 基本について"),
+					_T("- STEP2: アイテムについて"),
+					_T("- STEP3: 反射について"),
+					_T("- STEP4: スコアについて")
+				};
+				//1行ずつ表示.
+				for (auto& i : texts) {
+					str.text = i;
+					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.pos.y += mLayout.loreLineSpace; //次の行へ.
+				}
+			}
 			break;
 
 		case 2:
