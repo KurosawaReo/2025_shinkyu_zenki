@@ -112,7 +112,7 @@ void ItemManager::ItemSpawn(int idx) {
 
 	//座標の設定.
 	items[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
-	items[idx].pos.y = -ITEM_SIZE;					        		    // 画面上部の少し上から開始
+	items[idx].pos.y = -ITEM_SIZE;					        	    	 // 画面上部の少し上から開始
 	//タイプを決める.
 	if (p_gamedata->level < 5) {
 		items[idx].type = Item_Normal;

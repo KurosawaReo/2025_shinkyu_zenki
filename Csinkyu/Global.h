@@ -135,6 +135,7 @@ enum StageType
 
 //障害物: 落下レーザー(花火用)
 #define LASER_FAL_DEL_TIME				(100)			//消えるまでの時間.
+#define LASER_FAL_HIT_ABLE				(70)			//↑のうち、当たり判定を持たせる時間.
 
 //障害物: 隕石.
 //#define METEOR_CNT_MAX				(50)			//隕石の最大出現数.

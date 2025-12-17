@@ -80,7 +80,7 @@ void LaserManager::Draw() {
 		//レーザー本体.
 		for (const LaserData& i : laser)
 		{
-			UINT color;
+			UINT color{};
 
 			//色を指定.
 			switch (i.type)
@@ -146,9 +146,12 @@ void LaserManager::UpdateLaser() {
 
 			case Laser_Falling:
 			{
-				//レーザーの当たり判定.
-				if (HitLaser(i)) {
-					bool isErase = true;
+				//ある程度薄くなるまで.
+				if (i->counter <= LASER_FAL_HIT_ABLE) {
+					//レーザーの当たり判定.
+					if (HitLaser(i)) {
+						bool isErase = true;
+					}
 				}
 
 				// 重力効果を適用（下向きの加速度）
