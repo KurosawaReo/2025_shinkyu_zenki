@@ -122,7 +122,7 @@ bool MeteorManager::GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
 		if (i.GetState() == Meteor_Normal) {
 
 			DBL_XY tmpPos = i.GetPos();                  //1‚Â‚¸‚ÂÀ•Wæ“¾.
-			double tmpDis = CalcDist(tmpPos, _startPos); //‹——£‚ğŒvZ.
+			double tmpDis = Dist(tmpPos, _startPos); //‹——£‚ğŒvZ.
 
 			//‰‰ñŒÀ’è.
 			if (shortest == -1) {

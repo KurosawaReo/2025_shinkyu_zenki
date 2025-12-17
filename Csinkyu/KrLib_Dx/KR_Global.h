@@ -28,7 +28,7 @@ namespace KR
 	{
 		BYTE r, g, b, a;
 	};
-	//F.
+	//F”Ô†.
 	enum class ColorID
 	{
 		Red,

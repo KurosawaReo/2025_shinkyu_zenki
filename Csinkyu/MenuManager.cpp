@@ -31,6 +31,9 @@ void MenuManager::Init() {
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_tutorial.png"), "menu1"); //チュートリアル.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_title.png"),    "menu2"); //タイトルに戻る.
 
+	//電気の設定.
+//	electr.color = 0xffff00;
+
 	Reset();
 }
 
@@ -46,9 +49,15 @@ void MenuManager::Update() {
 	//カーソル移動操作.
 	if (InputMng::IsPushActionTime("MENU_UP") % 20 == 1) {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
+		OnCursorMove();
 	}
 	if (InputMng::IsPushActionTime("MENU_DOWN") % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
+		OnCursorMove();
+	}
+	//点滅終了.
+	if (tmBlink.GetPassTime() <= 0) {
+		isBlink = false;
 	}
 
 	//決定操作.
@@ -83,6 +92,19 @@ void MenuManager::Update() {
 		}
 	}
 
+	/*
+	//電気の進行率.
+	if (electrRate < 1.0) { 
+		electrRate += MENU_ELECTR_MOVE_SPEED * p_data->speedRate;
+		NumLimMax(&electrRate, 1.0); //上限は1.0
+
+		//前の始点を終点にする.
+		electr.edPos   = electr.stPos;
+		electr.stPos.x += 10;
+		Debug::Log(_T("pos:"), electr.stPos);
+	}
+	*/
+	//経過時間.
 	counter += 1;
 }
 
@@ -91,13 +113,10 @@ void MenuManager::Draw() {
 
 	//アニメーション値.
 	//この値を基準にメニューのアニメーションを制御する.
-	const double cntrAnim1 = sin(counter/ 50 * M_PI);
-	const double cntrAnim2 = sin(counter/100 * M_PI);
-	//デジタル風の点滅用.
-	if (tmBlink.IntervalTime()) {
-		//一定確率で点滅する.
-		isBlink = Calc::RandNum(0, 100) < 10;
-	}
+	const double anim1 = sin(counter/ 50 * M_PI);
+	const double anim2 = sin(counter/100 * M_PI);
+
+//	const double anim3 = electrRate;
 
 	//▼メニュー全体の背景.
 	SetDrawBlendModeKR(BlendModeID::Alpha, 128);
@@ -114,7 +133,7 @@ void MenuManager::Draw() {
 
 		{
 			//アニメーション値.
-			const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter, 120)/120);
+			const double anim1 = Calc::AnimEaseOutIn(fmod(counter, 120)/120);
 			const double anim2 = sin(fmod(counter, 120)/120 * M_PI);
 
 			Line lines[4] = {
@@ -135,7 +154,7 @@ void MenuManager::Draw() {
 		}
 		{
 			//アニメーション値.
-			const double anim1 = Calc::CalcNumEaseOutIn(fmod(counter-20, 120)/120);
+			const double anim1 = Calc::AnimEaseOutIn(fmod(counter-20, 120)/120);
 			const double anim2 = sin(fmod(counter-20, 120)/120 * M_PI);
 
 			Line lines[4] = {
@@ -161,47 +180,55 @@ void MenuManager::Draw() {
 
 	//▼各選択肢.
 	{
-		unsigned int color1 = (selectedIndex == 0) ? mColor.select1 : mColor.normal;
-		unsigned int color2 = (selectedIndex == 1) ? mColor.select1 : mColor.normal;
-		unsigned int color3 = (selectedIndex == 2) ? mColor.select1 : mColor.normal;
-
 		//テキスト & 枠線用.
-		Box box = { mLayout.menuPos.ToDbl(), mLayout.menuBoxSize.ToDbl(), mColor.select1};
-		DrawStr str(_T(""), mLayout.menuPos, {});
+		Box box = { mLayout.menuPos, mLayout.menuSize, mColor.select1};
+		DrawStr str(_T(""), mLayout.menuPos.ToInt(), {});
+		//選択肢テキスト.
+		MY_STRING texts[] = {
+			__T("ゲーム開始"), _T("チュートリアル"), _T("タイトルに戻る")
+		};
+		//テキスト色.
+		unsigned int colors[] = {
+			(selectedIndex == 0) ? mColor.select1 : mColor.normal,
+			(selectedIndex == 1) ? mColor.select1 : mColor.normal,
+			(selectedIndex == 2) ? mColor.select1 : mColor.normal
+		};
 
-		//選択肢1
-		str.text = _T("ゲーム開始");
-		str.color = color1;
-		DrawBoxKR(box, Anchor::Mid, false);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
-
-		//選択肢2
-		box.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.text  = _T("チュートリアル");
-		str.color = color2;
-		DrawBoxKR(box, Anchor::Mid, false);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
-
-		//選択肢3
-		box.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.pos.y += mLayout.menuSpace; //スペースを空ける.
-		str.text  = _T(" タイトルに戻る");
-		str.color = color3;
-		DrawBoxKR(box, Anchor::Mid, false);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+		INT_XY savePos; //保存用.
+		//全選択肢ループ.
+		for (int i = 0; i < 3; i++) {
+			str.text  = texts[i];
+			str.color = colors[i];
+			savePos   = str.pos;  //前の座標を保存.
+			//枠.
+			DrawBoxKR(box, Anchor::Mid, false);
+			//ブレる処理.
+			if (isBlink && selectedIndex == i) {
+				const int add = Calc::RandNum(-5, 5);		 //ずらす量.
+				str.pos += add;								 //位置をずらす.
+				SetDrawBlendModeKR(BlendModeID::Alpha, 128); //透明度変更.
+			}
+			//テキスト.
+			str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+			//戻す.
+			str.pos = savePos;
+			ResetDrawBlendMode();
+			//スペースを空ける.
+			box.pos.y += mLayout.menuSpace;
+			str.pos.y += mLayout.menuSpace;
+		}
 	}
 
 	//▼カーソルの三角.
 	{
 		//基準座標.
-		DBL_XY base = mLayout.menuPos.ToDbl().Add(
-			-mLayout.menuBoxSize.x/2 - 20,      //xの移動量.
-			+mLayout.menuSpace * selectedIndex  //yの移動量.
+		DBL_XY base = mLayout.menuPos.Add(
+			-mLayout.menuSize.x/2 - 20,			//横にずらす.
+			+mLayout.menuSpace * selectedIndex	//縦にずらす.
 		);
 
-		Triangle tri = { {base, base.Add(-20, 10 * cntrAnim1), base.Add(-20, -10 * cntrAnim1)}, {} };
-		tri.color = (cntrAnim1 >= 0) ? mColor.select1 : mColor.select2; //表か裏かで色を変える.
+		Triangle tri = { {base, base.Add(-20, 10 * anim1), base.Add(-20, -10 * anim1)}, {} };
+		tri.color = (anim1 >= 0) ? mColor.select1 : mColor.select2; //表か裏かで色を変える.
 		DrawTriangleKR(tri, true, true);
 	}
 
@@ -210,15 +237,15 @@ void MenuManager::Draw() {
 
 	//▼サムネ画像.
 	{
-		const double ext    = 0.4; //画像描画倍率.
+		const double extend = 0.4; //画像描画倍率.
 		const int    margin = 10;  //枠を画像よりどれだけ大きくするか.
 	
 		string name = "menu" + to_string(selectedIndex);
 		if (auto i = DrawImgMng::Get(name)) {
 			//画像描画.
-			i->DrawExtend(mLayout.imgPos, {ext , ext});
+			i->DrawExtend(mLayout.imgPos, {extend , extend});
 			//画像のサイズ(Extend倍率分小さくする)
-			imgSize = i->GetSize().ToDbl() * ext + margin;
+			imgSize = i->GetSize().ToDbl() * extend + margin;
 			//画像の枠線(位置とサイズは画像に合わせる)
 			Box box = { mLayout.imgPos, imgSize, mColor.frame };
 			DrawBoxKR(box, Anchor::Mid, false);
@@ -233,10 +260,6 @@ void MenuManager::Draw() {
 
 	//▼選択項目から画像、説明文エリアまでの線を描画
 	{
-		// 選択されたメニュー項目の右端座標
-		int menuItemRightX  = mLayout.menuPos.x + mLayout.menuBoxSize.x/2;
-		int menuItemCenterY = mLayout.menuPos.y + mLayout.menuSpace * selectedIndex;
-
 		int imgLeftX   = (int)(mLayout.imgPos.x - imgSize.x/2); //画像の左端座標.
 		int imgCenterY = (int) mLayout.imgPos.y;
 		int imgBottomY = (int)(mLayout.imgPos.y + imgSize.y/2); //画像の下端座標.
@@ -246,62 +269,45 @@ void MenuManager::Draw() {
 		int textBoxTopY = textBoxY;
 
 		//線の透明度(155～255)
-		const int alpha = 155 + 100 * (cntrAnim2 + 1.0) / 2.0;
-		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * ((isBlink) ? 0.5 : 1));
-
-		//線の太さ.
-		//(DrawLineにも太さの設定はあるが、ブレの雰囲気が出てるためあえてこのままのやり方で)
-		const int lineThickness = 3;
+		const int alpha = 155 + 100 * (anim2 + 1.0) / 2.0;
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 		//1.メニュー項目から画像への線（メニュー項目右端から画像左端まで）
-		for (int i = 0; i < lineThickness; i++) {
+		{
 			//線データ.
 			Line line = {
-				DBL_XY(menuItemRightX, menuItemCenterY + i - lineThickness / 2), //pos1
-				DBL_XY(imgLeftX,       menuItemCenterY + i - lineThickness / 2), //pos2
-				mColor.line                                                      //color
+				mLayout.menuPos.Add(mLayout.menuSize.x/2, 0),            //始点.
+				DBL_XY(mLayout.imgPos.x-imgSize.x/2, mLayout.menuPos.y), //終点.
+				mColor.line                                              //色.
 			};
-			//ブレる時に位置をずらす.
-			if (isBlink) {
-				const int add = Calc::RandNum(-5, 5);
-				line.stPos += add;
-				line.edPos += add;
-			}
+			//選択してる所にずらす.
+			line.stPos.y += mLayout.menuSpace * selectedIndex;
+			line.edPos.y += mLayout.menuSpace * selectedIndex;
 			//線描画.
-			DrawLineKR(line);
+			DrawLineKR(line, false, 3.0f);
 		}
 
 		//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
-		for (int i = 0; i < lineThickness; i++) {
+		{
 			Line line = {
-				DBL_XY(mLayout.imgPos.x-30 + i - lineThickness / 2, imgBottomY),
-				DBL_XY(mLayout.imgPos.x-30 + i - lineThickness / 2, textBoxTopY),
-				mColor.line
+				DBL_XY(mLayout.imgPos.x-30, imgBottomY),  //始点.
+				DBL_XY(mLayout.imgPos.x-30, textBoxTopY), //終点.
+				mColor.line								  //色.
 			};
-			//ブレる時に位置をずらす.
-			if (isBlink) {
-				const int add = Calc::RandNum(-5, 5);
-				line.stPos += add;
-				line.edPos += add;
-			}
-			//線描画.
-			DrawLineKR(line);
+			//線1.
+			DrawLineKR(line, false, 3.0f);
+			//線2.
+			line.stPos.x += 60;
+			line.edPos.x += 60;
+			DrawLineKR(line, false, 3.0f);
 		}
-		for (int i = 0; i < lineThickness; i++) {
-			Line line = {
-				DBL_XY(mLayout.imgPos.x+30 + i - lineThickness / 2, imgBottomY),
-				DBL_XY(mLayout.imgPos.x+30 + i - lineThickness / 2, textBoxTopY),
-				mColor.line
-			};
-			//ブレる時に位置をずらす.
-			if (isBlink) {
-				const int add = Calc::RandNum(-5, 5);
-				line.stPos += add;
-				line.edPos += add;
-			}
-			//線描画.
-			DrawLineKR(line);
+
+		/*
+		//3.電気.
+		if (electrRate < 1.0) {
+			DrawLineKR(electr, false, 3.0f);
 		}
+		*/
 
 		ResetDrawBlendMode();
 	}
@@ -310,7 +316,7 @@ void MenuManager::Draw() {
 	{
 		int infoWidth = 500;
 		int infoHeight = textBoxHeight;
-		int infoX = mLayout.menuPos.x - infoWidth/2;
+		int infoX = mLayout.menuPos.x - infoWidth / 2;
 		int infoY = textBoxY;
 
 		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1 };
@@ -344,56 +350,43 @@ void MenuManager::Draw() {
 
 		switch (selectedIndex)
 		{
-		case 0:
-			str.text = _T("ゲームオーバーになるまで続くエンドレスモード。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-			
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("ハイスコアを目指して頑張ろう！");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("[スコア]");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- 隕石を壊す　　: +500");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- アイテムを取る: +100");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- タイムボーナス: 1秒ごとに +10");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			case 0:
+			{
+				MY_STRING texts[] = {
+					_T("ゲームオーバーになるまで続くエンドレスモード。"),
+					_T("ハイスコアを目指して頑張ろう！"),
+					_T(""),
+					_T("[スコア]"),
+					_T("- 隕石を壊す　　: +500"),
+					_T("- アイテムを取る: +100"),
+					_T("- タイムボーナス: 1秒ごとに +10")
+				};
+				//1行ずつ表示.
+				for (auto& i : texts) {
+					str.text = i;
+					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.pos.y += mLayout.loreLineSpace; //次の行へ.
+				}
+			}
 			break;
 
-		case 1:
-			str.text = _T("基本操作とルールを確認できます。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("STEP1～4まであり、目安は数分で終わります。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP1: 基本について");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP2: アイテムについて");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP3: 反射について");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
-
-			str.pos.y += mLayout.loreLineSpace; //次の行へ.
-			str.text = _T("- STEP4: スコアについて");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			case 1:
+			{
+				MY_STRING texts[] = {
+					_T("基本操作とルールを確認できます。"),
+					_T("STEP1～4まであり、目安は数分で終わります。"),
+					_T("- STEP1: 基本について"),
+					_T("- STEP2: アイテムについて"),
+					_T("- STEP3: 反射について"),
+					_T("- STEP4: スコアについて")
+				};
+				//1行ずつ表示.
+				for (auto& i : texts) {
+					str.text = i;
+					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.pos.y += mLayout.loreLineSpace; //次の行へ.
+				}
+			}
 			break;
 
 		case 2:
@@ -402,4 +395,17 @@ void MenuManager::Draw() {
 			break;
 		}
 	}
+}
+
+//カーソル移動時の処理.
+void MenuManager::OnCursorMove() {
+	isBlink = true;  //点滅させる.
+	tmBlink.Start(); //点滅時間計測.
+
+	/*
+	//電気の初期座標.
+	electr.stPos = mLayout.menuPos.Add(mLayout.menuSize.x/2, mLayout.menuSpace * selectedIndex);
+	//電気を動かす.
+	electrRate   = 0.0;
+	*/
 }

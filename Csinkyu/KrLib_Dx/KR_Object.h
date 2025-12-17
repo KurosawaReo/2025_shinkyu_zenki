@@ -56,9 +56,9 @@ namespace KR
 		//計算(Calcの機能)
 		void      FixPosInArea   (DBL_RECT rect);
 		bool      IsOutInArea    (DBL_RECT rect, bool isCompOut);
-		double    CalcDist       (DBL_XY pos);
-		DBL_XY    CalcArcPos     (double ang, double len);
-		double    CalcFacingAng  (DBL_XY targetPos);
+		double    Dist       (DBL_XY pos);
+		DBL_XY    ArcPos     (double ang, double len);
+		double    FacingAng  (DBL_XY targetPos);
 		//操作(Inputの機能)
 		void      MoveKey4Dir    (float speed);
 		void      MovePad4Dir    (float speed);

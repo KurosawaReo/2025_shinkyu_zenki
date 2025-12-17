@@ -10,12 +10,12 @@
 //メニュー設定(レイアウト)
 struct MenuLayout
 {
-	INT_XY menuPos       = {370, 280};				//モードリストの基準位置.
-	INT_XY menuBoxSize   = {400, 70};				//モード1つの枠
-	int    menuSpace     = 100;						//モード枠の配置間隔.
-	int    loreInner     = 15;						//説明文が内側にどれだけずれるか.
-	int    loreLineSpace = 30;						//説明文の行間.
-	DBL_XY imgPos        = {WINDOW_WID-510, 410};	//サムネ画像の基準位置.
+	DBL_XY   menuPos       = {370, 280};					//モード枠の位置.
+	DBL_XY   menuSize      = {400,  70};					//モード枠のサイズ.
+	int      menuSpace     = 100;							//モード枠の配置間隔.
+	int      loreInner     = 15;							//説明文が内側にどれだけずれるか.
+	int      loreLineSpace = 30;							//説明文の行間.
+	DBL_XY   imgPos        = {WINDOW_WID-510, 410};			//サムネ画像の基準位置.
 };
 //メニュー設定(色)
 struct MenuColor 
@@ -48,11 +48,16 @@ private:
 	int       selectedIndex = 0;  //カーソルの選択位置 | 0:ゲーム開始 | 1:チュートリアル | 2:タイトルに戻る |
 	float     counter = 0;        //経過時間.
 
-	//点滅処理.
+	//点滅アニメーション.
 	Timer     tmBlink = Timer(TimerMode::CountDown, 0.1f); //点滅間隔.
 	Timer     tmTitle = Timer(TimerMode::CountDown, 2.5f); //タイトルアニメ用.
 	bool      isBlink = 0;                                 //点滅させる用.
 
+	/*
+	//電気アニメーション.
+	double    electrRate = 0.0;  //電気が線の何割まで進んだか.
+	Line      electr{};          //電気用の線.
+	*/
 	//描画用設定.
 	const MenuLayout mLayout;
 	const MenuColor  mColor;
@@ -66,6 +71,8 @@ public:
 	void Reset();
 	void Update();
 	void Draw();
+
+	void OnCursorMove(); //カーソル移動時の処理.
 	
 	//使用禁止.
 	MenuManager(const MenuManager&) = delete;

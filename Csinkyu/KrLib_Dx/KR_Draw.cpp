@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/12/10
+   ver: 2025/12/17
 */
 #include "KR_Draw.h"
 
@@ -276,19 +276,19 @@ namespace KR
 
 			//[world基準]
 			//カメラ→画像 の距離.
-			const double wrdDist = Calc::CalcDist     (Camera::GetPos(), pos);
+			const double wrdDist = Calc::Dist     (Camera::GetPos(), pos);
 			//カメラ→画像 の角度.
-			const double wrdAng  = Calc::CalcFacingAng(Camera::GetPos(), pos);
+			const double wrdAng  = Calc::FacingAng(Camera::GetPos(), pos);
 
 			//[camera基準]
 			//カメラ→画像 の角度.
 			const double cmrAng = wrdAng - Camera::GetAng();             //カメラの角度を0とする.
 			//カメラ→画像 の位置.
-			const DBL_XY cmrPos = Calc::CalcVectorDeg(cmrAng) * wrdDist; //方向 * 距離.
+			const DBL_XY cmrPos = Calc::VectorDeg(cmrAng) * wrdDist; //方向 * 距離.
 			
 			//描画座標が確定.
 			//カメラ基準にするため、画面の半分ずらす.
-			newPos = cmrPos + App::GetWindowRect().GetMiddle().ToDbl();
+			newPos = cmrPos + App::GetWindowRect().GetMid().ToDbl();
 			//描画角度が確定.
 			newAng -= Camera::GetAng();
 		}
@@ -299,7 +299,10 @@ namespace KR
 			float cx = _flt(img.size.x/2 + pivot.x);
 			float cy = _flt(img.size.y/2 + pivot.y);
 			//float型描画.
-			int err = DrawRotaGraphFast2F(newPos.x, newPos.y, cx, cy, extend, _rad(newAng), img.handle, isTrans);
+			int err = DrawRotaGraphFast2F(
+				_flt(newPos.x), _flt(newPos.y), cx, cy, 
+				_flt(extend), _flt(_rad(newAng)), img.handle, isTrans
+			);
 			if (err < 0) {
 				return {-1, _T("DrawImg::DrawRota"), _T("DrawRotaGraph2Fエラー") };
 			}
@@ -309,7 +312,10 @@ namespace KR
 			int cx = img.size.x/2 + pivot.x;
 			int cy = img.size.y/2 + pivot.y;
 			//int型描画.
-			int err = DrawRotaGraphFast2(_int_r(newPos.x), _int_r(newPos.y), cx, cy, extend, _rad(newAng), img.handle, isTrans);
+			int err = DrawRotaGraphFast2(
+				_int_r(newPos.x), _int_r(newPos.y), cx, cy, _flt(extend), 
+				_flt(_rad(newAng)), img.handle, isTrans
+			);
 			if (err < 0) {
 				return {-2, _T("DrawImg::DrawRota"), _T("DrawRotaGraph2エラー")};
 			}
@@ -735,8 +741,8 @@ namespace KR
 		ResultInt err; //エラー判定用.
 
 		//ベクトルを求める.
-		DBL_XY vec1 = Calc::CalcVectorDeg(pie.stAng);             //扇の始まりの角度.
-		DBL_XY vec2 = Calc::CalcVectorDeg(pie.stAng+pie.arcAng); //扇の終わりの角度.
+		DBL_XY vec1 = Calc::VectorDeg(pie.stAng);             //扇の始まりの角度.
+		DBL_XY vec2 = Calc::VectorDeg(pie.stAng+pie.arcAng); //扇の終わりの角度.
 		//座標を求める.
 		DBL_XY pos1 = newPos + vec1 * pie.r;
 		DBL_XY pos2 = newPos + vec2 * pie.r;
@@ -775,8 +781,8 @@ namespace KR
 			double ang2 = i + addAng + 1;
 			ang2 = min(ang2, edAng);      //上限.
 			//座標の設定.
-			DBL_XY pos1 = Calc::CalcArcPos(newPos, ang1, pie.r); //繋ぎ目が綺麗になるよう角度を-1する.
-			DBL_XY pos2 = Calc::CalcArcPos(newPos, ang2, pie.r); //繋ぎ目が綺麗になるよう角度を+1する.
+			DBL_XY pos1 = Calc::ArcPos(newPos, ang1, pie.r); //繋ぎ目が綺麗になるよう角度を-1する.
+			DBL_XY pos2 = Calc::ArcPos(newPos, ang2, pie.r); //繋ぎ目が綺麗になるよう角度を+1する.
 			Line line = { pos1, pos2, pie.color };
 			//線を描画.
 			ResultInt err = DrawLineKR(line, isAnti, thick);
@@ -826,8 +832,8 @@ namespace KR
 		}
 
 		//座標.
-		VECTOR vec1 = { newPos[0].x, newPos[0].y, newPos[0].z };
-		VECTOR vec2 = { newPos[1].x, newPos[1].y, newPos[1].z };
+		VECTOR vec1 = { _flt(newPos[0].x), _flt(newPos[0].y), _flt(newPos[0].z) };
+		VECTOR vec2 = { _flt(newPos[1].x), _flt(newPos[1].y), _flt(newPos[1].z) };
 		//描画.
 		int err = DrawCube3D(vec1, vec2, box.difColor.GetColorCode(), box.spcColor.GetColorCode(), isFill);
 		if (err < 0) {

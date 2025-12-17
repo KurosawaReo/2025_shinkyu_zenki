@@ -69,7 +69,7 @@ public:
 	void SetReflectFinish(bool _flag) { isReflectFinish = _flag; }
 	void SetBreakMeteor  (bool _flag) { isBreakMeteor   = _flag; }
 	//get
-	int GetStepNo() const { return stepNo; }
+	int  GetStepNo() const { return stepNo; }
 
 	void Init();
 	void Reset();

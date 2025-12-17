@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2025/12/01
+   ver.2025/12/17
 
    KrLib全体で使う汎用機能を追加。
 */
@@ -297,7 +297,7 @@ namespace KR
 	using INT_XYZ = XYZ<int>;    //int型.
 	using DBL_XYZ = XYZ<double>; //double型.
 
-	//上下左右.
+	//四角形型.
 	template<typename T, _type_num_only(T)>
 	struct RECT
 	{
@@ -314,10 +314,27 @@ namespace KR
 		RECT<double> ToDbl() const {
 			return { _dbl(left), _dbl(up), _dbl(right), _dbl(down) };
 		}
-		//中央位置を取得.
-		XY<T> GetMiddle() {
-			return {(right+left)/2, (up+down)/2};
-		}
+
+		//サイズ.
+		XY<T> GetSize() const { return { right-left, down-up }; }
+		//左中央.
+		XY<T> GetL()    const { return { left,  (up+down)/2 }; }
+		//右中央.
+		XY<T> GetR()    const { return { right, (up+down)/2 }; }
+		//上中央.
+		XY<T> GetU()    const { return { (left+right)/2, up   }; }
+		//下中央.
+		XY<T> GetD()    const { return { (left+right)/2, down }; }
+		//左上.
+		XY<T> GetLU()   const { return { left,  up   }; }
+		//右上.
+		XY<T> GetRU()   const { return { right, up   }; }
+		//左下.
+		XY<T> GetLD()   const { return { left,  down }; }
+		//右下.
+		XY<T> GetRD()   const { return { right, down }; }
+		//中央.
+		XY<T> GetMid()  const { return { (left+right)/2, (up+down)/2 }; }
 	};
 	using INT_RECT = RECT<int>;    //int型.
 	using DBL_RECT = RECT<double>; //double型.
@@ -346,9 +363,24 @@ namespace KR
 		}
 	};
 
-	//値が範囲内かどうか.
+	//<T> 数値が範囲内か.
 	template<typename T, _type_num_only(T)>
-	bool IsInRange(T num, T min, T max) {
-		return (min <= num && num <= max);
+	bool IsNumInRange(T _num, T _min, T _max) {
+		return (_min <= _num && _num <= _max);
+	}
+	//<T> 数値の上限.
+	template<typename T, _type_num_only(T)>
+	void NumLimMax(T* _num, T _max) {
+		*_num = std::min(*_num, _max);
+	}
+	//<T> 数値の下限.
+	template<typename T, _type_num_only(T)>
+	void NumLimMin(T* _num, T _min) {
+		*_num = std::max(*_num, _min);
+	}
+	//<T> 数値の範囲.
+	template<typename T, _type_num_only(T)>
+	void NumLimRange(T* num, T low, T high) {
+		*num = std::max(low, std::min(*num, high));
 	}
 }
