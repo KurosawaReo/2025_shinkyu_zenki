@@ -53,10 +53,11 @@ private:
 	Timer     tmTitle = Timer(TimerMode::CountDown, 2.5f); //タイトルアニメ用.
 	bool      isBlink = 0;                                 //点滅させる用.
 
+	/*
 	//電気アニメーション.
 	double    electrRate = 0.0;  //電気が線の何割まで進んだか.
-	DBL_XY    electrPos{};       //電気の座標.
-
+	Line      electr{};          //電気用の線.
+	*/
 	//描画用設定.
 	const MenuLayout mLayout;
 	const MenuColor  mColor;
@@ -70,6 +71,8 @@ public:
 	void Reset();
 	void Update();
 	void Draw();
+
+	void OnCursorMove(); //カーソル移動時の処理.
 	
 	//使用禁止.
 	MenuManager(const MenuManager&) = delete;

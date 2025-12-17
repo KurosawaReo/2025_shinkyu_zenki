@@ -31,6 +31,9 @@ void MenuManager::Init() {
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_tutorial.png"), "menu1"); //チュートリアル.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_title.png"),    "menu2"); //タイトルに戻る.
 
+	//電気の設定.
+//	electr.color = 0xffff00;
+
 	Reset();
 }
 
@@ -46,13 +49,11 @@ void MenuManager::Update() {
 	//カーソル移動操作.
 	if (InputMng::IsPushActionTime("MENU_UP") % 20 == 1) {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
-		isBlink = true;								 //点滅させる.
-		tmBlink.Start();
+		OnCursorMove();
 	}
 	if (InputMng::IsPushActionTime("MENU_DOWN") % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
-		isBlink = true;								 //点滅させる.
-		tmBlink.Start();
+		OnCursorMove();
 	}
 	//点滅終了.
 	if (tmBlink.GetPassTime() <= 0) {
@@ -91,11 +92,20 @@ void MenuManager::Update() {
 		}
 	}
 
+	/*
+	//電気の進行率.
+	if (electrRate < 1.0) { 
+		electrRate += MENU_ELECTR_MOVE_SPEED * p_data->speedRate;
+		NumLimMax(&electrRate, 1.0); //上限は1.0
+
+		//前の始点を終点にする.
+		electr.edPos   = electr.stPos;
+		electr.stPos.x += 10;
+		Debug::Log(_T("pos:"), electr.stPos);
+	}
+	*/
 	//経過時間.
 	counter += 1;
-	//電気の進行率.
-	electrRate += MENU_ELECTR_MOVE_SPEED * p_data->speedRate;
-	NumLimMax(&electrRate, 1.0); //上限は1.0
 }
 
 // 描画
@@ -106,8 +116,7 @@ void MenuManager::Draw() {
 	const double anim1 = sin(counter/ 50 * M_PI);
 	const double anim2 = sin(counter/100 * M_PI);
 
-//	const double anim3 = Calc::AnimEaseIn();
-	const double anim3 = electrRate;
+//	const double anim3 = electrRate;
 
 	//▼メニュー全体の背景.
 	SetDrawBlendModeKR(BlendModeID::Alpha, 128);
@@ -278,8 +287,6 @@ void MenuManager::Draw() {
 			DrawLineKR(line, false, 3.0f);
 		}
 
-		anim3;
-
 		//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
 		{
 			Line line = {
@@ -294,6 +301,13 @@ void MenuManager::Draw() {
 			line.edPos.x += 60;
 			DrawLineKR(line, false, 3.0f);
 		}
+
+		/*
+		//3.電気.
+		if (electrRate < 1.0) {
+			DrawLineKR(electr, false, 3.0f);
+		}
+		*/
 
 		ResetDrawBlendMode();
 	}
@@ -381,4 +395,17 @@ void MenuManager::Draw() {
 			break;
 		}
 	}
+}
+
+//カーソル移動時の処理.
+void MenuManager::OnCursorMove() {
+	isBlink = true;  //点滅させる.
+	tmBlink.Start(); //点滅時間計測.
+
+	/*
+	//電気の初期座標.
+	electr.stPos = mLayout.menuPos.Add(mLayout.menuSize.x/2, mLayout.menuSpace * selectedIndex);
+	//電気を動かす.
+	electrRate   = 0.0;
+	*/
 }

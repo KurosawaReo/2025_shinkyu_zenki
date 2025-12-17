@@ -20,8 +20,8 @@ void ItemManager::Init()
 	p_effectMng = &EffectManager::GetInst();
 
 	//‰æ‘œ.
-	DrawImgMng::LoadFile(_T("Resources/Images/item.png"),          "item");
-	DrawImgMng::LoadFile(_T("Resources/Images/light_color_2.png"), "item_light");
+	DrawImgMng::LoadFile(_T("Resources/Images/item.png"),            "item");
+	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "item_light");
 }
 //ƒŠƒZƒbƒg.
 void ItemManager::Reset()
