@@ -194,7 +194,7 @@ void LaserManager::UpdateLaser() {
 					const bool hasMeteo = p_meteorMng->GetMeteorPosNearest(laserPos, &meteoPos);
 					//隕石があった場合.
 					if (hasMeteo) {
-						i->goalPos = meteoPos; //登録.
+						i->goalPos  = meteoPos; //登録.
 						i->isGoGoal = true;
 					}
 				}
@@ -299,14 +299,17 @@ void LaserManager::UpdateLaserLine() {
 //レーザー召喚.
 void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 
-	LaserData tmp;		//レーザー作成.
+	LaserData tmp;			//レーザー作成.
 
-	tmp.nowPos  = pos;	//初期座標.
-	tmp.befPos  = pos;	//初期座標.
-	tmp.vec     = vel;	//初期方向.
-	tmp.counter = 0;	// 経過時間カウンタ初期化
-	tmp.logNum  = 0;	// 軌跡カウンタ初期化
-	tmp.type    = type;	// タイプの登録
+	tmp.nowPos   = pos;		//初期座標.
+	tmp.befPos   = pos;		//初期座標.
+	tmp.vec      = vel;		//初期方向.
+	tmp.counter  = 0;		//経過時間カウンタ初期化
+	tmp.logNum   = 0;		//軌跡カウンタ初期化
+	tmp.type     = type;	//タイプの登録
+
+	tmp.isGoGoal = false;
+	tmp.goalPos  = {0, 0};
 
 	laser.push_back(tmp); //listに追加.
 
@@ -429,8 +432,12 @@ void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 //レーザー(reflected)の隕石追尾.
 void LaserManager::LaserRefTracking(list<LaserData>::iterator it)
 {
+	Debug::Log(L"a");
+
 	//目標地点に向かうなら.
 	if (it->isGoGoal) {
+		Debug::Log(L"b");
+
 		//一定時間のみ追尾.
 		if (it->counter > LASER_REF_TRACK_ST_TM &&
 			it->counter < LASER_REF_TRACK_ED_TM)

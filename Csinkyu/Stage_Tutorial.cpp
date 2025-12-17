@@ -379,10 +379,12 @@ void TutorialStage::UpdateStep4() {
 		{
 			//[終了条件] 一定時間が経過したら
 			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 5.0) {
+#if !defined BGM_NONE
 				//BGMフェードアウト.
 				if (auto i = SoundMng::Get("BGM_Tutorial")) {
 					i->FadeOutPlay(TUTORIAL_END_NEXT_TIME); //再生.
 				}
+#endif
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
