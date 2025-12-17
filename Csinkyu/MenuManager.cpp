@@ -94,6 +94,11 @@ void MenuManager::Update() {
 
 			default: assert(FALSE); break;
 		}
+
+		//サウンド.
+		if (auto i = SoundMng::Get("MenuOK")) {
+			i->Play(false, 70);
+		}
 	}
 
 	/*
@@ -403,8 +408,14 @@ void MenuManager::Draw() {
 
 //カーソル移動時の処理.
 void MenuManager::OnCursorMove() {
+
 	isBlink = true;  //点滅させる.
 	tmBlink.Start(); //点滅時間計測.
+
+	//サウンド.
+	if (auto i = SoundMng::Get("MenuCursor")) {
+		i->Play(false, 70);
+	}
 
 	/*
 	//電気の初期座標.

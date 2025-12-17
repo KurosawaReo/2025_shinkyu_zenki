@@ -274,6 +274,8 @@ void GameManager::Init() {
 	SoundMng::LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		 "BGM_Endless");  //耐久モードBGM.
 	SoundMng::LoadFile(_T("Resources/Sounds/bgm/命ナキ者ノ詩.mp3"),		     "BGM_Over");     //ゲームオーバーBGM.
 
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1636674.mp3"),	 "MenuCursor");	  //メニューカーソル音.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1636651.mp3"),	 "MenuOK");		  //メニュー決定音.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		 "ItemUse"); 	  //アイテム発動.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"), "CountDown");	  //カウントダウン.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		 "PowerDown");	  //アイテム解除.
@@ -470,13 +472,17 @@ void GameManager::Draw() {
 
 		default: assert(FALSE); break;
 	}
+	effectMng->Draw(); //エフェクト.
 
+	//ポーズ画面.
+	if (gameData->isPause) {
+		DrawPause();
+	}
+	
 	//fps表示用.
 #if defined DEBUG_SHOW_FPS
 	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("FPS: %f"), tmFps.GetFps());
 #endif
-
-	effectMng->Draw(); //エフェクト.
 }
 
 //通常レーザーのリセット.
@@ -898,6 +904,12 @@ void GameManager::GamePauseEnd() {
 	}
 	bg->RestartAnim();
 }
+//ポーズ画面.
+void GameManager::DrawPause() {
+	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
+	str.Draw(Anchor::Mid, gameData->font4);
+}
+
 //ゲーム終了(死亡)
 void GameManager::GameOver() {
 
