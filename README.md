@@ -123,7 +123,7 @@
 
 ▼`レベルアップアニメーション`
 
-<img src="_readme_img/anim_level.gif">
+<img src="_readme_img/anim_levelup.gif">
 <br>
 
 > ### 隕石
@@ -131,7 +131,7 @@
 1. 隕石の線の数を抽選
 2. 隕石の中心から、頂点をどのくらいの距離離すかを抽選
 
-<img src="_readme_img/meteor1"> <img src="_readme_img/meteor2.png"> <img src="_readme_img/meteor3.png">
+<img src="_readme_img/meteor1.png"> <img src="_readme_img/meteor2.png"> <img src="_readme_img/meteor3.png">
 
 また、隕石が壊れた時の演出にもこだわり、壊した時の気持ち良さが出るよう工夫しました。
 
