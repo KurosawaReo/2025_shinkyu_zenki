@@ -80,7 +80,7 @@ void LaserManager::Draw() {
 		//レーザー本体.
 		for (const LaserData& i : laser)
 		{
-			UINT color;
+			UINT color{};
 
 			//色を指定.
 			switch (i.type)
@@ -146,9 +146,12 @@ void LaserManager::UpdateLaser() {
 
 			case Laser_Falling:
 			{
-				//レーザーの当たり判定.
-				if (HitLaser(i)) {
-					bool isErase = true;
+				//ある程度薄くなるまで.
+				if (i->counter <= LASER_FAL_HIT_ABLE) {
+					//レーザーの当たり判定.
+					if (HitLaser(i)) {
+						bool isErase = true;
+					}
 				}
 
 				// 重力効果を適用（下向きの加速度）
@@ -212,7 +215,7 @@ void LaserManager::UpdateLaser() {
 					for (int j = 0; j < METEOR_BREAK_ANIM_CNT; j++) {
 
 						double newDig = deg + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-						data.vec   = CalcVectorDeg(newDig);                 //ずらした角度を反映.
+						data.vec   = VectorDeg(newDig);                 //ずらした角度を反映.
 						data.speed = (float)RandNum(20, 100)/10;            //速度抽選.
 						data.len   = (float)RandNum(10, 150)/10;            //長さ抽選.
 						data.ang   = (float)RandNum(0, 3599)/10;            //角度抽選.
@@ -395,7 +398,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator it)
 void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 
 	//前回描画した位置からの距離.
-	const double dis = CalcDist(it->nowPos, it->befPos);
+	const double dis = Dist(it->nowPos, it->befPos);
 
 	//長さが一定以上あれば描画線を出す(DrawLineAAの関係上)
 	if (dis >= LASER_LINE_DRAW_LEN) {
@@ -413,7 +416,7 @@ void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 			//落下レーザー消滅時間が、レーザー描画線消滅時間に合わさるよう計算.
 			tmp.counter = it->counter * LASER_LINE_DEL_TIME / LASER_FAL_DEL_TIME;
 			//アニメーション曲線の調整.
-			const double anim = CalcNumEaseOut(tmp.counter / LASER_LINE_DEL_TIME);
+			const double anim = AnimEaseOut(tmp.counter / LASER_LINE_DEL_TIME);
 			tmp.counter *= _flt(anim);
 		}
 
@@ -473,8 +476,14 @@ bool LaserManager::IsExistEnemyLaser(DBL_XY pos, float len) {
 			i.type == Laser_Straight ||
 			i.type == Laser_Falling)
 		{
+			//消えかかってる落下レーザーは除外.
+			if (i.type == Laser_Falling &&
+				i.counter > LASER_FAL_HIT_ABLE) 
+			{
+				continue;
+			}
 			//距離が範囲内ならtrueを返す.
-			if (CalcDist(pos, i.nowPos) <= len) {
+			if (Dist(pos, i.nowPos) <= len) {
 				return true; 
 			}
 		}

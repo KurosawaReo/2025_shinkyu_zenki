@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/12/09
+   ver: 2025/12/17
 */
 #include "KR_Calc.h"
 
@@ -43,10 +43,10 @@ namespace KR
 			DBL_XY nearest = cir.pos;
 
 			//円の中心から一番近い四角形の点を求める.
-			ClampNum(&nearest.x, box.pos.x - box.size.x/2, box.pos.x + box.size.x/2);
-			ClampNum(&nearest.y, box.pos.y - box.size.y/2, box.pos.y + box.size.y/2);
+			NumLimRange(&nearest.x, box.pos.x - box.size.x/2, box.pos.x + box.size.x/2);
+			NumLimRange(&nearest.y, box.pos.y - box.size.y/2, box.pos.y + box.size.y/2);
 			//円の中心との距離.
-			double dis = CalcDist(cir.pos, nearest);
+			double dis = Dist(cir.pos, nearest);
 
 			return (dis <= cir.r); //距離が半径以下ならhit.
 		}
@@ -82,15 +82,15 @@ namespace KR
 			//線の中点～円の中心の距離.
 			double dis2;
 			{
-				double x = cir.pos.x - CalcMidPos(line.stPos, line.edPos).x;
-				double y = cir.pos.y - CalcMidPos(line.stPos, line.edPos).y;
+				double x = cir.pos.x - MidPos(line.stPos, line.edPos).x;
+				double y = cir.pos.y - MidPos(line.stPos, line.edPos).y;
 				//距離: d = √(x^2 + y^2) (三平方の定理)
 				dis2 = sqrt(x*x + y*y);
 			}
 
 			//hit条件.
 			if (dis1 <= cir.r &&                                   //条件1: 線に触れている.
-				dis2 <= CalcDist(line.stPos, line.edPos)/2 + cir.r //条件2: 線を直径とする円に触れている.
+				dis2 <= Dist(line.stPos, line.edPos)/2 + cir.r //条件2: 線を直径とする円に触れている.
 			){
 				return true;
 			}
@@ -100,10 +100,10 @@ namespace KR
 		bool HitPie(const Pie& pie, DBL_XY pos) {
 
 			//扇形の中心からの距離.
-			double distLen = CalcDist(pie.pos, pos);
+			double distLen = Dist(pie.pos, pos);
 
 			//扇形の中心からの角度.
-			double ang = CalcFacingAng(pie.pos, pos);
+			double ang = FacingAng(pie.pos, pos);
 			//扇形の中心角.
 			double centerAng = pie.stAng+pie.arcAng/2;
 			//角度差(1.0～-1.0の範囲, 距離差が少ないほど1.0に近づく)
@@ -149,14 +149,14 @@ namespace KR
 
 		//距離を求める.
 		//[座標1,座標2 → 長さ]
-		double CalcDist(INT_XY pos1, INT_XY pos2) {
+		double Dist(INT_XY pos1, INT_XY pos2) {
 
 			double x = pos1.x - pos2.x; //xの差.
 			double y = pos1.y - pos2.y; //yの差.
 
 			return sqrt(x*x + y*y); //斜辺の長さを返す.
 		}
-		double CalcDist(DBL_XY pos1, DBL_XY pos2) {
+		double Dist(DBL_XY pos1, DBL_XY pos2) {
 
 			double x = pos1.x - pos2.x; //xの差.
 			double y = pos1.y - pos2.y; //yの差.
@@ -165,7 +165,7 @@ namespace KR
 		}
 		//中点座標を求める.
 		//[座標1,座標2 → 中点座標]
-		DBL_XY CalcMidPos(DBL_XY pos1, DBL_XY pos2) {
+		DBL_XY MidPos(DBL_XY pos1, DBL_XY pos2) {
 
 			double x = (pos1.x + pos2.x)/2; //xの平均.
 			double y = (pos1.y + pos2.y)/2; //yの平均.
@@ -174,7 +174,7 @@ namespace KR
 		}
 		//角度と長さから円周上の座標を求める.
 		//[座標1,角度,長さ → 座標2]
-		DBL_XY CalcArcPos(DBL_XY pos, double ang, double len) {
+		DBL_XY ArcPos(DBL_XY pos, double ang, double len) {
 
 			//角度をradに変換し、座標の計算.
 			double x = cos(_rad(ang)) * len;
@@ -185,7 +185,7 @@ namespace KR
 		//始点座標から対象座標への方向を求める.
 		//[座標1,座標2 → 角度]
 		//[返り値:-180.0～180.0]
-		double CalcFacingAng(DBL_XY from, DBL_XY to) {
+		double FacingAng(DBL_XY from, DBL_XY to) {
 			//座標差.
 			double disX = to.x - from.x;
 			double disY = to.y - from.y;
@@ -193,21 +193,21 @@ namespace KR
 			return _deg(atan2(disY, disX));
 		}
 		//角度から座標を求める.
-		DBL_XY CalcVectorDeg(double deg) {
+		DBL_XY VectorDeg(double deg) {
 			//座標vector(-1.0～+1.0)を返す.
 			return { cos(_rad(deg)), sin(_rad(deg)) };
 		}
 		//角度から座標を求める.
-		DBL_XY CalcVectorRad(double rad) {
+		DBL_XY VectorRad(double rad) {
 			//座標vector(-1.0～+1.0)を返す.
 			return { cos(rad), sin(rad) };
 		}
 
 		//慣性の法則.
 		//accel = 加速度, flic = 摩擦.
-		void CalcSpeedInertia(double* speed, double maxSpeed, double accel, double fric) {
+		void PhysicsSpeedInertia(double* speed, double maxSpeed, double accel, double fric) {
 
-			ClampNum(&fric, 0.0, 1.0); //1.0～0.0の範囲.
+			NumLimRange(&fric, 0.0, 1.0); //1.0～0.0の範囲.
 			accel = max(accel, 0.0);   //下限は0.0
 
 			*speed += accel;
@@ -218,23 +218,23 @@ namespace KR
 		}
 
 		//ease-in: 徐々に加速.
-		double CalcNumEaseIn(double time) {
-			ClampNum(&time, 0.0, 1.0); //0.0～1.0の範囲.
+		double AnimEaseIn(double time) {
+			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
 			return time * time;
 		}
 		//ease-out: 徐々に減速.
-		double CalcNumEaseOut(double time) {
-			ClampNum(&time, 0.0, 1.0); //0.0～1.0の範囲.
+		double AnimEaseOut(double time) {
+			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
 			return 1 - (1-time) * (1-time);
 		}
 		//ease-in-out: 徐々に加速して減速.
-		double CalcNumEaseInOut(double time) {
-			ClampNum(&time, 0.0, 1.0); //0.0～1.0の範囲.
+		double AnimEaseInOut(double time) {
+			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
 			return 0.5 * (1.0 - cos(M_PI*time)); //cosの返り値は 1.0→-1.0
 		}
 		//ease-out-in: 徐々に減速して加速.
-		double CalcNumEaseOutIn(double time) {
-			ClampNum(&time, 0.0, 1.0); //0.0～1.0の範囲.
+		double AnimEaseOutIn(double time) {
+			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
 			if (time < 0.5) {
 				//0.0→0.5まで.
 				return 0.5 * sin(M_PI*time);
@@ -245,7 +245,7 @@ namespace KR
 			}
 		}
 		//wave loop: cos波のループ(0.0～1.0)
-		double CalcNumWaveLoop(double time) {
+		double AnimWaveLoop(double time) {
 			return 0.5 - cos(M_PI*time)/2;
 		}
 

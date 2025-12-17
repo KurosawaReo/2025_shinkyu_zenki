@@ -20,8 +20,8 @@ void ItemManager::Init()
 	p_effectMng = &EffectManager::GetInst();
 
 	//画像.
-	DrawImgMng::LoadFile(_T("Resources/Images/item.png"),          "item");
-	DrawImgMng::LoadFile(_T("Resources/Images/light_color_2.png"), "item_light");
+	DrawImgMng::LoadFile(_T("Resources/Images/item.png"),            "item");
+	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "item_light");
 }
 //リセット.
 void ItemManager::Reset()
@@ -85,7 +85,7 @@ void ItemManager::Draw()
 		//有効なアイテムを描画.
 		if (items[i].active) {
 			
-			SetDrawBlendModeKR(BlendModeID::Alpha, 155 + 100*CalcNumWaveLoop(items[i].counter/30)); //点滅.
+			SetDrawBlendModeKR(BlendModeID::Alpha, 155 + 100*AnimWaveLoop(items[i].counter/30)); //点滅.
 			
 			//強化演出.
 			if (items[i].type == Item_Super) {
@@ -112,7 +112,7 @@ void ItemManager::ItemSpawn(int idx) {
 
 	//座標の設定.
 	items[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
-	items[idx].pos.y = -ITEM_SIZE;					        		    // 画面上部の少し上から開始
+	items[idx].pos.y = -ITEM_SIZE;					        	    	 // 画面上部の少し上から開始
 	//タイプを決める.
 	if (p_gamedata->level < 5) {
 		items[idx].type = Item_Normal;

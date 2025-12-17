@@ -101,7 +101,7 @@ void BackGround::Draw() {
 	float pass = GameManager::GetInst().GetReflectModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
-	time = CalcNumEaseOut(time); //値の曲線変動.
+	time = AnimEaseOut(time); //値の曲線変動.
 
 	//各タイル描画.
 	for (auto& i : tiles) {

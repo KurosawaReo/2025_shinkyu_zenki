@@ -34,8 +34,8 @@ namespace KR
 	void Camera::AddPos(DBL_XY _pos, bool isLocal) {
 		//local: 角度を考慮して加算.
 		if (isLocal) {
-			DBL_XY vec  = Calc::CalcVectorDeg(inst.cameraAng-90);
-			double dist = Calc::CalcDist     (DBL_XY(0, 0), _pos);
+			DBL_XY vec  = Calc::VectorDeg(inst.cameraAng-90);
+			double dist = Calc::Dist     (DBL_XY(0, 0), _pos);
 			inst.cameraPos.x += vec.x * dist;
 			inst.cameraPos.y += vec.y * dist;
 		}
@@ -53,6 +53,6 @@ namespace KR
 	//カメラ基準座標取得(描画用)
 	DBL_XY Camera::GetCameraPos() {
 		//カメラの座標は画面中央に来るようにする.
-		return inst.GetPos() - App::GetWindowRect().GetMiddle().ToDbl();
+		return inst.GetPos() - App::GetWindowRect().GetMid().ToDbl();
 	}
 }

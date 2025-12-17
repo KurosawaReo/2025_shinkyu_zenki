@@ -1,8 +1,8 @@
 ﻿/*--------------------------------------------------------/
    - REFLECT LINE -
 
-   (日本語表記: リフレクトライン)
-   (略称　　　: REFLINE/リフライン)
+   日本語表記: リフレクトライン
+   略称　　　: REFLINE(リフライン)
 /---------------------------------------------------------/
    TODOメモ
 
@@ -29,9 +29,9 @@
    4.反射したレーザーが隕石に当たると壊れる(可能なら壊れるアニメーションを入れたい)
    課題点: どうやって隕石の座標を取得するか.
 
-   小田島 →レーザーの反射
-   黒澤　 →線で構成された多角形の隕石
-
+   [今後の制作予定]
+   小田島: レーザーの反射
+   黒澤　: 線で構成された多角形の隕石
    [余裕があれば]
    ・FPSはm秒待機ではなく、時間計測で測りたい
 
@@ -120,10 +120,15 @@
 
    2025/12/17:
    思いついた案。
-   レーザーを跳ね返して隕石を破壊するというのが限定的すぎる気がした。
-   説明もしにくいし、直感的に理解しにくい。
-   から、他の障害物も反射したり破壊できるようにしてもいいかもとは思った。
+   ・レーザーを跳ね返して隕石を破壊するというのが限定的すぎる気がした。
+   　他の障害物も反射したり破壊できるようにしてもいいかも?
+   ・背景デザインにバリエーションを追加する。
+   　例: プログラムのコードを横に流れるように動かす。
+	 例: カラーコードを流す。
 
+   [今後の制作担当]
+   直斗: ステージ選択画面.
+   怜旺: ステージ本体.
 /---------------------------------------------------------/
    [チュートリアル配分]
    step1: 移動, よける
@@ -241,7 +246,7 @@ void GameManager::Init() {
 	srand((unsigned)time(NULL)); //乱数初期化.
 
 	//カメラ位置.
-	Camera::SetPos(App::GetWindowRect().GetMiddle().ToDbl());
+	Camera::SetPos(App::GetWindowRect().GetMid().ToDbl());
 	
 	//実体生成.
 	laserNor1   = new NormalLaser_1();
@@ -633,7 +638,7 @@ void GameManager::DrawTitle() {
 		//切り替え前.
 		if (tmScene[SCENE_TITLE].GetPassTime() < delay1) {
 			//アニメーション値.
-			double anim = CalcNumEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
+			double anim = AnimEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim);
 			DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY}, imgSize, Anchor::Mid, true, true);
@@ -641,8 +646,8 @@ void GameManager::DrawTitle() {
 		//切り替え後.
 		else {
 			//アニメーション値.
-			double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
-			double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
+			double anim1 = AnimEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
+			double anim2 = AnimEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
 			//ロゴ1枚目.
 			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * (1-anim2));
 			DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
@@ -660,8 +665,8 @@ void GameManager::DrawTitle() {
 		const int drawY = WINDOW_HEI/2 + 130;
 
 		//アニメーション値.
-		double anim1 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
-		double anim2 = CalcNumEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
+		double anim1 = AnimEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay3)/1.5);
+		double anim2 = AnimEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay2)/1.5);
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
@@ -683,7 +688,7 @@ void GameManager::DrawTitle() {
 		const int drawY = WINDOW_HEI/2+310;
 
 		//アニメーション値.
-		double anim = CalcNumWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
+		double anim = AnimWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
 		
@@ -705,7 +710,7 @@ void GameManager::DrawTitle() {
 			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
 				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-				data.vec   = CalcVectorDeg(newDig);                 //ずらした角度を反映.
+				data.vec   = VectorDeg(newDig);                 //ずらした角度を反映.
 				data.speed = ((float)RandNum(20, 100)/10) * 1.4f;   //速度抽選.
 				data.len   = ((float)RandNum(10, 150)/10) * 1.4f;   //長さ抽選.
 				data.ang   =  (float)RandNum(0, 3599)/10;           //角度抽選.
@@ -753,7 +758,7 @@ void GameManager::DrawEnd() {
 	}
 	//黒フィルター.
 	{
-		double anim = CalcNumEaseInOut(tmScene[SCENE_END].GetPassTime()); //アニメーション値.
+		double anim = AnimEaseInOut(tmScene[SCENE_END].GetPassTime()); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
 
 		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);
@@ -766,7 +771,7 @@ void GameManager::DrawEnd() {
 	if (gameData->stage == STAGE_TUTORIAL) {
 		
 		//アニメーション値.
-		double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
+		double anim = AnimEaseOut(tmScene[SCENE_END].GetPassTime());
 		//テキスト.
 		DrawStr str(_T("チュートリアルではその場で復活します..."), {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FFFF);
 
@@ -784,7 +789,7 @@ void GameManager::DrawEnd() {
 		//終了案内.
 		{
 			//アニメーション値.
-			double anim = CalcNumEaseOut(tmScene[SCENE_END].GetPassTime());
+			double anim = AnimEaseOut(tmScene[SCENE_END].GetPassTime());
 
 			//スコア表示.
 			TCHAR text[256];
@@ -813,7 +818,7 @@ void GameManager::DrawEnd() {
 			if (isBestScore) {
 
 				//アニメーション値.
-				double anim = CalcNumEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
+				double anim = AnimEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
 				DrawImgMng::Get("new_record")->DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, Anchor::Mid, true, true); //NEW RECORD
@@ -831,7 +836,7 @@ void GameManager::DrawEnd() {
 		if (tmScene[SCENE_END].GetPassTime() > delay2) {
 		
 			//アニメーション値.
-			double anim = CalcNumWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
+			double anim = AnimWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 			//テキスト.
 			DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
 		
@@ -855,7 +860,7 @@ void GameManager::DrawReflectMode() {
 		//画面中央に数字を表示.
 		{
 			double dec  = GetDecimal(tmReflectMode.GetPassTime()); //小数だけ取り出す.
-			double anim = CalcNumEaseOut(dec);
+			double anim = AnimEaseOut(dec);
 			
 			SetDrawBlendModeKR(BlendModeID::Alpha, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
 			//最初の1秒.
