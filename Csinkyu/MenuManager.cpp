@@ -95,7 +95,7 @@ void MenuManager::Update() {
 	counter += 1;
 	//電気の進行率.
 	electrRate += MENU_ELECTR_MOVE_SPEED * p_data->speedRate;
-	Calc::NumLimMax(&electrRate, 1.0); //上限は1.0
+	NumLimMax(&electrRate, 1.0); //上限は1.0
 }
 
 // 描画
@@ -172,8 +172,8 @@ void MenuManager::Draw() {
 	//▼各選択肢.
 	{
 		//テキスト & 枠線用.
-		Box box = { mLayout.menuPos.ToDbl(), mLayout.menuBoxSize.ToDbl(), mColor.select1};
-		DrawStr str(_T(""), mLayout.menuPos, {});
+		Box box = { mLayout.menuPos, mLayout.menuSize, mColor.select1};
+		DrawStr str(_T(""), mLayout.menuPos.ToInt(), {});
 		//選択肢テキスト.
 		MY_STRING texts[] = {
 			__T("ゲーム開始"), _T("チュートリアル"), _T("タイトルに戻る")
@@ -213,9 +213,9 @@ void MenuManager::Draw() {
 	//▼カーソルの三角.
 	{
 		//基準座標.
-		DBL_XY base = mLayout.menuPos.ToDbl().Add(
-			-mLayout.menuBoxSize.x/2 - 20,      //xの移動量.
-			+mLayout.menuSpace * selectedIndex  //yの移動量.
+		DBL_XY base = mLayout.menuPos.Add(
+			-mLayout.menuSize.x/2 - 20,			//横にずらす.
+			+mLayout.menuSpace * selectedIndex	//縦にずらす.
 		);
 
 		Triangle tri = { {base, base.Add(-20, 10 * anim1), base.Add(-20, -10 * anim1)}, {} };
@@ -228,15 +228,15 @@ void MenuManager::Draw() {
 
 	//▼サムネ画像.
 	{
-		const double ext    = 0.4; //画像描画倍率.
+		const double extend = 0.4; //画像描画倍率.
 		const int    margin = 10;  //枠を画像よりどれだけ大きくするか.
 	
 		string name = "menu" + to_string(selectedIndex);
 		if (auto i = DrawImgMng::Get(name)) {
 			//画像描画.
-			i->DrawExtend(mLayout.imgPos, {ext , ext});
+			i->DrawExtend(mLayout.imgPos, {extend , extend});
 			//画像のサイズ(Extend倍率分小さくする)
-			imgSize = i->GetSize().ToDbl() * ext + margin;
+			imgSize = i->GetSize().ToDbl() * extend + margin;
 			//画像の枠線(位置とサイズは画像に合わせる)
 			Box box = { mLayout.imgPos, imgSize, mColor.frame };
 			DrawBoxKR(box, Anchor::Mid, false);
@@ -251,10 +251,6 @@ void MenuManager::Draw() {
 
 	//▼選択項目から画像、説明文エリアまでの線を描画
 	{
-		// 選択されたメニュー項目の右端座標
-		int menuItemRightX  = mLayout.menuPos.x + mLayout.menuBoxSize.x/2;
-		int menuItemCenterY = mLayout.menuPos.y + mLayout.menuSpace * selectedIndex;
-
 		int imgLeftX   = (int)(mLayout.imgPos.x - imgSize.x/2); //画像の左端座標.
 		int imgCenterY = (int) mLayout.imgPos.y;
 		int imgBottomY = (int)(mLayout.imgPos.y + imgSize.y/2); //画像の下端座標.
@@ -267,40 +263,36 @@ void MenuManager::Draw() {
 		const int alpha = 155 + 100 * (anim2 + 1.0) / 2.0;
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
-		//線の太さ.
-		//(DrawLineにも太さの設定はあるが、ブレの雰囲気が出てるためあえてこのままのやり方で)
-		const int lineThickness = 3;
-
 		//1.メニュー項目から画像への線（メニュー項目右端から画像左端まで）
-		for (int i = 0; i < lineThickness; i++) {
+		{
 			//線データ.
 			Line line = {
-				DBL_XY(menuItemRightX, menuItemCenterY + i - lineThickness / 2), //pos1
-				DBL_XY(imgLeftX,       menuItemCenterY + i - lineThickness / 2), //pos2
-				mColor.line                                                      //color
+				mLayout.menuPos.Add(mLayout.menuSize.x/2, 0),            //始点.
+				DBL_XY(mLayout.imgPos.x-imgSize.x/2, mLayout.menuPos.y), //終点.
+				mColor.line                                              //色.
 			};
+			//選択してる所にずらす.
+			line.stPos.y += mLayout.menuSpace * selectedIndex;
+			line.edPos.y += mLayout.menuSpace * selectedIndex;
 			//線描画.
-			DrawLineKR(line);
+			DrawLineKR(line, false, 3.0f);
 		}
 
+		anim3;
+
 		//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
-		for (int i = 0; i < lineThickness; i++) {
+		{
 			Line line = {
-				DBL_XY(mLayout.imgPos.x-30 + i - lineThickness / 2, imgBottomY),
-				DBL_XY(mLayout.imgPos.x-30 + i - lineThickness / 2, textBoxTopY),
-				mColor.line
+				DBL_XY(mLayout.imgPos.x-30, imgBottomY),  //始点.
+				DBL_XY(mLayout.imgPos.x-30, textBoxTopY), //終点.
+				mColor.line								  //色.
 			};
-			//線描画.
-			DrawLineKR(line);
-		}
-		for (int i = 0; i < lineThickness; i++) {
-			Line line = {
-				DBL_XY(mLayout.imgPos.x+30 + i - lineThickness / 2, imgBottomY),
-				DBL_XY(mLayout.imgPos.x+30 + i - lineThickness / 2, textBoxTopY),
-				mColor.line
-			};
-			//線描画.
-			DrawLineKR(line);
+			//線1.
+			DrawLineKR(line, false, 3.0f);
+			//線2.
+			line.stPos.x += 60;
+			line.edPos.x += 60;
+			DrawLineKR(line, false, 3.0f);
 		}
 
 		ResetDrawBlendMode();
@@ -310,7 +302,7 @@ void MenuManager::Draw() {
 	{
 		int infoWidth = 500;
 		int infoHeight = textBoxHeight;
-		int infoX = mLayout.menuPos.x - infoWidth/2;
+		int infoX = mLayout.menuPos.x - infoWidth / 2;
 		int infoY = textBoxY;
 
 		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1 };

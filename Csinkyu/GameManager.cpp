@@ -246,7 +246,7 @@ void GameManager::Init() {
 	srand((unsigned)time(NULL)); //乱数初期化.
 
 	//カメラ位置.
-	Camera::SetPos(App::GetWindowRect().GetMiddle().ToDbl());
+	Camera::SetPos(App::GetWindowRect().GetMid().ToDbl());
 	
 	//実体生成.
 	laserNor1   = new NormalLaser_1();

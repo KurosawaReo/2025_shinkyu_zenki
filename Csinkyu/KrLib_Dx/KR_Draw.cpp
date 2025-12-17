@@ -288,7 +288,7 @@ namespace KR
 			
 			//描画座標が確定.
 			//カメラ基準にするため、画面の半分ずらす.
-			newPos = cmrPos + App::GetWindowRect().GetMiddle().ToDbl();
+			newPos = cmrPos + App::GetWindowRect().GetMid().ToDbl();
 			//描画角度が確定.
 			newAng -= Camera::GetAng();
 		}

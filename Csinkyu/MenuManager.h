@@ -10,12 +10,12 @@
 //メニュー設定(レイアウト)
 struct MenuLayout
 {
-	INT_XY menuPos       = {370, 280};				//モードリストの基準位置.
-	INT_XY menuBoxSize   = {400, 70};				//モード1つの枠
-	int    menuSpace     = 100;						//モード枠の配置間隔.
-	int    loreInner     = 15;						//説明文が内側にどれだけずれるか.
-	int    loreLineSpace = 30;						//説明文の行間.
-	DBL_XY imgPos        = {WINDOW_WID-510, 410};	//サムネ画像の基準位置.
+	DBL_XY   menuPos       = {370, 280};					//モード枠の位置.
+	DBL_XY   menuSize      = {400,  70};					//モード枠のサイズ.
+	int      menuSpace     = 100;							//モード枠の配置間隔.
+	int      loreInner     = 15;							//説明文が内側にどれだけずれるか.
+	int      loreLineSpace = 30;							//説明文の行間.
+	DBL_XY   imgPos        = {WINDOW_WID-510, 410};			//サムネ画像の基準位置.
 };
 //メニュー設定(色)
 struct MenuColor 
@@ -55,6 +55,7 @@ private:
 
 	//電気アニメーション.
 	double    electrRate = 0.0;  //電気が線の何割まで進んだか.
+	DBL_XY    electrPos{};       //電気の座標.
 
 	//描画用設定.
 	const MenuLayout mLayout;

@@ -53,6 +53,6 @@ namespace KR
 	//カメラ基準座標取得(描画用)
 	DBL_XY Camera::GetCameraPos() {
 		//カメラの座標は画面中央に来るようにする.
-		return inst.GetPos() - App::GetWindowRect().GetMiddle().ToDbl();
+		return inst.GetPos() - App::GetWindowRect().GetMid().ToDbl();
 	}
 }

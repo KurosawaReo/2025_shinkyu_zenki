@@ -54,21 +54,5 @@ namespace KR
 		int         RandNum				(int st, int ed, bool isDxRand = false);
 		vector<int> RandNums			(int st, int ed, int count, bool isDxRand = false);
 		double      GetDecimal			(double num);
-
-		//<T> ”’l‚ÌãŒÀ.
-		template<typename T, _type_num_only(T)>
-		void NumLimMax(T* _num, T _max) {
-			*_num = min(*_num, _max);
-		}
-		//<T> ”’l‚Ì‰ºŒÀ.
-		template<typename T, _type_num_only(T)>
-		void NumLimMin(T* _num, T _min) {
-			*_num = max(*_num, _min);
-		}
-		//<T> ”’l‚Ì”ÍˆÍ.
-		template<typename T, _type_num_only(T)>
-		void NumLimRange(T* num, T low, T high) {
-			*num = max(low, min(*num, high));
-		}
 	};
 }
