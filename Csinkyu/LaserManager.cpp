@@ -432,12 +432,8 @@ void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 //レーザー(reflected)の隕石追尾.
 void LaserManager::LaserRefTracking(list<LaserData>::iterator it)
 {
-	Debug::Log(L"a");
-
 	//目標地点に向かうなら.
 	if (it->isGoGoal) {
-		Debug::Log(L"b");
-
 		//一定時間のみ追尾.
 		if (it->counter > LASER_REF_TRACK_ST_TM &&
 			it->counter < LASER_REF_TRACK_ED_TM)
