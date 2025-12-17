@@ -274,6 +274,8 @@ void GameManager::Init() {
 	SoundMng::LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		 "BGM_Endless");  //耐久モードBGM.
 	SoundMng::LoadFile(_T("Resources/Sounds/bgm/命ナキ者ノ詩.mp3"),		     "BGM_Over");     //ゲームオーバーBGM.
 
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1636674.mp3"),	 "MenuCursor");	  //メニューカーソル音.
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1636651.mp3"),	 "MenuOK");		  //メニュー決定音.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		 "ItemUse"); 	  //アイテム発動.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"), "CountDown");	  //カウントダウン.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		 "PowerDown");	  //アイテム解除.
