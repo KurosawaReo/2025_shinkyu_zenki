@@ -18,7 +18,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	int  disBestScore{}; //表示ベストスコア.
 	int  disScore{};     //表示スコア.
@@ -29,6 +29,7 @@ private:
 	GameData*      p_gameData{};
 	TutorialStage* p_tutorialStg{};
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	UIManager(){}

@@ -39,7 +39,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	GameData* p_data{};           //GameDataのポインタ.
 
@@ -62,6 +62,7 @@ private:
 	const MenuLayout mLayout;
 	const MenuColor  mColor;
 
+//関数.
 private:
 	//constructor(新規作成をできなくする)
 	MenuManager(){}

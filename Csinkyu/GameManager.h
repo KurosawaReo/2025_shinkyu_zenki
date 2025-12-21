@@ -21,7 +21,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 public:
 	Scene      scene{};			//現在のシーン.
 	StageType  stage{};			//ステージ種類.
@@ -44,6 +44,7 @@ public:
 	int		   font3{};			//フォント.
 	int		   font4{};			//フォント.
 	
+//関数.
 private:
 	//constructor(新規作成をできなくする)
 	GameData(){}
@@ -64,12 +65,12 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
-	Timer      tmGameTime{};    //ゲーム計測時間.
-	Timer      tmReflectMode{}; //スロー継続時間.
+	Timer tmGameTime{};         //ゲーム計測時間.
+	Timer tmReflectMode{};      //スロー継続時間.
 
 #if defined DEBUG_SHOW_FPS
 	TimerMicro tmFps{};         //fps計測用タイマー.
@@ -82,13 +83,15 @@ private:
 	bool isGameStart{};             //ゲーム開始サイン.
 	bool isBestScore{};             //ベストスコア更新したか.
 
-public: //オブジェクト.
+//▼オブジェクト.
+public:
 	NormalLaser_1* laserNor1{};
 	NormalLaser_2* laserNor2{};
 	NormalLaser_3* laserNor3{};
 	NormalLaser_4* laserNor4{};
 	StraightLaser* laserStr[2]{};
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	GameManager(){}

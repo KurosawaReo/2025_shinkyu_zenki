@@ -1,24 +1,21 @@
-/*
-   - BackGround.h -
-*/
 #pragma once
 
 //前方宣言.
-class GameData; 
-class BackGround;
+class GameData;
+class BGManager;
 
 //背景タイル.
 class BG_Tile
 {
-	friend class BackGround; //アクセス許可.
+	friend class BGManager; //アクセス許可.
 private:
 	INT_XY   pos{};
 	DBL_XY   sizeRate{};
 
 	Timer timer = Timer(TimerMode::CountDown, 3); //発光する時間.
 
-	GameData*   p_data;
-	BackGround* p_bg;
+	GameData* p_data;
+	BG1*      p_bg;
 
 public:
 	void Init();                //初期化.
@@ -28,17 +25,17 @@ public:
 	void Shine(); //発光.
 };
 
-//背景クラス.[継承不可]
-class BackGround final
+//背景1.[継承不可]
+class BG1 final
 {
 //▼実体関係.
 public:
-	static BackGround& GetInst() {
-		static BackGround inst; //自身のインスタンス.
+	static BG1& GetInst() {
+		static BG1 inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	vector<BG_Tile> tiles; //背景タイルデータ.
 
@@ -48,9 +45,10 @@ private:
 
 	GameData* p_data{}; //ゲームデータ.
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
-	BackGround(){}
+	BG1(){}
 
 public:
 	//get.
@@ -65,6 +63,6 @@ public:
 	void RestartAnim();
 
 	//使用禁止.
-	BackGround(const BackGround&) = delete;
-	BackGround& operator=(const BackGround&) = delete;
+	BG1(const BG1&) = delete;
+	BG1& operator=(const BG1&) = delete;
 };

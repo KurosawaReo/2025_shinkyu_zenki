@@ -55,7 +55,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	//listで適宜サイズを増減する.
 	list<LaserData>     laser; //レーザー.
@@ -68,6 +68,7 @@ private:
 	MeteorManager* p_meteorMng{};
 	EffectManager* p_effectMng{};
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	LaserManager(){}

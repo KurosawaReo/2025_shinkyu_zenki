@@ -53,11 +53,12 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	list<Effect> effect;   //エフェクト配列.
 	GameData*	 p_data{};
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	EffectManager(){}

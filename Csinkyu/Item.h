@@ -32,7 +32,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	ItemData items[ITEM_COUNT]{};
 	int      itemMaxCnt{}; //出すアイテムの数.
@@ -45,6 +45,7 @@ private:
 	LaserManager*  p_laserMng{};
 	EffectManager* p_effectMng{};
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	ItemManager(){}

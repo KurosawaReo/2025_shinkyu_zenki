@@ -34,7 +34,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	PlayerMode     mode{};     //モード.
 	
@@ -58,6 +58,7 @@ private:
 	GameData*      p_data{};      //ゲームデータ.
 	EffectManager* p_effectMng{}; //エフェクト管理.
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	Player(){}

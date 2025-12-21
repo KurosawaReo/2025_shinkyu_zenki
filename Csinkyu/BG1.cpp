@@ -1,17 +1,37 @@
-/*
-   - BackGround.cpp -
-*/
-#include "GameManager.h"
-#include "BackGround.h"
 
-using namespace Calc; //計算機能を使用.
+#include "BG1.h"
+#include "GameManager.h"
+
+
+//TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BGManagerからの移植
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
 //初期化.
 void BG_Tile::Init() {
 	p_data = &GameData::GetInst();
-	p_bg   = &BackGround::GetInst();
+	p_bg   = &BG1::GetInst();
 }
 //更新.
 void BG_Tile::Update() {
@@ -45,10 +65,10 @@ void BG_Tile::Shine() {
 	}
 }
 
-// ▼*---=[ BackGround ]=---*▼ //
+// ▼*---=[ BG1 ]=---*▼ //
 
 //初期化.
-void BackGround::Init() {
+void BG1::Init() {
 
 	p_data = &GameData::GetInst();
 
@@ -80,7 +100,7 @@ void BackGround::Init() {
 	tmShine.Start(); //タイマー開始.
 }
 //更新.
-void BackGround::Update() {
+void BG1::Update() {
 	
 	counter += p_data->speedRate;
 
@@ -95,7 +115,7 @@ void BackGround::Update() {
 	}
 }
 //描画.
-void BackGround::Draw() {
+void BG1::Draw() {
 
 	//スローモード経過時間.
 	float pass = GameManager::GetInst().GetReflectModeTime();
@@ -120,13 +140,13 @@ void BackGround::Draw() {
 }
 
 //ポーズする.
-void BackGround::StopAnim() {
+void BG1::StopAnim() {
 	for (auto& i : tiles) {
 		i.timer.Stop();
 	}
 }
 //ポーズ解除.
-void BackGround::RestartAnim() {
+void BG1::RestartAnim() {
 	for (auto& i : tiles) {
 		//稼働中だったならリスタート.
 		if (i.timer.GetIsMove()) {

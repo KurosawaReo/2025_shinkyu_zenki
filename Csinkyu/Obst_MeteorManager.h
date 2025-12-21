@@ -16,7 +16,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	list<Meteor>   meteor;		  //隕石配列.
 
@@ -27,6 +27,7 @@ private:
 	Player*        p_player{};	  //プレイヤー.
 	EffectManager* p_effectMng{}; //エフェクト管理.
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	MeteorManager(){}

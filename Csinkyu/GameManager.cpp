@@ -192,7 +192,7 @@
    ゲーム全体管理.
 */
 
-#include "BackGround.h"
+#include "BGManager.h"
 #include "MenuManager.h"
 #include "Stage_Tutorial.h"
 #include "Stage_Endless.h"
@@ -217,7 +217,7 @@ using namespace Calc; //計算機能を使用.
 
 //ポインタ.
 GameData         *gameData     = &GameData::GetInst();
-BackGround       *bg           = &BackGround::GetInst();
+BGManager        *bg           = &BGManager::GetInst();
 MenuManager      *menuMng      = &MenuManager::GetInst();
 TutorialStage    *tutorialStg  = &TutorialStage::GetInst();
 EndlessStage     *endlessStg   = &EndlessStage::GetInst();
