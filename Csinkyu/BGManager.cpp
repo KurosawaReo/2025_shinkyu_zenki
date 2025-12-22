@@ -3,32 +3,42 @@
 */
 #include "BGManager.h"
 
-#include "BG1.h"
-#include "GameManager.h"
-
 // ¥*---=[ BGManager ]=---*¥ //
 
 //‰Šú‰».
 void BGManager::Init() {
-
-	BG1::GetInst().Init();
 }
 //XV.
 void BGManager::Update() {
 	
-	BG1::GetInst().Update(); //TODO: switch•¶‚Å‚ÌØ‚è‘Ö‚¦.
+	//Œ»İ‚Ì”wŒi.
+	switch (useBgNo) {
+		case 0:  bg1.Update();  break;
+		default: assert(false); break;
+	}
 }
 //•`‰æ.
 void BGManager::Draw() {
-
-	BG1::GetInst().Draw(); //TODO: switch•¶‚Å‚ÌØ‚è‘Ö‚¦.
+	//Œ»İ‚Ì”wŒi.
+	switch (useBgNo) {
+		case 0:  bg1.Draw();    break;
+		default: assert(false); break;
+	}
 }
 
 //ƒ|[ƒY‚·‚é.
 void BGManager::StopAnim() {
-	BG1::GetInst().StopAnim(); //TODO: switch•¶‚Å‚ÌØ‚è‘Ö‚¦.
+	//Œ»İ‚Ì”wŒi.
+	switch (useBgNo) {
+		case 0:  bg1.StopAnim(); break;
+		default: assert(false);	 break;
+	}
 }
 //ƒ|[ƒY‰ğœ.
 void BGManager::RestartAnim() {
-	BG1::GetInst().RestartAnim(); //TODO: switch•¶‚Å‚ÌØ‚è‘Ö‚¦.
+	//Œ»İ‚Ì”wŒi.
+	switch (useBgNo) {
+		case 0:  bg1.RestartAnim(); break;
+		default: assert(false);	    break;
+	}
 }

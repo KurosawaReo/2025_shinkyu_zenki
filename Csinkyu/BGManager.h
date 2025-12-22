@@ -2,6 +2,7 @@
    - BGManager.h -
 */
 #pragma once
+#include "BG1.h"
 
 //”wŒiƒNƒ‰ƒX.[Œp³•s‰Â]
 class BGManager final
@@ -12,6 +13,11 @@ public:
 		static BGManager inst; //©g‚ÌƒCƒ“ƒXƒ^ƒ“ƒX.
 		return inst;
 	}
+
+//¥ŠÖ”.
+private:
+	int useBgNo{}; //‚Ç‚Ì”wŒi‚ğg‚¤‚©.
+	BG1 bg1{};     //”wŒi.
 
 //¥ŠÖ”.
 private:
