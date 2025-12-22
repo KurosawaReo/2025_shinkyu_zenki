@@ -8,7 +8,7 @@
 //ˆË‘¶ŠÖŒW.
 #include "GameData.h"
 //QÆ.
-GameData& p_data = GameData::GetInst();
+static GameData& p_data = GameData::GetInst();
 
 void Meteor::Init() {
 

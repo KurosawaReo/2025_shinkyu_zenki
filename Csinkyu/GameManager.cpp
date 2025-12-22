@@ -217,19 +217,19 @@
 using namespace Calc; //計算機能を使用.
 
 //ポインタ.
-GameData         &gameData     = GameData::GetInst();
-BGManager        &bg           = BGManager::GetInst();
-MenuManager      &menuMng      = MenuManager::GetInst();
-TutorialStage    &tutorialStg  = TutorialStage::GetInst();
-EndlessStage     &endlessStg   = EndlessStage::GetInst();
-LaserManager     &laserMng     = LaserManager::GetInst();
-MeteorManager    &meteorMng    = MeteorManager::GetInst();
-Ripples          &ripples      = Ripples::GetInst();
-FireworksManager &fireworksMng = FireworksManager::GetInst();
-ItemManager      &item         = ItemManager::GetInst();
-Player           &player       = Player::GetInst();
-EffectManager    &effectMng    = EffectManager::GetInst();
-UIManager        &uiMng        = UIManager::GetInst();
+static GameData         &gameData     = GameData::GetInst();
+static BGManager        &bg           = BGManager::GetInst();
+static MenuManager      &menuMng      = MenuManager::GetInst();
+static TutorialStage    &tutorialStg  = TutorialStage::GetInst();
+static EndlessStage     &endlessStg   = EndlessStage::GetInst();
+static LaserManager     &laserMng     = LaserManager::GetInst();
+static MeteorManager    &meteorMng    = MeteorManager::GetInst();
+static Ripples          &ripples      = Ripples::GetInst();
+static FireworksManager &fireworksMng = FireworksManager::GetInst();
+static ItemManager      &item         = ItemManager::GetInst();
+static Player           &player       = Player::GetInst();
+static EffectManager    &effectMng    = EffectManager::GetInst();
+static UIManager        &uiMng        = UIManager::GetInst();
 
 //destructor.
 GameManager::~GameManager() {
@@ -243,6 +243,10 @@ GameManager::~GameManager() {
 }
 //初期化(一回のみ行う)
 void GameManager::Init() {
+
+#if defined _DEBUG 
+	Debug::Log(L"[Debug] GameManager::Init() 開始");
+#endif
 
 	srand((unsigned)time(NULL)); //乱数初期化.
 
@@ -360,6 +364,10 @@ void GameManager::Init() {
 	}
 
 	Reset();
+
+#if defined _DEBUG 
+	Debug::Log(L"[Debug] GameManager::Init() 終了");
+#endif
 }
 
 //リセット(何回でも行う)

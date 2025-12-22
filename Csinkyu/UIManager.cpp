@@ -9,9 +9,9 @@
 #include "GameData.h"
 #include "GameManager.h"
 //QÆ.
-GameManager&   p_gameMng     = GameManager::GetInst();
-GameData&      p_gameData	 = GameData::GetInst();
-TutorialStage& p_tutorialStg = TutorialStage::GetInst();
+static GameManager&   p_gameMng     = GameManager::GetInst();
+static GameData&      p_gameData	 = GameData::GetInst();
+static TutorialStage& p_tutorialStg = TutorialStage::GetInst();
 
 //‰Šú‰».
 void UIManager::Init() {

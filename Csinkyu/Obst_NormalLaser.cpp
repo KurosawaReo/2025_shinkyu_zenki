@@ -9,7 +9,7 @@
 //ˆË‘¶ŠÖŒW.
 #include "GameData.h"
 //QÆ.
-GameData& p_data = GameData::GetInst();
+static GameData& p_data = GameData::GetInst();
 
 //obstacle4main‚ÌMoveŠÖ”‚ğobstacle4—p‚Éã‘‚«.
 void NormalLaser_1::Move()

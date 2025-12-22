@@ -10,8 +10,8 @@
 #include "LaserManager.h"
 #include "GameData.h"
 //QÆ.
-GameData& p_data = GameData::GetInst();
-LaserManager& p_laserMng = LaserManager::GetInst();
+static GameData&     p_data     = GameData::GetInst();
+static LaserManager& p_laserMng = LaserManager::GetInst();
 
 // ‰Šú‰»
 void FireworksManager::Init() {
