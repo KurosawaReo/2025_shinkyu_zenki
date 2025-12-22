@@ -12,13 +12,13 @@ class BG_Tile
 {
 	friend class BG1; //アクセス許可.
 private:
-	INT_XY   pos{};
-	DBL_XY   sizeRate{};
+	INT_XY    pos{};
+	DBL_XY    sizeRate{};
 
 	Timer timer = Timer(TimerMode::CountDown, 3); //発光する時間.
 
-	GameData* p_data;
-	BG1*      p_bg;
+	GameData* p_data{};
+	BG1*      p_bg{};
 
 public:
 	void Init();                //初期化.
