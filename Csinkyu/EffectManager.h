@@ -41,9 +41,6 @@ struct Effect : public EffectData
 	float      counter{}; //時間計測用.
 };
 
-//前方宣言.
-class GameData;
-
 //エフェクト管理クラス.[継承不可]
 class EffectManager final
 {
@@ -57,9 +54,6 @@ public:
 //▼変数.
 private:
 	list<Effect> effect; //エフェクト配列.
-
-	//参照
-	GameData* p_data{};
 
 //▼関数.
 private:

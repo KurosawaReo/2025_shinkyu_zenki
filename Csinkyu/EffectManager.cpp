@@ -6,10 +6,12 @@
 
 //依存関係.
 #include "GameData.h"
+//参照
+GameData& p_data = GameData::GetInst();
+
+using namespace Calc; //計算機能を使用.
 
 void EffectManager::Init() {
-	//参照.
-	p_data = &GameData::GetInst();
 	//画像読み込み.
 	DrawImgMng::LoadFile(_T("Resources/Images/score100.png"), "score100");
 	DrawImgMng::LoadFile(_T("Resources/Images/score500.png"), "score500");
@@ -78,14 +80,14 @@ void EffectManager::Update() {
 			case Effect_BreakMeteor:
 			{
 				//カウンター加算.
-				i->counter += p_data->speedRate;
+				i->counter += p_data.speedRate;
 				//回転.
-				i->ang += 3 * p_data->speedRate;
+				i->ang += 3 * p_data.speedRate;
 				//減速.
 				float newSpeed = i->speed/(1+(i->counter/10));
 				//移動.
-				i->pos.x += i->vec.x * newSpeed * p_data->speedRate;
-				i->pos.y += i->vec.y * newSpeed * p_data->speedRate;
+				i->pos.x += i->vec.x * newSpeed * p_data.speedRate;
+				i->pos.y += i->vec.y * newSpeed * p_data.speedRate;
 
 				//時間経過で消滅.
 				if (i->counter >= METEOR_BREAK_ANIM_TIME) {
@@ -143,9 +145,9 @@ void EffectManager::Draw() {
 			case Effect_Score500:
 			{
 				//座標.
-				DBL_XY pos = {i.pos.x, i.pos.y - Calc::AnimEaseOut(i.counter/SCORE_ANIM_TIME)*30};
+				DBL_XY pos = {i.pos.x, i.pos.y - AnimEaseOut(i.counter/SCORE_ANIM_TIME)*30};
 				//アニメーション値.
-				int pow = _int_r(255 * Calc::AnimEaseOut(1 - i.counter/SCORE_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/SCORE_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -162,7 +164,7 @@ void EffectManager::Draw() {
 			case Effect_PlayerDash:
 			{
 				//アニメーション値.
-				const double anim = Calc::AnimEaseOut(1-i.counter/PLAYER_DASH_EFFECT_TIME);
+				const double anim = AnimEaseOut(1-i.counter/PLAYER_DASH_EFFECT_TIME);
 				//三角形データ.
 				DBL_XY pos1 = i.pos + Calc::VectorDeg(i.ang   ) * 40 * anim;
 				DBL_XY pos2 = i.pos + Calc::VectorDeg(i.ang+90) * 20 * anim;
@@ -179,7 +181,7 @@ void EffectManager::Draw() {
 			{
 				Circle cir= { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF };
 				//アニメーション値.
-				int pow = _int_r(255 * Calc::AnimEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -191,7 +193,7 @@ void EffectManager::Draw() {
 			{
 				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT };
 				//アニメーション値.
-				int pow = _int_r(255 * Calc::AnimEaseOut(1 - i.counter/LASER_REF_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/LASER_REF_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -203,11 +205,11 @@ void EffectManager::Draw() {
 			{
 				//飛ばす線のデータ.
 				Line line{};
-				line.stPos = Calc::ArcPos(i.pos, i.ang,     i.len);
-				line.edPos = Calc::ArcPos(i.pos, i.ang+180, i.len);
+				line.stPos = ArcPos(i.pos, i.ang,     i.len);
+				line.edPos = ArcPos(i.pos, i.ang+180, i.len);
 			    line.color = COLOR_METEOR(i.pos);
 				//アニメーション値.
-				int pow = _int_r(255 * Calc::AnimEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME));
+				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME));
 
 				//描画.
 				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
@@ -236,7 +238,7 @@ void EffectManager::Draw() {
 					{{-1, i.pos.y+20}, 10, 0xFFFFFF}
 				};
 				//アニメーション値.
-				int pow = _int_r(255 * Calc::AnimWaveLoop(1 - i.counter/MIDDLE_ANIM_TIME));
+				int pow = _int_r(255 * AnimWaveLoop(1 - i.counter/MIDDLE_ANIM_TIME));
 				//何個ランプを使うか.
 				int lampUseCnt  = 0;
 				int lampFillCnt = 0;
@@ -295,7 +297,7 @@ void EffectManager::Draw() {
 						break;
 				}
 				//テキスト.
-				str.Draw(Anchor::Mid, p_data->font2);
+				str.Draw(Anchor::Mid, p_data.font2);
 				//ランプ(必要な数だけ描画)
 				for (int j = 0; j < lampUseCnt; j++) {
 						

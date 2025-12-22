@@ -36,7 +36,7 @@ public:
 	int		   font3{};			//フォント.
 	int		   font4{};			//フォント.
 	
-//▼関数.
+//関数.
 private:
 	//constructor(新規作成をできなくする)
 	GameData(){}

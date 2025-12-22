@@ -129,7 +129,7 @@ namespace KR
 			state      = TimerState::Stop;
 		}
 
-		LONGLONG GetPassTime();  //ŽžŠÔŽæ“¾.
+		LONGLONG GetPassTime (); //ŽžŠÔŽæ“¾.
 		double   GetFps();       //fpsŽæ“¾.
 		bool     IntervalTime(); //ˆê’èŽžŠÔ‚²‚Æ‚Étrue‚ð•Ô‚·.
 	};
