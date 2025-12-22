@@ -5,6 +5,20 @@
 #pragma once
 
 //前方宣言.
+class GameData;
+class BGManager;
+class MenuManager;
+class TutorialStage;
+class EndlessStage;
+class LaserManager;
+class MeteorManager;
+class Ripples;
+class FireworksManager;
+class ItemManager;
+class Player;
+class EffectManager;
+class UIManager;
+
 class NormalLaser_1;
 class NormalLaser_2;
 class NormalLaser_3;
@@ -38,6 +52,21 @@ private:
 
 	bool isGameStart{};             //ゲーム開始サイン.
 	bool isBestScore{};             //ベストスコア更新したか.
+
+	//参照.
+	GameData         *gameData{};
+	BGManager        *bg{};
+	MenuManager      *menuMng{};
+	TutorialStage    *tutorialStg{};
+	EndlessStage     *endlessStg{};
+	LaserManager     *laserMng{};
+	MeteorManager    *meteorMng{};
+	Ripples          *ripples{};
+	FireworksManager *fireworksMng{};
+	ItemManager      *item{};
+	Player           *player{};
+	EffectManager    *effectMng{};
+	UIManager        *uiMng{};
 
 //▼オブジェクト.
 public:
