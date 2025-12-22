@@ -8,7 +8,7 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-GameData& p_data = GameData::GetInst();
+static GameData& p_data = GameData::GetInst();
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
@@ -53,7 +53,7 @@ void BG_Tile::Draw(double slowTime) {
 //発光.
 void BG_Tile::Shine() {
 	//発光してないなら.
-	if(!timer.GetIsMove()){
+	if(timer.GetState() != TimerState::Active){
 		timer.Start(); //開始.
 	}
 }
@@ -129,16 +129,16 @@ void BG1::Draw() {
 }
 
 //ポーズする.
-void BG1::StopAnim() {
+void BG1::PauseAnim() {
 	for (auto& i : tiles) {
-		i.timer.Stop();
+		i.timer.Pause();
 	}
 }
 //ポーズ解除.
 void BG1::RestartAnim() {
 	for (auto& i : tiles) {
 		//稼働中だったならリスタート.
-		if (i.timer.GetIsMove()) {
+		if (i.timer.GetState() == TimerState::Pause) {
 			i.timer.Start();
 		}
 	}

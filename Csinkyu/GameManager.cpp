@@ -506,7 +506,7 @@ void GameManager::ResetStrLaser() {
 void GameManager::UpdateTitle()
 {
 	//シーンタイマー開始.
-	if (!tmScene[SCENE_TITLE].GetIsMove()) {
+	if (tmScene[SCENE_TITLE].GetState() != TimerState::Active) {
 		tmScene[SCENE_TITLE].Start();
 	}
 	//特定の操作でゲーム開始.
@@ -520,7 +520,7 @@ void GameManager::UpdateMenu() {
 void GameManager::UpdateGame() {
 
 	//シーンタイマー開始.
-	if (!tmScene[SCENE_GAME].GetIsMove()) {
+	if (tmScene[SCENE_GAME].GetState() != TimerState::Active) {
 		tmScene[SCENE_GAME].Start();
 	}
 
@@ -553,7 +553,7 @@ void GameManager::UpdateGame() {
 void GameManager::UpdateEnd() {
 
 	//シーンタイマー開始.
-	if (!tmScene[SCENE_END].GetIsMove()) {
+	if (tmScene[SCENE_END].GetState() != TimerState::Active) {
 		tmScene[SCENE_END].Start();
 	}
 
@@ -594,7 +594,7 @@ void GameManager::UpdateReflectMode() {
 	}
 
 	//反射モード中.
-	if (tmReflectMode.GetIsMove()) {
+	if (tmReflectMode.GetState() == TimerState::Active) {
 		//3秒以下になったばかりの時.
 		if (tmReflectMode.GetPassTime() <= 3) {
 			if (!isItemCountDownSound[2]) {
@@ -860,7 +860,8 @@ void GameManager::DrawEnd() {
 void GameManager::DrawReflectMode() {
 
 	//カウントダウン中.
-	if (tmReflectMode.GetIsMove() && tmReflectMode.GetPassTime() > 0)
+	if (tmReflectMode.GetState() == TimerState::Active && 
+		tmReflectMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
 		MY_STRING text = _to_mystr((int)ceil(tmReflectMode.GetPassTime()));
@@ -891,16 +892,16 @@ void GameManager::GamePause() {
 	//稼働中のタイマーを一時停止.
 	tmGameTime.Pause();
 	tmReflectMode.Pause();
-	bg.StopAnim();
+	bg.PauseAnim();
 }
 //ポーズ解除.
 void GameManager::GamePauseEnd() {
 	gameData.isPause = false;
 	//稼働中だったタイマーは再開.
-	if (tmGameTime.GetIsMove()) {
+	if (tmGameTime.GetState() == TimerState::Pause) {
 		tmGameTime.Start();
 	}
-	if (tmReflectMode.GetIsMove()) {
+	if (tmReflectMode.GetState() == TimerState::Pause) {
 		tmReflectMode.Start();
 	}
 	bg.RestartAnim();

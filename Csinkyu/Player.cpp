@@ -11,8 +11,8 @@
 #include "GameManager.h"
 #include "GameData.h"
 //QÆ.
-GameData&      p_data      = GameData::GetInst();
-EffectManager& p_effectMng = EffectManager::GetInst(); 
+static GameData&      p_data      = GameData::GetInst();
+static EffectManager& p_effectMng = EffectManager::GetInst();
 
 //‰Šú‰»(ˆê‰ñ‚Ì‚İs‚¤)
 void Player::Init()

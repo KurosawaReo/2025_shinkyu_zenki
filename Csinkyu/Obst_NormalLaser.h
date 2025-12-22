@@ -7,10 +7,6 @@
 #pragma once
 #include "Obst_NormalLaserMain.h"
 
-//#define MAX_L 100 //ミサイルが飛ぶ最大距離.
-//#define PI 3.14159//円周率.
-//#define LINE_MAXNUM 3000//描画する線の最大数.
-
 //継承先クラス(子1)
 class NormalLaser_1 : public NormalLaserMain
 {

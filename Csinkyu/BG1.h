@@ -37,6 +37,6 @@ public:
 	void Draw();
 
 	//ポーズ用.
-	void StopAnim();
+	void PauseAnim();
 	void RestartAnim();
 };

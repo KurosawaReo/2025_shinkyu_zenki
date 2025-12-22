@@ -34,11 +34,11 @@ void BGManager::Draw() {
 }
 
 //ƒ|[ƒY‚·‚é.
-void BGManager::StopAnim() {
+void BGManager::PauseAnim() {
 
 	switch (useBgNo) {
-		case 0:  bg1.StopAnim(); break; //”wŒi1.
-		default: assert(false);  break;
+		case 0:  bg1.PauseAnim(); break; //”wŒi1.
+		default: assert(false);   break;
 	}
 }
 //ƒ|[ƒY‰ğœ.

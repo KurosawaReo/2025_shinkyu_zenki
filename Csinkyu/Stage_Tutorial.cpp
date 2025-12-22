@@ -129,7 +129,9 @@ void TutorialStage::UpdateStep1() {
 			plyMoveSum += p_player.GetMoveDist(); //プレイヤー移動距離を計測.
 
 			//[終了条件] 一定距離移動したら.
-			if (!endTimer.GetIsMove() && plyMoveSum >= 1500) {
+			if (endTimer.GetState() != TimerState::Active && 
+				plyMoveSum >= 1500) 
+			{
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -142,7 +144,7 @@ void TutorialStage::UpdateStep1() {
 		case 1:
 		{
 			//[終了条件] ダッシュしたら.
-			if (!endTimer.GetIsMove() && isPlayerDash) {
+			if (endTimer.GetState() != TimerState::Active && isPlayerDash) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -161,7 +163,9 @@ void TutorialStage::UpdateStep1() {
 			p_gameMng.laserNor1->Update();
 
 			//[終了条件] 一定時間経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 9.0) {
+			if (endTimer.GetState() != TimerState::Active && 
+				startTimer.GetPassTime() >= 9.0) 
+			{
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -203,7 +207,7 @@ void TutorialStage::UpdateStep2() {
 			p_itemMng.Update();
 
 			//[終了条件] アイテムを取ったら.
-			if (!endTimer.GetIsMove() && isTakeItem) {
+			if (endTimer.GetState() != TimerState::Active && isTakeItem) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -221,7 +225,7 @@ void TutorialStage::UpdateStep2() {
 			p_itemMng.Update();
 
 			//[終了条件] 反射モードが終わったら.
-			if (!endTimer.GetIsMove() && isReflectFinish) {
+			if (endTimer.GetState() != TimerState::Active && isReflectFinish) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -260,7 +264,7 @@ void TutorialStage::UpdateStep3() {
 			p_itemMng.Update();
 
 			//[終了条件] アイテムを取ったら.
-			if (!endTimer.GetIsMove() && isTakeItem) {
+			if (endTimer.GetState() != TimerState::Active && isTakeItem) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -280,7 +284,7 @@ void TutorialStage::UpdateStep3() {
 			p_gameMng.laserNor1->Update();
 
 			//[終了条件] レーザーを反射した && 反射モードが終わったら.
-			if (!endTimer.GetIsMove() && isReflectLaser && isReflectFinish) {
+			if (endTimer.GetState() != TimerState::Active && isReflectLaser && isReflectFinish) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -301,7 +305,7 @@ void TutorialStage::UpdateStep3() {
 			p_gameMng.laserNor1->Update();
 
 			//[終了条件] 隕石を壊した & 反射モードが終わったら.
-			if (!endTimer.GetIsMove() && isBreakMeteor && isReflectFinish) {
+			if (endTimer.GetState() != TimerState::Active && isBreakMeteor && isReflectFinish) {
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -319,7 +323,9 @@ void TutorialStage::UpdateStep3() {
 			p_gameMng.laserNor1->Update();
 
 			//[終了条件] 一定時間が経過したら.
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 6.0) {
+			if (endTimer.GetState() != TimerState::Active && 
+				startTimer.GetPassTime() >= 6.0) 
+			{
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -362,7 +368,9 @@ void TutorialStage::UpdateStep4() {
 			p_gameMng.laserNor1->Update();
 
 			//[終了条件] 一定スコアを越える & 反射モードが終わったら.
-			if (!endTimer.GetIsMove() && p_data.score >= 2000 && isReflectFinish) {
+			if (endTimer.GetState() != TimerState::Active && 
+				p_data.score >= 2000 && isReflectFinish) 
+			{
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -381,7 +389,9 @@ void TutorialStage::UpdateStep4() {
 		case 1:
 		{
 			//[終了条件] 一定時間が経過したら
-			if (!endTimer.GetIsMove() && startTimer.GetPassTime() >= 5.0) {
+			if (endTimer.GetState() != TimerState::Active && 
+				startTimer.GetPassTime() >= 5.0) 
+			{
 #if !defined BGM_NONE
 				//BGMフェードアウト.
 				if (auto i = SoundMng::Get("BGM_Tutorial")) {
