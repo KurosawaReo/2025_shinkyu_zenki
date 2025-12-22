@@ -45,7 +45,6 @@ namespace KR
 		while (ProcessMessage() == 0 && !inst.isQuit) {
 			//一定時間ごとに処理.
 			if (inst.tmFps.IntervalTime()) {
-				Debug::Log(L"b2");
 				ClearDrawScreen(); //画面クリア.
 				Update();		   //更新処理(main.cppへ)
 				Draw();			   //描画処理(main.cppへ)
