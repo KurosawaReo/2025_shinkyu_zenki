@@ -2,6 +2,7 @@
    - BGManager.h -
 */
 #pragma once
+#include "BG1.h"
 
 //”wŒiƒNƒ‰ƒX.[Œp³•s‰Â]
 class BGManager final
@@ -13,19 +14,29 @@ public:
 		return inst;
 	}
 
+//¥•Ï”.
+private:
+	float counter{}; //Œo‰ßŠÔ.
+
+	int   useBgNo{}; //‰½”Ô–Ú‚Ì”wŒi‚ğg‚¤‚©.
+	BG1   bg1{};     //”wŒi1.
+
 //¥ŠÖ”.
 private:
 	//constructor(V‹Kì¬‚ğ‚Å‚«‚È‚­‚·‚é)
 	BGManager(){}
 
 public:
-	void Init();
-	void Update();
-	void Draw();
+	//get.
+	float GetCounter() const { return counter; }
+
+	void  Init();
+	void  Update();
+	void  Draw();
 
 	//ƒ|[ƒY—p.
-	void StopAnim();
-	void RestartAnim();
+	void  StopAnim();
+	void  RestartAnim();
 
 	//g—p‹Ö~.
 	BGManager(const BGManager&) = delete;

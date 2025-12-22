@@ -31,32 +31,16 @@ public:
 //背景1.[継承不可]
 class BG1 final
 {
-//▼実体関係.
-public:
-	static BG1& GetInst() {
-		static BG1 inst; //自身のインスタンス.
-		return inst;
-	}
-
 //▼変数.
 private:
 	vector<BG_Tile> tiles; //背景タイルデータ.
 
 	TimerMicro tmShine = TimerMicro(TimerMode::CountDown, 1000000/60); //光る間隔.
 
-	float counter{}; //時間経過計測用.
-
-	GameData* p_data{}; //ゲームデータ.
+	GameData*  p_data{}; //ゲームデータ.
 
 //▼関数.
-private:
-	//constructor(新規作成をできなくする)
-	BG1(){}
-
 public:
-	//get.
-	float GetCounter() const { return counter; }
-
 	void Init();
 	void Update();
 	void Draw();
@@ -64,8 +48,4 @@ public:
 	//ポーズ用.
 	void StopAnim();
 	void RestartAnim();
-
-	//使用禁止.
-	BG1(const BG1&) = delete;
-	BG1& operator=(const BG1&) = delete;
 };
