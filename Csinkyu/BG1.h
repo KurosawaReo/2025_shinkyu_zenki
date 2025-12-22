@@ -1,3 +1,6 @@
+/*
+   - BG1.h -
+*/
 #pragma once
 
 //前方宣言.
@@ -7,7 +10,7 @@ class BGManager;
 //背景タイル.
 class BG_Tile
 {
-	friend class BGManager; //アクセス許可.
+	friend class BG1; //アクセス許可.
 private:
 	INT_XY   pos{};
 	DBL_XY   sizeRate{};

@@ -262,10 +262,10 @@ void MenuManager::Draw() {
 	}
 
 	//▼説明文の枠（右下）- 画像の幅に合わせる
-	int textBoxWidth = (int)imgSize.x;
+	int textBoxWidth  = _int_r(imgSize.x);
 	int textBoxHeight = 260;
-	int textBoxX = (int)(mLayout.imgPos.x - textBoxWidth/2);  // 画像と同じ中心位置
-	int textBoxY = WINDOW_HEI - 300;
+	int textBoxX      = _int_r(mLayout.imgPos.x - textBoxWidth/2);  // 画像と同じ中心位置
+	int textBoxY      = WINDOW_HEI - 300;
 
 	//▼選択項目から画像、説明文エリアまでの線を描画
 	{
@@ -278,7 +278,7 @@ void MenuManager::Draw() {
 		int textBoxTopY = textBoxY;
 
 		//線の透明度(155～255)
-		const int alpha = 155 + 100 * (anim2 + 1.0) / 2.0;
+		const int alpha = _int_r(155 + 100 * (anim2 + 1.0) / 2.0);
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 		//1.メニュー項目から画像への線（メニュー項目右端から画像左端まで）
@@ -325,7 +325,7 @@ void MenuManager::Draw() {
 	{
 		int infoWidth = 500;
 		int infoHeight = textBoxHeight;
-		int infoX = mLayout.menuPos.x - infoWidth / 2;
+		int infoX = _int_r(mLayout.menuPos.x - _dbl(infoWidth)/2);
 		int infoY = textBoxY;
 
 		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1 };

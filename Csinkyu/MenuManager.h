@@ -29,6 +29,8 @@ struct MenuColor
 };
 /*------------------------------------------*/
 
+class GameData;
+
 //ƒƒjƒ…[.[Œp³•s‰Â]
 class MenuManager final
 {

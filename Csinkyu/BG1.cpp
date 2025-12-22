@@ -1,30 +1,8 @@
-
+/*
+   - BG1.cpp -
+*/
 #include "BG1.h"
 #include "GameManager.h"
-
-
-//TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BGManagerからの移植
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
@@ -106,7 +84,7 @@ void BG1::Update() {
 
 	//一定間隔ごと.
 	if (tmShine.IntervalTime()) {
-		int idx = RandNum(0, (int)tiles.size()-1);
+		int idx = Calc::RandNum(0, (int)tiles.size()-1);
 		tiles[idx].Shine(); //ランダムでタイルを発光させる.
 	}
 	//各タイル更新.
@@ -121,7 +99,7 @@ void BG1::Draw() {
 	float pass = GameManager::GetInst().GetReflectModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
-	time = AnimEaseOut(time); //値の曲線変動.
+	time = Calc::AnimEaseOut(time); //値の曲線変動.
 
 	//各タイル描画.
 	for (auto& i : tiles) {
