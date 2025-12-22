@@ -9,6 +9,7 @@
 //初期化.
 void BG_Tile::Init() {
 	p_data = &GameData::GetInst();
+	p_bg   = &BG1::GetInst();
 }
 //更新.
 void BG_Tile::Update() {
@@ -18,29 +19,20 @@ void BG_Tile::Update() {
 	}
 }
 //描画.
-void BG_Tile::Draw(double slowTime, float counter) {
+void BG_Tile::Draw(double slowTime) {
 
 	//通常モード.
 	{
-		//透明度計算.
-		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
-		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4))+1) / 2;
-		//透明度設定.
-		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * sinNum * (1-slowTime));
-		//画像.
+		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * (1-slowTime) * (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
 		DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 	}
 	//反射モード.
 	if (p_data->isReflectMode) {
-		//透明度計算.
-		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
-		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4))+1) / 2;
-		//透明度設定.
-		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * sinNum * slowTime);
-		//画像.
+		double alpha = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
+		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * slowTime* (sin(M_PI * (double)(pos.x - pos.y + p_bg->GetCounter()*2)/(WINDOW_WID/4))+1)/2);
 		DrawImgMng::Get("bg_reflect")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 	}
-
 	ResetDrawBlendMode(); //描画モードリセット.
 }
 //発光.
@@ -88,7 +80,7 @@ void BG1::Init() {
 //更新.
 void BG1::Update() {
 	
-	counter += p_data->speedRate; //経過時間.
+	counter += p_data->speedRate;
 
 	//一定間隔ごと.
 	if (tmShine.IntervalTime()) {
@@ -111,7 +103,7 @@ void BG1::Draw() {
 
 	//各タイル描画.
 	for (auto& i : tiles) {
-		i.Draw(time, counter);
+		i.Draw(time);
 	}
 	//スローモード中.
 	if (p_data->speedRate) {

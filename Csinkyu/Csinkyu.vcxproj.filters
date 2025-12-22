@@ -74,6 +74,5 @@
     <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Camera.cpp" />
     <ClCompile Include="BG1.cpp" />
-    <ClCompile Include="BG_Base.h" />
   </ItemGroup>
 </Project>
