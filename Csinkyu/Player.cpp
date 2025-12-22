@@ -168,7 +168,7 @@ void Player::PlayerMove()
 		if (isDashing)
 		{
 			//c‚èŠÔ‚É‰‚¶‚Ä’iXŒ¸‘¬.
-			speed *= 1.0f + PLAYER_DASH_SPEED * Calc::AnimEaseOut(dashTimer/PLAYER_DASH_DURATION);
+			speed *= 1.0f + _flt(PLAYER_DASH_SPEED * Calc::AnimEaseOut(dashTimer/PLAYER_DASH_DURATION));
 		}
 		//ˆÚ“®.
 		InputMng::MoveKey4Dir (&hit.pos, speed);
