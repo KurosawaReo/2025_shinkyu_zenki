@@ -1,10 +1,5 @@
 #pragma once
 
-//前方宣言.
-class Player;
-class LaserManager;
-class EffectManager;
-
 //アイテムタイプ.
 enum ItemType
 {
@@ -39,11 +34,6 @@ private:
 
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
 	bool     isSpawnAble{};   //召喚可能かどうか.
-
-	GameData*      p_gamedata{};  //ゲームデータ.
-	Player*        p_player{};    //プレイヤーデータ.
-	LaserManager*  p_laserMng{};
-	EffectManager* p_effectMng{};
 
 //▼関数.
 private:

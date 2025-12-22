@@ -2,10 +2,16 @@
    - UIManager.cpp -
    UI管理.
 */
-#include "GameManager.h"
-#include "Stage_Tutorial.h"
 #include "UIManager.h"
-using namespace Calc; //計算機能.
+
+//依存関係.
+#include "Stage_Tutorial.h"
+#include "GameData.h"
+#include "GameManager.h"
+//参照.
+GameManager* p_gameMng{};
+GameData* p_gameData{};
+TutorialStage* p_tutorialStg{};
 
 //初期化.
 void UIManager::Init() {
@@ -52,8 +58,8 @@ void UIManager::Draw() {
 		case STAGE_TUTORIAL:
 		{
 			//アニメーション値.
-			double alpha   = AnimEaseInOut((time-1.0) * 2);
-			double alpha2  = AnimEaseInOut(time-0.2);
+			double alpha   = Calc::AnimEaseInOut((time-1.0) * 2);
+			double alpha2  = Calc::AnimEaseInOut(time-0.2);
 			double animSin = sin(M_PI * (time-0.2));
 			//テキスト設定.
 			DrawStr str1({}, { WINDOW_WID/2, 70+2 }, 0xFFFFFF);
@@ -89,10 +95,10 @@ void UIManager::Draw() {
 		case STAGE_ENDLESS:
 		{
 			//アニメーション値.
-			double alpha1   = AnimEaseInOut( time-0.1);
-			double alpha2   = AnimEaseInOut( time-0.2);
-			double alpha3   = AnimEaseInOut( time-0.3);
-			double alpha4   = AnimEaseInOut((time-1.0)*2);
+			double alpha1   = Calc::AnimEaseInOut( time-0.1);
+			double alpha2   = Calc::AnimEaseInOut( time-0.2);
+			double alpha3   = Calc::AnimEaseInOut( time-0.3);
+			double alpha4   = Calc::AnimEaseInOut((time-1.0)*2);
 			double animSin1 = sin(M_PI* time-0.1);
 			double animSin2 = sin(M_PI*(time-0.2));
 			double animSin3 = sin(M_PI*(time-0.3));

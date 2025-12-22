@@ -4,14 +4,18 @@
    障害物: レーザー発射台(継承先)
    個体によって違う動きをするため、overrideを使用.
 */
-#include "GameManager.h"
 #include "Obst_NormalLaser.h"
+
+//依存関係.
+#include "GameData.h"
+//参照.
+GameData& p_data = GameData::GetInst();
 
 //obstacle4mainのMove関数をobstacle4用に上書き.
 void NormalLaser_1::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data->speedRate;
+	float moveSpeed = Hm * p_data.speedRate;
 
 	// 矩形経路の移動(右回り)
 	switch (moveDir)
@@ -51,7 +55,7 @@ void NormalLaser_1::Move()
 void NormalLaser_2::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data->speedRate;
+	float moveSpeed = Hm * p_data.speedRate;
 
 	// 矩形経路の移動(左回り)
 	switch (moveDir)
@@ -91,7 +95,7 @@ void NormalLaser_2::Move()
 void NormalLaser_3::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data->speedRate;
+	float moveSpeed = Hm * p_data.speedRate;
 
 	// 矩形経路の移動(左回り)
 	switch (moveDir)
@@ -131,7 +135,7 @@ void NormalLaser_3::Move()
 void NormalLaser_4::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data->speedRate;
+	float moveSpeed = Hm * p_data.speedRate;
 
 	// 矩形経路の移動(右回り)
 	switch (moveDir)

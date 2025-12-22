@@ -5,8 +5,6 @@
 #pragma once
 #include "EffectManager.h"
 
-class GameData; //前方宣言.
-
 //エフェクトデータ.
 struct AfterEffect
 {
@@ -54,9 +52,6 @@ private:
 	double         imgRot{};            //プレイヤーの画像角度.
 
 	bool           isMoveAble{};     //移動可能かどうか.
-
-	GameData*      p_data{};      //ゲームデータ.
-	EffectManager* p_effectMng{}; //エフェクト管理.
 
 //▼関数.
 private:

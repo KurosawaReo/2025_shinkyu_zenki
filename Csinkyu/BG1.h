@@ -3,10 +3,6 @@
 */
 #pragma once
 
-//前方宣言.
-class GameData;
-class BGManager;
-
 //背景タイル.
 class BG_Tile
 {
@@ -16,9 +12,6 @@ private:
 	DBL_XY    sizeRate{};
 
 	Timer timer = Timer(TimerMode::CountDown, 3); //発光する時間.
-
-	GameData* p_data{};
-	BG1*      p_bg{};
 
 public:
 	void Init();                //初期化.
@@ -36,8 +29,6 @@ private:
 	vector<BG_Tile> tiles; //背景タイルデータ.
 
 	TimerMicro tmShine = TimerMicro(TimerMode::CountDown, 1000000/60); //光る間隔.
-
-	GameData*  p_data{}; //ゲームデータ.
 
 //▼関数.
 public:

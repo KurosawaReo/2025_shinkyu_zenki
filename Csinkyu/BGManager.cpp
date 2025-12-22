@@ -3,8 +3,9 @@
 */
 #include "BGManager.h"
 
+//И╦С╢К╓МW.
 #include "BG1.h"
-#include "GameManager.h"
+#include "GameData.h"
 
 // Бе*---=[ BGManager ]=---*Бе //
 

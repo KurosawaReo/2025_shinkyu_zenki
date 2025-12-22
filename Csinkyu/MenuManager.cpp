@@ -2,14 +2,16 @@
    - MenuManager.cpp -
    メニューシーン
 */
-#include "Global.h"
-#include "GameManager.h"
 #include "MenuManager.h"
+
+//依存関係.
+#include "GameData.h"
+#include "GameManager.h"
+//参照.
+GameData& p_data = GameData::GetInst();
 
 // 初期化
 void MenuManager::Init() {
-
-	p_data = &GameData::GetInst();
 
 	// 入力アクション登録
 	InputMng::AddAction("MENU_UP",   KeyID::Up);
@@ -66,8 +68,8 @@ void MenuManager::Update() {
 		switch (selectedIndex)
 		{
 			case 0:
-				p_data->scene = SCENE_GAME;
-				p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
+				p_data.scene = SCENE_GAME;
+				p_data.stage = STAGE_ENDLESS;  //耐久モードへ.
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -77,8 +79,8 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 1:
-				p_data->scene = SCENE_GAME;
-				p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
+				p_data.scene = SCENE_GAME;
+				p_data.stage = STAGE_TUTORIAL; //チュートリアルへ.
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -88,7 +90,7 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 2:
-				p_data->scene = SCENE_TITLE;    //タイトルへ.
+				p_data.scene = SCENE_TITLE;    //タイトルへ.
 				GameManager::GetInst().Reset(); //リセット.
 				break;
 
@@ -104,7 +106,7 @@ void MenuManager::Update() {
 	/*
 	//電気の進行率.
 	if (electrRate < 1.0) { 
-		electrRate += MENU_ELECTR_MOVE_SPEED * p_data->speedRate;
+		electrRate += MENU_ELECTR_MOVE_SPEED * p_data.speedRate;
 		NumLimMax(&electrRate, 1.0); //上限は1.0
 
 		//前の始点を終点にする.

@@ -29,8 +29,6 @@ struct MenuColor
 };
 /*------------------------------------------*/
 
-class GameData;
-
 //メニュー.[継承不可]
 class MenuManager final
 {
@@ -43,8 +41,6 @@ public:
 
 //▼変数.
 private:
-	GameData* p_data{};           //GameDataのポインタ.
-
 	Font      fontMenu[2]{};      //メニュー用フォント.
 
 	int       selectedIndex = 0;  //カーソルの選択位置 | 0:ゲーム開始 | 1:チュートリアル | 2:タイトルに戻る |

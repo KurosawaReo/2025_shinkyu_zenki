@@ -5,9 +5,6 @@
 */
 #pragma once
 
-class GameData; //‘O•ûéŒ¾.
-class Player;   //‘O•ûéŒ¾.
-
 // ‰Ô‰Î‚Ìó‘Ô
 enum FireworksState {
 	FIREWORKS_STATE_WARNING,    // —\ó‘Ô
@@ -44,10 +41,6 @@ public:
 private:
 	list<FireworksData> fireworks;
 	float				spawnTimer{};
-
-	GameData*     p_data{};
-	Player*       p_player{};
-	LaserManager* p_laserMng{};
 
 //¥ŠÖ”.
 private:

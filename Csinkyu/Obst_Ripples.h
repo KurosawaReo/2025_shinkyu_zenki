@@ -29,10 +29,7 @@ public:
 private:
 	list<RipplesData> ripples; //波紋配列.
 
-	float     flashTimer{}; //出現タイマー.
-
-	GameData* p_data{};
-	Player*   p_player{};
+	float flashTimer{}; //出現タイマー.
 
 //▼関数.
 private:

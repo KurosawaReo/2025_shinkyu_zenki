@@ -4,12 +4,6 @@
 */
 #pragma once
 
-//前方宣言.
-class GameData;
-class Player;
-class MeteorManager;
-class EffectManager;
-
 //レーザータイプ.
 enum LaserType
 {
@@ -62,11 +56,6 @@ private:
 	list<LaserLineData> line;  //レーザー描画線.
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
-
-	GameData*      p_data{};
-	Player*        p_player{};
-	MeteorManager* p_meteorMng{};
-	EffectManager* p_effectMng{};
 
 //▼関数.
 private:

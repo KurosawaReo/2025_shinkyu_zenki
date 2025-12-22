@@ -3,14 +3,18 @@
 */
 #include "BG1.h"
 
+//依存関係.
 #include "BGManager.h"
+#include "GameData.h"
 #include "GameManager.h"
+//参照.
+GameData& p_data = GameData::GetInst();
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
 //初期化.
 void BG_Tile::Init() {
-	p_data = &GameData::GetInst();
+
 }
 //更新.
 void BG_Tile::Update() {
@@ -35,7 +39,7 @@ void BG_Tile::Draw(double slowTime) {
 		DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 	}
 	//反射モード.
-	if (p_data->isReflectMode) {
+	if (p_data.isReflectMode) {
 		//透明度計算.
 		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
@@ -58,8 +62,6 @@ void BG_Tile::Shine() {
 
 //初期化.
 void BG1::Init() {
-
-	p_data = &GameData::GetInst();
 
 	DrawImgMng::LoadFile(_T("Resources/Images/bg_normal.png"),          "bg_normal");
 	DrawImgMng::LoadFile(_T("Resources/Images/bg_reflect.png"),         "bg_reflect");
@@ -115,7 +117,7 @@ void BG1::Draw() {
 		i.Draw(time);
 	}
 	//スローモード中.
-	if (p_data->speedRate) {
+	if (p_data.speedRate) {
 		//グラデーション枠.
 		SetDrawBlendModeKR(BlendModeID::Alpha, 255*time);
 		DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
