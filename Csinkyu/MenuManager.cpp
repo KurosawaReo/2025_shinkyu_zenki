@@ -5,10 +5,12 @@
 #include "MenuManager.h"
 
 //依存関係.
+#include "BGManager.h"
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData& p_data = GameData::GetInst();
+static GameData&  p_data = GameData::GetInst();
+static BGManager& p_bg   = BGManager::GetInst();
 
 // 初期化
 void MenuManager::Init() {
@@ -69,7 +71,8 @@ void MenuManager::Update() {
 		{
 			case 0:
 				p_data.scene = SCENE_GAME;
-				p_data.stage = STAGE_ENDLESS;  //耐久モードへ.
+				p_data.stage = STAGE_ENDLESS; //耐久モードへ.
+				p_bg.SetBgNo(1);              //背景変更.
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -81,6 +84,7 @@ void MenuManager::Update() {
 			case 1:
 				p_data.scene = SCENE_GAME;
 				p_data.stage = STAGE_TUTORIAL; //チュートリアルへ.
+				p_bg.SetBgNo(1);               //背景変更.
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -103,18 +107,6 @@ void MenuManager::Update() {
 		}
 	}
 
-	/*
-	//電気の進行率.
-	if (electrRate < 1.0) { 
-		electrRate += MENU_ELECTR_MOVE_SPEED * p_data.speedRate;
-		NumLimMax(&electrRate, 1.0); //上限は1.0
-
-		//前の始点を終点にする.
-		electr.edPos   = electr.stPos;
-		electr.stPos.x += 10;
-		Debug::Log(_T("pos:"), electr.stPos);
-	}
-	*/
 	//経過時間.
 	counter += 1;
 }
@@ -313,13 +305,6 @@ void MenuManager::Draw() {
 			DrawLineKR(line, false, 3.0f);
 		}
 
-		/*
-		//3.電気.
-		if (electrRate < 1.0) {
-			DrawLineKR(electr, false, 3.0f);
-		}
-		*/
-
 		ResetDrawBlendMode();
 	}
 
@@ -418,11 +403,4 @@ void MenuManager::OnCursorMove() {
 	if (auto i = SoundMng::Get("MenuCursor")) {
 		i->Play(false, 70);
 	}
-
-	/*
-	//電気の初期座標.
-	electr.stPos = mLayout.menuPos.Add(mLayout.menuSize.x/2, mLayout.menuSpace * selectedIndex);
-	//電気を動かす.
-	electrRate   = 0.0;
-	*/
 }

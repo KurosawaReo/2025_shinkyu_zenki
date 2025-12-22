@@ -4,7 +4,6 @@
 #include "BGManager.h"
 
 //àÀë∂ä÷åW.
-#include "BG1.h"
 #include "GameData.h"
 
 // Å•*---=[ BGManager ]=---*Å• //
@@ -13,6 +12,7 @@
 void BGManager::Init() {
 	useBgNo = 0;
 	bg1.Init();
+	bg2.Init();
 }
 //çXêV.
 void BGManager::Update() {
@@ -20,7 +20,9 @@ void BGManager::Update() {
 	counter += GameData::GetInst().speedRate; //åoâﬂéûä‘.
 
 	switch (useBgNo) {
-		case 0:  bg1.Update();  break; //îwåi1.
+		case 0:                 break; //îwåiÇ»Çµ.
+		case 1:  bg1.Update();  break; //îwåi1.
+		case 2:  bg2.Update();  break; //îwåi2.
 		default: assert(false); break;
 	}
 }
@@ -28,7 +30,9 @@ void BGManager::Update() {
 void BGManager::Draw() {
 
 	switch (useBgNo) {
-		case 0:  bg1.Draw();    break; //îwåi1.
+		case 0:                 break; //îwåiÇ»Çµ.
+		case 1:  bg1.Draw();    break; //îwåi1.
+		case 2:  bg2.Draw();    break; //îwåi2.
 		default: assert(false); break;
 	}
 }
@@ -37,7 +41,9 @@ void BGManager::Draw() {
 void BGManager::PauseAnim() {
 
 	switch (useBgNo) {
-		case 0:  bg1.PauseAnim(); break; //îwåi1.
+		case 0:                   break; //îwåiÇ»Çµ.
+		case 1:  bg1.PauseAnim(); break; //îwåi1.
+		case 2:  bg2.PauseAnim(); break; //îwåi2.
 		default: assert(false);   break;
 	}
 }
@@ -45,7 +51,9 @@ void BGManager::PauseAnim() {
 void BGManager::RestartAnim() {
 
 	switch (useBgNo) {
-		case 0:  bg1.RestartAnim(); break; //îwåi1.
+		case 0:                     break; //îwåiÇ»Çµ.
+		case 1:  bg1.RestartAnim(); break; //îwåi1.
+		case 2:  bg2.RestartAnim(); break; //îwåi2.
 		default: assert(false);     break;
 	}
 }

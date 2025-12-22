@@ -21,8 +21,8 @@ public:
 	void Shine(); //”­Œõ.
 };
 
-//”wŒi1.[Œp³•s‰Â]
-class BG1 final
+//”wŒi1.
+class BG1
 {
 //¥•Ï”.
 private:

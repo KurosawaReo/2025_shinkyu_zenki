@@ -3,6 +3,7 @@
 */
 #pragma once
 #include "BG1.h"
+#include "BG2.h"
 
 //”wŒiƒNƒ‰ƒX.[Œp³•s‰Â]
 class BGManager final
@@ -20,6 +21,7 @@ private:
 
 	int   useBgNo{}; //‰½”Ô–Ú‚Ì”wŒi‚ğg‚¤‚©.
 	BG1   bg1{};     //”wŒi1.
+	BG2   bg2{};     //”wŒi2.
 
 //¥ŠÖ”.
 private:
@@ -27,6 +29,8 @@ private:
 	BGManager(){}
 
 public:
+	//set.
+	void  SetBgNo(int _no) { useBgNo = _no; }
 	//get.
 	float GetCounter() const { return counter; }
 

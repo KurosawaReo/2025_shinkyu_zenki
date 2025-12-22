@@ -30,10 +30,12 @@ namespace KR
 	//タイマー共通[継承想定]
 	class TimerBase
 	{
+	//▼ ===== 変数 ===== ▼.
 	protected:
 		TimerMode  mode{};  //計測モード.
 		TimerState state{};	//タイマー状態.
 
+	//▼ ===== 関数 ===== ▼.
 	public:
 		//constructor.
 		TimerBase(TimerMode _mode) :
