@@ -7,7 +7,7 @@
 //依存関係.
 #include "GameData.h"
 //参照
-GameData& p_data = GameData::GetInst();
+static GameData& p_data = GameData::GetInst();
 
 using namespace Calc; //計算機能を使用.
 

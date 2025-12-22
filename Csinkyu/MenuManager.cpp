@@ -8,7 +8,7 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-GameData& p_data = GameData::GetInst();
+static GameData& p_data = GameData::GetInst();
 
 // 初期化
 void MenuManager::Init() {

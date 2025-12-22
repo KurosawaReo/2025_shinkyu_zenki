@@ -11,10 +11,10 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-GameData&      p_gamedata  = GameData::GetInst();
-Player&        p_player    = Player::GetInst();
-LaserManager&  p_laserMng  = LaserManager::GetInst();
-EffectManager& p_effectMng = EffectManager::GetInst();
+static GameData&      p_gamedata  = GameData::GetInst();
+static Player&        p_player    = Player::GetInst();
+static LaserManager&  p_laserMng  = LaserManager::GetInst();
+static EffectManager& p_effectMng = EffectManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 

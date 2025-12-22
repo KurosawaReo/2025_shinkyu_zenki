@@ -10,8 +10,8 @@
 #include "GameData.h"
 #include "GameManager.h"
 //QÆ.
-GameData& p_data   = GameData::GetInst();
-Player&   p_player = Player::GetInst();
+static GameData& p_data   = GameData::GetInst();
+static Player&   p_player = Player::GetInst();
 
 //‰Šú‰»(ˆê‰ñ‚Ì‚İs‚¤)
 void Ripples::Init()

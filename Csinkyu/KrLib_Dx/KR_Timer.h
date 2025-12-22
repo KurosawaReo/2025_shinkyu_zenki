@@ -36,8 +36,8 @@ namespace KR
 
 	public:
 		//constructor.
-		TimerBase() : 
-			mode(TimerMode::CountUp), state(TimerState::Stop) 
+		TimerBase(TimerMode _mode) :
+			mode(_mode), state(TimerState::Stop)
 		{}
 		//get.
 		TimerState GetState() const { return state; }
@@ -72,11 +72,11 @@ namespace KR
 
 	public:
 		//constructor.
-		Timer() {
-			Timer(TimerMode::CountUp, 0);
-		}
+		Timer() :
+			TimerBase(TimerMode::CountUp), tmInit(0), tmSavePass(0) //‰Šú‰».
+		{}
 		Timer(TimerMode _mode, float _init) :
-			tmInit(_init), tmSavePass(_init) //‰Šú‰».
+			TimerBase(_mode), tmInit(_init), tmSavePass(_init) //‰Šú‰».
 		{}
 
 		void Start() {
@@ -110,11 +110,13 @@ namespace KR
 
 	public:
 		//constructor.
-		TimerMicro() {
-			TimerMicro(TimerMode::CountUp, 0);
+		TimerMicro() :
+			TimerBase(TimerMode::CountUp), tmInit(0), tmSavePass(0) //‰Šú‰».
+		{
+			QueryPerformanceFrequency(&freq); //•p“x‚Ìæ“¾.
 		}
 		TimerMicro(TimerMode _mode, LONGLONG _init) :
-			tmInit(_init), tmSavePass(_init) //‰Šú‰».
+			TimerBase(_mode), tmInit(_init), tmSavePass(_init) //‰Šú‰».
 		{
 			QueryPerformanceFrequency(&freq); //•p“x‚Ìæ“¾.
 		}

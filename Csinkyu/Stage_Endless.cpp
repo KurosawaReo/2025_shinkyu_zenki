@@ -17,14 +17,14 @@
 #include "GameData.h"
 #include "GameManager.h"
 //QÆ.
-GameData&         p_data         = GameData::GetInst();
-GameManager&      p_gameMng      = GameManager::GetInst();
-LaserManager&	  p_laserMng     = LaserManager::GetInst();
-MeteorManager&    p_meteorMng    = MeteorManager::GetInst();
-Ripples&          p_ripples      = Ripples::GetInst();
-ItemManager&      p_itemMng      = ItemManager::GetInst();
-FireworksManager& p_fireworksMng = FireworksManager::GetInst();
-EffectManager&    p_effectMng    = EffectManager::GetInst();
+static GameData&         p_data         = GameData::GetInst();
+static GameManager&      p_gameMng      = GameManager::GetInst();
+static LaserManager&     p_laserMng     = LaserManager::GetInst();
+static MeteorManager&    p_meteorMng    = MeteorManager::GetInst();
+static Ripples&          p_ripples      = Ripples::GetInst();
+static ItemManager&      p_itemMng      = ItemManager::GetInst();
+static FireworksManager& p_fireworksMng = FireworksManager::GetInst();
+static EffectManager&    p_effectMng    = EffectManager::GetInst();
 
 //‰Šú‰».
 void EndlessStage::Init() {

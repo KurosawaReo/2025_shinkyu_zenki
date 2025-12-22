@@ -12,10 +12,10 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-GameData&      p_data      = GameData::GetInst();
-Player&        p_player    = Player::GetInst();
-LaserManager&  p_laserMng  = LaserManager::GetInst();
-MeteorManager& p_meteorMng = MeteorManager::GetInst();
+static GameData&      p_data      = GameData::GetInst();
+static Player&        p_player    = Player::GetInst();
+static LaserManager&  p_laserMng  = LaserManager::GetInst();
+static MeteorManager& p_meteorMng = MeteorManager::GetInst();
 
 /// <summary>
 /// リセットするぜ.

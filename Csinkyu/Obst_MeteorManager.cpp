@@ -10,9 +10,9 @@
 #include "GameManager.h"
 #include "EffectManager.h"
 //éQè∆.
-GameData&      p_data      = GameData::GetInst();
-Player&        p_player    = Player::GetInst();
-EffectManager& p_effectMng = EffectManager::GetInst();
+static GameData&      p_data      = GameData::GetInst();
+static Player&        p_player    = Player::GetInst();
+static EffectManager& p_effectMng = EffectManager::GetInst();
 
 void MeteorManager::Init() {
 

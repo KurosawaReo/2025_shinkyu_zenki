@@ -10,10 +10,10 @@
 #include "Stage_Tutorial.h"
 #include "GameData.h"
 //参照.
-GameData&      p_data      = GameData::GetInst();
-Player&        p_player    = Player::GetInst();
-MeteorManager& p_meteorMng = MeteorManager::GetInst();
-EffectManager& p_effectMng = EffectManager::GetInst();
+static GameData&      p_data      = GameData::GetInst();
+static Player&        p_player    = Player::GetInst();
+static MeteorManager& p_meteorMng = MeteorManager::GetInst();
+static EffectManager& p_effectMng = EffectManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
