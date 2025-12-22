@@ -2,14 +2,18 @@
    - MenuManager.cpp -
    メニューシーン
 */
-#include "Global.h"
-#include "GameManager.h"
 #include "MenuManager.h"
+
+//依存関係.
+#include "BGManager.h"
+#include "GameData.h"
+#include "GameManager.h"
+//参照.
+static GameData&  p_data = GameData::GetInst();
+static BGManager& p_bg   = BGManager::GetInst();
 
 // 初期化
 void MenuManager::Init() {
-
-	p_data = &GameData::GetInst();
 
 	// 入力アクション登録
 	InputMng::AddAction("MENU_UP",   KeyID::Up);
@@ -66,8 +70,9 @@ void MenuManager::Update() {
 		switch (selectedIndex)
 		{
 			case 0:
-				p_data->scene = SCENE_GAME;
-				p_data->stage = STAGE_ENDLESS;  //耐久モードへ.
+				p_data.scene = SCENE_GAME;
+				p_data.stage = STAGE_ENDLESS; //耐久モードへ.
+				p_bg.SetBgNo(1);              //背景変更.
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -77,8 +82,9 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 1:
-				p_data->scene = SCENE_GAME;
-				p_data->stage = STAGE_TUTORIAL; //チュートリアルへ.
+				p_data.scene = SCENE_GAME;
+				p_data.stage = STAGE_TUTORIAL; //チュートリアルへ.
+				p_bg.SetBgNo(1);               //背景変更.
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -88,7 +94,7 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 2:
-				p_data->scene = SCENE_TITLE;    //タイトルへ.
+				p_data.scene = SCENE_TITLE;    //タイトルへ.
 				GameManager::GetInst().Reset(); //リセット.
 				break;
 
@@ -101,18 +107,6 @@ void MenuManager::Update() {
 		}
 	}
 
-	/*
-	//電気の進行率.
-	if (electrRate < 1.0) { 
-		electrRate += MENU_ELECTR_MOVE_SPEED * p_data->speedRate;
-		NumLimMax(&electrRate, 1.0); //上限は1.0
-
-		//前の始点を終点にする.
-		electr.edPos   = electr.stPos;
-		electr.stPos.x += 10;
-		Debug::Log(_T("pos:"), electr.stPos);
-	}
-	*/
 	//経過時間.
 	counter += 1;
 }
@@ -262,10 +256,10 @@ void MenuManager::Draw() {
 	}
 
 	//▼説明文の枠（右下）- 画像の幅に合わせる
-	int textBoxWidth = (int)imgSize.x;
+	int textBoxWidth  = _int_r(imgSize.x);
 	int textBoxHeight = 260;
-	int textBoxX = (int)(mLayout.imgPos.x - textBoxWidth/2);  // 画像と同じ中心位置
-	int textBoxY = WINDOW_HEI - 300;
+	int textBoxX      = _int_r(mLayout.imgPos.x - textBoxWidth/2);  // 画像と同じ中心位置
+	int textBoxY      = WINDOW_HEI - 300;
 
 	//▼選択項目から画像、説明文エリアまでの線を描画
 	{
@@ -278,7 +272,7 @@ void MenuManager::Draw() {
 		int textBoxTopY = textBoxY;
 
 		//線の透明度(155～255)
-		const int alpha = 155 + 100 * (anim2 + 1.0) / 2.0;
+		const int alpha = _int_r(155 + 100 * (anim2 + 1.0) / 2.0);
 		SetDrawBlendModeKR(BlendModeID::Alpha, alpha);
 
 		//1.メニュー項目から画像への線（メニュー項目右端から画像左端まで）
@@ -311,13 +305,6 @@ void MenuManager::Draw() {
 			DrawLineKR(line, false, 3.0f);
 		}
 
-		/*
-		//3.電気.
-		if (electrRate < 1.0) {
-			DrawLineKR(electr, false, 3.0f);
-		}
-		*/
-
 		ResetDrawBlendMode();
 	}
 
@@ -325,7 +312,7 @@ void MenuManager::Draw() {
 	{
 		int infoWidth = 500;
 		int infoHeight = textBoxHeight;
-		int infoX = mLayout.menuPos.x - infoWidth / 2;
+		int infoX = _int_r(mLayout.menuPos.x - _dbl(infoWidth)/2);
 		int infoY = textBoxY;
 
 		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1 };
@@ -416,11 +403,4 @@ void MenuManager::OnCursorMove() {
 	if (auto i = SoundMng::Get("MenuCursor")) {
 		i->Play(false, 70);
 	}
-
-	/*
-	//電気の初期座標.
-	electr.stPos = mLayout.menuPos.Add(mLayout.menuSize.x/2, mLayout.menuSpace * selectedIndex);
-	//電気を動かす.
-	electrRate   = 0.0;
-	*/
 }

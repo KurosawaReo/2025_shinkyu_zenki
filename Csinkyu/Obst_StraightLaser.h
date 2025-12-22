@@ -12,11 +12,6 @@ class StraightLaser
 private:
 	DBL_XY plyPos{};   // プレイヤー座標保管用.
 
-	GameData*      p_data{};
-	Player*        p_player{};
-	LaserManager*  p_laserMng{};
-	MeteorManager* p_meteorMng{};
-
 	float  laserSpawnTimer{};  // レーザー発射タイマー.
 	float  predictionTimer{};  // 予測線タイマー.
 	bool   showPrediction{};   // 予測線表示フラグ

@@ -5,18 +5,6 @@
 */
 #pragma once
 
-//前方宣言.
-class GameData;
-class GameManager;
-class LaserManager;
-class MeteorManager;
-class Ripples;
-class ItemManager;
-class Player;
-class FireworksManager;
-class EffectManager;
-class UIManager;
-
 //チュートリアル.[継承不可]
 class TutorialStage final
 {
@@ -27,9 +15,8 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
-
 	Font   font[2]{};
 	
 	int    stepNo{};          //現在のステップ番号.
@@ -46,17 +33,7 @@ private:
 	Timer  startTimer{};      //項目開始時に計測開始.
 	Timer  endTimer{};        //項目終了時に計測開始.
 
-	GameData*         p_data{};
-	GameManager*      p_gameMng{};
-	LaserManager*     p_laserMng{};
-	MeteorManager*    p_meteorMng{};
-	Ripples*          p_ripples{};
-	ItemManager*      p_itemMng{};
-	Player*           p_player{};
-	FireworksManager* p_fireworksMng{};
-	EffectManager*    p_effectMng{};
-	UIManager*        p_uiMng{};
-
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	TutorialStage(){}

@@ -1,6 +1,6 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/12/16
+   ver: 2025/12/23
 */
 #include "KR_Timer.h"
 
@@ -10,10 +10,10 @@ namespace KR
 // ▼*--=<[ Timer ]>=--*▼ //
 
 	//タイマー停止.
-	void Timer::Pause() {
+	bool Timer::TimerStop() {
 
 		//計測中なら.
-		if (isMoveNow) {
+		if (state == TimerState::Active) {
 
 			float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 
@@ -25,14 +25,17 @@ namespace KR
 				tmSavePass -= elapsed;           //タイマー減少.
 				tmSavePass = max(tmSavePass, 0); //下限は0秒.
 			}
-			isMoveNow = false; //停止.
+
+			return true; //停止した.
 		}
+		return false; //停止してない.
 	}
 	//経過時間取得.
 	float Timer::GetPassTime() {
 
 		//計測中なら.
-		if (isMoveNow) { 
+		if (state == TimerState::Active) {
+
 			float elapsed = _flt(clock() - tmStart)/1000; //時間差.
 			float pass = 0; //経過時間.
 
@@ -58,7 +61,7 @@ namespace KR
 		}
 
 		//まだ動いてなかったら.
-		if (!isMove) {
+		if (state != TimerState::Active) {
 			Start(); //タイマー開始.
 		}
 		//タイマーが0になるまで.
@@ -71,9 +74,11 @@ namespace KR
 
 // ▼*--=<[ TimerMicro ]>=--*▼ //
 
-	void TimerMicro::Pause() {
+	//タイマー停止.
+	bool TimerMicro::TimerStop() {
 
-		if (isMoveNow) {
+		//計測中なら.
+		if (state == TimerState::Active) {
 		
 			LARGE_INTEGER tmEnd;
 			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.
@@ -89,14 +94,15 @@ namespace KR
 				tmSavePass -= elapsed;           //タイマー減少.
 				tmSavePass = max(tmSavePass, 0); //下限は0秒.
 			}
-			isMoveNow = false; //停止.
+			return true; //停止した.
 		}
+		return false; //停止してない.
 	}
 	//経過時間取得(マイクロ秒)
 	LONGLONG TimerMicro::GetPassTime() {
 
 		//計測中なら.
-		if (isMoveNow) { 
+		if (state == TimerState::Active) {
 
 			LARGE_INTEGER tmEnd;
 			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.
@@ -123,7 +129,7 @@ namespace KR
 	double TimerMicro::GetFps() {
 
 		//計測中なら.
-		if (isMoveNow) {
+		if (state == TimerState::Active) {
 
 			LARGE_INTEGER tmEnd;
 			QueryPerformanceCounter(&tmEnd); //終了時刻の取得.
@@ -150,7 +156,7 @@ namespace KR
 		}
 
 		//まだ動いてなかったら.
-		if (!isMove) {
+		if (state != TimerState::Active) {
 			Start(); //タイマー開始.
 		}
 		//タイマーが0になるまで.

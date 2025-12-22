@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/23
 
    オブジェクトを追加。(継承して使うことも可)
    Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
@@ -56,9 +56,9 @@ namespace KR
 		//計算(Calcの機能)
 		void      FixPosInArea   (DBL_RECT rect);
 		bool      IsOutInArea    (DBL_RECT rect, bool isCompOut);
-		double    Dist       (DBL_XY pos);
-		DBL_XY    ArcPos     (double ang, double len);
-		double    FacingAng  (DBL_XY targetPos);
+		double    Dist			 (DBL_XY pos);
+		DBL_XY    ArcPos		 (double ang, double len);
+		double    FacingAng		 (DBL_XY targetPos);
 		//操作(Inputの機能)
 		void      MoveKey4Dir    (float speed);
 		void      MovePad4Dir    (float speed);
@@ -117,10 +117,10 @@ namespace KR
 		//get.
 		Box       GetBox() const { return box; }
 		//override.
-		void      SetPos(DBL_XY _pos)       override { box.pos = _pos; }
-		DBL_XY    GetPos()            const override { return box.pos; }
-		DBL_XY*   GetPosPtr()               override { return &box.pos; }
-		DBL_XY    GetSize()           const override { return box.size; }
+		void      SetPos   (DBL_XY _pos)       override { box.pos = _pos; }
+		DBL_XY    GetPos   ()            const override { return box.pos; }
+		DBL_XY*   GetPosPtr()                  override { return &box.pos; }
+		DBL_XY    GetSize  ()            const override { return box.size; }
 		ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const override;
 
 		//当たり判定(Calcの機能)

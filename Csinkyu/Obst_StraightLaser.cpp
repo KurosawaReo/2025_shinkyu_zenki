@@ -3,26 +3,25 @@
 
    障害物: 直線レーザー.
 */
-#include "Player.h"
-#include "GameManager.h"
-#include "LaserManager.h"
-#include "Obst_MeteorManager.h"
-
 #include "Obst_StraightLaser.h"
 
-using namespace Calc; //計算機能を使用.
+//依存関係.
+#include "Player.h"
+#include "LaserManager.h"
+#include "Obst_MeteorManager.h"
+#include "GameData.h"
+#include "GameManager.h"
+//参照.
+static GameData&      p_data      = GameData::GetInst();
+static Player&        p_player    = Player::GetInst();
+static LaserManager&  p_laserMng  = LaserManager::GetInst();
+static MeteorManager& p_meteorMng = MeteorManager::GetInst();
 
 /// <summary>
 /// リセットするぜ.
 /// </summary>
 void StraightLaser::Init()
 {
-	//実態取得するぜ.
-	p_data      = &GameData::GetInst();
-	p_player    = &Player::GetInst();
-	p_laserMng  = &LaserManager::GetInst();
-	p_meteorMng = &MeteorManager::GetInst();
-
 	currentDirection = 0;
 	nextDirection = 0;
 	// 重複削除: currentDirection = 0;
@@ -46,10 +45,10 @@ void StraightLaser::Reset()
 /// </summary>
 void StraightLaser::Update()
 {
-	plyPos = p_player->GetPos();//プレイヤーの現在位置を取得.
+	plyPos = p_player.GetPos();//プレイヤーの現在位置を取得.
 
 	//レーザー発射タイマー更新.
-	laserSpawnTimer -= p_data->speedRate;
+	laserSpawnTimer -= p_data.speedRate;
 
 	// 予測線表示タイマー更新（レーザー発射の60フレーム前から表示）
 	if (laserSpawnTimer <= LASER_STR_PREDICTION_TIME)
@@ -86,7 +85,7 @@ void StraightLaser::Update()
 
 		//タイマー再開(徐々に短くなる)
 		//予測線の出る時間より短くならないよう設定.
-		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * p_data->spawnRate;
+		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * p_data.spawnRate;
 
 		showPrediction = false;
 		predictionTimer = 0;
@@ -126,7 +125,7 @@ void StraightLaser::DrawPredictionLine()
 #endif
 
 	// 予測線の透明度.
-	double alpha = AnimEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0～1.0の範囲.
+	double alpha = Calc::AnimEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0～1.0の範囲.
 	SetDrawBlendModeKR(BlendModeID::Alpha, 255*(1-alpha));
 
 	// 中央の予測線のみを描画
@@ -226,7 +225,7 @@ void StraightLaser::SpawnStraightLaser()
 		}
 
 		//直線レーザーを発射.
-		p_laserMng->SpawnLaser(tmpPos, vel, Laser_Straight);
+		p_laserMng.SpawnLaser(tmpPos, vel, Laser_Straight);
 	}
 
 	nextLaserIndex = 0;

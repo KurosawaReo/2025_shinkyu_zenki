@@ -25,15 +25,13 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	list<RipplesData> ripples; //波紋配列.
 
-	float     flashTimer{}; //出現タイマー.
+	float flashTimer{}; //出現タイマー.
 
-	GameData* p_data{};
-	Player*   p_player{};
-
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	Ripples(){}

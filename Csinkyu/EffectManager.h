@@ -4,8 +4,6 @@
 */
 #pragma once
 
-class GameData; //前方宣言.
-
 //エフェクトタイプ.
 enum EffectType
 {
@@ -53,11 +51,11 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
-	list<Effect> effect;   //エフェクト配列.
-	GameData*	 p_data{};
+	list<Effect> effect; //エフェクト配列.
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	EffectManager(){}

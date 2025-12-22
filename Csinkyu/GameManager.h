@@ -11,49 +11,6 @@ class NormalLaser_3;
 class NormalLaser_4;
 class StraightLaser;
 
-//ゲームデータ.[継承不可]
-class GameData final
-{
-//▼実体関係.
-public:
-	static GameData& GetInst() {
-		static GameData inst; //自身のインスタンス.
-		return inst;
-	}
-
-//▼データ.
-public:
-	Scene      scene{};			//現在のシーン.
-	StageType  stage{};			//ステージ種類.
-	bool       isPause{};       //ポーズ中かどうか.
-
-	int		   score{};			//スコア.
-	int		   scoreBef{};		//スコア(時間加算前)
-	int		   bestScore{};		//ベストスコア.
-	int		   level{};			//レベル.
-
-	float	   speedRate{};		//ゲーム進行速度倍率.
-	float	   spawnRate{};		//障害物の出現時間割合.
-	float	   counter{};		//経過時間カウンター(スローの影響を受ける)
-
-	bool       isReflectMode{};	//反射モードかどうか.
-	float      slowBufCntr{};	//スロー続行時間.
-
-	int		   font1{};			//フォント.
-	int		   font2{};			//フォント.
-	int		   font3{};			//フォント.
-	int		   font4{};			//フォント.
-	
-private:
-	//constructor(新規作成をできなくする)
-	GameData(){}
-
-public:
-	//使用禁止.
-	GameData(const GameData&) = delete;
-	GameData& operator=(const GameData&) = delete;
-};
-
 //ゲームマネージャー.[継承不可]
 class GameManager final
 {
@@ -64,12 +21,12 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
 
-	Timer      tmGameTime{};    //ゲーム計測時間.
-	Timer      tmReflectMode{}; //スロー継続時間.
+	Timer tmGameTime{};         //ゲーム計測時間.
+	Timer tmReflectMode{};      //スロー継続時間.
 
 #if defined DEBUG_SHOW_FPS
 	TimerMicro tmFps{};         //fps計測用タイマー.
@@ -82,13 +39,15 @@ private:
 	bool isGameStart{};             //ゲーム開始サイン.
 	bool isBestScore{};             //ベストスコア更新したか.
 
-public: //オブジェクト.
+//▼オブジェクト.
+public:
 	NormalLaser_1* laserNor1{};
 	NormalLaser_2* laserNor2{};
 	NormalLaser_3* laserNor3{};
 	NormalLaser_4* laserNor4{};
 	StraightLaser* laserStr[2]{};
 
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	GameManager(){}

@@ -5,8 +5,6 @@
 #pragma once
 #include "EffectManager.h"
 
-class GameData; //前方宣言.
-
 //エフェクトデータ.
 struct AfterEffect
 {
@@ -34,7 +32,7 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	PlayerMode     mode{};     //モード.
 	
@@ -55,9 +53,7 @@ private:
 
 	bool           isMoveAble{};     //移動可能かどうか.
 
-	GameData*      p_data{};      //ゲームデータ.
-	EffectManager* p_effectMng{}; //エフェクト管理.
-
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	Player(){}
