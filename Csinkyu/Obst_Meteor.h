@@ -6,8 +6,6 @@
 #pragma once
 #include "Player.h"
 
-class GameData; //前方宣言.
-
 //隕石の状態.
 enum MeteorState
 {
@@ -35,8 +33,6 @@ private:
 	bool        isErase{};     //消去するかどうか.
 
 	float       destroyCntr{}; //破壊量の度合.
-
-	GameData*   p_data;        //ゲームデータ.
 
 public:
 	//get.

@@ -3,17 +3,19 @@
 
    障害物: 花火.
 */
-#include "Player.h"
-#include "GameManager.h"
-#include "LaserManager.h"
 #include "Obst_Fireworks.h"
+
+//依存関係.
+#include "Player.h"
+#include "LaserManager.h"
+#include "GameData.h"
+//参照.
+static GameData&     p_data     = GameData::GetInst();
+static LaserManager& p_laserMng = LaserManager::GetInst();
 
 // 初期化
 void FireworksManager::Init() {
 
-	p_data     = &GameData::GetInst();
-	p_player   = &Player::GetInst();
-	p_laserMng = &LaserManager::GetInst();
 }
 
 // リセット
@@ -68,7 +70,7 @@ void FireworksManager::SpawnFireworks(float x, float y) {
 
 // 花火生成更新
 void FireworksManager::UpdateFireworksGeneration() {
-	spawnTimer -= p_data->speedRate;
+	spawnTimer -= p_data.speedRate;
 
 	if (spawnTimer <= 0) {
 		//1～3個の花火をランダム生成.
@@ -90,7 +92,7 @@ void FireworksManager::UpdateFireworksGeneration() {
 			}
 		}
 		//出現カウンターリセット.
-		spawnTimer = FIREWORKS_SPAWN_SPAN * p_data->spawnRate;
+		spawnTimer = FIREWORKS_SPAWN_SPAN * p_data.spawnRate;
 	}
 }
 
@@ -99,7 +101,7 @@ void FireworksManager::UpdateIndividualFireworks() {
 
 	for (auto i = fireworks.begin(); i != fireworks.end(); ) {
 
-		i->counter -= p_data->speedRate; //カウンター減少.
+		i->counter -= p_data.speedRate; //カウンター減少.
 
 		//警告表示.
 		if (i->counter > 0) {
@@ -145,7 +147,7 @@ void FireworksManager::CreateFireworksSparks(float x, float y) {
 		};
 
 		// 落下するレーザーとして生成
-		p_laserMng->SpawnLaser(pos, vel, Laser_Falling);
+		p_laserMng.SpawnLaser(pos, vel, Laser_Falling);
 	}
 }
 

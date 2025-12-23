@@ -16,17 +16,14 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	list<Meteor>   meteor;		  //隕石配列.
 
 	float		   timer{};       //隕石生成用.
 	bool		   isSpawnAble{}; //召喚可能かどうか.
 
-	GameData*      p_data{};      //ゲームデータ.
-	Player*        p_player{};	  //プレイヤー.
-	EffectManager* p_effectMng{}; //エフェクト管理.
-
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	MeteorManager(){}

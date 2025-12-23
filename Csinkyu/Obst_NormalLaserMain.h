@@ -5,11 +5,6 @@
 */
 #pragma once
 
-//前方宣言.
-class Player;
-class LaserManager;
-class MeteorManager;
-
 struct FlashEffect
 {
 	double x, y;    // エフェクト位置.
@@ -32,11 +27,6 @@ protected:
 	MoveDir moveDir{};   //現在の移動方向.
 
 	FlashEffect    flash[LASER_NOR_FLASH_MAX]{};
-
-	GameData*      p_data{};
-	Player*        p_player{};
-	LaserManager*  p_laserMng{};
-	MeteorManager* p_meteorMng{};
 
 public:
 	//基本処理.

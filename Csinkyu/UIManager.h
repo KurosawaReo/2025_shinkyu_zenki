@@ -4,10 +4,6 @@
 */
 #pragma once
 
-//前方宣言.
-class GameManager;
-class TutorialStage;
-
 //UI管理.[継承不可]
 class UIManager final
 {
@@ -18,17 +14,14 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
 	int  disBestScore{}; //表示ベストスコア.
 	int  disScore{};     //表示スコア.
 
 	bool isShowScore{}; //スコアを表示するかどうか.
 
-	GameManager*   p_gameMng{};
-	GameData*      p_gameData{};
-	TutorialStage* p_tutorialStg{};
-
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	UIManager(){}

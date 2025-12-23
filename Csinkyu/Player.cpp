@@ -2,21 +2,21 @@
    - Player.cpp -
    プレイヤー管理.
 */
-#include "GameManager.h"
+#include "Player.h"
+
+//依存関係.
 #include "LaserManager.h"
 #include "Obst_NormalLaserMain.h"
 #include "Stage_Tutorial.h"
-
-#include "Player.h"
-
-using namespace Calc; //計算機能を使用.
+#include "GameManager.h"
+#include "GameData.h"
+//参照.
+static GameData&      p_data      = GameData::GetInst();
+static EffectManager& p_effectMng = EffectManager::GetInst();
 
 //初期化(一回のみ行う)
 void Player::Init()
 {
-	p_data      = &GameData::GetInst();
-	p_effectMng = &EffectManager::GetInst();
-
 	isDebug = false;
 
 	//画像読み込み.
@@ -57,17 +57,17 @@ void Player::Update()
 
 	//有効なら.
 	if (active) {
-		imgRot += 1.5 * p_data->speedRate; //画像回転.
+		imgRot += 1.5 * p_data.speedRate; //画像回転.
 
 		UpdateAfterImage();
 		UpdateDash();
 		PlayerMove();
 		
 		//反射モード中.
-		if (p_data->isReflectMode) {
+		if (p_data.isReflectMode) {
 			//敵のレーザーが近くにあれば.
 			if (LaserManager::GetInst().IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
-				p_data->slowBufCntr = SLOW_MODE_BUF_F;
+				p_data.slowBufCntr = SLOW_MODE_BUF_F;
 			}
 		}
 	}
@@ -79,7 +79,7 @@ void Player::Draw()
 	//デバッグ表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.Draw(Anchor::Mid, p_data->font1);
+		str.Draw(Anchor::Mid, p_data.font1);
 	}
 #endif
 
@@ -110,7 +110,7 @@ void Player::Draw()
 		}
 
 		//チュートリアル用.
-		if (p_data->stage == STAGE_TUTORIAL) {
+		if (p_data.stage == STAGE_TUTORIAL) {
 			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToInt(), 0xFFFFFF );
 			str.Draw();
 		}
@@ -122,13 +122,13 @@ void Player::UpdateDash()
 {
 	//ダッシュクールダウン減少.
 	if (dashCooldown > 0){
-		dashCooldown -= 1 * p_data->speedRate;
+		dashCooldown -= 1 * p_data.speedRate;
 	}
 
 	//ダッシュ中なら.
 	if (isDashing)
 	{
-		dashTimer -= 1 * p_data->speedRate;
+		dashTimer -= 1 * p_data.speedRate;
 		//ダッシュ時間切れ.
 		if (dashTimer <= 0)
 		{
@@ -149,7 +149,7 @@ void Player::UpdateDash()
 				isDashing    = true;
 
 				//チュートリアルなら.
-				if (p_data->stage == STAGE_TUTORIAL) {
+				if (p_data.stage == STAGE_TUTORIAL) {
 					TutorialStage::GetInst().SetPlayerDash(true);
 				}
 			}
@@ -160,7 +160,7 @@ void Player::UpdateDash()
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	float speed = PLAYER_MOVE_SPEED * p_data->speedRate;
+	float speed = PLAYER_MOVE_SPEED * p_data.speedRate;
 
 	//移動可能なら.
 	if (isMoveAble) {
@@ -168,13 +168,13 @@ void Player::PlayerMove()
 		if (isDashing)
 		{
 			//残り時間に応じて段々減速.
-			speed *= 1.0f + PLAYER_DASH_SPEED * Calc::AnimEaseOut(dashTimer/PLAYER_DASH_DURATION);
+			speed *= 1.0f + _flt(PLAYER_DASH_SPEED * Calc::AnimEaseOut(dashTimer/PLAYER_DASH_DURATION));
 		}
 		//移動.
 		InputMng::MoveKey4Dir (&hit.pos, speed);
 		InputMng::MovePadStick(&hit.pos, speed);
 		//移動限界.
-		FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
+		Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
 	}
 }
 
@@ -195,7 +195,7 @@ void Player::PlayerDeath() {
 		EffectData data{};
 		data.type = Effect_PlayerDeath;
 		data.pos  = hit.pos;
-		p_effectMng->SpawnEffect(&data);
+		p_effectMng.SpawnEffect(&data);
 		//GamaManagerの関数実行(includeだけすれば使える)
 		GameManager::GetInst().GameOver(); //ゲーム終了.
 	
@@ -222,7 +222,7 @@ void Player::PlayerRevival()
 //残像更新.
 void Player::UpdateAfterImage()
 {
-	afterCntr -= p_data->speedRate;
+	afterCntr -= p_data.speedRate;
 
 	//残像を残すタイミングになったら(基本は毎フレーム)
 	if (afterCntr <= 0) {

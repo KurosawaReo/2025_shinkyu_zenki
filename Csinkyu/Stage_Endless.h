@@ -5,16 +5,6 @@
 */
 #pragma once
 
-//前方宣言.
-class GameData;
-class GameManager;
-class LaserManager;
-class MeteorManager;
-class Ripples;
-class ItemManager;
-class FireworksManager;
-class EffectManager;
-
 //耐久モード.[継承不可]
 class EndlessStage final
 {
@@ -25,17 +15,10 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
-	GameData*         p_data{};
-	GameManager*      p_gameMng{};
-	LaserManager*     p_laserMng{};
-	MeteorManager*    p_meteorMng{};
-	Ripples*          p_ripples{};
-	ItemManager*      p_itemMng{};
-	FireworksManager* p_fireworksMng{};
-	EffectManager*    p_effectMng{};
-
+	
+//▼関数.
 private:
 	//constructor(新規作成をできなくする)
 	EndlessStage(){}

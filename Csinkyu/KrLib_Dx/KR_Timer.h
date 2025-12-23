@@ -1,6 +1,6 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/12/16
+   ver: 2025/12/23
 
    タイマー機能を追加。
 */
@@ -16,66 +16,90 @@ namespace KR
 	//タイマーモード.
 	enum class TimerMode
 	{
-		CountUp,
-		CountDown,
+		CountUp,	//増えるモード.
+		CountDown,	//減るモード.
+	};
+	//タイマー状態.
+	enum class TimerState
+	{
+		Stop,	//停止中.
+		Pause,	//ポーズ中.
+		Active,	//稼働中.
 	};
 
-	//タイマー機能.
-	class Timer
+	//タイマー共通[継承想定]
+	class TimerBase
 	{
 	//▼ ===== 変数 ===== ▼.
-	private:
-		TimerMode mode{};       //計測モード.
-		bool      isMove{};     //計測中か.
-		bool      isMoveNow{};  //計測中で, ポーズしていない状態か.
-
-		float     tmInit{};     //init : 初期時刻.
-		clock_t   tmStart{};    //start: 開始時刻.
-
-		float     tmSavePass{}; //時刻保存用(Stop後にStartしたら再開できるように)
+	protected:
+		TimerMode  mode{};  //計測モード.
+		TimerState state{};	//タイマー状態.
 
 	//▼ ===== 関数 ===== ▼.
 	public:
 		//constructor.
-		Timer() {
-			Timer(TimerMode::CountUp, 0);
-		}
-		Timer(TimerMode _mode, float _init) :
-			mode(_mode), tmInit(_init), tmSavePass(_init)      //初期化.
+		TimerBase(TimerMode _mode) :
+			mode(_mode), state(TimerState::Stop)
 		{}
 		//get.
-		bool GetIsMove()    const { return isMove; }
-		bool GetIsMoveNow() const {	return isMoveNow; }
+		TimerState GetState() const { return state; }
+
+		void Stop() {
+			if (TimerStop()) {
+				state = TimerState::Stop;  //停止できたらStopへ.
+			}
+		}
+		void Pause() {
+			if (TimerStop()) {
+				state = TimerState::Pause; //停止できたらPauseへ.
+			}
+		}
+
+		virtual bool TimerStop() = 0; //停止処理.
+	};
+
+	//タイマー機能.
+	class Timer : public TimerBase
+	{
+	//▼ ===== 変数 ===== ▼.
+	private:
+		float      tmInit{};     //init : 初期時刻.
+		clock_t    tmStart{};    //start: 開始時刻.
+
+		float      tmSavePass{}; //時刻保存用(Stop後にStartしたら再開できるように)
+
+	//▼ ===== 関数 ===== ▼.
+	private:
+		bool TimerStop() override; //タイマー停止.
+
+	public:
+		//constructor.
+		Timer() :
+			TimerBase(TimerMode::CountUp), tmInit(0), tmSavePass(0) //初期化.
+		{}
+		Timer(TimerMode _mode, float _init) :
+			TimerBase(_mode), tmInit(_init), tmSavePass(_init) //初期化.
+		{}
 
 		void Start() {
-			tmStart   = clock(); //開始時刻の取得.
-			isMove    = true;    //計測中.
-			isMoveNow = true;    //計測中.
+			tmStart = clock();            //開始時刻の取得.
+			state   = TimerState::Active; //タイマー稼働.
 		}
-		void Stop() {
-			isMove = false; //完全に停止.
-			Pause();
-		}
-		void Pause();
 		void Reset() {
 			tmStart    = 0;
 			tmSavePass = tmInit; //初期時刻.
-			isMove     = false;
-			isMoveNow  = false;
+			state      = TimerState::Stop;
 		}
+
 		float GetPassTime();  //時間取得.
 		bool  IntervalTime(); //一定時間ごとにtrueを返す.
 	};
 
 	//タイマー機能(マイクロ秒)
-	class TimerMicro
+	class TimerMicro : public TimerBase
 	{
 	//▼ ===== 変数 ===== ▼.
 	private:
-		TimerMode     mode{};       //計測モード.
-		bool          isMove{};     //計測中か.
-		bool          isMoveNow{};  //計測中で, ポーズしていない状態か.
-
 		LONGLONG      tmInit{};     //init     : 初期時刻(マイクロ秒)
 		LARGE_INTEGER tmStart{};    //start    : 開始時刻(カウント)
 		LARGE_INTEGER freq{};       //frequency: 1秒で何カウント進むか.
@@ -83,36 +107,32 @@ namespace KR
 		LONGLONG      tmSavePass{}; //時刻保存用(Stop後にStartしたら再開できるように)
 
 	//▼ ===== 関数 ===== ▼.
+	private:
+		bool TimerStop() override; //タイマー停止.
+
 	public:
 		//constructor.
-		TimerMicro() {
-			TimerMicro(TimerMode::CountUp, 0);
-		}
-		TimerMicro(TimerMode _mode, LONGLONG _init) :
-			mode(_mode), tmInit(_init), tmSavePass(_init) //初期化.
+		TimerMicro() :
+			TimerBase(TimerMode::CountUp), tmInit(0), tmSavePass(0) //初期化.
 		{
 			QueryPerformanceFrequency(&freq); //頻度の取得.
 		}
-		//get.
-		bool GetIsMove()    const { return isMove; }
-		bool GetIsMoveNow() const { return isMoveNow; }
+		TimerMicro(TimerMode _mode, LONGLONG _init) :
+			TimerBase(_mode), tmInit(_init), tmSavePass(_init) //初期化.
+		{
+			QueryPerformanceFrequency(&freq); //頻度の取得.
+		}
 
 		void Start() {
 			QueryPerformanceCounter(&tmStart); //開始時刻の取得.
-			isMove    = true; //計測中.
-			isMoveNow = true; //計測中.
+			state = TimerState::Active;
 		}
-		void Stop() {
-			isMove = false; //完全に停止.
-			Pause();
-		}
-		void Pause();
 		void Reset() {
 			tmStart.QuadPart = 0;
 			tmSavePass = tmInit; //初期時刻.
-			isMove     = false;
-			isMoveNow  = false;
+			state      = TimerState::Stop;
 		}
+
 		LONGLONG GetPassTime (); //時間取得.
 		double   GetFps();       //fps取得.
 		bool     IntervalTime(); //一定時間ごとにtrueを返す.

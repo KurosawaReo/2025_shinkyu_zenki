@@ -39,10 +39,8 @@ public:
 		return inst;
 	}
 
-//▼データ.
+//▼変数.
 private:
-	GameData* p_data{};           //GameDataのポインタ.
-
 	Font      fontMenu[2]{};      //メニュー用フォント.
 
 	int       selectedIndex = 0;  //カーソルの選択位置 | 0:ゲーム開始 | 1:チュートリアル | 2:タイトルに戻る |
@@ -53,15 +51,11 @@ private:
 	Timer     tmTitle = Timer(TimerMode::CountDown, 2.5f); //タイトルアニメ用.
 	bool      isBlink = 0;                                 //点滅させる用.
 
-	/*
-	//電気アニメーション.
-	double    electrRate = 0.0;  //電気が線の何割まで進んだか.
-	Line      electr{};          //電気用の線.
-	*/
 	//描画用設定.
 	const MenuLayout mLayout;
 	const MenuColor  mColor;
 
+//関数.
 private:
 	//constructor(新規作成をできなくする)
 	MenuManager(){}
