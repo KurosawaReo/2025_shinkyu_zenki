@@ -206,7 +206,7 @@ void GameManager::Reset() {
 	tmReflectMode.Reset();
 
 	//背景.
-	bg.SetBgNo(2);
+	bg.SetBgNo(1);
 	//サウンド.
 	SoundMng::StopAll();
 #if !defined BGM_NONE
