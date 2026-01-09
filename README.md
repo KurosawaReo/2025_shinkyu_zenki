@@ -18,30 +18,30 @@
 ## ゲーム概要
 <img src="_readme_img/game_image.png">
 <table>
-    <tr>
-        <th>ジャンル</th>
-        <td>反撃型回避アクション</td>
-    </tr>
-    <tr>
-        <th>操作端末</th>
-        <td>キーボード / コントローラ</td>
-    </tr>
-    <tr>
-        <th>プレイ人数</th>
-        <td>1人</td>
-    </tr>
-    <tr>
-        <th>開発期間</th>
-        <td>2025年4月 ～ 現在</td>
-    </tr>
-    <tr>
-        <th>開発人数</th>
-        <td>2人</td>
-    </tr>
-    <tr>
-        <th>使用技術</th>
-        <td>C++ / DxLib</td>
-    </tr>
+  <tr>
+    <th>開発期間</th>
+    <td>2025年4月 ～ 現在</td>
+  </tr>
+  <tr>
+    <th>ジャンル</th>
+    <td>反撃型回避アクション</td>
+  </tr>
+  <tr>
+    <th>プレイ人数</th>
+    <td>1人</td>
+  </tr>
+  <tr>
+    <th>開発人数</th>
+    <td>2人</td>
+  </tr>
+  <tr>
+    <th>操作端末</th>
+    <td>キーボード / コントローラ</td>
+  </tr>
+  <tr>
+    <th>使用技術</th>
+    <td>C++ / DxLib</td>
+  </tr>
 </table>
 
 ## ルール
