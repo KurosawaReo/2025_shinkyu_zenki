@@ -7,7 +7,7 @@
 //依存関係.
 #include "GameData.h"
 //参照
-static GameData& p_data = GameData::GetInst();
+static GameData& gameData = GameData::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
@@ -80,14 +80,14 @@ void EffectManager::Update() {
 			case Effect_BreakMeteor:
 			{
 				//カウンター加算.
-				i->counter += p_data.speedRate;
+				i->counter += gameData.speedRate;
 				//回転.
-				i->ang += 3 * p_data.speedRate;
+				i->ang += 3 * gameData.speedRate;
 				//減速.
 				float newSpeed = i->speed/(1+(i->counter/10));
 				//移動.
-				i->pos.x += i->vec.x * newSpeed * p_data.speedRate;
-				i->pos.y += i->vec.y * newSpeed * p_data.speedRate;
+				i->pos.x += i->vec.x * newSpeed * gameData.speedRate;
+				i->pos.y += i->vec.y * newSpeed * gameData.speedRate;
 
 				//時間経過で消滅.
 				if (i->counter >= METEOR_BREAK_ANIM_TIME) {
@@ -297,7 +297,7 @@ void EffectManager::Draw() {
 						break;
 				}
 				//テキスト.
-				str.Draw(Anchor::Mid, p_data.font2);
+				str.Draw(Anchor::Mid, gameData.font2);
 				//ランプ(必要な数だけ描画)
 				for (int j = 0; j < lampUseCnt; j++) {
 						

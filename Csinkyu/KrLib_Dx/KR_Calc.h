@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/12/17
+   ver: 2025/12/26
 
    計算機能を追加。
 */
@@ -41,7 +41,7 @@ namespace KR
 		DBL_XY		VectorRad			(double rad);
 
 		//物理系.
-		void        PhysicsSpeedInertia	(double* speed, double maxSpeed, double accel, double fric);
+		void        PhysicsVel          (DBL_XY* vel, DBL_XY maxVel, bool isGround, double gravity, double friction, double airDrag);
 
 		//値の曲線変動(アニメーション用)
 		double		AnimEaseIn			(double time);

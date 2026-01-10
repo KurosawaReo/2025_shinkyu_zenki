@@ -1,6 +1,6 @@
 /*
    - KR_ObjectMng.h - (DxLib)
-   ver: 2025/12/08
+   ver: 2025/12/30
 */
 #pragma once
 //KR_Globalが入ってなければここで導入.
@@ -20,8 +20,9 @@ namespace KR
 		ObjectMngTarget() {}
 
 	public:
+		virtual void Init()          = 0; //初期化.
 		virtual void Update()        = 0; //更新.
-		virtual void Draw()    const = 0; //描画.
+		virtual void Draw()          = 0; //描画.
 		virtual bool IsErase() const = 0; //消滅条件.
 	};
 	
@@ -35,17 +36,6 @@ namespace KR
 		list<T> objects; //object配列.
 
 	//▼ ===== 関数 ===== ▼.
-	protected:
-		//constructor.
-		ObjectMng() {}
-
-		//object追加.
-		void Push(T obj) {
-			objects.push_back(obj);
-		}
-		//object生成処理.
-		virtual void Spawn() = 0;
-
 	private:
 		//object削除.
 		void Erase() {
@@ -60,6 +50,18 @@ namespace KR
 				}
 			}
 		}
+
+	protected:
+		//constructor.
+		ObjectMng() {}
+
+		//object追加.
+		void Push(T obj) {
+			obj.Init(); //初期化処理.
+			objects.push_back(obj);
+		}
+		//object生成処理.
+		virtual void Spawn() = 0;
 
 	public:
 		//get.
@@ -77,7 +79,7 @@ namespace KR
 		//管理クラス描画.
 		void DrawMng() {
 			//activeなobjectのみ.
-			for (const T& i : objects) if (i.isActive) { i.Draw(); }
+			for (T& i : objects) if (i.isActive) { i.Draw(); }
 		}
 	};
 }

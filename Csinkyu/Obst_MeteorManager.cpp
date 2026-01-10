@@ -10,9 +10,9 @@
 #include "GameManager.h"
 #include "EffectManager.h"
 //参照.
-static GameData&      p_data      = GameData::GetInst();
-static Player&        p_player    = Player::GetInst();
-static EffectManager& p_effectMng = EffectManager::GetInst();
+static GameData&      gameData      = GameData::GetInst();
+static Player&        player    = Player::GetInst();
+static EffectManager& effectMng = EffectManager::GetInst();
 
 void MeteorManager::Init() {
 
@@ -33,12 +33,12 @@ void MeteorManager::Update() {
 	if (isSpawnAble) {
 		//タイマーが残っていれば.
 		if (timer > 0) {
-			timer -= p_data.speedRate;
+			timer -= gameData.speedRate;
 		}
 		//タイマーが0になったら.
 		else {
 			SpawnMeteor(); //隕石生成.
-			timer = METEOR_SPAWN_SPAN * p_data.spawnRate; //タイマー再開(徐々に短くなる)
+			timer = METEOR_SPAWN_SPAN * gameData.spawnRate; //タイマー再開(徐々に短くなる)
 		}
 	}
 
@@ -54,8 +54,8 @@ void MeteorManager::Update() {
 		}
 	}
 	//プレイヤーとの当たり判定.
-	if (IsHitMeteors(p_player.GetHit(), false)) {
-		p_player.PlayerDeath(); //死亡.
+	if (IsHitMeteors(player.GetHit(), false)) {
+		player.PlayerDeath(); //死亡.
 	}
 }
 
@@ -103,7 +103,7 @@ bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 				//壊れてない隕石であれば.
 				if (i.GetState() == Meteor_Normal) {
 					i.Destroy();						 //隕石を破壊.
-					p_data.score += SCORE_BREAK_METEOR; //スコア加算.
+					gameData.score += SCORE_BREAK_METEOR; //スコア加算.
 				}
 			}
 			return true; //1つでも当たっている.

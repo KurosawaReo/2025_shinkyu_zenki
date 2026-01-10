@@ -12,10 +12,10 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&      p_data      = GameData::GetInst();
-static Player&        p_player    = Player::GetInst();
-static LaserManager&  p_laserMng  = LaserManager::GetInst();
-static MeteorManager& p_meteorMng = MeteorManager::GetInst();
+static GameData&      gameData      = GameData::GetInst();
+static Player&        player    = Player::GetInst();
+static LaserManager&  laserMng  = LaserManager::GetInst();
+static MeteorManager& meteorMng = MeteorManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
@@ -42,18 +42,18 @@ void NormalLaserMain::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
 //更新.
 void NormalLaserMain::Update()
 {
-//	if (p_player->GetActive()) {  // プレイヤーがアクティブな場合のみ
-	if (p_data.scene == SCENE_GAME) {  // ゲーム中のみ
+//	if (player->GetActive()) {  // プレイヤーがアクティブな場合のみ
+	if (gameData.scene == SCENE_GAME) {  // ゲーム中のみ
 		
 		//発射カウンタを減少.
-		Hsc -= p_data.speedRate;
+		Hsc -= gameData.speedRate;
 
 		//エフェクトのカウンタを更新.
 		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 			//有効なら.
 			if (flash[i].validFlag)
 			{
-				flash[i].counter += p_data.speedRate;
+				flash[i].counter += gameData.speedRate;
 			}
 		}
 
@@ -192,13 +192,13 @@ void NormalLaserMain::enemy4Move()
 		if (Hsc <= HscTm)
 		{
 			//プレイヤー座標.
-			DBL_XY plyPos = p_player.GetPos();
+			DBL_XY plyPos = player.GetPos();
 			//プレイヤー方向への初期角度計算.
 			double angle = atan2(plyPos.y - Hy, plyPos.x - Hx);
 			DBL_XY vel = {cos(angle), sin(angle)};
 
 			//通常レーザー召喚.
-			p_laserMng.SpawnLaser({ Hx, Hy }, vel, Laser_Normal);
+			laserMng.SpawnLaser({ Hx, Hy }, vel, Laser_Normal);
 			CreateFlashEffect(Hx, Hy); //エフェクトを出す.
 
 			HscTm -= LASER_NOR_SHOT_SPAN; //発射タイミングを変更.
@@ -207,7 +207,7 @@ void NormalLaserMain::enemy4Move()
 		if (Hsc <= 0) {
 			//タイマー再開(徐々に短くなる)
 			//発射開始時間より短くならないよう時間を設定.
-			Hsc   = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * p_data.spawnRate;
+			Hsc   = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData.spawnRate;
 			HscTm = LASER_NOR_SHOT_START;
 			MoveRand();
 		}
@@ -246,7 +246,7 @@ void NormalLaserMain::MoveRand()
 //光るeffectの生成.
 void NormalLaserMain::CreateFlashEffect(double fx, double fy)
 {
-	DBL_XY pPos = p_player.GetPos(); //プレイヤー座標取得.
+	DBL_XY pPos = player.GetPos(); //プレイヤー座標取得.
 
 	//未使用のエフェクトスロットを探す.
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
