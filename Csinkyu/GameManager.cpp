@@ -300,6 +300,10 @@ void GameManager::Draw() {
 		DrawPause();
 	}
 	
+	//コントローラ操作表示.
+#if defined DEBUG_CONTR_INPUT
+	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("Pad Input: %d"), GetJoypadInputState(DX_INPUT_PAD1));
+#endif
 	//fps表示用.
 #if defined DEBUG_SHOW_FPS
 	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("FPS: %f"), tmFps.GetFps());
@@ -451,6 +455,29 @@ void GameManager::UpdateReflectMode() {
 
 //シーン別描画.
 void GameManager::DrawTitle() {
+
+	//操作方法明記.
+	DrawStr howPlay(_T(""), {30, WINDOW_HEI - 30}, 0x00FFFF);
+	{
+#if defined INPUT_CHANGE_ARCADE
+		howPlay.text = _T("アーケード操作");
+#else
+		howPlay.text = _T("コントローラ操作");
+#endif
+		howPlay.Draw(Anchor::LD);
+
+		//枠線グラデーション.
+		const DBL_XY howPlayPos  = howPlay.pos.ToDbl();
+		const DBL_XY howPlaySize = howPlay.GetTextSize().ToDbl();
+		const int margin = 5;
+
+		GradLine line;
+		line.AddPoint(howPlayPos.Add(-margin,              margin               ), { 0, 255, 255 });
+ 		line.AddPoint(howPlayPos.Add(howPlaySize.x+margin, margin               ), { 0, 100, 255 });
+		line.AddPoint(howPlayPos.Add(howPlaySize.x+margin, -howPlaySize.y-margin), { 0, 255, 255 });
+		line.AddPoint(howPlayPos.Add(-margin,              -howPlaySize.y-margin), { 0, 100, 255 });
+		line.Draw(true);
+	}
 
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
