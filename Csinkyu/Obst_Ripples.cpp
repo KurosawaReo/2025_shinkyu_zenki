@@ -10,8 +10,8 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData& p_data   = GameData::GetInst();
-static Player&   p_player = Player::GetInst();
+static GameData& gameData   = GameData::GetInst();
+static Player&   player = Player::GetInst();
 
 //初期化(一回のみ行う)
 void Ripples::Init()
@@ -60,6 +60,7 @@ void Ripples::SpawnRipples(double x, double y)
 	tmp.duration = RIPPLES_WARNING_DURATION + RIPPLES_ACTIVE_DURATION;
 	tmp.counter  = tmp.duration;	// 持続時間から開始（カウントダウン）
 	tmp.baseSize = 20;				// 適切な基本サイズに調整
+	tmp.alreadyHit = false;         // 最初はまだ当たっていない.
 
 	ripples.push_back(tmp); //listに追加.
 }
@@ -100,21 +101,21 @@ int Ripples::GetEffectState(list<RipplesData>::iterator it)
 void Ripples::UpdateFlashGeneration()
 {
 	//タイマー減少.
-	flashTimer -= p_data.speedRate;
+	flashTimer -= gameData.speedRate;
 	//0以下になったら実行.
 	if (flashTimer <= 0) {
 		// 新しいフラッシュエフェクトを生成
 		SpawnObstaclegroup();  // ランダム位置に複数生成するように変更
 
 		// GameDataのspawnRateを使用してインターバルを調整
-		flashTimer = RIPPLES_SPAWN_SPAN * p_data.spawnRate;
+		flashTimer = RIPPLES_SPAWN_SPAN * gameData.spawnRate;
 	}
 
 	//全波紋.
 	for (auto i = ripples.begin(); i != ripples.end(); )
 	{
 		//経過カウンター減少.
-		i->counter -= p_data.speedRate;
+		i->counter -= gameData.speedRate;
 		//エフェクト時間が終了したら無効化.
 		if (i->counter <= 0) {
 			i = ripples.erase(i);
@@ -161,20 +162,25 @@ void Ripples::Hitjudgment()
 		float activeElapsedTime = elapsedTime - RIPPLES_WARNING_DURATION;
 		float activeProgress = activeElapsedTime / RIPPLES_ACTIVE_DURATION;
 
+		Debug::Log(L"条件1:", effectState == RIPPLES_STATE_ACTIVE);
+		Debug::Log(L"条件2:", !i->alreadyHit);
+
 		//波紋が広がった瞬間のみダメージ判定.
 		if (effectState == RIPPLES_STATE_ACTIVE && !i->alreadyHit) {
+
+			Debug::Log(L"ugoita");
 
 			float sizeMultiplier = RIPPLES_FLASH_SIZE_INIT + (activeProgress * RIPPLES_FLASH_SIZE_SPREAD);
 			int effectSize = (int)(i->baseSize * sizeMultiplier);
 
-			DBL_XY playerPos = p_player.GetPos();
+			DBL_XY playerPos = player.GetPos();
 			double dx = playerPos.x - i->x;
 			double dy = playerPos.y - i->y;
 			double distance = sqrt(dx * dx + dy * dy);
 			float playerRadius = 10.0f;
 
 			if (distance < (effectSize * 0.8f + playerRadius)) {
-				p_player.PlayerDeath();
+				player.PlayerDeath();
 			}
 
 			//サウンド.

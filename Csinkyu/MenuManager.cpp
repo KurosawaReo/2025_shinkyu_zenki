@@ -9,7 +9,7 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&  p_data = GameData::GetInst();
+static GameData&  gameData = GameData::GetInst();
 static BGManager& p_bg   = BGManager::GetInst();
 
 // 初期化
@@ -70,8 +70,8 @@ void MenuManager::Update() {
 		switch (selectedIndex)
 		{
 			case 0:
-				p_data.scene = SCENE_GAME;
-				p_data.stage = STAGE_ENDLESS; //耐久モードへ.
+				gameData.scene = SCENE_GAME;
+				gameData.stage = STAGE_ENDLESS; //耐久モードへ.
 				p_bg.SetBgNo(1);              //背景変更.
 #if !defined BGM_NONE
 				//BGM.
@@ -82,8 +82,8 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 1:
-				p_data.scene = SCENE_GAME;
-				p_data.stage = STAGE_TUTORIAL; //チュートリアルへ.
+				gameData.scene = SCENE_GAME;
+				gameData.stage = STAGE_TUTORIAL; //チュートリアルへ.
 				p_bg.SetBgNo(1);               //背景変更.
 #if !defined BGM_NONE
 				//BGM.
@@ -94,7 +94,7 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 2:
-				p_data.scene = SCENE_TITLE;    //タイトルへ.
+				gameData.scene = SCENE_TITLE;    //タイトルへ.
 				GameManager::GetInst().Reset(); //リセット.
 				break;
 

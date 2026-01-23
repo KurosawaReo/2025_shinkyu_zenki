@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver: 2025/12/17
+   ver: 2025/12/26
 */
 #include "KR_Calc.h"
 
@@ -203,18 +203,49 @@ namespace KR
 			return { cos(rad), sin(rad) };
 		}
 
-		//慣性の法則.
-		//accel = 加速度, flic = 摩擦.
-		void PhysicsSpeedInertia(double* speed, double maxSpeed, double accel, double fric) {
+		/*
+		   物理法則での速度減衰.
+		   
+		   vel     : 速度.
+		   maxVel  : 限界速度(絶対値)
+		   isGround: 接地しているか.
+		   gravity : 重力.
+		   friction: 摩擦.
+		   airDrag : 空気抵抗.
 
-			NumLimRange(&fric, 0.0, 1.0); //1.0～0.0の範囲.
-			accel = max(accel, 0.0);   //下限は0.0
+		   (例)
+		   初速度  : 10,-10
+		   重力    : 0.8
+		   摩擦    : 0.1
+		   空気抵抗: 0.01
+		*/
+		void PhysicsVel(DBL_XY* vel, DBL_XY maxVel, bool isGround, double gravity, double friction, double airDrag)
+		{
+			//値の補正.
+			maxVel.x = abs(maxVel.x);
+			maxVel.y = abs(maxVel.y);
+			NumLimRange(&friction,  0.0, 1.0);
+			NumLimRange(&airDrag,   0.0, 1.0);
 
-			*speed += accel;
-			*speed *= (1.0 - fric);
+			//[1]速度.
+			DBL_XY v = *vel;
 
-			if (*speed > maxSpeed) { *speed = maxSpeed; } //速度上限.
-			if (*speed < 0.0001)   { *speed = 0; }        //ほぼ0の値なら、0とみなす.
+			//[2]加速&抵抗.
+			if (isGround) {
+				v.x *= (1.0 - friction); //摩擦による減速.
+				v.y = 0;                 //接地中は落下停止.
+			}
+			else {
+				v *= (1.0 - airDrag); //空気抵抗による減速.
+				v.y += gravity;       //重力.
+			}
+
+			//[3]限界速度.
+			NumLimRange(&v.x, -maxVel.x, maxVel.x);
+			NumLimRange(&v.y, -maxVel.y, maxVel.y);
+
+			//[4]速度更新.
+			*vel = v;
 		}
 
 		//ease-in: 徐々に加速.

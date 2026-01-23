@@ -8,7 +8,7 @@
 //依存関係.
 #include "GameData.h"
 //参照.
-static GameData& p_data = GameData::GetInst();
+static GameData& gameData = GameData::GetInst();
 
 void Meteor::Init() {
 
@@ -21,10 +21,10 @@ void Meteor::Reset() {
 void Meteor::Update() {
 
 	//移動.
-	pos.x += vel.x * METEOR_SPEED * p_data.speedRate;
-	pos.y += vel.y * METEOR_SPEED * p_data.speedRate;
+	pos.x += vel.x * METEOR_SPEED * gameData.speedRate;
+	pos.y += vel.y * METEOR_SPEED * gameData.speedRate;
 	//回転.
-	ang += p_data.speedRate;
+	ang += gameData.speedRate;
 
 	//状態別処理.
 	switch (state)
@@ -38,7 +38,7 @@ void Meteor::Update() {
 
 		case Meteor_Destroy:
 			//破壊量の度合.
-			destroyCntr += p_data.speedRate;
+			destroyCntr += gameData.speedRate;
 			//時間が終了したら.
 			if (destroyCntr >= METEOR_DEST_TIME) {
 				state   = Meteor_Normal; //元に戻す.
@@ -82,7 +82,7 @@ void Meteor::Draw() {
 #endif
 
 	//チュートリアル.
-	if (p_data.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == STAGE_TUTORIAL) {
 		DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
 		str.Draw();
 	}

@@ -55,7 +55,7 @@ GameManager::~GameManager() {
 void GameManager::Init() {
 
 #if defined _DEBUG 
-	Debug::Log(L"[Debug] GameManager::Init() 開始");
+	//Debug::Log(L"[Debug] GameManager::Init() 開始");
 #endif
 
 	srand((unsigned)time(NULL)); //乱数初期化.
@@ -175,8 +175,8 @@ void GameManager::Init() {
 
 	Reset();
 
-#if defined _DEBUG 
-	Debug::Log(L"[Debug] GameManager::Init() 終了");
+#if defined _DEBUG
+	//Debug::Log(L"[Debug] GameManager::Init() 終了");
 #endif
 }
 

@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2025/12/17
+   ver.2025/12/30
 
    KrLib全体で使う汎用機能を追加。
 */
@@ -20,7 +20,6 @@
 #include <unordered_map>
 #include <string>     //string型用.
 #include <cmath>      //math.hをラップしたもの.
-//#include <functional> //ラムダ式用.
 //C言語用.
 #include <tchar.h>
 

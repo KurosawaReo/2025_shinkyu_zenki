@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/12/17
+   ver: 2025/12/28
 */
 #include "KR_Draw.h"
 
@@ -40,85 +40,37 @@ namespace KR
 		{0.0, 1.0}, {0.5, 1.0}, {1.0, 1.0}
 	};
 
-// ▼*--=<[ DrawImgST ]>=--*▼ //
+// ▼*--=<[ DrawImg ]>=--*▼ //
 
 	//constructor.
 	DrawImg::DrawImg() {
-		img.handle = NONE_HANDLE;
+		handle = NONE_HANDLE;
 	}
 	//destructor.
 	DrawImg::~DrawImg() {
 		Release();
 	}
 
-	//読み込み.
-	ResultInt DrawImg::LoadFile(MY_STRING fileName) {
-
-		//読み込み済のものは解放.
-		Release();
-		//画像読み込み.
-		img.handle = LoadGraph   (fileName.c_str());
-		int err    = GetGraphSize(img.handle, &img.size.x, &img.size.y);
-	
-		//結果を返す.
-		if (img.handle < 0) {
-			return {-1, _T("DrawImg::LoadFile"), _T("LoadGraphエラー")};
-		}
-		if (err < 0) {
-			return {-2, _T("DrawImg::LoadFile"), _T("GetGraphSizeエラー")};
-		}
-		return {0, _T("DrawImg::LoadFile"), _T("正常終了")};
+	//画像登録.
+	void DrawImg::SetImage(int _handle) {
+		handle = _handle;
+		GetGraphSize(_handle, &size.x, &size.y); //サイズ取得.
 	}
-	//解放.
+	//画像解放.
 	void DrawImg::Release() {
 		//データが登録されていれば.
-		if (img.handle != NONE_HANDLE) {
-			DeleteGraph(img.handle); //解放.
-			img.handle = NONE_HANDLE;
+		if (handle != NONE_HANDLE) {
+			DeleteGraph(handle);  //解放.
+			handle = NONE_HANDLE; //NONEにする.
 		}
 	}
-
-	//TODO: LoadDivGraphにはそのうち対応したい. <<<<<<<<<<<<<<<<<<<<<<<<<
-#if false
-	//LoadDivGraphの改造版.
-	ResultInt DrawDivImg::LoadFile(MY_STRING fileName, INT_XY size, INT_XY cnt) {
-
-		//過去に読み込んだ画像は解放.
-		for (auto& i : data) {
-			DeleteGraph(i.handle); //画像解放.
-			i.handle = NONE_HANDLE;
-		}
-
-		int* pHandle = new int[cnt.x*cnt.y]; //LoadDivGraphからハンドル取り出す用.
-
-		//画像分割読み込み.
-		int err = LoadDivGraph(fileName.c_str(), cnt.x*cnt.y, cnt.x, cnt.y, size.x, size.y, pHandle);
-		if (err < 0) {
-			return {-1, _T("DrawDivImg::LoadFile"), _T("LoadDivGraphエラー")};
-		}
-		//Image型配列のサイズを分割数に合わせる.
-		img.resize(cnt.x*cnt.y);
-		//分割数だけループ.
-		for (int i = 0; i < cnt.y; i++) {
-			for (int j = 0; j < cnt.x; j++) {
-				data[j+i*cnt.x].handle = pHandle[j+i*cnt.x]; //ハンドル保存.
-				data[j+i*cnt.x].size   = size;               //サイズ保存.
-			}
-		}
-
-		//配列破棄.
-		delete[] pHandle; pHandle = nullptr;
-
-		return {0, _T("DrawDivImg::LoadFile"), _T("正常終了")};
-	}
-#endif
 
 	/*
 	   DrawGraphの改造版.
 	*/
 	ResultInt DrawImg::Draw(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat, bool isCameraDis) const {
 
-		if (img.handle == NONE_HANDLE) {
+		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::Draw"), _T("ハンドル未設定")};
 		}
 
@@ -130,20 +82,20 @@ namespace KR
 		//float型かどうか.
 		if (isFloat) {
 			//基準点に座標をずらす.
-			float x = _flt(newPos.x - (img.size.x) * ANCHOR_POS[_int(anc)].x);
-			float y = _flt(newPos.y - (img.size.y) * ANCHOR_POS[_int(anc)].y);
+			float x = _flt(newPos.x - (size.x) * ANCHOR_POS[_int(anc)].x);
+			float y = _flt(newPos.y - (size.y) * ANCHOR_POS[_int(anc)].y);
 			//float型描画.
-			int err = DrawGraphF(x, y, img.handle, isTrans);
+			int err = DrawGraphF(x, y, handle, isTrans);
 			if (err < 0) {
 				return {-1, _T("DrawImg::Draw"), _T("DrawGraphFエラー")};
 			}
 		}
 		else {
 			//基準点に座標をずらす.
-			int x = _int(newPos.x - (img.size.x-1) * ANCHOR_POS[_int(anc)].x);
-			int y = _int(newPos.y - (img.size.y-1) * ANCHOR_POS[_int(anc)].y);
+			int x = _int(newPos.x - (size.x-1) * ANCHOR_POS[_int(anc)].x);
+			int y = _int(newPos.y - (size.y-1) * ANCHOR_POS[_int(anc)].y);
 			//int型描画.
-			int err = DrawGraph(x, y, img.handle, isTrans);
+			int err = DrawGraph(x, y, handle, isTrans);
 			if (err < 0) {
 				return {-2, _T("DrawImg::Draw"), _T("DrawGraphエラー")};
 			}
@@ -157,7 +109,7 @@ namespace KR
 	*/
 	ResultInt DrawImg::DrawRect(DBL_XY pos, DBL_RECT rect, Anchor anc, bool isTrans, bool isFloat, bool isCameraDis) const {
 
-		if (img.handle == NONE_HANDLE) {
+		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawRect"), _T("ハンドル未設定")};
 		}
 
@@ -166,41 +118,49 @@ namespace KR
 		//カメラ基準に変換.
 		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
 		//アンカーを含めた描画座標.
-		newPos -= img.size.ToDbl() * ANCHOR_POS[_int(anc)];
+		newPos -= size.ToDbl() * ANCHOR_POS[_int(anc)];
 		//画像の矩形.
-		INT_XY stPxl  = {0, 0};
-		INT_XY size   = img.size;
+		INT_XY drawStart = {0, 0};
+		INT_XY drawSize  = size;
 
 		//クリッピング(画像の切り取り処理)
 		if (newPos.x < rect.left) {
-			stPxl.x += _int(rect.left - newPos.x);
-			size.x  -= _int(rect.left - newPos.x);
+			drawStart.x += _int(rect.left - newPos.x);
+			drawSize.x  -= _int(rect.left - newPos.x);
 			newPos.x = rect.left;
 		}
 		if (newPos.y < rect.up) {
-			stPxl.y += _int(rect.up - newPos.y);
-			size.y  -= _int(rect.up - newPos.y);
+			drawStart.y += _int(rect.up - newPos.y);
+			drawSize.y  -= _int(rect.up - newPos.y);
 			newPos.y = rect.up;
 		}
-		if (newPos.x + size.x > rect.right) {
-			size.x -= _int((newPos.x + size.x) - rect.right);
+		if (newPos.x + drawSize.x > rect.right) {
+			drawSize.x -= _int((newPos.x + drawSize.x) - rect.right);
 		}
-		if (newPos.y + size.y > rect.down) {
-			size.y -= _int((newPos.y + size.y) - rect.down);
+		if (newPos.y + drawSize.y > rect.down) {
+			drawSize.y -= _int((newPos.y + drawSize.y) - rect.down);
 		}
 
 		//描画する範囲があるなら描画.
-		if (size.x > 0 && size.y > 0) {
+		if (drawSize.x > 0 && drawSize.y > 0) {
 			if (isFloat) {
 				//float型描画.
-				int err = DrawRectGraphF(_flt(newPos.x), _flt(newPos.y), stPxl.x, stPxl.y, size.x, size.y, img.handle, isTrans);
+				int err = DrawRectGraphF(
+					_flt(newPos.x), _flt(newPos.y), 
+					drawStart.x, drawStart.y, drawSize.x, drawSize.y, 
+					handle, isTrans
+				);
 				if (err < 0) {
 					return {-1, _T("DrawImg::DrawRect"), _T("DrawRectGraphFエラー")};
 				}
 			}
 			else {
 				//int型描画.
-				int err = DrawRectGraph(_int(newPos.x), _int(newPos.y), stPxl.x, stPxl.y, size.x, size.y, img.handle, isTrans);
+				int err = DrawRectGraph(
+					_int(newPos.x), _int(newPos.y), 
+					drawStart.x, drawStart.y, drawSize.x, drawSize.y, 
+					handle, isTrans
+				);
 				if (err < 0) {
 					return {-2, _T("DrawImg::DrawRect"), _T("DrawRectGraphエラー")};
 				}
@@ -215,7 +175,7 @@ namespace KR
 	*/
 	ResultInt DrawImg::DrawExtend(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat, bool isCameraDis) const {
 
-		if (img.handle == NONE_HANDLE) {
+		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawExtend"), _T("ハンドル未設定")};
 		}
 
@@ -227,26 +187,26 @@ namespace KR
 		//float型かどうか.
 		if (isFloat) {
 			//始点を求める.
-			float x1 = _flt(newPos.x - (img.size.x * sizeRate.x) * ANCHOR_POS[_int(anc)].x);
-			float y1 = _flt(newPos.y - (img.size.y * sizeRate.y) * ANCHOR_POS[_int(anc)].y);
+			float x1 = _flt(newPos.x - (size.x * sizeRate.x) * ANCHOR_POS[_int(anc)].x);
+			float y1 = _flt(newPos.y - (size.y * sizeRate.y) * ANCHOR_POS[_int(anc)].y);
 			//終点を求める.
-			float x2 = _flt(x1 + img.size.x * sizeRate.x);
-			float y2 = _flt(y1 + img.size.y * sizeRate.y);
+			float x2 = _flt(x1 + size.x * sizeRate.x);
+			float y2 = _flt(y1 + size.y * sizeRate.y);
 			//float型描画.
-			int err = DrawExtendGraphF(x1, y1, x2+1, y2+1, img.handle, isTrans);
+			int err = DrawExtendGraphF(x1, y1, x2+1, y2+1, handle, isTrans);
 			if (err < 0) {
 				return {-1, _T("DrawImg::DrawExtend"), _T("DrawExtendGraphFエラー")};
 			}
 		}
 		else {
 			//始点を求める.
-			int x1 = _int(newPos.x - ((img.size.x * sizeRate.x)-1) * ANCHOR_POS[_int(anc)].x);
-			int y1 = _int(newPos.y - ((img.size.y * sizeRate.y)-1) * ANCHOR_POS[_int(anc)].y);
+			int x1 = _int(newPos.x - ((size.x * sizeRate.x)-1) * ANCHOR_POS[_int(anc)].x);
+			int y1 = _int(newPos.y - ((size.y * sizeRate.y)-1) * ANCHOR_POS[_int(anc)].y);
 			//終点を求める.
-			int x2 = _int(x1 + ((img.size.x * sizeRate.x)-1));
-			int y2 = _int(y1 + ((img.size.y * sizeRate.y)-1));
+			int x2 = _int(x1 + ((size.x * sizeRate.x)-1));
+			int y2 = _int(y1 + ((size.y * sizeRate.y)-1));
 			//int型描画.
-			int err = DrawExtendGraph(x1, y1, x2+1, y2+1, img.handle, isTrans);
+			int err = DrawExtendGraph(x1, y1, x2+1, y2+1, handle, isTrans);
 			if (err < 0) {
 				return {-2, _T("DrawImg::DrawExtend"), _T("DrawExtendGraphエラー")};
 			}
@@ -264,7 +224,7 @@ namespace KR
 	*/
 	ResultInt DrawImg::DrawRota(DBL_XY pos, double extend, double ang, INT_XY pivot, bool isTrans, bool isFloat, bool isCameraDis) const {
 
-		if (img.handle == NONE_HANDLE) {
+		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawRota"), _T("ハンドル未設定")};
 		}
 
@@ -282,7 +242,7 @@ namespace KR
 
 			//[camera基準]
 			//カメラ→画像 の角度.
-			const double cmrAng = wrdAng - Camera::GetAng();             //カメラの角度を0とする.
+			const double cmrAng = wrdAng - Camera::GetAng(); //カメラの角度を0とする.
 			//カメラ→画像 の位置.
 			const DBL_XY cmrPos = Calc::VectorDeg(cmrAng) * wrdDist; //方向 * 距離.
 			
@@ -296,12 +256,12 @@ namespace KR
 		//float型かどうか.
 		if (isFloat) {
 			//回転軸(デフォルトは画像の中心とする)
-			float cx = _flt(img.size.x/2 + pivot.x);
-			float cy = _flt(img.size.y/2 + pivot.y);
+			float cx = _flt(size.x/2 + pivot.x);
+			float cy = _flt(size.y/2 + pivot.y);
 			//float型描画.
 			int err = DrawRotaGraphFast2F(
 				_flt(newPos.x), _flt(newPos.y), cx, cy, 
-				_flt(extend), _flt(_rad(newAng)), img.handle, isTrans
+				_flt(extend), _flt(_rad(newAng)), handle, isTrans
 			);
 			if (err < 0) {
 				return {-1, _T("DrawImg::DrawRota"), _T("DrawRotaGraph2Fエラー") };
@@ -309,12 +269,12 @@ namespace KR
 		}
 		else {
 			//回転軸(デフォルトは画像の中心とする)
-			int cx = img.size.x/2 + pivot.x;
-			int cy = img.size.y/2 + pivot.y;
+			int cx = size.x/2 + pivot.x;
+			int cy = size.y/2 + pivot.y;
 			//int型描画.
 			int err = DrawRotaGraphFast2(
 				_int_r(newPos.x), _int_r(newPos.y), cx, cy, _flt(extend), 
-				_flt(_rad(newAng)), img.handle, isTrans
+				_flt(_rad(newAng)), handle, isTrans
 			);
 			if (err < 0) {
 				return {-2, _T("DrawImg::DrawRota"), _T("DrawRotaGraph2エラー")};
@@ -328,7 +288,7 @@ namespace KR
 	*/
 	ResultInt DrawImg::DrawModi(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat, bool isCameraDis) const {
 	
-		if (img.handle == NONE_HANDLE) {
+		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawModi"), _T("ハンドル未設定")};
 		}
 
@@ -344,7 +304,7 @@ namespace KR
 			//float型描画.
 			int err = DrawModiGraphF(
 				_flt(newPos[0].x), _flt(newPos[0].y), _flt(newPos[1].x), _flt(newPos[1].y),
-				_flt(newPos[2].x), _flt(newPos[2].y), _flt(newPos[3].x), _flt(newPos[3].y), img.handle, isTrans
+				_flt(newPos[2].x), _flt(newPos[2].y), _flt(newPos[3].x), _flt(newPos[3].y), handle, isTrans
 			);
 			if (err < 0) {
 				return {-1, _T("DrawImg::DrawModi"), _T("DrawModiGraphFエラー")};
@@ -354,7 +314,7 @@ namespace KR
 			//int型描画.
 			int err = DrawModiGraph(
 				_int_r(newPos[0].x), _int_r(newPos[0].y), _int_r(newPos[1].x), _int_r(newPos[1].y),
-				_int_r(newPos[2].x), _int_r(newPos[2].y), _int_r(newPos[3].x), _int_r(newPos[3].y), img.handle, isTrans
+				_int_r(newPos[2].x), _int_r(newPos[2].y), _int_r(newPos[3].x), _int_r(newPos[3].y), handle, isTrans
 			);
 			if (err < 0) {
 				return {-2, _T("DrawImg::DrawModi"), _T("DrawModiGraphエラー")};
@@ -389,24 +349,72 @@ namespace KR
 		//存在すれば.
 		if (inst.images.count(saveName) > 0) {
 			ptr = &inst.images[saveName]; //返す.
-			return true;             //取得成功.
+			return true; //取得成功.
 		}
 		return false; //取得失敗.
 	}
 
-	//画像読み込み.
+	/*
+	   画像読み込み.
+	*/
 	ResultInt DrawImgMng::LoadFile(MY_STRING fileName, string saveName) {
 
 		//既に存在すれば.
 		if (inst.images.count(saveName) > 0) {
 			return { -1, _T("DrawImgMng::LoadFile"), _T("使用済みの保存名") };
 		}
-		//ファイル読み込み.
-		ResultInt err = inst.images[saveName].LoadFile(fileName);
-		if (err.GetCode() < 0) {
-			return { -2, _T("DrawImgMng::LoadFile"), _T("LoadFileエラー") };
+
+		//画像読み込み.
+		int handle = LoadGraph(fileName.c_str());
+		if (handle < 0) {
+			return { -2, _T("DrawImgMng::LoadFile"), _T("LoadGraphエラー") };
 		}
+		//画像登録.
+		inst.images[saveName].SetImage(handle);
+
 		return { 0, _T("DrawImgMng::LoadFile"), _T("正常終了") };
+	}
+
+	/*
+	   画像読み込み(分割)
+
+	   (例)
+	   DrawImgMng::LoadFileDiv(
+	       _T("test.png"), {64, 64}, {4, 1}, //64×64のサイズで横4つ縦1つに分割.
+	       {"idle","run1","jump","death"}    //登録名.
+	   );
+	*/
+	ResultInt DrawImgMng::LoadFileDiv(MY_STRING fileName, INT_XY size, INT_XY cnt, vector<string> saveName) {
+		
+		const int divCnt = cnt.x * cnt.y; //分割数.
+
+		//分割数と一致しない場合.
+		if (saveName.size() != divCnt) {
+			return { -1, _T("DrawImgMng::LoadFileDiv"), _T("保存名の数が分割数と不一致") };
+		}
+
+		//LoadDivGraphからハンドルを取り出す用.
+		int* pHandle = new int[divCnt];
+		//画像読み込み(分割)
+		int err = LoadDivGraph(fileName.c_str(), divCnt, cnt.x, cnt.y, size.x, size.y, pHandle);
+		if (err < 0) {
+			delete[] pHandle; pHandle = nullptr; //配列破棄.
+			return { -2, _T("DrawImgMng::LoadFileDiv"), _T("LoadDivGraphエラー") };
+		}
+
+		//読み込んだ画像をループ.
+		for (int i = 0; i < divCnt; i++) {
+			//既に存在すれば.
+			if (inst.images.count(saveName[i]) > 0) {
+				delete[] pHandle; pHandle = nullptr; //配列破棄.
+				return { -3, _T("DrawImgMng::LoadFileDiv"), _T("使用済みの保存名が含まれている") };
+			}
+			//画像登録.
+			inst.images[saveName[i]].SetImage(pHandle[i]);
+		}
+
+		delete[] pHandle; pHandle = nullptr; //配列破棄.		
+		return { 0, _T("DrawImgMng::LoadFileDiv"), _T("正常終了") };
 	}
 
 // ▼*--=<[ DrawStr ]>=--*▼ //

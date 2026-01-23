@@ -12,10 +12,10 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&      p_data      = GameData::GetInst();
-static Player&        p_player    = Player::GetInst();
-static LaserManager&  p_laserMng  = LaserManager::GetInst();
-static MeteorManager& p_meteorMng = MeteorManager::GetInst();
+static GameData&      gameData      = GameData::GetInst();
+static Player&        player    = Player::GetInst();
+static LaserManager&  laserMng  = LaserManager::GetInst();
+static MeteorManager& meteorMng = MeteorManager::GetInst();
 
 /// <summary>
 /// リセットするぜ.
@@ -45,10 +45,10 @@ void StraightLaser::Reset()
 /// </summary>
 void StraightLaser::Update()
 {
-	plyPos = p_player.GetPos();//プレイヤーの現在位置を取得.
+	plyPos = player.GetPos();//プレイヤーの現在位置を取得.
 
 	//レーザー発射タイマー更新.
-	laserSpawnTimer -= p_data.speedRate;
+	laserSpawnTimer -= gameData.speedRate;
 
 	// 予測線表示タイマー更新（レーザー発射の60フレーム前から表示）
 	if (laserSpawnTimer <= LASER_STR_PREDICTION_TIME)
@@ -85,7 +85,7 @@ void StraightLaser::Update()
 
 		//タイマー再開(徐々に短くなる)
 		//予測線の出る時間より短くならないよう設定.
-		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * p_data.spawnRate;
+		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * gameData.spawnRate;
 
 		showPrediction = false;
 		predictionTimer = 0;
@@ -225,7 +225,7 @@ void StraightLaser::SpawnStraightLaser()
 		}
 
 		//直線レーザーを発射.
-		p_laserMng.SpawnLaser(tmpPos, vel, Laser_Straight);
+		laserMng.SpawnLaser(tmpPos, vel, Laser_Straight);
 	}
 
 	nextLaserIndex = 0;

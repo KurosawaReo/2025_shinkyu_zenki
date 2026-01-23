@@ -1,13 +1,47 @@
 /*
    - KR_Timer.cpp - (DxLib)
-   ver: 2025/12/23
+   ver: 2025/12/28
 */
 #include "KR_Timer.h"
 
 //KrLib名前空間.
 namespace KR
 {
+
+	//一定時間ごとにtrueを返す(CountDown専用)
+	bool TimerBase::IntervalTime() {
+
+		//CountDownじゃない場合はfalseを返し続ける.
+		if (mode != TimerMode::CountDown) {
+			return false;
+		}
+
+		//まだ動いてなかったら.
+		if (state == TimerState::Stop) {
+			Start(); //タイマー開始.
+		}
+		//タイマーが0になったら.
+		if (IsCountDownEnd()) {
+			Reset();
+			Start();
+			return true; //trueを返す.
+		}
+		return false; //falseを返す.
+	}
+
 // ▼*--=<[ Timer ]>=--*▼ //
+
+	//開始.
+	void Timer::Start() {
+		tmStart = clock();          //開始時刻の取得.
+		state = TimerState::Active; //タイマー稼働.
+	}
+	//リセット.
+	void Timer::Reset() {
+		tmStart = 0;
+		tmSavePass = tmInit; //初期時刻.
+		state = TimerState::Stop;
+	}
 
 	//タイマー停止.
 	bool Timer::TimerStop() {
@@ -31,7 +65,7 @@ namespace KR
 		return false; //停止してない.
 	}
 	//経過時間取得.
-	float Timer::GetPassTime() {
+	float Timer::GetPassTime() const {
 
 		//計測中なら.
 		if (state == TimerState::Active) {
@@ -52,27 +86,24 @@ namespace KR
 			return tmSavePass; //保存時間を返す.
 		}	
 	}
-	//一定時間ごとにtrueを返す(CountDown専用)
-	bool Timer::IntervalTime() {
-
-		//CountDownじゃない場合はfalseを返し続ける.
-		if (mode != TimerMode::CountDown) {
-			return false;
-		}
-
-		//まだ動いてなかったら.
-		if (state != TimerState::Active) {
-			Start(); //タイマー開始.
-		}
-		//タイマーが0になるまで.
-		if (GetPassTime() > 0) {
-			return false; //falseを返す.
-		}
-		Start();     //時間リセット.
-		return true; //trueを返す.
+	//カウントダウンが終了したか.
+	bool Timer::IsCountDownEnd() const {
+		return GetPassTime() <= 0;
 	}
 
 // ▼*--=<[ TimerMicro ]>=--*▼ //
+
+	//開始.
+	void TimerMicro::Start() {
+		QueryPerformanceCounter(&tmStart); //開始時刻の取得.
+		state = TimerState::Active;
+	}
+	//リセット.
+	void TimerMicro::Reset() {
+		tmStart.QuadPart = 0;
+		tmSavePass = tmInit; //初期時刻.
+		state = TimerState::Stop;
+	}
 
 	//タイマー停止.
 	bool TimerMicro::TimerStop() {
@@ -99,7 +130,7 @@ namespace KR
 		return false; //停止してない.
 	}
 	//経過時間取得(マイクロ秒)
-	LONGLONG TimerMicro::GetPassTime() {
+	LONGLONG TimerMicro::GetPassTime() const {
 
 		//計測中なら.
 		if (state == TimerState::Active) {
@@ -147,23 +178,8 @@ namespace KR
 			return 0; //計測中じゃない時はfps0
 		}
 	}
-	//一定時間ごとにtrueを返す(CountDown専用)
-	bool TimerMicro::IntervalTime() {
-
-		//CountDownじゃない場合はfalseを返し続ける.
-		if (mode != TimerMode::CountDown) {
-			return false;
-		}
-
-		//まだ動いてなかったら.
-		if (state != TimerState::Active) {
-			Start(); //タイマー開始.
-		}
-		//タイマーが0になるまで.
-		if (GetPassTime() > 0) {
-			return false; //falseを返す.
-		}
-		Start();     //時間リセット.
-		return true; //trueを返す.
+	//カウントダウンが終了したか.
+	bool TimerMicro::IsCountDownEnd() const {
+		return GetPassTime() <= 0;
 	}
 }

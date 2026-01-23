@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/12/17
+   ver: 2025/12/28
 
    描画機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -33,13 +33,6 @@ namespace KR
 		Sub   = DX_BLENDMODE_SUB,     //減算ブレンド.(重なると明度が暗くなる)
 		Mul   = DX_BLENDMODE_MUL      //乗算ブレンド.
 	};
-
-	//画像データ.
-	struct Image
-	{
-		int    handle; //ハンドル.
-		INT_XY size;   //画像のサイズ.
-	};
 	//アンカー(描画の基準点)
 	enum class Anchor
 	{
@@ -55,12 +48,13 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private:
-		Image img{}; //画像データ.
+		int    handle; //ハンドル.
+		INT_XY size;   //画像のサイズ.
 
 	//▼ ===== 関数 ===== ▼.
 	private:
-		ResultInt LoadFile(MY_STRING fileName); //読み込み.
-		void      Release ();                   //解放.
+		void SetImage(int _handle); //画像登録.
+		void Release();             //画像解放.
 
 	public:
 		//constructor, destructor.
@@ -68,7 +62,7 @@ namespace KR
 		DrawImg();
 		~DrawImg();
 		//get.
-		INT_XY    GetSize() const { return img.size; }
+		INT_XY    GetSize() const { return size; }
 
 		//描画.
 		ResultInt Draw      (DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDis = true) const;
@@ -104,7 +98,9 @@ namespace KR
 		static DrawImg*  Get     (string saveName);
 		static bool      TryGet  (string saveName, DrawImg* ptr);
 		
-		static ResultInt LoadFile(MY_STRING fileName, string saveName); //読み込み.
+		//画像読み込み.
+		static ResultInt LoadFile   (MY_STRING fileName, string saveName);
+		static ResultInt LoadFileDiv(MY_STRING fileName, INT_XY size, INT_XY cnt, vector<string> saveName);
 
 		//使用禁止.
 		DrawImgMng(const DrawImgMng&) = delete;

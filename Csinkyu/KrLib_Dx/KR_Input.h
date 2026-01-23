@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/12/10
+   ver: 2025/12/26
 
    入力操作機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -181,7 +181,7 @@ namespace KR
 		//constructor(新規作成をできなくする)
 		InputMng() {}
 
-		DBL_XY GetVector4Dir(INT_XY pow);
+		static DBL_XY GetVector4Dir(INT_XY pow);
 
 	public:
 
@@ -206,14 +206,11 @@ namespace KR
 		static void   AddAction       (string name, PadSwitchID id);
 		static void   AddAction       (string name, PadArcadeID id);
 
-		//移動系.
-		static void   MoveKey4Dir     (DBL_XY* pos, float speed);
-		static void   MovePad4Dir     (DBL_XY* pos, float speed);
-		static void   MovePadStick    (DBL_XY* pos, float speed);
-
 		//取得.
+		static DBL_XY GetKey4Dir();
+		static DBL_XY GetPad4Dir();
+		static DBL_XY GetPadStick();
 		static DBL_XY GetMousePos();
-		static DBL_XY GetPadStickXY();
 
 		//更新.
 		static void   UpdateKey();
