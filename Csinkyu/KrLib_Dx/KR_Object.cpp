@@ -1,6 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/12/23
+   ver: 2025/12/29
 */
 #include "KR_Object.h"
 
@@ -12,6 +12,42 @@
 namespace KR
 {
 // ▼*--=<[ ObjectShape ]>=--*▼ //
+
+	//画像.
+	void ObjectShape::SetDrawImg(DrawImg* _img) {
+		useImg.clear();         //リセット.
+		useImg.push_back(_img); //画像を登録.
+		useImgNo = 0;           //1枚しかない場合は0で固定.
+	}
+	void ObjectShape::SetDrawImgs(vector<DrawImg*> _imgs, double _changeTime) {
+		//同じものでなければ.
+		if (useImg != _imgs) {
+			useImg = _imgs; //画像配列を登録.
+			useImgNo = 0;   //最初は0番目から.
+			//切り替え時間の設定.
+			tmImgAnim = Timer(TimerMode::CountDown, _changeTime);
+		}
+	}
+	//画像アニメーション設定.
+	//ポーズ画面などに使う想定.
+	void ObjectShape::SetStopImgAnim(bool isStop) {
+		if (isStop) {
+			tmImgAnim.Pause(); //停止する(ポーズ)
+		}
+		else {
+			tmImgAnim.Start(); //再生する.
+		}
+	}
+	//画像更新.
+	void ObjectShape::UpdateImg() {
+		//複数の画像がある場合のみ.
+		if (useImg.size() > 1) {
+			//一定時間で画像切り替え.
+			if (tmImgAnim.IntervalTime()) {
+				useImgNo = (useImgNo + 1) % useImg.size(); //(0～size-1)を順番にループ.
+			}
+		}
+	}
 
 	//移動限界を越えないよう位置修正.
 	void ObjectShape::FixPosInArea(DBL_RECT rect) {
@@ -36,13 +72,13 @@ namespace KR
 
 	//移動操作.
 	void ObjectShape::MoveKey4Dir(float speed) {
-		InputMng::MoveKey4Dir(GetPosPtr(), speed);
+		SetPos(GetPos() + InputMng::GetKey4Dir()  * speed); //現在地 + 入力 * 速度.
 	}
 	void ObjectShape::MovePad4Dir(float speed) {
-		InputMng::MovePad4Dir(GetPosPtr(), speed);
+		SetPos(GetPos() + InputMng::GetPad4Dir()  * speed); //現在地 + 入力 * 速度.
 	}
 	void ObjectShape::MovePadStick(float speed) {
-		InputMng::MovePadStick(GetPosPtr(), speed);
+		SetPos(GetPos() + InputMng::GetPadStick() * speed); //現在地 + 入力 * 速度.
 	}
 	void ObjectShape::MoveMousePos(bool isMoveX, bool isMoveY) {
 		//有効ならマウス座標を反映.
@@ -52,21 +88,23 @@ namespace KR
 	}
 	
 	//DrawGraph描画.
-	ResultInt ObjectShape::DrawGraph(Anchor anc, bool isFloat, bool isCameraDis) const {
+	ResultInt ObjectShape::DrawGraph(Anchor anc, bool isFloat, bool isCameraDis) {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawGraph"), _T("非アクティブ")};
 		}
 
+		UpdateImg(); //画像更新.
+
 		//画像データがない.
-		if (img == nullptr) {
+		if (useImg[useImgNo] == nullptr) {
 			DrawShape(); //代わりに図形を描画.
 			return {-2, _T("ObjectShape::DrawGraph"), _T("画像なし") };
 		}
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		ResultInt err = img->Draw(pos, anc, true, isFloat, isCameraDis);
+		ResultInt err = useImg[useImgNo]->Draw(pos, anc, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawGraph"), _T("描画エラー")};
 		}
@@ -74,21 +112,23 @@ namespace KR
 		return {0, _T("ObjectShape::DrawGraph"), _T("正常終了")};
 	}
 	//DrawRectGraph描画.
-	ResultInt ObjectShape::DrawRectGraph(DBL_RECT rect, Anchor anc, bool isFloat, bool isCameraDis) const {
+	ResultInt ObjectShape::DrawRectGraph(DBL_RECT rect, Anchor anc, bool isFloat, bool isCameraDis) {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawRectGraph"), _T("非アクティブ")};
 		}
 
+		UpdateImg(); //画像更新.
+
 		//画像データがない.
-		if (img == nullptr) {
+		if (useImg[useImgNo] == nullptr) {
 			DrawShape(); //代わりに図形を描画.
 			return {-2, _T("ObjectShape::DrawRectGraph"), _T("画像なし")};
 		}
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		ResultInt err = img->DrawRect(pos, rect, anc, true, isFloat, isCameraDis);
+		ResultInt err = useImg[useImgNo]->DrawRect(pos, rect, anc, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawRectGraph"), _T("描画エラー")};
 		}
@@ -96,21 +136,23 @@ namespace KR
 		return {0, _T("ObjectShape::DrawRectGraph"), _T("正常終了")};
 	}
 	//DrawExtendGraph描画.
-	ResultInt ObjectShape::DrawExtendGraph(DBL_XY sizeRate, Anchor anc, bool isFloat, bool isCameraDis) const {
+	ResultInt ObjectShape::DrawExtendGraph(DBL_XY sizeRate, Anchor anc, bool isFloat, bool isCameraDis) {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawExtendGraph"), _T("非アクティブ")};
 		}
 
+		UpdateImg(); //画像更新.
+
 		//画像データがない.
-		if (img == nullptr) {
+		if (useImg[useImgNo] == nullptr) {
 			DrawShape(); //代わりに図形を描画.
 			return {-2, _T("ObjectShape::DrawExtendGraph"), _T("画像なし")};
 		}
 		//座標にoffsetを足す.
 		DBL_XY pos = GetPos() + offset;
 		//描画.
-		ResultInt err = img->DrawExtend(pos, sizeRate, anc, true, isFloat, isCameraDis);
+		ResultInt err = useImg[useImgNo]->DrawExtend(pos, sizeRate, anc, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawExtendGraph"), _T("描画エラー")};
 		}
@@ -118,14 +160,16 @@ namespace KR
 		return {0, _T("ObjectShape::DrawExtendGraph"), _T("正常終了")};
 	}
 	//DrawRotaGraph描画.
-	ResultInt ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot, bool isFloat, bool isCameraDis) const {
+	ResultInt ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot, bool isFloat, bool isCameraDis) {
 
 		if (!isActive) {
 			return {-1, _T("ObjectShape::DrawRotaGraph"), _T("非アクティブ")};
 		}
 
+		UpdateImg(); //画像更新.
+
 		//画像データがない.
-		if (img == nullptr) {
+		if (useImg[useImgNo] == nullptr) {
 			DrawShape(); //代わりに図形を描画.
 			return {-2, _T("ObjectShape::DrawRotaGraph"), _T("画像なし")};
 		}
@@ -133,7 +177,7 @@ namespace KR
 		DBL_XY pos = GetPos() + offset;
 
 		//描画.
-		ResultInt err = img->DrawRota(pos, sizeRate, ang, pivot, true, isFloat, isCameraDis);
+		ResultInt err = useImg[useImgNo]->DrawRota(pos, sizeRate, ang, pivot, true, isFloat, isCameraDis);
 		if (err.GetCode() < 0) {
 			return {-3, _T("ObjectShape::DrawRotaGraph"), _T("描画エラー")};
 		}

@@ -9,13 +9,13 @@
 //依存関係.
 #include "GameData.h"
 //参照.
-static GameData& p_data = GameData::GetInst();
+static GameData& gameData = GameData::GetInst();
 
 //obstacle4mainのMove関数をobstacle4用に上書き.
 void NormalLaser_1::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data.speedRate;
+	float moveSpeed = Hm * gameData.speedRate;
 
 	// 矩形経路の移動(右回り)
 	switch (moveDir)
@@ -55,7 +55,7 @@ void NormalLaser_1::Move()
 void NormalLaser_2::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data.speedRate;
+	float moveSpeed = Hm * gameData.speedRate;
 
 	// 矩形経路の移動(左回り)
 	switch (moveDir)
@@ -95,7 +95,7 @@ void NormalLaser_2::Move()
 void NormalLaser_3::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data.speedRate;
+	float moveSpeed = Hm * gameData.speedRate;
 
 	// 矩形経路の移動(左回り)
 	switch (moveDir)
@@ -135,7 +135,7 @@ void NormalLaser_3::Move()
 void NormalLaser_4::Move()
 {
 	// 移動速度
-	float moveSpeed = Hm * p_data.speedRate;
+	float moveSpeed = Hm * gameData.speedRate;
 
 	// 矩形経路の移動(右回り)
 	switch (moveDir)

@@ -1,6 +1,6 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver: 2025/12/10
+   ver: 2025/12/26
 */
 #include "KR_Input.h"
 
@@ -67,88 +67,73 @@ namespace KR
 		inst.actions[name].inputs.push_back({ InputType::PadArcade, _int(id) }); //Pad操作(arcade)で登録.
 	}
 
-	//キーボード:十字キー操作.
-	void InputMng::MoveKey4Dir(DBL_XY* pos, float speed) {
+	//キーボード操作取得(十字キー)
+	DBL_XY InputMng::GetKey4Dir() {
 
-		INT_XY pow{}; //移動力.
+		INT_XY input{}; //入力.
 
 		//キー入力に応じて移動力を与える.
 		if (IsPushKey(KeyID::Up)   ||IsPushKey(KeyID::W)) {
-			pow.y += -1;
+			input.y += -1;
 		}
 		if (IsPushKey(KeyID::Down) ||IsPushKey(KeyID::S)) {
-			pow.y += +1;
+			input.y += +1;
 		}
 		if (IsPushKey(KeyID::Left) ||IsPushKey(KeyID::A)) {
-			pow.x += -1;
+			input.x += -1;
 		}
 		if (IsPushKey(KeyID::Right)||IsPushKey(KeyID::D)) {
-			pow.x += +1;
+			input.x += +1;
 		}
-
-		//座標移動.
-		pos->x += inst.GetVector4Dir(pow).x * speed;
-		pos->y += inst.GetVector4Dir(pow).y * speed;
+		//入力ベクトル(-1.0～1.0)を返す.
+		return GetVector4Dir(input);
 	}
-	//コントローラ:十字キー操作.
-	void InputMng::MovePad4Dir(DBL_XY* pos, float speed) {
+	//コントローラ操作取得(十字キー)
+	DBL_XY InputMng::GetPad4Dir() {
 
-		INT_XY pow{}; //移動力.
+		INT_XY input{}; //入力.
 
 		//キー入力に応じて移動力を与える.
 		if (IsPushPadBtn(PadXboxID::Up)) {
-			pow.y += -1;
+			input.y += -1;
 		}
 		if (IsPushPadBtn(PadXboxID::Down)) {
-			pow.y += +1;
+			input.y += +1;
 		}
 		if (IsPushPadBtn(PadXboxID::Left)) {
-			pow.x += -1;
+			input.x += -1;
 		}
 		if (IsPushPadBtn(PadXboxID::Right)) {
-			pow.x += +1;
+			input.x += +1;
 		}
-
-		//座標移動.
-		pos->x += inst.GetVector4Dir(pow).x * speed;
-		pos->y += inst.GetVector4Dir(pow).y * speed;
+		//入力ベクトル(-1.0～1.0)を返す.
+		return GetVector4Dir(input);
 	}
-	//コントローラ:スティック操作.
-	void InputMng::MovePadStick(DBL_XY* pos, float speed) {
-	
-		//入力取得.
-		DBL_XY vec = GetPadStickXY();
-		//座標移動.
-		pos->x += vec.x * speed;
-		pos->y += vec.y * speed;
+	//コントローラ操作取得(スティック)
+	DBL_XY InputMng::GetPadStick() {
+		//範囲-1000～1000を-1.0～1.0に変換.
+		return inst.stickVec.ToDbl() / 1000;
 	}
-	//移動4方向処理(斜め計算)
-	DBL_XY InputMng::GetVector4Dir(INT_XY pow){
-
-		DBL_XY move{}; //求めた移動量.
-
-		//移動力があれば.
-		if (pow.x != 0 || pow.y != 0) {
-			//角度にする.
-			double theta = atan2(pow.y, pow.x);
-			//移動量を求める.
-			move = { cos(theta), sin(theta) };
-			//ほぼ0の値なら0と見なす(計算上誤差があるため)
-			if (fabs(move.x) < 0.0001) { move.x = 0; }
-			if (fabs(move.y) < 0.0001) { move.y = 0; }
-		}
-
-		return move;
-	}
-
 	//マウス座標取得.
 	DBL_XY InputMng::GetMousePos() {
 		return inst.mPos.ToDbl();
 	}
-	//コントローラスティック操作取得.
-	DBL_XY InputMng::GetPadStickXY() {
-		//範囲-1000～1000を-1.0～1.0に変換.
-		return inst.stickVec.ToDbl() / 1000;
+	//移動4方向処理(斜め計算)
+	DBL_XY InputMng::GetVector4Dir(INT_XY input) {
+
+		DBL_XY vec{}; //ベクトル.
+
+		//移動力があれば.
+		if (input.x != 0 || input.y != 0) {
+			//角度にする.
+			double theta = atan2(input.y, input.x);
+			//移動量を求める.
+			vec = { cos(theta), sin(theta) };
+			//ほぼ0の値なら0と見なす(計算上誤差があるため)
+			if (fabs(vec.x) < 0.0001) { vec.x = 0; }
+			if (fabs(vec.y) < 0.0001) { vec.y = 0; }
+		}
+		return vec;
 	}
 
 	//ボタンの更新処理.

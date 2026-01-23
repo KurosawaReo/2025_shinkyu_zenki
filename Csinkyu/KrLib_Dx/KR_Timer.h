@@ -1,6 +1,6 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/12/23
+   ver: 2025/12/28
 
    タイマー機能を追加。
 */
@@ -36,6 +36,9 @@ namespace KR
 		TimerState state{};	//タイマー状態.
 
 	//▼ ===== 関数 ===== ▼.
+	private:
+		virtual bool TimerStop() = 0; //停止処理.
+
 	public:
 		//constructor.
 		TimerBase(TimerMode _mode) :
@@ -54,8 +57,12 @@ namespace KR
 				state = TimerState::Pause; //停止できたらPauseへ.
 			}
 		}
+		bool IntervalTime(); //一定時間ごとにtrueを返す.
 
-		virtual bool TimerStop() = 0; //停止処理.
+		virtual void Start() = 0; //開始.
+		virtual void Reset() = 0; //リセット.
+
+		virtual bool IsCountDownEnd() const = 0; //カウントダウンが終了したか.
 	};
 
 	//タイマー機能.
@@ -81,18 +88,11 @@ namespace KR
 			TimerBase(_mode), tmInit(_init), tmSavePass(_init) //初期化.
 		{}
 
-		void Start() {
-			tmStart = clock();            //開始時刻の取得.
-			state   = TimerState::Active; //タイマー稼働.
-		}
-		void Reset() {
-			tmStart    = 0;
-			tmSavePass = tmInit; //初期時刻.
-			state      = TimerState::Stop;
-		}
+		void Start() override;
+		void Reset() override;
 
-		float GetPassTime();  //時間取得.
-		bool  IntervalTime(); //一定時間ごとにtrueを返す.
+		float GetPassTime()    const;          //時間取得.
+		bool  IsCountDownEnd() const override; //カウントダウンが終了したか.
 	};
 
 	//タイマー機能(マイクロ秒)
@@ -123,18 +123,11 @@ namespace KR
 			QueryPerformanceFrequency(&freq); //頻度の取得.
 		}
 
-		void Start() {
-			QueryPerformanceCounter(&tmStart); //開始時刻の取得.
-			state = TimerState::Active;
-		}
-		void Reset() {
-			tmStart.QuadPart = 0;
-			tmSavePass = tmInit; //初期時刻.
-			state      = TimerState::Stop;
-		}
+		void Start() override;
+		void Reset() override;
 
-		LONGLONG GetPassTime (); //時間取得.
-		double   GetFps();       //fps取得.
-		bool     IntervalTime(); //一定時間ごとにtrueを返す.
+		LONGLONG GetPassTime()    const;          //時間取得.
+		double   GetFps();                        //fps取得.
+		bool     IsCountDownEnd() const override; //カウントダウンが終了したか.
 	};
 }

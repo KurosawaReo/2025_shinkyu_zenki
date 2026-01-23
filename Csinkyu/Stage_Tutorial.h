@@ -22,7 +22,7 @@ private:
 	int    stepNo{};          //現在のステップ番号.
 	int    stepInNo{};        //現在のステップ内番号.
 
-	double plyMoveSum{};      //プレイヤーの移動距離.
+	int    plyMoveCntr{};     //プレイヤーの移動カウンター.
 
 	bool   isPlayerDash{};    //プレイヤーがダッシュしたかどうか.
 	bool   isTakeItem{};      //アイテムを取ったかどうか.

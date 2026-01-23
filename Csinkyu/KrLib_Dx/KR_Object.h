@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/12/23
+   ver: 2025/12/29
 
    オブジェクトを追加。(継承して使うことも可)
    Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
@@ -17,6 +17,7 @@
 #endif
 //[include] 定義で使ってるもの.
 #include "KR_Draw.h"
+#include "KR_Timer.h"
 
 /*
    [画像について]
@@ -33,15 +34,22 @@ namespace KR
 	{
 	//▼ ===== 変数 ===== ▼.
 	private:
-		DrawImg* img{};      //画像データ.
+		vector<DrawImg*> useImg{};    //使う画像データ.
+		int              useImgNo{};  //使う画像データのindex.
+		Timer            tmImgAnim{}; //画像切り替え用タイマー.
+
 	public:
-		DBL_XY   offset{};   //画像をずらす量.
-		bool     isActive{}; //有効かどうか.
+		DBL_XY offset{};   //画像をずらす量.
+		bool   isActive{}; //有効かどうか.
 
 	//▼ ===== 関数 ===== ▼.
 	protected:
 		//constructor.
-		ObjectShape() : img(nullptr), offset(0, 0), isActive(true) {}
+		ObjectShape() : 
+			useImg(0), tmImgAnim(TimerMode::CountDown, 0), offset(0, 0), isActive(true)
+		{}
+		//画像更新.
+		void UpdateImg();
 
 	public:
 		//virtual(中身が変わるため、派生クラスで設定する)
@@ -51,8 +59,10 @@ namespace KR
 		virtual DBL_XY    GetSize  ()       const = 0;
 		virtual ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const = 0;
 
-		//set.
-		void      SetDrawImg     (DrawImg* _img) { img = _img; }
+		//画像.
+		void      SetDrawImg     (DrawImg* _img);
+		void      SetDrawImgs    (vector<DrawImg*> _imgs, double _changeTime);
+		void      SetStopImgAnim (bool isStop);
 		//計算(Calcの機能)
 		void      FixPosInArea   (DBL_RECT rect);
 		bool      IsOutInArea    (DBL_RECT rect, bool isCompOut);
@@ -65,10 +75,10 @@ namespace KR
 		void      MovePadStick   (float speed);
 		void      MoveMousePos   (bool isMoveX = true, bool isMoveY = true);
 		//描画(Drawの機能)
-		ResultInt DrawGraph      (                                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true) const;
-		ResultInt DrawRectGraph  (DBL_RECT rect,                                            Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true) const;
-		ResultInt DrawExtendGraph(DBL_XY sizeRate,                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true) const;
-		ResultInt DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0},                           bool isFloat = false, bool isCameraDis = true) const;
+		ResultInt DrawGraph      (                                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true);
+		ResultInt DrawRectGraph  (DBL_RECT rect,                                            Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true);
+		ResultInt DrawExtendGraph(DBL_XY sizeRate,                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true);
+		ResultInt DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0},                           bool isFloat = false, bool isCameraDis = true);
 	};
 
 	//オブジェクト(円)[継承想定]

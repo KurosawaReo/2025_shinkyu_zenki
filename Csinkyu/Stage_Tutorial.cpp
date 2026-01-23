@@ -18,16 +18,16 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData& p_data = GameData::GetInst();
-static GameManager& p_gameMng = GameManager::GetInst();
-static LaserManager& p_laserMng = LaserManager::GetInst();
-static MeteorManager& p_meteorMng = MeteorManager::GetInst();
-static Ripples& p_ripples = Ripples::GetInst();
-static ItemManager& p_itemMng = ItemManager::GetInst();
-static Player& p_player = Player::GetInst();
-static FireworksManager& p_fireworksMng = FireworksManager::GetInst();
-static EffectManager& p_effectMng = EffectManager::GetInst();
-static UIManager& p_uiMng = UIManager::GetInst();
+static GameData&			gameData		= GameData::GetInst();
+static GameManager&			gameMng			= GameManager::GetInst();
+static LaserManager&		laserMng		= LaserManager::GetInst();
+static MeteorManager&		meteorMng		= MeteorManager::GetInst();
+static Ripples&				ripples			= Ripples::GetInst();
+static ItemManager&			itemMng			= ItemManager::GetInst();
+static Player&				player			= Player::GetInst();
+static FireworksManager&	fireworksMng	= FireworksManager::GetInst();
+static EffectManager&		effectMng		= EffectManager::GetInst();
+static UIManager&			uiMng			= UIManager::GetInst();
 
 //初期化.
 void TutorialStage::Init() {
@@ -47,7 +47,7 @@ void TutorialStage::Reset() {
 	stepNo   = 0;    //後からstep1にする.
 	stepInNo = 0;    //0スタート.
 
-	plyMoveSum = 0; 
+	plyMoveCntr = 0; 
 	ResetSignFlag(); //signフラグoff.
 }
 //更新.
@@ -111,7 +111,7 @@ void TutorialStage::UpdateStep0() {
 	EffectData data{};
 	data.type = Effect_Tutorial_Step1;
 	data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
-	p_effectMng.SpawnEffect(&data);
+	effectMng.SpawnEffect(&data);
 
 	startTimer.Start(); //開始.
 	stepNo++;           //次のステップ.
@@ -125,11 +125,14 @@ void TutorialStage::UpdateStep1() {
 	{
 		case 0:
 		{
-			plyMoveSum += p_player.GetMoveDist(); //プレイヤー移動距離を計測.
+			//移動したらカウンターを+1
+			if (player.IsMoved()) {
+				plyMoveCntr += 1;
+			}
 
-			//[終了条件] 一定距離移動したら.
+			//[終了条件] 一定時間移動したら.
 			if (endTimer.GetState() != TimerState::Active && 
-				plyMoveSum >= 1500) 
+				plyMoveCntr >= 100) 
 			{
 				endTimer.Start();
 			}
@@ -158,12 +161,12 @@ void TutorialStage::UpdateStep1() {
 			//最初の一定時間は停止.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-			p_laserMng.Update();
-			p_gameMng.laserNor1->Update();
+			laserMng.Update();
+			gameMng.laserNor1->Update();
 
 			//[終了条件] 一定時間経過したら.
 			if (endTimer.GetState() != TimerState::Active && 
-				startTimer.GetPassTime() >= 9.0) 
+				startTimer.GetPassTime() >= 9.5) 
 			{
 				endTimer.Start();
 			}
@@ -176,13 +179,13 @@ void TutorialStage::UpdateStep1() {
 				EffectData data{};
 				data.type = Effect_Tutorial_Step2;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				p_effectMng.SpawnEffect(&data);
+				effectMng.SpawnEffect(&data);
 
 				//オブジェクトリセット.
-				p_laserMng.Reset();
-				p_gameMng.ResetNorLaser();
+				laserMng.Reset();
+				gameMng.ResetNorLaser();
 				//アイテム召喚.
-				p_itemMng.ItemSpawn(0);
+				itemMng.ItemSpawn(0);
 
 				StepInEnd();  //終了処理.
 				stepNo++;     //次のステップ.
@@ -203,7 +206,7 @@ void TutorialStage::UpdateStep2() {
 			//最初の一定時間は停止.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-			p_itemMng.Update();
+			itemMng.Update();
 
 			//[終了条件] アイテムを取ったら.
 			if (endTimer.GetState() != TimerState::Active && isTakeItem) {
@@ -221,7 +224,7 @@ void TutorialStage::UpdateStep2() {
 			//最初の一定時間は停止.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-			p_itemMng.Update();
+			itemMng.Update();
 
 			//[終了条件] 反射モードが終わったら.
 			if (endTimer.GetState() != TimerState::Active && isReflectFinish) {
@@ -236,10 +239,10 @@ void TutorialStage::UpdateStep2() {
 				EffectData data{};
 				data.type = Effect_Tutorial_Step3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				p_effectMng.SpawnEffect(&data);
+				effectMng.SpawnEffect(&data);
 
 				//アイテム召喚.
-				p_itemMng.ItemSpawn(0);
+				itemMng.ItemSpawn(0);
 
 				StepInEnd();  //終了処理.
 				stepNo++;     //次のステップ.
@@ -260,7 +263,7 @@ void TutorialStage::UpdateStep3() {
 			//最初の一定時間は停止.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-			p_itemMng.Update();
+			itemMng.Update();
 
 			//[終了条件] アイテムを取ったら.
 			if (endTimer.GetState() != TimerState::Active && isTakeItem) {
@@ -278,9 +281,9 @@ void TutorialStage::UpdateStep3() {
 			//最初の一定時間は停止.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
-			p_itemMng.Update();
-			p_laserMng.Update();
-			p_gameMng.laserNor1->Update();
+			itemMng.Update();
+			laserMng.Update();
+			gameMng.laserNor1->Update();
 
 			//[終了条件] レーザーを反射した && 反射モードが終わったら.
 			if (endTimer.GetState() != TimerState::Active && isReflectLaser && isReflectFinish) {
@@ -288,7 +291,7 @@ void TutorialStage::UpdateStep3() {
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//召喚可能に.
-				p_meteorMng.SetIsSpawnAble(true);
+				meteorMng.SetIsSpawnAble(true);
 
 				StepInEnd(); //終了処理.
 				stepInNo++;
@@ -298,10 +301,10 @@ void TutorialStage::UpdateStep3() {
 
 		case 2:
 		{
-			p_itemMng.Update();
-			p_laserMng.Update();
-			p_meteorMng.Update();
-			p_gameMng.laserNor1->Update();
+			itemMng.Update();
+			laserMng.Update();
+			meteorMng.Update();
+			gameMng.laserNor1->Update();
 
 			//[終了条件] 隕石を壊した & 反射モードが終わったら.
 			if (endTimer.GetState() != TimerState::Active && isBreakMeteor && isReflectFinish) {
@@ -316,10 +319,10 @@ void TutorialStage::UpdateStep3() {
 
 		case 3:
 		{
-			p_itemMng.Update();
-			p_laserMng.Update();
-			p_meteorMng.Update();
-			p_gameMng.laserNor1->Update();
+			itemMng.Update();
+			laserMng.Update();
+			meteorMng.Update();
+			gameMng.laserNor1->Update();
 
 			//[終了条件] 一定時間が経過したら.
 			if (endTimer.GetState() != TimerState::Active && 
@@ -336,14 +339,14 @@ void TutorialStage::UpdateStep3() {
 				EffectData data{};
 				data.type = Effect_Tutorial_Step4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				p_effectMng.SpawnEffect(&data);
+				effectMng.SpawnEffect(&data);
 
 				//スコアリセット.
-				p_data.scoreBef = p_data.score = 0;
+				gameData.scoreBef = gameData.score = 0;
 				//スコア表示.
-				p_uiMng.SignIsShowScore();
+				uiMng.SignIsShowScore();
 				//召喚可能に.
-				p_itemMng.SetIsSpawnAble(true);
+				itemMng.SetIsSpawnAble(true);
 
 				StepInEnd();  //終了処理.
 				stepNo++;     //次のステップ.
@@ -361,23 +364,23 @@ void TutorialStage::UpdateStep4() {
 	{
 		case 0:
 		{
-			p_itemMng.Update();
-			p_laserMng.Update();
-			p_meteorMng.Update();
-			p_gameMng.laserNor1->Update();
+			itemMng.Update();
+			laserMng.Update();
+			meteorMng.Update();
+			gameMng.laserNor1->Update();
 
 			//[終了条件] 一定スコアを越える & 反射モードが終わったら.
 			if (endTimer.GetState() != TimerState::Active && 
-				p_data.score >= 2000 && isReflectFinish) 
+				gameData.score >= 2000 && isReflectFinish) 
 			{
 				endTimer.Start();
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//オブジェクトリセット.
-				p_itemMng.Reset();
-				p_laserMng.Reset();
-				p_meteorMng.Reset();
-				p_gameMng.ResetNorLaser();
+				itemMng.Reset();
+				laserMng.Reset();
+				meteorMng.Reset();
+				gameMng.ResetNorLaser();
 
 				StepInEnd(); //終了処理.
 				stepInNo++;
@@ -401,8 +404,8 @@ void TutorialStage::UpdateStep4() {
 			}
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//チュートリアル終了.
-				p_data.scene = SCENE_TITLE;
-				p_gameMng.Reset(); //全てリセット.
+				gameData.scene = SCENE_TITLE;
+				gameMng.Reset(); //全てリセット.
 			}
 		}
 		break;
@@ -444,8 +447,8 @@ void TutorialStage::DrawStep1() {
             DrawTopText2(_T("青いものは敵です。当たると即死します。"), alpha);
             DrawTopText3(_T("灰色:予告, 青色:攻撃"), alpha);
 
-            p_gameMng.laserNor1->Draw();
-            p_laserMng.Draw();
+            gameMng.laserNor1->Draw();
+            laserMng.Draw();
         }
         break;
     }
@@ -466,7 +469,7 @@ void TutorialStage::DrawStep2() {
             DrawTopText1(_T("アイテムをとる"), alpha);
             DrawTopText2(_T("アイテムは画面上から降ってきます。触れると自動で取れます。"), alpha);
 
-			p_itemMng.Draw();
+			itemMng.Draw();
         }
         break;
 
@@ -475,7 +478,7 @@ void TutorialStage::DrawStep2() {
             DrawTopText1(_T("アイテム発動"), alpha);
             DrawTopText2(_T("触れると効果が発動し、一定時間経つと解除されます。"), alpha);
 
-			p_itemMng.Draw();
+			itemMng.Draw();
         }
         break;
     }
@@ -496,7 +499,7 @@ void TutorialStage::DrawStep3() {
             DrawTopText1(_T("反射モード"), alpha);
             DrawTopText2(_T("アイテムを取ると反射モードになります。"), alpha);
 
-			p_itemMng.Draw();
+			itemMng.Draw();
         }
         break;
 
@@ -505,10 +508,10 @@ void TutorialStage::DrawStep3() {
             DrawTopText1(_T("レーザーを跳ね返す"), alpha);
             DrawTopText2(_T("反射モード中は、レーザーに当たると跳ね返せます。"), alpha);
 
-			p_itemMng.Draw();
-			p_laserMng.Draw();
-			p_meteorMng.Draw();
-			p_gameMng.laserNor1->Draw();
+			itemMng.Draw();
+			laserMng.Draw();
+			meteorMng.Draw();
+			gameMng.laserNor1->Draw();
         }
         break;
 
@@ -517,10 +520,10 @@ void TutorialStage::DrawStep3() {
             DrawTopText1(_T("隕石をこわす"), alpha);
             DrawTopText2(_T("跳ね返したレーザーは、隕石に向かって飛んでいきます。"), alpha);
 
-			p_itemMng.Draw();
-			p_laserMng.Draw();
-			p_meteorMng.Draw();
-			p_gameMng.laserNor1->Draw();
+			itemMng.Draw();
+			laserMng.Draw();
+			meteorMng.Draw();
+			gameMng.laserNor1->Draw();
         }
         break;
 
@@ -529,10 +532,10 @@ void TutorialStage::DrawStep3() {
 			DrawTopText1(_T("反射モードの注意"), alpha);
 			DrawTopText2(_T("無敵ではないので、レーザー以外には当たると死にます。ご注意ください。"), alpha);
 
-			p_itemMng.Draw();
-			p_laserMng.Draw();
-			p_meteorMng.Draw();
-			p_gameMng.laserNor1->Draw();
+			itemMng.Draw();
+			laserMng.Draw();
+			meteorMng.Draw();
+			gameMng.laserNor1->Draw();
 		}
 		break;
     }
@@ -553,10 +556,10 @@ void TutorialStage::DrawStep4() {
             DrawTopText2(_T("最後に、スコアを2000点稼いでみましょう。"), alpha);
 			DrawTopText3(_T("アイテムを取る:+100, 隕石を壊す:+500"), alpha);
 
-			p_itemMng.Draw();
-			p_laserMng.Draw();
-			p_meteorMng.Draw();
-			p_gameMng.laserNor1->Draw();
+			itemMng.Draw();
+			laserMng.Draw();
+			meteorMng.Draw();
+			gameMng.laserNor1->Draw();
         }
         break;
 

@@ -69,9 +69,10 @@ public:
 	bool       GetActive()   const { return active; }
 	PlayerMode GetMode()     const { return mode; }
 	Circle     GetHit()      const { return hit; }
-	//Œv‘ª.
-	double     GetMoveDist() const { 
-		return Calc::Dist(hit.pos, after[1].pos); //ˆÚ“®‚µ‚½‹——£.
+	
+	//ˆÚ“®‚µ‚½‚©.
+	double     IsMoved() const { 
+		return Calc::Dist(hit.pos, after[1].pos) > 0; //ˆÚ“®‹——£‚ª0‚æ‚è‘å‚«‚¯‚ê‚Î.
 	}
 
 	//‚»‚Ì‘¼.

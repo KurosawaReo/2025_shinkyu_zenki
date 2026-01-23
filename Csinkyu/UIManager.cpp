@@ -9,7 +9,7 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameManager&   p_gameMng     = GameManager::GetInst();
+static GameManager&   gameMng     = GameManager::GetInst();
 static GameData&      p_gameData	 = GameData::GetInst();
 static TutorialStage& p_tutorialStg = TutorialStage::GetInst();
 
@@ -44,7 +44,7 @@ void UIManager::Draw() {
 #endif
 
 	//経過時間.
-	const float time = p_gameMng.GetSceneTime(SCENE_GAME);
+	const float time = gameMng.GetSceneTime(SCENE_GAME);
 		
 	//ステージ別.
 	switch (p_gameData.stage) 
@@ -111,7 +111,7 @@ void UIManager::Draw() {
 			str[1].text = text;
 			_stprintf(text, _T("SCORE:%05d"),      p_gameData.score);
 			str[2].text = text;
-			_stprintf(text, _T("TIME:%.3f"),       p_gameMng.GetGameTime());
+			_stprintf(text, _T("TIME:%.3f"),       gameMng.GetGameTime());
 			str[3].text = text;
 		
 			//[level]
