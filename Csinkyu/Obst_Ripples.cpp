@@ -60,6 +60,7 @@ void Ripples::SpawnRipples(double x, double y)
 	tmp.duration = RIPPLES_WARNING_DURATION + RIPPLES_ACTIVE_DURATION;
 	tmp.counter  = tmp.duration;	// 持続時間から開始（カウントダウン）
 	tmp.baseSize = 20;				// 適切な基本サイズに調整
+	tmp.alreadyHit = false;         // 最初はまだ当たっていない.
 
 	ripples.push_back(tmp); //listに追加.
 }
@@ -161,8 +162,13 @@ void Ripples::Hitjudgment()
 		float activeElapsedTime = elapsedTime - RIPPLES_WARNING_DURATION;
 		float activeProgress = activeElapsedTime / RIPPLES_ACTIVE_DURATION;
 
+		Debug::Log(L"条件1:", effectState == RIPPLES_STATE_ACTIVE);
+		Debug::Log(L"条件2:", !i->alreadyHit);
+
 		//波紋が広がった瞬間のみダメージ判定.
 		if (effectState == RIPPLES_STATE_ACTIVE && !i->alreadyHit) {
+
+			Debug::Log(L"ugoita");
 
 			float sizeMultiplier = RIPPLES_FLASH_SIZE_INIT + (activeProgress * RIPPLES_FLASH_SIZE_SPREAD);
 			int effectSize = (int)(i->baseSize * sizeMultiplier);
