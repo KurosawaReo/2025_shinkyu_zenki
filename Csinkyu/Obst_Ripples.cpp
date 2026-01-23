@@ -162,13 +162,8 @@ void Ripples::Hitjudgment()
 		float activeElapsedTime = elapsedTime - RIPPLES_WARNING_DURATION;
 		float activeProgress = activeElapsedTime / RIPPLES_ACTIVE_DURATION;
 
-		Debug::Log(L"ðŒ1:", effectState == RIPPLES_STATE_ACTIVE);
-		Debug::Log(L"ðŒ2:", !i->alreadyHit);
-
 		//”g–ä‚ªL‚ª‚Á‚½uŠÔ‚Ì‚Ýƒ_ƒ[ƒW”»’è.
 		if (effectState == RIPPLES_STATE_ACTIVE && !i->alreadyHit) {
-
-			Debug::Log(L"ugoita");
 
 			float sizeMultiplier = RIPPLES_FLASH_SIZE_INIT + (activeProgress * RIPPLES_FLASH_SIZE_SPREAD);
 			int effectSize = (int)(i->baseSize * sizeMultiplier);
