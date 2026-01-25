@@ -175,59 +175,58 @@ void StraightLaser::DrawPredictionLine()
 }
 
 /// <summary>
-/// //直線レーザー発射(コードおもれー) - ランダム発射版
+/// 直線レーザー発射.
 /// </summary>
 void StraightLaser::SpawnStraightLaser()
 {
-	// 予測された方向で発射
-	int direction = nextDirection;  // 修正: currentDirectionではなくnextDirectionを使用
-
-	double centerPos = nextCenterPos;  // 修正: 予測された位置を使用
-	double spacing = 20;  // レーザー間の間隔
+	//予測線と同じ所を通る.
+	const int    direction = nextDirection;
+	const double centerPos = nextCenterPos;
+	//レーザー間の間隔.
+	const double spacing = 20;
 
 	DBL_XY startPos{};
 	DBL_XY vel{};
 
 	switch (direction)
 	{
-	case 0: // 左から右へ発射
+	case 0: //→.
 		startPos.x = -50;
 		vel = { +1.0, 0.0 };
 		break;
-	case 1: // 右から左へ発射
+	case 1: //←.
 		startPos.x = WINDOW_WID + 50;
 		vel = { -1.0, 0.0 };
 		break;
-	case 2: // 上から下へ発射
+	case 2: //↓.
 		startPos.y = -50;
 		vel = { 0.0, +1.0 };
 		break;
-	case 3: // 下から上へ発射
+	case 3: //↑.
 		startPos.y = WINDOW_HEI + 50;
 		vel = { 0.0, -1.0 };
 		break;
 	}
 
-	// 3つのレーザーを同時に発射
+	//3つのレーザーを同時に発射.
 	for (int i = 0; i < 3; i++)
 	{
 		DBL_XY tmpPos{};
-		// レーザーデータの初期化
-		if (direction == 0 || direction == 1) // 水平発射
-		{
+		
+		//水平発射.
+		if (direction == 0 || direction == 1) {
 			tmpPos.x = startPos.x;
 			tmpPos.y = centerPos + (i-1) * spacing; // -spacing, 0, +spacing
 		}
-		else // 垂直発射
-		{
+		//垂直発射.
+		else {
 			tmpPos.x = centerPos + (i-1) * spacing; // -spacing, 0, +spacing
 			tmpPos.y = startPos.y;
 		}
-
 		//直線レーザーを発射.
 		laserMng.SpawnLaser(tmpPos, vel, Laser_Straight);
 	}
 
 	nextLaserIndex = 0;
-	currentDirection = nextDirection; // 発射後に現在の方向を更新
+	currentDirection = nextDirection; //発射後に現在の方向を更新.
 }

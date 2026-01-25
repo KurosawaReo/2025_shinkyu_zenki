@@ -574,11 +574,11 @@ void GameManager::DrawTitle() {
 			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
 				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-				data.vec   = VectorDeg(newDig);                 //ずらした角度を反映.
+				data.vec   = VectorDeg(newDig);						//ずらした角度を反映.
 				data.speed = ((float)RandNum(20, 100)/10) * 1.4f;   //速度抽選.
 				data.len   = ((float)RandNum(10, 150)/10) * 1.4f;   //長さ抽選.
 				data.ang   =  (float)RandNum(0, 3599)/10;           //角度抽選.
-				effectMng.SpawnEffect(&data);                      //エフェクト召喚.
+				effectMng.SpawnEffect(&data);						//エフェクト召喚.
 			}
 			//サウンド.
 			if (auto i = SoundMng::Get("Break")) {
@@ -594,9 +594,9 @@ void GameManager::DrawMenu() {
 }
 void GameManager::DrawGame() {
 
-	player.Draw();     //プレイヤー.
+	player.Draw();		//プレイヤー.
 	DrawReflectMode();  //反射モード演出.
-	uiMng.Draw();      //UI.
+	uiMng.Draw();		//UI.
 
 	//ゲームが開始したら.
 	if (isGameStart) {
