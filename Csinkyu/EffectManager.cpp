@@ -148,15 +148,17 @@ void EffectManager::Draw() {
 				DBL_XY pos = {i.pos.x, i.pos.y - AnimEaseOut(i.counter/SCORE_ANIM_TIME)*30};
 				//アニメーション値.
 				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/SCORE_ANIM_TIME));
-
 				//描画.
-				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				//画像切り替え.
-				if (i.type == Effect_Score100) {
-					DrawImgMng::Get("score100")->DrawExtend(pos, {0.2, 0.2});
-				}
-				else {
-					DrawImgMng::Get("score500")->DrawExtend(pos, {0.2, 0.2});
+				{
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+
+					//画像切り替え.
+					if (i.type == Effect_Score100) {
+						DrawImgMng::Get("score100")->DrawExtend(pos, {0.2, 0.2});
+					}
+					else {
+						DrawImgMng::Get("score500")->DrawExtend(pos, {0.2, 0.2});
+					}
 				}
 			}
 			break;
@@ -170,10 +172,11 @@ void EffectManager::Draw() {
 				DBL_XY pos2 = i.pos + Calc::VectorDeg(i.ang+90) * 20 * anim;
 				DBL_XY pos3 = i.pos + Calc::VectorDeg(i.ang-90) * 20 * anim;
 				Triangle tri = {{pos1, pos2, pos3}, 0xFFFFFF};
-
 				//描画.
-				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-				DrawTriangleKR(tri, false, true);
+				{
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
+					DrawTriangleKR(tri, false, true);
+				}
 			}
 			break;
 
@@ -182,10 +185,11 @@ void EffectManager::Draw() {
 				Circle cir= { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF };
 				//アニメーション値.
 				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME));
-
 				//描画.
-				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(cir, false, true);
+				{
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+					DrawCircleKR(cir, false, true);
+				}
 			}
 			break;
 
@@ -194,10 +198,11 @@ void EffectManager::Draw() {
 				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT };
 				//アニメーション値.
 				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/LASER_REF_ANIM_TIME));
-
 				//描画.
-				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(cir, false, true);
+				{
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+					DrawCircleKR(cir, false, true);
+				}
 			}
 			break;
 
@@ -210,10 +215,11 @@ void EffectManager::Draw() {
 			    line.color = COLOR_METEOR(i.pos);
 				//アニメーション値.
 				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME));
-
 				//描画.
-				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawLineKR(line, true);
+				{
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+					DrawLineKR(line, true);
+				}
 			}
 			break;
 
@@ -242,78 +248,76 @@ void EffectManager::Draw() {
 				//何個ランプを使うか.
 				int lampUseCnt  = 0;
 				int lampFillCnt = 0;
-
-				//描画.
-				SetDrawBlendModeKR(BlendModeID::Alpha, pow);
-				DrawCircleKR(mainCir, false, true);
-
-				switch (i.type) 
 				{
-					case Effect_Endless_Level1:
-						str.text = _T("Level 1");
-						lampUseCnt  = 5;
-						lampFillCnt = 1;
-						break;
-					case Effect_Endless_Level2:
-						str.text = _T("Level 2");
-						lampUseCnt  = 5;
-						lampFillCnt = 2;
-						break;
-					case Effect_Endless_Level3:
-						str.text = _T("Level 3");
-						lampUseCnt  = 5;
-						lampFillCnt = 3;
-						break;
-					case Effect_Endless_Level4:
-						str.text = _T("Level 4");
-						lampUseCnt  = 5;
-						lampFillCnt = 4;
-						break;
-					case Effect_Endless_Level5:
-						str.text = _T("Level 5");
-						lampUseCnt  = 5;
-						lampFillCnt = 5;
-						break;
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 
-					case Effect_Tutorial_Step1:
-						str.text = _T("Step 1");
-						lampUseCnt  = 4;
-						lampFillCnt = 1;
-						break;
-					case Effect_Tutorial_Step2:
-						str.text = _T("Step 2");
-						lampUseCnt  = 4;
-						lampFillCnt = 2;
-						break;
-					case Effect_Tutorial_Step3:
-						str.text = _T("Step 3");
-						lampUseCnt  = 4;
-						lampFillCnt = 3;
-						break;
-					case Effect_Tutorial_Step4:
-						str.text = _T("Step 4");
-						lampUseCnt  = 4;
-						lampFillCnt = 4;
-						break;
-				}
-				//テキスト.
-				str.Draw(Anchor::Mid, gameData.font2);
-				//ランプ(必要な数だけ描画)
-				for (int j = 0; j < lampUseCnt; j++) {
-						
-					const int interval = 30; //間隔.
-					//均等になるように配置する.
-					lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt-1)/2);
-					//円描画.
-					DrawCircleKR(lampCir[j], (lampFillCnt >= j+1), true); 
+					//円.
+					DrawCircleKR(mainCir, false, true);
+					//テキスト.					
+					switch (i.type) 
+					{
+						case Effect_Endless_Level1:
+							str.text = _T("Level 1");
+							lampUseCnt  = 5;
+							lampFillCnt = 1;
+							break;
+						case Effect_Endless_Level2:
+							str.text = _T("Level 2");
+							lampUseCnt  = 5;
+							lampFillCnt = 2;
+							break;
+						case Effect_Endless_Level3:
+							str.text = _T("Level 3");
+							lampUseCnt  = 5;
+							lampFillCnt = 3;
+							break;
+						case Effect_Endless_Level4:
+							str.text = _T("Level 4");
+							lampUseCnt  = 5;
+							lampFillCnt = 4;
+							break;
+						case Effect_Endless_Level5:
+							str.text = _T("Level 5");
+							lampUseCnt  = 5;
+							lampFillCnt = 5;
+							break;
+
+						case Effect_Tutorial_Step1:
+							str.text = _T("Step 1");
+							lampUseCnt  = 4;
+							lampFillCnt = 1;
+							break;
+						case Effect_Tutorial_Step2:
+							str.text = _T("Step 2");
+							lampUseCnt  = 4;
+							lampFillCnt = 2;
+							break;
+						case Effect_Tutorial_Step3:
+							str.text = _T("Step 3");
+							lampUseCnt  = 4;
+							lampFillCnt = 3;
+							break;
+						case Effect_Tutorial_Step4:
+							str.text = _T("Step 4");
+							lampUseCnt  = 4;
+							lampFillCnt = 4;
+							break;
+					}
+					str.Draw(Anchor::Mid, gameData.font2);
+
+					//ランプ(必要な数だけ)
+					for (int j = 0; j < lampUseCnt; j++) {
+						//均等になるように配置する.
+						const int interval = 30; //間隔.
+						lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt-1)/2);
+						DrawCircleKR(lampCir[j], (lampFillCnt >= j+1), true); 
+					}
 				}
 			}
 			break;
 
 			default: assert(FALSE); break;
 		}
-
-		ResetDrawBlendMode(); //描画モードリセット.
 	}
 }
 

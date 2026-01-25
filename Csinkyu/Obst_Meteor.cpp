@@ -54,40 +54,43 @@ void Meteor::Update() {
 
 void Meteor::Draw() {
 	
+	int pow = 255;
+
 	//破壊モード限定.
 	if (state == Meteor_Destroy) {
-		int pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
-		SetDrawBlendModeKR(BlendModeID::Add, pow);
+		pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
 	}
 
-	//全ての描画線.
-	for (auto& i : shape.line) {
+	{
+		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+
+		//全ての描画線.
+		for (auto& i : shape.line) {
 			
-		i.color = COLOR_METEOR(pos);
-		DrawLineKR(i, true, 2);
+			i.color = COLOR_METEOR(pos);
+			DrawLineKR(i, true, 2);
 
-#if defined DEBUG_METEOR_POINT
-		DrawCircle(i.stPos.x, i.stPos.y, 3, 0xFFFFFF);
-		DrawLine(i.stPos.x, i.stPos.y, pos.x, pos.y, 0x808080);
-#endif
+	#if defined DEBUG_METEOR_POINT
+			DrawCircle(i.stPos.x, i.stPos.y, 3, 0xFFFFFF);
+			DrawLine(i.stPos.x, i.stPos.y, pos.x, pos.y, 0x808080);
+	#endif
+		}
+	#if defined DEBUG_METEOR_POINT
+		DrawCircle(pos.x, pos.y, 5, 0xFFFFFF);
+	#endif
+
+	#if defined	DEBUG_METEOR_SPAWN
+		//隕石の経路.
+		Line line = {pos+vel*2000, pos-vel*2000, 0xFFFFFF};
+		DrawLineKR(&line, true, 2);
+	#endif
+
+		//チュートリアル.
+		if (gameData.stage == STAGE_TUTORIAL) {
+			DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
+			str.Draw();
+		}
 	}
-#if defined DEBUG_METEOR_POINT
-	DrawCircle(pos.x, pos.y, 5, 0xFFFFFF);
-#endif
-
-#if defined	DEBUG_METEOR_SPAWN
-	//隕石の経路.
-	Line line = {pos+vel*2000, pos-vel*2000, 0xFFFFFF};
-	DrawLineKR(&line, true, 2);
-#endif
-
-	//チュートリアル.
-	if (gameData.stage == STAGE_TUTORIAL) {
-		DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
-		str.Draw();
-	}
-
-	ResetDrawBlendMode(); //描画モードリセット.
 }
 
 //隕石出現.

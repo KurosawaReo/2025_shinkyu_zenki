@@ -50,31 +50,28 @@ void LaserManager::Draw() {
 	for (const LaserLineData& i : line) 
 	{
 		//時間経過で徐々に薄くする.
-		int clr = _int_r(255 * (1 - i.counter/LASER_LINE_DEL_TIME));
-		clr = max(clr, 0); //最低値を0にする.
-
-		//加算合成モードで軌跡を描画（発光エフェクト）
-		SetDrawBlendMode(DX_BLENDMODE_ADD, clr);
+		int color = _int_r(255 * (1 - i.counter/LASER_LINE_DEL_TIME));
+		color = max(color, 0); //最低値を0にする.
 
 		//軌跡の線設定.
 		Line tmpLine = { i.pos1, i.pos2, {} };
 		//線の色(時間経過で色が変化)
 		switch (i.type)
 		{
-			case Laser_Normal:       tmpLine.color = GetColor(50, clr, 255);        break;
-			case Laser_Straight:     tmpLine.color = GetColor(50, clr, 255);        break;
-			case Laser_Reflect:      tmpLine.color = GetColor(clr/2+128, 0, 255);   break;
-			case Laser_SuperReflect: tmpLine.color = GetColor(clr/2+128, 0, 255);   break;
-			case Laser_Falling:      tmpLine.color = GetColor(50, clr, 255);        break;
+			case Laser_Normal:       tmpLine.color = GetColor(50, color, 255);      break;
+			case Laser_Straight:     tmpLine.color = GetColor(50, color, 255);      break;
+			case Laser_Reflect:      tmpLine.color = GetColor(color/2+128, 0, 255); break;
+			case Laser_SuperReflect: tmpLine.color = GetColor(color/2+128, 0, 255); break;
+			case Laser_Falling:      tmpLine.color = GetColor(50, color, 255);      break;
 
 			default: assert(FALSE); break;
 		}
-
-		DrawLineKR(tmpLine, true, 2); //描画.
+		//加算合成モードで軌跡を描画(発光エフェクト)
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Add, color);
+			DrawLineKR(tmpLine, true, 2);
+		}
 	}
-
-	//通常の描画モードに戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	//チュートリアル限定.
 	if (gameData.stage == STAGE_TUTORIAL) {

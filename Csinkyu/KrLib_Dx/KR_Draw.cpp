@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2025/12/28
+   ver: 2026/01/25
 */
 #include "KR_Draw.h"
 
@@ -588,9 +588,12 @@ namespace KR
 		}
 
 		//描画.
-		SetDrawBlendModeKR(BlendModeID::Alpha, 255); //透過を反映させるためにアルファモードにする.
-		DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE); //TODO: DX_PRIMTYPE_LINESTRIP以外の機能.
-		ResetDrawBlendMode();
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha);
+
+			//TODO: ↓DX_PRIMTYPE_LINESTRIP以外の機能.
+			DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
+		}
 	}
 
 // ▼*--=<[ function ]>=--*▼ //
@@ -848,21 +851,5 @@ namespace KR
 			return {-1, _T("DrawBox3DKR"), _T("描画エラー")};
 		}
 		return {0, _T("DrawBox3DKR"), _T("正常終了")};
-	}
-
-	//描画モード変更.
-	ResultInt SetDrawBlendModeKR(BlendModeID id, int power) {
-		//設定.
-		if (SetDrawBlendMode(_int(id), power) < 0) {
-			return {-1, _T("SetDrawBlendModeKR"), _T("エラー") };
-		}
-		return {0, _T("SetDrawBlendModeKR"), _T("正常終了")};
-	}
-	ResultInt SetDrawBlendModeKR(BlendModeID id, double power) {
-		return SetDrawBlendModeKR(id, _int_r(power));
-	}
-	//描画モードリセット.
-	ResultInt ResetDrawBlendMode() {
-		return SetDrawBlendModeKR(BlendModeID::None, 255);
 	}
 }

@@ -63,10 +63,12 @@ void MeteorManager::Draw() {
 
 #if defined	DEBUG_METEOR_SPAWN
 	//Ë¶êŒÇÃñ⁄ïWínì_îÕàÕ.
-	SetDrawBlendModeKR(BlendModeID::Alpha, 100);
-	Box box = {{WINDOW_WID/2, WINDOW_HEI/2}, {METEOR_GOAL_RAND_RANGE*2, METEOR_GOAL_RAND_RANGE*2}, 0xFFA0A0};
-	DrawBoxKR(&box, Anchor::Mid);
-	ResetDrawBlendMode();
+	{
+		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 100);
+
+		Box box = {{WINDOW_WID/2, WINDOW_HEI/2}, {METEOR_GOAL_RAND_RANGE*2, METEOR_GOAL_RAND_RANGE*2}, 0xFFA0A0};
+		DrawBoxKR(&box, Anchor::Mid);
+	}
 #endif
 
 #if defined DEBUG_OBJ_ACTIVE

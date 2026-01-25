@@ -67,10 +67,7 @@ public:
 	void DrawStep3();
 	void DrawStep4();
 
-	void DrawTopText1(MY_STRING text, double alpha);
-	void DrawTopText2(MY_STRING text, double alpha);
-	void DrawTopText3(MY_STRING text, double alpha);
-	void DrawTopText4(MY_STRING text, double alpha);
+	void DrawTopText(int line, MY_STRING text, double alpha);
 
 	//Žg—p‹ÖŽ~.
 	TutorialStage(const TutorialStage&) = delete;

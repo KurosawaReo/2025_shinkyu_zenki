@@ -126,52 +126,52 @@ void StraightLaser::DrawPredictionLine()
 
 	// —\‘ªü‚Ì“§–¾“x.
 	double alpha = Calc::AnimEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
-	SetDrawBlendModeKR(BlendModeID::Alpha, 255*(1-alpha));
 
-	// ’†‰›‚Ì—\‘ªü‚Ì‚İ‚ğ•`‰æ
-	// ”­Ë•ûŒü‚É‰‚¶‚Ä—\‘ªü‚ğ•`‰æ
-	switch (nextDirection)
 	{
-	case 0: // ¶‚©‚ç‰E‚Ö
-		startX = -50;
-		endX = WINDOW_WID + 50;
+		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - alpha));
+	
+		// ’†‰›‚Ì—\‘ªü‚Ì‚İ‚ğ•`‰æ
+		// ”­Ë•ûŒü‚É‰‚¶‚Ä—\‘ªü‚ğ•`‰æ
+		switch (nextDirection)
 		{
-			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
+		case 0: // ¶‚©‚ç‰E‚Ö
+			startX = -50;
+			endX = WINDOW_WID + 50;
+			{
+				Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
+		case 1: // ‰E‚©‚ç¶‚Ö
+			startX = WINDOW_WID + 50;
+			endX = -50;
+			{
+				Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
+		case 2: // ã‚©‚ç‰º‚Ö
+			startY = -50;
+			endY = WINDOW_HEI + 50;
+			{
+				Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
+		case 3: // ‰º‚©‚çã‚Ö
+			startY = WINDOW_HEI + 50;
+			endY = -50;
+			{
+				Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
 		}
-		break;
-	case 1: // ‰E‚©‚ç¶‚Ö
-		startX = WINDOW_WID + 50;
-		endX = -50;
-		{
-			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
-		}
-		break;
-	case 2: // ã‚©‚ç‰º‚Ö
-		startY = -50;
-		endY = WINDOW_HEI + 50;
-		{
-			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
-		}
-		break;
-	case 3: // ‰º‚©‚çã‚Ö
-		startY = WINDOW_HEI + 50;
-		endY = -50;
-		{
-			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
-		}
-		break;
 	}
-
-	// •`‰æƒ‚[ƒh‚ğ–ß‚·
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 /// <summary>
