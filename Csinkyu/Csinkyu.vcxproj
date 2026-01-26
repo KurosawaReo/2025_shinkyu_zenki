@@ -27,6 +27,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
     <ClInclude Include="KrLib_cpp\KR_Num.h" />
@@ -65,6 +66,7 @@
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
     <ClCompile Include="KrLib_Dx\KR_App.cpp" />

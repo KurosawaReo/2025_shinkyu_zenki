@@ -300,6 +300,10 @@ void GameManager::Draw() {
 		DrawPause();
 	}
 	
+	//コントローラ操作表示.
+#if defined DEBUG_CONTR_INPUT
+	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("Pad Input: %d"), GetJoypadInputState(DX_INPUT_PAD1));
+#endif
 	//fps表示用.
 #if defined DEBUG_SHOW_FPS
 	DrawFormatString(20, WINDOW_HEI-40, 0xFFFFFF, _T("FPS: %f"), tmFps.GetFps());
@@ -452,6 +456,29 @@ void GameManager::UpdateReflectMode() {
 //シーン別描画.
 void GameManager::DrawTitle() {
 
+	//操作方法明記.
+	DrawStr howPlay(_T(""), {30, WINDOW_HEI - 30}, 0x00FFFF);
+	{
+#if defined INPUT_CHANGE_ARCADE
+		howPlay.text = _T("アーケード操作");
+#else
+		howPlay.text = _T("コントローラ操作");
+#endif
+		howPlay.Draw(Anchor::LD);
+
+		//枠線グラデーション.
+		const DBL_XY howPlayPos  = howPlay.pos.ToDbl();
+		const DBL_XY howPlaySize = howPlay.GetTextSize().ToDbl();
+		const int margin = 5;
+
+		GradLine line;
+		line.AddPoint(howPlayPos.Add(-margin,              margin               ), { 0, 255, 255 });
+ 		line.AddPoint(howPlayPos.Add(howPlaySize.x+margin, margin               ), { 0, 100, 255 });
+		line.AddPoint(howPlayPos.Add(howPlaySize.x+margin, -howPlaySize.y-margin), { 0, 255, 255 });
+		line.AddPoint(howPlayPos.Add(-margin,              -howPlaySize.y-margin), { 0, 100, 255 });
+		line.Draw(true);
+	}
+
 	//アニメーション切り替わりポイント.
 	const float delay1 = 1;
 	const float delay2 = 1.4f;
@@ -469,23 +496,28 @@ void GameManager::DrawTitle() {
 			//アニメーション値.
 			double anim = AnimEaseInOut(tmScene[SCENE_TITLE].GetPassTime()/delay1);
 			//ロゴ1枚目.
-			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim);
-			DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY}, imgSize, Anchor::Mid, true, true);
+			{
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
+				DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY}, imgSize, Anchor::Mid, true, true);
+			}
 		}
 		//切り替え後.
 		else {
 			//アニメーション値.
+			//1枚目と2枚目の切り替えが自然になるよう、anim2は遅延ありにする.
 			double anim1 = AnimEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1    )/1.8);
-			double anim2 = AnimEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8); //少し遅延あり.
+			double anim2 = AnimEaseInOut((tmScene[SCENE_TITLE].GetPassTime()-delay1-0.4)/1.8);
 			//ロゴ1枚目.
-			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * (1-anim2));
-			DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
+			{
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1-anim2));
+				DrawImgMng::Get("logo")->DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
+			}
 			//ロゴ2枚目.
-			SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim1);
-			DrawImgMng::Get("logo_all")->DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
+			{
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1);
+				DrawImgMng::Get("logo_all")->DrawExtend({WINDOW_WID/2, logoY - anim1*80}, imgSize, Anchor::Mid, true, true);
+			}
 		}
-		//描画モードリセット.
-		ResetDrawBlendMode();
 	}
 
 	//best score.
@@ -500,16 +532,19 @@ void GameManager::DrawTitle() {
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), gameData.bestScore); //ベストスコア.
 		DrawStr str(text, {WINDOW_WID/2, drawY+1}, COLOR_BEST_SCORE);
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1);
+			str.Draw(Anchor::Mid, gameData.font2); //スコア値.
+		}
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim2);
 
-		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim1);
-		str.Draw(Anchor::Mid, gameData.font2); //スコア値.
-		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim2);
-		//UI
-		DrawImgMng::Get("ui_back_best_score")->
-			DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
-		DrawImgMng::Get("ui_back_best_score")->
-			DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
-		ResetDrawBlendMode();
+			//UI
+			DrawImgMng::Get("ui_back_best_score")->
+				DrawExtend({WINDOW_WID/2, drawY + (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
+			DrawImgMng::Get("ui_back_best_score")->
+				DrawExtend({WINDOW_WID/2, drawY - (10+18*anim2)}, {0.45, 0.4}, Anchor::Mid, true, true);
+		}
 	}
 	//PUSH SPACE.
 	if (tmScene[SCENE_TITLE].GetPassTime() >= delay4) {
@@ -520,10 +555,10 @@ void GameManager::DrawTitle() {
 		double anim = AnimWaveLoop(tmScene[SCENE_TITLE].GetPassTime()-delay4);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, drawY}, 0xFFFFFF);
-		
-		SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-		str.Draw(Anchor::Mid, gameData.font1); //テキスト.
-		ResetDrawBlendMode();
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
+			str.Draw(Anchor::Mid, gameData.font1); //テキスト.
+		}
 	}
 	//隕石破壊アニメーション.
 	if (!isTitleAnim) {
@@ -539,11 +574,11 @@ void GameManager::DrawTitle() {
 			for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
 				double newDig = dig + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-				data.vec   = VectorDeg(newDig);                 //ずらした角度を反映.
+				data.vec   = VectorDeg(newDig);						//ずらした角度を反映.
 				data.speed = ((float)RandNum(20, 100)/10) * 1.4f;   //速度抽選.
 				data.len   = ((float)RandNum(10, 150)/10) * 1.4f;   //長さ抽選.
 				data.ang   =  (float)RandNum(0, 3599)/10;           //角度抽選.
-				effectMng.SpawnEffect(&data);                      //エフェクト召喚.
+				effectMng.SpawnEffect(&data);						//エフェクト召喚.
 			}
 			//サウンド.
 			if (auto i = SoundMng::Get("Break")) {
@@ -559,9 +594,9 @@ void GameManager::DrawMenu() {
 }
 void GameManager::DrawGame() {
 
-	player.Draw();     //プレイヤー.
+	player.Draw();		//プレイヤー.
 	DrawReflectMode();  //反射モード演出.
-	uiMng.Draw();      //UI.
+	uiMng.Draw();		//UI.
 
 	//ゲームが開始したら.
 	if (isGameStart) {
@@ -589,10 +624,10 @@ void GameManager::DrawEnd() {
 	{
 		double anim = AnimEaseInOut(tmScene[SCENE_END].GetPassTime()); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
-
-		SetDrawBlendModeKR(BlendModeID::Alpha, 128*anim);
-		DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
-		ResetDrawBlendMode();
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 128 * anim);
+			DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
+		}
 	}
 	uiMng.Draw(); //UI.
 
@@ -603,15 +638,14 @@ void GameManager::DrawEnd() {
 		double anim = AnimEaseOut(tmScene[SCENE_END].GetPassTime());
 		//テキスト.
 		DrawStr str(_T("チュートリアルではその場で復活します..."), {WINDOW_WID/2, WINDOW_HEI/2}, 0x00FFFF);
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
 
-		SetDrawBlendModeKR(BlendModeID::Alpha, 255 * anim);
-
-		//GAME OVER
-		DrawImgMng::Get("gameover")->DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true);
-		//テキスト.
-		str.Draw(Anchor::Mid, gameData.font2);
-
-		ResetDrawBlendMode();
+			//GAME OVER
+			DrawImgMng::Get("gameover")->DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true);
+			//テキスト.
+			str.Draw(Anchor::Mid, gameData.font2);
+		}
 	}
 	//チュートリアル以外の場合.
 	else {
@@ -629,13 +663,14 @@ void GameManager::DrawEnd() {
 			//テキストの設定.
 			DrawStr str1(_T("Time Bonus"), {WINDOW_WID/2, WINDOW_HEI/2-20}, 0xFFFFFF);
 			DrawStr str2(text,             {WINDOW_WID/2, WINDOW_HEI/2+20}, 0xFFFFFF);
+			{
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
 
-			SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-			DrawImgMng::Get("gameover")->DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true); //GAME OVER
-			//画面中央に文字を表示.
-			str1.Draw(Anchor::Mid, gameData.font1);
-			str2.Draw(Anchor::Mid, gameData.font1);
-			ResetDrawBlendMode();
+				DrawImgMng::Get("gameover")->DrawExtend({WINDOW_WID/2, 370+30*anim}, {0.5, 0.5}, Anchor::Mid, true, true); //GAME OVER
+				//画面中央に文字を表示.
+				str1.Draw(Anchor::Mid, gameData.font1);
+				str2.Draw(Anchor::Mid, gameData.font1);
+			}
 		}
 
 		const float delay1 = 1.2f;
@@ -649,9 +684,10 @@ void GameManager::DrawEnd() {
 				//アニメーション値.
 				double anim = AnimEaseOut((tmScene[SCENE_END].GetPassTime()-delay1)*2);
 				//描画.
-				SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-				DrawImgMng::Get("new_record")->DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, Anchor::Mid, true, true); //NEW RECORD
-				ResetDrawBlendMode();
+				{
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
+					DrawImgMng::Get("new_record")->DrawExtend({WINDOW_WID/2, WINDOW_HEI/2-330+anim*20}, {0.4, 0.4}, Anchor::Mid, true, true); //NEW RECORD
+				}
 				//サウンド.
 				if (!isBestScoreSound) {
 					if (auto i = SoundMng::Get("BestScore")) {
@@ -667,11 +703,11 @@ void GameManager::DrawEnd() {
 			//アニメーション値.
 			double anim = AnimWaveLoop(tmScene[SCENE_END].GetPassTime()-delay2);
 			//テキスト.
-			DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);
-		
-			SetDrawBlendModeKR(BlendModeID::Alpha, 255*anim);
-			str.Draw(Anchor::Mid, gameData.font1); //テキスト.
-			ResetDrawBlendMode();
+			DrawStr str(_T("Push SPACE or Ⓐ"), {WINDOW_WID/2-5, WINDOW_HEI/2+145}, 0xFFFFFF);		
+			{
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
+				str.Draw(Anchor::Mid, gameData.font1); //テキスト.
+			}
 		}
 	}
 }
@@ -691,17 +727,19 @@ void GameManager::DrawReflectMode() {
 		{
 			double dec  = GetDecimal(tmReflectMode.GetPassTime()); //小数だけ取り出す.
 			double anim = AnimEaseOut(dec);
-			
-			SetDrawBlendModeKR(BlendModeID::Alpha, _int_r(255 * dec)); //1秒ごとに薄くなる演出.
-			//最初の1秒.
-			if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME-1) {
-				DrawImgMng::Get("reflect")->DrawExtend({WINDOW_WID / 2, WINDOW_HEI / 2}, {0.3 + 0.2 * anim, 0.3 + 0.2 * anim});
+			{
+				//1秒ごとに薄くなる演出.
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * dec);
+
+				//最初の1秒.
+				if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME-1) {
+					DrawImgMng::Get("reflect")->DrawExtend({WINDOW_WID / 2, WINDOW_HEI / 2}, {0.3 + 0.2 * anim, 0.3 + 0.2 * anim});
+				}
+				//最後の3秒.
+				if (tmReflectMode.GetPassTime() <= 3) {
+					str.Draw(Anchor::Mid, gameData.font4); //数字.
+				}
 			}
-			//最後の3秒.
-			if (tmReflectMode.GetPassTime() <= 3) {
-				str.Draw(Anchor::Mid, gameData.font4); //数字.
-			}
-			ResetDrawBlendMode();
 		}
 	}
 }

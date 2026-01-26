@@ -33,22 +33,23 @@ void BG_Tile::Draw(double slowTime) {
 		//透明度計算.
 		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
-		//透明度設定.
-		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * sinNum * (1-slowTime));
 		//画像.
-		DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alpha * sinNum * (1 - slowTime));
+			DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+		}
 	}
 	//反射モード.
 	if (gameData.isReflectMode) {
 		//透明度計算.
 		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
-		//透明度設定.
-		SetDrawBlendModeKR(BlendModeID::Alpha, alpha * sinNum * slowTime);
 		//画像.
-		DrawImgMng::Get("bg_reflect")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alpha * sinNum * slowTime);
+			DrawImgMng::Get("bg_reflect")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+		}
 	}
-	ResetDrawBlendMode(); //描画モードリセット.
 }
 //発光.
 void BG_Tile::Shine() {
@@ -119,9 +120,10 @@ void BG1::Draw() {
 	//スローモード中.
 	if (gameData.speedRate) {
 		//グラデーション枠.
-		SetDrawBlendModeKR(BlendModeID::Alpha, 255*time);
-		DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
-		ResetDrawBlendMode();
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * time);
+			DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
+		}
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
 		DrawBoxKR(box, Anchor::Mid, false, true);

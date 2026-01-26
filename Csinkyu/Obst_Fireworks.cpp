@@ -169,8 +169,6 @@ void FireworksManager::Draw() {
 	for (auto i = fireworks.begin(); i != fireworks.end(); i++) {
 		DrawWarningEffect(i);
 	}
-	//描画モードをリセット.
-	ResetDrawBlendMode();
 }
 
 // 予告エフェクト描画
@@ -198,7 +196,6 @@ void FireworksManager::DrawWarningEffect(list<FireworksData>::iterator it) {
 	else {
 		warningSize = 30;
 	}
-	SetDrawBlendModeKR(BlendModeID::Alpha, alphaValue);
 
 	float centerX = it->targetX;
 	float centerY = it->targetY;
@@ -206,23 +203,23 @@ void FireworksManager::DrawWarningEffect(list<FireworksData>::iterator it) {
 
 	unsigned int color = GetColor(128, 128, 128);
 
-	// 上向きの三角形
-	Triangle tri;
-	tri.pos[0] = { centerX, centerY - size }; // 上の頂点
-	tri.pos[1] = { centerX - size * 0.866f, centerY + size * 0.5f }; // 左下の頂点
-	tri.pos[2] = { centerX + size * 0.866f, centerY + size * 0.5f }; // 右下の頂点
-	tri.color = color;
-	DrawTriangleKR(tri, false, true);
+	{
+		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
+	
+		//上向きの三角形.
+		Triangle tri;
+		tri.pos[0] = { centerX, centerY - size }; // 上の頂点
+		tri.pos[1] = { centerX - size * 0.866f, centerY + size * 0.5f }; // 左下の頂点
+		tri.pos[2] = { centerX + size * 0.866f, centerY + size * 0.5f }; // 右下の頂点
+		tri.color = color;
+		DrawTriangleKR(tri, false, true);
 
-	// 下向きの三角形
-	Triangle tri2;
-	tri2.pos[0] = { centerX, centerY + size }; // 下の頂点
-	tri2.pos[1] = { centerX - size * 0.866f, centerY - size * 0.5f }; // 左上の頂点
-	tri2.pos[2] = { centerX + size * 0.866f, centerY - size * 0.5f }; // 右上の頂点
-	tri2.color = color;
-	DrawTriangleKR(tri2, false, true);
-
-	// 中心点
-	//Circle cir = { {centerX, centerY}, 5, color };
-	//DrawCircleKR(&cir, false, true);
+		//下向きの三角形.
+		Triangle tri2;
+		tri2.pos[0] = { centerX, centerY + size }; // 下の頂点
+		tri2.pos[1] = { centerX - size * 0.866f, centerY - size * 0.5f }; // 左上の頂点
+		tri2.pos[2] = { centerX + size * 0.866f, centerY - size * 0.5f }; // 右上の頂点
+		tri2.color = color;
+		DrawTriangleKR(tri2, false, true);
+	}
 }

@@ -44,13 +44,14 @@ enum StageType
 //====================================================================//
 //【設定】
 
-//#define DEBUG_OBJ_ACTIVE //デバッグ用.
-//#define DEBUG_SPAWN_RATE   //デバッグ用.
-//#define DEBUG_METEOR_POINT //デバッグ用.
-//#define DEBUG_METEOR_SPAWN //デバッグ用.
-//#define DEBUG_SHOW_FPS //デバッグ用.
+//#define DEBUG_OBJ_ACTIVE		//オブジェクト出現数表示.
+//#define DEBUG_SPAWN_RATE		//召喚間隔表示.
+//#define DEBUG_METEOR_POINT	//隕石目標地点表示.
+//#define DEBUG_METEOR_SPAWN	//隕石召喚範囲表示.
+//#define DEBUG_SHOW_FPS		//FPS表示.　
+//#define DEBUG_CONTR_INPUT		//コントローラ操作表示.
 
-//#define INPUT_CHANGE_ARCADE  //定義するとアーケード操作にする, しないとコントローラ操作に.
+#define INPUT_CHANGE_ARCADE		//定義するとアーケード操作にする, しないとコントローラ操作に.
 
 //#define BGM_NONE //定義するとBGMをoffに.
 

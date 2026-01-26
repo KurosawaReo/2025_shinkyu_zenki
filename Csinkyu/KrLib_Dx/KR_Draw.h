@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2025/12/28
+   ver: 2026/01/25
 
    描画機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -20,23 +20,30 @@ namespace KR
 		Normal   = DX_FONTTYPE_NORMAL,
 		Edge     = DX_FONTTYPE_EDGE,
 		Anti     = DX_FONTTYPE_ANTIALIASING,      //アンチエイリアス(滑らかになる)
-		AntiEdge = DX_FONTTYPE_ANTIALIASING_EDGE, //アンチエイリアス & エッジ
+		AntiEdge = DX_FONTTYPE_ANTIALIASING_EDGE, //アンチエイリアス & エッジ.
 
 		None     = -1, //指定なし.
 	};
 	//描画モードID(入力しやすくする用)
-	enum class BlendModeID
+	enum class DrawModeID
 	{
-		None  = DX_BLENDMODE_NOBLEND, //デフォルト.
-		Alpha = DX_BLENDMODE_ALPHA,   //αブレンド.  (重なると透過する)
-		Add   = DX_BLENDMODE_ADD,     //加算ブレンド.(重なると明度が明るくなる)
-		Sub   = DX_BLENDMODE_SUB,     //減算ブレンド.(重なると明度が暗くなる)
-		Mul   = DX_BLENDMODE_MUL      //乗算ブレンド.
+		None        = DX_DRAWMODE_NEAREST,      //指定なし.
+		Nearest		= DX_DRAWMODE_NEAREST,		//ネアレストネイバー法  (通常)
+		Bilinear	= DX_DRAWMODE_BILINEAR,		//バイリニア法          (画像を縮小しても滑らかになる)
+		Anisotropic	= DX_DRAWMODE_ANISOTROPIC,	//異方性フィルタリング法.
+	};
+	enum class DrawBlendModeID
+	{
+		None		= DX_BLENDMODE_NOBLEND,		//デフォルト.
+		Alpha		= DX_BLENDMODE_ALPHA,		//αブレンド  (重なると透過する)
+		Add			= DX_BLENDMODE_ADD,			//加算ブレンド(重なると明度が明るくなる)
+		Sub			= DX_BLENDMODE_SUB,			//減算ブレンド(重なると明度が暗くなる)
+		Mul			= DX_BLENDMODE_MUL			//乗算ブレンド.
 	};
 	//アンカー(描画の基準点)
 	enum class Anchor
 	{
-		LU,	U,   RU, //例: Anchor::LU = Left Up.
+		LU,	U,   RU, //[例] Anchor::LU = Left Up.
 		L,  Mid, R,
 		LD,	D,   RD,
 	};
@@ -170,8 +177,32 @@ namespace KR
 	//図形(3D)[試作品]
 	ResultInt DrawBox3DKR		(const Box3D& box, bool isFill = true, bool isCameraDis = true);
 
-	//描画モード.
-	ResultInt SetDrawBlendModeKR(BlendModeID id, int    power = 255);
-	ResultInt SetDrawBlendModeKR(BlendModeID id, double power = 255);
-	ResultInt ResetDrawBlendMode();
+	//描画モード設定(スコープ内のみ有効)
+	class DrawMode
+	{
+	private:
+		int oldMode1;
+		int oldMode2;
+		int oldMode2Param;
+
+	public:
+		//コンストラクタ.
+		DrawMode(
+			DrawModeID mode1, DrawBlendModeID mode2, int mode2Param = 255
+		){
+			//現在の設定を保存.
+			oldMode1 = GetDrawMode();
+			GetDrawBlendMode(&oldMode2, &oldMode2Param);
+
+			//modeを設定.
+			SetDrawMode(_int(mode1));
+			SetDrawBlendMode(_int(mode2), mode2Param);
+		}
+		//デストラクタ.
+		~DrawMode() {
+			//設定を戻す.
+			SetDrawMode(oldMode1);
+			SetDrawBlendMode(oldMode2, oldMode2Param);
+		}
+	};
 }

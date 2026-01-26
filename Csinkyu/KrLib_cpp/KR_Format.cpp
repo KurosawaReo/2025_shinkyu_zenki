@@ -1,6 +1,6 @@
 /*
    - KR_Format.cpp - (C++)
-   ver.2025/12/30
+   ver.2026/01/25
 
    文字列に変数を挿入する機能を追加。
 */
@@ -33,7 +33,7 @@ namespace KR
         va_end(args); //可変引数の終了.
 
         //エラーが発生したら"Error"と返す.
-        if (err < 0) { return "Error"; }
+        if (err < 0) { return _T("Error"); }
         //結果を返す.
         return ret;
 	}

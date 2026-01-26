@@ -1,6 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2025/12/29
+   ver: 2026/01/25
 */
 #include "KR_Object.h"
 
@@ -14,18 +14,18 @@ namespace KR
 // ▼*--=<[ ObjectShape ]>=--*▼ //
 
 	//画像.
-	void ObjectShape::SetDrawImg(DrawImg* _img) {
+	void ObjectShape::SetDrawImg(string name) {
 		useImg.clear();         //リセット.
-		useImg.push_back(_img); //画像を登録.
+		useImg.push_back(name); //画像名を登録.
 		useImgNo = 0;           //1枚しかない場合は0で固定.
 	}
-	void ObjectShape::SetDrawImgs(vector<DrawImg*> _imgs, double _changeTime) {
+	void ObjectShape::SetDrawImgs(vector<string> names, double changeTime) {
 		//同じものでなければ.
-		if (useImg != _imgs) {
-			useImg = _imgs; //画像配列を登録.
+		if (useImg != names) {
+			useImg = names; //画像名配列を登録.
 			useImgNo = 0;   //最初は0番目から.
 			//切り替え時間の設定.
-			tmImgAnim = Timer(TimerMode::CountDown, _changeTime);
+			tmImgAnim = Timer(TimerMode::CountDown, changeTime);
 		}
 	}
 	//画像アニメーション設定.
@@ -96,17 +96,21 @@ namespace KR
 
 		UpdateImg(); //画像更新.
 
-		//画像データがない.
-		if (useImg[useImgNo] == nullptr) {
-			DrawShape(); //代わりに図形を描画.
-			return {-2, _T("ObjectShape::DrawGraph"), _T("画像なし") };
+		DrawImg* pImg = nullptr;
+		//画像データがある場合.
+		if (DrawImgMng::TryGet(useImg[useImgNo], pImg)) {
+			//座標にoffsetを足す.
+			DBL_XY pos = GetPos() + offset;
+			//描画.
+			ResultInt err = pImg->Draw(pos, anc, true, isFloat, isCameraDis);
+			if (err.GetCode() < 0) {
+				return {-2, _T("ObjectShape::DrawGraph"), _T("描画エラー")};
+			}
 		}
-		//座標にoffsetを足す.
-		DBL_XY pos = GetPos() + offset;
-		//描画.
-		ResultInt err = useImg[useImgNo]->Draw(pos, anc, true, isFloat, isCameraDis);
-		if (err.GetCode() < 0) {
-			return {-3, _T("ObjectShape::DrawGraph"), _T("描画エラー")};
+		//画像データがない場合.
+		else {
+			DrawShape(); //代わりに図形を描画.
+			return {-3, _T("ObjectShape::DrawGraph"), _T("画像なし") };
 		}
 
 		return {0, _T("ObjectShape::DrawGraph"), _T("正常終了")};
@@ -120,17 +124,21 @@ namespace KR
 
 		UpdateImg(); //画像更新.
 
-		//画像データがない.
-		if (useImg[useImgNo] == nullptr) {
-			DrawShape(); //代わりに図形を描画.
-			return {-2, _T("ObjectShape::DrawRectGraph"), _T("画像なし")};
+		DrawImg* pImg = nullptr;
+		//画像データがある場合.
+		if (DrawImgMng::TryGet(useImg[useImgNo], pImg)) {
+			//座標にoffsetを足す.
+			DBL_XY pos = GetPos() + offset;
+			//描画.
+			ResultInt err = pImg->DrawRect(pos, rect, anc, true, isFloat, isCameraDis);
+			if (err.GetCode() < 0) {
+				return { -2, _T("ObjectShape::DrawRectGraph"), _T("描画エラー") };
+			}
 		}
-		//座標にoffsetを足す.
-		DBL_XY pos = GetPos() + offset;
-		//描画.
-		ResultInt err = useImg[useImgNo]->DrawRect(pos, rect, anc, true, isFloat, isCameraDis);
-		if (err.GetCode() < 0) {
-			return {-3, _T("ObjectShape::DrawRectGraph"), _T("描画エラー")};
+		//画像データがない場合.
+		else {
+			DrawShape(); //代わりに図形を描画.
+			return { -3, _T("ObjectShape::DrawRectGraph"), _T("画像なし") };
 		}
 
 		return {0, _T("ObjectShape::DrawRectGraph"), _T("正常終了")};
@@ -144,17 +152,21 @@ namespace KR
 
 		UpdateImg(); //画像更新.
 
-		//画像データがない.
-		if (useImg[useImgNo] == nullptr) {
-			DrawShape(); //代わりに図形を描画.
-			return {-2, _T("ObjectShape::DrawExtendGraph"), _T("画像なし")};
+		DrawImg* pImg = nullptr;
+		//画像データがある場合.
+		if (DrawImgMng::TryGet(useImg[useImgNo], pImg)) {
+			//座標にoffsetを足す.
+			DBL_XY pos = GetPos() + offset;
+			//描画.
+			ResultInt err = pImg->DrawExtend(pos, sizeRate, anc, true, isFloat, isCameraDis);
+			if (err.GetCode() < 0) {
+				return { -2, _T("ObjectShape::DrawExtendGraph"), _T("描画エラー") };
+			}
 		}
-		//座標にoffsetを足す.
-		DBL_XY pos = GetPos() + offset;
-		//描画.
-		ResultInt err = useImg[useImgNo]->DrawExtend(pos, sizeRate, anc, true, isFloat, isCameraDis);
-		if (err.GetCode() < 0) {
-			return {-3, _T("ObjectShape::DrawExtendGraph"), _T("描画エラー")};
+		//画像データがない場合.
+		else {
+			DrawShape(); //代わりに図形を描画.
+			return { -3, _T("ObjectShape::DrawExtendGraph"), _T("画像なし") };
 		}
 
 		return {0, _T("ObjectShape::DrawExtendGraph"), _T("正常終了")};
@@ -168,18 +180,21 @@ namespace KR
 
 		UpdateImg(); //画像更新.
 
-		//画像データがない.
-		if (useImg[useImgNo] == nullptr) {
-			DrawShape(); //代わりに図形を描画.
-			return {-2, _T("ObjectShape::DrawRotaGraph"), _T("画像なし")};
+		DrawImg* pImg = nullptr;
+		//画像データがある場合.
+		if (DrawImgMng::TryGet(useImg[useImgNo], pImg)) {
+			//座標にoffsetを足す.
+			DBL_XY pos = GetPos() + offset;
+			//描画.
+			ResultInt err = pImg->DrawRota(pos, sizeRate, ang, pivot, true, isFloat, isCameraDis);
+			if (err.GetCode() < 0) {
+				return { -2, _T("ObjectShape::DrawRotaGraph"), _T("描画エラー") };
+			}
 		}
-		//座標にoffsetを足す.
-		DBL_XY pos = GetPos() + offset;
-
-		//描画.
-		ResultInt err = useImg[useImgNo]->DrawRota(pos, sizeRate, ang, pivot, true, isFloat, isCameraDis);
-		if (err.GetCode() < 0) {
-			return {-3, _T("ObjectShape::DrawRotaGraph"), _T("描画エラー")};
+		//画像データがない場合.
+		else {
+			DrawShape(); //代わりに図形を描画.
+			return { -3, _T("ObjectShape::DrawRotaGraph"), _T("画像なし") };
 		}
 
 		return {0, _T("ObjectShape::DrawRotaGraph"), _T("正常終了")};

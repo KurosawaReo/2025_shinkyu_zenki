@@ -49,7 +49,7 @@ private:
 	//点滅アニメーション.
 	Timer     tmBlink = Timer(TimerMode::CountDown, 0.1f); //点滅間隔.
 	Timer     tmTitle = Timer(TimerMode::CountDown, 2.5f); //タイトルアニメ用.
-	bool      isBlink = 0;                                 //点滅させる用.
+	bool      isBlink = false;                             //点滅させる用.
 
 	//描画用設定.
 	const MenuLayout mLayout;

@@ -254,57 +254,55 @@ void Player::DrawAfterImage()
 		if (!after[i].isActive) { continue; }
 
 		if (hit.pos.x != after[i].pos.x || hit.pos.y != after[i].pos.y) {
-			//アニメーション値.
-			float anim = (float)i/PLAYER_AFT_IMG_NUM;
-			//透明度反映.
-			SetDrawBlendModeKR(BlendModeID::Add, 255*(1-anim));
 
-			MY_COLOR color;
+			float anim = (float)i/PLAYER_AFT_IMG_NUM; //アニメーション値.
+			{
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim));
+	
+				MY_COLOR color;
 
-			//ダッシュエフェクト.
-			if (after[i].isDash) {
-				//三角形データ.
-				DBL_XY   pos1 = after[i].pos + Calc::VectorDeg(after[i].ang)    * (30 * (1-anim));
-				DBL_XY   pos2 = after[i].pos + Calc::VectorDeg(after[i].ang+90) * (20 * (1-anim));
-				DBL_XY   pos3 = after[i].pos + Calc::VectorDeg(after[i].ang-90) * (20 * (1-anim));
-				GradLine line;
-				//反射カラー.
-				if (mode == Player_Reflect ||
-					mode == Player_SuperReflect
-				){
-					line.AddPoint(pos2, {255,   0, 255, _int_r(255*(1-anim))});
-					line.AddPoint(pos1, {100,   0, 100, _int_r(255*(1-anim))});
-					line.AddPoint(pos3, {255,   0, 255, _int_r(255*(1-anim))});
+				//ダッシュエフェクト.
+				if (after[i].isDash) {
+					//三角形データ.
+					DBL_XY   pos1 = after[i].pos + Calc::VectorDeg(after[i].ang)    * (30 * (1-anim));
+					DBL_XY   pos2 = after[i].pos + Calc::VectorDeg(after[i].ang+90) * (20 * (1-anim));
+					DBL_XY   pos3 = after[i].pos + Calc::VectorDeg(after[i].ang-90) * (20 * (1-anim));
+					GradLine line;
+					//反射カラー.
+					if (mode == Player_Reflect ||
+						mode == Player_SuperReflect
+					){
+						line.AddPoint(pos2, {255,   0, 255, _int_r(255*(1-anim))});
+						line.AddPoint(pos1, {100,   0, 100, _int_r(255*(1-anim))});
+						line.AddPoint(pos3, {255,   0, 255, _int_r(255*(1-anim))});
+					}
+					//通常カラー.
+					else
+					{
+						line.AddPoint(pos2, {255, 255, 255, _int_r(255*(1-anim))});
+						line.AddPoint(pos1, {100, 100, 100, _int_r(255*(1-anim))});
+						line.AddPoint(pos3, {255, 255, 255, _int_r(255*(1-anim))});
+					}
+					line.Draw();
 				}
-				//通常カラー.
-				else
-				{
-					line.AddPoint(pos2, {255, 255, 255, _int_r(255*(1-anim))});
-					line.AddPoint(pos1, {100, 100, 100, _int_r(255*(1-anim))});
-					line.AddPoint(pos3, {255, 255, 255, _int_r(255*(1-anim))});
+				//通常エフェクト.
+				else {
+					//反射カラー.
+					if (mode == Player_Reflect ||
+						mode == Player_SuperReflect
+					){
+						color = COLOR_PLY_AFT_REF;
+					}
+					//通常カラー.
+					else
+					{
+						color = COLOR_PLY_AFT_NOR;
+					}
+					//円描画.
+					Circle cir = { after[i].pos, PLAYER_SIZE, color };
+					DrawCircleKR(cir, false, true);
 				}
-				line.Draw();
-			}
-			//通常エフェクト.
-			else {
-				//反射カラー.
-				if (mode == Player_Reflect ||
-					mode == Player_SuperReflect
-				){
-					color = COLOR_PLY_AFT_REF;
-				}
-				//通常カラー.
-				else
-				{
-					color = COLOR_PLY_AFT_NOR;
-				}
-				//円描画.
-				Circle cir = { after[i].pos, PLAYER_SIZE, color };
-				DrawCircleKR(cir, false, true);
 			}
 		}
 	}
-
-	//描画モードリセット.
-	ResetDrawBlendMode();
 }

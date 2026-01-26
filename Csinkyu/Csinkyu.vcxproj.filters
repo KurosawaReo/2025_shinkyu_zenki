@@ -37,6 +37,9 @@
     <ClInclude Include="KrLib_cpp\KR_Num.h" />
     <ClInclude Include="KrLib_Dx\KR_Camera.h" />
     <ClInclude Include="BG1.h" />
+    <ClInclude Include="BG2.h" />
+    <ClInclude Include="GameData.h" />
+    <ClInclude Include="KrLib_cpp\KR_Format.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BGManager.cpp" />
@@ -74,5 +77,10 @@
     <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Camera.cpp" />
     <ClCompile Include="BG1.cpp" />
+    <ClCompile Include="BG2.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="_memo.txt" />
   </ItemGroup>
 </Project>
