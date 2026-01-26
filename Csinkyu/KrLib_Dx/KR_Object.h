@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2025/12/29
+   ver: 2026/01/25
 
    オブジェクトを追加。(継承して使うことも可)
    Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
@@ -34,9 +34,9 @@ namespace KR
 	{
 	//▼ ===== 変数 ===== ▼.
 	private:
-		vector<DrawImg*> useImg{};    //使う画像データ.
-		int              useImgNo{};  //使う画像データのindex.
-		Timer            tmImgAnim{}; //画像切り替え用タイマー.
+		vector<string> useImg{};    //使う画像データ.
+		int            useImgNo{};  //使う画像データのindex.
+		Timer          tmImgAnim{}; //画像切り替え用タイマー.
 
 	public:
 		DBL_XY offset{};   //画像をずらす量.
@@ -60,8 +60,8 @@ namespace KR
 		virtual ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const = 0;
 
 		//画像.
-		void      SetDrawImg     (DrawImg* _img);
-		void      SetDrawImgs    (vector<DrawImg*> _imgs, double _changeTime);
+		void      SetDrawImg     (string name);
+		void      SetDrawImgs    (vector<string> names, double changeTime);
 		void      SetStopImgAnim (bool isStop);
 		//計算(Calcの機能)
 		void      FixPosInArea   (DBL_RECT rect);

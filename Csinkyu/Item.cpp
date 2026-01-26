@@ -86,19 +86,21 @@ void ItemManager::Draw()
 
 		//有効なアイテムを描画.
 		if (items[i].active) {
-			
-			SetDrawBlendModeKR(BlendModeID::Alpha, 155 + 100*AnimWaveLoop(items[i].counter/30)); //点滅.
-			
-			//強化演出.
-			if (items[i].type == Item_Super) {
-				//アイテム発光.
-				DrawImgMng::Get("item_light")->DrawExtend(items[i].pos, {0.05, 0.05});
-			}
-			//アイテム本体.
+			//描画.
 			{
-				DrawImgMng::Get("item")->DrawExtend(items[i].pos, {0.045, 0.045}, Anchor::Mid, true, true);
+				//点滅.
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 155 + 100 * AnimWaveLoop(items[i].counter/30));
+
+				//強化演出.
+				if (items[i].type == Item_Super) {
+					//アイテム発光.
+					DrawImgMng::Get("item_light")->DrawExtend(items[i].pos, {0.05, 0.05});
+				}
+				//アイテム本体.
+				{
+					DrawImgMng::Get("item")->DrawExtend(items[i].pos, {0.045, 0.045}, Anchor::Mid, true, true);
+				}
 			}
-			ResetDrawBlendMode();
 
 			//チュートリアル用.
 			if (gamedata.stage == STAGE_TUTORIAL) {

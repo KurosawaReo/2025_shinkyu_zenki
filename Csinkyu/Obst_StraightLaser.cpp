@@ -126,108 +126,107 @@ void StraightLaser::DrawPredictionLine()
 
 	// 予測線の透明度.
 	double alpha = Calc::AnimEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0～1.0の範囲.
-	SetDrawBlendModeKR(BlendModeID::Alpha, 255*(1-alpha));
 
-	// 中央の予測線のみを描画
-	// 発射方向に応じて予測線を描画
-	switch (nextDirection)
 	{
-	case 0: // 左から右へ
-		startX = -50;
-		endX = WINDOW_WID + 50;
+		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - alpha));
+	
+		// 中央の予測線のみを描画
+		// 発射方向に応じて予測線を描画
+		switch (nextDirection)
 		{
-			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
+		case 0: // 左から右へ
+			startX = -50;
+			endX = WINDOW_WID + 50;
+			{
+				Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
+		case 1: // 右から左へ
+			startX = WINDOW_WID + 50;
+			endX = -50;
+			{
+				Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
+		case 2: // 上から下へ
+			startY = -50;
+			endY = WINDOW_HEI + 50;
+			{
+				Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
+		case 3: // 下から上へ
+			startY = WINDOW_HEI + 50;
+			endY = -50;
+			{
+				Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
+				predictionLine.color = COLOR_PRE_EFFECT;
+				DrawLineKR(predictionLine, true);
+			}
+			break;
 		}
-		break;
-	case 1: // 右から左へ
-		startX = WINDOW_WID + 50;
-		endX = -50;
-		{
-			Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
-		}
-		break;
-	case 2: // 上から下へ
-		startY = -50;
-		endY = WINDOW_HEI + 50;
-		{
-			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
-		}
-		break;
-	case 3: // 下から上へ
-		startY = WINDOW_HEI + 50;
-		endY = -50;
-		{
-			Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-			predictionLine.color = COLOR_PRE_EFFECT;
-			DrawLineKR(predictionLine, true);
-		}
-		break;
 	}
-
-	// 描画モードを戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 /// <summary>
-/// //直線レーザー発射(コードおもれー) - ランダム発射版
+/// 直線レーザー発射.
 /// </summary>
 void StraightLaser::SpawnStraightLaser()
 {
-	// 予測された方向で発射
-	int direction = nextDirection;  // 修正: currentDirectionではなくnextDirectionを使用
-
-	double centerPos = nextCenterPos;  // 修正: 予測された位置を使用
-	double spacing = 20;  // レーザー間の間隔
+	//予測線と同じ所を通る.
+	const int    direction = nextDirection;
+	const double centerPos = nextCenterPos;
+	//レーザー間の間隔.
+	const double spacing = 20;
 
 	DBL_XY startPos{};
 	DBL_XY vel{};
 
 	switch (direction)
 	{
-	case 0: // 左から右へ発射
+	case 0: //→.
 		startPos.x = -50;
 		vel = { +1.0, 0.0 };
 		break;
-	case 1: // 右から左へ発射
+	case 1: //←.
 		startPos.x = WINDOW_WID + 50;
 		vel = { -1.0, 0.0 };
 		break;
-	case 2: // 上から下へ発射
+	case 2: //↓.
 		startPos.y = -50;
 		vel = { 0.0, +1.0 };
 		break;
-	case 3: // 下から上へ発射
+	case 3: //↑.
 		startPos.y = WINDOW_HEI + 50;
 		vel = { 0.0, -1.0 };
 		break;
 	}
 
-	// 3つのレーザーを同時に発射
+	//3つのレーザーを同時に発射.
 	for (int i = 0; i < 3; i++)
 	{
 		DBL_XY tmpPos{};
-		// レーザーデータの初期化
-		if (direction == 0 || direction == 1) // 水平発射
-		{
+		
+		//水平発射.
+		if (direction == 0 || direction == 1) {
 			tmpPos.x = startPos.x;
 			tmpPos.y = centerPos + (i-1) * spacing; // -spacing, 0, +spacing
 		}
-		else // 垂直発射
-		{
+		//垂直発射.
+		else {
 			tmpPos.x = centerPos + (i-1) * spacing; // -spacing, 0, +spacing
 			tmpPos.y = startPos.y;
 		}
-
 		//直線レーザーを発射.
 		laserMng.SpawnLaser(tmpPos, vel, Laser_Straight);
 	}
 
 	nextLaserIndex = 0;
-	currentDirection = nextDirection; // 発射後に現在の方向を更新
+	currentDirection = nextDirection; //発射後に現在の方向を更新.
 }

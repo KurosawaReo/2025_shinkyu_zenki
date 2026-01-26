@@ -134,22 +134,18 @@ void NormalLaserMain::DrawObstFlash() {
 		line2.edPos = tri.pos[2];
 		line1.color = GetColor(0, 255, 255);
 		line2.color = GetColor(0, 255, 255);
-
-		//描画モード設定(光る)
-		SetDrawBlendMode(DX_BLENDMODE_ADD, alphaValue);
-
-		DrawLineKR(line1, true);
-		DrawLineKR(line2, true);
-
+		
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
+			DrawLineKR(line1, true);
+			DrawLineKR(line2, true);
+		}
 		//エフェクト時間が終了したら無効化
 		if (flash[i].counter >= flash[i].Duration)
 		{
 			flash[i].validFlag = 0;
 		}
 	}
-
-	//通常の描画モードに戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);  
 }
 
 // レーザー発射前の予告●を描画
@@ -166,14 +162,14 @@ void NormalLaserMain::DrawPreLaserDots() {
 		float dotSize2 = (float)(3 + AnimEaseOut(blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
 		//円情報.
 		Circle cir = {{Hx, Hy}, dotSize, COLOR_PRE_EFFECT };
-		SetDrawBlendMode(DX_BLENDMODE_ADD, blinkAlpha);
 
-		// 砲台の位置に●を描画
-		DrawCircleKR(cir, false, true);
-		cir.r = dotSize2;
-		DrawCircleKR(cir, false, true);
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, blinkAlpha);
 
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+			DrawCircleKR(cir, false, true);
+			cir.r = dotSize2;
+			DrawCircleKR(cir, false, true);
+		}
 	}
 }
 
