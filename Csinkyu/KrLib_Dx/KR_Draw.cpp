@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2026/01/25
+   ver: 2026/01/28
 */
 #include "KR_Draw.h"
 
@@ -589,7 +589,7 @@ namespace KR
 
 		//ï`âÊ.
 		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha);
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255);
 
 			//TODO: Å´DX_PRIMTYPE_LINESTRIPà»äOÇÃã@î\.
 			DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);

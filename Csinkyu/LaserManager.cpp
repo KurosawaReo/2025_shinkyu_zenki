@@ -182,15 +182,12 @@ void LaserManager::UpdateLaser() {
 				//一定時間で目標地点を決める.
 				if (i->counter >= LASER_REF_TRACK_ST_TM) {
 
-					const DBL_XY laserPos = i->nowPos; //レーザーの現在位置.
-
-					DBL_XY meteoPos{ -1, -1 }; //隕石座標(受け取る用)
-
-					//最も近い隕石の位置を取得する.
-					const bool hasMeteo = meteorMng.GetMeteorPosNearest(laserPos, &meteoPos);
+					//最寄りの隕石を取得する.
+					const DBL_XY  laserPos = i->nowPos; //レーザーの現在位置.
+					const Meteor* meteor   = meteorMng.GetNearestMeteor(laserPos);
 					//隕石があった場合.
-					if (hasMeteo) {
-						i->goalPos  = meteoPos; //登録.
+					if (meteor) {
+						i->goalPos  = meteor->GetPos(); //座標登録.
 						i->isGoGoal = true;
 					}
 				}
@@ -198,9 +195,13 @@ void LaserManager::UpdateLaser() {
 				Circle hit = { i->nowPos, 10, {} }; //当たり判定円(仮)
 
 				//隕石と当たっているなら.
-				if (meteorMng.IsHitMeteors(hit, true)) {
-
+				if (auto meteor = meteorMng.GetHitMeteor(hit, true)) {
+					//壊れてない隕石であれば.
+					if (meteor->GetState() == Meteor_Normal) {
+						meteor->Destroy(); //隕石を破壊.
+					}
 					meteorMng.BreakMeteor(i->nowPos, i->vec); //破壊演出.
+					gameData.score += SCORE_BREAK_METEOR;     //スコア加算.
 
 					//どっちのタイプかで切り替え.
 					if (i->type == Laser_Reflect) {
@@ -212,7 +213,7 @@ void LaserManager::UpdateLaser() {
 					}
 					//チュートリアルなら指示送信.
 					if (gameData.stage == STAGE_TUTORIAL) {
-						TutorialStage::GetInst().SetBreakMeteor(true);	
+						TutorialStage::GetInst().SetBreakMeteor(true);
 					}
 				}
 				else {
@@ -228,7 +229,7 @@ void LaserManager::UpdateLaser() {
 			break;
 
 			//想定外の値エラー.
-			default: assert(FALSE); break;
+			default: assert(false); break;
 		}
 
 		//画面外判定.

@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2026/01/25
+   ver: 2026/01/28
 
    オブジェクトを追加。(継承して使うことも可)
    Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
@@ -61,7 +61,7 @@ namespace KR
 
 		//画像.
 		void      SetDrawImg     (string name);
-		void      SetDrawImgs    (vector<string> names, double changeTime);
+		void      SetDrawImgs    (vector<string> names, float changeTime);
 		void      SetStopImgAnim (bool isStop);
 		//計算(Calcの機能)
 		void      FixPosInArea   (DBL_RECT rect);

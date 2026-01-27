@@ -14,6 +14,47 @@ static GameData&      gameData  = GameData::GetInst();
 static Player&        player    = Player::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
+//範囲内の隕石を取得(1つ)
+Meteor* MeteorManager::GetHitMeteor(Circle cir, bool isDestroy) {
+
+	//全隕石ループ.
+	for (auto& i : meteor) {
+		if (i.IsHitMeteor(cir)) {
+			return &i; //この隕石を返す.
+		}
+	}
+	return nullptr; //隕石はない.
+}
+//最寄りの隕石を取得.
+Meteor* MeteorManager::GetNearestMeteor(DBL_XY pos) {
+
+	Meteor* ret = nullptr; //最寄りの隕石.
+	double shortest = -1;  //暫定の最短距離.
+
+	//全隕石ループ.
+	for (auto& i : meteor) {
+		//破壊されてないなら.
+		if (i.GetState() == Meteor_Normal) {
+
+			DBL_XY tmpPos = i.GetPos();              //1つずつ座標取得.
+			double tmpDis = Calc::Dist(tmpPos, pos); //距離を計算.
+
+			//初回限定.
+			if (shortest == -1) {
+				shortest = tmpDis; //暫定1位.
+				ret = &i;
+			}
+			//より近い場所が見つかれば更新.
+			else if (tmpDis < shortest) {
+				shortest = tmpDis;
+				ret = &i;
+			}
+		}
+	}
+
+	return ret;
+}
+
 void MeteorManager::Init() {
 
 }
@@ -54,7 +95,7 @@ void MeteorManager::Update() {
 		}
 	}
 	//プレイヤーとの当たり判定.
-	if (IsHitMeteors(player.GetHit(), false)) {
+	if (GetHitMeteor(player.GetHit(), false)) {
 		player.PlayerDeath(); //死亡.
 	}
 }
@@ -104,8 +145,8 @@ void MeteorManager::BreakMeteor(DBL_XY pos, DBL_XY vec) {
 
 		double newDig = deg + (float)Calc::RandNum(-300, 300) / 10;	//少し角度をずらす.
 		data.vec   = Calc::VectorDeg(newDig);						//ずらした角度を反映.
-		data.speed = (float)Calc::RandNum(20, 100) / 10;			//速度抽選.
-		data.len   = (float)Calc::RandNum(10, 150) / 10;			//長さ抽選.
+		data.speed = (float)Calc::RandNum(50, 300) / 10;			//速度抽選.
+		data.len   = (float)Calc::RandNum(10, 100) / 10;			//長さ抽選.
 		data.ang   = (float)Calc::RandNum(0, 3599) / 10;			//角度抽選.
 		effectMng.SpawnEffect(&data);								//エフェクト出現.
 	}
@@ -116,59 +157,4 @@ void MeteorManager::BreakMeteor(DBL_XY pos, DBL_XY vec) {
 	if (auto i = SoundMng::Get("Break")) {
 		i->Play(false, 74); //再生.
 	}
-}
-
-//隕石のどれか1つでも当たっているか.
-bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
-
-	bool hit;
-
-	//全隕石ループ.
-	for (auto& i : meteor) {
-		hit = i.IsHitMeteor(cir); //1こずつ判定.
-		//当たれば.
-		if (hit) {
-			if (isDestroy) {
-				//壊れてない隕石であれば.
-				if (i.GetState() == Meteor_Normal) {
-					i.Destroy();						  //隕石を破壊.
-					gameData.score += SCORE_BREAK_METEOR; //スコア加算.
-				}
-			}
-			return true; //1つでも当たっている.
-		}
-	}
-	return false; //どれも当たっていない.
-}
-
-//最寄りの隕石座標を探す.
-bool MeteorManager::GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos) {
-
-	bool   isExistMeteo = false; //1つでも隕石があるか.
-	double shortest     = -1;    //暫定の最短距離.
-
-	//全隕石ループ.
-	for (const auto& i : meteor) {
-		//破壊されてないなら.
-		if (i.GetState() == Meteor_Normal) {
-
-			DBL_XY tmpPos = i.GetPos();                    //1つずつ座標取得.
-			double tmpDis = Calc::Dist(tmpPos, _startPos); //距離を計算.
-
-			//初回限定.
-			if (shortest == -1) {
-				shortest  = tmpDis; //暫定1位.
-				*_nearPos = tmpPos;
-			}
-			//より近い場所が見つかれば更新.
-			else if (tmpDis < shortest){
-				shortest  = tmpDis;
-				*_nearPos = tmpPos;
-			}
-
-			isExistMeteo = true; //隕石がある.
-		}
-	}
-
-	return isExistMeteo;
 }

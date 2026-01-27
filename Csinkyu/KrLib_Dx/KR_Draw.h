@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2026/01/25
+   ver: 2026/01/28
 
    描画機能を追加。
    (オブジェクト指向ver → KR_Object)
@@ -187,13 +187,16 @@ namespace KR
 
 	public:
 		//コンストラクタ.
-		DrawMode(
-			DrawModeID mode1, DrawBlendModeID mode2, int mode2Param = 255
-		){
+		DrawMode(DrawModeID mode1, DrawBlendModeID mode2) :
+			DrawMode(mode1, mode2, 255)
+		{}
+		DrawMode(DrawModeID mode1, DrawBlendModeID mode2, double mode2Param) :
+			DrawMode(mode1, mode2, _int(mode2Param))
+		{}
+		DrawMode(DrawModeID mode1, DrawBlendModeID mode2, int mode2Param){
 			//現在の設定を保存.
 			oldMode1 = GetDrawMode();
 			GetDrawBlendMode(&oldMode2, &oldMode2Param);
-
 			//modeを設定.
 			SetDrawMode(_int(mode1));
 			SetDrawBlendMode(_int(mode2), mode2Param);

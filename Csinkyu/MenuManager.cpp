@@ -245,7 +245,7 @@ void MenuManager::Draw() {
 		if (auto i = DrawImgMng::Get(name)) {
 			//画像描画.
 			{
-				DrawMode _(DrawModeID::Bilinear, DrawBlendModeID::None); //画像を滑らかに.
+				DrawMode _(DrawModeID::Bilinear, DrawBlendModeID::None, 255); //画像を滑らかに.
 				i->DrawExtend(mLayout.imgPos, {extend , extend});
 			}
 			//画像のサイズ(Extend倍率分小さくする)

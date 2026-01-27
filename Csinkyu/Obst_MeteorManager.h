@@ -29,6 +29,9 @@ private:
 	MeteorManager(){}
 
 public:
+	//get.
+	Meteor* GetHitMeteor    (Circle cir, bool isDestroy); //範囲内の隕石を取得(1つ)
+	Meteor* GetNearestMeteor(DBL_XY pos);				  //最寄りの隕石を取得.
 	//set.
 	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
 
@@ -39,9 +42,6 @@ public:
 
 	void SpawnMeteor();                       //隕石生成.
 	void BreakMeteor(DBL_XY pos, DBL_XY vec); //隕石破壊演出.
-
-	bool IsHitMeteors       (Circle cir, bool isDestroy);			//隕石のどれか1つでも当たっているか.
-	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos);	//最寄りの隕石座標を探す.
 
 	//使用禁止.
 	MeteorManager(const MeteorManager&) = delete;
