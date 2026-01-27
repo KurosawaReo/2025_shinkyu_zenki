@@ -10,7 +10,7 @@
 #include "GameManager.h"
 #include "EffectManager.h"
 //参照.
-static GameData&      gameData      = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
 static Player&        player    = Player::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
@@ -90,6 +90,33 @@ void MeteorManager::SpawnMeteor(){
 	tmp.Spawn(); //スポーン処理.
 	meteor.push_back(tmp);
 }
+//隕石破壊演出.
+void MeteorManager::BreakMeteor(DBL_XY pos, DBL_XY vec) {
+
+	const double deg = _deg(atan2(vec.y, vec.x)); //破片の飛ぶ方向.
+	
+	//エフェクトデータ.
+	EffectData data{};
+	data.type = Effect_BreakMeteor;
+	data.pos  = pos;
+	//いくつか出す.
+	for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
+
+		double newDig = deg + (float)Calc::RandNum(-300, 300) / 10;	//少し角度をずらす.
+		data.vec   = Calc::VectorDeg(newDig);						//ずらした角度を反映.
+		data.speed = (float)Calc::RandNum(20, 100) / 10;			//速度抽選.
+		data.len   = (float)Calc::RandNum(10, 150) / 10;			//長さ抽選.
+		data.ang   = (float)Calc::RandNum(0, 3599) / 10;			//角度抽選.
+		effectMng.SpawnEffect(&data);								//エフェクト出現.
+	}
+	//スコアエフェクト.
+	data.type = Effect_Score500;
+	effectMng.SpawnEffect(&data); //エフェクト出現.
+	//サウンド.
+	if (auto i = SoundMng::Get("Break")) {
+		i->Play(false, 74); //再生.
+	}
+}
 
 //隕石のどれか1つでも当たっているか.
 bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
@@ -104,7 +131,7 @@ bool MeteorManager::IsHitMeteors(Circle cir, bool isDestroy) {
 			if (isDestroy) {
 				//壊れてない隕石であれば.
 				if (i.GetState() == Meteor_Normal) {
-					i.Destroy();						 //隕石を破壊.
+					i.Destroy();						  //隕石を破壊.
 					gameData.score += SCORE_BREAK_METEOR; //スコア加算.
 				}
 			}

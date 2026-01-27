@@ -107,68 +107,38 @@ void StraightLaser::Draw()
 /// </summary>
 void StraightLaser::DrawPredictionLine()
 {
-	// 次のレーザー発射方向と位置を使用
-	double startX, startY, endX, endY;
-	double centerPos = nextCenterPos;  // 修正: 予測された位置を使用
-
-	//30フレーム周期だとそもそも点滅してない.
-#if false
-	// 点滅効果（30フレーム周期で点滅）
-	int blinkCycle = 30;
-	int alpha = 128; // 基本透明度
-	if ((predictionTimer / blinkCycle) % 2 == 0)
-	{
-		alpha = 64; // 薄くする
-	}
-#endif
-
-	// 予測線の透明度.
-	double alpha = Calc::AnimEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0～1.0の範囲.
+	//予測線の透明度.
+	const double alpha = Calc::AnimEaseIn((float)predictionTimer/LASER_STR_PREDICTION_TIME); //0.0～1.0の範囲.
+	//予測線の位置.
+	const double centerPos = nextCenterPos;
 
 	{
 		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - alpha));
 	
-		// 中央の予測線のみを描画
-		// 発射方向に応じて予測線を描画
+		Line preLine = { {0, 0}, {0, 0}, {} };
+		//位置の設定.
 		switch (nextDirection)
 		{
-		case 0: // 左から右へ
-			startX = -50;
-			endX = WINDOW_WID + 50;
-			{
-				Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-				predictionLine.color = COLOR_PRE_EFFECT;
-				DrawLineKR(predictionLine, true);
-			}
+		case 0: //→.
+			preLine.stPos = { -50,             centerPos };
+			preLine.edPos = { WINDOW_WID + 50, centerPos };
 			break;
-		case 1: // 右から左へ
-			startX = WINDOW_WID + 50;
-			endX = -50;
-			{
-				Line predictionLine = { {startX, centerPos}, {endX, centerPos}, {} };
-				predictionLine.color = COLOR_PRE_EFFECT;
-				DrawLineKR(predictionLine, true);
-			}
+		case 1: //←.
+			preLine.stPos = { WINDOW_WID + 50, centerPos };
+			preLine.edPos = { -50,             centerPos };
 			break;
-		case 2: // 上から下へ
-			startY = -50;
-			endY = WINDOW_HEI + 50;
-			{
-				Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-				predictionLine.color = COLOR_PRE_EFFECT;
-				DrawLineKR(predictionLine, true);
-			}
+		case 2: //↓.
+			preLine.stPos = { centerPos, -50             };
+			preLine.edPos = { centerPos, WINDOW_HEI + 50 };
 			break;
-		case 3: // 下から上へ
-			startY = WINDOW_HEI + 50;
-			endY = -50;
-			{
-				Line predictionLine = { {centerPos, startY}, {centerPos, endY}, {} };
-				predictionLine.color = COLOR_PRE_EFFECT;
-				DrawLineKR(predictionLine, true);
-			}
+		case 3: //↑.
+			preLine.stPos = { centerPos, WINDOW_HEI + 50 };
+			preLine.edPos = { centerPos, -50             };
 			break;
 		}
+		//描画.
+		preLine.color = COLOR_PRE_EFFECT;
+		DrawLineKR(preLine, true);
 	}
 }
 

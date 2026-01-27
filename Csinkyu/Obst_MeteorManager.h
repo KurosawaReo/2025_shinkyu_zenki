@@ -37,7 +37,8 @@ public:
 	void Update();
 	void Draw();
 
-	void SpawnMeteor(); //è¦Î¶¬.
+	void SpawnMeteor();                       //è¦Î¶¬.
+	void BreakMeteor(DBL_XY pos, DBL_XY vec); //è¦Î”j‰ó‰‰o.
 
 	bool IsHitMeteors       (Circle cir, bool isDestroy);			//è¦Î‚Ì‚Ç‚ê‚©1‚Â‚Å‚à“–‚½‚Á‚Ä‚¢‚é‚©.
 	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos);	//ÅŠñ‚è‚Ìè¦ÎÀ•W‚ğ’T‚·.
