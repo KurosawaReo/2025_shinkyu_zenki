@@ -12,25 +12,23 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&      gameData      = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
 static Player&        player    = Player::GetInst();
 static LaserManager&  laserMng  = LaserManager::GetInst();
 static MeteorManager& meteorMng = MeteorManager::GetInst();
 
 /// <summary>
-/// リセットするぜ.
+/// 初期化.
 /// </summary>
 void StraightLaser::Init()
 {
 	currentDirection = 0;
 	nextDirection = 0;
-	// 重複削除: currentDirection = 0;
-	// 重複削除: nextDirection = 0;
 	
 	Reset();
 }
 /// <summary>
-/// リセットするよ～ん
+/// リセット.
 /// </summary>
 void StraightLaser::Reset()
 {
@@ -41,7 +39,7 @@ void StraightLaser::Reset()
 	nextCenterPos = 0;  //次のレーザー発射位置リセット
 }
 /// <summary>
-/// 更新するぜ.
+/// 更新.
 /// </summary>
 void StraightLaser::Update()
 {
@@ -93,7 +91,7 @@ void StraightLaser::Update()
 	}
 }
 /// <summary>
-/// 描画処理だぜ～
+/// 描画.
 /// </summary>
 void StraightLaser::Draw()
 {
