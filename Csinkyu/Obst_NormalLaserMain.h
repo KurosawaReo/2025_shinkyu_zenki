@@ -7,17 +7,17 @@
 
 struct FlashEffect
 {
-	double x, y;    // エフェクト位置.
-	float counter;  // 経過時間.
-	float Duration; // エフェクトの持続時間.
-	int BaseSize;   // 基本サイズ
-	int validFlag;  // 有効フラグ
+	double	x, y;		// エフェクト位置.
+	float	counter;	// 経過時間.
+	float	Duration;	// エフェクトの持続時間.
+	int		BaseSize;   // 基本サイズ
+	int		validFlag;  // 有効フラグ
 
-	double angle;
+	double	angle;
 };
 
 //継承元となるクラス(親)
-class NormalLaserMain
+class NormalLaserMain : public ManagerBase
 {
 protected:
 	float   Hx{}, Hy{};  //砲台の位置.
@@ -29,11 +29,15 @@ protected:
 	FlashEffect    flash[LASER_NOR_FLASH_MAX]{};
 
 public:
+	//コンストラクタ.
+	NormalLaserMain() : ManagerBase(ORDER_NOR_LASER_MNG) {}
+
 	//基本処理.
-	void Init  ();
-	void Reset (float _Hx, float _Hy, float _Hm, MoveDir);
-	void Update();
-	void Draw  ();
+	void Init  () override;
+	void Reset () override;
+	void Update() override;
+	void Draw  () override;
+
 	//更新系.
 	void UpdateObstFlash();
 	//描画系.
@@ -44,7 +48,6 @@ public:
 	virtual void Move() = 0; //砲台によって動きが違う→overrideを利用し、"動き"だけを変える.
 	//ランダムMove
 	void MoveRand();
-
 	//出る直前の点滅.
 	void CreateFlashEffect(double x, double y);
 };

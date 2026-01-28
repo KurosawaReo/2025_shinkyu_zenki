@@ -4,10 +4,9 @@
    障害物: 直線レーザー.
 */
 #pragma once
-//#include "MeteoManager.h"
 
 //直線レーザー.
-class StraightLaser
+class StraightLaser : public ManagerBase
 {
 private:
 	DBL_XY plyPos{};   // プレイヤー座標保管用.
@@ -21,10 +20,13 @@ private:
 	double nextCenterPos{};    // 次のレーザー発射位置（予測線用）
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	//コンストラクタ.
+	StraightLaser() : ManagerBase(ORDER_STR_LASER_MNG) {}
+
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void SpawnStraightLaser();   // 直線レーザー発射.
 	void DrawPredictionLine();

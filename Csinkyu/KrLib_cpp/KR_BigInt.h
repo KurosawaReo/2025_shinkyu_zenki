@@ -1,11 +1,11 @@
 /*
-   - KR_Num.h - (C++)
-   ver.2025/12/08
+   - KR_BigInt.h - (C++)
+   ver.2026/01/28
 
-   膨大な数値を扱える型の追加。
+   膨大な数値を扱えるint型。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_CPP_GLOBAL
   #include "KR_Global.h"
 #endif

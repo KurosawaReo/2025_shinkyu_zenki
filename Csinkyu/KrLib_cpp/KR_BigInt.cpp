@@ -1,10 +1,8 @@
 /*
    - KR_Num.cpp - (C++)
-   ver.2025/12/08
-
-   –c‘å‚È”’l‚ğˆµ‚¦‚éŒ^‚Ì’Ç‰ÁB
+   ver.2026/01/28
 */
-#include "KR_Num.h"
+#include "KR_BigInt.h"
 
 //KrLib–¼‘O‹óŠÔ.
 namespace KR

@@ -51,7 +51,7 @@ enum StageType
 //#define DEBUG_SHOW_FPS		//FPS表示.　
 //#define DEBUG_CONTR_INPUT		//コントローラ操作表示.
 
-#define INPUT_CHANGE_ARCADE		//定義するとアーケード操作にする, しないとコントローラ操作に.
+//#define INPUT_CHANGE_ARCADE		//定義するとアーケード操作にする, しないとコントローラ操作に.
 
 //#define BGM_NONE //定義するとBGMをoffに.
 
@@ -85,6 +85,23 @@ enum StageType
 #define SLOW_MODE_BUF_F                 (50)            //スローが継続するフレーム数.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
+
+//管理クラス.
+#define ORDER_GAME_MNG					(0)
+#define ORDER_BG_MNG					(1)
+#define ORDER_ENDLESS_STAGE				(2)
+#define ORDER_TUTORIAL_STAGE			(3)
+#define ORDER_MENU_MNG					(4)
+#define ORDER_METEOR_MNG				(5)
+#define ORDER_NOR_LASER_MNG				(6)				//Normal Laser  (通常レーザー)
+#define ORDER_STR_LASER_MNG				(7)				//Straight Laser(直線レーザー)
+#define ORDER_RIPPLES_MNG				(8)
+#define ORDER_FIREWORKS_MNG				(9)
+#define ORDER_LASER_MNG					(10)
+#define ORDER_ITEM_MNG					(11)
+#define ORDER_PLAYER_MNG				(12)
+#define ORDER_EFFECT_MNG				(13)
+#define ORDER_UI_MNG					(14)
 
 //プレイヤー.
 #define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)

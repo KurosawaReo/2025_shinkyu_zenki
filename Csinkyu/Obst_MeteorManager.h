@@ -6,8 +6,8 @@
 #pragma once
 #include "Obst_Meteor.h"
 
-//隕石管理[継承不可]
-class MeteorManager final
+//隕石管理.
+class MeteorManager : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -25,8 +25,8 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	MeteorManager(){}
+	//コンストラクタ.
+	MeteorManager() : ManagerBase(ORDER_METEOR_MNG) {}
 
 public:
 	//get.
@@ -35,10 +35,10 @@ public:
 	//set.
 	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void SpawnMeteor();                       //隕石生成.
 	void BreakMeteor(DBL_XY pos, DBL_XY vec); //隕石破壊演出.

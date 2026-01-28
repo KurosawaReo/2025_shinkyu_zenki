@@ -34,12 +34,13 @@
     <ClInclude Include="KrLib_Dx\KR_Timer.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
-    <ClInclude Include="KrLib_cpp\KR_Num.h" />
+    <ClInclude Include="KrLib_cpp\KR_BigInt.h" />
     <ClInclude Include="KrLib_Dx\KR_Camera.h" />
     <ClInclude Include="BG1.h" />
     <ClInclude Include="BG2.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
+    <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BGManager.cpp" />
@@ -69,16 +70,16 @@
     <ClCompile Include="KrLib_Dx\KR_Global.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_ObjectMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Scene.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Camera.cpp" />
     <ClCompile Include="BG1.cpp" />
     <ClCompile Include="BG2.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="_memo.txt" />

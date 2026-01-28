@@ -4,8 +4,8 @@
 */
 #pragma once
 
-//UI管理.[継承不可]
-class UIManager final
+//UI管理.
+class UIManager : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -23,8 +23,8 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	UIManager(){}
+	//コンストラクタ.
+	UIManager() : ManagerBase(ORDER_UI_MNG) {}
 
 public:
 	//sign.
@@ -32,10 +32,10 @@ public:
 	//set.
 	void SetDisBestScore(int _score) { disBestScore = _score; }
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	//使用禁止.
 	UIManager(const UIManager&) = delete;

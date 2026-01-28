@@ -1,8 +1,8 @@
 /*
    - KR_Global.h - (C++)
-   ver.2025/12/30
+   ver.2026/01/28
 
-   KrLib全体で使う汎用機能を追加。
+   KrLib全体で使う汎用プログラム。
 */
 #pragma once
 
@@ -68,7 +68,7 @@ namespace KR
 	{
 		T x, y;
 
-		//constructor.
+		//コンストラクタ.
 		XY()           : x(0),  y(0)  {}
 		XY(T _x, T _y) : x(_x), y(_y) {} //INT_XY n = {1, 0}; この書き方ができる.
 
@@ -185,7 +185,7 @@ namespace KR
 	{
 		T x, y, z;
 
-		//constructor.
+		//コンストラクタ.
 		XYZ()                 : x(0),  y(0),  z(0)  {}
 		XYZ(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {} 
 
@@ -347,7 +347,7 @@ namespace KR
 		MY_STRING msg;      //メッセージ.
 
 	public:
-		//constructor.
+		//コンストラクタ.
 		ResultInt() :
 			codeNum(0), funcName(_T("None")), msg(_T("No Msg"))
 		{};

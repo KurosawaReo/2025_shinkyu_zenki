@@ -5,8 +5,8 @@
 */
 #pragma once
 
-//耐久モード.[継承不可]
-class EndlessStage final
+//エンドレスステージ.
+class EndlessStage : public ManagerBase 
 {
 //▼実体関係.
 public:
@@ -20,14 +20,14 @@ private:
 	
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	EndlessStage(){}
+	//コンストラクタ.
+	EndlessStage() : ManagerBase(ORDER_ENDLESS_STAGE) {}
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void UpdateObjects();
 	void DrawObjects();

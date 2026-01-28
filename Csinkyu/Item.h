@@ -17,8 +17,8 @@ struct ItemData
 	float    spawnCounter{};
 };
 
-//アイテム管理クラス.[継承不可]
-class ItemManager final
+//アイテム管理クラス.
+class ItemManager : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -37,8 +37,8 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	ItemManager(){}
+	//コンストラクタ.
+	ItemManager() : ManagerBase(ORDER_ITEM_MNG) {}
 
 public:
 	//set.
@@ -46,10 +46,10 @@ public:
 	//add.
 	void AddItemCnt() { itemMaxCnt++; }
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void ItemSpawn(int idx); //アイテム召喚.
 	void ItemErase(int idx); //アイテム消滅.

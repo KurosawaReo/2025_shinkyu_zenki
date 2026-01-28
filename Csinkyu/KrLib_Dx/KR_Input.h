@@ -1,12 +1,12 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/12/26
+   ver.2026/01/28
 
-   入力操作機能を追加。
+   入力操作機能。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -178,7 +178,7 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	private:
-		//constructor(新規作成をできなくする)
+		//コンストラクタ(新規作成をできなくする)
 		InputMng() {}
 
 		static DBL_XY GetVector4Dir(INT_XY pow);

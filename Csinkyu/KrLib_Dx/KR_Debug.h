@@ -1,11 +1,11 @@
 /*
    - KR_Debug.h - (DxLib)
-   ver: 2025/12/17
+   ver.2026/01/28
 
-   デバッグ機能を追加。
+   変数表示、マウス位置表示などのデバッグ機能。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif

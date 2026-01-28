@@ -1,13 +1,13 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/12/04
+   ver.2026/01/28
 */
 #include "KR_Global.h"
 
 //KrLib名前空間.
 namespace KR
 {
-	//constructor.
+	//コンストラクタ.
 	MY_COLOR::MY_COLOR(UINT _colorCode) {
 		*this = _colorCode; //「=」演算子内で変換.
 	}

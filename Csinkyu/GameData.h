@@ -38,7 +38,7 @@ public:
 	
 //関数.
 private:
-	//constructor(新規作成をできなくする)
+	//コンストラクタ(新規作成をできなくする)
 	GameData(){}
 
 public:

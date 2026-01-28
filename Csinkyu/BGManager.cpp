@@ -14,6 +14,10 @@ void BGManager::Init() {
 	bg1.Init();
 	bg2.Init();
 }
+//リセット.
+void BGManager::Reset() {
+
+}
 //更新.
 void BGManager::Update() {
 

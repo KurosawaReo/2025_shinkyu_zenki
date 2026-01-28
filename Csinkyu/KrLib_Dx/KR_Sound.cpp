@@ -1,6 +1,6 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver: 2025/12/10
+   ver.2026/01/28
 */
 #include "KR_Sound.h"
 
@@ -9,13 +9,13 @@ namespace KR
 {
 // ▼*--=<[ Sound ]>=--*▼ //
 
-	//constructor.
+	//コンストラクタ.
 	Sound::Sound() 
 		: handle(-1), nowVol(-1), aftVol(-1) 
 	{
 		timer = TimerMicro(TimerMode::CountUp, 0);
 	};
-	//destructor.
+	//デストラクタ.
 	Sound::~Sound() {
 		Release();
 	};
@@ -142,7 +142,7 @@ namespace KR
 
 	SoundMng SoundMng::inst; //実体生成.
 
-	//destructor.
+	//デストラクタ.
 	SoundMng::~SoundMng() {
 		//サウンドデータを全て取り出す.
 		for (auto& i : sounds) {

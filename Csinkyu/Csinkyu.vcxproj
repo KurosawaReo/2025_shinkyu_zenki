@@ -30,7 +30,7 @@
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
-    <ClInclude Include="KrLib_cpp\KR_Num.h" />
+    <ClInclude Include="KrLib_cpp\KR_BigInt.h" />
     <ClInclude Include="KrLib_Dx\KR_App.h" />
     <ClInclude Include="KrLib_Dx\KR_Calc.h" />
     <ClInclude Include="KrLib_Dx\KR_Camera.h" />
@@ -44,6 +44,7 @@
     <ClInclude Include="KrLib_Dx\KR_Scene.h" />
     <ClInclude Include="KrLib_Dx\KR_Sound.h" />
     <ClInclude Include="KrLib_Dx\KR_Timer.h" />
+    <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />
     <ClInclude Include="LaserManager.h" />
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="Obst_Fireworks.h" />
@@ -68,7 +69,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_Num.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
     <ClCompile Include="KrLib_Dx\KR_App.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Calc.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Camera.cpp" />
@@ -77,8 +78,8 @@
     <ClCompile Include="KrLib_cpp\KR_File.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Global.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_ObjectMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Scene.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />

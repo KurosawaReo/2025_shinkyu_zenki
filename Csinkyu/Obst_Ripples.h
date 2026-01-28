@@ -15,8 +15,8 @@ struct RipplesData
 	float  duration;   // エフェクトの持続時間.
 };
 
-//波紋管理.[継承不可]
-class Ripples final
+//波紋管理.
+class Ripples : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -33,14 +33,14 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	Ripples(){}
+	//コンストラクタ.
+	Ripples() : ManagerBase(ORDER_RIPPLES_MNG) {}
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void Hitjudgment();
 	void UpdateFlashGeneration();

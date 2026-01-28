@@ -1,12 +1,12 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver: 2026/01/28
+   ver.2026/01/28
 
-   描画機能を追加。
+   図形や画像の描画機能。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -64,7 +64,7 @@ namespace KR
 		void Release();             //画像解放.
 
 	public:
-		//constructor, destructor.
+		//コンストラクタ, デストラクタ.
 		//std::mapを使う関係でpublicに入れておく.
 		DrawImg();
 		~DrawImg();
@@ -95,9 +95,9 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	private:
-		//constructor(新規作成できなくする)
+		//コンストラクタ(新規作成できなくする)
 		DrawImgMng(){}
-		//destructor.
+		//デストラクタ.
 		~DrawImgMng();
 
 	public:
@@ -122,7 +122,7 @@ namespace KR
 		INT_XY    pos;   //画面のどこに描画するか.
 		MY_COLOR  color; //文字の色.
 
-		//constructor.
+		//コンストラクタ.
 		DrawStr(MY_STRING _text, INT_XY _pos, MY_COLOR _color) : text(_text), pos(_pos), color(_color) {}
 
 		//描画.
@@ -140,7 +140,7 @@ namespace KR
 		int handle;
 
 	public:
-		//constructor, destructor.
+		//コンストラクタ, デストラクタ.
 		Font();
 		~Font();
 		//get.

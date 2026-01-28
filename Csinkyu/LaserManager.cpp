@@ -10,7 +10,7 @@
 #include "Stage_Tutorial.h"
 #include "GameData.h"
 //éQè∆.
-static GameData&      gameData      = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
 static Player&        player    = Player::GetInst();
 static MeteorManager& meteorMng = MeteorManager::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();

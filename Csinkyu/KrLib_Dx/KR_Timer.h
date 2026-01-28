@@ -1,11 +1,11 @@
 /*
    - KR_Timer.h - (DxLib)
-   ver: 2025/12/28
+   ver.2026/01/28
 
-   タイマー機能を追加。
+   タイマー機能。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -40,7 +40,7 @@ namespace KR
 		virtual bool TimerStop() = 0; //停止処理.
 
 	public:
-		//constructor.
+		//コンストラクタ.
 		TimerBase(TimerMode _mode) :
 			mode(_mode), state(TimerState::Stop)
 		{}
@@ -80,7 +80,7 @@ namespace KR
 		bool TimerStop() override; //タイマー停止.
 
 	public:
-		//constructor.
+		//コンストラクタ.
 		Timer() :
 			TimerBase(TimerMode::CountUp), tmInit(0), tmSavePass(0) //初期化.
 		{}
@@ -111,7 +111,7 @@ namespace KR
 		bool TimerStop() override; //タイマー停止.
 
 	public:
-		//constructor.
+		//コンストラクタ.
 		TimerMicro() :
 			TimerBase(TimerMode::CountUp), tmInit(0), tmSavePass(0) //初期化.
 		{

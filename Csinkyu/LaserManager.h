@@ -40,7 +40,7 @@ struct LaserLineData
 };
 
 //レーザー管理用.
-class LaserManager final
+class LaserManager : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -59,14 +59,14 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	LaserManager(){}
+	//コンストラクタ.
+	LaserManager() : ManagerBase(ORDER_LASER_MNG) {}
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void UpdateLaser();                                             //各レーザーの更新.
 	void UpdateLaserLine();                                         //各レーザー描画線の更新.

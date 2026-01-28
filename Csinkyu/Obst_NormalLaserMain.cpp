@@ -24,14 +24,10 @@ void NormalLaserMain::Init(){
 	
 }
 //リセット.
-void NormalLaserMain::Reset(float _Hx, float _Hy, float _Hm, MoveDir _moveDir)
+void NormalLaserMain::Reset()
 {
-	Hx      = _Hx;                      // 砲台のX座標初期値（画面中央）
-	Hy      = _Hy;                      // 砲台のY座標初期値（画面上部）
-	Hm      = _Hm;                      // 砲台の移動速度
-	Hsc     = LASER_NOR_SHOT_START+100; // 砲台の発射カウンタ初期値 
-	HscTm   = LASER_NOR_SHOT_START;     // 砲台の発射タイミング初期値
-	moveDir = _moveDir;                 // 初期方向を右に設定.
+	Hsc   = LASER_NOR_SHOT_START+100; // 砲台の発射カウンタ初期値 
+	HscTm = LASER_NOR_SHOT_START;     // 砲台の発射タイミング初期値
 
 	//フラッシュを無効化.
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {

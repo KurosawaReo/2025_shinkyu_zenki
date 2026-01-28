@@ -11,7 +11,49 @@
 //参照.
 static GameData& gameData = GameData::GetInst();
 
-//obstacle4mainのMove関数をobstacle4用に上書き.
+/*
+   ▼リセット処理.
+*/
+void NormalLaser_1::Reset() {
+
+	NormalLaserMain::Reset();
+
+	Hx = WINDOW_WID / 2;  //砲台のX座標初期値.
+	Hy = 0;				  //砲台のY座標初期値.
+	Hm = 3;				  //砲台の移動速度.
+	moveDir = MOVE_RIGHT; //初期方向.
+}
+void NormalLaser_2::Reset() {
+
+	NormalLaserMain::Reset();
+
+	Hx = WINDOW_WID / 2;
+	Hy = 0;
+	Hm = 3;
+	moveDir = MOVE_LEFT;
+}
+void NormalLaser_3::Reset() {
+
+	NormalLaserMain::Reset();
+
+	Hx = WINDOW_WID / 2;
+	Hy = WINDOW_HEI;
+	Hm = 3;
+	moveDir = MOVE_RIGHT;
+}
+void NormalLaser_4::Reset() {
+
+	NormalLaserMain::Reset();
+
+	Hx = WINDOW_WID / 2;
+	Hy = WINDOW_HEI;
+	Hm = 3;
+	moveDir = MOVE_LEFT;
+}
+
+/*
+   ▼移動処理.
+*/
 void NormalLaser_1::Move()
 {
 	// 移動速度
@@ -50,8 +92,6 @@ void NormalLaser_1::Move()
 		break;
 	}
 }
-
-//obstacle4mainのMove関数をobstacle5用に上書き.
 void NormalLaser_2::Move()
 {
 	// 移動速度
@@ -90,8 +130,6 @@ void NormalLaser_2::Move()
 		break;
 	}
 }
-
-//obstacle4mainのMove関数をobstacle5用に上書き.
 void NormalLaser_3::Move()
 {
 	// 移動速度
@@ -130,8 +168,6 @@ void NormalLaser_3::Move()
 		break;
 	}
 }
-
-//obstacle4mainのMove関数をobstacle4用に上書き.
 void NormalLaser_4::Move()
 {
 	// 移動速度

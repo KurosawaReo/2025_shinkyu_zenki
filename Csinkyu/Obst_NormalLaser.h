@@ -11,26 +11,30 @@
 class NormalLaser_1 : public NormalLaserMain
 {
 public:
-	void Move() override;
+	void Reset() override;
+	void Move()  override;
 };
 
 //継承先クラス(子2)
 class NormalLaser_2 : public NormalLaserMain
 {
 public:
-	void Move() override;
+	void Reset() override;
+	void Move()  override;
 };
 
 //継承先クラス(子3)
 class NormalLaser_3 : public NormalLaserMain
 {
 public:
-	void Move() override;
+	void Reset() override;
+	void Move()  override;
 };
 
 //継承先クラス(子4)
 class NormalLaser_4 : public NormalLaserMain
 {
 public:
-	void Move() override;
+	void Reset() override;
+	void Move()  override;
 };

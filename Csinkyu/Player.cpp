@@ -26,13 +26,13 @@ void Player::Init()
 	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "player_light_ref");
 }
 //リセット(何回でも行う)
-void Player::Reset(DBL_XY _pos, bool _active)
+void Player::Reset()
 {
-	hit        = { _pos, PLAYER_SIZE, {} };
-	active     = _active;
+	hit        = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {} };
 	mode       = Player_Normal;
 	afterCntr  = 1;
 	isMoveAble = true;
+	active     = true;
 
 	// ダッシュ関連の初期化.
 	isDashing    = false;
@@ -41,7 +41,7 @@ void Player::Reset(DBL_XY _pos, bool _active)
 
 	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
-		after[i].pos      = _pos;
+		after[i].pos      = hit.pos; //初期位置と同じ.
 		after[i].isActive = false;
 	}
 }

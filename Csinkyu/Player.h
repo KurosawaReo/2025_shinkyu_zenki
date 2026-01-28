@@ -22,8 +22,8 @@ enum PlayerMode
 	Player_SuperReflect //反射モード強化版.
 };
 
-//プレイヤー.[継承不可]
-class Player final
+//プレイヤー.
+class Player : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -55,8 +55,8 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	Player(){}
+	//コンストラクタ.
+	Player() : ManagerBase(ORDER_PLAYER_MNG) {}
 
 public:
 	//set.
@@ -75,11 +75,10 @@ public:
 		return Calc::Dist(hit.pos, after[1].pos) > 0; //移動距離が0より大きければ.
 	}
 
-	//その他.
-	void Init  ();
-	void Reset (DBL_XY _pos, bool _active);
-	void Update();
-	void Draw  ();
+	void Init  () override;
+	void Reset () override;
+	void Update() override;
+	void Draw  () override;
 
 	void UpdateDash();       //ダッシュ更新.
 

@@ -11,8 +11,8 @@ class NormalLaser_3;
 class NormalLaser_4;
 class StraightLaser;
 
-//ゲームマネージャー.[継承不可]
-class GameManager final
+//ゲームマネージャー.
+class GameManager : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -49,9 +49,9 @@ public:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	GameManager(){}
-	//destructor.
+	//コンストラクタ.
+	GameManager() : ManagerBase(ORDER_GAME_MNG) {}
+	//デストラクタ.
 	~GameManager();
 
 public:
@@ -67,10 +67,10 @@ public:
 	}
 
 	//メイン処理.
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	//Reset.
 	void ResetNorLaser();

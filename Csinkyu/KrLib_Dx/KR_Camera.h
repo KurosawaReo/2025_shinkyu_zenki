@@ -1,11 +1,11 @@
 /*
    - KR_Camera.h - (DxLib)
-   ver: 2025/12/08
+   ver.2026/01/28
 
-   カメラ機能を追加。
+   カメラ機能。現状2Dのみ対応。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -34,7 +34,7 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	private:
-		//constructor.
+		//コンストラクタ.
 		Camera() : cameraPos(0, 0, 0), cameraAng(0) {}
 		//角度補正.
 		void FixAng360();

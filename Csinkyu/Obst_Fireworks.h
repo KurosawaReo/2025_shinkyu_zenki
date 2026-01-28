@@ -27,8 +27,8 @@ struct FireworksData
 	bool  hasFallen;           // 落下済みか
 };
 
-//花火管理.[継承不可]
-class FireworksManager final 
+//花火管理.
+class FireworksManager : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -44,8 +44,8 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	FireworksManager(){}
+	//コンストラクタ
+	FireworksManager() : ManagerBase(ORDER_FIREWORKS_MNG) {}
 
 	void GenerateRandomPosition   (float& x, float& y);
 	bool CheckDistance            (float x, float y);
@@ -58,10 +58,10 @@ private:
 	void DrawWarningEffect(list<FireworksData>::iterator it);
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	//使用禁止.
 	FireworksManager(const FireworksManager&) = delete;

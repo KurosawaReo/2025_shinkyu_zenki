@@ -29,8 +29,8 @@ struct MenuColor
 };
 /*------------------------------------------*/
 
-//メニュー.[継承不可]
-class MenuManager final
+//メニュー.
+class MenuManager : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -57,14 +57,14 @@ private:
 
 //関数.
 private:
-	//constructor(新規作成をできなくする)
-	MenuManager(){}
+	//コンストラクタ.
+	MenuManager() : ManagerBase(ORDER_MENU_MNG) {}
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void OnCursorMove(); //カーソル移動時の処理.
 	

@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver: 2026/01/28
+   ver.2026/01/28
 */
 #include "KR_Draw.h"
 
@@ -42,11 +42,11 @@ namespace KR
 
 // ▼*--=<[ DrawImg ]>=--*▼ //
 
-	//constructor.
+	//コンストラクタ.
 	DrawImg::DrawImg() {
 		handle = NONE_HANDLE;
 	}
-	//destructor.
+	//デストラクタ.
 	DrawImg::~DrawImg() {
 		Release();
 	}
@@ -327,7 +327,7 @@ namespace KR
 
 	DrawImgMng DrawImgMng::inst; //実体生成.
 
-	//destructor.
+	//デストラクタ.
 	DrawImgMng::~DrawImgMng() {
 		//画像データを全て取り出す.
 		for (auto& i : images) {
@@ -538,7 +538,7 @@ namespace KR
 
 // ▼*--=<[ Font ]>=--*▼ //
 
-	//constructor, destructor.
+	//コンストラクタ, デストラクタ.
 	Font::Font() {
 		handle = NONE_HANDLE;
 	}

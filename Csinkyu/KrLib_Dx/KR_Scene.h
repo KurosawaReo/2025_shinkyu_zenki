@@ -1,14 +1,12 @@
 /*
    - KR_Scene.h - (DxLib)
-   ver: 2025/12/10
+   ver.2026/01/28
 
-   シーン管理機能を追加。
-
+   シーン管理機能。(試作品)
    シーンごとにSceneBasicを継承してクラスを作る。
-   (※しっかり設計を作る時用)
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -39,7 +37,7 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	private:
-		//constructor(新規作成をできなくする)
+		//コンストラクタ(新規作成をできなくする)
 		SceneMng() {}
 
 	public:

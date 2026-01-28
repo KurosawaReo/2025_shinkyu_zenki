@@ -5,8 +5,8 @@
 #include "BG1.h"
 #include "BG2.h"
 
-//背景クラス.[継承不可]
-class BGManager final
+//背景クラス.
+class BGManager : public ManagerBase 
 {
 //▼実体関係.
 public:
@@ -25,8 +25,8 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	BGManager(){}
+	//コンストラクタ.
+	BGManager() : ManagerBase(ORDER_BG_MNG) {}
 
 public:
 	//set.
@@ -34,9 +34,10 @@ public:
 	//get.
 	float GetCounter() const { return counter; }
 
-	void  Init();
-	void  Update();
-	void  Draw();
+	void  Init()   override;
+	void  Reset()  override;
+	void  Update() override;
+	void  Draw()   override;
 
 	//ポーズ用.
 	void  PauseAnim();

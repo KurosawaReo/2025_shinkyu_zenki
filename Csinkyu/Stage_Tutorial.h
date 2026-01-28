@@ -5,8 +5,8 @@
 */
 #pragma once
 
-//チュートリアル.[継承不可]
-class TutorialStage final
+//チュートリアルステージ.
+class TutorialStage : public ManagerBase
 {
 //▼実体関係.
 public:
@@ -35,8 +35,8 @@ private:
 
 //▼関数.
 private:
-	//constructor(新規作成をできなくする)
-	TutorialStage(){}
+	//コンストラクタ.
+	TutorialStage() : ManagerBase(ORDER_TUTORIAL_STAGE) {}
 
 public:
 	//set.
@@ -48,10 +48,10 @@ public:
 	//get
 	int  GetStepNo() const { return stepNo; }
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void ResetSignFlag();
 	void StepInEnd();

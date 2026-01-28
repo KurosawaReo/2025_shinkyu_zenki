@@ -41,7 +41,7 @@ static Player           &player       = Player::GetInst();
 static EffectManager    &effectMng    = EffectManager::GetInst();
 static UIManager        &uiMng        = UIManager::GetInst();
 
-//destructor.
+//デストラクタ.
 GameManager::~GameManager() {
 	//解放.
 	delete laserNor1;
@@ -138,31 +138,6 @@ void GameManager::Init() {
 	tmFps.Start();
 #endif
 
-	//Init処理
-	{
-		//障害物.
-		for (int i = 0; i < _countof(laserStr); i++) {
-			laserStr[i]->Init();
-		}
-		laserNor1->Init();
-		laserNor2->Init();
-		laserNor3->Init();
-		laserNor4->Init();
-
-		bg.Init();
-		menuMng.Init();
-		tutorialStg.Init();
-		endlessStg.Init();
-		laserMng.Init();
-		meteorMng.Init();
-		ripples.Init();
-		fireworksMng.Init();
-		item.Init();
-		player.Init();
-		effectMng.Init();
-		uiMng.Init();
-	}
-
 	//スコア読み込み.
 	{
 		File file;
@@ -173,7 +148,7 @@ void GameManager::Init() {
 		}
 	}
 
-	Reset();
+	App::Reset();
 
 #if defined _DEBUG
 	//Debug::Log(L"[Debug] GameManager::Init() 終了");
@@ -205,8 +180,6 @@ void GameManager::Reset() {
 	tmGameTime.Reset();
 	tmReflectMode.Reset();
 
-	//背景.
-	bg.SetBgNo(1);
 	//サウンド.
 	SoundMng::StopAll();
 #if !defined BGM_NONE
@@ -215,23 +188,6 @@ void GameManager::Reset() {
 		i->Play(true, 90);
 	}
 #endif
-
-	{
-		//レーザー系.
-		ResetNorLaser();
-		ResetStrLaser();
-
-		menuMng.Reset();
-		tutorialStg.Reset();
-		laserMng.Reset();
-		meteorMng.Reset();
-		ripples.Reset();
-		fireworksMng.Reset();
-		item.Reset();
-		player.Reset({ WINDOW_WID/2, WINDOW_HEI/2+200 }, true);
-		effectMng.Reset();
-		uiMng.Reset();
-	}
 }
 
 //更新.
@@ -313,10 +269,10 @@ void GameManager::Draw() {
 //通常レーザーのリセット.
 void GameManager::ResetNorLaser() {
 
-	laserNor1->Reset(WINDOW_WID/2, 0, 3, MOVE_RIGHT);
-	laserNor2->Reset(WINDOW_WID/2, 0, 3, MOVE_LEFT);
-	laserNor3->Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_RIGHT);
-	laserNor4->Reset(WINDOW_WID/2, WINDOW_HEI, 3, MOVE_LEFT);
+	laserNor1->Reset();
+	laserNor2->Reset();
+	laserNor3->Reset();
+	laserNor4->Reset();
 }
 //直線レーザーのリセット.
 void GameManager::ResetStrLaser() {
