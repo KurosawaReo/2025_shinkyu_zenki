@@ -3,13 +3,13 @@
    ゲーム全体管理.
 */
 #pragma once
-
-//前方宣言.
-class NormalLaser_1;
-class NormalLaser_2;
-class NormalLaser_3;
-class NormalLaser_4;
-class StraightLaser;
+#include "Scene_Title.h"
+#include "Scene_Menu.h"
+#include "Scene_Game.h"
+#include "Scene_End.h"
+#include "Obst_NormalLaser.h"
+#include "Obst_NormalLaserMain.h"
+#include "Obst_StraightLaser.h"
 
 //ゲームマネージャー.
 class GameManager : public ManagerBase
@@ -23,19 +23,29 @@ public:
 
 //▼ ===== 変数 ===== ▼.
 private:
-	Timer tmGameTime{};         //ゲーム計測時間.
-	Timer tmReflectMode{};      //スロー継続時間.
+	/* シーン関係 */
+	StateMachine scene{};			//シーン切り替え用.
 
-#if defined DEBUG_SHOW_FPS
-	TimerMicro tmFps{};         //fps計測用タイマー.
-#endif
+	TitleScene titleScene{};
+	GameScene  gameScene{};
+	MenuScene  menuScene{};
+	EndScene   endScene{};
 
+	/* タイマー */
+	Timer tmGameTime{};			    //ゲーム計測時間.
+	Timer tmReflectMode{};			//スロー継続時間.
+	
+	/* その他 */
 	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
 	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
 	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
 
 	bool isGameStart{};             //ゲーム開始サイン.
 	bool isBestScore{};             //ベストスコア更新したか.
+
+#if defined DEBUG_SHOW_FPS
+	TimerMicro tmFps{};         //fps計測用タイマー.
+#endif
 
 public:
 	//オブジェクト.
@@ -72,19 +82,11 @@ public:
 	void ResetStrLaser();
 
 	//Update.
-	void UpdateTitle();
-	void UpdateMenu();
-	void UpdateGame();
-	void UpdateEnd();
-
+	//TODO
 	void UpdateReflectMode();
 
 	//Draw.
-	void DrawTitle();
-	void DrawMenu();
-	void DrawGame();
-	void DrawEnd();
-
+	//TODO
 	void DrawReflectMode();
 
 	//ポーズ画面.

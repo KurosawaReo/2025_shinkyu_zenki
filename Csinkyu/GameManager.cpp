@@ -5,12 +5,8 @@
 #include "BGManager.h"
 #include "Stage_Tutorial.h"
 #include "Stage_Endless.h"
-#include "Scene_Menu.h"
 
 #include "LaserManager.h"
-#include "Obst_NormalLaser.h"
-#include "Obst_NormalLaserMain.h"
-#include "Obst_StraightLaser.h"
 #include "Obst_MeteorManager.h"
 #include "Obst_Ripples.h"
 #include "Obst_Fireworks.h"
@@ -52,10 +48,6 @@ GameManager::~GameManager() {
 }
 //初期化(一回のみ行う)
 void GameManager::Init() {
-
-#if defined _DEBUG 
-	//Debug::Log(L"[Debug] GameManager::Init() 開始");
-#endif
 
 	srand((unsigned)time(NULL)); //乱数初期化.
 
@@ -124,10 +116,6 @@ void GameManager::Init() {
 #endif
 	}
 
-	//タイマー初期化.
-	for(int i = 0; i < SCENE_COUNT; i++){
-		tmScene[i] = Timer(TimerMode::CountUp, 0);
-	}
 	tmGameTime    = Timer(TimerMode::CountUp, 0);
 	tmReflectMode = Timer(TimerMode::CountDown, REFLECT_MODE_TIME);
 
@@ -148,10 +136,6 @@ void GameManager::Init() {
 	}
 
 	App::Reset();
-
-#if defined _DEBUG
-	//Debug::Log(L"[Debug] GameManager::Init() 終了");
-#endif
 }
 
 //リセット(何回でも行う)
@@ -172,12 +156,10 @@ void GameManager::Reset() {
 	for (int i = 0; i < 3; i++) {
 		isItemCountDownSound[i] = false;
 	}
-	//タイマー.
-	for (int i = 0; i < SCENE_COUNT; i++) {
-		tmScene[i].Reset();
-	}
 	tmGameTime.Reset();
 	tmReflectMode.Reset();
+
+	scene.InitState(&titleScene);
 
 	//サウンド.
 	SoundMng::StopAll();
@@ -201,18 +183,10 @@ void GameManager::Update() {
 	if (!gameData.isPause) {
 
 		//背景, エフェクト.
-		bg.Update();
-		effectMng.Update(); 
-		//シーン別.
-		switch (gameData.scene) 
-		{
-			case SCENE_TITLE: UpdateTitle(); break;
-			case SCENE_MENU:  UpdateMenu();  break;
-			case SCENE_GAME:  UpdateGame();  break;
-			case SCENE_END:   UpdateEnd();   break;
-	
-			default: assert(FALSE); break;
-		}
+		bg.Update();        //TODO Update内でポーズしてるかどうか判定.
+		effectMng.Update(); //TODO 
+
+		scene.Update(); //現シーンの更新.
 	}
 
 	//ポーズ操作.
@@ -236,19 +210,7 @@ void GameManager::Update() {
 //描画.
 void GameManager::Draw() {
 
-	bg.Draw(); //背景.
-
-	//シーン別.
-	switch (gameData.scene) 
-	{
-		case SCENE_TITLE: DrawTitle(); break;
-		case SCENE_MENU:  DrawMenu();  break;
-		case SCENE_GAME:  DrawGame();  break;
-		case SCENE_END:   DrawEnd();   break;
-
-		default: assert(FALSE); break;
-	}
-	effectMng.Draw(); //エフェクト.
+	scene.Draw(); //現シーンの描画.
 
 	//ポーズ画面.
 	if (gameData.isPause) {

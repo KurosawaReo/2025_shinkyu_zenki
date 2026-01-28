@@ -33,7 +33,7 @@ namespace KR
         State* GetCurrent() const { return current; }
 
         //‰Šú‰».
-        void Init(State* initState) {
+        void InitState(State* initState) {
             current = initState;               //‰Šústate.
             if (current) { current->Enter(); } //‰Šústate‚ÉEnter.
         }

@@ -6,7 +6,7 @@
 //ゲームデータ.[継承不可]
 class GameData final
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static GameData& GetInst() {
 		static GameData inst; //自身のインスタンス.
@@ -15,7 +15,6 @@ public:
 
 //▼ ===== 変数 ===== ▼.
 public:
-	Scene      scene{};			//現在のシーン.
 	StageType  stage{};			//ステージ種類.
 	bool       isPause{};       //ポーズ中かどうか.
 
@@ -36,9 +35,9 @@ public:
 	int		   font3{};			//フォント.
 	int		   font4{};			//フォント.
 	
-//関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//コンストラクタ(新規作成をできなくする)
+	//コンストラクタ.
 	GameData(){}
 
 public:

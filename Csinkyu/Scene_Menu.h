@@ -36,7 +36,7 @@ struct MenuColor
 /*------------------------------------------*/
 
 //メニューシーン.
-class MenuScene : public SceneBase
+class MenuScene : public State, public SceneBase
 {
 //▼ ===== 実体 ===== ▼.
 public:
@@ -61,11 +61,7 @@ private:
 	const MenuLayout mLayout;
 	const MenuColor  mColor;
 
-//関数.
-private:
-	//コンストラクタ.
-	MenuScene() {}
-
+//▼ ===== 関数 ===== ▼.
 public:
 	void Init()   override;
 	void Reset()  override;
@@ -73,8 +69,4 @@ public:
 	void Draw()   override;
 
 	void OnCursorMove(); //カーソル移動時の処理.
-	
-	//使用禁止.
-	MenuScene(const MenuScene&) = delete;
-	MenuScene& operator=(const MenuScene&) = delete;
 };

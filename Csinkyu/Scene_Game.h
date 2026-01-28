@@ -11,7 +11,7 @@
 #include "SceneBase.h"
 
 //タイトルシーン.
-class GameScene : public SceneBase
+class GameScene : public State, public SceneBase
 {
 private:
 public:

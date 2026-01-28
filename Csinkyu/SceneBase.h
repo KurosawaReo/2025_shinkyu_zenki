@@ -10,9 +10,12 @@ namespace KR
 	class SceneBase
 	{
 	protected:
-		Timer tmScene{}; //シーンごとに経過時間を計測.
+		Timer tmScene; //シーンごとに経過時間を計測.
 
 	public:
+		//コンストラクタ.
+		SceneBase() : tmScene(Timer(TimerMode::CountUp, 0)) {}
+
 		virtual void Init()   = 0;
 		virtual void Reset()  = 0;
 		virtual void Update() = 0;

@@ -11,7 +11,7 @@
 #include "SceneBase.h"
 
 //I—¹ƒV[ƒ“.
-class EndScene : public SceneBase
+class EndScene : public State, public SceneBase
 {
 private:
 public:
