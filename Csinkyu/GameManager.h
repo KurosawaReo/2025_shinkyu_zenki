@@ -14,17 +14,15 @@ class StraightLaser;
 //ゲームマネージャー.
 class GameManager : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static GameManager& GetInst() {
 		static GameManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
-	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
-
 	Timer tmGameTime{};         //ゲーム計測時間.
 	Timer tmReflectMode{};      //スロー継続時間.
 
@@ -39,15 +37,15 @@ private:
 	bool isGameStart{};             //ゲーム開始サイン.
 	bool isBestScore{};             //ベストスコア更新したか.
 
-//▼オブジェクト.
 public:
+	//オブジェクト.
 	NormalLaser_1* laserNor1{};
 	NormalLaser_2* laserNor2{};
 	NormalLaser_3* laserNor3{};
 	NormalLaser_4* laserNor4{};
 	StraightLaser* laserStr[2]{};
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	GameManager() : ManagerBase(ORDER_GAME_MNG) {}
@@ -58,9 +56,6 @@ public:
 	//get.
 	float GetReflectModeTime() {
 		return tmReflectMode.GetPassTime();
-	}
-	float GetSceneTime(Scene scene) {
-		return tmScene[scene].GetPassTime();
 	}
 	float GetGameTime() {
 		return tmGameTime.GetPassTime();

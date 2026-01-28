@@ -3,9 +3,9 @@
    ゲーム全体管理.
 */
 #include "BGManager.h"
-#include "MenuManager.h"
 #include "Stage_Tutorial.h"
 #include "Stage_Endless.h"
+#include "Scene_Menu.h"
 
 #include "LaserManager.h"
 #include "Obst_NormalLaser.h"
@@ -29,7 +29,6 @@ using namespace Calc; //計算機能を使用.
 //ポインタ.
 static GameData         &gameData     = GameData::GetInst();
 static BGManager        &bg           = BGManager::GetInst();
-static MenuManager      &menuMng      = MenuManager::GetInst();
 static TutorialStage    &tutorialStg  = TutorialStage::GetInst();
 static EndlessStage     &endlessStg   = EndlessStage::GetInst();
 static LaserManager     &laserMng     = LaserManager::GetInst();
@@ -143,7 +142,7 @@ void GameManager::Init() {
 		File file;
 		//ファイルを開く.
 		if (file.Open(FILE_DATA, _T("r")).GetCode() == 0) {
-			gameData.bestScore = file.ReadInt();        //数字を読み込んで登録.
+			gameData.bestScore = file.ReadInt();       //数字を読み込んで登録.
 			uiMng.SetDisBestScore(gameData.bestScore); //ベストスコア表示更新.
 		}
 	}
@@ -319,7 +318,7 @@ void GameManager::UpdateGame() {
 		UpdateReflectMode(); //反射モード.
 
 		//ステージ別.
-		switch (gameData.stage) 
+		switch (gameData.stage)
 		{
 			case STAGE_TUTORIAL: tutorialStg.Update(); break;
 			case STAGE_ENDLESS:  endlessStg.Update();  break;
@@ -344,7 +343,7 @@ void GameManager::UpdateEnd() {
 
 		//死亡後一定時間経過したら.
 		if (tmScene[SCENE_END].GetPassTime() >= TUTORIAL_RESPAWN_TIME) {
-			tmScene[SCENE_END].Reset();   //タイマーリセット.
+			tmScene[SCENE_END].Reset();  //タイマーリセット.
 			player.PlayerRevival();      //復活.
 			gameData.scene = SCENE_GAME; //ゲームシーンへ戻る.
 		}

@@ -1,7 +1,9 @@
 /*
    - Stage_Endless.h -
 
-   ステージ: 耐久モード.
+   [Stage]
+   ・Endless <-
+   ・Tutorial
 */
 #pragma once
 
@@ -15,10 +17,10 @@ public:
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	EndlessStage() : ManagerBase(ORDER_ENDLESS_STAGE) {}

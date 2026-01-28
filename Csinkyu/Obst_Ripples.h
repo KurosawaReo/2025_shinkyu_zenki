@@ -25,13 +25,13 @@ public:
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	list<RipplesData> ripples; //波紋配列.
 
 	float flashTimer{}; //出現タイマー.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	Ripples() : ManagerBase(ORDER_RIPPLES_MNG) {}

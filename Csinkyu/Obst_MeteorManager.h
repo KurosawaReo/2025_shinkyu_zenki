@@ -9,21 +9,21 @@
 //隕石管理.
 class MeteorManager : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static MeteorManager& GetInst() {
 		static MeteorManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	list<Meteor>   meteor;		  //隕石配列.
 
 	float		   timer{};       //隕石生成用.
 	bool		   isSpawnAble{}; //召喚可能かどうか.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	MeteorManager() : ManagerBase(ORDER_METEOR_MNG) {}

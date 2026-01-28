@@ -51,11 +51,11 @@ public:
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	list<Effect> effect; //エフェクト配列.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ(新規作成をできなくする)
 	EffectManager() : ManagerBase(ORDER_EFFECT_MNG) {}

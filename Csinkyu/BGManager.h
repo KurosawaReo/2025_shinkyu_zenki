@@ -15,7 +15,7 @@ public:
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	float counter{}; //経過時間.
 
@@ -23,7 +23,7 @@ private:
 	BG1   bg1{};     //背景1.
 	BG2   bg2{};     //背景2.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	BGManager() : ManagerBase(ORDER_BG_MNG) {}

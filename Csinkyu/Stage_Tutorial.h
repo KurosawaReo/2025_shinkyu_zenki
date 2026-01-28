@@ -1,21 +1,23 @@
 /*
-   - Stage_Tutorial.h -
+   - Stage_Endless.h -
 
-   ステージ: チュートリアル.
+   [Stage]
+   ・Endless
+   ・Tutorial <-
 */
 #pragma once
 
 //チュートリアルステージ.
 class TutorialStage : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static TutorialStage& GetInst() {
 		static TutorialStage inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	Font   font[2]{};
 	
@@ -33,7 +35,7 @@ private:
 	Timer  startTimer{};      //項目開始時に計測開始.
 	Timer  endTimer{};        //項目終了時に計測開始.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	TutorialStage() : ManagerBase(ORDER_TUTORIAL_STAGE) {}

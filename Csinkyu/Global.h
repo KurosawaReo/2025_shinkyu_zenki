@@ -91,7 +91,6 @@ enum StageType
 #define ORDER_BG_MNG					(1)
 #define ORDER_ENDLESS_STAGE				(2)
 #define ORDER_TUTORIAL_STAGE			(3)
-#define ORDER_MENU_MNG					(4)
 #define ORDER_METEOR_MNG				(5)
 #define ORDER_NOR_LASER_MNG				(6)				//Normal Laser  (通常レーザー)
 #define ORDER_STR_LASER_MNG				(7)				//Straight Laser(直線レーザー)

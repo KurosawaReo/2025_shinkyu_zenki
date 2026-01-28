@@ -24,13 +24,13 @@ public:
 //”wŒi1.
 class BG1
 {
-//¥•Ï”.
+//¥ ===== •Ï” ===== ¥.
 private:
 	vector<BG_Tile> tiles; //”wŒiƒ^ƒCƒ‹ƒf[ƒ^.
 
 	TimerMicro tmShine = TimerMicro(TimerMode::CountDown, 1000000/60); //Œõ‚éŠÔŠu.
 
-//¥ŠÖ”.
+//¥ ===== ŠÖ” ===== ¥.
 public:
 	void Init();
 	void Update();

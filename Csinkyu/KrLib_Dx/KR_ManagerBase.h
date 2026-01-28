@@ -10,7 +10,8 @@
 namespace KR
 {
 	//ŠÇ—ƒNƒ‰ƒX‚ÌÀsó‘Ô.
-	enum class ManagerState {
+	enum class ManagerState 
+	{
 		Active,		//Update & Draw
 		UpdateOnly, //Update‚Ì‚İ.
 		DrawOnly,	//Draw‚Ì‚İ.

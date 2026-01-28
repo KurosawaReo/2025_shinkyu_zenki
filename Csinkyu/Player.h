@@ -25,14 +25,14 @@ enum PlayerMode
 //プレイヤー.
 class Player : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static Player& GetInst() {
 		static Player inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	PlayerMode     mode{};     //モード.
 	
@@ -53,7 +53,7 @@ private:
 
 	bool           isMoveAble{};     //移動可能かどうか.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	Player() : ManagerBase(ORDER_PLAYER_MNG) {}

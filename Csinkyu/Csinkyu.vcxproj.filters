@@ -29,7 +29,6 @@
     <ClInclude Include="KrLib_Dx\KR_Input.h" />
     <ClInclude Include="KrLib_Dx\KR_Object.h" />
     <ClInclude Include="KrLib_Dx\KR_ObjectMng.h" />
-    <ClInclude Include="KrLib_Dx\KR_Scene.h" />
     <ClInclude Include="KrLib_Dx\KR_Sound.h" />
     <ClInclude Include="KrLib_Dx\KR_Timer.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
@@ -41,6 +40,7 @@
     <ClInclude Include="GameData.h" />
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />
+    <ClInclude Include="KrLib_Dx\KR_StateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BGManager.cpp" />
@@ -70,7 +70,6 @@
     <ClCompile Include="KrLib_Dx\KR_Global.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_Scene.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
@@ -80,6 +79,7 @@
     <ClCompile Include="BG2.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="_memo.txt" />

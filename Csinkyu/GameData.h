@@ -13,7 +13,7 @@ public:
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 public:
 	Scene      scene{};			//現在のシーン.
 	StageType  stage{};			//ステージ種類.

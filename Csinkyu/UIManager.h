@@ -7,21 +7,21 @@
 //UI管理.
 class UIManager : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static UIManager& GetInst() {
 		static UIManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	int  disBestScore{}; //表示ベストスコア.
 	int  disScore{};     //表示スコア.
 
 	bool isShowScore{}; //スコアを表示するかどうか.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	UIManager() : ManagerBase(ORDER_UI_MNG) {}

@@ -30,7 +30,7 @@ struct FireworksData
 //花火管理.
 class FireworksManager : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static FireworksManager& GetInst() {
 		static FireworksManager inst; //自身のインスタンス.
@@ -42,7 +42,7 @@ private:
 	list<FireworksData> fireworks;
 	float				spawnTimer{};
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ
 	FireworksManager() : ManagerBase(ORDER_FIREWORKS_MNG) {}

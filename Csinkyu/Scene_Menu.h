@@ -1,11 +1,17 @@
 /*
-   - MenuManager.h -
-   メニューシーン.
+   - Scene_Menu.h -
+
+   [Scene]
+   ・Title
+   ・Menu <-
+   ・Game
+   ・End
 */
 #pragma once
+#include "SceneBase.h"
 
 /*------------------------------------------*/
-//【編集】メニューのデザインを変えたい時はここをいじる.
+//【編集用】メニューのデザインを変えたい時はここをいじる.
 
 //メニュー設定(レイアウト)
 struct MenuLayout
@@ -29,17 +35,17 @@ struct MenuColor
 };
 /*------------------------------------------*/
 
-//メニュー.
-class MenuManager : public ManagerBase
+//メニューシーン.
+class MenuScene : public SceneBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
-	static MenuManager& GetInst() {
-		static MenuManager inst; //自身のインスタンス.
+	static MenuScene& GetInst() {
+		static MenuScene inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	Font      fontMenu[2]{};      //メニュー用フォント.
 
@@ -58,7 +64,7 @@ private:
 //関数.
 private:
 	//コンストラクタ.
-	MenuManager() : ManagerBase(ORDER_MENU_MNG) {}
+	MenuScene() {}
 
 public:
 	void Init()   override;
@@ -69,6 +75,6 @@ public:
 	void OnCursorMove(); //カーソル移動時の処理.
 	
 	//使用禁止.
-	MenuManager(const MenuManager&) = delete;
-	MenuManager& operator=(const MenuManager&) = delete;
+	MenuScene(const MenuScene&) = delete;
+	MenuScene& operator=(const MenuScene&) = delete;
 };

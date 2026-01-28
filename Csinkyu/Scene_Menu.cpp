@@ -1,8 +1,7 @@
 ﻿/*
-   - MenuManager.cpp -
-   メニューシーン
+   - Scene_Menu.cpp -
 */
-#include "MenuManager.h"
+#include "Scene_Menu.h"
 
 //依存関係.
 #include "BGManager.h"
@@ -13,7 +12,7 @@ static GameData&  gameData = GameData::GetInst();
 static BGManager& p_bg   = BGManager::GetInst();
 
 // 初期化
-void MenuManager::Init() {
+void MenuScene::Init() {
 
 	// 入力アクション登録
 	InputMng::AddAction("MENU_UP",   KeyID::Up);
@@ -42,13 +41,13 @@ void MenuManager::Init() {
 }
 
 // リセット
-void MenuManager::Reset() {
+void MenuScene::Reset() {
 	selectedIndex = 0;
 	tmBlink.Start();
 }
 
 // 更新
-void MenuManager::Update() {
+void MenuScene::Update() {
 
 	//カーソル移動操作.
 	if (InputMng::IsPushActionTime("MENU_UP") % 20 == 1) {
@@ -112,7 +111,7 @@ void MenuManager::Update() {
 }
 
 // 描画
-void MenuManager::Draw() {
+void MenuScene::Draw() {
 
 	//アニメーション値.
 	//この値を基準にメニューのアニメーションを制御する.
@@ -396,7 +395,7 @@ void MenuManager::Draw() {
 }
 
 //カーソル移動時の処理.
-void MenuManager::OnCursorMove() {
+void MenuScene::OnCursorMove() {
 
 	isBlink = true;  //点滅させる.
 	tmBlink.Start(); //点滅時間計測.
