@@ -34,16 +34,24 @@ struct FlashEffect
 	double	angle;
 };
 
-//レーザー発射台.
-class LaserPoint
+//通常レーザー発射台.
+class NormalLaserPoint
 {
-public:
+private:
 	DBL_XY   pos;       //位置.
 	MoveInfo move;      //移動データ.
 	float    speed;     //移動速度.
 	float    counter;   //経過カウンター.
 	float    counterTm; //発射するタイミング.
 	bool	 validFlag; //有効フラグ.
+
+public:
+	//set.
+	void SetValidFlag(bool _flag) { validFlag = _flag; }
+
+	void Reset();
+	void Update();
+	void Draw();
 
 	void MoveRand(); //移動方向抽選.
 };
@@ -60,7 +68,7 @@ public:
 
 //▼ ===== 変数 ===== ▼.
 private:
-	LaserPoint  points[4]; //レーザー発射台.
+	NormalLaserPoint  points[4]; //レーザー発射台.
 	FlashEffect flash[LASER_NOR_FLASH_MAX] {};
 
 //▼ ===== 変数 ===== ▼.
@@ -74,11 +82,8 @@ public:
 	void Update() override;
 	void Draw  () override;
 
-	//更新系.
-	void UpdatePoint();
 	//描画系.
 	void DrawObstFlash();
-	void DrawPreLaserDots();
  
 	void CreateFlashEffect(double x, double y);
 
