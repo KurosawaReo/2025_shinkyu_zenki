@@ -36,7 +36,7 @@ protected:
 	float   HscTm{};     //砲台がショットする時間.
 	MoveDir moveDir{};   //現在の移動方向.
 
-	FlashEffect    flash[LASER_NOR_FLASH_MAX]{};
+	FlashEffect flash[LASER_NOR_FLASH_MAX] {};
 
 public:
 	//コンストラクタ.

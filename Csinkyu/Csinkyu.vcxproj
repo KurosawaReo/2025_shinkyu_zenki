@@ -41,7 +41,7 @@
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_Scene.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_SceneMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
     <ClCompile Include="KrLib_Dx\KR_StateMachine.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
@@ -91,7 +91,7 @@
     <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />
     <ClInclude Include="KrLib_Dx\KR_Object.h" />
     <ClInclude Include="KrLib_Dx\KR_ObjectMng.h" />
-    <ClInclude Include="KrLib_Dx\KR_Scene.h" />
+    <ClInclude Include="KrLib_Dx\KR_SceneMng.h" />
     <ClInclude Include="KrLib_Dx\KR_Sound.h" />
     <ClInclude Include="KrLib_Dx\KR_StateMachine.h" />
     <ClInclude Include="KrLib_Dx\KR_Timer.h" />

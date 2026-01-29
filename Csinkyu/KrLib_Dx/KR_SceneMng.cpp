@@ -2,7 +2,7 @@
    - KR_Scene.cpp - (DxLib)
    ver.2026/01/29
 */
-#include "KR_Scene.h"
+#include "KR_SceneMng.h"
 
 //KrLib名前空間.
 namespace KR
@@ -16,7 +16,7 @@ namespace KR
 	   SceneMngは自動実行を止めれるよう、専用の関数を用意.
 	*/
 	void SceneMng::SetExeState(MngExeState _state) {
-		inst.SetExeState(_state);
+		inst.ManagerBase::SetExeState(_state);
 	}
 
 	//シーン追加.
@@ -42,9 +42,13 @@ namespace KR
 		}
 	}
 	void SceneMng::Update() {
-		sceneChanger.GetCurrent()->Update(); //現シーンの更新.
+		if (IState* i = sceneChanger.GetCurrent()) { 
+			i->Update(); //現シーンの更新.
+		}
 	}
 	void SceneMng::Draw() {
-		sceneChanger.GetCurrent()->Draw();   //現シーンの描画.
+		if (IState* i = sceneChanger.GetCurrent()) {
+			i->Draw(); //現シーンの更新.
+		}
 	}
 }

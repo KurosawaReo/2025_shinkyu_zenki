@@ -71,7 +71,7 @@ public:
 	Circle     GetHit()      const { return hit; }
 	
 	//ˆÚ“®‚µ‚½‚©.
-	double     IsMoved() const { 
+	bool IsMoved() const { 
 		return Calc::Dist(hit.pos, after[1].pos) > 0; //ˆÚ“®‹——£‚ª0‚æ‚è‘å‚«‚¯‚ê‚Î.
 	}
 

@@ -44,10 +44,15 @@ namespace KR
 				return a->GetOrder() < b->GetOrder(); //order’l‚ğ”äŠr.
 			}
 		);
+		Debug::Log(_T("InitStart"));
+
 		//Init‚ğÀs.
 		for (const auto& i : ManagerBase::mngInsts) {
+			Debug::Log(_T("order:"), i->GetOrder());
 			i->Init();
 		}
+		Debug::Log(_T("InitEnd"));
+
 
 		return {0, _T("App::InitDx"), _T("³íI—¹")};
 	}

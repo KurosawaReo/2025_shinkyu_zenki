@@ -18,10 +18,9 @@ public:
 
 //▼ ===== 変数 ===== ▼.
 private:
-	list<Meteor>   meteor;		  //隕石配列.
+	list<Meteor> meteor;  //隕石配列.
 
-	float		   timer{};       //隕石生成用.
-	bool		   isSpawnAble{}; //召喚可能かどうか.
+	float		 timer{}; //隕石生成用.
 
 //▼ ===== 関数 ===== ▼.
 private:
@@ -32,8 +31,6 @@ public:
 	//get.
 	Meteor* GetHitMeteor    (Circle cir, bool isDestroy); //範囲内の隕石を取得(1つ)
 	Meteor* GetNearestMeteor(DBL_XY pos);				  //最寄りの隕石を取得.
-	//set.
-	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
 
 	void Init()   override;
 	void Reset()  override;

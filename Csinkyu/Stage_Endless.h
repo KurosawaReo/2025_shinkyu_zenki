@@ -31,9 +31,6 @@ public:
 	void Update() override;
 	void Draw()   override;
 
-	void UpdateObjects();
-	void DrawObjects();
-
 	//Žg—p‹ÖŽ~.
 	EndlessStage(const EndlessStage&) = delete;
 	EndlessStage& operator=(const EndlessStage&) = delete;

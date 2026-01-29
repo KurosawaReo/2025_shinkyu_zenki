@@ -61,8 +61,7 @@ void MeteorManager::Init() {
 
 void MeteorManager::Reset() {
 
-	isSpawnAble = false;             //許可が出されるまで召喚不可.
-	timer       = METEOR_SPAWN_SPAN; //初期時間.
+	timer = METEOR_SPAWN_SPAN; //初期時間.
 
 	//隕石を全て消去.
 	meteor.clear();
@@ -70,17 +69,14 @@ void MeteorManager::Reset() {
 
 void MeteorManager::Update() {
 
-	//召喚可能なら.
-	if (isSpawnAble) {
-		//タイマーが残っていれば.
-		if (timer > 0) {
-			timer -= gameData.speedRate;
-		}
-		//タイマーが0になったら.
-		else {
-			SpawnMeteor(); //隕石生成.
-			timer = METEOR_SPAWN_SPAN * gameData.spawnRate; //タイマー再開(徐々に短くなる)
-		}
+	//タイマーが残っていれば.
+	if (timer > 0) {
+		timer -= gameData.speedRate;
+	}
+	//タイマーが0になったら.
+	else {
+		SpawnMeteor(); //隕石生成.
+		timer = METEOR_SPAWN_SPAN * gameData.spawnRate; //タイマー再開(徐々に短くなる)
 	}
 
 	//全隕石ループ.
@@ -141,11 +137,11 @@ void MeteorManager::BreakMeteor(DBL_XY pos, double ang, double scale) {
 	//いくつか出す.
 	for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
-		double newDig = ang + (float)Calc::RandNum(-300, 300) / 10;	//少し角度をずらす.
+		double newDig = ang + _flt(Calc::RandNum(-300, 300)) / 10;	//少し角度をずらす.
 		data.vec   = Calc::VectorDeg(newDig);						//ずらした角度を反映.
-		data.speed = (float)Calc::RandNum(50, 300) / 10 * scale;	//速度抽選.
-		data.len   = (float)Calc::RandNum(10, 100) / 10 * scale;	//長さ抽選.
-		data.ang   = (float)Calc::RandNum(0, 3599) / 10;			//角度抽選.
+		data.speed = _flt(Calc::RandNum(50, 300) / 10 * scale);		//速度抽選.
+		data.len   = _flt(Calc::RandNum(10, 100) / 10 * scale);		//長さ抽選.
+		data.ang   = _flt(Calc::RandNum(0, 3599) / 10);				//角度抽選.
 		effectMng.SpawnEffect(&data);								//エフェクト出現.
 	}
 	//スコアエフェクト.

@@ -33,7 +33,6 @@ private:
 	int      itemMaxCnt{}; //出すアイテムの数.
 
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
-	bool     isSpawnAble{};   //召喚可能かどうか.
 
 //▼ ===== 関数 ===== ▼.
 private:
@@ -41,8 +40,6 @@ private:
 	ItemManager() : ManagerBase(ORDER_ITEM_MNG) {}
 
 public:
-	//set.
-	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
 	//add.
 	void AddItemCnt() { itemMaxCnt++; }
 

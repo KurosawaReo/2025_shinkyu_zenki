@@ -37,7 +37,7 @@
 #include "KrLib_Dx/KR_Draw.h"
 #include "KrLib_Dx/KR_Input.h"
 #include "KrLib_Dx/KR_Managerbase.h"
-#include "KrLib_Dx/KR_Scene.h"
+#include "KrLib_Dx/KR_SceneMng.h"
 #include "KrLib_Dx/KR_Sound.h"
 #include "KrLib_Dx/KR_StateMachine.h"
 #include "KrLib_Dx/KR_Timer.h"

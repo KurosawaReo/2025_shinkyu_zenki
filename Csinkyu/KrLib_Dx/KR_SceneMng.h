@@ -1,5 +1,5 @@
 /*
-   - KR_Scene.h - (DxLib)
+   - KR_SceneMng.h - (DxLib)
    ver.2026/01/29
 
    シーン管理機能。

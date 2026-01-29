@@ -51,7 +51,7 @@ GameManager::~GameManager() {
 void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
-	
+
 	//実体生成.
 	laserNor1   = new NormalLaser_1();
 	laserNor2   = new NormalLaser_2();
@@ -136,6 +136,9 @@ void GameManager::Init() {
 	tmFps = TimerMicro(TimerMode::CountUp, 0);
 	tmFps.Start();
 #endif
+
+	Debug::Log(_T("InitEnd"));
+
 
 	App::Reset();
 }
