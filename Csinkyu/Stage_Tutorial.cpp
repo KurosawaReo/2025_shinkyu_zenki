@@ -113,6 +113,10 @@ void TutorialStage::UpdateStep0() {
 	data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
 	effectMng.SpawnEffect(&data);
 
+	//予め動かしておく.
+	ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Active);
+	ManagerBase::GetMng<LaserManager>()->SetExeState(MngExeState::Active);
+
 	startTimer.Start(); //開始.
 	stepNo++;           //次のステップ.
 	stepInNo = 0;
@@ -154,8 +158,8 @@ void TutorialStage::UpdateStep1() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//オブジェクトON.
-				ManagerBase::GetMng<LaserManager>()->SetExeState(MngExeState::Active);
-				ManagerBase::GetMng<NormalLaser_1>()->SetExeState(MngExeState::Active);
+				ManagerBase::GetMng<NormalLaser>()->SetExeState(MngExeState::Active);
+				ManagerBase::GetMng<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -187,10 +191,7 @@ void TutorialStage::UpdateStep1() {
 				effectMng.SpawnEffect(&data);
 
 				//オブジェクトOFF.
-				laserMng.Reset();
-				gameMng.ResetNorLaser();
-				ManagerBase::GetMng<LaserManager>()->SetExeState(MngExeState::Stop);
-				ManagerBase::GetMng<NormalLaser_1>()->SetExeState(MngExeState::Stop);
+				ManagerBase::GetMng<NormalLaser>()->SetExeState(MngExeState::Stop);
 				//オブジェクトON.
 				ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Active);
 				//アイテム召喚.
@@ -277,6 +278,8 @@ void TutorialStage::UpdateStep3() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+				//オブジェクトON.
+				ManagerBase::GetMng<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -373,7 +376,7 @@ void TutorialStage::UpdateStep4() {
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//オブジェクトOFF.
 				ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Stop);
-				ManagerBase::GetMng<NormalLaser_1>()->SetExeState(MngExeState::Stop);
+				ManagerBase::GetMng<NormalLaser>()->SetExeState(MngExeState::Stop);
 				ManagerBase::GetMng<LaserManager>()->SetExeState(MngExeState::Stop);
 				ManagerBase::GetMng<MeteorManager>()->SetExeState(MngExeState::Stop);
 				//終了処理.

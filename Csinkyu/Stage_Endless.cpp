@@ -18,8 +18,6 @@
 #include "GameManager.h"
 //参照.
 static GameData&      gameData  = GameData::GetInst();
-static GameManager&   gameMng   = GameManager::GetInst();
-static ItemManager&   itemMng   = ItemManager::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
 //初期化.
@@ -47,10 +45,12 @@ void EndlessStage::Update() {
 
 		//Lv1から.
 		ManagerBase::GetMng<LaserManager>()->SetExeState(MngExeState::Active);
-		ManagerBase::GetMng<NormalLaser_1>()->SetExeState(MngExeState::Active);
-		ManagerBase::GetMng<NormalLaser_2>()->SetExeState(MngExeState::Active);
+		ManagerBase::GetMng<NormalLaser>()->SetExeState(MngExeState::Active);
 		ManagerBase::GetMng<MeteorManager>()->SetExeState(MngExeState::Active);
 		ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Active);
+
+		ManagerBase::GetMng<NormalLaser>()->UseLaserPointCnt(2); //レーザーは2つ.
+		ManagerBase::GetMng<ItemManager>()->SetItemMaxCnt(1);    //アイテムは1つ.
 	}
 	else {
 #if defined _DEBUG //Releaseでは入れない.
@@ -111,7 +111,7 @@ void EndlessStage::Update() {
 			if (gameData.counter >= 6000) { //6000 = 出現間隔約??%地点.
 				gameData.level = 4; //Lv4へ.
 
-				itemMng.AddItemCnt(); //アイテムを増やす.
+				ManagerBase::GetMng<ItemManager>()->SetItemMaxCnt(2); //アイテムを2つに.
 
 				//サウンド.
 				if (auto i = SoundMng::Get("LevelUp")) {
@@ -131,8 +131,6 @@ void EndlessStage::Update() {
 			if (gameData.counter >= 9000) { //9000 = 出現間隔約??%地点.
 				gameData.level = 5; //Lv5へ.
 
-				gameMng.ResetNorLaser();
-
 				//サウンド.
 				if (auto i = SoundMng::Get("LevelUp")) {
 					i->Play(false, 100);
@@ -144,8 +142,7 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv5から.
-				ManagerBase::GetMng<NormalLaser_3>()->SetExeState(MngExeState::Active);
-				ManagerBase::GetMng<NormalLaser_4>()->SetExeState(MngExeState::Active);
+				ManagerBase::GetMng<NormalLaser>()->UseLaserPointCnt(4); //レーザーは4つ.
 			}
 			break;
 		case 5:

@@ -74,7 +74,7 @@ void MenuScene::Update() {
 			case 0:
 				//耐久モードへ.
 				SceneMng::SetScene("Game");
-				gameData.stage = STAGE_ENDLESS;
+				gameData.stage = Stage_Endless;
 				//背景変更.
 				p_bg.SetBgNo(1);
 #if !defined BGM_NONE
@@ -88,7 +88,7 @@ void MenuScene::Update() {
 			case 1:
 				//チュートリアルへ.
 				SceneMng::SetScene("Game");
-				gameData.stage = STAGE_TUTORIAL;
+				gameData.stage = Stage_Tutorial;
 				//背景変更.
 				p_bg.SetBgNo(1);
 #if !defined BGM_NONE

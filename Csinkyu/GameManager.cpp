@@ -39,10 +39,6 @@ static UIManager        &uiMng        = UIManager::GetInst();
 //デストラクタ.
 GameManager::~GameManager() {
 	//解放.
-	delete laserNor1;
-	delete laserNor2;
-	delete laserNor3;
-	delete laserNor4;
 	delete laserStr[0];
 	delete laserStr[1];
 }
@@ -53,10 +49,6 @@ void GameManager::Init() {
 	srand((unsigned)time(NULL)); //乱数初期化.
 
 	//実体生成.
-	laserNor1   = new NormalLaser_1();
-	laserNor2   = new NormalLaser_2();
-	laserNor3   = new NormalLaser_3();
-	laserNor4   = new NormalLaser_4();
 	laserStr[0] = new StraightLaser();
 	laserStr[1] = new StraightLaser();
 
@@ -218,14 +210,6 @@ void GameManager::Draw() {
 #endif
 }
 
-//通常レーザーのリセット.
-void GameManager::ResetNorLaser() {
-
-	laserNor1->Reset();
-	laserNor2->Reset();
-	laserNor3->Reset();
-	laserNor4->Reset();
-}
 //直線レーザーのリセット.
 void GameManager::ResetStrLaser() {
 
@@ -262,13 +246,13 @@ void GameManager::GameOver() {
 	//ステージ別.
 	switch (gameData.stage)
 	{
-		case STAGE_TUTORIAL:
+		case Stage_Tutorial:
 		{
 			SceneMng::SetScene("End"); //終了シーンへ.
 		}
 		break;
 
-		case STAGE_ENDLESS:
+		case Stage_Endless:
 		{
 			SceneMng::SetScene("End"); //終了シーンへ.
 
@@ -311,7 +295,7 @@ void GameManager::ItemUsed() {
 	gameScene.ItemUsed();          //アイテム使用処理.
 	
 	//チュートリアルなら指示送信.
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 		tutorialStg.SetTakeItem(true);       //指示を送る.
 		tutorialStg.SetReflectFinish(false); //falseにする(指示取り消し)
 	}

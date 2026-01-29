@@ -49,7 +49,7 @@ void UIManager::Draw() {
 	//ステージ別.
 	switch (p_gameData.stage) 
 	{
-		case STAGE_TUTORIAL:
+		case Stage_Tutorial:
 		{
 			//アニメーション値.
 			double alpha   = Calc::AnimEaseInOut((time-1.0)*2);
@@ -90,7 +90,7 @@ void UIManager::Draw() {
 		}
 		break;
 
-		case STAGE_ENDLESS:
+		case Stage_Endless:
 		{
 			//アニメーション値.
 			double alpha1   = Calc::AnimEaseInOut( time-0.1   );

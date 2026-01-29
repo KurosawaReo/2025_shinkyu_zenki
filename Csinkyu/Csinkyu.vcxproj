@@ -51,7 +51,6 @@
     <ClCompile Include="Obst_Meteor.cpp" />
     <ClCompile Include="Obst_MeteorManager.cpp" />
     <ClCompile Include="Obst_NormalLaser.cpp" />
-    <ClCompile Include="Obst_NormalLaserMain.cpp" />
     <ClCompile Include="Obst_Ripples.cpp" />
     <ClCompile Include="Obst_StraightLaser.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -100,7 +99,6 @@
     <ClInclude Include="Obst_Meteor.h" />
     <ClInclude Include="Obst_MeteorManager.h" />
     <ClInclude Include="Obst_NormalLaser.h" />
-    <ClInclude Include="Obst_NormalLaserMain.h" />
     <ClInclude Include="Obst_Ripples.h" />
     <ClInclude Include="Obst_StraightLaser.h" />
     <ClInclude Include="Player.h" />

@@ -8,7 +8,7 @@
 //背景クラス.
 class BGManager : public ManagerBase 
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
 public:
 	static BGManager& GetInst() {
 		static BGManager inst; //自身のインスタンス.

@@ -74,7 +74,7 @@ void LaserManager::Draw() {
 	}
 
 	//チュートリアル限定.
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 		//レーザー本体.
 		for (const LaserData& i : laser)
 		{
@@ -215,7 +215,7 @@ void LaserManager::UpdateLaser() {
 						ReflectLaser(i); //再反射.
 					}
 					//チュートリアルなら指示送信.
-					if (gameData.stage == STAGE_TUTORIAL) {
+					if (gameData.stage == Stage_Tutorial) {
 						TutorialStage::GetInst().SetBreakMeteor(true);
 					}
 				}
@@ -368,7 +368,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator it)
 	}
 
 	//チュートリアルなら指示送信.
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 		TutorialStage::GetInst().SetReflectLaser(true);
 	}
 }

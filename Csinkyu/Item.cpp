@@ -28,7 +28,7 @@ void ItemManager::Init()
 //リセット.
 void ItemManager::Reset()
 {
-	itemMaxCnt = 1; //最初はアイテム1つ.
+	itemMaxCnt = 0; //最大出現数は0にする.
 
 	//全て消滅.
 	for (int i = 0; i < _countof(items); i++) {
@@ -102,7 +102,7 @@ void ItemManager::Draw()
 			}
 
 			//チュートリアル用.
-			if (gamedata.stage == STAGE_TUTORIAL) {
+			if (gamedata.stage == Stage_Tutorial) {
 				DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToInt(), COLOR_ITEM);
 				str.Draw();
 			}

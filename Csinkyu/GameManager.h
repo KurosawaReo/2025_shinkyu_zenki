@@ -8,7 +8,7 @@
 #include "Scene_Game.h"
 #include "Scene_End.h"
 #include "Obst_NormalLaser.h"
-#include "Obst_NormalLaserMain.h"
+#include "Obst_NormalLaser.h"
 #include "Obst_StraightLaser.h"
 
 //ゲームマネージャー.
@@ -35,11 +35,7 @@ private:
 
 public:
 	//オブジェクト.
-	NormalLaser_1* laserNor1{};
-	NormalLaser_2* laserNor2{};
-	NormalLaser_3* laserNor3{};
-	NormalLaser_4* laserNor4{};
-	StraightLaser* laserStr[2]{};
+	StraightLaser* laserStr[2]{}; //TODO そのうちいらなくなるため消す.
 
 //▼ ===== 関数 ===== ▼.
 private:
@@ -59,7 +55,6 @@ public:
 	void Draw()   override;
 
 	//Reset.
-	void ResetNorLaser();
 	void ResetStrLaser();
 
 	//ポーズ画面.

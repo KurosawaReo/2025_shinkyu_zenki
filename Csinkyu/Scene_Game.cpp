@@ -56,10 +56,10 @@ void GameScene::Update() {
 		//ステージ別.
 		switch (gameData.stage)
 		{
-			case STAGE_TUTORIAL: 
+			case Stage_Tutorial: 
 				ManagerBase::GetMng<TutorialStage>()->SetExeState(MngExeState::Active);
 				break;
-			case STAGE_ENDLESS:  
+			case Stage_Endless:  
 				ManagerBase::GetMng<EndlessStage>()-> SetExeState(MngExeState::Active);
 				break;
 
@@ -187,7 +187,7 @@ void GameScene::ReflectModeEnd() {
 		i->Play(false, 78); //再生.
 	}
 	//チュートリアルなら指示送信.
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 		tutorialStg.SetReflectFinish(true); //指示を送る.
 	}
 }

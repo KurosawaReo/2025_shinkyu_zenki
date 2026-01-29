@@ -86,7 +86,7 @@ void Meteor::Draw() {
 	#endif
 
 		//チュートリアル.
-		if (gameData.stage == STAGE_TUTORIAL) {
+		if (gameData.stage == Stage_Tutorial) {
 			DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
 			str.Draw();
 		}

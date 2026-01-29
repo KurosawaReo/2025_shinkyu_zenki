@@ -33,7 +33,7 @@ void EndScene::Exit() {
 }
 //更新.
 void EndScene::Update() {
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 
 		gameMng.GetGameScene()->Update(); //ゲームシーンと同じ動作をする.
 
@@ -70,7 +70,7 @@ void EndScene::Draw() {
 	uiMng.Draw(); //UI.
 
 	//チュートリアルの場合.
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 
 		//アニメーション値.
 		double anim = Calc::AnimEaseOut(timer.GetPassTime());

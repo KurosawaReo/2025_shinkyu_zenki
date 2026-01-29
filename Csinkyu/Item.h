@@ -40,8 +40,8 @@ private:
 	ItemManager() : ManagerBase(ORDER_ITEM_MNG) {}
 
 public:
-	//add.
-	void AddItemCnt() { itemMaxCnt++; }
+	//set.
+	void SetItemMaxCnt(int count) { itemMaxCnt = count; }
 
 	void Init()   override;
 	void Reset()  override;

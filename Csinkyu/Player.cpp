@@ -6,12 +6,12 @@
 
 //依存関係.
 #include "LaserManager.h"
-#include "Obst_NormalLaserMain.h"
+#include "Obst_NormalLaser.h"
 #include "Stage_Tutorial.h"
 #include "GameManager.h"
 #include "GameData.h"
 //参照.
-static GameData&      gameData      = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
 //初期化(一回のみ行う)
@@ -110,7 +110,7 @@ void Player::Draw()
 		}
 
 		//チュートリアル用.
-		if (gameData.stage == STAGE_TUTORIAL) {
+		if (gameData.stage == Stage_Tutorial) {
 			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToInt(), 0xFFFFFF );
 			str.Draw();
 		}
@@ -149,7 +149,7 @@ void Player::UpdateDash()
 				isDashing    = true;
 
 				//チュートリアルなら.
-				if (gameData.stage == STAGE_TUTORIAL) {
+				if (gameData.stage == Stage_Tutorial) {
 					TutorialStage::GetInst().SetPlayerDash(true);
 				}
 			}

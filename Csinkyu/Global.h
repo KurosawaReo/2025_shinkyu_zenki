@@ -18,8 +18,8 @@ using namespace KR;
 //ステージ種類,
 enum StageType
 {
-	STAGE_ENDLESS,
-	STAGE_TUTORIAL,
+	Stage_Endless,
+	Stage_Tutorial,
 };
 
 //====================================================================//
@@ -116,7 +116,6 @@ enum StageType
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
 //障害物: 通常レーザー.
-#define LASER_NOR_OUTER_MARGIN			(0)				//砲台の周回時の外側余白.
 #define LASER_NOR_SHOT_RESET			(300)			//砲台の発射リセット時間.
 #define LASER_NOR_SHOT_START			(20)			//砲台の発射開始時間.
 #define LASER_NOR_SHOT_SPAN				(5)				//砲台の発射間隔時間.
