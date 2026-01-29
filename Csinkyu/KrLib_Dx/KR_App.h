@@ -1,6 +1,6 @@
 /*
    - KR_App.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/01/29
 
    プログラムの根底(開始,終了など)の処理。
 */
@@ -11,12 +11,11 @@
 #endif
 //[include] hで使うもの.
 #include "KR_Timer.h"
-#include "KR_ManagerBase.h"
 
 //KrLib名前空間.
 namespace KR
 {
-	//プログラム全体処理[staticクラス]
+	//プログラム全体処理.
 	class App final
 	{
 	//▼ ===== 実体 ===== ▼.
@@ -25,8 +24,6 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private:
-		vector<ManagerBase*> mngAry{}; //管理クラスの実体配列.
-
 		TimerMicro tmFps{};		 //fps計測用タイマー.
 		bool       isQuit{};     //ゲーム終了フラグ.
 
@@ -35,14 +32,12 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	private:
-		//コンストラクタ(新規作成できなくする)
+		//コンストラクタ.
 		App() {}
 
-		static void      EndDx();
+		void EndDx();
 
 	public:
-		//add.
-		static void      AddManager(ManagerBase* p) { inst.mngAry.push_back(p); }
 		//get.
 		static INT_RECT  GetWindowRect() { return {0, 0, inst.windowSize.x, inst.windowSize.y}; }
 		static int		 GetWindowX()    { return inst.windowSize.x; }

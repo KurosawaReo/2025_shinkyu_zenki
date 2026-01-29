@@ -43,8 +43,8 @@ void UIManager::Draw() {
 	);
 #endif
 
-	//経過時間.
-	const float time = gameMng.GetSceneTime(SCENE_GAME);
+	//ゲームシーン経過時間.
+	const float time = gameMng.GetGameScene()->GetSceneTime();
 		
 	//ステージ別.
 	switch (p_gameData.stage) 
@@ -52,7 +52,7 @@ void UIManager::Draw() {
 		case STAGE_TUTORIAL:
 		{
 			//アニメーション値.
-			double alpha   = Calc::AnimEaseInOut((time-1.0) * 2);
+			double alpha   = Calc::AnimEaseInOut((time-1.0)*2);
 			double alpha2  = Calc::AnimEaseInOut(time-0.2);
 			double animSin = sin(M_PI * (time-0.2));
 			//テキスト設定.
@@ -93,9 +93,9 @@ void UIManager::Draw() {
 		case STAGE_ENDLESS:
 		{
 			//アニメーション値.
-			double alpha1   = Calc::AnimEaseInOut( time-0.1);
-			double alpha2   = Calc::AnimEaseInOut( time-0.2);
-			double alpha3   = Calc::AnimEaseInOut( time-0.3);
+			double alpha1   = Calc::AnimEaseInOut( time-0.1   );
+			double alpha2   = Calc::AnimEaseInOut( time-0.2   );
+			double alpha3   = Calc::AnimEaseInOut( time-0.3   );
 			double alpha4   = Calc::AnimEaseInOut((time-1.0)*2);
 			double animSin1 = sin(M_PI* time-0.1);
 			double animSin2 = sin(M_PI*(time-0.2));
@@ -115,7 +115,7 @@ void UIManager::Draw() {
 			str[1].text = text;
 			_stprintf(text, _T("SCORE:%05d"),      p_gameData.score);
 			str[2].text = text;
-			_stprintf(text, _T("TIME:%.3f"),       gameMng.GetGameTime());
+			_stprintf(text, _T("TIME:%.3f"),       gameMng.GetGameScene()->GetGameTime());
 			str[3].text = text;
 		
 			//[level]

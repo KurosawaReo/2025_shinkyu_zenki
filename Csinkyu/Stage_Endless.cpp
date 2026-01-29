@@ -17,7 +17,7 @@
 #include "GameData.h"
 #include "GameManager.h"
 //QÆ.
-static GameData&         gameData         = GameData::GetInst();
+static GameData&         gameData     = GameData::GetInst();
 static GameManager&      gameMng      = GameManager::GetInst();
 static LaserManager&     laserMng     = LaserManager::GetInst();
 static MeteorManager&    meteorMng    = MeteorManager::GetInst();

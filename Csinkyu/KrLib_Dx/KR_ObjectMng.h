@@ -28,8 +28,10 @@ namespace KR
 		virtual bool IsErase() const = 0; //消滅条件.
 	};
 	
-	//オブジェクト管理クラス.
-	//ObjectMngTargetを継承したクラスのみ指定可.
+	/*
+	   オブジェクト管理クラス[継承想定]
+	   ObjectMngTargetを継承したクラスのみ指定可.
+	*/
 	template<typename T> requires std::derived_from<T, ObjectMngTarget>
 	class ObjectMng : public ManagerBase
 	{

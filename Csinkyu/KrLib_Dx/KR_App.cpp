@@ -1,11 +1,12 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver.2026/01/28
+   ver.2026/01/29
 */
 #include "KR_App.h"
 
 //[include] cppでのみ使うもの.
 #include <algorithm>
+#include "KR_ManagerBase.h"
 
 //KrLib名前空間.
 namespace KR 
@@ -38,13 +39,13 @@ namespace KR
 
 		//order値で並び替える.
 		std::sort(
-			inst.mngAry.begin(), inst.mngAry.end(),   //管理クラス配列.
+			ManagerBase::mngInsts.begin(), ManagerBase::mngInsts.end(), //管理クラス配列.
 			[](const auto& a, const auto& b) {
 				return a->GetOrder() < b->GetOrder(); //order値を比較.
 			}
 		);
 		//Initを実行.
-		for (const auto& i : inst.mngAry) {
+		for (const auto& i : ManagerBase::mngInsts) {
 			i->Init();
 		}
 
@@ -62,16 +63,16 @@ namespace KR
 				//画面クリア.
 				ClearDrawScreen();
 				//Update, Drawを実行.
-				for (const auto& i : inst.mngAry) {
+				for (const auto& i : ManagerBase::mngInsts) {
 					if (i->CanUpdate()) { i->Update(); }
-					if (i->CanDraw())   { i->Draw();   }
+					if (i->CanDraw())   { i->Draw();   } 
 				}
 				//表画面へ描画.
 				ScreenFlip();
 			}
 		}
 
-		EndDx(); //終了処理.
+		inst.EndDx(); //終了処理.
 	}
 
 	//DxLibの終了処理.
@@ -83,7 +84,7 @@ namespace KR
 	//全管理クラスのリセット.
 	void App::Reset() {
 		//Resetを実行.
-		for (const auto& i : inst.mngAry) {
+		for (const auto& i : ManagerBase::mngInsts) {
 			i->Reset();
 		}
 	}

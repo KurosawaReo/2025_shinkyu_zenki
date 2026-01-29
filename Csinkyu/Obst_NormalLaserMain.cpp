@@ -12,7 +12,7 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&      gameData      = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
 static Player&        player    = Player::GetInst();
 static LaserManager&  laserMng  = LaserManager::GetInst();
 static MeteorManager& meteorMng = MeteorManager::GetInst();
@@ -38,8 +38,8 @@ void NormalLaserMain::Reset()
 //更新.
 void NormalLaserMain::Update()
 {
-//	if (player->GetActive()) {  // プレイヤーがアクティブな場合のみ
-	if (gameData.scene == SCENE_GAME) {  // ゲーム中のみ
+	//ゲーム中のみ.
+	if (SceneMng::GetSceneName() == "Game") {
 		
 		//発射カウンタを減少.
 		Hsc -= gameData.speedRate;

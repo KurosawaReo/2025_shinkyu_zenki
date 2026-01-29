@@ -24,27 +24,13 @@ public:
 //▼ ===== 変数 ===== ▼.
 private:
 	/* シーン関係 */
-	StateMachine scene{};			//シーン切り替え用.
-
 	TitleScene titleScene{};
 	GameScene  gameScene{};
 	MenuScene  menuScene{};
 	EndScene   endScene{};
 
-	/* タイマー */
-	Timer tmGameTime{};			    //ゲーム計測時間.
-	Timer tmReflectMode{};			//スロー継続時間.
-	
-	/* その他 */
-	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
-	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
-	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
-
-	bool isGameStart{};             //ゲーム開始サイン.
-	bool isBestScore{};             //ベストスコア更新したか.
-
 #if defined DEBUG_SHOW_FPS
-	TimerMicro tmFps{};         //fps計測用タイマー.
+	TimerMicro tmFps{};				//fps計測用タイマー.
 #endif
 
 public:
@@ -64,12 +50,7 @@ private:
 
 public:
 	//get.
-	float GetReflectModeTime() {
-		return tmReflectMode.GetPassTime();
-	}
-	float GetGameTime() {
-		return tmGameTime.GetPassTime();
-	}
+	GameScene* GetGameScene() { return &gameScene; }
 
 	//メイン処理.
 	void Init()   override;
@@ -81,14 +62,6 @@ public:
 	void ResetNorLaser();
 	void ResetStrLaser();
 
-	//Update.
-	//TODO
-	void UpdateReflectMode();
-
-	//Draw.
-	//TODO
-	void DrawReflectMode();
-
 	//ポーズ画面.
 	void GamePause();
 	void GamePauseEnd();
@@ -97,7 +70,6 @@ public:
 	//その他.
 	void GameOver();
 	void ItemUsed();
-	void ReflectModeEnd();
 
 	//使用禁止.
 	GameManager(const GameManager&) = delete;

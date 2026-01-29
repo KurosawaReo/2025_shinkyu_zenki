@@ -15,25 +15,6 @@ using namespace KR;
 //====================================================================//
 //【列挙体】
 
-//シーン.
-enum Scene
-{
-	SCENE_TITLE,
-	SCENE_MENU,     //メニュー画面.
-	SCENE_GAME,
-	SCENE_END,
-
-	SCENE_COUNT,    //総数.
-};
-//移動方向.
-//レーザー(normal)砲台用.
-enum MoveDir
-{
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	MOVE_UP,
-	MOVE_DOWN
-};
 //ステージ種類,
 enum StageType
 {

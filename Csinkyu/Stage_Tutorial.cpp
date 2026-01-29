@@ -402,9 +402,9 @@ void TutorialStage::UpdateStep4() {
 #endif
 				endTimer.Start();
 			}
+			//チュートリアル終了.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
-				//チュートリアル終了.
-				gameData.scene = SCENE_TITLE;
+				SceneMng::SetScene("Title");
 				gameMng.Reset(); //全てリセット.
 			}
 		}

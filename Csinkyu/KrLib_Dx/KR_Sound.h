@@ -10,6 +10,7 @@
   #include "KR_Global.h"
 #endif
 //[include] hで使うもの.
+#include "KR_ManagerBase.h"
 #include "KR_Timer.h"
 
 //KrLib名前空間.
@@ -53,8 +54,8 @@ namespace KR
 		Sound& operator=(const Sound&) = delete;
 	};
 
-	//サウンド管理クラス[staticクラス]
-	class SoundMng final
+	//サウンド管理クラス.
+	class SoundMng final : public ManagerBase
 	{
 	//▼ ===== 実体 ===== ▼.
 	private:
@@ -66,8 +67,8 @@ namespace KR
 	
 	//▼ ===== 関数 ===== ▼.
 	private: 
-		//コンストラクタ(新規作成をできなくする)
-		SoundMng(){}
+		//コンストラクタ.
+		SoundMng() : ManagerBase(ORDER_KR_SOUND_MNG) {}
 		//デストラクタ.
 		~SoundMng();
 
@@ -77,9 +78,13 @@ namespace KR
 		static bool      TryGet  (string saveName, Sound* ptr);
 
 		static ResultInt LoadFile(MY_STRING fileName, string saveName); //読み込み.
-		static void      Update  ();									//全サウンド更新.
 		static void      StopAll ();									//全サウンド停止.
 	
+		void Init()   override {} //未使用.
+		void Reset()  override {} //未使用.
+		void Update() override;
+		void Draw()   override {} //未使用.
+
 		//使用禁止.
 		SoundMng(const SoundMng&) = delete;
 		SoundMng& operator=(const SoundMng&) = delete;

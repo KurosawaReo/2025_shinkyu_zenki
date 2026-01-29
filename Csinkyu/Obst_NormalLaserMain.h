@@ -5,6 +5,16 @@
 */
 #pragma once
 
+//移動方向.
+//レーザー(normal)砲台用.
+enum MoveDir
+{
+	MOVE_LEFT,
+	MOVE_RIGHT,
+	MOVE_UP,
+	MOVE_DOWN
+};
+
 struct FlashEffect
 {
 	double	x, y;		// エフェクト位置.

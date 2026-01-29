@@ -183,16 +183,17 @@ namespace KR
 		}
 		return {0, _T("SoundMng::LoadFile"), _T("正常終了")};
 	}
-	//全サウンド更新.
-	void SoundMng::Update() {
-		for (auto& i : inst.sounds) {
-			i.second.Update(); //各サウンドの更新.
-		}
-	}
 	//全サウンド停止.
 	void SoundMng::StopAll() {
 		for (auto& i : inst.sounds) {
 			i.second.Stop();
+		}
+	}
+
+	//更新(自動実行)
+	void SoundMng::Update() {
+		for (auto& i : inst.sounds) {
+			i.second.Update(); //各サウンドの更新.
 		}
 	}
 }

@@ -82,7 +82,7 @@ namespace KR
 		DrawImg& operator=(const DrawImg&) = delete;
 	};
 
-	//画像管理クラス[staticクラス]
+	//画像管理クラス.
 	class DrawImgMng final
 	{
 	//▼ ===== 実体 ===== ▼.

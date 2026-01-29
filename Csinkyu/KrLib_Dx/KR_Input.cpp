@@ -86,7 +86,7 @@ namespace KR
 			input.x += +1;
 		}
 		//入力ベクトル(-1.0～1.0)を返す.
-		return GetVector4Dir(input);
+		return inst.GetVector4Dir(input);
 	}
 	//コントローラ操作取得(十字キー)
 	DBL_XY InputMng::GetPad4Dir() {
@@ -107,7 +107,7 @@ namespace KR
 			input.x += +1;
 		}
 		//入力ベクトル(-1.0～1.0)を返す.
-		return GetVector4Dir(input);
+		return inst.GetVector4Dir(input);
 	}
 	//コントローラ操作取得(スティック)
 	DBL_XY InputMng::GetPadStick() {
@@ -136,7 +136,7 @@ namespace KR
 		return vec;
 	}
 
-	//ボタンの更新処理.
+	//更新:ボタン.
 	void InputMng::UpdateKey() {
 	
 		char key[KEY_MAX];
@@ -152,7 +152,7 @@ namespace KR
 			}
 		}
 	}
-	//マウスの更新処理.
+	//更新:マウス.
 	void InputMng::UpdateMouse() {
 
 		//マウス座標取得.
@@ -168,7 +168,7 @@ namespace KR
 			}
 		}
 	}
-	//コントローラの更新処理.
+	//更新:コントローラ.
 	void InputMng::UpdatePad() {
 
 		//スティック入力取得.
@@ -184,7 +184,7 @@ namespace KR
 			}
 		}
 	}
-	//アクションの更新処理.
+	//更新:アクション.
 	void InputMng::UpdateAction() {
 
 		//ActionDataを全ループ.
@@ -219,5 +219,13 @@ namespace KR
 				i.second.time = 0; //リセット.
 			}
 		}
+	}
+
+	//更新(自動実行)
+	void InputMng::Update() {
+		UpdateKey();
+		UpdateMouse();
+		UpdatePad();
+		UpdateAction();
 	}
 }

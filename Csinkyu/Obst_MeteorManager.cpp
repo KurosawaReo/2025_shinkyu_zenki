@@ -132,9 +132,7 @@ void MeteorManager::SpawnMeteor(){
 	meteor.push_back(tmp);
 }
 //隕石破壊演出.
-void MeteorManager::BreakMeteor(DBL_XY pos, DBL_XY vec) {
-
-	const double deg = _deg(atan2(vec.y, vec.x)); //破片の飛ぶ方向.
+void MeteorManager::BreakMeteor(DBL_XY pos, double ang, double scale) {
 	
 	//エフェクトデータ.
 	EffectData data{};
@@ -143,10 +141,10 @@ void MeteorManager::BreakMeteor(DBL_XY pos, DBL_XY vec) {
 	//いくつか出す.
 	for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
-		double newDig = deg + (float)Calc::RandNum(-300, 300) / 10;	//少し角度をずらす.
+		double newDig = ang + (float)Calc::RandNum(-300, 300) / 10;	//少し角度をずらす.
 		data.vec   = Calc::VectorDeg(newDig);						//ずらした角度を反映.
-		data.speed = (float)Calc::RandNum(50, 300) / 10;			//速度抽選.
-		data.len   = (float)Calc::RandNum(10, 100) / 10;			//長さ抽選.
+		data.speed = (float)Calc::RandNum(50, 300) / 10 * scale;	//速度抽選.
+		data.len   = (float)Calc::RandNum(10, 100) / 10 * scale;	//長さ抽選.
 		data.ang   = (float)Calc::RandNum(0, 3599) / 10;			//角度抽選.
 		effectMng.SpawnEffect(&data);								//エフェクト出現.
 	}

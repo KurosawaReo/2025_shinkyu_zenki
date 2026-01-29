@@ -196,12 +196,15 @@ void LaserManager::UpdateLaser() {
 
 				//è¦Î‚Æ“–‚½‚Á‚Ä‚¢‚é‚È‚ç.
 				if (auto meteor = meteorMng.GetHitMeteor(hit, true)) {
+
 					//‰ó‚ê‚Ä‚È‚¢è¦Î‚Å‚ ‚ê‚Î.
 					if (meteor->GetState() == Meteor_Normal) {
 						meteor->Destroy(); //è¦Î‚ð”j‰ó.
 					}
-					meteorMng.BreakMeteor(i->nowPos, i->vec); //”j‰ó‰‰o.
-					gameData.score += SCORE_BREAK_METEOR;     //ƒXƒRƒA‰ÁŽZ.
+
+					const double ang = _deg(atan2(i->vec.y, i->vec.x)); //”j•Ð‚Ì”ò‚Ô•ûŒü.
+					meteorMng.BreakMeteor(i->nowPos, ang); //”j‰ó‰‰o.
+					gameData.score += SCORE_BREAK_METEOR;  //ƒXƒRƒA‰ÁŽZ.
 
 					//‚Ç‚Á‚¿‚Ìƒ^ƒCƒv‚©‚ÅØ‚è‘Ö‚¦.
 					if (i->type == Laser_Reflect) {

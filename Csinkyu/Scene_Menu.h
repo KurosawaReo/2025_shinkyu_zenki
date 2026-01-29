@@ -8,7 +8,6 @@
    ・End
 */
 #pragma once
-#include "SceneBase.h"
 
 /*------------------------------------------*/
 //【編集用】メニューのデザインを変えたい時はここをいじる.
@@ -36,7 +35,7 @@ struct MenuColor
 /*------------------------------------------*/
 
 //メニューシーン.
-class MenuScene : public State, public SceneBase
+class MenuScene : public IScene
 {
 //▼ ===== 実体 ===== ▼.
 public:
@@ -65,6 +64,8 @@ private:
 public:
 	void Init()   override;
 	void Reset()  override;
+	void Enter()  override;
+	void Exit()   override;
 	void Update() override;
 	void Draw()   override;
 

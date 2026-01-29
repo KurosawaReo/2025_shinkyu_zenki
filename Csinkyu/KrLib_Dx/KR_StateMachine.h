@@ -1,6 +1,6 @@
 /*
    - KR_StateMachine.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/01/29
 
    ステート遷移機能。
 */
@@ -9,8 +9,11 @@
 //KrLib名前空間.
 namespace KR
 {
-    //状態クラス[継承想定]
-    class State
+    /*
+       状態クラス[継承想定]
+       AIの行動、シーン、stepなど、様々な切り替えに使える.
+    */
+    class IState
     {
     public:
         virtual void Enter()  = 0; //状態に入った瞬間.
@@ -20,37 +23,20 @@ namespace KR
     };
 
     //状態管理クラス.
-    //シーン切り替え、stepの切り替えなど様々な用途に使える.
     class StateMachine
     {
     //▼ ===== 変数 ===== ▼.
     private:
-        State* current = nullptr; //現在のstate.
+        IState* current = nullptr; //現在のstate.
 
     //▼ ===== 関数 ===== ▼.
     public:
         //get.
-        State* GetCurrent() const { return current; }
+        IState* GetCurrent() const { return current; }
 
-        //初期化.
-        void InitState(State* initState) {
-            current = initState;               //初期state.
-            if (current) { current->Enter(); } //初期stateにEnter.
-        }
-        //state遷移.
-        void ChangeState(State* newState) {
-            if (current == newState) return;   //同じstateには遷移しない.
-            if (current) { current->Exit(); }  //元のstateからExit.
-            current = newState;                //stateを変更.
-            if (current) { current->Enter(); } //新たなstateにEnter.
-        }
-        //現stateの更新.
-        void Update() {
-            if (current) { current->Update(); }
-        }
-        //現stateの描画.
-        void Draw() {
-            if (current) { current->Draw(); }
-        }
+        void InitState  (IState* state);    //初期化.
+        void ChangeState(IState* newState); //state遷移.
+        void Update();                      //更新.
+        void Draw();                        //描画.
     };
 }

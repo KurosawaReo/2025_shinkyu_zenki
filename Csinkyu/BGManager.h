@@ -40,8 +40,8 @@ public:
 	void  Draw()   override;
 
 	//ポーズ用.
-	void  PauseAnim();
-	void  RestartAnim();
+	void  Pause();
+	void  PauseEnd();
 
 	//使用禁止.
 	BGManager(const BGManager&) = delete;

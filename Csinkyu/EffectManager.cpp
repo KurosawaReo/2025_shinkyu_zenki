@@ -24,6 +24,9 @@ void EffectManager::Reset() {
 
 void EffectManager::Update() {
 	
+	//ポーズ中の更新はしない.
+	if (gameData.isPause) { return; }
+
 	//全てのエフェクト.
 	for (auto i = effect.begin(); i != effect.end(); ) {
 

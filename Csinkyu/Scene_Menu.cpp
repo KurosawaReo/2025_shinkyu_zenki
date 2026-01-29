@@ -11,7 +11,7 @@
 static GameData&  gameData = GameData::GetInst();
 static BGManager& p_bg   = BGManager::GetInst();
 
-// 初期化
+//初期化.
 void MenuScene::Init() {
 
 	// 入力アクション登録
@@ -34,19 +34,22 @@ void MenuScene::Init() {
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_tutorial.png"), "menu1"); //チュートリアル.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_title.png"),    "menu2"); //タイトルに戻る.
 
-	//電気の設定.
-//	electr.color = 0xffff00;
-
 	Reset();
 }
-
-// リセット
+//リセット.
 void MenuScene::Reset() {
 	selectedIndex = 0;
 	tmBlink.Start();
 }
+//入った瞬間.
+void MenuScene::Enter() {
 
-// 更新
+}
+//抜けた瞬間.
+void MenuScene::Exit() {
+
+}
+//更新.
 void MenuScene::Update() {
 
 	//カーソル移動操作.
@@ -69,9 +72,11 @@ void MenuScene::Update() {
 		switch (selectedIndex)
 		{
 			case 0:
-				gameData.scene = SCENE_GAME;
-				gameData.stage = STAGE_ENDLESS; //耐久モードへ.
-				p_bg.SetBgNo(1);              //背景変更.
+				//耐久モードへ.
+				SceneMng::SetScene("Game");
+				gameData.stage = STAGE_ENDLESS;
+				//背景変更.
+				p_bg.SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -81,9 +86,11 @@ void MenuScene::Update() {
 #endif
 				break;
 			case 1:
-				gameData.scene = SCENE_GAME;
-				gameData.stage = STAGE_TUTORIAL; //チュートリアルへ.
-				p_bg.SetBgNo(1);               //背景変更.
+				//チュートリアルへ.
+				SceneMng::SetScene("Game");
+				gameData.stage = STAGE_TUTORIAL;
+				//背景変更.
+				p_bg.SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -93,7 +100,7 @@ void MenuScene::Update() {
 #endif
 				break;
 			case 2:
-				gameData.scene = SCENE_TITLE;    //タイトルへ.
+				SceneMng::SetScene("Title");    //タイトルへ.
 				GameManager::GetInst().Reset(); //リセット.
 				break;
 
@@ -109,8 +116,7 @@ void MenuScene::Update() {
 	//経過時間.
 	counter += 1;
 }
-
-// 描画
+//描画.
 void MenuScene::Draw() {
 
 	//アニメーション値.

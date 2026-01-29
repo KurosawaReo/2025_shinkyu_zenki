@@ -8,7 +8,8 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData& gameData = GameData::GetInst();
+static GameManager& gameMng  = GameManager::GetInst();
+static GameData&    gameData = GameData::GetInst();
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
@@ -108,7 +109,7 @@ void BG1::Update() {
 void BG1::Draw() {
 
 	//スローモード経過時間.
-	float pass = GameManager::GetInst().GetReflectModeTime();
+	float pass = gameMng.GetGameScene()->GetReflectModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
 	time = Calc::AnimEaseOut(time); //値の曲線変動.
@@ -131,13 +132,13 @@ void BG1::Draw() {
 }
 
 //ポーズする.
-void BG1::PauseAnim() {
+void BG1::Pause() {
 	for (auto& i : tiles) {
 		i.timer.Pause();
 	}
 }
 //ポーズ解除.
-void BG1::RestartAnim() {
+void BG1::PauseEnd() {
 	for (auto& i : tiles) {
 		//稼働中だったならリスタート.
 		if (i.timer.GetState() == TimerState::Pause) {

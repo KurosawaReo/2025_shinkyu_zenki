@@ -5,6 +5,8 @@
 
 //ˆË‘¶ŠÖŒW.
 #include "GameData.h"
+//QÆ.
+static GameData& gameData = GameData::GetInst();
 
 // ¥*---=[ BGManager ]=---*¥ //
 
@@ -21,7 +23,10 @@ void BGManager::Reset() {
 //XV.
 void BGManager::Update() {
 
-	counter += GameData::GetInst().speedRate; //Œo‰ßŠÔ.
+	//ƒ|[ƒY’†‚ÌXV‚Í‚µ‚È‚¢.
+	if (gameData.isPause) { return; }
+
+	counter += gameData.speedRate; //Œo‰ßŠÔ.
 
 	switch (useBgNo) {
 		case 0:                 break; //”wŒi‚È‚µ.
@@ -42,22 +47,22 @@ void BGManager::Draw() {
 }
 
 //ƒ|[ƒY‚·‚é.
-void BGManager::PauseAnim() {
+void BGManager::Pause() {
 
 	switch (useBgNo) {
-		case 0:                   break; //”wŒi‚È‚µ.
-		case 1:  bg1.PauseAnim(); break; //”wŒi1.
-		case 2:  bg2.PauseAnim(); break; //”wŒi2.
-		default: assert(false);   break;
+		case 0:                 break; //”wŒi‚È‚µ.
+		case 1:  bg1.Pause();	break; //”wŒi1.
+		case 2:  bg2.Pause();	break; //”wŒi2.
+		default: assert(false); break;
 	}
 }
 //ƒ|[ƒY‰ğœ.
-void BGManager::RestartAnim() {
+void BGManager::PauseEnd() {
 
 	switch (useBgNo) {
-		case 0:                     break; //”wŒi‚È‚µ.
-		case 1:  bg1.RestartAnim(); break; //”wŒi1.
-		case 2:  bg2.RestartAnim(); break; //”wŒi2.
-		default: assert(false);     break;
+		case 0:                  break; //”wŒi‚È‚µ.
+		case 1:  bg1.PauseEnd(); break; //”wŒi1.
+		case 2:  bg2.PauseEnd(); break; //”wŒi2.
+		default: assert(false);  break;
 	}
 }
