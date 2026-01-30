@@ -10,6 +10,8 @@ static GameData& gameData = GameData::GetInst();
 
 // ¥*---=[ BGManager ]=---*¥ //
 
+BGManager BGManager::inst;
+
 //‰Šú‰».
 void BGManager::Init() {
 	useBgNo = 0;

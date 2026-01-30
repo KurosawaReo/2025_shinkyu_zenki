@@ -26,9 +26,10 @@ enum PlayerMode
 class Player : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static Player inst; //自身のインスタンス.
 public:
 	static Player& GetInst() {
-		static Player inst; //自身のインスタンス.
 		return inst;
 	}
 

@@ -8,9 +8,10 @@
 class UIManager : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static UIManager inst; //自身のインスタンス.
 public:
 	static UIManager& GetInst() {
-		static UIManager inst; //自身のインスタンス.
 		return inst;
 	}
 

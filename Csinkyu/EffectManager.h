@@ -45,9 +45,10 @@ struct Effect : public EffectData //<<<<<<<<<<<<<<<< TODO: ‚±‚ÌŒp³‚ÌŽg‚¢•û‚Í•s“
 class EffectManager : public ManagerBase
 {
 //¥ŽÀ‘ÌŠÖŒW.
+private:
+	static EffectManager inst;
 public:
 	static EffectManager& GetInst() {
-		static EffectManager inst; //Ž©g‚ÌƒCƒ“ƒXƒ^ƒ“ƒX.
 		return inst;
 	}
 

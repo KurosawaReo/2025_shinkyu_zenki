@@ -7,9 +7,10 @@
 class GameData final
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static GameData inst; //自身のインスタンス.
 public:
 	static GameData& GetInst() {
-		static GameData inst; //自身のインスタンス.
 		return inst;
 	}
 

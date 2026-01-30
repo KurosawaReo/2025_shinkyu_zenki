@@ -13,6 +13,10 @@
 static GameData&     gameData     = GameData::GetInst();
 static LaserManager& laserMng = LaserManager::GetInst();
 
+// ¥*---=[ FireworksManager ]=---*¥ //
+
+FireworksManager FireworksManager::inst;
+
 // ‰Šú‰»
 void FireworksManager::Init() {
 

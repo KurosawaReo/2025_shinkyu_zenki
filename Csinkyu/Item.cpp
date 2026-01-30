@@ -18,6 +18,10 @@ static EffectManager& effectMng = EffectManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
+// ▼*---=[ ItemManager ]=---*▼ //
+
+ItemManager ItemManager::inst;
+
 //初期化.
 void ItemManager::Init() 
 {

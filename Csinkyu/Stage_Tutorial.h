@@ -11,9 +11,10 @@
 class TutorialStage : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static TutorialStage inst; //自身のインスタンス.
 public:
 	static TutorialStage& GetInst() {
-		static TutorialStage inst; //自身のインスタンス.
 		return inst;
 	}
 

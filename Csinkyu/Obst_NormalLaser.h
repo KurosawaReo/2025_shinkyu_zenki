@@ -56,13 +56,14 @@ public:
 	void MoveRand(); //移動方向抽選.
 };
 
-//通常レーザー管理クラス.
+//通常レーザー.
 class NormalLaser : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static NormalLaser inst; //自身のインスタンス.
 public:
 	static NormalLaser& GetInst() {
-		static NormalLaser inst; //自身のインスタンス.
 		return inst;
 	}
 
@@ -72,10 +73,11 @@ private:
 	FlashEffect flash[LASER_NOR_FLASH_MAX] {};
 
 //▼ ===== 変数 ===== ▼.
-public:
+private:
 	//コンストラクタ.
 	NormalLaser() : ManagerBase(ORDER_NOR_LASER_MNG) {}
 
+public:
 	//基本処理.
 	void Init  () override;
 	void Reset () override;
@@ -89,4 +91,8 @@ public:
 
 	//何個発射台を使うか.
 	static void UseLaserPointCnt(int count);
+
+	//使用禁止.
+	NormalLaser(const NormalLaser&) = delete;
+	NormalLaser& operator=(const NormalLaser&) = delete;
 };

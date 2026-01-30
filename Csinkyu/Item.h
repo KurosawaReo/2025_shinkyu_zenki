@@ -21,9 +21,10 @@ struct ItemData
 class ItemManager : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static ItemManager inst; //自身のインスタンス.
 public:
 	static ItemManager& GetInst() {
-		static ItemManager inst; //自身のインスタンス.
 		return inst;
 	}
 

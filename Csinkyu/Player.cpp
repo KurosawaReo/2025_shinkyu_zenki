@@ -14,6 +14,10 @@
 static GameData&      gameData  = GameData::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
+// ¥*--=<[ Player ]>=--*¥ //
+
+Player Player::inst;
+
 //‰Šú‰»(ˆê‰ñ‚Ì‚İs‚¤)
 void Player::Init()
 {

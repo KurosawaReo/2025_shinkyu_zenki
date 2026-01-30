@@ -43,9 +43,10 @@ struct LaserLineData
 class LaserManager : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static LaserManager inst; //自身のインスタンス.
 public:
 	static LaserManager& GetInst() {
-		static LaserManager inst; //自身のインスタンス.
 		return inst;
 	}
 

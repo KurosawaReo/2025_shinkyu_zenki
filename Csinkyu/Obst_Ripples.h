@@ -19,9 +19,10 @@ struct RipplesData
 class Ripples : public ManagerBase
 {
 //▼実体関係.
+private:
+	static Ripples inst; //自身のインスタンス.
 public:
 	static Ripples& GetInst() {
-		static Ripples inst; //自身のインスタンス.
 		return inst;
 	}
 

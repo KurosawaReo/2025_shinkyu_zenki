@@ -13,6 +13,10 @@
 static GameData& gameData   = GameData::GetInst();
 static Player&   player = Player::GetInst();
 
+// ¥*---=[ Ripples ]=---*¥ //
+
+Ripples Ripples::inst;
+
 //‰Šú‰»(ˆê‰ñ‚Ì‚İs‚¤)
 void Ripples::Init()
 {

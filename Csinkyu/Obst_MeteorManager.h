@@ -10,9 +10,10 @@
 class MeteorManager : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static MeteorManager inst; //自身のインスタンス.
 public:
 	static MeteorManager& GetInst() {
-		static MeteorManager inst; //自身のインスタンス.
 		return inst;
 	}
 

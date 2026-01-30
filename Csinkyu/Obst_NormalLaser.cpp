@@ -132,6 +132,8 @@ void NormalLaserPoint::MoveRand()
 
 // ¥*--=<[ NormalLaser ]>=--*¥ //
 
+NormalLaser NormalLaser::inst;
+
 //‰Šú‰».
 void NormalLaser::Init(){
 	

@@ -20,6 +20,10 @@
 static GameData&      gameData  = GameData::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
+// ¥*--=<[ EndlessStage ]>=--*¥ //
+
+EndlessStage EndlessStage::inst;
+
 //‰Šú‰».
 void EndlessStage::Init() {
 
@@ -85,7 +89,6 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv2‚©‚ç.
-				//TODO: ‚¨‚»‚ç‚­2ŒÂ“¯‚É“®‚­, 1‚Â‚ÌŠÇ—ƒNƒ‰ƒX‚É‚Ü‚Æ‚ß‚½‚¢.
 				ManagerBase::GetMng<StraightLaser>()->SetExeState(MngExeState::Active);
 			}
 			break;

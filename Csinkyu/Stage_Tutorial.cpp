@@ -29,6 +29,10 @@ static FireworksManager&	fireworksMng	= FireworksManager::GetInst();
 static EffectManager&		effectMng		= EffectManager::GetInst();
 static UIManager&			uiMng			= UIManager::GetInst();
 
+// ¥*--=<[ TutorialStage ]>=--*¥ //
+
+TutorialStage TutorialStage::inst;
+
 //‰Šú‰».
 void TutorialStage::Init() {
 

@@ -11,6 +11,10 @@ static GameData& gameData = GameData::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
+// ▼*---=[ EffectManager ]=---*▼ //
+
+EffectManager EffectManager::inst;
+
 void EffectManager::Init() {
 	//画像読み込み.
 	DrawImgMng::LoadFile(_T("Resources/Images/score100.png"), "score100");

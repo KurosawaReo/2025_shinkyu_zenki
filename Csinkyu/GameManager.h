@@ -15,9 +15,10 @@
 class GameManager : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static GameManager inst; //自身のインスタンス.
 public:
 	static GameManager& GetInst() {
-		static GameManager inst; //自身のインスタンス.
 		return inst;
 	}
 
@@ -30,19 +31,13 @@ private:
 	EndScene   endScene{};
 
 #if defined DEBUG_SHOW_FPS
-	TimerMicro tmFps{};				//fps計測用タイマー.
+	TimerMicro tmFps{};	//fps計測用タイマー.
 #endif
-
-public:
-	//オブジェクト.
-	StraightLaser* laserStr[2]{}; //TODO そのうちいらなくなるため消す.
 
 //▼ ===== 関数 ===== ▼.
 private:
 	//コンストラクタ.
 	GameManager() : ManagerBase(ORDER_GAME_MNG) {}
-	//デストラクタ.
-	~GameManager();
 
 public:
 	//get.
@@ -53,9 +48,6 @@ public:
 	void Reset()  override;
 	void Update() override;
 	void Draw()   override;
-
-	//Reset.
-	void ResetStrLaser();
 
 	//ポーズ画面.
 	void GamePause();

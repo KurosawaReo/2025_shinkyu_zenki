@@ -17,6 +17,10 @@ static EffectManager& effectMng = EffectManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
+// ▼*---=[ LaserManager ]=---*▼ //
+
+LaserManager LaserManager::inst;
+
 //初期化.
 void LaserManager::Init() {
 

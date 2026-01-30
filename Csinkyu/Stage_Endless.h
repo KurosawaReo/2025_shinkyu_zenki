@@ -12,8 +12,9 @@ class EndlessStage : public ManagerBase
 {
 //▼実体関係.
 public:
+	static EndlessStage inst; //自身のインスタンス.
+public:
 	static EndlessStage& GetInst() {
-		static EndlessStage inst; //自身のインスタンス.
 		return inst;
 	}
 

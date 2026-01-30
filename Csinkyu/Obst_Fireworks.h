@@ -31,9 +31,10 @@ struct FireworksData
 class FireworksManager : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static FireworksManager inst; //自身のインスタンス.
 public:
 	static FireworksManager& GetInst() {
-		static FireworksManager inst; //自身のインスタンス.
 		return inst;
 	}
 

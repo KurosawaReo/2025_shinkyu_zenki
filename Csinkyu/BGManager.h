@@ -9,9 +9,10 @@
 class BGManager : public ManagerBase 
 {
 //▼ ===== 実体 ===== ▼.
+private:
+	static BGManager inst;
 public:
 	static BGManager& GetInst() {
-		static BGManager inst; //自身のインスタンス.
 		return inst;
 	}
 

@@ -14,6 +14,10 @@ static GameData&      gameData  = GameData::GetInst();
 static Player&        player    = Player::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
+// ¥*---=[ MeteorManager ]=---*¥ //
+
+MeteorManager MeteorManager::inst;
+
 //”ÍˆÍ“à‚Ìè¦Î‚ğæ“¾(1‚Â)
 Meteor* MeteorManager::GetHitMeteor(Circle cir, bool isDestroy) {
 

@@ -36,21 +36,14 @@ static Player           &player       = Player::GetInst();
 static EffectManager    &effectMng    = EffectManager::GetInst();
 static UIManager        &uiMng        = UIManager::GetInst();
 
-//デストラクタ.
-GameManager::~GameManager() {
-	//解放.
-	delete laserStr[0];
-	delete laserStr[1];
-}
+// ▼*---=[ GameManager ]=---*▼ //
+
+GameManager GameManager::inst; //自身のインスタンス.
 
 //初期化(一回のみ行う)
 void GameManager::Init() {
 
 	srand((unsigned)time(NULL)); //乱数初期化.
-
-	//実体生成.
-	laserStr[0] = new StraightLaser();
-	laserStr[1] = new StraightLaser();
 
 	//[KrLib] カメラ.
 	Camera::SetPos(App::GetWindowRect().GetMid().ToDbl());
@@ -128,9 +121,6 @@ void GameManager::Init() {
 	tmFps = TimerMicro(TimerMode::CountUp, 0);
 	tmFps.Start();
 #endif
-
-	Debug::Log(_T("InitEnd"));
-
 
 	App::Reset();
 }
@@ -210,14 +200,6 @@ void GameManager::Draw() {
 #endif
 }
 
-//直線レーザーのリセット.
-void GameManager::ResetStrLaser() {
-
-	for (int i = 0; i < _countof(laserStr); i++) {
-		laserStr[i]->Reset();
-	}
-}
-
 //ポーズする.
 void GameManager::GamePause() {
 	gameData.isPause = true;
@@ -239,54 +221,55 @@ void GameManager::DrawPause() {
 //ゲーム終了(死亡)
 void GameManager::GameOver() {
 
-	//まだ終わってないなら(念のため2重実行されることを防ぐ)
+	//念のため2重実行されることを防ぐ用.
 	if (SceneMng::GetSceneName() != "End") {
-	}
 
-	//ステージ別.
-	switch (gameData.stage)
-	{
-		case Stage_Tutorial:
+		//ステージ別.
+		switch (gameData.stage)
 		{
-			SceneMng::SetScene("End"); //終了シーンへ.
-		}
-		break;
-
-		case Stage_Endless:
-		{
-			SceneMng::SetScene("End"); //終了シーンへ.
-
-			gameData.speedRate = 1.0;                             //速度倍率を100%に戻す.
-			gameData.scoreBef = gameData.score;                   //時間加算前のスコアを記録.
-			gameData.score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
-
-			//ハイスコア更新.
-			if (gameData.score > gameData.bestScore) {
-
-				File file;
-				//ファイルを開く.
-				if (file.Open(FILE_DATA, _T("w"), true).GetCode() == 0) {
-					file.WriteInt(gameData.score);   //スコアを保存.
-				}
-				gameData.bestScore = gameData.score; //スコア更新.
-				endScene.SignBestScore();            //ハイスコアのサイン送信.
+			case Stage_Tutorial:
+			{
+				SceneMng::SetScene("End"); //終了シーンへ.
 			}
+			break;
+
+			case Stage_Endless:
+			{
+				SceneMng::SetScene("End"); //終了シーンへ.
+
+				gameData.speedRate = 1.0;                             //速度倍率を100%に戻す.
+				gameData.scoreBef = gameData.score;                   //時間加算前のスコアを記録.
+				gameData.score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
+
+				//ハイスコア更新.
+				if (gameData.score > gameData.bestScore) {
+
+					File file;
+					//ファイルを開く.
+					if (file.Open(FILE_DATA, _T("w"), true).GetCode() == 0) {
+						file.WriteInt(gameData.score);   //スコアを保存.
+					}
+					gameData.bestScore = gameData.score; //スコア更新.
+					endScene.SignBestScore();            //ハイスコアのサイン送信.
+				}
 
 #if !defined BGM_NONE
-			//BGM停止.
-			if (auto i = SoundMng::Get("BGM_Endless")) {
-				i->FadeOutPlay(2); //再生.
-			}
-			//ゲームオーバーBGM.;
-			if (auto i = SoundMng::Get("BGM_Over")) {
-				i->Play(true, 68); //再生.
-			}
+				//BGM停止.
+				if (auto i = SoundMng::Get("BGM_Endless")) {
+					i->FadeOutPlay(2); //再生.
+				}
+				//ゲームオーバーBGM.;
+				if (auto i = SoundMng::Get("BGM_Over")) {
+					i->Play(true, 68); //再生.
+				}
 #endif
-		}
-		break;
+			}
+			break;
 
-		default: assert(FALSE); break;
+			default: assert(FALSE); break;
+		}
 	}
+
 }
 //アイテムを使用した時.
 void GameManager::ItemUsed() {
