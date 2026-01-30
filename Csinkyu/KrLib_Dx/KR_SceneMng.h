@@ -35,8 +35,6 @@ namespace KR
 
 	/*
 	   シーン管理クラス.
-	   Reset, Update, Drawは自動実行されない.
-	   (描画順などを操作できるように)
 	*/
 	class SceneMng final : public ManagerBase
 	{
@@ -53,7 +51,7 @@ namespace KR
 	//▼ ===== 関数 ===== ▼.
 	private:
 		//コンストラクタ.
-		SceneMng() : ManagerBase(ORDER_KR_SCENE_MNG) {}
+		SceneMng() : ManagerBase(ORDER_KR_SCENE_MNG) {} //TODO: 処理順はどうやって操作する?
 
 	public:
 		//get.

@@ -118,8 +118,8 @@ void TutorialStage::UpdateStep0() {
 	effectMng.SpawnEffect(&data);
 
 	//予め動かしておく.
-	ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Active);
-	ManagerBase::GetMng<LaserManager>()->SetExeState(MngExeState::Active);
+	ManagerInsts::GetInst().Get<ItemManager>()->SetExeState(MngExeState::Active);
+	ManagerInsts::GetInst().Get<LaserManager>()->SetExeState(MngExeState::Active);
 
 	startTimer.Start(); //開始.
 	stepNo++;           //次のステップ.
@@ -162,8 +162,8 @@ void TutorialStage::UpdateStep1() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//オブジェクトON.
-				ManagerBase::GetMng<NormalLaser>()->SetExeState(MngExeState::Active);
-				ManagerBase::GetMng<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
+				ManagerInsts::GetInst().Get<NormalLaser>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -195,9 +195,9 @@ void TutorialStage::UpdateStep1() {
 				effectMng.SpawnEffect(&data);
 
 				//オブジェクトOFF.
-				ManagerBase::GetMng<NormalLaser>()->SetExeState(MngExeState::Stop);
+				ManagerInsts::GetInst().Get<NormalLaser>()->SetExeState(MngExeState::Stop);
 				//オブジェクトON.
-				ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<ItemManager>()->SetExeState(MngExeState::Active);
 				//アイテム召喚.
 				itemMng.ItemSpawn(0);
 
@@ -283,7 +283,7 @@ void TutorialStage::UpdateStep3() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//オブジェクトON.
-				ManagerBase::GetMng<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
+				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -303,7 +303,7 @@ void TutorialStage::UpdateStep3() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//オブジェクトON.
-				ManagerBase::GetMng<MeteorManager>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<MeteorManager>()->SetExeState(MngExeState::Active);
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -351,7 +351,7 @@ void TutorialStage::UpdateStep3() {
 				//スコア表示.
 				uiMng.SignIsShowScore();
 				//召喚可能に.
-				ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<ItemManager>()->SetExeState(MngExeState::Active);
 
 				//終了処理.
 				StepInEnd();
@@ -379,10 +379,10 @@ void TutorialStage::UpdateStep4() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//オブジェクトOFF.
-				ManagerBase::GetMng<ItemManager>()->SetExeState(MngExeState::Stop);
-				ManagerBase::GetMng<NormalLaser>()->SetExeState(MngExeState::Stop);
-				ManagerBase::GetMng<LaserManager>()->SetExeState(MngExeState::Stop);
-				ManagerBase::GetMng<MeteorManager>()->SetExeState(MngExeState::Stop);
+				ManagerInsts::GetInst().Get<ItemManager>()->SetExeState(MngExeState::Stop);
+				ManagerInsts::GetInst().Get<NormalLaser>()->SetExeState(MngExeState::Stop);
+				ManagerInsts::GetInst().Get<LaserManager>()->SetExeState(MngExeState::Stop);
+				ManagerInsts::GetInst().Get<MeteorManager>()->SetExeState(MngExeState::Stop);
 				//終了処理.
 				StepInEnd();
 				stepInNo++;

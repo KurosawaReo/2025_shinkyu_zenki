@@ -28,7 +28,7 @@ struct FireworksData
 };
 
 //‰Ô‰ÎŠÇ—.
-class FireworksManager : public ManagerBase
+class FireworksManager final : public ManagerBase
 {
 //¥ ===== À‘Ì ===== ¥.
 private:

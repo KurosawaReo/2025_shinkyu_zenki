@@ -10,7 +10,7 @@
 #pragma once
 
 //タイトルシーン.
-class GameScene : public IScene
+class GameScene final : public IScene
 {
 //▼ ===== 変数 ===== ▼.
 private:

@@ -165,7 +165,7 @@ namespace KR
 	{
 	//¥ ===== À‘Ì ===== ¥.
 	private:
-		static InputMng inst; //À‘Ì‚ğ“ü‚ê‚é—p.		
+		static InputMng inst; //À‘Ì‚ğ“ü‚ê‚é—p.
 
 	//¥ ===== •Ï” ===== ¥.
 	private:

@@ -7,7 +7,7 @@
 #include "Obst_Meteor.h"
 
 //è¦ÎŠÇ—.
-class MeteorManager : public ManagerBase
+class MeteorManager final : public ManagerBase
 {
 //¥ ===== À‘Ì ===== ¥.
 private:

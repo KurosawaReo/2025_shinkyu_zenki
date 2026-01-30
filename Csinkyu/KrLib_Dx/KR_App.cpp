@@ -39,20 +39,19 @@ namespace KR
 
 		//order値で並び替える.
 		std::sort(
-			ManagerBase::mngInsts.begin(), ManagerBase::mngInsts.end(), //管理クラス配列.
+			ManagerInsts::GetInst().GetAll().begin(), ManagerInsts::GetInst().GetAll().end(), //管理クラス配列.
 			[](const auto& a, const auto& b) {
 				return a->GetOrder() < b->GetOrder(); //order値を比較.
 			}
 		);
-		Debug::Log(_T("InitStart"));
 
 		//Initを実行.
-		for (const auto& i : ManagerBase::mngInsts) {
+		for (const auto& i : ManagerInsts::GetInst().GetAll()) {
 			Debug::Log(_T("order:"), i->GetOrder());
 			i->Init();
 		}
-		Debug::Log(_T("InitEnd"));
-
+		//Resetを実行.
+		Reset();
 
 		return {0, _T("App::InitDx"), _T("正常終了")};
 	}
@@ -68,7 +67,7 @@ namespace KR
 				//画面クリア.
 				ClearDrawScreen();
 				//Update, Drawを実行.
-				for (const auto& i : ManagerBase::mngInsts) {
+				for (const auto& i : ManagerInsts::GetInst().GetAll()) {
 					if (i->CanUpdate()) { i->Update(); }
 					if (i->CanDraw())   { i->Draw();   } 
 				}
@@ -89,7 +88,7 @@ namespace KR
 	//全管理クラスのリセット.
 	void App::Reset() {
 		//Resetを実行.
-		for (const auto& i : ManagerBase::mngInsts) {
+		for (const auto& i : ManagerInsts::GetInst().GetAll()) {
 			i->Reset();
 		}
 	}

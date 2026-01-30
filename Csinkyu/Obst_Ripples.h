@@ -16,7 +16,7 @@ struct RipplesData
 };
 
 //”g–äŠÇ—.
-class Ripples : public ManagerBase
+class Ripples final : public ManagerBase
 {
 //¥À‘ÌŠÖŒW.
 private:

@@ -27,7 +27,7 @@ public:
 };
 
 //’¼üƒŒ[ƒU[.
-class StraightLaser : public ManagerBase
+class StraightLaser final : public ManagerBase
 {
 //¥ ===== À‘Ì ===== ¥.
 private:

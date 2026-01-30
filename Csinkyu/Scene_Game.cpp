@@ -57,10 +57,10 @@ void GameScene::Update() {
 		switch (gameData.stage)
 		{
 			case Stage_Tutorial: 
-				ManagerBase::GetMng<TutorialStage>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<TutorialStage>()->SetExeState(MngExeState::Active);
 				break;
 			case Stage_Endless:  
-				ManagerBase::GetMng<EndlessStage>()-> SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<EndlessStage>()-> SetExeState(MngExeState::Active);
 				break;
 
 			default: assert(false); break;

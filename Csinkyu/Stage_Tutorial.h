@@ -8,7 +8,7 @@
 #pragma once
 
 //チュートリアルステージ.
-class TutorialStage : public ManagerBase
+class TutorialStage final : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
 private:

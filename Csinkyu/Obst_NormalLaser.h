@@ -57,7 +57,7 @@ public:
 };
 
 //通常レーザー.
-class NormalLaser : public ManagerBase
+class NormalLaser final : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
 private:
@@ -69,8 +69,8 @@ public:
 
 //▼ ===== 変数 ===== ▼.
 private:
-	NormalLaserPoint  points[4]; //レーザー発射台.
-	FlashEffect flash[LASER_NOR_FLASH_MAX] {};
+	NormalLaserPoint points[4]{}; //レーザー発射台.
+	FlashEffect flash[LASER_NOR_FLASH_MAX]{};
 
 //▼ ===== 変数 ===== ▼.
 private:

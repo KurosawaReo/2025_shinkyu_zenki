@@ -5,7 +5,7 @@
 #pragma once
 
 //UIŠÇ—.
-class UIManager : public ManagerBase
+class UIManager final : public ManagerBase
 {
 //¥ ===== À‘Ì ===== ¥.
 private:

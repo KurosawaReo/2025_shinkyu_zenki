@@ -12,7 +12,7 @@
 #include "Obst_StraightLaser.h"
 
 //ゲームマネージャー.
-class GameManager : public ManagerBase
+class GameManager final : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
 private:

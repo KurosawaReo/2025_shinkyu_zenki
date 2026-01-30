@@ -35,7 +35,7 @@ struct MenuColor
 /*------------------------------------------*/
 
 //メニューシーン.
-class MenuScene : public IScene
+class MenuScene final : public IScene
 {
 //▼ ===== 実体 ===== ▼.
 public:

@@ -3,7 +3,7 @@
    プログラムの開始地点.
 */
 
-#if false
+#if true
 int main() {
 #else
 int WINAPI WinMain(
@@ -18,6 +18,4 @@ int WINAPI WinMain(
 	if (err.GetCode() < 0) { return -1; } //初期化エラー.
 
 	App::LoopDx();
-
-	return 0;
 }

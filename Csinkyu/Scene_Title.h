@@ -10,7 +10,7 @@
 #pragma once
 
 //タイトルシーン.
-class TitleScene : public IScene
+class TitleScene final : public IScene
 {
 private:
 	Timer timer;         //シーンの経過時間.

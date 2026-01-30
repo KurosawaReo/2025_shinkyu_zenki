@@ -18,7 +18,7 @@ struct ItemData
 };
 
 //アイテム管理クラス.
-class ItemManager : public ManagerBase
+class ItemManager final : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
 private:

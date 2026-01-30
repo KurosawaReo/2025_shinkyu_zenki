@@ -8,7 +8,7 @@
 #pragma once
 
 //エンドレスステージ.
-class EndlessStage : public ManagerBase 
+class EndlessStage final : public ManagerBase 
 {
 //▼実体関係.
 public:

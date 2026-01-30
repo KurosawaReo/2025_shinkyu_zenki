@@ -36,13 +36,13 @@ struct EffectData
 	float      len{};     //長さ.
 };
 //エフェクト.
-struct Effect : public EffectData //<<<<<<<<<<<<<<<< TODO: この継承の使い方は不適切.
+struct Effect : public EffectData //TODO: この継承の使い方は不適切らしい.
 {
 	float      counter{}; //時間計測用.
 };
 
 //エフェクト管理クラス.
-class EffectManager : public ManagerBase
+class EffectManager final : public ManagerBase
 {
 //▼実体関係.
 private:
@@ -58,7 +58,7 @@ private:
 
 //▼ ===== 関数 ===== ▼.
 private:
-	//コンストラクタ(新規作成をできなくする)
+	//コンストラクタ.
 	EffectManager() : ManagerBase(ORDER_EFFECT_MNG) {}
 
 public:

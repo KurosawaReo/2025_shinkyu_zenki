@@ -40,7 +40,7 @@ struct LaserLineData
 };
 
 //レーザー管理用.
-class LaserManager : public ManagerBase
+class LaserManager final : public ManagerBase
 {
 //▼ ===== 実体 ===== ▼.
 private:

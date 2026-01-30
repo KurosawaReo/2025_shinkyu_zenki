@@ -121,8 +121,6 @@ void GameManager::Init() {
 	tmFps = TimerMicro(TimerMode::CountUp, 0);
 	tmFps.Start();
 #endif
-
-	App::Reset();
 }
 
 //リセット(何回でも行う)
@@ -141,8 +139,8 @@ void GameManager::Reset() {
 	SceneMng::SetScene("Title");
 
 	//管理クラスリセット.
-	ManagerBase::GetMng<TutorialStage>()->SetExeState(MngExeState::Stop);
-	ManagerBase::GetMng<EndlessStage>()-> SetExeState(MngExeState::Stop);
+	ManagerInsts::GetInst().Get<TutorialStage>()->SetExeState(MngExeState::Stop);
+	ManagerInsts::GetInst().Get<EndlessStage>()-> SetExeState(MngExeState::Stop);
 
 	//サウンド.
 	SoundMng::StopAll();

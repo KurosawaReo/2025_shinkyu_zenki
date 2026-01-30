@@ -6,7 +6,7 @@
 #include "BG2.h"
 
 //”wŒiƒNƒ‰ƒX.
-class BGManager : public ManagerBase 
+class BGManager final : public ManagerBase 
 {
 //¥ ===== À‘Ì ===== ¥.
 private:

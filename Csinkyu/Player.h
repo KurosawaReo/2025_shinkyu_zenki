@@ -23,7 +23,7 @@ enum PlayerMode
 };
 
 //ƒvƒŒƒCƒ„[.
-class Player : public ManagerBase
+class Player final : public ManagerBase
 {
 //¥ ===== À‘Ì ===== ¥.
 private:
