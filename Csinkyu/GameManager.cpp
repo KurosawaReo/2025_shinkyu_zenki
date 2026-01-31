@@ -7,7 +7,15 @@
 //依存関係.
 #include "GameData.h"
 #include "BGManager.h"
+#include "LaserManager.h"
+#include "Obst_NormalLaser.h"
+#include "Obst_StraightLaser.h"
+#include "Obst_MeteorManager.h"
+#include "Obst_Ripples.h"
+#include "Obst_Fireworks.h"
+#include "Item.h"
 #include "UIManager.h"
+#include "EffectManager.h"
 #include "Stage_Tutorial.h"
 #include "Stage_Endless.h"
 //参照.
@@ -252,6 +260,19 @@ void GameManager::GameOver() {
 	}
 
 }
+
+//オブジェクト停止.
+void GameManager::StopObjects() {
+
+	ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::DrawOnly);
+	ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::DrawOnly);
+	ManagerInsts::GetInst().Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::DrawOnly);
+	ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::DrawOnly);
+	ManagerInsts::GetInst().Get<Ripples>      ()->SetAutoExeMode(MngAutoExe::DrawOnly);
+	ManagerInsts::GetInst().Get<Fireworks>    ()->SetAutoExeMode(MngAutoExe::DrawOnly);
+	ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::DrawOnly);
+}
+
 //アイテムを使用した時.
 void GameManager::ItemUsed() {
 
