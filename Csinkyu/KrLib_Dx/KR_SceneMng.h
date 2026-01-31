@@ -1,6 +1,6 @@
 /*
    - KR_SceneMng.h - (DxLib)
-   ver.2026/01/29
+   ver.2026/01/31
 
    シーン管理機能。
 */
@@ -51,13 +51,13 @@ namespace KR
 	//▼ ===== 関数 ===== ▼.
 	private:
 		//コンストラクタ.
-		SceneMng() : ManagerBase(ORDER_KR_SCENE_MNG) {} //TODO: 処理順はどうやって操作する?
+		SceneMng() : ManagerBase(0) {} //order値は仮で0にする(SetOrderで変更する想定)
 
 	public:
 		//get.
 		static string GetSceneName() { return inst.nowSceneName; }
 		//set.
-		static void SetExeState(MngExeState _state);
+		static void SetAutoExeMode(MngAutoExe _state);
 
 		void Init()   override {} //未使用.
 		void Reset()  override;

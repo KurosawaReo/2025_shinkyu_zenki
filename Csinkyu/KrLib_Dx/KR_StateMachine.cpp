@@ -1,29 +1,31 @@
 /*
    - KR_StateMachine.cpp - (DxLib)
-   ver.2026/01/29
+   ver.2026/01/31
 */
 #pragma once
 #include "KR_StateMachine.h"
 
-//TODO: SceneManagerを作って、その中にStateMachineを入れたい(Unityみたいにstaticでやりたい)
-
 //KrLib名前空間.
 namespace KR
 {
-    //初期化.
-    void StateMachine::InitState(IState* state) {
-        current = state;                    //初期state.
-        if (current) { current->Enter(); }  //初期stateにEnter.
+    //state遷移予約.
+    void StateMachine::RequestChange(IState* state) {
+        if (current == state) return; //同じstateには遷移しない.
+        next = state;                 //次のstateにする.
     }
-    //state遷移.
-    void StateMachine::ChangeState(IState* newState) {
-        if (current == newState) return;    //同じstateには遷移しない.
-        if (current) { current->Exit(); }   //元のstateからExit.
-        current = newState;                 //stateを変更.
-        if (current) { current->Enter(); }  //新たなstateにEnter.
+    //state変更.
+    void StateMachine::ChangeState() {
+        //次に遷移するstateがあれば.
+        if (next) {
+            if (current) { current->Exit(); }   //元のstateからExit.
+            current = next;                     //stateを変更.
+            next = nullptr;                     //nextは空に.
+            if (current) { current->Enter(); }  //新たなstateにEnter.
+        }
     }
     //更新.
     void StateMachine::Update() {
+        ChangeState();
         if (current) { current->Update(); } //現stateの更新.
     }
     //描画.

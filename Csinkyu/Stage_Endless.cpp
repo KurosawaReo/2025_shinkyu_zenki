@@ -48,10 +48,10 @@ void EndlessStage::Update() {
 		effectMng.SpawnEffect(&data);
 
 		//Lv1から.
-		ManagerInsts::GetInst().Get<LaserManager>()->SetExeState(MngExeState::Active);
-		ManagerInsts::GetInst().Get<NormalLaser>()->SetExeState(MngExeState::Active);
-		ManagerInsts::GetInst().Get<MeteorManager>()->SetExeState(MngExeState::Active);
-		ManagerInsts::GetInst().Get<ItemManager>()->SetExeState(MngExeState::Active);
+		ManagerInsts::GetInst().Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Active);
 
 		ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(2); //レーザーは2つ.
 		ManagerInsts::GetInst().Get<ItemManager>()->SetItemMaxCnt(1);    //アイテムは1つ.
@@ -89,7 +89,7 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv2から.
-				ManagerInsts::GetInst().Get<StraightLaser>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::Active);
 			}
 			break;
 		case 2:
@@ -107,7 +107,7 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv3から.
-				ManagerInsts::GetInst().Get<Ripples>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<Ripples>()->SetAutoExeMode(MngAutoExe::Active);
 			}
 			break;
 		case 3:
@@ -127,7 +127,7 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv4から.
-				ManagerInsts::GetInst().Get<FireworksManager>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<FireworksManager>()->SetAutoExeMode(MngAutoExe::Active);
 			}
 			break;
 		case 4:

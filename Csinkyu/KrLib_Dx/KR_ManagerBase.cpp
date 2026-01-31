@@ -1,6 +1,6 @@
 /*
    - KR_ManagerBase.cpp - (DxLib)
-   ver.2026/01/30
+   ver.2026/01/31
 */
 #include "KR_ManagerBase.h"
 
@@ -21,7 +21,7 @@ namespace KR
 	}
 
 	//管理クラスを探す.
-	ManagerBase* ManagerInsts::GetByType(const std::type_info& type) {
+	ManagerBase* ManagerInsts::GetMngClass(const std::type_info& type) {
 		//保存された管理クラスを全ループ.
 		for (auto* m : mngInsts) {
 			if (typeid(*m) == type) { //一致すれば返す.
@@ -35,7 +35,7 @@ namespace KR
 
 	//コンストラクタ.
 	ManagerBase::ManagerBase(int _order) :
-		order(_order), state(MngExeState::Active)
+		order(_order), mode(MngAutoExe::Active)
 	{
 		//派生クラスのコンストラクタが実行された時, 自身を登録する.
 		ManagerInsts::GetInst().Push(this);

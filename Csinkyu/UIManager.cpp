@@ -27,6 +27,9 @@ void UIManager::Init() {
 }
 //リセット.
 void UIManager::Reset() {
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
 	isShowScore = false;
 }
 //更新.

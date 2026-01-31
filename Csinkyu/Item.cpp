@@ -32,6 +32,9 @@ void ItemManager::Init()
 //リセット.
 void ItemManager::Reset()
 {
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
 	itemMaxCnt = 0; //最大出現数は0にする.
 
 	//全て消滅.

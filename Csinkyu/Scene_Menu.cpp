@@ -6,7 +6,6 @@
 //依存関係.
 #include "BGManager.h"
 #include "GameData.h"
-#include "GameManager.h"
 //参照.
 static GameData&  gameData = GameData::GetInst();
 static BGManager& p_bg   = BGManager::GetInst();
@@ -100,8 +99,8 @@ void MenuScene::Update() {
 #endif
 				break;
 			case 2:
-				SceneMng::SetScene("Title");    //タイトルへ.
-				GameManager::GetInst().Reset(); //リセット.
+				SceneMng::SetScene("Title"); //タイトルへ.
+				App::Reset();                //リセット.
 				break;
 
 			default: assert(FALSE); break;

@@ -1,6 +1,6 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver.2026/01/29
+   ver.2026/01/31
 */
 #include "KR_App.h"
 
@@ -37,17 +37,17 @@ namespace KR
 		//変数初期化.
 		inst.isQuit = false;
 
+		auto managers = ManagerInsts::GetInst().GetAll();
+
 		//order値で並び替える.
 		std::sort(
-			ManagerInsts::GetInst().GetAll().begin(), ManagerInsts::GetInst().GetAll().end(), //管理クラス配列.
+			managers.begin(), managers.end(), //管理クラス配列.
 			[](const auto& a, const auto& b) {
 				return a->GetOrder() < b->GetOrder(); //order値を比較.
 			}
 		);
-
 		//Initを実行.
-		for (const auto& i : ManagerInsts::GetInst().GetAll()) {
-			Debug::Log(_T("order:"), i->GetOrder());
+		for (const auto& i : managers) {
 			i->Init();
 		}
 		//Resetを実行.
@@ -68,8 +68,8 @@ namespace KR
 				ClearDrawScreen();
 				//Update, Drawを実行.
 				for (const auto& i : ManagerInsts::GetInst().GetAll()) {
-					if (i->CanUpdate()) { i->Update(); }
-					if (i->CanDraw())   { i->Draw();   } 
+					if (i->IsAutoUpdate()) { i->Update(); }
+					if (i->ISAutoDraw())   { i->Draw();   } 
 				}
 				//表画面へ描画.
 				ScreenFlip();

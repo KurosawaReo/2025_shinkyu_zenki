@@ -28,6 +28,9 @@ void LaserManager::Init() {
 //リセット.
 void LaserManager::Reset() {
 
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
 	//レーザーを全て消去.
 	laser.clear();
 	//レーザー描画線を全て消去.

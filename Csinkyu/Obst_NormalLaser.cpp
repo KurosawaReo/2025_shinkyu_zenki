@@ -141,6 +141,9 @@ void NormalLaser::Init(){
 //リセット.
 void NormalLaser::Reset()
 {
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
 	//発射台.
 	for (auto& i : points) {
 		i.Reset();

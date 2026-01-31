@@ -6,12 +6,14 @@
 //àÀë∂ä÷åW.
 #include "GameData.h"
 #include "Player.h"
+#include "BGManager.h"
 #include "Stage_Tutorial.h"
 #include "Stage_Endless.h"
 //éQè∆.
-static GameData& gameData = GameData::GetInst();
-static Player& player = Player::GetInst();
-static TutorialStage& tutorialStg = TutorialStage::GetInst();
+static GameData&		gameData	= GameData::GetInst();
+static Player&			player		= Player::GetInst();
+static BGManager&		bgMng		= BGManager::GetInst();
+static TutorialStage&	tutorialStg = TutorialStage::GetInst();
 
 //èâä˙âª.
 void GameScene::Init() {
@@ -57,10 +59,10 @@ void GameScene::Update() {
 		switch (gameData.stage)
 		{
 			case Stage_Tutorial: 
-				ManagerInsts::GetInst().Get<TutorialStage>()->SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Active);
 				break;
 			case Stage_Endless:  
-				ManagerInsts::GetInst().Get<EndlessStage>()-> SetExeState(MngExeState::Active);
+				ManagerInsts::GetInst().Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Active);
 				break;
 
 			default: assert(false); break;

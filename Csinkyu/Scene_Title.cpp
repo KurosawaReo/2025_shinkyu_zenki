@@ -5,9 +5,11 @@
 
 //依存関係.
 #include "GameData.h"
+#include "BGManager.h"
 #include "Obst_MeteorManager.h"
 //参照.
-static GameData&      gameData = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
+static BGManager&     bgMng     = BGManager::GetInst();
 static MeteorManager& meteorMng = MeteorManager::GetInst();
 
 //初期化.
@@ -16,10 +18,12 @@ void TitleScene::Init() {
 }
 //リセット.
 void TitleScene::Reset() {
+	isTitleAnim = false;
 }
 //入った瞬間.
 void TitleScene::Enter() {
-	timer.Start(); //タイマー開始.
+	timer.Start();    //タイマー開始.
+	bgMng.SetBgNo(1); //背景を設定.
 }
 //抜けた瞬間.
 void TitleScene::Exit() {

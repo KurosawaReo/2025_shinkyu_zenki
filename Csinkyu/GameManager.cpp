@@ -95,6 +95,7 @@ void GameManager::Init() {
 #endif
 	}
 	//[KrLib] シーン.
+	ManagerInsts::GetInst().Get<SceneMng>()->SetOrder(ORDER_SCENE_MNG); //実行順の設定.
 	SceneMng::AddScene(&titleScene, "Title");
 	SceneMng::AddScene(&menuScene,  "Menu");
 	SceneMng::AddScene(&gameScene,  "Game");
@@ -139,8 +140,8 @@ void GameManager::Reset() {
 	SceneMng::SetScene("Title");
 
 	//管理クラスリセット.
-	ManagerInsts::GetInst().Get<TutorialStage>()->SetExeState(MngExeState::Stop);
-	ManagerInsts::GetInst().Get<EndlessStage>()-> SetExeState(MngExeState::Stop);
+	ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Stop);
+	ManagerInsts::GetInst().Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Stop);
 
 	//サウンド.
 	SoundMng::StopAll();
@@ -157,10 +158,10 @@ void GameManager::Update() {
 
 	//ポーズしていれば
 	if (gameData.isPause) {
-		SceneMng::SetExeState(MngExeState::DrawOnly); //描画のみ.
+		SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //描画のみ.
 	}
 	else{
-		SceneMng::SetExeState(MngExeState::Active);   //自動実行.
+		SceneMng::SetAutoExeMode(MngAutoExe::Active);   //自動実行.
 	}
 	//ポーズ操作.
 	if (InputMng::IsPushActionTime("GamePause") == 1) {

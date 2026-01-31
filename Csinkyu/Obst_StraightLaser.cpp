@@ -194,6 +194,9 @@ void StraightLaser::Init()
 /// </summary>
 void StraightLaser::Reset()
 {
+	//é©ìÆé¿çsê›íË.
+	SetAutoExeMode(MngAutoExe::Stop);
+
 	for (auto& i : points) {
 		i.Reset();
 	}

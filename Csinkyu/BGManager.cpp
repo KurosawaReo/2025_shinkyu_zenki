@@ -14,19 +14,15 @@ BGManager BGManager::inst;
 
 //初期化.
 void BGManager::Init() {
-	useBgNo = 0;
 	bg1.Init();
 	bg2.Init();
-	Debug::Log(_T("a"));
 }
 //リセット.
 void BGManager::Reset() {
-
+	useBgNo = 1;
 }
 //更新.
 void BGManager::Update() {
-
-	Debug::Log(_T("b"));
 
 	//ポーズ中の更新はしない.
 	if (gameData.isPause) { return; }
@@ -42,8 +38,6 @@ void BGManager::Update() {
 }
 //描画.
 void BGManager::Draw() {
-
-	Debug::Log(_T("c"));
 
 	switch (useBgNo) {
 		case 0:                 break; //背景なし.

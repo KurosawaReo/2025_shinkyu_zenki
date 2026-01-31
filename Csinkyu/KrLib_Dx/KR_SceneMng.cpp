@@ -1,6 +1,6 @@
 /*
    - KR_Scene.cpp - (DxLib)
-   ver.2026/01/29
+   ver.2026/01/31
 */
 #include "KR_SceneMng.h"
 
@@ -15,8 +15,8 @@ namespace KR
 	   InputMngやSoundMngは自動実行を止める必要はないが
 	   SceneMngは自動実行を止めれるよう、専用の関数を用意.
 	*/
-	void SceneMng::SetExeState(MngExeState _state) {
-		inst.ManagerBase::SetExeState(_state);
+	void SceneMng::SetAutoExeMode(MngAutoExe _state) {
+		inst.ManagerBase::SetAutoExeMode(_state); //自動実行設定.
 	}
 
 	//シーン追加.
@@ -28,7 +28,7 @@ namespace KR
 	ResultInt SceneMng::SetScene(string saveName) {
 		//登録されてたら.
 		if (inst.scenes.count(saveName) > 0) {
-			inst.sceneChanger.ChangeState(inst.scenes[saveName]); //シーン変更.
+			inst.sceneChanger.RequestChange(inst.scenes[saveName]); //次のシーンを設定.
 			return { 0, _T("SceneMng::SetScene"), _T("正常終了") };
 		}
 		return { -1, _T("SceneMng::SetScene"), _T("未登録のシーン") };
@@ -42,13 +42,9 @@ namespace KR
 		}
 	}
 	void SceneMng::Update() {
-		if (IState* i = sceneChanger.GetCurrent()) { 
-			i->Update(); //現シーンの更新.
-		}
+		sceneChanger.Update(); //更新.
 	}
 	void SceneMng::Draw() {
-		if (IState* i = sceneChanger.GetCurrent()) {
-			i->Draw(); //現シーンの更新.
-		}
+		sceneChanger.Draw(); //描画.
 	}
 }

@@ -1,6 +1,6 @@
 /*
    - KR_ManagerBase.h - (DxLib)
-   ver.2026/01/30
+   ver.2026/01/31
 
    管理クラスの根底。
 
@@ -17,10 +17,9 @@ namespace KR
 	//KrLibの管理クラスのorder値.
 	constexpr int ORDER_KR_INPUT_MNG = -1;
 	constexpr int ORDER_KR_SOUND_MNG = -1;
-	constexpr int ORDER_KR_SCENE_MNG = 0;
 
-	//管理クラスの実行状態.
-	enum class MngExeState
+	//管理クラスの自動実行モード.
+	enum class MngAutoExe
 	{
 		Active,		//Update & Draw
 		UpdateOnly, //Updateのみ.
@@ -50,7 +49,7 @@ namespace KR
 		//コンストラクタ.
 		ManagerInsts(){}
 		//管理クラスを探す.
-		ManagerBase* GetByType(const std::type_info& type);
+		ManagerBase* GetMngClass(const std::type_info& type);
 
 	public:
 		//管理クラスを追加.
@@ -58,7 +57,7 @@ namespace KR
 		//管理クラスを取得.
 		template<class T>
 		T* Get() {
-			return static_cast<T*>(GetByType(typeid(T)));
+			return static_cast<T*>(GetMngClass(typeid(T)));
 		}
 		//管理クラスを全て取得.
 		vector<ManagerBase*>& GetAll() { return mngInsts; }
@@ -78,8 +77,8 @@ namespace KR
 	{
 	//▼ ===== 変数 ===== ▼.
 	private: 
-		MngExeState state; //実行状態.
-		int order;         //処理優先度.
+		MngAutoExe mode;  //自動実行モード.
+		int        order; //処理優先度.
 
 	//▼ ===== 関数 ===== ▼.
 	public:
@@ -89,17 +88,18 @@ namespace KR
 		virtual ~ManagerBase() = default;
 
 		//set.
-		void        SetExeState(MngExeState _state) { state = _state; }
+		void       SetOrder      (int _order)       { order = _order; }
+		void       SetAutoExeMode(MngAutoExe _mode) { mode  = _mode; }
 		//get.
-		int         GetOrder()    const { return order; }
-		MngExeState GetExeState() const { return state; }
+		int        GetOrder()       const { return order; }
+		MngAutoExe GetAutoExeMode() const { return mode; }
 
-		//実行判定.
-		bool CanUpdate() const {
-			return state == MngExeState::Active || state == MngExeState::UpdateOnly;
+		//判定.
+		bool IsAutoUpdate() const {
+			return mode == MngAutoExe::Active || mode == MngAutoExe::UpdateOnly;
 		}
-		bool CanDraw() const {
-			return state == MngExeState::Active || state == MngExeState::DrawOnly;
+		bool ISAutoDraw() const {
+			return mode == MngAutoExe::Active || mode == MngAutoExe::DrawOnly;
 		}
 
 		virtual void Init()   = 0;

@@ -32,6 +32,9 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset()
 {
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
 	hit        = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {} };
 	mode       = Player_Normal;
 	afterCntr  = 1;

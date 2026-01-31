@@ -65,10 +65,11 @@ void MeteorManager::Init() {
 
 void MeteorManager::Reset() {
 
-	timer = METEOR_SPAWN_SPAN; //‰ŠúŠÔ.
+	//©“®Àsİ’è.
+	SetAutoExeMode(MngAutoExe::Stop);
 
-	//è¦Î‚ğ‘S‚ÄÁ‹.
-	meteor.clear();
+	timer = METEOR_SPAWN_SPAN; //‰ŠúŠÔ.
+	meteor.clear();            //è¦Î‚ğ‘S‚ÄÁ‹.
 }
 
 void MeteorManager::Update() {

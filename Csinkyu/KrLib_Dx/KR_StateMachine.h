@@ -1,6 +1,6 @@
 /*
    - KR_StateMachine.h - (DxLib)
-   ver.2026/01/29
+   ver.2026/01/31
 
    ステート遷移機能。
 */
@@ -22,21 +22,30 @@ namespace KR
         virtual void Draw()   = 0; //描画.
     };
 
-    //状態管理クラス.
-    class StateMachine
+    /*
+       状態管理クラス.
+
+       RequestChangeで次のstateを設定すると
+       次にUpdateが動いた時に変更される.
+       (App::Reset中にstate変更した時、即ExitとEnterを実行されないように)
+    */
+    class StateMachine final
     {
     //▼ ===== 変数 ===== ▼.
     private:
         IState* current = nullptr; //現在のstate.
+        IState* next    = nullptr; //次に変更するstate(予約)
 
     //▼ ===== 関数 ===== ▼.
+    private:
+        void ChangeState(); //state変更.
+
     public:
         //get.
         IState* GetCurrent() const { return current; }
 
-        void InitState  (IState* state);    //初期化.
-        void ChangeState(IState* newState); //state遷移.
-        void Update();                      //更新.
-        void Draw();                        //描画.
+        void RequestChange(IState* state); //state遷移予約.
+        void Update();                     //更新.
+        void Draw();                       //描画.
     };
 }
