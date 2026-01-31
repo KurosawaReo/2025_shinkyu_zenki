@@ -3,7 +3,7 @@
    プログラムの開始地点.
 */
 
-#if true
+#if false
 int main() {
 #else
 int WINAPI WinMain(

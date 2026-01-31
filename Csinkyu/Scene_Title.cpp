@@ -146,7 +146,7 @@ void TitleScene::Draw() {
 	if (!isTitleAnim) {
 		if (timer.GetPassTime() >= delay5) {
 			//破壊演出.
-			meteorMng.BreakMeteor({ 580, 310 }, -130, 1.4);
+			meteorMng.BreakMeteor({ 580, 310 }, -130, false, 1.4);
 			//一度きり.
 			isTitleAnim = true;
 		}

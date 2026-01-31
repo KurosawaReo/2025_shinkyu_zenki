@@ -38,8 +38,8 @@ public:
 	void Update() override;
 	void Draw()   override;
 
-	void SpawnMeteor();                                         //è¦Î¶¬.
-	void BreakMeteor(DBL_XY pos, double ang, double scale = 1); //è¦Î”j‰ó‰‰o.
+	void SpawnMeteor();                                                       //è¦Î¶¬.
+	void BreakMeteor(DBL_XY pos, double ang, bool isScore, double scale = 1); //è¦Î”j‰ó‰‰o.
 
 	//g—p‹Ö~.
 	MeteorManager(const MeteorManager&) = delete;

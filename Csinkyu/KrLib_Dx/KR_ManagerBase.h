@@ -48,6 +48,7 @@ namespace KR
 	private:
 		//コンストラクタ.
 		ManagerInsts(){}
+		
 		//管理クラスを探す.
 		ManagerBase* GetMngClass(const std::type_info& type);
 
@@ -61,6 +62,8 @@ namespace KR
 		}
 		//管理クラスを全て取得.
 		vector<ManagerBase*>& GetAll() { return mngInsts; }
+		//order値で並べ替える.
+		void SortOrder();
 
 		//使用禁止.
 		ManagerInsts(const ManagerInsts&) = delete;
@@ -88,8 +91,8 @@ namespace KR
 		virtual ~ManagerBase() = default;
 
 		//set.
-		void       SetOrder      (int _order)       { order = _order; }
-		void       SetAutoExeMode(MngAutoExe _mode) { mode  = _mode; }
+		void       SetOrder      (int _order);
+		void       SetAutoExeMode(MngAutoExe _mode) { mode = _mode; }
 		//get.
 		int        GetOrder()       const { return order; }
 		MngAutoExe GetAutoExeMode() const { return mode; }
@@ -98,7 +101,7 @@ namespace KR
 		bool IsAutoUpdate() const {
 			return mode == MngAutoExe::Active || mode == MngAutoExe::UpdateOnly;
 		}
-		bool ISAutoDraw() const {
+		bool IsAutoDraw() const {
 			return mode == MngAutoExe::Active || mode == MngAutoExe::DrawOnly;
 		}
 

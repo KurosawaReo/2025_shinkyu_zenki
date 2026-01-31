@@ -5,7 +5,6 @@
 #include "KR_App.h"
 
 //[include] cppでのみ使うもの.
-#include <algorithm>
 #include "KR_ManagerBase.h"
 
 //KrLib名前空間.
@@ -37,17 +36,8 @@ namespace KR
 		//変数初期化.
 		inst.isQuit = false;
 
-		auto managers = ManagerInsts::GetInst().GetAll();
-
-		//order値で並び替える.
-		std::sort(
-			managers.begin(), managers.end(), //管理クラス配列.
-			[](const auto& a, const auto& b) {
-				return a->GetOrder() < b->GetOrder(); //order値を比較.
-			}
-		);
 		//Initを実行.
-		for (const auto& i : managers) {
+		for (const auto& i : ManagerInsts::GetInst().GetAll()) {
 			i->Init();
 		}
 		//Resetを実行.
@@ -69,7 +59,7 @@ namespace KR
 				//Update, Drawを実行.
 				for (const auto& i : ManagerInsts::GetInst().GetAll()) {
 					if (i->IsAutoUpdate()) { i->Update(); }
-					if (i->ISAutoDraw())   { i->Draw();   } 
+					if (i->IsAutoDraw())   { i->Draw();   } 
 				}
 				//表画面へ描画.
 				ScreenFlip();

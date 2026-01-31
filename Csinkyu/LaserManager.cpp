@@ -210,8 +210,8 @@ void LaserManager::UpdateLaser() {
 					}
 
 					const double ang = _deg(atan2(i->vec.y, i->vec.x)); //破片の飛ぶ方向.
-					meteorMng.BreakMeteor(i->nowPos, ang); //破壊演出.
-					gameData.score += SCORE_BREAK_METEOR;  //スコア加算.
+					meteorMng.BreakMeteor(i->nowPos, ang, true); //破壊演出.
+					gameData.score += SCORE_BREAK_METEOR;        //スコア加算.
 
 					//どっちのタイプかで切り替え.
 					if (i->type == Laser_Reflect) {

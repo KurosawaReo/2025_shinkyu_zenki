@@ -133,7 +133,7 @@ void MeteorManager::SpawnMeteor(){
 	meteor.push_back(tmp);
 }
 //隕石破壊演出.
-void MeteorManager::BreakMeteor(DBL_XY pos, double ang, double scale) {
+void MeteorManager::BreakMeteor(DBL_XY pos, double ang, bool isScore, double scale) {
 	
 	//エフェクトデータ.
 	EffectData data{};
@@ -150,8 +150,10 @@ void MeteorManager::BreakMeteor(DBL_XY pos, double ang, double scale) {
 		effectMng.SpawnEffect(&data);								//エフェクト出現.
 	}
 	//スコアエフェクト.
-	data.type = Effect_Score500;
-	effectMng.SpawnEffect(&data); //エフェクト出現.
+	if (isScore) {
+		data.type = Effect_Score500;
+		effectMng.SpawnEffect(&data); //エフェクト出現.
+	}
 	//サウンド.
 	if (auto i = SoundMng::Get("Break")) {
 		i->Play(false, 74); //再生.

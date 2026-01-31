@@ -2,39 +2,21 @@
    - GameManager.cpp -
    ゲーム全体管理.
 */
-#include "BGManager.h"
-#include "Stage_Tutorial.h"
-#include "Stage_Endless.h"
-
-#include "LaserManager.h"
-#include "Obst_MeteorManager.h"
-#include "Obst_Ripples.h"
-#include "Obst_Fireworks.h"
-
-#include "Item.h"
-#include "Player.h"
-
-#include "EffectManager.h"
-#include "UIManager.h"
-
-#include "GameData.h"
 #include "GameManager.h"
 
-using namespace Calc; //計算機能を使用.
-
-//ポインタ.
+//依存関係.
+#include "GameData.h"
+#include "BGManager.h"
+#include "UIManager.h"
+#include "Stage_Tutorial.h"
+#include "Stage_Endless.h"
+//参照.
 static GameData         &gameData     = GameData::GetInst();
 static BGManager        &bg           = BGManager::GetInst();
-static TutorialStage    &tutorialStg  = TutorialStage::GetInst();
-static EndlessStage     &endlessStg   = EndlessStage::GetInst();
-static LaserManager     &laserMng     = LaserManager::GetInst();
-static MeteorManager    &meteorMng    = MeteorManager::GetInst();
-static Ripples          &ripples      = Ripples::GetInst();
-static FireworksManager &fireworksMng = FireworksManager::GetInst();
-static ItemManager      &item         = ItemManager::GetInst();
-static Player           &player       = Player::GetInst();
-static EffectManager    &effectMng    = EffectManager::GetInst();
 static UIManager        &uiMng        = UIManager::GetInst();
+static TutorialStage    &tutorialStg  = TutorialStage::GetInst();
+
+using namespace Calc; //計算機能を使用.
 
 // ▼*---=[ GameManager ]=---*▼ //
 
@@ -102,7 +84,7 @@ void GameManager::Init() {
 	SceneMng::AddScene(&endScene,   "End");
 
 	//フォント.
-	gameData.font1 = CreateFontToHandle(NULL, 26, 1);
+	gameData.font1 = CreateFontToHandle(NULL, 26, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData.font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData.font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
 	gameData.font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
@@ -156,13 +138,6 @@ void GameManager::Reset() {
 //更新.
 void GameManager::Update() {
 
-	//ポーズしていれば
-	if (gameData.isPause) {
-		SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //描画のみ.
-	}
-	else{
-		SceneMng::SetAutoExeMode(MngAutoExe::Active);   //自動実行.
-	}
 	//ポーズ操作.
 	if (InputMng::IsPushActionTime("GamePause") == 1) {
 		if (gameData.isPause) {
@@ -201,15 +176,21 @@ void GameManager::Draw() {
 
 //ポーズする.
 void GameManager::GamePause() {
+
 	gameData.isPause = true;
 	bg.Pause();        //背景のポーズ.
 	gameScene.Pause(); //ゲームシーンのポーズ.
+
+	SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //描画のみ.
 }
 //ポーズ解除.
 void GameManager::GamePauseEnd() {
+
 	gameData.isPause = false;
 	bg.PauseEnd();        //背景のポーズ解除.
 	gameScene.PauseEnd(); //ゲームシーンのポーズ解除.
+
+	SceneMng::SetAutoExeMode(MngAutoExe::Active); //自動実行.
 }
 //ポーズ画面.
 void GameManager::DrawPause() {
