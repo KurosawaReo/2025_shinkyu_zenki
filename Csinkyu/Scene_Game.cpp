@@ -5,6 +5,7 @@
 
 //依存関係.
 #include "GameData.h"
+#include "GameManager.h"
 #include "Player.h"
 #include "BGManager.h"
 #include "UIManager.h"
@@ -12,10 +13,11 @@
 #include "Stage_Endless.h"
 //参照.
 static GameData&		gameData	= GameData::GetInst();
+static GameManager&		gameMng		= GameManager::GetInst();
 static Player&			player		= Player::GetInst();
 static BGManager&		bgMng		= BGManager::GetInst();
-static TutorialStage&	tutorialStg = TutorialStage::GetInst();
 static UIManager&		uiMng		= UIManager::GetInst();
+static TutorialStage&	tutorialStg = TutorialStage::GetInst();
 
 //初期化.
 void GameScene::Init() {
@@ -45,10 +47,11 @@ void GameScene::Enter() {
 void GameScene::Exit() {
 	//チュートリアル以外のみ.
 	if (gameData.stage != Stage_Tutorial) {
+		itemSoundCnt = 0;
 		timer.Stop();          //演出用タイマー停止.
 		tmGameTime.Stop();     //ゲーム時間停止.
 		tmReflectMode.Reset(); //反射モードリセット.
-		itemSoundCnt = 0;
+		gameMng.StopObjects(); //オブジェクト停止.
 	}
 }
 //更新.
@@ -64,25 +67,23 @@ void GameScene::Update() {
 		if (timer.GetPassTime() >= GAME_START_TIME) {
 			tmGameTime.Start(); //ゲーム時間計測開始.
 			isGameStart = true; //ゲーム開始.
+			//ステージ別.
+			switch (gameData.stage)
+			{
+				case Stage_Tutorial: 
+					ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Active);
+					break;
+				case Stage_Endless:  
+					ManagerInsts::GetInst().Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Active);
+					break;
+
+				default: assert(false); break;
+			}
 		}
 	}
 	//ゲーム開始後.
 	else {
-
 		UpdateReflectMode(); //反射モード.
-
-		//ステージ別.
-		switch (gameData.stage)
-		{
-			case Stage_Tutorial: 
-				ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Active);
-				break;
-			case Stage_Endless:  
-				ManagerInsts::GetInst().Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Active);
-				break;
-
-			default: assert(false); break;
-		}
 	}
 }
 //描画.

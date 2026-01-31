@@ -13,17 +13,17 @@
 static GameData&     gameData     = GameData::GetInst();
 static LaserManager& laserMng = LaserManager::GetInst();
 
-// ▼*---=[ FireworksManager ]=---*▼ //
+// ▼*---=[ Fireworks ]=---*▼ //
 
-FireworksManager FireworksManager::inst;
+Fireworks Fireworks::inst;
 
 // 初期化
-void FireworksManager::Init() {
+void Fireworks::Init() {
 
 }
 
 // リセット
-void FireworksManager::Reset() {
+void Fireworks::Reset() {
 
 	//自動実行設定.
 	SetAutoExeMode(MngAutoExe::Stop);
@@ -33,14 +33,14 @@ void FireworksManager::Reset() {
 }
 
 // ランダム位置生成
-void FireworksManager::GenerateRandomPosition(float& x, float& y) {
+void Fireworks::GenerateRandomPosition(float& x, float& y) {
 	int margin = 80;
 	x = (float)(margin + (rand() % (WINDOW_WID - margin * 2)));
 	y = (float)(margin + (rand() % (WINDOW_HEI - margin * 2 - FIREWORKS_LAUNCH_HEIGHT)));
 }
 
 // 距離チェック(近すぎる花火がなければtrue)
-bool FireworksManager::CheckDistance(float x, float y) {
+bool Fireworks::CheckDistance(float x, float y) {
 
 	//全花火.
 	for (const auto& i: fireworks) {
@@ -57,7 +57,7 @@ bool FireworksManager::CheckDistance(float x, float y) {
 }
 
 // 花火生成.
-void FireworksManager::SpawnFireworks(float x, float y) {
+void Fireworks::SpawnFireworks(float x, float y) {
 
 	FireworksData tmp; //花火生成.
 
@@ -75,7 +75,7 @@ void FireworksManager::SpawnFireworks(float x, float y) {
 }
 
 // 花火生成更新
-void FireworksManager::UpdateFireworksGeneration() {
+void Fireworks::UpdateFireworksGeneration() {
 	spawnTimer -= gameData.speedRate;
 
 	if (spawnTimer <= 0) {
@@ -103,7 +103,7 @@ void FireworksManager::UpdateFireworksGeneration() {
 }
 
 // 個別花火更新
-void FireworksManager::UpdateIndividualFireworks() {
+void Fireworks::UpdateIndividualFireworks() {
 
 	for (auto i = fireworks.begin(); i != fireworks.end(); ) {
 
@@ -129,7 +129,7 @@ void FireworksManager::UpdateIndividualFireworks() {
 }
 
 // 花火の火花作成（LaserManagerを使用）- 落下効果付き
-void FireworksManager::CreateFireworksSparks(float x, float y) {
+void Fireworks::CreateFireworksSparks(float x, float y) {
 
 	//仮で0番の火花数を使用(←追記:これがなにかは不明)
 	const int sparkCount = fireworks.begin()->sparkCount;
@@ -158,13 +158,13 @@ void FireworksManager::CreateFireworksSparks(float x, float y) {
 }
 
 // 更新
-void FireworksManager::Update() {
+void Fireworks::Update() {
 	UpdateFireworksGeneration();
 	UpdateIndividualFireworks();
 }
 
 // 描画
-void FireworksManager::Draw() {
+void Fireworks::Draw() {
 
 #if defined DEBUG_OBJ_ACTIVE
 	//デバッグ表示.
@@ -178,7 +178,7 @@ void FireworksManager::Draw() {
 }
 
 // 予告エフェクト描画
-void FireworksManager::DrawWarningEffect(list<FireworksData>::iterator it) {
+void Fireworks::DrawWarningEffect(list<FireworksData>::iterator it) {
 
 	const float sepTime     = 30; //区切り時間.
 	const float elapsedTime = it->counter;

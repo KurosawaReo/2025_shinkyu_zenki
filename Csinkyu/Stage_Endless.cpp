@@ -127,7 +127,7 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv4‚©‚ç.
-				ManagerInsts::GetInst().Get<FireworksManager>()->SetAutoExeMode(MngAutoExe::Active);
+				ManagerInsts::GetInst().Get<Fireworks>()->SetAutoExeMode(MngAutoExe::Active);
 			}
 			break;
 		case 4:

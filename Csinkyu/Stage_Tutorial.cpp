@@ -26,7 +26,7 @@ static MeteorManager&		meteorMng		= MeteorManager::GetInst();
 static Ripples&				ripples			= Ripples::GetInst();
 static ItemManager&			itemMng			= ItemManager::GetInst();
 static Player&				player			= Player::GetInst();
-static FireworksManager&	fireworksMng	= FireworksManager::GetInst();
+static Fireworks&	fireworksMng	= Fireworks::GetInst();
 static EffectManager&		effectMng		= EffectManager::GetInst();
 static UIManager&			uiMng			= UIManager::GetInst();
 

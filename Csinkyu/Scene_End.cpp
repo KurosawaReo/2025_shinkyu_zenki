@@ -33,11 +33,14 @@ void EndScene::Exit() {
 }
 //更新.
 void EndScene::Update() {
+
+	//チュートリアルの場合.
+	//→死亡後復活.
 	if (gameData.stage == Stage_Tutorial) {
 
 		gameMng.GetGameScene()->Update(); //ゲームシーンと同じ動作をする.
 
-		//死亡後一定時間経過したら.
+		//一定時間経過したら.
 		if (timer.GetPassTime() >= TUTORIAL_RESPAWN_TIME) {
 			timer.Reset();              //タイマーリセット.
 			player.PlayerRevival();     //復活.
@@ -45,6 +48,7 @@ void EndScene::Update() {
 		}
 	}
 	//チュートリアル以外の場合.
+	//→ゲームオーバー.
 	else {
 		//特定の操作でタイトルへ.
 		if (InputMng::IsPushActionTime("GameNext") == 1)
@@ -78,7 +82,7 @@ void EndScene::Draw() {
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
 
-			//GAME OVER
+			//GAME OVER.
 			DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
 			//テキスト.
 			str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont());
