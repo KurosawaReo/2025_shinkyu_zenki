@@ -122,7 +122,7 @@ void UIManager::Draw() {
 			str[1].text = text;
 			_stprintf(text, _T("SCORE:%05d"),      p_gameData.score);
 			str[2].text = text;
-			_stprintf(text, _T("TIME:%.3f"),       gameMng.GetGameScene()->GetGameTime());
+			_stprintf(text, _T("TIME:%.1f"),       gameMng.GetGameScene()->GetGameTime());
 			str[3].text = text;
 		
 			//[level]

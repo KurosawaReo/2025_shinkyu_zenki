@@ -99,7 +99,7 @@ void EndScene::Draw() {
 			//スコア表示.
 			TCHAR text[256];
 			_stprintf(
-				text, _T("%d + %d(%.3f秒) = %d点"),
+				text, _T("%d + %d(%.1f秒) = %d点"),
 				gameData.scoreBef, _int(gameTime * 10), gameTime, gameData.score
 			);
 			//テキストの設定.

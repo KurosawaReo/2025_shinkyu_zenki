@@ -271,6 +271,7 @@ void GameManager::StopObjects() {
 	ManagerInsts::GetInst().Get<Ripples>      ()->SetAutoExeMode(MngAutoExe::DrawOnly);
 	ManagerInsts::GetInst().Get<Fireworks>    ()->SetAutoExeMode(MngAutoExe::DrawOnly);
 	ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::DrawOnly);
+	ManagerInsts::GetInst().Get<EndlessStage> ()->SetAutoExeMode(MngAutoExe::DrawOnly);
 }
 
 //アイテムを使用した時.
