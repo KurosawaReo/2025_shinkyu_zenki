@@ -25,10 +25,11 @@ using namespace Calc; //計算機能を使用.
 DBL_XY NormalLaserPoint::GetVec() const {
 
 	switch (move.dir) {
-		case Up:    return {  0, -1 };
-		case Left:  return { -1,  0 };
-		case Right: return {  1,  0 };
-		case Down:  return {  0,  1 };
+		//                 (move.isLeft) ? 左回り         : 右回り.
+		case Left:  return (move.isLeft) ? DBL_XY( 0, +1) : DBL_XY( 0, -1);
+		case Up:    return (move.isLeft) ? DBL_XY(-1,  0) : DBL_XY(+1,  0);
+		case Right: return (move.isLeft) ? DBL_XY( 0, -1) : DBL_XY( 0, +1);
+		case Down:  return (move.isLeft) ? DBL_XY(+1,  0) : DBL_XY(-1,  0);
 	}
 	return { 0, 0 }; //不正な値.
 }
@@ -57,7 +58,7 @@ void NormalLaserPoint::Update() {
 			Calc::FixPosInArea(&pos, { 0, 0 }, winSize);
 			//回転.
 			if (move.isLeft) {
-				move.dir = static_cast<MoveDir>((move.dir - 1) % MoveDir::Count); //左回り.
+				move.dir = static_cast<MoveDir>((move.dir + 3) % MoveDir::Count); //左回り.
 			}
 			else {
 				move.dir = static_cast<MoveDir>((move.dir + 1) % MoveDir::Count); //右回り.
@@ -119,28 +120,29 @@ void NormalLaserPoint::Draw() {
 //移動ランダム.
 void NormalLaserPoint::MoveRand()
 {
-	//どの辺から発射するか.
+	//画面のどの辺にいくか.
 	move.dir = static_cast<MoveDir>(rand() % MoveDir::Count);
 	//どっち周りか.
 	move.isLeft = (rand() % 2 == 0);
+
 	//座標抽選.
 	switch (move.dir)
 	{
-	case 0: //上.
+	case Left: //左.
+		pos.x = 0;
+		pos.y = _dbl(Calc::RandNum(0, WINDOW_HEI - 1));
+		break;
+	case Up: //上.
 		pos.x = _dbl(Calc::RandNum(0, WINDOW_WID - 1));
 		pos.y = 0;
 		break;
-	case 1: //右.
+	case Right: //右.
 		pos.x = WINDOW_WID;
 		pos.y = _dbl(Calc::RandNum(0, WINDOW_HEI - 1));
 		break;
-	case 2: //下.
+	case Down: //下.
 		pos.x = _dbl(Calc::RandNum(0, WINDOW_WID - 1));
 		pos.y = WINDOW_HEI;
-		break;
-	case 3: //左.
-		pos.x = 0;
-		pos.y = _dbl(Calc::RandNum(0, WINDOW_HEI - 1));
 		break;
 	}
 }
@@ -302,6 +304,7 @@ void NormalLaser::UseLaserPointCnt(int count) {
 
 	//全ての発射台.
 	for (auto& i : GetInst().points) {
+		i.Reset();               //一旦リセット.
 		i.SetValidFlag(tmp > 0); //必要な数だけ有効に.
 		tmp--;
 	}

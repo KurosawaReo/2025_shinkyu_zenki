@@ -17,7 +17,7 @@ enum MoveDir
 };
 struct MoveInfo
 {
-	MoveDir dir;    //i‚ñ‚Å‚é•ûŒü.
+	MoveDir dir;    //‰æ–Ê‚Ì‚Ç‚Ì•Ó‚É‚¢‚é‚©.
 	bool    isLeft; //true = ¶‰ñ‚è, false = ‰E‰ñ‚è.
 };
 

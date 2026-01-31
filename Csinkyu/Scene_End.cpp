@@ -67,7 +67,6 @@ void EndScene::Draw() {
 			DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
 		}
 	}
-	uiMng.Draw(); //UI.
 
 	//チュートリアルの場合.
 	if (gameData.stage == Stage_Tutorial) {
