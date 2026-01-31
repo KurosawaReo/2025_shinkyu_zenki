@@ -40,16 +40,17 @@ struct LaserLineData
 };
 
 //レーザー管理用.
-class LaserManager final
+class LaserManager final : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static LaserManager inst; //自身のインスタンス.
 public:
 	static LaserManager& GetInst() {
-		static LaserManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	//listで適宜サイズを増減する.
 	list<LaserData>     laser; //レーザー.
@@ -57,16 +58,16 @@ private:
 
 	DBL_XY plyPos{}; //プレイヤー座標保管用.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	LaserManager(){}
+	//コンストラクタ.
+	LaserManager() : ManagerBase(ORDER_LASER_MNG) {}
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void UpdateLaser();                                             //各レーザーの更新.
 	void UpdateLaserLine();                                         //各レーザー描画線の更新.

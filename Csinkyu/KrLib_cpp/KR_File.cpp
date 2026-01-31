@@ -1,11 +1,11 @@
 /*
    - KR_File.cpp - (C++)
-   ver: 2025/12/08
+   ver.2026/01/28
 */
 #include "KR_File.h"
 
 //[include] cppでのみ使うもの.
-#include <direct.h> //フォルダ作成のため導入.
+#include <direct.h>
 
 //KrLib名前空間.
 namespace KR

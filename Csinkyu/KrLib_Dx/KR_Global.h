@@ -1,8 +1,8 @@
 /*
    - KR_Global.h - (DxLib)
-   ver: 2025/12/06
+   ver.2026/01/28
 
-   KrLib全体で使う汎用機能を追加。
+   KrLib全体で使う汎用プログラム。
 */
 #pragma once
 
@@ -52,7 +52,7 @@ namespace KR
 		RGBA color;
 
 	public:
-		//constructor.
+		//コンストラクタ.
 		MY_COLOR()                               : color{_byte(255), _byte(255), _byte(255), _byte(255)} {}
 		MY_COLOR(int _r, int _g, int _b)         : color{_byte(_r),  _byte(_g),  _byte(_b),  _byte(255)} {}
 		MY_COLOR(int _r, int _g, int _b, int _a) : color{_byte(_r) , _byte(_g),  _byte(_b),  _byte(_a) } {}

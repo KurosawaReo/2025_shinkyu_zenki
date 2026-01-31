@@ -13,6 +13,10 @@
 static GameData&     gameData     = GameData::GetInst();
 static LaserManager& laserMng = LaserManager::GetInst();
 
+// ▼*---=[ FireworksManager ]=---*▼ //
+
+FireworksManager FireworksManager::inst;
+
 // 初期化
 void FireworksManager::Init() {
 
@@ -20,10 +24,12 @@ void FireworksManager::Init() {
 
 // リセット
 void FireworksManager::Reset() {
-	//最初は少し待機.
-	spawnTimer = 120;
-	//花火を全て消去.
-	fireworks.clear();
+
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+	
+	spawnTimer = 120;  //最初は少し待機.
+	fireworks.clear(); //花火を全て消去.
 }
 
 // ランダム位置生成

@@ -1,9 +1,11 @@
 /*
    - KR_ObjectMng.h - (DxLib)
-   ver: 2025/12/30
+   ver.2026/01/31
+
+   オブジェクトを扱う管理クラス。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -16,7 +18,7 @@ namespace KR
 	{
 	//▼ ===== 関数 ===== ▼.
 	protected:
-		//constructor.
+		//コンストラクタ.
 		ObjectMngTarget() {}
 
 	public:
@@ -26,10 +28,12 @@ namespace KR
 		virtual bool IsErase() const = 0; //消滅条件.
 	};
 	
-	//管理クラス.
-	//ObjectMngTargetを継承したクラスのみ指定可.
+	/*
+	   オブジェクト管理クラス[継承想定]
+	   ObjectMngTargetを継承したクラスのみ指定可.
+	*/
 	template<typename T> requires std::derived_from<T, ObjectMngTarget>
-	class ObjectMng
+	class ObjectMng : public ManagerBase
 	{
 	//▼ ===== 変数 ===== ▼.
 	private:
@@ -52,34 +56,38 @@ namespace KR
 		}
 
 	protected:
-		//constructor.
-		ObjectMng() {}
-
+		//コンストラクタ.
+		ObjectMng(int order) : ManagerBase(order) {}
 		//object追加.
 		void Push(T obj) {
-			obj.Init(); //初期化処理.
-			objects.push_back(obj);
+			obj.Init();             //初期化処理.
+			objects.push_back(obj); //配列に追加.
 		}
-		//object生成処理.
-		virtual void Spawn() = 0;
+
+		virtual void Init()  override = 0; //初期化処理.
+		virtual void Spawn()          = 0; //召喚処理.
 
 	public:
 		//get.
 		int GetObjectCnt() const { return objects.size(); }
-		
+
 		//管理クラス更新.
-		void UpdateMng() {
+		void Update() override {
 			//生成処理.
 			Spawn();
 			//activeなobjectのみ.
-			for (T& i : objects) if (i.isActive) { i.Update(); }
+			for (T& i : objects) if (i.isActive) { 
+				i.Update(); 
+			}
 			//消滅処理.
 			Erase();
 		}
 		//管理クラス描画.
-		void DrawMng() {
+		void DrawMng() override {
 			//activeなobjectのみ.
-			for (T& i : objects) if (i.isActive) { i.Draw(); }
+			for (T& i : objects) if (i.isActive) { 
+				i.Draw(); 
+			}
 		}
 	};
 }

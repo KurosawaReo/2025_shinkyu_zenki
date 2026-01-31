@@ -86,7 +86,7 @@ void Meteor::Draw() {
 	#endif
 
 		//チュートリアル.
-		if (gameData.stage == STAGE_TUTORIAL) {
+		if (gameData.stage == Stage_Tutorial) {
 			DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
 			str.Draw();
 		}
@@ -103,13 +103,13 @@ void Meteor::Spawn() {
 
 	//50%:上下端から出現.
 	if (rnd1 < 50) {
-		pos.x = Calc::RandNum(0, WINDOW_WID);                                                   //xの設定.
+		pos.x = Calc::RandNum(0, WINDOW_WID);                                             //xの設定.
 		pos.y = (rnd2 < 50) ? 0 - METEOR_LINE_DIS_MAX : WINDOW_HEI + METEOR_LINE_DIS_MAX; //yの設定.
 	}
 	//50%:左右端から出現.
 	else {
 		pos.x = (rnd2 < 50) ? 0 - METEOR_LINE_DIS_MAX : WINDOW_WID + METEOR_LINE_DIS_MAX; //xの設定.
-		pos.y = Calc::RandNum(0, WINDOW_HEI);                                                   //yの設定.
+		pos.y = Calc::RandNum(0, WINDOW_HEI);                                             //yの設定.
 	}
 
 	//目標地点の抽選.
@@ -179,7 +179,7 @@ void Meteor::UpdateMeteoLine() {
 			//①隕石を構成する線の情報.
 			DBL_XY lineMidPos = Calc::MidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
 			double lineLen    = Calc::Dist(shape.line[i].stPos, lineMidPos);            //長さの半分.
-			double lineAng    = Calc::FacingAng(lineMidPos, shape.line[i].stPos);		  //角度.
+			double lineAng    = Calc::FacingAng(lineMidPos, shape.line[i].stPos);		//角度.
 			//②隕石の中央からどんどん離していく.
 			double pivotDis   = Calc::Dist(pos, lineMidPos);                            //隕石の中央からの距離.
 			double pivotAng   = Calc::FacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.

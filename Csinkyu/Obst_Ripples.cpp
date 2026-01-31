@@ -13,6 +13,10 @@
 static GameData& gameData   = GameData::GetInst();
 static Player&   player = Player::GetInst();
 
+// ▼*---=[ Ripples ]=---*▼ //
+
+Ripples Ripples::inst;
+
 //初期化(一回のみ行う)
 void Ripples::Init()
 {
@@ -21,10 +25,11 @@ void Ripples::Init()
 //リセット(何回でも行う)
 void Ripples::Reset()
 {
-	//最初は少しだけ待機.
-	flashTimer = 80;
-	//波紋を全て消去.
-	ripples.clear();
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
+	flashTimer = 80; //最初は少しだけ待機.
+	ripples.clear(); //波紋を全て消去.
 }
 
 void Ripples::GenerateRandomPosition(double& x, double& y)

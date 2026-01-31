@@ -1,11 +1,11 @@
 /*
    - KR_Memory.h - (C++)
-   ver.2025/12/08
+   ver.2026/01/28
 
-   メモリ管理機能を追加。
+   メモリ管理機能。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_CPP_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -33,7 +33,7 @@ namespace KR
 
     //▼ ===== 関数 ===== ▼.
     public:
-        //constructor.
+        //コンストラクタ.
         MemoryLeak() {
             //デバッグ欄にログを出す設定.
             _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -52,9 +52,9 @@ namespace KR
         T* pointer; //ポインタを入れる用.
 
     public:
-        //constructor.
+        //コンストラクタ.
         TypePtr() : pointer(nullptr) {}
-        //destructor.
+        //デストラクタ.
         ~TypePtr() {
             Delete();
         }

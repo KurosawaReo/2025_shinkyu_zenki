@@ -10,9 +10,8 @@
 enum MeteorState
 {
 	Meteor_Normal,
-	Meteor_Destroy, //破壊モード.
+	Meteor_Destroy, //破壊演出.
 };
-
 //隕石の形データ.
 struct MeteorShape
 {

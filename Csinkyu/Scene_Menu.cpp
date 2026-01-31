@@ -1,25 +1,23 @@
 ﻿/*
-   - MenuManager.cpp -
-   メニューシーン
+   - Scene_Menu.cpp -
 */
-#include "MenuManager.h"
+#include "Scene_Menu.h"
 
 //依存関係.
 #include "BGManager.h"
 #include "GameData.h"
-#include "GameManager.h"
 //参照.
 static GameData&  gameData = GameData::GetInst();
-static BGManager& p_bg   = BGManager::GetInst();
+static BGManager& bgMng    = BGManager::GetInst();
 
-// 初期化
-void MenuManager::Init() {
+//初期化.
+void MenuScene::Init() {
 
 	// 入力アクション登録
 	InputMng::AddAction("MENU_UP",   KeyID::Up);
 	InputMng::AddAction("MENU_UP",   KeyID::W);
 	InputMng::AddAction("MENU_UP",   PadXboxID::Up);
-	InputMng::AddAction("MENU_DOWN", KeyID::Down);
+	InputMng::AddAction("MENU_DOWN", KeyID::Down); 
 	InputMng::AddAction("MENU_DOWN", KeyID::S);
 	InputMng::AddAction("MENU_DOWN", PadXboxID::Down);
 	InputMng::AddAction("MENU_NEXT", KeyID::Space);
@@ -27,28 +25,31 @@ void MenuManager::Init() {
 	InputMng::AddAction("MENU_NEXT", PadXboxID::A);
 
 	//フォント作成.
-	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Edge);
-	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Edge);
+	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Anti);
+	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Anti);
 
 	//モードごとの画像読み込み.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_endless.png"),  "menu0"); //ゲーム開始.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_tutorial.png"), "menu1"); //チュートリアル.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_title.png"),    "menu2"); //タイトルに戻る.
 
-	//電気の設定.
-//	electr.color = 0xffff00;
-
 	Reset();
 }
-
-// リセット
-void MenuManager::Reset() {
+//リセット.
+void MenuScene::Reset() {
 	selectedIndex = 0;
 	tmBlink.Start();
 }
+//入った瞬間.
+void MenuScene::Enter() {
 
-// 更新
-void MenuManager::Update() {
+}
+//抜けた瞬間.
+void MenuScene::Exit() {
+
+}
+//更新.
+void MenuScene::Update() {
 
 	//カーソル移動操作.
 	if (InputMng::IsPushActionTime("MENU_UP") % 20 == 1) {
@@ -70,9 +71,11 @@ void MenuManager::Update() {
 		switch (selectedIndex)
 		{
 			case 0:
-				gameData.scene = SCENE_GAME;
-				gameData.stage = STAGE_ENDLESS; //耐久モードへ.
-				p_bg.SetBgNo(1);              //背景変更.
+				//耐久モードへ.
+				SceneMng::SetScene("Game");
+				gameData.stage = Stage_Endless;
+				//背景変更.
+				bgMng.SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -82,9 +85,11 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 1:
-				gameData.scene = SCENE_GAME;
-				gameData.stage = STAGE_TUTORIAL; //チュートリアルへ.
-				p_bg.SetBgNo(1);               //背景変更.
+				//チュートリアルへ.
+				SceneMng::SetScene("Game");
+				gameData.stage = Stage_Tutorial;
+				//背景変更.
+				bgMng.SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -94,8 +99,8 @@ void MenuManager::Update() {
 #endif
 				break;
 			case 2:
-				gameData.scene = SCENE_TITLE;    //タイトルへ.
-				GameManager::GetInst().Reset(); //リセット.
+				SceneMng::SetScene("Title"); //タイトルへ.
+				App::Reset();                //リセット.
 				break;
 
 			default: assert(FALSE); break;
@@ -110,9 +115,8 @@ void MenuManager::Update() {
 	//経過時間.
 	counter += 1;
 }
-
-// 描画
-void MenuManager::Draw() {
+//描画.
+void MenuScene::Draw() {
 
 	//アニメーション値.
 	//この値を基準にメニューのアニメーションを制御する.
@@ -245,7 +249,7 @@ void MenuManager::Draw() {
 		if (auto i = DrawImgMng::Get(name)) {
 			//画像描画.
 			{
-				DrawMode _(DrawModeID::Bilinear, DrawBlendModeID::None); //画像を滑らかに.
+				DrawMode _(DrawModeID::Bilinear, DrawBlendModeID::None, 255); //画像を滑らかに.
 				i->DrawExtend(mLayout.imgPos, {extend , extend});
 			}
 			//画像のサイズ(Extend倍率分小さくする)
@@ -396,7 +400,7 @@ void MenuManager::Draw() {
 }
 
 //カーソル移動時の処理.
-void MenuManager::OnCursorMove() {
+void MenuScene::OnCursorMove() {
 
 	isBlink = true;  //点滅させる.
 	tmBlink.Start(); //点滅時間計測.

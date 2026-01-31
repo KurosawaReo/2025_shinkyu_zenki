@@ -1,8 +1,8 @@
 /*
    - KR_Global.h - (C++)
-   ver.2025/12/30
+   ver.2026/01/31
 
-   KrLib全体で使う汎用機能を追加。
+   KrLib全体で使う汎用プログラム。
 */
 #pragma once
 
@@ -68,7 +68,7 @@ namespace KR
 	{
 		T x, y;
 
-		//constructor.
+		//コンストラクタ.
 		XY()           : x(0),  y(0)  {}
 		XY(T _x, T _y) : x(_x), y(_y) {} //INT_XY n = {1, 0}; この書き方ができる.
 
@@ -185,7 +185,7 @@ namespace KR
 	{
 		T x, y, z;
 
-		//constructor.
+		//コンストラクタ.
 		XYZ()                 : x(0),  y(0),  z(0)  {}
 		XYZ(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {} 
 
@@ -313,27 +313,22 @@ namespace KR
 		RECT<double> ToDbl() const {
 			return { _dbl(left), _dbl(up), _dbl(right), _dbl(down) };
 		}
+		//拡大縮小した結果を返す(+で拡大, -で縮小)
+		RECT<T> AddSize(T other) {
+			return { left-other, up-other, right+other, down+other }; 
+		}
 
-		//サイズ.
-		XY<T> GetSize() const { return { right-left, down-up }; }
-		//左中央.
-		XY<T> GetL()    const { return { left,  (up+down)/2 }; }
-		//右中央.
-		XY<T> GetR()    const { return { right, (up+down)/2 }; }
-		//上中央.
-		XY<T> GetU()    const { return { (left+right)/2, up   }; }
-		//下中央.
-		XY<T> GetD()    const { return { (left+right)/2, down }; }
-		//左上.
-		XY<T> GetLU()   const { return { left,  up   }; }
-		//右上.
-		XY<T> GetRU()   const { return { right, up   }; }
-		//左下.
-		XY<T> GetLD()   const { return { left,  down }; }
-		//右下.
-		XY<T> GetRD()   const { return { right, down }; }
-		//中央.
-		XY<T> GetMid()  const { return { (left+right)/2, (up+down)/2 }; }
+		//get.
+		XY<T> GetSize() const { return { right-left, down-up }; }			//サイズ.
+		XY<T> GetL()    const { return { left,  (up+down)/2 }; }			//左中央.
+		XY<T> GetR()    const { return { right, (up+down)/2 }; }			//右中央.
+		XY<T> GetU()    const { return { (left+right)/2, up   }; }			//上中央.
+		XY<T> GetD()    const { return { (left+right)/2, down }; }			//下中央.
+		XY<T> GetLU()   const { return { left,  up   }; }					//左上.
+		XY<T> GetRU()   const { return { right, up   }; }					//右上.
+		XY<T> GetLD()   const { return { left,  down }; }					//左下.
+		XY<T> GetRD()   const { return { right, down }; }					//右下.
+		XY<T> GetMid()  const { return { (left+right)/2, (up+down)/2 }; }	//中央.
 	};
 	using INT_RECT = RECT<int>;    //int型.
 	using DBL_RECT = RECT<double>; //double型.
@@ -347,7 +342,7 @@ namespace KR
 		MY_STRING msg;      //メッセージ.
 
 	public:
-		//constructor.
+		//コンストラクタ.
 		ResultInt() :
 			codeNum(0), funcName(_T("None")), msg(_T("No Msg"))
 		{};

@@ -1,11 +1,11 @@
 /*
    - KR_File.h - (C++)
-   ver: 2025/12/08
+   ver.2026/01/28
 
-   ファイル操作機能を追加。
+   ファイルの読み取り/書き出し機能。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_CPP_GLOBAL
   #include "KR_Global.h"
 #endif
@@ -25,7 +25,7 @@ namespace KR
 		ResultInt MakeDir(MY_STRING path); //フォルダを作成(なければ)
 
 	public:
-		//destructor.
+		//デストラクタ.
 		~File() {
 			Close(); //自動で閉じる.
 		}

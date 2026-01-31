@@ -15,30 +15,11 @@ using namespace KR;
 //====================================================================//
 //【列挙体】
 
-//シーン.
-enum Scene
-{
-	SCENE_TITLE,
-	SCENE_MENU,     //メニュー画面.
-	SCENE_GAME,
-	SCENE_END,
-
-	SCENE_COUNT,    //総数.
-};
-//移動方向.
-//レーザー(normal)砲台用.
-enum MoveDir
-{
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	MOVE_UP,
-	MOVE_DOWN
-};
 //ステージ種類,
 enum StageType
 {
-	STAGE_ENDLESS,
-	STAGE_TUTORIAL,
+	Stage_Endless,
+	Stage_Tutorial,
 };
 
 //====================================================================//
@@ -51,7 +32,7 @@ enum StageType
 //#define DEBUG_SHOW_FPS		//FPS表示.　
 //#define DEBUG_CONTR_INPUT		//コントローラ操作表示.
 
-#define INPUT_CHANGE_ARCADE		//定義するとアーケード操作にする, しないとコントローラ操作に.
+//#define INPUT_CHANGE_ARCADE		//定義するとアーケード操作にする, しないとコントローラ操作に.
 
 //#define BGM_NONE //定義するとBGMをoffに.
 
@@ -86,6 +67,24 @@ enum StageType
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
+//管理クラス.
+//順番: 背景 → オブジェクト → シーン → ステージ → UIなど.
+#define ORDER_GAME_MNG					(0)
+#define ORDER_BG_MNG					(1)
+#define ORDER_METEOR_MNG				(2)
+#define ORDER_NOR_LASER_MNG				(3)				//Normal Laser  (通常レーザー)
+#define ORDER_STR_LASER_MNG				(4)				//Straight Laser(直線レーザー)
+#define ORDER_RIPPLES_MNG				(5)
+#define ORDER_FIREWORKS_MNG				(6)
+#define ORDER_LASER_MNG					(7)
+#define ORDER_ITEM_MNG					(8)
+#define ORDER_PLAYER_MNG				(9)
+#define ORDER_SCENE_MNG					(10)
+#define ORDER_ENDLESS_STAGE				(11)
+#define ORDER_TUTORIAL_STAGE			(12)
+#define ORDER_EFFECT_MNG				(13)
+#define ORDER_UI_MNG					(14)
+
 //プレイヤー.
 #define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)
 #define PLAYER_REF_ADD_SIZE				(5)				//反射モード時に拡大する当たり判定.
@@ -119,7 +118,6 @@ enum StageType
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
 
 //障害物: 通常レーザー.
-#define LASER_NOR_OUTER_MARGIN			(0)				//砲台の周回時の外側余白.
 #define LASER_NOR_SHOT_RESET			(300)			//砲台の発射リセット時間.
 #define LASER_NOR_SHOT_START			(20)			//砲台の発射開始時間.
 #define LASER_NOR_SHOT_SPAN				(5)				//砲台の発射間隔時間.

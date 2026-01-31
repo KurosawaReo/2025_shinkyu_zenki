@@ -22,17 +22,18 @@ enum PlayerMode
 	Player_SuperReflect //反射モード強化版.
 };
 
-//プレイヤー.[継承不可]
-class Player final
+//プレイヤー.
+class Player final : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static Player inst; //自身のインスタンス.
 public:
 	static Player& GetInst() {
-		static Player inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	PlayerMode     mode{};     //モード.
 	
@@ -53,10 +54,10 @@ private:
 
 	bool           isMoveAble{};     //移動可能かどうか.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	Player(){}
+	//コンストラクタ.
+	Player() : ManagerBase(ORDER_PLAYER_MNG) {}
 
 public:
 	//set.
@@ -71,15 +72,14 @@ public:
 	Circle     GetHit()      const { return hit; }
 	
 	//移動したか.
-	double     IsMoved() const { 
+	bool IsMoved() const { 
 		return Calc::Dist(hit.pos, after[1].pos) > 0; //移動距離が0より大きければ.
 	}
 
-	//その他.
-	void Init  ();
-	void Reset (DBL_XY _pos, bool _active);
-	void Update();
-	void Draw  ();
+	void Init  () override;
+	void Reset () override;
+	void Update() override;
+	void Draw  () override;
 
 	void UpdateDash();       //ダッシュ更新.
 

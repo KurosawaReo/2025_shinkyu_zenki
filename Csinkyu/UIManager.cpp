@@ -9,9 +9,13 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameManager&   gameMng     = GameManager::GetInst();
-static GameData&      p_gameData	 = GameData::GetInst();
+static GameManager&   gameMng       = GameManager::GetInst();
+static GameData&      p_gameData    = GameData::GetInst();
 static TutorialStage& p_tutorialStg = TutorialStage::GetInst();
+
+// ▼*--=<[ UIManager ]>=--*▼ //
+
+UIManager UIManager::inst;
 
 //初期化.
 void UIManager::Init() {
@@ -23,6 +27,9 @@ void UIManager::Init() {
 }
 //リセット.
 void UIManager::Reset() {
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
 	isShowScore = false;
 }
 //更新.
@@ -43,16 +50,16 @@ void UIManager::Draw() {
 	);
 #endif
 
-	//経過時間.
-	const float time = gameMng.GetSceneTime(SCENE_GAME);
-		
+	//ゲームシーン経過時間.
+	const float time = gameMng.GetGameScene()->GetSceneTime();
+	
 	//ステージ別.
 	switch (p_gameData.stage) 
 	{
-		case STAGE_TUTORIAL:
+		case Stage_Tutorial:
 		{
 			//アニメーション値.
-			double alpha   = Calc::AnimEaseInOut((time-1.0) * 2);
+			double alpha   = Calc::AnimEaseInOut((time-1.0)*2);
 			double alpha2  = Calc::AnimEaseInOut(time-0.2);
 			double animSin = sin(M_PI * (time-0.2));
 			//テキスト設定.
@@ -69,14 +76,14 @@ void UIManager::Draw() {
 			DrawImgMng::Get("ui_back_level")->DrawExtend({ WINDOW_WID/2, 70 }, {0.4, 0.35}); //背景画像.
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha);
-				str1.Draw(Anchor::Mid, p_gameData.font4);
+				str1.Draw(Anchor::Mid, p_gameData.fonts["size40"].GetFont());
 			}
 			//SCORE.
 			if (isShowScore) {
 				{
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha2);
 
-					str2.Draw(Anchor::Mid, p_gameData.font3);
+					str2.Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
 		 			DrawImgMng::Get("ui_back_score")->DrawExtend({(double)str2.pos.x, (double)str2.pos.y+28}, {0.35, 0.4});
 				}
 				//テキスト(光沢用)
@@ -84,18 +91,18 @@ void UIManager::Draw() {
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 100 * animSin);
 
 					str2.color = 0xFFFFFF;
-					str2.Draw(Anchor::Mid, p_gameData.font3);
+					str2.Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
 				}
 			}
 		}
 		break;
 
-		case STAGE_ENDLESS:
+		case Stage_Endless:
 		{
 			//アニメーション値.
-			double alpha1   = Calc::AnimEaseInOut( time-0.1);
-			double alpha2   = Calc::AnimEaseInOut( time-0.2);
-			double alpha3   = Calc::AnimEaseInOut( time-0.3);
+			double alpha1   = Calc::AnimEaseInOut( time-0.1   );
+			double alpha2   = Calc::AnimEaseInOut( time-0.2   );
+			double alpha3   = Calc::AnimEaseInOut( time-0.3   );
 			double alpha4   = Calc::AnimEaseInOut((time-1.0)*2);
 			double animSin1 = sin(M_PI* time-0.1);
 			double animSin2 = sin(M_PI*(time-0.2));
@@ -115,7 +122,7 @@ void UIManager::Draw() {
 			str[1].text = text;
 			_stprintf(text, _T("SCORE:%05d"),      p_gameData.score);
 			str[2].text = text;
-			_stprintf(text, _T("TIME:%.3f"),       gameMng.GetGameTime());
+			_stprintf(text, _T("TIME:%.3f"),       gameMng.GetGameScene()->GetGameTime());
 			str[3].text = text;
 		
 			//[level]
@@ -123,28 +130,28 @@ void UIManager::Draw() {
 			//テキスト(main)
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha4);
-				str[0].Draw(Anchor::Mid, p_gameData.font4);
+				str[0].Draw(Anchor::Mid, p_gameData.fonts["size40"].GetFont());
 			}
 			//[best score]
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha1);
 
-				str[1].Draw(Anchor::Mid, p_gameData.font3);
-				DrawImgMng::Get("ui_back_best_score")->DrawExtend({(double)str[1].pos.x, (double)str[1].pos.y+28}, {0.35, 0.4});
+				str[1].Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
+				DrawImgMng::Get("ui_back_best_score")->DrawExtend(str[1].pos.Add(0, 28).ToDbl(), {0.35, 0.4});
 			}
 			//[score]
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha2);
 
-				str[2].Draw(Anchor::Mid, p_gameData.font3);
-				DrawImgMng::Get("ui_back_score")->DrawExtend({(double)str[2].pos.x, (double)str[2].pos.y+28}, {0.35, 0.4});
+				str[2].Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
+				DrawImgMng::Get("ui_back_score")->DrawExtend(str[2].pos.Add(0, 28).ToDbl(), {0.35, 0.4});
 			}			
 			//[time]
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha3);
 
-				str[3].Draw(Anchor::Mid, p_gameData.font3);
-				DrawImgMng::Get("ui_back_time")->DrawExtend({(double)str[3].pos.x, (double)str[3].pos.y+28}, {0.35, 0.4});
+				str[3].Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
+				DrawImgMng::Get("ui_back_time")->DrawExtend(str[3].pos.Add(0, 28).ToDbl(), {0.35, 0.4});
 			}
 			//テキスト(光沢用)
 			str[1].color = 0xFFFFFF;
@@ -152,15 +159,15 @@ void UIManager::Draw() {
 			str[3].color = 0xFFFFFF;
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 100 * animSin1);
-				str[1].Draw(Anchor::Mid, p_gameData.font3);
+				str[1].Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
 			}
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 100 * animSin2);
-				str[2].Draw(Anchor::Mid, p_gameData.font3);
+				str[2].Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
 			}
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 100 * animSin3);
-				str[3].Draw(Anchor::Mid, p_gameData.font3);
+				str[3].Draw(Anchor::Mid, p_gameData.fonts["size35"].GetFont());
 			}
 		}
 		break;

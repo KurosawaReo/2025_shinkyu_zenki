@@ -5,17 +5,18 @@
 #include "BG1.h"
 #include "BG2.h"
 
-//背景クラス.[継承不可]
-class BGManager final
+//背景クラス.
+class BGManager final : public ManagerBase 
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static BGManager inst;
 public:
 	static BGManager& GetInst() {
-		static BGManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	float counter{}; //経過時間.
 
@@ -23,10 +24,10 @@ private:
 	BG1   bg1{};     //背景1.
 	BG2   bg2{};     //背景2.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	BGManager(){}
+	//コンストラクタ.
+	BGManager() : ManagerBase(ORDER_BG_MNG) {}
 
 public:
 	//set.
@@ -34,13 +35,14 @@ public:
 	//get.
 	float GetCounter() const { return counter; }
 
-	void  Init();
-	void  Update();
-	void  Draw();
+	void  Init()   override;
+	void  Reset()  override;
+	void  Update() override;
+	void  Draw()   override;
 
 	//ポーズ用.
-	void  PauseAnim();
-	void  RestartAnim();
+	void  Pause();
+	void  PauseEnd();
 
 	//使用禁止.
 	BGManager(const BGManager&) = delete;

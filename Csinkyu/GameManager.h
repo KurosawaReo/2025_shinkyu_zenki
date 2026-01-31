@@ -3,94 +3,51 @@
    ゲーム全体管理.
 */
 #pragma once
+#include "Scene_Title.h"
+#include "Scene_Menu.h"
+#include "Scene_Game.h"
+#include "Scene_End.h"
+#include "Obst_NormalLaser.h"
+#include "Obst_NormalLaser.h"
+#include "Obst_StraightLaser.h"
 
-//前方宣言.
-class NormalLaser_1;
-class NormalLaser_2;
-class NormalLaser_3;
-class NormalLaser_4;
-class StraightLaser;
-
-//ゲームマネージャー.[継承不可]
-class GameManager final
+//ゲームマネージャー.
+class GameManager final : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static GameManager inst; //自身のインスタンス.
 public:
 	static GameManager& GetInst() {
-		static GameManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
-	Timer tmScene[SCENE_COUNT]; //シーン別に経過時間を記録する.
-
-	Timer tmGameTime{};         //ゲーム計測時間.
-	Timer tmReflectMode{};      //スロー継続時間.
+	/* シーン関係 */
+	TitleScene titleScene{};
+	GameScene  gameScene{};
+	MenuScene  menuScene{};
+	EndScene   endScene{};
 
 #if defined DEBUG_SHOW_FPS
-	TimerMicro tmFps{};         //fps計測用タイマー.
+	TimerMicro tmFps{};	//fps計測用タイマー.
 #endif
 
-	bool isTitleAnim{};             //Title:     破片アニメーションを出したか.
-	bool isBestScoreSound{};        //BestScore: 音を鳴らしたか.
-	bool isItemCountDownSound[3]{}; //Item:      カウントダウンの音を鳴らしたか.
-
-	bool isGameStart{};             //ゲーム開始サイン.
-	bool isBestScore{};             //ベストスコア更新したか.
-
-//▼オブジェクト.
-public:
-	NormalLaser_1* laserNor1{};
-	NormalLaser_2* laserNor2{};
-	NormalLaser_3* laserNor3{};
-	NormalLaser_4* laserNor4{};
-	StraightLaser* laserStr[2]{};
-
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	GameManager(){}
-	//destructor.
-	~GameManager();
+	//コンストラクタ.
+	GameManager() : ManagerBase(ORDER_GAME_MNG) {}
 
 public:
 	//get.
-	float GetReflectModeTime() {
-		return tmReflectMode.GetPassTime();
-	}
-	float GetSceneTime(Scene scene) {
-		return tmScene[scene].GetPassTime();
-	}
-	float GetGameTime() {
-		return tmGameTime.GetPassTime();
-	}
+	GameScene* GetGameScene() { return &gameScene; }
 
 	//メイン処理.
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
-
-	//Reset.
-	void ResetNorLaser();
-	void ResetStrLaser();
-
-	//Update.
-	void UpdateTitle();
-	void UpdateMenu();
-	void UpdateGame();
-	void UpdateEnd();
-
-	void UpdateReflectMode();
-
-	//Draw.
-	void DrawTitle();
-	void DrawMenu();
-	void DrawGame();
-	void DrawEnd();
-
-	void DrawReflectMode();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	//ポーズ画面.
 	void GamePause();
@@ -100,7 +57,6 @@ public:
 	//その他.
 	void GameOver();
 	void ItemUsed();
-	void ReflectModeEnd();
 
 	//使用禁止.
 	GameManager(const GameManager&) = delete;

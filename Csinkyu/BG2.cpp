@@ -85,11 +85,11 @@ void BG2::Draw() {
 }
 
 //ポーズする.
-void BG2::PauseAnim() {
+void BG2::Pause() {
 	isPaused = true;
 }
 
 //ポーズ解除.
-void BG2::RestartAnim() {
+void BG2::PauseEnd() {
 	isPaused = false;
 }

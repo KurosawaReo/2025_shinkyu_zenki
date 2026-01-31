@@ -6,13 +6,17 @@
 
 //依存関係.
 #include "LaserManager.h"
-#include "Obst_NormalLaserMain.h"
+#include "Obst_NormalLaser.h"
 #include "Stage_Tutorial.h"
 #include "GameManager.h"
 #include "GameData.h"
 //参照.
-static GameData&      gameData      = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
+
+// ▼*--=<[ Player ]>=--*▼ //
+
+Player Player::inst;
 
 //初期化(一回のみ行う)
 void Player::Init()
@@ -26,13 +30,16 @@ void Player::Init()
 	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "player_light_ref");
 }
 //リセット(何回でも行う)
-void Player::Reset(DBL_XY _pos, bool _active)
+void Player::Reset()
 {
-	hit        = { _pos, PLAYER_SIZE, {} };
-	active     = _active;
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
+	hit        = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {} };
 	mode       = Player_Normal;
 	afterCntr  = 1;
 	isMoveAble = true;
+	active     = true;
 
 	// ダッシュ関連の初期化.
 	isDashing    = false;
@@ -41,7 +48,7 @@ void Player::Reset(DBL_XY _pos, bool _active)
 
 	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
-		after[i].pos      = _pos;
+		after[i].pos      = hit.pos; //初期位置と同じ.
 		after[i].isActive = false;
 	}
 }
@@ -79,7 +86,7 @@ void Player::Draw()
 	//デバッグ表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.Draw(Anchor::Mid, gameData.font1);
+		str.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont());
 	}
 #endif
 
@@ -110,7 +117,7 @@ void Player::Draw()
 		}
 
 		//チュートリアル用.
-		if (gameData.stage == STAGE_TUTORIAL) {
+		if (gameData.stage == Stage_Tutorial) {
 			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToInt(), 0xFFFFFF );
 			str.Draw();
 		}
@@ -149,7 +156,7 @@ void Player::UpdateDash()
 				isDashing    = true;
 
 				//チュートリアルなら.
-				if (gameData.stage == STAGE_TUTORIAL) {
+				if (gameData.stage == Stage_Tutorial) {
 					TutorialStage::GetInst().SetPlayerDash(true);
 				}
 			}

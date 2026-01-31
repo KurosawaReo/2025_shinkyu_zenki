@@ -18,6 +18,10 @@ static EffectManager& effectMng = EffectManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
+// ▼*---=[ ItemManager ]=---*▼ //
+
+ItemManager ItemManager::inst;
+
 //初期化.
 void ItemManager::Init() 
 {
@@ -28,8 +32,10 @@ void ItemManager::Init()
 //リセット.
 void ItemManager::Reset()
 {
-	isSpawnAble = false; //許可が出されるまで召喚不可.
-	itemMaxCnt = 1; 	 //最初はアイテム1つ.
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
+	itemMaxCnt = 0; //最大出現数は0にする.
 
 	//全て消滅.
 	for (int i = 0; i < _countof(items); i++) {
@@ -103,7 +109,7 @@ void ItemManager::Draw()
 			}
 
 			//チュートリアル用.
-			if (gamedata.stage == STAGE_TUTORIAL) {
+			if (gamedata.stage == Stage_Tutorial) {
 				DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToInt(), COLOR_ITEM);
 				str.Draw();
 			}
