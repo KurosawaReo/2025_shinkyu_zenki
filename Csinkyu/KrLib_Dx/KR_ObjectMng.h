@@ -1,6 +1,6 @@
 /*
    - KR_ObjectMng.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/01/31
 
    オブジェクトを扱う管理クラス。
 */
@@ -57,9 +57,7 @@ namespace KR
 
 	protected:
 		//コンストラクタ.
-		ObjectMng(int order) :
-			ManagerBase(order)
-		{}
+		ObjectMng(int order) : ManagerBase(order) {}
 		//object追加.
 		void Push(T obj) {
 			obj.Init();             //初期化処理.
