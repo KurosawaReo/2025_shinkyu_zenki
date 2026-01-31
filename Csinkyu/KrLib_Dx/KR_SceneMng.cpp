@@ -26,9 +26,13 @@ namespace KR
 	}
 	//シーン変更.
 	ResultInt SceneMng::SetScene(string saveName) {
-		//登録されてたら.
+		//登録されてれば.
 		if (inst.scenes.count(saveName) > 0) {
-			inst.sceneChanger.RequestChange(inst.scenes[saveName]); //次のシーンを設定.
+
+			//次のシーンに設定.
+			inst.sceneChanger.RequestChange(inst.scenes[saveName]);
+			inst.nowSceneName = saveName;
+
 			return { 0, _T("SceneMng::SetScene"), _T("正常終了") };
 		}
 		return { -1, _T("SceneMng::SetScene"), _T("未登録のシーン") };

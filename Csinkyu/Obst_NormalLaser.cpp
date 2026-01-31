@@ -21,10 +21,22 @@ using namespace Calc; //計算機能を使用.
 
 // ▼*--=<[ NormalLaserPoint ]>=--*▼ //
 
+//方向取得.
+DBL_XY NormalLaserPoint::GetVec() const {
+
+	switch (move.dir) {
+		case Up:    return {  0, -1 };
+		case Left:  return { -1,  0 };
+		case Right: return {  1,  0 };
+		case Down:  return {  0,  1 };
+	}
+	return { 0, 0 }; //不正な値.
+}
+
 void NormalLaserPoint::Reset() {
-	counter = LASER_NOR_SHOT_START + 100;
+	counter   = LASER_NOR_SHOT_START + 100;
 	counterTm = LASER_NOR_SHOT_START;
-	speed = 3;
+	speed     = 3;
 	validFlag = false;
 	MoveRand();
 }
@@ -35,11 +47,14 @@ void NormalLaserPoint::Update() {
 		counter -= gameData.speedRate; //経過カウンター.
 
 		//移動(方向 * 速度 * 速度倍率)
-		pos += move.vec * speed * gameData.speedRate;
+		pos += GetVec() * speed * gameData.speedRate;
+		//画面サイズ.
+		DBL_RECT winSize = App::GetWindowRect().ToDbl();
+
 		//画面から少しでもはみ出たら.
-		if (Calc::IsOutInArea(pos, { 0, 0 }, App::GetWindowRect().ToDbl(), false)) {
+		if (Calc::IsOutInArea(pos, { 0, 0 }, winSize.AddSize(1), false)) {
 			//画面内に補正.
-			Calc::FixPosInArea(&pos, { 0, 0 }, App::GetWindowRect().ToDbl());
+			Calc::FixPosInArea(&pos, { 0, 0 }, winSize);
 			//回転.
 			if (move.isLeft) {
 				move.dir = static_cast<MoveDir>((move.dir - 1) % MoveDir::Count); //左回り.
@@ -50,7 +65,7 @@ void NormalLaserPoint::Update() {
 		}
 
 		//タイミングが来たらレーザー発射.
-		if (counter <= LASER_NOR_SHOT_START)
+		if (counter <= counterTm)
 		{
 			//プレイヤー座標.
 			DBL_XY plyPos = player.GetPos();
@@ -158,7 +173,7 @@ void NormalLaser::Update()
 {
 	//ゲーム中のみ.
 	if (SceneMng::GetSceneName() == "Game") {
-		
+
 		//発射台.
 		for (auto& i : points) {
 			i.Update();
@@ -248,7 +263,7 @@ void NormalLaser::DrawObstFlash() {
 		//エフェクト時間が終了したら無効化
 		if (flash[i].counter >= flash[i].Duration)
 		{
-			flash[i].validFlag = 0;
+			flash[i].validFlag = false;
 		}
 	}
 }
@@ -261,7 +276,7 @@ void NormalLaser::CreateFlashEffect(double fx, double fy)
 	//未使用のエフェクトスロットを探す.
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
 	{
-		if (flash[i].validFlag == 0)
+		if (!flash[i].validFlag)
 		{
 			double dx = pPos.x - fx;
 			double dy = pPos.y - fy;
@@ -283,14 +298,11 @@ void NormalLaser::CreateFlashEffect(double fx, double fy)
 //何個発射台を使うか.
 void NormalLaser::UseLaserPointCnt(int count) {
 	
-	GetInst().Reset(); //一度リセット.
-	
 	int tmp = count;
-	//必要な数だけ有効に.
+
+	//全ての発射台.
 	for (auto& i : GetInst().points) {
-		if (tmp > 0) {
-			i.SetValidFlag(true);
-		}
+		i.SetValidFlag(tmp > 0); //必要な数だけ有効に.
 		tmp--;
 	}
 }

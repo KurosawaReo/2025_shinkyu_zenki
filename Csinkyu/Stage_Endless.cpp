@@ -48,10 +48,10 @@ void EndlessStage::Update() {
 		effectMng.SpawnEffect(&data);
 
 		//Lv1から.
-		ManagerInsts::GetInst().Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::Active);
 		ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Active);
 
 		ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(2); //レーザーは2つ.
 		ManagerInsts::GetInst().Get<ItemManager>()->SetItemMaxCnt(1);    //アイテムは1つ.

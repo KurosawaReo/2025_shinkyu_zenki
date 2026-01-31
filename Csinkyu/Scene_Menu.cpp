@@ -8,7 +8,7 @@
 #include "GameData.h"
 //参照.
 static GameData&  gameData = GameData::GetInst();
-static BGManager& p_bg   = BGManager::GetInst();
+static BGManager& bgMng    = BGManager::GetInst();
 
 //初期化.
 void MenuScene::Init() {
@@ -17,7 +17,7 @@ void MenuScene::Init() {
 	InputMng::AddAction("MENU_UP",   KeyID::Up);
 	InputMng::AddAction("MENU_UP",   KeyID::W);
 	InputMng::AddAction("MENU_UP",   PadXboxID::Up);
-	InputMng::AddAction("MENU_DOWN", KeyID::Down);
+	InputMng::AddAction("MENU_DOWN", KeyID::Down); 
 	InputMng::AddAction("MENU_DOWN", KeyID::S);
 	InputMng::AddAction("MENU_DOWN", PadXboxID::Down);
 	InputMng::AddAction("MENU_NEXT", KeyID::Space);
@@ -75,7 +75,7 @@ void MenuScene::Update() {
 				SceneMng::SetScene("Game");
 				gameData.stage = Stage_Endless;
 				//背景変更.
-				p_bg.SetBgNo(1);
+				bgMng.SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();
@@ -89,7 +89,7 @@ void MenuScene::Update() {
 				SceneMng::SetScene("Game");
 				gameData.stage = Stage_Tutorial;
 				//背景変更.
-				p_bg.SetBgNo(1);
+				bgMng.SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
 				SoundMng::StopAll();

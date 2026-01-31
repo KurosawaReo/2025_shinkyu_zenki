@@ -13,6 +13,7 @@
 #include "Obst_Ripples.h"
 #include "Obst_Fireworks.h"
 #include "Item.h"
+#include "Player.h"
 #include "EffectManager.h"
 #include "UIManager.h"
 #include "GameData.h"
@@ -114,11 +115,11 @@ void TutorialStage::UpdateStep0() {
 	//エフェクト.
 	EffectData data{};
 	data.type = Effect_Tutorial_Step1;
-	data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
+	data.pos  = { WINDOW_WID/2, WINDOW_HEI/2 };
 	effectMng.SpawnEffect(&data);
 
-	//予め動かしておく.
-	ManagerInsts::GetInst().Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Active);
+	//オブジェクト.
+	ManagerInsts::GetInst().Get<ItemManager> ()->SetAutoExeMode(MngAutoExe::Active);
 	ManagerInsts::GetInst().Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Active);
 
 	startTimer.Start(); //開始.
@@ -133,6 +134,9 @@ void TutorialStage::UpdateStep1() {
 	{
 		case 0:
 		{
+			//最初の一定時間は処理しない.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
+
 			//移動したらカウンターを+1
 			if (player.IsMoved()) {
 				plyMoveCntr += 1;
@@ -155,13 +159,16 @@ void TutorialStage::UpdateStep1() {
 
 		case 1:
 		{
+			//最初の一定時間は処理しない.
+			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
+
 			//[終了条件] ダッシュしたら.
 			if (endTimer.GetState() != TimerState::Active && isPlayerDash) {
 				endTimer.Start();
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
-				//オブジェクトON.
+				//オブジェクト.
 				ManagerInsts::GetInst().Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Active);
 				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
 				//終了処理.
@@ -173,7 +180,7 @@ void TutorialStage::UpdateStep1() {
 
 		case 2:
 		{
-			//最初の一定時間は停止.
+			//最初の一定時間は処理しない.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//[終了条件] 一定時間経過したら.
@@ -194,12 +201,9 @@ void TutorialStage::UpdateStep1() {
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng.SpawnEffect(&data);
 
-				//オブジェクトOFF.
-				ManagerInsts::GetInst().Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Stop);
-				//オブジェクトON.
-				ManagerInsts::GetInst().Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Active);
-				//アイテム召喚.
-				itemMng.ItemSpawn(0);
+				//オブジェクト.
+				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(0); //レーザーは0.
+				ManagerInsts::GetInst().Get<ItemManager>()->SetItemMaxCnt(1);    //アイテムは1つ.
 
 				//終了処理.
 				StepInEnd();
@@ -218,7 +222,7 @@ void TutorialStage::UpdateStep2() {
 	{
 		case 0:
 		{
-			//最初の一定時間は停止.
+			//最初の一定時間は処理しない.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//[終了条件] アイテムを取ったら.
@@ -236,7 +240,7 @@ void TutorialStage::UpdateStep2() {
 
 		case 1:
 		{
-			//最初の一定時間は停止.
+			//最初の一定時間は処理しない.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//[終了条件] 反射モードが終わったら.
@@ -254,8 +258,6 @@ void TutorialStage::UpdateStep2() {
 				data.type = Effect_Tutorial_Step3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng.SpawnEffect(&data);
-				//アイテム召喚.
-				itemMng.ItemSpawn(0);
 				//終了処理.
 				StepInEnd();
 				stepNo++;
@@ -273,7 +275,7 @@ void TutorialStage::UpdateStep3() {
 	{
 		case 0:
 		{
-			//最初の一定時間は停止.
+			//最初の一定時間は処理しない.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//[終了条件] アイテムを取ったら.
@@ -282,7 +284,7 @@ void TutorialStage::UpdateStep3() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
-				//オブジェクトON.
+				//オブジェクト.
 				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(1); //レーザーは1つ.
 				//終了処理.
 				StepInEnd();
@@ -293,7 +295,7 @@ void TutorialStage::UpdateStep3() {
 
 		case 1:
 		{
-			//最初の一定時間は停止.
+			//最初の一定時間は処理しない.
 			if (startTimer.GetPassTime() < TUTORIAL_START_WAIT_TIME) { break; }
 
 			//[終了条件] レーザーを反射した && 反射モードが終わったら.
@@ -302,7 +304,7 @@ void TutorialStage::UpdateStep3() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
-				//オブジェクトON.
+				//オブジェクト.
 				ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
 				//終了処理.
 				StepInEnd();
@@ -345,13 +347,10 @@ void TutorialStage::UpdateStep3() {
 				data.type = Effect_Tutorial_Step4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng.SpawnEffect(&data);
-
 				//スコアリセット.
 				gameData.scoreBef = gameData.score = 0;
 				//スコア表示.
 				uiMng.SignIsShowScore();
-				//召喚可能に.
-				ManagerInsts::GetInst().Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Active);
 
 				//終了処理.
 				StepInEnd();
@@ -378,7 +377,7 @@ void TutorialStage::UpdateStep4() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
-				//オブジェクトOFF.
+				//オブジェクト.
 				ManagerInsts::GetInst().Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Stop);
 				ManagerInsts::GetInst().Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Stop);
 				ManagerInsts::GetInst().Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Stop);
@@ -407,7 +406,7 @@ void TutorialStage::UpdateStep4() {
 			//チュートリアル終了.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				SceneMng::SetScene("Title");
-				gameMng.Reset(); //全てリセット.
+				App::Reset(); //全てリセット.
 			}
 		}
 		break;
@@ -557,7 +556,7 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 	switch (line) {
 		case 1: 
 			str.pos.y = 155;
-			str.color = {0, 255, 255};
+			str.color = {  0, 255, 255};
 			break;
 		case 2: 
 			str.pos.y = 155+70;

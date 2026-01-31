@@ -7,6 +7,7 @@
 #include "GameData.h"
 #include "Player.h"
 #include "BGManager.h"
+#include "UIManager.h"
 #include "Stage_Tutorial.h"
 #include "Stage_Endless.h"
 //参照.
@@ -14,6 +15,7 @@ static GameData&		gameData	= GameData::GetInst();
 static Player&			player		= Player::GetInst();
 static BGManager&		bgMng		= BGManager::GetInst();
 static TutorialStage&	tutorialStg = TutorialStage::GetInst();
+static UIManager&		uiMng		= UIManager::GetInst();
 
 //初期化.
 void GameScene::Init() {
@@ -23,27 +25,41 @@ void GameScene::Init() {
 }
 //リセット.
 void GameScene::Reset() {
-	isGameStart = false;
+
+	//タイマーリセット.
+	timer.Reset();
 	tmGameTime.Reset();
 	tmReflectMode.Reset();
+
+	itemSoundCnt = 0;
+	isGameStart = false;
 }
 //入った瞬間.
 void GameScene::Enter() {
-	timer.Start(); //タイマー開始.
+	//まだ動いてなければ.
+	if (timer.GetState() != TimerState::Active) {
+		timer.Start(); //タイマー開始.
+	}
 }
 //抜けた瞬間.
 void GameScene::Exit() {
-	timer.Reset(); //タイマーリセット.
-
-	tmGameTime.Stop();     //停止.
-	tmReflectMode.Reset(); //リセット.
-	
-	itemSoundCnt = 0;
+	//チュートリアル以外のみ.
+	if (gameData.stage != Stage_Tutorial) {
+		timer.Stop();          //演出用タイマー停止.
+		tmGameTime.Stop();     //ゲーム時間停止.
+		tmReflectMode.Reset(); //反射モードリセット.
+		itemSoundCnt = 0;
+	}
 }
 //更新.
 void GameScene::Update() {
+
 	//ゲーム開始前.
 	if (!isGameStart) {
+
+		ManagerInsts::GetInst().Get<Player>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<UIManager>()->SetAutoExeMode(MngAutoExe::Active);
+
 		//一定時間経ったら.
 		if (timer.GetPassTime() >= GAME_START_TIME) {
 			tmGameTime.Start(); //ゲーム時間計測開始.

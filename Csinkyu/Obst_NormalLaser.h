@@ -17,8 +17,7 @@ enum MoveDir
 };
 struct MoveInfo
 {
-	DBL_XY  vec;    //移動方向ベクトル.
-	MoveDir dir;    //今の方向(回転用)
+	MoveDir dir;    //進んでる方向.
 	bool    isLeft; //true = 左回り, false = 右回り.
 };
 
@@ -48,6 +47,8 @@ private:
 public:
 	//set.
 	void SetValidFlag(bool _flag) { validFlag = _flag; }
+	//get.
+	DBL_XY GetVec() const; //方向取得.
 
 	void Reset();
 	void Update();
