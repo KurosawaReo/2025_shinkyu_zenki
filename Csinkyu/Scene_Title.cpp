@@ -38,19 +38,22 @@ void TitleScene::Update() {
 }
 //描画.
 void TitleScene::Draw() {
+
 	//操作方法明記.
 	DrawStr howPlay(_T(""), { 30, WINDOW_HEI - 30 }, 0x00FFFF);
 	{
+		const int fontH = gameData.fonts["size18"].GetFont();
+
 #if defined INPUT_CHANGE_ARCADE
 		howPlay.text = _T("アーケード操作");
 #else
 		howPlay.text = _T("コントローラ操作");
 #endif
-		howPlay.Draw(Anchor::LD);
+		howPlay.Draw(Anchor::LD, fontH);
 
 		//枠線グラデーション.
 		const DBL_XY howPlayPos = howPlay.pos.ToDbl();
-		const DBL_XY howPlaySize = howPlay.GetTextSize().ToDbl();
+		const DBL_XY howPlaySize = howPlay.GetTextSize(fontH).ToDbl();
 		const int margin = 5;
 
 		GradLine line;
@@ -116,7 +119,7 @@ void TitleScene::Draw() {
 		DrawStr str(text, { WINDOW_WID / 2, drawY + 1 }, COLOR_BEST_SCORE);
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1);
-			str.Draw(Anchor::Mid, gameData.font2); //スコア値.
+			str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont()); //スコア値.
 		}
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim2);
@@ -139,7 +142,7 @@ void TitleScene::Draw() {
 		DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, drawY }, 0xFFFFFF);
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-			str.Draw(Anchor::Mid, gameData.font1); //テキスト.
+			str.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont()); //テキスト.
 		}
 	}
 	//隕石破壊アニメーション.

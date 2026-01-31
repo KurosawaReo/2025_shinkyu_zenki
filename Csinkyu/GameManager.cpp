@@ -84,10 +84,11 @@ void GameManager::Init() {
 	SceneMng::AddScene(&endScene,   "End");
 
 	//フォント.
-	gameData.font1 = CreateFontToHandle(NULL, 26, 1, DX_FONTTYPE_ANTIALIASING);
-	gameData.font2 = CreateFontToHandle(NULL, 30, 1, DX_FONTTYPE_ANTIALIASING);
-	gameData.font3 = CreateFontToHandle(NULL, 35, 1, DX_FONTTYPE_ANTIALIASING);
-	gameData.font4 = CreateFontToHandle(NULL, 40, 1, DX_FONTTYPE_ANTIALIASING);
+	gameData.fonts["size18"].CreateFontH(_T(""), 20, 1, FontTypeID::Anti);
+	gameData.fonts["size26"].CreateFontH(_T(""), 26, 1, FontTypeID::Anti);
+	gameData.fonts["size30"].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
+	gameData.fonts["size35"].CreateFontH(_T(""), 35, 1, FontTypeID::Anti);
+	gameData.fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
 
 	//スコア読み込み.
 	{
@@ -195,7 +196,7 @@ void GameManager::GamePauseEnd() {
 //ポーズ画面.
 void GameManager::DrawPause() {
 	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
-	str.Draw(Anchor::Mid, gameData.font4);
+	str.Draw(Anchor::Mid, gameData.fonts["size40"].GetFont());
 }
 
 //ゲーム終了(死亡)

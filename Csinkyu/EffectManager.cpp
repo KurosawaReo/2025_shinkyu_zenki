@@ -309,7 +309,7 @@ void EffectManager::Draw() {
 							lampFillCnt = 4;
 							break;
 					}
-					str.Draw(Anchor::Mid, gameData.font2);
+					str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont());
 
 					//ƒ‰ƒ“ƒv(•K—v‚È”‚¾‚¯)
 					for (int j = 0; j < lampUseCnt; j++) {

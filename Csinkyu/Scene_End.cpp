@@ -82,7 +82,7 @@ void EndScene::Draw() {
 			//GAME OVER
 			DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
 			//テキスト.
-			str.Draw(Anchor::Mid, gameData.font2);
+			str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont());
 		}
 	}
 	//チュートリアル以外の場合.
@@ -107,8 +107,8 @@ void EndScene::Draw() {
 
 				DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
 				//画面中央に文字を表示.
-				str1.Draw(Anchor::Mid, gameData.font1);
-				str2.Draw(Anchor::Mid, gameData.font1);
+				str1.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont());
+				str2.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont());
 			}
 		}
 
@@ -145,7 +145,7 @@ void EndScene::Draw() {
 			DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, WINDOW_HEI / 2 + 145 }, 0xFFFFFF);
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-				str.Draw(Anchor::Mid, gameData.font1); //テキスト.
+				str.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont()); //テキスト.
 			}
 		}
 	}

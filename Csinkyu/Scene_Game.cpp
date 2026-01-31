@@ -183,7 +183,7 @@ void GameScene::DrawReflectMode() {
 				}
 				//ç≈å„ÇÃ3ïb.
 				if (tmReflectMode.GetPassTime() <= 3) {
-					str.Draw(Anchor::Mid, gameData.font4); //êîéö.
+					str.Draw(Anchor::Mid, gameData.fonts["size40"].GetFont()); //êîéö.
 				}
 			}
 		}

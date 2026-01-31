@@ -25,8 +25,8 @@ void MenuScene::Init() {
 	InputMng::AddAction("MENU_NEXT", PadXboxID::A);
 
 	//フォント作成.
-	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Edge);
-	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Edge);
+	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Anti);
+	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Anti);
 
 	//モードごとの画像読み込み.
 	DrawImgMng::LoadFile(_T("Resources/Images/menu_endless.png"),  "menu0"); //ゲーム開始.
