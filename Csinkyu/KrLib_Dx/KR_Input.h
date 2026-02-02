@@ -1,15 +1,17 @@
 /*
    - KR_Input.h - (DxLib)
-   ver: 2025/12/26
+   ver.2026/01/28
 
-   入力操作機能を追加。
+   入力操作機能。
    (オブジェクト指向ver → KR_Object)
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
+//[include] hで使うもの.
+#include "KR_ManagerBase.h"
 
 //KrLib名前空間.
 namespace KR
@@ -158,12 +160,12 @@ namespace KR
 	constexpr int MOUSE_MAX   = 3;
 	constexpr int PAD_BTN_MAX = 32;
 
-	//入力管理クラス[staticクラス]
-	class InputMng final
+	//入力管理クラス.
+	class InputMng final : public ManagerBase
 	{
 	//▼ ===== 実体 ===== ▼.
 	private:
-		static InputMng inst; //実体を入れる用.		
+		static InputMng inst; //実体を入れる用.
 
 	//▼ ===== 変数 ===== ▼.
 	private:
@@ -178,10 +180,14 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	private:
-		//constructor(新規作成をできなくする)
-		InputMng() {}
+		//コンストラクタ.
+		InputMng() : ManagerBase(ORDER_KR_INPUT_MNG) {}
 
-		static DBL_XY GetVector4Dir(INT_XY pow);
+		DBL_XY GetVector4Dir(INT_XY pow);
+		void   UpdateKey();
+		void   UpdateMouse();
+		void   UpdatePad();
+		void   UpdateAction();
 
 	public:
 
@@ -212,11 +218,11 @@ namespace KR
 		static DBL_XY GetPadStick();
 		static DBL_XY GetMousePos();
 
-		//更新.
-		static void   UpdateKey();
-		static void   UpdateMouse();
-		static void   UpdatePad();
-		static void   UpdateAction();
+		//基本処理.
+		void Init()   override {} //未使用.
+		void Reset()  override {} //未使用.
+		void Update() override;
+		void Draw()   override {} //未使用.
 
 		//使用禁止.
 		InputMng(const InputMng&) = delete;

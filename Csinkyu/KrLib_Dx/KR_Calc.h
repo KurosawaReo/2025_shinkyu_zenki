@@ -1,11 +1,11 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver: 2025/12/26
+   ver.2026/01/28
 
-   計算機能を追加。
+   当たり判定、物理、アニメーション曲線などの計算機能。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif

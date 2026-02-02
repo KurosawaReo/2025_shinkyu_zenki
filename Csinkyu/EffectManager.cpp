@@ -11,6 +11,10 @@ static GameData& gameData = GameData::GetInst();
 
 using namespace Calc; //計算機能を使用.
 
+// ▼*---=[ EffectManager ]=---*▼ //
+
+EffectManager EffectManager::inst;
+
 void EffectManager::Init() {
 	//画像読み込み.
 	DrawImgMng::LoadFile(_T("Resources/Images/score100.png"), "score100");
@@ -24,6 +28,9 @@ void EffectManager::Reset() {
 
 void EffectManager::Update() {
 	
+	//ポーズ中の更新はしない.
+	if (gameData.isPause) { return; }
+
 	//全てのエフェクト.
 	for (auto i = effect.begin(); i != effect.end(); ) {
 
@@ -146,10 +153,9 @@ void EffectManager::Draw() {
 			{
 				//座標.
 				DBL_XY pos = {i.pos.x, i.pos.y - AnimEaseOut(i.counter/SCORE_ANIM_TIME)*30};
-				//アニメーション値.
-				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/SCORE_ANIM_TIME));
 				//描画.
 				{
+					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/SCORE_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 
 					//画像切り替え.
@@ -183,11 +189,11 @@ void EffectManager::Draw() {
 			case Effect_PlayerDeath:
 			{
 				Circle cir= { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF };
-				//アニメーション値.
-				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME));
 				//描画.
 				{
+					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+		
 					DrawCircleKR(cir, false, true);
 				}
 			}
@@ -196,11 +202,11 @@ void EffectManager::Draw() {
 			case Effect_ReflectLaser:
 			{
 				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT };
-				//アニメーション値.
-				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/LASER_REF_ANIM_TIME));
 				//描画.
 				{
+					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+
 					DrawCircleKR(cir, false, true);
 				}
 			}
@@ -213,11 +219,11 @@ void EffectManager::Draw() {
 				line.stPos = ArcPos(i.pos, i.ang,     i.len);
 				line.edPos = ArcPos(i.pos, i.ang+180, i.len);
 			    line.color = COLOR_METEOR(i.pos);
-				//アニメーション値.
-				int pow = _int_r(255 * AnimEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME));
 				//描画.
 				{
+					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+
 					DrawLineKR(line, true);
 				}
 			}
@@ -303,7 +309,7 @@ void EffectManager::Draw() {
 							lampFillCnt = 4;
 							break;
 					}
-					str.Draw(Anchor::Mid, gameData.font2);
+					str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont());
 
 					//ランプ(必要な数だけ)
 					for (int j = 0; j < lampUseCnt; j++) {

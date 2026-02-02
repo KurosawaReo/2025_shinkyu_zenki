@@ -1,21 +1,24 @@
 /*
-   - Stage_Tutorial.h -
+   - Stage_Endless.h -
 
-   ステージ: チュートリアル.
+   [Stage]
+   ・Endless
+   ・Tutorial <-
 */
 #pragma once
 
-//チュートリアル.[継承不可]
-class TutorialStage final
+//チュートリアルステージ.
+class TutorialStage final : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static TutorialStage inst; //自身のインスタンス.
 public:
 	static TutorialStage& GetInst() {
-		static TutorialStage inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	Font   font[2]{};
 	
@@ -33,10 +36,10 @@ private:
 	Timer  startTimer{};      //項目開始時に計測開始.
 	Timer  endTimer{};        //項目終了時に計測開始.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	TutorialStage(){}
+	//コンストラクタ.
+	TutorialStage() : ManagerBase(ORDER_TUTORIAL_STAGE) {}
 
 public:
 	//set.
@@ -48,10 +51,10 @@ public:
 	//get
 	int  GetStepNo() const { return stepNo; }
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void ResetSignFlag();
 	void StepInEnd();

@@ -17,39 +17,37 @@ struct ItemData
 	float    spawnCounter{};
 };
 
-//アイテム管理クラス.[継承不可]
-class ItemManager final
+//アイテム管理クラス.
+class ItemManager final : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static ItemManager inst; //自身のインスタンス.
 public:
 	static ItemManager& GetInst() {
-		static ItemManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	ItemData items[ITEM_COUNT]{};
 	int      itemMaxCnt{}; //出すアイテムの数.
 
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
-	bool     isSpawnAble{};   //召喚可能かどうか.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	ItemManager(){}
+	//コンストラクタ.
+	ItemManager() : ManagerBase(ORDER_ITEM_MNG) {}
 
 public:
 	//set.
-	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
-	//add.
-	void AddItemCnt() { itemMaxCnt++; }
+	void SetItemMaxCnt(int count) { itemMaxCnt = count; }
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	void ItemSpawn(int idx); //アイテム召喚.
 	void ItemErase(int idx); //アイテム消滅.

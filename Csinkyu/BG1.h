@@ -24,19 +24,19 @@ public:
 //背景1.
 class BG1
 {
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	vector<BG_Tile> tiles; //背景タイルデータ.
 
 	TimerMicro tmShine = TimerMicro(TimerMode::CountDown, 1000000/60); //光る間隔.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 public:
 	void Init();
 	void Update();
 	void Draw();
 
 	//ポーズ用.
-	void PauseAnim();
-	void RestartAnim();
+	void Pause();
+	void PauseEnd();
 };

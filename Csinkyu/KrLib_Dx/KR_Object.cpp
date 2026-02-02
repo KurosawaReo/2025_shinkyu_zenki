@@ -1,6 +1,6 @@
 /*
    - KR_Object.cpp - (DxLib)
-   ver: 2026/01/25
+   ver.2026/01/28
 */
 #include "KR_Object.h"
 
@@ -19,7 +19,7 @@ namespace KR
 		useImg.push_back(name); //‰æ‘œ–¼‚ğ“o˜^.
 		useImgNo = 0;           //1–‡‚µ‚©‚È‚¢ê‡‚Í0‚ÅŒÅ’è.
 	}
-	void ObjectShape::SetDrawImgs(vector<string> names, double changeTime) {
+	void ObjectShape::SetDrawImgs(vector<string> names, float changeTime) {
 		//“¯‚¶‚à‚Ì‚Å‚È‚¯‚ê‚Î.
 		if (useImg != names) {
 			useImg = names; //‰æ‘œ–¼”z—ñ‚ğ“o˜^.

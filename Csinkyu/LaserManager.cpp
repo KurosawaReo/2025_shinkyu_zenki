@@ -10,12 +10,16 @@
 #include "Stage_Tutorial.h"
 #include "GameData.h"
 //参照.
-static GameData&      gameData      = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
 static Player&        player    = Player::GetInst();
 static MeteorManager& meteorMng = MeteorManager::GetInst();
 static EffectManager& effectMng = EffectManager::GetInst();
 
 using namespace Calc; //計算機能を使用.
+
+// ▼*---=[ LaserManager ]=---*▼ //
+
+LaserManager LaserManager::inst;
 
 //初期化.
 void LaserManager::Init() {
@@ -23,6 +27,9 @@ void LaserManager::Init() {
 }
 //リセット.
 void LaserManager::Reset() {
+
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
 
 	//レーザーを全て消去.
 	laser.clear();
@@ -74,7 +81,7 @@ void LaserManager::Draw() {
 	}
 
 	//チュートリアル限定.
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 		//レーザー本体.
 		for (const LaserData& i : laser)
 		{
@@ -182,15 +189,12 @@ void LaserManager::UpdateLaser() {
 				//一定時間で目標地点を決める.
 				if (i->counter >= LASER_REF_TRACK_ST_TM) {
 
-					const DBL_XY laserPos = i->nowPos; //レーザーの現在位置.
-
-					DBL_XY meteoPos{ -1, -1 }; //隕石座標(受け取る用)
-
-					//最も近い隕石の位置を取得する.
-					const bool hasMeteo = meteorMng.GetMeteorPosNearest(laserPos, &meteoPos);
+					//最寄りの隕石を取得する.
+					const DBL_XY  laserPos = i->nowPos; //レーザーの現在位置.
+					const Meteor* meteor   = meteorMng.GetNearestMeteor(laserPos);
 					//隕石があった場合.
-					if (hasMeteo) {
-						i->goalPos  = meteoPos; //登録.
+					if (meteor) {
+						i->goalPos  = meteor->GetPos(); //座標登録.
 						i->isGoGoal = true;
 					}
 				}
@@ -198,33 +202,16 @@ void LaserManager::UpdateLaser() {
 				Circle hit = { i->nowPos, 10, {} }; //当たり判定円(仮)
 
 				//隕石と当たっているなら.
-				if (meteorMng.IsHitMeteors(hit, true)) {
+				if (auto meteor = meteorMng.GetHitMeteor(hit, true)) {
 
-					EffectData data{}; //エフェクト用に用意.
-					
-					//現在のレーザー角度.
-					const double deg = _deg(atan2(i->vec.y, i->vec.x));
-					//隕石破壊エフェクト.
-					data.type  = Effect_BreakMeteor;
-					data.pos   = i->nowPos;
-					//いくつか出す.
-					for (int j = 0; j < METEOR_BREAK_ANIM_CNT; j++) {
+					//壊れてない隕石であれば.
+					if (meteor->GetState() == Meteor_Normal) {
+						meteor->Destroy(); //隕石を破壊.
+					}
 
-						double newDig = deg + (float)RandNum(-300, 300)/10; //少し角度をずらす.
-						data.vec   = VectorDeg(newDig);                     //ずらした角度を反映.
-						data.speed = (float)RandNum(20, 100)/10;            //速度抽選.
-						data.len   = (float)RandNum(10, 150)/10;            //長さ抽選.
-						data.ang   = (float)RandNum(0, 3599)/10;            //角度抽選.
-						effectMng.SpawnEffect(&data);                     //エフェクト出現.
-					}
-					//スコアエフェクト.
-					data.type = Effect_Score500;
-					data.pos = i->nowPos;
-					effectMng.SpawnEffect(&data); //エフェクト出現.
-					//サウンド.
-					if (auto i = SoundMng::Get("Break")) {
-						i->Play(false, 74); //再生.
-					}
+					const double ang = _deg(atan2(i->vec.y, i->vec.x)); //破片の飛ぶ方向.
+					meteorMng.BreakMeteor(i->nowPos, ang, true); //破壊演出.
+					gameData.score += SCORE_BREAK_METEOR;        //スコア加算.
 
 					//どっちのタイプかで切り替え.
 					if (i->type == Laser_Reflect) {
@@ -234,10 +221,9 @@ void LaserManager::UpdateLaser() {
 						i->counter = LASER_REF_TRACK_ED_TM; //再反射後は追尾しない.
 						ReflectLaser(i); //再反射.
 					}
-
 					//チュートリアルなら指示送信.
-					if (gameData.stage == STAGE_TUTORIAL) {
-						TutorialStage::GetInst().SetBreakMeteor(true);	
+					if (gameData.stage == Stage_Tutorial) {
+						TutorialStage::GetInst().SetBreakMeteor(true);
 					}
 				}
 				else {
@@ -253,7 +239,7 @@ void LaserManager::UpdateLaser() {
 			break;
 
 			//想定外の値エラー.
-			default: assert(FALSE); break;
+			default: assert(false); break;
 		}
 
 		//画面外判定.
@@ -389,7 +375,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator it)
 	}
 
 	//チュートリアルなら指示送信.
-	if (gameData.stage == STAGE_TUTORIAL) {
+	if (gameData.stage == Stage_Tutorial) {
 		TutorialStage::GetInst().SetReflectLaser(true);
 	}
 }

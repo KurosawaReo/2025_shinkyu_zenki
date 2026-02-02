@@ -1,8 +1,11 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver: 2025/12/08
+   ver.2026/01/31
 */
 #include "KR_App.h"
+
+//[include] cppでのみ使うもの.
+#include "KR_ManagerBase.h"
 
 //KrLib名前空間.
 namespace KR 
@@ -33,10 +36,16 @@ namespace KR
 		//変数初期化.
 		inst.isQuit = false;
 
-		Init(); //初期化処理(main.cppへ)
+		//Initを実行.
+		for (const auto& i : ManagerInsts::GetInst().GetAll()) {
+			i->Init();
+		}
+		//Resetを実行.
+		Reset();
 
 		return {0, _T("App::InitDx"), _T("正常終了")};
 	}
+
 	//DxLibのループ処理.
 	void App::LoopDx() {
 
@@ -45,21 +54,34 @@ namespace KR
 		while (ProcessMessage() == 0 && !inst.isQuit) {
 			//一定時間ごとに処理.
 			if (inst.tmFps.IntervalTime()) {
-				ClearDrawScreen(); //画面クリア.
-				Update();		   //更新処理(main.cppへ)
-				Draw();			   //描画処理(main.cppへ)
-				ScreenFlip();      //表画面へ描画.
+				//画面クリア.
+				ClearDrawScreen();
+				//Update, Drawを実行.
+				for (const auto& i : ManagerInsts::GetInst().GetAll()) {
+					if (i->IsAutoUpdate()) { i->Update(); }
+					if (i->IsAutoDraw())   { i->Draw();   } 
+				}
+				//表画面へ描画.
+				ScreenFlip();
 			}
 		}
 
-		EndDx(); //終了処理.
+		inst.EndDx(); //終了処理.
 	}
+
 	//DxLibの終了処理.
 	void App::EndDx() {
 		DxLib_End();               //DxLibの終了処理.
 		DeleteFile(_T("Log.txt")); //Log.txtが生成されるので消去する.
 	}
 
+	//全管理クラスのリセット.
+	void App::Reset() {
+		//Resetを実行.
+		for (const auto& i : ManagerInsts::GetInst().GetAll()) {
+			i->Reset();
+		}
+	}
 	//ゲームを終了する.
 	void App::Quit() {
 		inst.isQuit = true;

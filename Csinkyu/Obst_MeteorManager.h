@@ -6,41 +6,40 @@
 #pragma once
 #include "Obst_Meteor.h"
 
-//隕石管理[継承不可]
-class MeteorManager final
+//隕石管理.
+class MeteorManager final : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static MeteorManager inst; //自身のインスタンス.
 public:
 	static MeteorManager& GetInst() {
-		static MeteorManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
-	list<Meteor>   meteor;		  //隕石配列.
+	list<Meteor> meteor;  //隕石配列.
 
-	float		   timer{};       //隕石生成用.
-	bool		   isSpawnAble{}; //召喚可能かどうか.
+	float		 timer{}; //隕石生成用.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	MeteorManager(){}
+	//コンストラクタ.
+	MeteorManager() : ManagerBase(ORDER_METEOR_MNG) {}
 
 public:
-	//set.
-	void SetIsSpawnAble(bool _flag) { isSpawnAble = _flag; }
+	//get.
+	Meteor* GetHitMeteor    (Circle cir, bool isDestroy); //範囲内の隕石を取得(1つ)
+	Meteor* GetNearestMeteor(DBL_XY pos);				  //最寄りの隕石を取得.
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
-	void SpawnMeteor(); //隕石生成.
-
-	bool IsHitMeteors       (Circle cir, bool isDestroy);			//隕石のどれか1つでも当たっているか.
-	bool GetMeteorPosNearest(DBL_XY _startPos, DBL_XY* _nearPos);	//最寄りの隕石座標を探す.
+	void SpawnMeteor();                                                       //隕石生成.
+	void BreakMeteor(DBL_XY pos, double ang, bool isScore, double scale = 1); //隕石破壊演出.
 
 	//使用禁止.
 	MeteorManager(const MeteorManager&) = delete;

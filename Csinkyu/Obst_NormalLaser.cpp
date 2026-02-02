@@ -1,172 +1,311 @@
 /*
    - Obst_NormalLaser.cpp -
 
-   障害物: レーザー発射台(継承先)
-   個体によって違う動きをするため、overrideを使用.
+   障害物: レーザー発射台(継承元)
 */
-#include "Obst_NormalLaser.h"
+#include "Obst_NormalLaser.h" //自身のヘッダ.
 
 //依存関係.
+#include "Player.h"
+#include "LaserManager.h"
+#include "Obst_MeteorManager.h"
 #include "GameData.h"
+#include "GameManager.h"
 //参照.
-static GameData& gameData = GameData::GetInst();
+static GameData&      gameData  = GameData::GetInst();
+static Player&        player    = Player::GetInst();
+static LaserManager&  laserMng  = LaserManager::GetInst();
+static MeteorManager& meteorMng = MeteorManager::GetInst();
 
-//obstacle4mainのMove関数をobstacle4用に上書き.
-void NormalLaser_1::Move()
+using namespace Calc; //計算機能を使用.
+
+// ▼*--=<[ NormalLaserPoint ]>=--*▼ //
+
+//方向取得.
+DBL_XY NormalLaserPoint::GetVec() const {
+
+	switch (move.dir) {
+		//                 (move.isLeft) ? 左回り         : 右回り.
+		case Left:  return (move.isLeft) ? DBL_XY( 0, +1) : DBL_XY( 0, -1);
+		case Up:    return (move.isLeft) ? DBL_XY(-1,  0) : DBL_XY(+1,  0);
+		case Right: return (move.isLeft) ? DBL_XY( 0, -1) : DBL_XY( 0, +1);
+		case Down:  return (move.isLeft) ? DBL_XY(+1,  0) : DBL_XY(-1,  0);
+	}
+	return { 0, 0 }; //不正な値.
+}
+
+void NormalLaserPoint::Reset() {
+	counter   = LASER_NOR_SHOT_START + 100;
+	counterTm = LASER_NOR_SHOT_START;
+	speed     = 3;
+	validFlag = false;
+	MoveRand();
+}
+void NormalLaserPoint::Update() {
+
+	//有効なもののみ.
+	if (validFlag) {
+		counter -= gameData.speedRate; //経過カウンター.
+
+		//移動(方向 * 速度 * 速度倍率)
+		pos += GetVec() * speed * gameData.speedRate;
+		//画面サイズ.
+		DBL_RECT winSize = App::GetWindowRect().ToDbl();
+
+		//画面から少しでもはみ出たら.
+		if (Calc::IsOutInArea(pos, { 0, 0 }, winSize.AddSize(1), false)) {
+			//画面内に補正.
+			Calc::FixPosInArea(&pos, { 0, 0 }, winSize);
+			//回転.
+			if (move.isLeft) {
+				move.dir = static_cast<MoveDir>((move.dir + 3) % MoveDir::Count); //左回り.
+			}
+			else {
+				move.dir = static_cast<MoveDir>((move.dir + 1) % MoveDir::Count); //右回り.
+			}
+		}
+
+		//タイミングが来たらレーザー発射.
+		if (counter <= counterTm)
+		{
+			//プレイヤー座標.
+			DBL_XY plyPos = player.GetPos();
+			//プレイヤー方向への初期角度計算.
+			double angle = atan2(plyPos.y - pos.y, plyPos.x - pos.x);
+			DBL_XY vel = { cos(angle), sin(angle) };
+
+			laserMng.SpawnLaser(pos, vel, Laser_Normal); //通常レーザー召喚.
+			NormalLaser::GetInst().CreateFlashEffect(pos.x, pos.y); //エフェクトを出す.
+
+			counterTm -= LASER_NOR_SHOT_SPAN; //次のレーザーを発射するタイミング.
+		}
+		//0を下回ったらタイマー再開.
+		if (counter <= 0) {
+			//発射開始時間 + 待機時間(待機時間は徐々に短くなる)
+			counter = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData.spawnRate;
+			//発射開始時間.
+			counterTm = LASER_NOR_SHOT_START;
+
+			MoveRand();
+		}
+	}
+}
+void NormalLaserPoint::Draw() {
+
+	if (validFlag) {
+
+		//予告演出, 発射する前になる度に表示.
+		if (counter <= counterTm + 60) {
+			//点滅.
+			float blinkProgress = (60 - counter) / 60.0f; //0.0～1.0
+			int blinkAlpha = _int_r(128 + 127 * sin(blinkProgress * M_PI * 8));
+
+			//サイズを徐々に大きく.
+			float dotSize = (float)(3 + AnimEaseOut(blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
+			float dotSize2 = (float)(3 + AnimEaseOut(blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
+			//円情報.
+			Circle cir = { pos, dotSize, COLOR_PRE_EFFECT };
+
+			{
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, blinkAlpha);
+
+				DrawCircleKR(cir, false, true);
+				cir.r = dotSize2;
+				DrawCircleKR(cir, false, true);
+			}
+		}
+	}
+}
+
+//移動ランダム.
+void NormalLaserPoint::MoveRand()
 {
-	// 移動速度
-	float moveSpeed = Hm * gameData.speedRate;
+	//画面のどの辺にいくか.
+	move.dir = static_cast<MoveDir>(rand() % MoveDir::Count);
+	//どっち周りか.
+	move.isLeft = (rand() % 2 == 0);
 
-	// 矩形経路の移動(右回り)
-	switch (moveDir)
+	//座標抽選.
+	switch (move.dir)
 	{
-	case MOVE_LEFT:
-		Hx -= moveSpeed;
-		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hx = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_UP;
-		}
+	case Left: //左.
+		pos.x = 0;
+		pos.y = _dbl(Calc::RandNum(0, WINDOW_HEI - 1));
 		break;
-	case MOVE_RIGHT:
-		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
-			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_DOWN;
-		}
+	case Up: //上.
+		pos.x = _dbl(Calc::RandNum(0, WINDOW_WID - 1));
+		pos.y = 0;
 		break;
-	case MOVE_DOWN:
-		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_LEFT;
-		}
+	case Right: //右.
+		pos.x = WINDOW_WID;
+		pos.y = _dbl(Calc::RandNum(0, WINDOW_HEI - 1));
 		break;
-	case MOVE_UP:
-		Hy -= moveSpeed;
-		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hy = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_RIGHT;
-		}
+	case Down: //下.
+		pos.x = _dbl(Calc::RandNum(0, WINDOW_WID - 1));
+		pos.y = WINDOW_HEI;
 		break;
 	}
 }
 
-//obstacle4mainのMove関数をobstacle5用に上書き.
-void NormalLaser_2::Move()
-{
-	// 移動速度
-	float moveSpeed = Hm * gameData.speedRate;
+// ▼*--=<[ NormalLaser ]>=--*▼ //
 
-	// 矩形経路の移動(左回り)
-	switch (moveDir)
+NormalLaser NormalLaser::inst;
+
+//初期化.
+void NormalLaser::Init(){
+	
+}
+//リセット.
+void NormalLaser::Reset()
+{
+	//自動実行設定.
+	SetAutoExeMode(MngAutoExe::Stop);
+
+	//発射台.
+	for (auto& i : points) {
+		i.Reset();
+	}
+	//フラッシュ.
+	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
+		flash[i].validFlag = false; //全て無効に.
+	}
+}
+//更新.
+void NormalLaser::Update()
+{
+	//ゲーム中のみ.
+	if (SceneMng::GetSceneName() == "Game") {
+
+		//発射台.
+		for (auto& i : points) {
+			i.Update();
+		}
+		//エフェクト.
+		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
+			//有効なら.
+			if (flash[i].validFlag) {
+				flash[i].counter += gameData.speedRate;
+			}
+		}
+	}
+}
+//描画.
+void NormalLaser::Draw()
+{
+	//レーザー発射前の予告●を描画.
+	for (auto& i : points) {
+		i.Draw();
+	}
+
+	DrawObstFlash(); //発射エフェクトの描画.
+}
+
+//発射エフェクトの描画.
+void NormalLaser::DrawObstFlash() {
+
+	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
 	{
-	case MOVE_LEFT:
-		Hx -= moveSpeed;
-		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hx = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_DOWN;
+		//無効ならスキップ.
+		if (!flash[i].validFlag) {
+			continue;
 		}
-		break;
-	case MOVE_RIGHT:
-		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
-			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_UP;
+
+		//エフェクトの透明度を時間に応じて計算.
+		float alpha = 1.0f - (
+			flash[i].counter * LASER_NOR_FLASH_ALPHA_TM / flash[i].Duration
+		);
+		int alphaValue = _int_r(255 * alpha);
+		alphaValue = max(alphaValue, 0); //下限は0.
+
+		//エフェクトのサイズを時間に応じて拡大.
+		float sizeMultiplier = LASER_NOR_FLASH_SIZE_INIT + (
+			flash[i].counter * LASER_NOR_FLASH_SIZE_SPREAD / flash[i].Duration
+		);
+		int effectSize = _int_r(flash[i].BaseSize * sizeMultiplier);
+		int innerSize = effectSize / 2;
+
+		//プレイヤーの方向を計算.
+		double angle = flash[i].angle;
+		double cos_a = cos(angle);
+		double sin_a = sin(angle);
+
+#if false
+		//エフェクトを時間経過でプレイヤーの方へ進ませる.
+		float progress = flashEffect[i].Counter / flashEffect[i].Duration;
+		double currentX = flashEffect[i].x + cos_a * progress * 1000; // nピクセル分移動
+		double currentY = flashEffect[i].y + sin_a * progress * 1000;
+#else
+		double currentX = flash[i].x;
+		double currentY = flash[i].y;
+#endif
+
+		Triangle tri;
+		//三角形の3点.
+		tri.pos[0].x = currentX + cos_a * effectSize; //先端.
+		tri.pos[0].y = currentY + sin_a * effectSize;
+		tri.pos[1].x = currentX - cos_a * effectSize/3 + sin_a * effectSize/2; //左後.
+		tri.pos[1].y = currentY - sin_a * effectSize/3 - cos_a * effectSize/2;
+		tri.pos[2].x = currentX - cos_a * effectSize/3 - sin_a * effectSize/2; //右後.
+		tri.pos[2].y = currentY - sin_a * effectSize/3 + cos_a * effectSize/2;
+
+		Line line1, line2;
+		//三角形の2辺を線にする.
+		line1.stPos = tri.pos[1];
+		line1.edPos = tri.pos[0];
+		line2.stPos = tri.pos[0];
+		line2.edPos = tri.pos[2];
+		line1.color = GetColor(0, 255, 255);
+		line2.color = GetColor(0, 255, 255);
+		
+		{
+			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
+			DrawLineKR(line1, true);
+			DrawLineKR(line2, true);
 		}
-		break;
-	case MOVE_DOWN:
-		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_RIGHT;
+		//エフェクト時間が終了したら無効化
+		if (flash[i].counter >= flash[i].Duration)
+		{
+			flash[i].validFlag = false;
 		}
-		break;
-	case MOVE_UP:
-		Hy -= moveSpeed;
-		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hy = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_LEFT;
-		}
-		break;
 	}
 }
 
-//obstacle4mainのMove関数をobstacle5用に上書き.
-void NormalLaser_3::Move()
+//光るeffectの生成.
+void NormalLaser::CreateFlashEffect(double fx, double fy)
 {
-	// 移動速度
-	float moveSpeed = Hm * gameData.speedRate;
+	DBL_XY pPos = player.GetPos(); //プレイヤー座標取得.
 
-	// 矩形経路の移動(左回り)
-	switch (moveDir)
+	//未使用のエフェクトスロットを探す.
+	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
 	{
-	case MOVE_LEFT:
-		Hx -= moveSpeed;
-		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hx = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_DOWN;
+		if (!flash[i].validFlag)
+		{
+			double dx = pPos.x - fx;
+			double dy = pPos.y - fy;
+			double angle = atan2(dy, dx);
+
+			//エフェクトデータの設定.
+			flash[i].x = fx;
+			flash[i].y = fy;
+			flash[i].angle = angle; // プレイヤーへの角度を保存
+			flash[i].counter = 0;
+			flash[i].Duration = LASER_NOR_FLASH_VALID_TM; //一定フレーム光る.
+			flash[i].BaseSize = 20; //基本サイズ
+			flash[i].validFlag = 1;
+			break;
 		}
-		break;
-	case MOVE_RIGHT:
-		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
-			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_UP;
-		}
-		break;
-	case MOVE_DOWN:
-		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_RIGHT;
-		}
-		break;
-	case MOVE_UP:
-		Hy -= moveSpeed;
-		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hy = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_LEFT;
-		}
-		break;
 	}
 }
 
-//obstacle4mainのMove関数をobstacle4用に上書き.
-void NormalLaser_4::Move()
-{
-	// 移動速度
-	float moveSpeed = Hm * gameData.speedRate;
+//何個発射台を使うか.
+void NormalLaser::UseLaserPointCnt(int count) {
+	
+	int tmp = count;
 
-	// 矩形経路の移動(右回り)
-	switch (moveDir)
-	{
-	case MOVE_LEFT:
-		Hx -= moveSpeed;
-		if (Hx < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hx = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_UP;
-		}
-		break;
-	case MOVE_RIGHT:
-		Hx += moveSpeed;
-		if (Hx > WINDOW_WID - LASER_NOR_OUTER_MARGIN) {
-			Hx = WINDOW_WID - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_DOWN;
-		}
-		break;
-	case MOVE_DOWN:
-		Hy += moveSpeed;
-		if (Hy > WINDOW_HEI - LASER_NOR_OUTER_MARGIN) {
-			Hy = WINDOW_HEI - LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_LEFT;
-		}
-		break;
-	case MOVE_UP:
-		Hy -= moveSpeed;
-		if (Hy < 0 + LASER_NOR_OUTER_MARGIN) {
-			Hy = 0 + LASER_NOR_OUTER_MARGIN;
-			moveDir = MOVE_RIGHT;
-		}
-		break;
+	//全ての発射台.
+	for (auto& i : GetInst().points) {
+		i.Reset();               //一旦リセット.
+		i.SetValidFlag(tmp > 0); //必要な数だけ有効に.
+		tmp--;
 	}
 }

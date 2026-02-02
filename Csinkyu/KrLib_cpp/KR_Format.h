@@ -1,11 +1,11 @@
 /*
    - KR_Format.h - (C++)
-   ver.2026/01/25
+   ver.2026/01/28
 
-   文字列のフォーマット機能を追加。
+   文字列のフォーマット機能。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_CPP_GLOBAL
   #include "KR_Global.h"
 #endif

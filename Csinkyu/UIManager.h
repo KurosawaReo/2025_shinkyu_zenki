@@ -4,27 +4,28 @@
 */
 #pragma once
 
-//UI管理.[継承不可]
-class UIManager final
+//UI管理.
+class UIManager final : public ManagerBase
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static UIManager inst; //自身のインスタンス.
 public:
 	static UIManager& GetInst() {
-		static UIManager inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	int  disBestScore{}; //表示ベストスコア.
 	int  disScore{};     //表示スコア.
 
 	bool isShowScore{}; //スコアを表示するかどうか.
 
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	UIManager(){}
+	//コンストラクタ.
+	UIManager() : ManagerBase(ORDER_UI_MNG) {}
 
 public:
 	//sign.
@@ -32,10 +33,10 @@ public:
 	//set.
 	void SetDisBestScore(int _score) { disBestScore = _score; }
 
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	//使用禁止.
 	UIManager(const UIManager&) = delete;

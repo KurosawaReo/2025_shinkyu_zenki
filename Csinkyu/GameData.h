@@ -6,16 +6,16 @@
 //ゲームデータ.[継承不可]
 class GameData final
 {
-//▼実体関係.
+//▼ ===== 実体 ===== ▼.
+private:
+	static GameData inst; //自身のインスタンス.
 public:
 	static GameData& GetInst() {
-		static GameData inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 public:
-	Scene      scene{};			//現在のシーン.
 	StageType  stage{};			//ステージ種類.
 	bool       isPause{};       //ポーズ中かどうか.
 
@@ -31,14 +31,11 @@ public:
 	bool       isReflectMode{};	//反射モードかどうか.
 	float      slowBufCntr{};	//スロー続行時間.
 
-	int		   font1{};			//フォント.
-	int		   font2{};			//フォント.
-	int		   font3{};			//フォント.
-	int		   font4{};			//フォント.
+	umap<string, Font> fonts;	//フォントデータ.
 	
-//関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
+	//コンストラクタ.
 	GameData(){}
 
 public:

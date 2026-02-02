@@ -1,15 +1,16 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver: 2025/12/10
+   ver.2026/01/28
 
-   サウンド機能を追加。
+   サウンド再生機能。
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
-//[include] 定義で使ってるもの.
+//[include] hで使うもの.
+#include "KR_ManagerBase.h"
 #include "KR_Timer.h"
 
 //KrLib名前空間.
@@ -38,7 +39,7 @@ namespace KR
 		int		  GetVolumeRange(int volume);	//ボリューム値を有効範囲に変換.
 		 
 	public:
-		//constructor, destructor.
+		//コンストラクタ, デストラクタ.
 		//std::mapを使う関係でpublicに入れておく.
 		Sound();
 		~Sound();
@@ -53,8 +54,8 @@ namespace KR
 		Sound& operator=(const Sound&) = delete;
 	};
 
-	//サウンド管理クラス[staticクラス]
-	class SoundMng final
+	//サウンド管理クラス.
+	class SoundMng final : public ManagerBase
 	{
 	//▼ ===== 実体 ===== ▼.
 	private:
@@ -66,9 +67,9 @@ namespace KR
 	
 	//▼ ===== 関数 ===== ▼.
 	private: 
-		//constructor(新規作成をできなくする)
-		SoundMng(){}
-		//destructor.
+		//コンストラクタ.
+		SoundMng() : ManagerBase(ORDER_KR_SOUND_MNG) {}
+		//デストラクタ.
 		~SoundMng();
 
 	public:
@@ -77,9 +78,13 @@ namespace KR
 		static bool      TryGet  (string saveName, Sound* ptr);
 
 		static ResultInt LoadFile(MY_STRING fileName, string saveName); //読み込み.
-		static void      Update  ();									//全サウンド更新.
 		static void      StopAll ();									//全サウンド停止.
 	
+		void Init()   override {} //未使用.
+		void Reset()  override {} //未使用.
+		void Update() override;
+		void Draw()   override {} //未使用.
+
 		//使用禁止.
 		SoundMng(const SoundMng&) = delete;
 		SoundMng& operator=(const SoundMng&) = delete;

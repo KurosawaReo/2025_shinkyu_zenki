@@ -1,21 +1,20 @@
 /*
    - KR_Object.h - (DxLib)
-   ver: 2026/01/25
+   ver.2026/01/28
 
-   オブジェクトを追加。(継承して使うことも可)
-   Draw, Calc, Inputの一部機能をオブジェクト指向で使える。
+   オブジェクト機能。
+   継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
 
-   [使い方]
-   ObjectMng: マネージャークラスに使うと便利。
-   ObjectCir: 円形。　継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
-   ObjectBox: 四角形。継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
+   [class]
+   ObjectCir: 円形
+   ObjectBox: 四角形
 */
 #pragma once
-//KR_Globalが入ってなければここで導入.
+//[include] KR_Global.
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
-//[include] 定義で使ってるもの.
+//[include] hで使うもの.
 #include "KR_Draw.h"
 #include "KR_Timer.h"
 
@@ -44,7 +43,7 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	protected:
-		//constructor.
+		//コンストラクタ.
 		ObjectShape() : 
 			useImg(0), tmImgAnim(TimerMode::CountDown, 0), offset(0, 0), isActive(true)
 		{}
@@ -61,7 +60,7 @@ namespace KR
 
 		//画像.
 		void      SetDrawImg     (string name);
-		void      SetDrawImgs    (vector<string> names, double changeTime);
+		void      SetDrawImgs    (vector<string> names, float changeTime);
 		void      SetStopImgAnim (bool isStop);
 		//計算(Calcの機能)
 		void      FixPosInArea   (DBL_RECT rect);
@@ -90,7 +89,7 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	public:
-		//constructor.
+		//コンストラクタ.
 		ObjectCir() {
 			cir.r     = 10;       //デフォルト半径.
 			cir.color = 0xFFFFFF; //デフォルト色.
@@ -119,7 +118,7 @@ namespace KR
 
 	//▼ ===== 関数 ===== ▼.
 	public:
-		//constructor.
+		//コンストラクタ.
 		ObjectBox() {
 			box.size  = {20, 20}; //デフォルトサイズ.
 			box.color = 0xFFFFFF; //デフォルト色.

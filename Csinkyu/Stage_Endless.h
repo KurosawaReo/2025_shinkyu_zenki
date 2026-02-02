@@ -1,36 +1,36 @@
 /*
    - Stage_Endless.h -
 
-   ステージ: 耐久モード.
+   [Stage]
+   ・Endless <-
+   ・Tutorial
 */
 #pragma once
 
-//耐久モード.[継承不可]
-class EndlessStage final
+//エンドレスステージ.
+class EndlessStage final : public ManagerBase 
 {
 //▼実体関係.
 public:
+	static EndlessStage inst; //自身のインスタンス.
+public:
 	static EndlessStage& GetInst() {
-		static EndlessStage inst; //自身のインスタンス.
 		return inst;
 	}
 
-//▼変数.
+//▼ ===== 変数 ===== ▼.
 private:
 	
-//▼関数.
+//▼ ===== 関数 ===== ▼.
 private:
-	//constructor(新規作成をできなくする)
-	EndlessStage(){}
+	//コンストラクタ.
+	EndlessStage() : ManagerBase(ORDER_ENDLESS_STAGE) {}
 
 public:
-	void Init();
-	void Reset();
-	void Update();
-	void Draw();
-
-	void UpdateObjects();
-	void DrawObjects();
+	void Init()   override;
+	void Reset()  override;
+	void Update() override;
+	void Draw()   override;
 
 	//使用禁止.
 	EndlessStage(const EndlessStage&) = delete;
