@@ -202,5 +202,7 @@ enum StageType
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)
+#define COLOR_LASER_NORMAL(color)		(GetColor(50, color, 255))		//レーザー通常カラー.
+#define COLOR_LASER_REFLECT(color)		(GetColor(color/2+128, 0, 255)) //レーザー反射カラー.
 
 #endif

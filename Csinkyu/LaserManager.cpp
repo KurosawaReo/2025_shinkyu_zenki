@@ -65,11 +65,15 @@ void LaserManager::Draw() {
 		//線の色(時間経過で色が変化)
 		switch (i.type)
 		{
-			case Laser_Normal:       tmpLine.color = GetColor(50, color, 255);      break;
-			case Laser_Straight:     tmpLine.color = GetColor(50, color, 255);      break;
-			case Laser_Reflect:      tmpLine.color = GetColor(color/2+128, 0, 255); break;
-			case Laser_SuperReflect: tmpLine.color = GetColor(color/2+128, 0, 255); break;
-			case Laser_Falling:      tmpLine.color = GetColor(50, color, 255);      break;
+			case Laser_Normal:
+			case Laser_Straight:
+			case Laser_Falling:
+				tmpLine.color = COLOR_LASER_NORMAL(color); //通常カラー.
+				break;
+			case Laser_Reflect:
+			case Laser_SuperReflect:
+				tmpLine.color = COLOR_LASER_REFLECT(color); //反射カラー.
+				break;
 
 			default: assert(FALSE); break;
 		}
