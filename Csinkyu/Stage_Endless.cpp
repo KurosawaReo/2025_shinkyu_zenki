@@ -47,19 +47,22 @@ void EndlessStage::Update() {
 		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
 		effectMng.SpawnEffect(&data);
 
-		//Lv1から.
-		ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<ItemManager>  ()->SetItemMaxCnt(1);    //アイテムは1つ.
+		//Lv1の出現設定.
+		{
+			ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::Active);
 
+#if !defined INVALID_ITEM
+			ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::Active);
+			ManagerInsts::GetInst().Get<ItemManager>  ()->SetItemMaxCnt(1);    //アイテムは1つ.
+#endif
 #if !defined INVALID_OBST_METEOR
-		ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
+			ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
 #if !defined INVALID_OBST_NOR_LASER
-		ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<NormalLaser>  ()->UseLaserPointCnt(2); //レーザーは2つ.
+			ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::Active);
+			ManagerInsts::GetInst().Get<NormalLaser>  ()->UseLaserPointCnt(2); //レーザーは2つ.
 #endif
-
+		}
 	}
 	else {
 #if defined _DEBUG //Releaseでは入れない.
@@ -93,7 +96,7 @@ void EndlessStage::Update() {
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng.SpawnEffect(&data);
 
-				//Lv2から.
+				//Lv2の出現設定.
 #if !defined INVALID_OBST_STR_LASER
 				ManagerInsts::GetInst().Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
@@ -113,7 +116,7 @@ void EndlessStage::Update() {
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng.SpawnEffect(&data);
 
-				//Lv3から.
+				//Lv3の出現設定.
 #if !defined INVALID_OBST_RIPPLES
 				ManagerInsts::GetInst().Get<Ripples>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
@@ -135,7 +138,7 @@ void EndlessStage::Update() {
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng.SpawnEffect(&data);
 
-				//Lv4から.
+				//Lv4の出現設定.
 #if !defined INVALID_OBST_FIREWORKS
 				ManagerInsts::GetInst().Get<Fireworks>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
@@ -155,7 +158,7 @@ void EndlessStage::Update() {
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng.SpawnEffect(&data);
 
-				//Lv5から.
+				//Lv5の出現設定.
 #if !defined INVALID_OBST_NOR_LASER
 				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(4); //レーザーは4つ.
 #endif
