@@ -47,8 +47,8 @@ namespace KR
 // ▼*--=<[ ManagerBase ]>=--*▼ //
 
 	//コンストラクタ.
-	ManagerBase::ManagerBase(int _order) :
-		order(_order), mode(MngAutoExe::Active)
+	ManagerBase::ManagerBase(int _order, MngAutoExe _mode) :
+		order(_order), mode(_mode), befMode(_mode)
 	{
 		//派生クラスのコンストラクタが実行された時, 自身を登録する.
 		ManagerInsts::GetInst().Push(this);

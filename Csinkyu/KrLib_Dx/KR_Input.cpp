@@ -1,8 +1,11 @@
 /*
    - KR_Input.cpp - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/07
 */
 #include "KR_Input.h"
+
+//[include] cppでのみ使うもの.
+#include "KR_App.h"
 
 //KrLib名前空間.
 namespace KR
@@ -116,7 +119,7 @@ namespace KR
 	}
 	//マウス座標取得.
 	DBL_XY InputMng::GetMousePos() {
-		return inst.mPos.ToDbl();
+		return App::ToCameraPos(inst.mPos.ToDbl()); //カメラ座標にして返す.
 	}
 	//移動4方向処理(斜め計算)
 	DBL_XY InputMng::GetVector4Dir(INT_XY input) {

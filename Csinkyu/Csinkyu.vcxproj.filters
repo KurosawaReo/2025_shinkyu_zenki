@@ -45,6 +45,8 @@
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
     <ClCompile Include="GameData.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_Matrix.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_CurveLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG1.h" />
@@ -90,5 +92,7 @@
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
+    <ClInclude Include="KrLib_Dx\KR_Matrix.h" />
+    <ClInclude Include="KrLib_Dx\KR_CurveLine.h" />
   </ItemGroup>
 </Project>

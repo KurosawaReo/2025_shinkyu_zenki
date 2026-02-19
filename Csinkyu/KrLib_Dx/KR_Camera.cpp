@@ -1,6 +1,6 @@
 /*
    - KR_Camera.cpp - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/08
 */
 #include "KR_Camera.h"
 
@@ -34,8 +34,8 @@ namespace KR
 	void Camera::AddPos(DBL_XY _pos, bool isLocal) {
 		//local: 角度を考慮して加算.
 		if (isLocal) {
-			DBL_XY vec  = Calc::VectorDeg(inst.cameraAng-90);
-			double dist = Calc::Dist     (DBL_XY(0, 0), _pos);
+			DBL_XY vec  = Calc::AngToVector(inst.cameraAng-90);
+			double dist = Calc::Dist(DBL_XY(0, 0), _pos);
 			inst.cameraPos.x += vec.x * dist;
 			inst.cameraPos.y += vec.y * dist;
 		}
@@ -48,11 +48,5 @@ namespace KR
 	void Camera::AddAng(double _ang) {
 		inst.cameraAng += _ang;
 		inst.FixAng360();
-	}
-
-	//カメラ基準座標取得(描画用)
-	DBL_XY Camera::GetCameraPos() {
-		//カメラの座標は画面中央に来るようにする.
-		return inst.GetPos() - App::GetWindowRect().GetMid().ToDbl();
 	}
 }

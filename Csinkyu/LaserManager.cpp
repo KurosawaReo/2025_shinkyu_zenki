@@ -61,7 +61,7 @@ void LaserManager::Draw() {
 		color = max(color, 0); //最低値を0にする.
 
 		//軌跡の線設定.
-		Line tmpLine = { i.pos1, i.pos2, {} };
+		Line tmpLine = { i.pos1, i.pos2, 0x000000, 2.0f };
 		//線の色(時間経過で色が変化)
 		switch (i.type)
 		{
@@ -80,7 +80,7 @@ void LaserManager::Draw() {
 		//加算合成モードで軌跡を描画(発光エフェクト)
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Add, color);
-			DrawLineKR(tmpLine, true, 2);
+			DrawLineKR(tmpLine, true);
 		}
 	}
 
@@ -203,7 +203,7 @@ void LaserManager::UpdateLaser() {
 					}
 				}
 
-				Circle hit = { i->nowPos, 10, {} }; //当たり判定円(仮)
+				Circle hit = { i->nowPos, 10, {}, {} }; //当たり判定円(仮)
 
 				//隕石と当たっているなら.
 				if (auto meteor = meteorMng.GetHitMeteor(hit, true)) {
@@ -330,7 +330,7 @@ bool LaserManager::HitLaser(list<LaserData>::iterator it) {
 	}
 
 	//レーザーの当たり判定.
-	Line line = { it->nowPos, it->befPos, {} };
+	Line line = { it->nowPos, it->befPos, {}, {} };
 
 	// プレイヤーとレーザーの当たり判定
 	if (player.GetActive() && HitLineCir(line, plyHit)) {
@@ -405,7 +405,7 @@ void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 			//落下レーザー消滅時間が、レーザー描画線消滅時間に合わさるよう計算.
 			tmp.counter = it->counter * LASER_LINE_DEL_TIME / LASER_FAL_DEL_TIME;
 			//アニメーション曲線の調整.
-			const double anim = AnimEaseOut(tmp.counter / LASER_LINE_DEL_TIME);
+			const double anim = AnimEase(EaseType::OutQuad, tmp.counter / LASER_LINE_DEL_TIME);
 			tmp.counter *= _flt(anim);
 		}
 
@@ -485,7 +485,7 @@ void LaserManager::LaserReflectRange(Circle cir) {
 	
 	//有効なレーザー.
 	for (auto i = laser.begin(); i != laser.end(); i++) {
-		const Circle cir2 = { i->nowPos, 1, {} };
+		const Circle cir2 = { i->nowPos, 1, {}, {} };
 		//範囲内なら.
 		if (HitCirCir(cir, cir2)) {
 			ReflectLaser(i); //その場で反射.

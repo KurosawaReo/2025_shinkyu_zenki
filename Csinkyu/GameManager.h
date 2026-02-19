@@ -57,7 +57,9 @@ public:
 	//‚»‚Ì‘¼.
 	void GameOver();
 	void ItemUsed();
+
 	void StopObjects();
+	void DrawOnlyObjects();
 	void RestartObjects();
 
 	//Žg—p‹ÖŽ~.

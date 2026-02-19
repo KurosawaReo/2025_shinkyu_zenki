@@ -1,6 +1,6 @@
 /*
    - KR_App.h - (DxLib)
-   ver.2026/01/31
+   ver.2026/02/07
 
    プログラムの根底(開始,終了など)の処理。
 */
@@ -39,10 +39,15 @@ namespace KR
 
 	public:
 		//get.
-		static INT_RECT  GetWindowRect() { return {0, 0, inst.windowSize.x, inst.windowSize.y}; }
-		static int		 GetWindowX()    { return inst.windowSize.x; }
-		static int		 GetWindowY()    { return inst.windowSize.y; }
+		static INT_RECT  GetWindowRect();                              //ウィンドウ矩形.
+		static int		 GetWindowWid()  { return inst.windowSize.x; } //横幅.
+		static int		 GetWindowHei()  { return inst.windowSize.y; } //縦幅.
+		static INT_XY	 GetWindowSize() { return inst.windowSize; }   //縦横サイズ.
 		static int		 GetFps()        { return inst.fps; }
+
+		//座標変換.
+		static DBL_XY    ToWorldPos (DBL_XY pos);
+		static DBL_XY    ToCameraPos(DBL_XY pos);
 
 		static ResultInt InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync = TRUE);
 		static void		 LoopDx();

@@ -1,6 +1,6 @@
 /*
    - KR_Camera.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/08
 
    カメラ機能。現状2Dのみ対応。
 */
@@ -50,9 +50,6 @@ namespace KR
 		static void SetAng(double _ang);
 		static void AddPos(DBL_XY _pos, bool isLocal = false);
 		static void AddAng(double _ang);
-
-		//カメラ座標.
-		static DBL_XY GetCameraPos();
 
 		//使用禁止.
 		Camera(const Camera&) = delete;

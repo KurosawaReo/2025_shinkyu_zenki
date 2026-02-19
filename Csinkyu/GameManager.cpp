@@ -36,7 +36,7 @@ void GameManager::Init() {
 	srand((unsigned)time(NULL)); //乱数初期化.
 
 	//[KrLib] カメラ.
-	Camera::SetPos(App::GetWindowRect().GetMid().ToDbl());
+	Camera::SetPos(App::GetWindowSize().ToDbl()/2);
 	//[KrLib] 画像.
 	DrawImgMng::LoadFile(_T("Resources/Images/logo_text_only.png"),     "logo");
 	DrawImgMng::LoadFile(_T("Resources/Images/logo_all.png"),           "logo_all");
@@ -131,8 +131,7 @@ void GameManager::Reset() {
 	SceneMng::SetScene("Title");
 
 	//管理クラスリセット.
-	ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Stop);
-	ManagerInsts::GetInst().Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Stop);
+	StopObjects();
 
 	//サウンド.
 	SoundMng::StopAll();
@@ -195,7 +194,7 @@ void GameManager::GamePause() {
 	gameScene.Pause(); //ゲームシーンのポーズ.
 
 	SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //シーン      : 描画のみ.
-	StopObjects();                                  //オブジェクト: 描画のみ.
+	DrawOnlyObjects();                              //オブジェクト: 描画のみ.
 }
 //ポーズ解除.
 void GameManager::GamePauseEnd() {
@@ -298,8 +297,29 @@ void GameManager::StopObjects() {
 	};
 	//全ループ.
 	for (auto& i : mngs) {
-		//ActiveなクラスをDrawOnlyに変更.
-		if (i->GetAutoExeMode() == MngAutoExe::Active) {
+		i->SetAutoExeMode(MngAutoExe::Stop);
+	}
+}
+//オブジェクト描画のみ.
+void GameManager::DrawOnlyObjects() {
+
+	//管理クラス取得.
+	vector<ManagerBase*> mngs = {
+		ManagerInsts::GetInst().Get<Player>(),
+		ManagerInsts::GetInst().Get<LaserManager>(),
+		ManagerInsts::GetInst().Get<ItemManager>(),
+		ManagerInsts::GetInst().Get<NormalLaser>(),
+		ManagerInsts::GetInst().Get<MeteorManager>(),
+		ManagerInsts::GetInst().Get<StraightLaser>(),
+		ManagerInsts::GetInst().Get<Ripples>(),
+		ManagerInsts::GetInst().Get<Fireworks>(),
+		ManagerInsts::GetInst().Get<EndlessStage>(),
+		ManagerInsts::GetInst().Get<TutorialStage>()
+	};
+	//全ループ.
+	for (auto& i : mngs) {
+		//稼働してるクラスをDrawOnlyに変更.
+		if (i->GetAutoExeMode() != MngAutoExe::Stop) {
 			i->SetAutoExeMode(MngAutoExe::DrawOnly);
 		}
 	}
@@ -322,6 +342,8 @@ void GameManager::RestartObjects() {
 	};
 	//全ループ.
 	for (auto& i : mngs) {
-		i->BackAutoExeMode(); //元のモードへ.
+		if (i->GetAutoExeMode() != MngAutoExe::Stop) {
+			i->BackAutoExeMode(); //元のモードへ.
+		}
 	}
 }

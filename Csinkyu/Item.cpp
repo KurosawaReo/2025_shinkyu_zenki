@@ -95,7 +95,7 @@ void ItemManager::Draw()
 			//描画.
 			{
 				//点滅.
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 155 + 100 * AnimWaveLoop(items[i].counter/30));
+				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 155 + 100 * AnimWave(WaveType::CosLoop, items[i].counter/30));
 
 				//強化演出.
 				if (items[i].type == Item_Super) {
@@ -162,7 +162,7 @@ void ItemManager::CheckHitPlayer(int idx)
 	//プレイヤーの判定を取得.
 	Circle plyHit = player.GetHit();
 	//当たり判定を四角形とする.
-	Box itemBox = { items[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {} };
+	Box itemBox = { items[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {}, {} };
 	
 	//当たった場合.
 	if (HitBoxCir(itemBox, plyHit)) {

@@ -1,16 +1,45 @@
 /*
    - KR_App.cpp - (DxLib)
-   ver.2026/01/31
+   ver.2026/02/07
 */
 #include "KR_App.h"
 
 //[include] cppでのみ使うもの.
+#include "KR_Camera.h"
 #include "KR_ManagerBase.h"
 
 //KrLib名前空間.
 namespace KR 
 {
 	App App::inst; //実体生成.
+
+	//ウィンドウ矩形を取得(カメラ視点)
+	INT_RECT App::GetWindowRect() {
+		//カメラ座標取得.
+		const INT_XY cmrPos = Camera::GetPos().ToInt();
+		//矩形を返す.
+		return { 
+			-inst.windowSize.x/2 + cmrPos.x,
+			-inst.windowSize.y/2 + cmrPos.y,
+			 inst.windowSize.x/2 + cmrPos.x,
+			 inst.windowSize.y/2 + cmrPos.y
+		};
+	}
+
+	//ワールド座標に変換.
+	DBL_XY App::ToWorldPos(DBL_XY pos) {
+		DBL_XY wPos = pos;
+		wPos += GetWindowSize().ToDbl()/2; //画面の左上が(0, 0)になるようにする.
+		wPos -= Camera::GetPos();          //カメラ座標を除く.
+		return wPos;
+	}
+	//カメラ座標に変換.
+	DBL_XY App::ToCameraPos(DBL_XY pos) {
+		DBL_XY cPos = pos;
+		cPos -= GetWindowSize().ToDbl()/2; //画面の中央が(0, 0)になるようにする.
+		cPos += Camera::GetPos();          //カメラ座標を反映.
+		return cPos;
+	}
 
 	//DxLibの初期化処理.
 	ResultInt App::InitDx(int windowWid, int windowHei, bool isWindowMode, int fps, bool isVSync) {
@@ -59,7 +88,7 @@ namespace KR
 				//Update, Drawを実行.
 				for (const auto& i : ManagerInsts::GetInst().GetAll()) {
 					if (i->IsAutoUpdate()) { i->Update(); }
-					if (i->IsAutoDraw())   { i->Draw();   } 
+					if (i->IsAutoDraw())   { i->Draw();   }
 				}
 				//表画面へ描画.
 				ScreenFlip();

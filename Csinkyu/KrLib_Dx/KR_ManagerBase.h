@@ -10,6 +10,10 @@
    シングルトンにするのがおすすめ。
 */
 #pragma once
+//[include] KR_Global.
+#if !defined DEF_KR_DX_GLOBAL
+  #include "KR_Global.h"
+#endif
 
 //KrLib名前空間.
 namespace KR
@@ -87,7 +91,7 @@ namespace KR
 	//▼ ===== 関数 ===== ▼.
 	public:
 		//コンストラクタ.
-		ManagerBase(int _order);
+		ManagerBase(int _order, MngAutoExe _mode = MngAutoExe::Active);
 		//デストラクタ(これがあると安全?)
 		virtual ~ManagerBase() = default;
 
@@ -100,7 +104,7 @@ namespace KR
 			mode     = _mode;   //モード切り替え.
 		}
 		void       BackAutoExeMode() {
-			auto tmp = befMode;
+			auto tmp = mode;
 			mode     = befMode; //1つ前のモードに戻す.
 			befMode  = tmp;     //元のモードを保存.
 		}

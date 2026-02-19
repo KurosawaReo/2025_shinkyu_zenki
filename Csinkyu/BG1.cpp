@@ -112,7 +112,7 @@ void BG1::Draw() {
 	float pass = gameMng.GetGameScene()->GetReflectModeTime();
 	//ç≈èâÇÃ0.5ïb
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
-	time = Calc::AnimEaseOut(time); //ílÇÃã»ê¸ïœìÆ.
+	time = Calc::AnimEase(EaseType::OutQuad, time); //ílÇÃã»ê¸ïœìÆ.
 
 	//äeÉ^ÉCÉãï`âÊ.
 	for (auto& i : tiles) {
@@ -126,7 +126,7 @@ void BG1::Draw() {
 			DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
 		}
 		//ògê¸.
-		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT };
+		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT, 1.0f };
 		DrawBoxKR(box, Anchor::Mid, false, true);
 	}
 }

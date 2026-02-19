@@ -1,6 +1,6 @@
 /*
    - KR_Calc.cpp - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/12
 */
 #include "KR_Calc.h"
 
@@ -89,7 +89,7 @@ namespace KR
 			}
 
 			//hit条件.
-			if (dis1 <= cir.r &&                                   //条件1: 線に触れている.
+			if (dis1 <= cir.r &&                               //条件1: 線に触れている.
 				dis2 <= Dist(line.stPos, line.edPos)/2 + cir.r //条件2: 線を直径とする円に触れている.
 			){
 				return true;
@@ -101,11 +101,10 @@ namespace KR
 
 			//扇形の中心からの距離.
 			double distLen = Dist(pie.pos, pos);
-
 			//扇形の中心からの角度.
 			double ang = FacingAng(pie.pos, pos);
 			//扇形の中心角.
-			double centerAng = pie.stAng+pie.arcAng/2;
+			double centerAng = pie.stAng + pie.arcAng/2;
 			//角度差(1.0～-1.0の範囲, 距離差が少ないほど1.0に近づく)
 			double distAng = cos(_rad(centerAng-ang));
 
@@ -150,57 +149,123 @@ namespace KR
 		//距離を求める.
 		//[座標1,座標2 → 長さ]
 		double Dist(INT_XY pos1, INT_XY pos2) {
-
-			double x = pos1.x - pos2.x; //xの差.
-			double y = pos1.y - pos2.y; //yの差.
-
-			return sqrt(x*x + y*y); //斜辺の長さを返す.
+			return (pos1 - pos2).Dist(); //斜辺の長さを返す.
 		}
 		double Dist(DBL_XY pos1, DBL_XY pos2) {
-
-			double x = pos1.x - pos2.x; //xの差.
-			double y = pos1.y - pos2.y; //yの差.
-
-			return sqrt(x*x + y*y); //斜辺の長さを返す.
+			return (pos1 - pos2).Dist(); //斜辺の長さを返す.
 		}
 		//中点座標を求める.
 		//[座標1,座標2 → 中点座標]
 		DBL_XY MidPos(DBL_XY pos1, DBL_XY pos2) {
-
-			double x = (pos1.x + pos2.x)/2; //xの平均.
-			double y = (pos1.y + pos2.y)/2; //yの平均.
-
-			return { x, y };
+			return (pos1 + pos2)/2; //xとyの平均を返す.
 		}
 		//角度と長さから円周上の座標を求める.
 		//[座標1,角度,長さ → 座標2]
 		DBL_XY ArcPos(DBL_XY pos, double ang, double len) {
-
-			//角度をradに変換し、座標の計算.
-			double x = cos(_rad(ang)) * len;
-			double y = sin(_rad(ang)) * len;
-
-			return { pos.x+x, pos.y+y }; //終点座標を返す.
+			return pos + AngToVector(ang) * len; //終点座標を返す.
 		}
 		//始点座標から対象座標への方向を求める.
 		//[座標1,座標2 → 角度]
 		//[返り値:-180.0～180.0]
 		double FacingAng(DBL_XY from, DBL_XY to) {
-			//座標差.
-			double disX = to.x - from.x;
-			double disY = to.y - from.y;
-			//radをdegにして返す.
-			return _deg(atan2(disY, disX));
+			return (to - from).Angle();
 		}
-		//角度から座標を求める.
-		DBL_XY VectorDeg(double deg) {
-			//座標vector(-1.0～+1.0)を返す.
-			return { cos(_rad(deg)), sin(_rad(deg)) };
+		//角度からベクトルを求める.
+		DBL_XY AngToVector(double ang) {
+			return { cos(_rad(ang)), sin(_rad(ang)) }; //vector(-1.0～+1.0)を返す.
 		}
-		//角度から座標を求める.
-		DBL_XY VectorRad(double rad) {
-			//座標vector(-1.0～+1.0)を返す.
-			return { cos(rad), sin(rad) };
+
+		//前方宣言(.cpp内でのみ使うため)
+		vector<double> CreateOpenUniformKnots(int controlCount, int degree);
+		double         BSplineBasis          (int i, int degree, double t, const vector<double>& knots);
+
+		//ベジエ曲線から一点を取得.
+		DBL_XY BezierPoint(const BezierLine& bLine, double time) {
+
+			double x = 
+				      (1 - time) * (1 - time) * (1 - time) * bLine.stPos.x 
+				+ 3 * (1 - time) * (1 - time) *      time  * bLine.stContrPos.x
+				+ 3 * (1 - time) *      time  *      time  * bLine.edContrPos.x 
+				+          time  *      time  *      time  * bLine.edPos.x;
+			double y = 
+				      (1 - time) * (1 - time) * (1 - time) * bLine.stPos.y
+				+ 3 * (1 - time) * (1 - time) *      time  * bLine.stContrPos.y
+				+ 3 * (1 - time) *      time  *      time  * bLine.edContrPos.y
+				+          time  *      time  *      time  * bLine.edPos.y;
+
+			return { x, y };
+		}
+		//スプライン曲線から一点を取得.
+		DBL_XY SplinePoint(const Spline& spline, int degree, double time)
+		{
+			const int  count = _int(spline.points.size());
+			const auto knots = CreateOpenUniformKnots(count, degree);
+
+			//timeが0.0(始点)以前なら.
+			if (time <= 0.0) {
+				return spline.points.front(); //始点の座標.
+			}
+			//timeが1.0(終点)以降なら.
+			if (time >= 1.0) {
+				return spline.points.back();  //終点の座標.
+			}
+
+			DBL_XY p{ -1, -1 };
+
+			for (int j = 0; j < count; j++) {
+				double b = BSplineBasis(j, degree, time, knots);
+				p.x += b * spline.points[j].x;
+				p.y += b * spline.points[j].y;
+			}
+			return p;
+		}
+		//Knots生成.
+		vector<double> CreateOpenUniformKnots(int controlCount, int degree)
+		{
+			//TODO: 整理する.
+			const int knotCount = controlCount + degree + 1;
+			vector<double> knots(knotCount);
+
+			for (int i = 0; i < knotCount; i++) {
+				if (i <= degree) {
+					knots[i] = 0.0f;
+				}
+				else if (i >= controlCount) {
+					knots[i] = 1.0f;
+				}
+				else {
+					knots[i] =
+						(double)(i - degree) /
+						(double)(controlCount - degree);
+				}
+			}
+			return knots;
+		}
+		//Bスプライン基底関数.
+		double BSplineBasis(int i, int degree, double t, const vector<double>& knots)
+		{
+			//TODO: 整理する.
+			//0次.
+			if (degree == 0) {
+				return (knots[i] <= t && t < knots[i + 1]) ? 1.0f : 0.0f;
+			}
+
+			double left = 0.0;
+			double right = 0.0;
+
+			const double denom1 = knots[i + degree] - knots[i];
+			const double denom2 = knots[i + degree + 1] - knots[i + 1];
+
+			if (denom1 > 0.0f) {
+				left = (t - knots[i]) / denom1
+					* BSplineBasis(i, degree - 1, t, knots);
+			}
+			if (denom2 > 0.0f) {
+				right = (knots[i + degree + 1] - t) / denom2
+					* BSplineBasis(i + 1, degree - 1, t, knots);
+			}
+
+			return left + right;
 		}
 
 		/*
@@ -248,36 +313,55 @@ namespace KR
 			*vel = v;
 		}
 
-		//ease-in: 徐々に加速.
-		double AnimEaseIn(double time) {
-			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
-			return time * time;
-		}
-		//ease-out: 徐々に減速.
-		double AnimEaseOut(double time) {
-			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
-			return 1 - (1-time) * (1-time);
-		}
-		//ease-in-out: 徐々に加速して減速.
-		double AnimEaseInOut(double time) {
-			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
-			return 0.5 * (1.0 - cos(M_PI*time)); //cosの返り値は 1.0→-1.0
-		}
-		//ease-out-in: 徐々に減速して加速.
-		double AnimEaseOutIn(double time) {
-			NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
-			if (time < 0.5) {
-				//0.0→0.5まで.
-				return 0.5 * sin(M_PI*time);
+		//値の曲線変動(アニメーション用)
+		double AnimEase(EaseType type, double time) {
+
+			//タイプ別.
+			switch (type) {
+				//InQuad: 徐々に加速.
+				case EaseType::InQuad:
+				{
+					NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
+					return time * time;
+				}
+				//OutQuad: 徐々に減速.
+				case EaseType::OutQuad:
+				{
+					NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
+					return 1 - (1 - time) * (1 - time);
+				}
+				//InOutQuad: 徐々に加速して減速.
+				case EaseType::InOutQuad:
+				{
+					NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
+					return time < 0.5 ? 2 * time * time : 1 - pow(-2 * time + 2, 2) / 2;
+				}
+				//OutInQuad: 徐々に減速して加速.
+				case EaseType::OutInQuad:
+				{
+					NumLimRange(&time, 0.0, 1.0); //0.0～1.0の範囲.
+					if (time < 0.5) {
+						//0.0→0.5まで.
+						return 0.5 * sin(M_PI * time);
+					}
+					else {
+						//0.5→1.0まで.
+						return 0.5 + 0.5 * (1.0 - cos(M_PI * (time - 0.5)));
+					}
+				}
 			}
-			else {
-				//0.5→1.0まで.
-				return 0.5 + 0.5*(1.0 - cos(M_PI*(time-0.5)));
-			}
+			return 0; //未対応のタイプ.
 		}
-		//wave loop: cos波のループ(0.0～1.0)
-		double AnimWaveLoop(double time) {
-			return 0.5 - cos(M_PI*time)/2;
+		double AnimWave(WaveType type, double time) {
+			//タイプ別.
+			switch (type) {
+				//CosLoop: cos波のループ(0.0～1.0)
+				case WaveType::CosLoop:
+				{
+					return 0.5 - cos(M_PI*time)/2;
+				}
+			}
+			return 0; //未対応のタイプ.
 		}
 
 		//値の抽選.

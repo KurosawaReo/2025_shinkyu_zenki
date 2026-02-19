@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/01/31
+   ver.2026/02/09
 
    KrLib全体で使う汎用プログラム。
 */
@@ -18,16 +18,18 @@
 #include <list>
 #include <map>
 #include <unordered_map>
+#include <array>
 #include <string>     //string型用.
 #include <cmath>      //math.hをラップしたもの.
 //C言語用.
 #include <tchar.h>
 
 //名前空間なしで使えるように.
-using std::list;
 using std::vector;
+using std::list;
 using std::map;
 using std::unordered_map;
+using std::array;
 using std::string;
 using std::wstring;
 using std::to_string;
@@ -39,6 +41,9 @@ using std::to_wstring;
 #define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
 #define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
 #define _byte(n)  static_cast<BYTE>  (n)        //BYTE型変換マクロ.
+//角度変換マクロ.
+#define _rad(n) (n)*(M_PI/180)
+#define _deg(n) (n)*(180/M_PI)
 //便利マクロ.
 #define _if_check(n)        assert(n); if(n)             //if文の前に同条件のassertを挟む.
 #define _return(num, condi) if (condi) { return num; }   //条件に合うならreturnする.(cond = 条件)
@@ -86,6 +91,20 @@ namespace KR
 		}
 		XY<T> Add(XY<T> other) const {
 			return *this + other;
+		}
+		//距離を求める.
+		double Dist() const {
+			return sqrt(x * x + y * y);
+		}
+		//方向ベクトル(長さは1.0の力の向き)を求める.
+		XY<T> Normalize() const {
+			const double len = Dist();     //距離を取得.
+			if (len == 0) return { 0, 0 }; //距離0ならベクトルなし.
+			return { x/len, y/len };
+		}
+		//ベクトルの角度を求める.
+		double Angle() const {
+			return _deg(atan2(y, x));
 		}
 
 		//演算子[+,-,*,/,%] [XY<T>・XY<T>]
