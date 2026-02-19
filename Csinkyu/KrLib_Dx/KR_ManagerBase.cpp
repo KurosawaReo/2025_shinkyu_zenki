@@ -1,6 +1,6 @@
 /*
    - KR_ManagerBase.cpp - (DxLib)
-   ver.2026/01/31
+   ver.2026/02/19
 */
 #include "KR_ManagerBase.h"
 

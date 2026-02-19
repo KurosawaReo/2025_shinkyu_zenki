@@ -42,12 +42,12 @@ enum StageType
 //#define BGM_NONE              //定義するとBGMをoffに.
 
 /* 撮影用 */
-#define INVALID_ITEM            //定義すると「アイテム」　　を無効にする.
-#define INVALID_OBST_NOR_LASER  //定義すると「追尾レーザー」を無効にする.
-#define INVALID_OBST_STR_LASER  //定義すると「直線レーザー」を無効にする.
-#define INVALID_OBST_RIPPLES    //定義すると「波紋」　　　　を無効にする.
+//#define INVALID_ITEM            //定義すると「アイテム」　　を無効にする.
+//#define INVALID_OBST_NOR_LASER  //定義すると「追尾レーザー」を無効にする.
+//#define INVALID_OBST_STR_LASER  //定義すると「直線レーザー」を無効にする.
+//#define INVALID_OBST_RIPPLES    //定義すると「波紋」　　　　を無効にする.
 //#define INVALID_OBST_FIREWORKS  //定義すると「花火」　　　　を無効にする.
-#define INVALID_OBST_METEOR     //定義すると「隕石」　　　　を無効にする.
+//#define INVALID_OBST_METEOR     //定義すると「隕石」　　　　を無効にする.
 
 //====================================================================//
 //【定数】

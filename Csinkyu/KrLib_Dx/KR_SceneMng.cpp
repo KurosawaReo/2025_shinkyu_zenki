@@ -1,6 +1,6 @@
 /*
    - KR_Scene.cpp - (DxLib)
-   ver.2026/01/31
+   ver.2026/02/19
 */
 #include "KR_SceneMng.h"
 
@@ -17,6 +17,9 @@ namespace KR
 	*/
 	void SceneMng::SetAutoExeMode(MngAutoExe _state) {
 		inst.ManagerBase::SetAutoExeMode(_state); //自動実行設定.
+	}
+	void SceneMng::BackAutoExeMode() {
+		inst.ManagerBase::BackAutoExeMode();      //1つ前のモードに戻す.
 	}
 
 	//シーン追加.

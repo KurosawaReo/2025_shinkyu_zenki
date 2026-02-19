@@ -149,11 +149,15 @@ void GameManager::Update() {
 
 	//ポーズ操作.
 	if (InputMng::IsPushActionTime("GamePause") == 1) {
-		if (gameData.isPause) {
-			GamePauseEnd(); //ポーズ解除.
-		}
-		else {
-			GamePause();    //ポーズする.
+		//ゲームシーンのみポーズ可.
+		if (SceneMng::GetSceneName() == "Game"){
+
+			if (gameData.isPause) {
+				GamePauseEnd(); //ポーズ解除.
+			}
+			else {
+				GamePause();    //ポーズする.
+			}
 		}
 	}
 	//特定の操作でゲーム終了
@@ -190,7 +194,8 @@ void GameManager::GamePause() {
 	bg.Pause();        //背景のポーズ.
 	gameScene.Pause(); //ゲームシーンのポーズ.
 
-	SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //描画のみ.
+	SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //シーン      : 描画のみ.
+	StopObjects();                                  //オブジェクト: 描画のみ.
 }
 //ポーズ解除.
 void GameManager::GamePauseEnd() {
@@ -199,7 +204,8 @@ void GameManager::GamePauseEnd() {
 	bg.PauseEnd();        //背景のポーズ解除.
 	gameScene.PauseEnd(); //ゲームシーンのポーズ解除.
 
-	SceneMng::SetAutoExeMode(MngAutoExe::Active); //自動実行.
+	SceneMng::SetAutoExeMode(MngAutoExe::Active);   //シーン      : 稼働.
+	RestartObjects();                               //オブジェクト: 稼働.
 }
 //ポーズ画面.
 void GameManager::DrawPause() {
@@ -261,19 +267,6 @@ void GameManager::GameOver() {
 
 }
 
-//オブジェクト停止.
-void GameManager::StopObjects() {
-
-	ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<Ripples>      ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<Fireworks>    ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<EndlessStage> ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-}
-
 //アイテムを使用した時.
 void GameManager::ItemUsed() {
 
@@ -284,5 +277,51 @@ void GameManager::ItemUsed() {
 	if (gameData.stage == Stage_Tutorial) {
 		tutorialStg.SetTakeItem(true);       //指示を送る.
 		tutorialStg.SetReflectFinish(false); //falseにする(指示取り消し)
+	}
+}
+
+//オブジェクト停止.
+void GameManager::StopObjects() {
+
+	//管理クラス取得.
+	vector<ManagerBase*> mngs = {
+		ManagerInsts::GetInst().Get<Player>(),
+		ManagerInsts::GetInst().Get<LaserManager>(),
+		ManagerInsts::GetInst().Get<ItemManager>(),
+		ManagerInsts::GetInst().Get<NormalLaser>(),
+		ManagerInsts::GetInst().Get<MeteorManager>(),
+		ManagerInsts::GetInst().Get<StraightLaser>(),
+		ManagerInsts::GetInst().Get<Ripples>(),
+		ManagerInsts::GetInst().Get<Fireworks>(),
+		ManagerInsts::GetInst().Get<EndlessStage>(),
+		ManagerInsts::GetInst().Get<TutorialStage>()
+	};
+	//全ループ.
+	for (auto& i : mngs) {
+		//ActiveなクラスをDrawOnlyに変更.
+		if (i->GetAutoExeMode() == MngAutoExe::Active) {
+			i->SetAutoExeMode(MngAutoExe::DrawOnly);
+		}
+	}
+}
+//オブジェクト稼働再開.
+void GameManager::RestartObjects() {
+
+	//管理クラス取得.
+	vector<ManagerBase*> mngs = {
+		ManagerInsts::GetInst().Get<Player>(),
+		ManagerInsts::GetInst().Get<LaserManager>(),
+		ManagerInsts::GetInst().Get<ItemManager>(),
+		ManagerInsts::GetInst().Get<NormalLaser>(),
+		ManagerInsts::GetInst().Get<MeteorManager>(),
+		ManagerInsts::GetInst().Get<StraightLaser>(),
+		ManagerInsts::GetInst().Get<Ripples>(),
+		ManagerInsts::GetInst().Get<Fireworks>(),
+		ManagerInsts::GetInst().Get<EndlessStage>(),
+		ManagerInsts::GetInst().Get<TutorialStage>()
+	};
+	//全ループ.
+	for (auto& i : mngs) {
+		i->BackAutoExeMode(); //元のモードへ.
 	}
 }

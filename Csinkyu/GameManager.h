@@ -56,8 +56,9 @@ public:
 
 	//‚»‚Ì‘¼.
 	void GameOver();
-	void StopObjects();
 	void ItemUsed();
+	void StopObjects();
+	void RestartObjects();
 
 	//Žg—p‹ÖŽ~.
 	GameManager(const GameManager&) = delete;

@@ -51,7 +51,9 @@ void GameScene::Exit() {
 		timer.Stop();          //演出用タイマー停止.
 		tmGameTime.Stop();     //ゲーム時間停止.
 		tmReflectMode.Reset(); //反射モードリセット.
-		gameMng.StopObjects(); //オブジェクト停止.
+
+		//オブジェクトの動作停止.
+		gameMng.StopObjects();
 	}
 }
 //更新.
