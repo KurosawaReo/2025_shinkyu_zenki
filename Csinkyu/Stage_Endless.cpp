@@ -50,11 +50,16 @@ void EndlessStage::Update() {
 		//Lv1から.
 		ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::Active);
 		ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<ItemManager>  ()->SetItemMaxCnt(1);    //アイテムは1つ.
 
-		ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(2); //レーザーは2つ.
-		ManagerInsts::GetInst().Get<ItemManager>()->SetItemMaxCnt(1);    //アイテムは1つ.
+#if !defined INVALID_OBST_METEOR
+		ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
+#endif
+#if !defined INVALID_OBST_NOR_LASER
+		ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::GetInst().Get<NormalLaser>  ()->UseLaserPointCnt(2); //レーザーは2つ.
+#endif
+
 	}
 	else {
 #if defined _DEBUG //Releaseでは入れない.
@@ -89,7 +94,9 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv2から.
+#if !defined INVALID_OBST_STR_LASER
 				ManagerInsts::GetInst().Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::Active);
+#endif
 			}
 			break;
 		case 2:
@@ -107,7 +114,9 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv3から.
+#if !defined INVALID_OBST_RIPPLES
 				ManagerInsts::GetInst().Get<Ripples>()->SetAutoExeMode(MngAutoExe::Active);
+#endif
 			}
 			break;
 		case 3:
@@ -127,7 +136,9 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv4から.
+#if !defined INVALID_OBST_FIREWORKS
 				ManagerInsts::GetInst().Get<Fireworks>()->SetAutoExeMode(MngAutoExe::Active);
+#endif
 			}
 			break;
 		case 4:
@@ -145,7 +156,9 @@ void EndlessStage::Update() {
 				effectMng.SpawnEffect(&data);
 
 				//Lv5から.
+#if !defined INVALID_OBST_NOR_LASER
 				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(4); //レーザーは4つ.
+#endif
 			}
 			break;
 		case 5:

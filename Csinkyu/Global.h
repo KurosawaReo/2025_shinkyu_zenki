@@ -25,6 +25,11 @@ enum StageType
 //====================================================================//
 //【設定】
 
+//デバッグ用操作.
+//Mキー: 無敵.
+//Lキー: レベルタイマー加速.
+
+/* デバッグ用 */
 //#define DEBUG_OBJ_ACTIVE		//オブジェクト出現数表示.
 //#define DEBUG_SPAWN_RATE		//召喚間隔表示.
 //#define DEBUG_METEOR_POINT	//隕石目標地点表示.
@@ -32,13 +37,16 @@ enum StageType
 //#define DEBUG_SHOW_FPS		//FPS表示.　
 //#define DEBUG_CONTR_INPUT		//コントローラ操作表示.
 
-//#define INPUT_CHANGE_ARCADE		//定義するとアーケード操作にする, しないとコントローラ操作に.
+/* ゲーム設定 */
+//#define INPUT_CHANGE_ARCADE   //定義するとアーケード操作にする, しないとコントローラ操作に.
+//#define BGM_NONE              //定義するとBGMをoffに.
 
-//#define BGM_NONE //定義するとBGMをoffに.
-
-//DEBUG用操作.
-//Mキー: 無敵.
-//Lキー: レベルタイマー加速.
+/* 撮影用 */
+//#define INVALID_OBST_NOR_LASER  //定義すると「追尾レーザー」を無効にする.
+//#define INVALID_OBST_STR_LASER  //定義すると「直線レーザー」を無効にする.
+//#define INVALID_OBST_RIPPLES    //定義すると「波紋」　　　　を無効にする.
+//#define INVALID_OBST_FIREWORKS  //定義すると「花火」　　　　を無効にする.
+//#define INVALID_OBST_METEOR     //定義すると「隕石」　　　　を無効にする.
 
 //====================================================================//
 //【定数】
