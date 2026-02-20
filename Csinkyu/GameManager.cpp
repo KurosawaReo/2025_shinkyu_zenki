@@ -73,13 +73,13 @@ void GameManager::Init() {
 #if defined INPUT_CHANGE_ARCADE
 		//アーケード操作.
 		InputMng::AddAction("GameNext",   PadArcadeID::BtnUpper1);
-//		InputMng::AddAction("GamePause",  PadArcadeID::BtnUpper2);
+		InputMng::AddAction("GamePause",  PadArcadeID::BtnUpper2);
 		InputMng::AddAction("PlayerDash", PadArcadeID::BtnUpper3);
 		InputMng::AddAction("GameQuit",   PadArcadeID::BtnStart);
 #else
 		//コントローラ操作.
 		InputMng::AddAction("GameNext",   PadXboxID::A);
-//		InputMng::AddAction("GamePause",  PadXboxID::X);
+		InputMng::AddAction("GamePause",  PadXboxID::X);
 		InputMng::AddAction("PlayerDash", PadXboxID::B);
 		InputMng::AddAction("GameQuit",   PadXboxID::Menu);
 #endif
@@ -208,8 +208,11 @@ void GameManager::GamePauseEnd() {
 }
 //ポーズ画面.
 void GameManager::DrawPause() {
+
+#if !defined NO_SHOW_PAUSE
 	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
 	str.Draw(Anchor::Mid, gameData.fonts["size40"].GetFont());
+#endif
 }
 
 //ゲーム終了(死亡)

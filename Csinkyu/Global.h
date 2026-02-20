@@ -39,7 +39,8 @@ enum StageType
 
 /* ゲーム設定 */
 //#define INPUT_CHANGE_ARCADE   //定義するとアーケード操作にする, しないとコントローラ操作に.
-//#define BGM_NONE              //定義するとBGMをoffに.
+#define BGM_NONE              //定義するとBGMをoffに.
+//#define NO_SHOW_PAUSE		    //定義するとポーズ表示をoffに.
 
 /* 撮影用 */
 //#define INVALID_ITEM            //定義すると「アイテム」　　を無効にする.
