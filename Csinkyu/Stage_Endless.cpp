@@ -74,7 +74,7 @@ void EndlessStage::Update() {
 	}
 
 	//カウンター増加.
-	gameData.counter += gameData.speedRate;
+	gameData.counter += gameData.speedRate * GAME_SPEED;
 	//出現間隔.
 	gameData.spawnRate = 1.0f/(1+(gameData.counter/8000)); //100%から少しずつ減少.
 	//レベル管理.
