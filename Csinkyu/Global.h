@@ -39,7 +39,7 @@ enum StageType
 
 /* ゲーム設定 */
 //#define INPUT_CHANGE_ARCADE   //定義するとアーケード操作にする, しないとコントローラ操作に.
-#define BGM_NONE              //定義するとBGMをoffに.
+//#define BGM_NONE              //定義するとBGMをoffに.
 //#define NO_SHOW_PAUSE		    //定義するとポーズ表示をoffに.
 
 /* 撮影用 */
@@ -65,6 +65,8 @@ enum StageType
 #define FPS								(80)			//フレームレート.
 
 //ゲーム設定.
+#define GAME_SPEED						(2.0)			//[展示用]ゲーム速度倍率(通常は1.0)
+
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 #define TUTORIAL_START_WAIT_TIME        (1.5)           //チュートリアルで項目が開始した時の停止時間.
 #define TUTORIAL_END_NEXT_TIME          (1.0)           //チュートリアルで次に進む間隔時間.
