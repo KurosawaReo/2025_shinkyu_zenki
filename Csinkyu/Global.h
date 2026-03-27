@@ -25,6 +25,11 @@ enum StageType
 //====================================================================//
 //【設定】
 
+//デバッグ用操作.
+//Mキー: 無敵.
+//Lキー: レベルタイマー加速.
+
+/* デバッグ用 */
 //#define DEBUG_OBJ_ACTIVE		//オブジェクト出現数表示.
 //#define DEBUG_SPAWN_RATE		//召喚間隔表示.
 //#define DEBUG_METEOR_POINT	//隕石目標地点表示.
@@ -32,13 +37,18 @@ enum StageType
 //#define DEBUG_SHOW_FPS		//FPS表示.　
 //#define DEBUG_CONTR_INPUT		//コントローラ操作表示.
 
-//#define INPUT_CHANGE_ARCADE		//定義するとアーケード操作にする, しないとコントローラ操作に.
+/* ゲーム設定 */
+//#define INPUT_CHANGE_ARCADE   //定義するとアーケード操作にする, しないとコントローラ操作に.
+//#define BGM_NONE              //定義するとBGMをoffに.
+//#define NO_SHOW_PAUSE		    //定義するとポーズ表示をoffに.
 
-//#define BGM_NONE //定義するとBGMをoffに.
-
-//DEBUG用操作.
-//Mキー: 無敵.
-//Lキー: レベルタイマー加速.
+/* 撮影用 */
+//#define INVALID_ITEM            //定義すると「アイテム」　　を無効にする.
+//#define INVALID_OBST_NOR_LASER  //定義すると「追尾レーザー」を無効にする.
+//#define INVALID_OBST_STR_LASER  //定義すると「直線レーザー」を無効にする.
+//#define INVALID_OBST_RIPPLES    //定義すると「波紋」　　　　を無効にする.
+//#define INVALID_OBST_FIREWORKS  //定義すると「花火」　　　　を無効にする.
+//#define INVALID_OBST_METEOR     //定義すると「隕石」　　　　を無効にする.
 
 //====================================================================//
 //【定数】
@@ -55,6 +65,8 @@ enum StageType
 #define FPS								(80)			//フレームレート.
 
 //ゲーム設定.
+#define GAME_SPEED						(2.0)			//[展示用]ゲーム速度倍率(通常は1.0)
+
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 #define TUTORIAL_START_WAIT_TIME        (1.5)           //チュートリアルで項目が開始した時の停止時間.
 #define TUTORIAL_END_NEXT_TIME          (1.0)           //チュートリアルで次に進む間隔時間.
@@ -198,9 +210,11 @@ enum StageType
 //#define COLOR_ITEM					(GetColor( 60, 255,  60))
 #define COLOR_ITEM						(GetColor(255, 155, 255))
 #define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))   //予測演出.
-#define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::AnimWaveLoop(pos.x/250)), 255)) //隕石.
+#define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::AnimWave(WaveType::CosLoop, pos.x/250)), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)
+#define COLOR_LASER_NORMAL(color)		(GetColor(50, color, 255))		//レーザー通常カラー.
+#define COLOR_LASER_REFLECT(color)		(GetColor(color/2+128, 0, 255)) //レーザー反射カラー.
 
 #endif

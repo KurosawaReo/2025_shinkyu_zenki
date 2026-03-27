@@ -35,7 +35,7 @@ void Player::Reset()
 	//自動実行設定.
 	SetAutoExeMode(MngAutoExe::Stop);
 
-	hit        = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {} };
+	hit        = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {}, {} };
 	mode       = Player_Normal;
 	afterCntr  = 1;
 	isMoveAble = true;
@@ -175,7 +175,7 @@ void Player::PlayerMove()
 		if (isDashing)
 		{
 			//残り時間に応じて段々減速.
-			speed *= 1.0f + _flt(PLAYER_DASH_SPEED * Calc::AnimEaseOut(dashTimer/PLAYER_DASH_DURATION));
+			speed *= 1.0f + _flt(PLAYER_DASH_SPEED * Calc::AnimEase(EaseType::OutQuad, dashTimer/PLAYER_DASH_DURATION));
 		}
 		//移動.
 		hit.pos += InputMng::GetKey4Dir()  * speed;
@@ -271,9 +271,9 @@ void Player::DrawAfterImage()
 				//ダッシュエフェクト.
 				if (after[i].isDash) {
 					//三角形データ.
-					DBL_XY   pos1 = after[i].pos + Calc::VectorDeg(after[i].ang)    * (30 * (1-anim));
-					DBL_XY   pos2 = after[i].pos + Calc::VectorDeg(after[i].ang+90) * (20 * (1-anim));
-					DBL_XY   pos3 = after[i].pos + Calc::VectorDeg(after[i].ang-90) * (20 * (1-anim));
+					DBL_XY   pos1 = after[i].pos + Calc::AngToVector(after[i].ang)    * (30 * (1-anim));
+					DBL_XY   pos2 = after[i].pos + Calc::AngToVector(after[i].ang+90) * (20 * (1-anim));
+					DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang-90) * (20 * (1-anim));
 					GradLine line;
 					//反射カラー.
 					if (mode == Player_Reflect ||
@@ -306,8 +306,8 @@ void Player::DrawAfterImage()
 						color = COLOR_PLY_AFT_NOR;
 					}
 					//円描画.
-					Circle cir = { after[i].pos, PLAYER_SIZE, color };
-					DrawCircleKR(cir, false, true);
+					Circle cir = { after[i].pos, PLAYER_SIZE, color, 1.0f };
+					DrawCircleKR(cir, Anchor::Mid, false, true);
 				}
 			}
 		}

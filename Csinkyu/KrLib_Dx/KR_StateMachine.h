@@ -1,10 +1,14 @@
 /*
    - KR_StateMachine.h - (DxLib)
-   ver.2026/01/31
+   ver.2026/02/04
 
    ステート遷移機能。
 */
 #pragma once
+//[include] KR_Global.
+#if !defined DEF_KR_DX_GLOBAL
+  #include "KR_Global.h"
+#endif
 
 //KrLib名前空間.
 namespace KR

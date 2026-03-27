@@ -122,16 +122,16 @@ void MenuScene::Draw() {
 	//この値を基準にメニューのアニメーションを制御する.
 	const double anim1 = sin(counter/ 50 * M_PI);
 	const double anim2 = sin(counter/100 * M_PI);
-	const double anim3 = Calc::AnimEaseOutIn(fmod(counter, 120)/120);
+	const double anim3 = Calc::AnimEase(EaseType::OutInQuad, fmod(counter, 120)/120);
 	const double anim4 = sin(fmod(counter, 120)/120 * M_PI);
-	const double anim5 = Calc::AnimEaseOutIn(fmod(counter-20, 120)/120);
+	const double anim5 = Calc::AnimEase(EaseType::OutInQuad, fmod(counter-20, 120)/120);
 	const double anim6 = sin(fmod(counter-20, 120)/120 * M_PI);
 
 	//▼メニュー全体の背景.
 	{
 		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 128);
 
-		Box box = {{0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000};
+		Box box = {{0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000, 1.0f};
 		DrawBoxKR(box, Anchor::LU, true);
 	}
 	//▼メニュータイトル.
@@ -144,15 +144,15 @@ void MenuScene::Draw() {
 
 			Line lines[4] = {
 			//「<」.
-				{ basePos.Add(-55-100*anim3, 30), basePos.Add(-85-100*anim3,   0), 0x00FFFF },
-				{ basePos.Add(-85-100*anim3,  0), basePos.Add(-55-100*anim3, -30), 0x00FFFF },
+				{ basePos.Add(-55-100*anim3, 30), basePos.Add(-85-100*anim3,   0), 0x00FFFF, 2.0f },
+				{ basePos.Add(-85-100*anim3,  0), basePos.Add(-55-100*anim3, -30), 0x00FFFF, 2.0f },
 			//「>」.
-				{ basePos.Add(+55+100*anim3, 30), basePos.Add(+85+100*anim3,   0), 0x00FFFF },
-				{ basePos.Add(+85+100*anim3,  0), basePos.Add(+55+100*anim3, -30), 0x00FFFF }
+				{ basePos.Add(+55+100*anim3, 30), basePos.Add(+85+100*anim3,   0), 0x00FFFF, 2.0f },
+				{ basePos.Add(+85+100*anim3,  0), basePos.Add(+55+100*anim3, -30), 0x00FFFF, 2.0f }
 			};
 			//線描画.
 			for (auto& i : lines) {
-				DrawLineKR(i, true, 2);
+				DrawLineKR(i, true);
 			}
 		}
 		{
@@ -160,15 +160,15 @@ void MenuScene::Draw() {
 
 			Line lines[4] = {
 			//「<」.
-				{ basePos.Add(-55-100*anim5, 30), basePos.Add(-85-100*anim5,   0), 0x00FFFF },
-				{ basePos.Add(-85-100*anim5,  0), basePos.Add(-55-100*anim5, -30), 0x00FFFF },
+				{ basePos.Add(-55-100*anim5, 30), basePos.Add(-85-100*anim5,   0), 0x00FFFF, 2.0f },
+				{ basePos.Add(-85-100*anim5,  0), basePos.Add(-55-100*anim5, -30), 0x00FFFF, 2.0f },
 			//「>」.
-				{ basePos.Add(+55+100*anim5, 30), basePos.Add(+85+100*anim5,   0), 0x00FFFF },
-				{ basePos.Add(+85+100*anim5,  0), basePos.Add(+55+100*anim5, -30), 0x00FFFF }
+				{ basePos.Add(+55+100*anim5, 30), basePos.Add(+85+100*anim5,   0), 0x00FFFF, 2.0f },
+				{ basePos.Add(+85+100*anim5,  0), basePos.Add(+55+100*anim5, -30), 0x00FFFF, 2.0f }
 			};
 			//線描画.
 			for (auto& i : lines) {
-				DrawLineKR(i, true, 2);
+				DrawLineKR(i, true);
 			}
 		}
 
@@ -179,7 +179,7 @@ void MenuScene::Draw() {
 	//▼各選択肢.
 	{
 		//テキスト & 枠線用.
-		Box box = { mLayout.menuPos, mLayout.menuSize, mColor.select1 };
+		Box box = { mLayout.menuPos, mLayout.menuSize, mColor.select1, 1.0f };
 		DrawStr str(_T(""), mLayout.menuPos.ToInt(), {});
 		//選択肢テキスト.
 		MY_STRING texts[] = {
@@ -232,7 +232,7 @@ void MenuScene::Draw() {
 			+mLayout.menuSpace * selectedIndex	//縦にずらす.
 		);
 
-		Triangle tri = { {base, base.Add(-20, 10 * anim1), base.Add(-20, -10 * anim1)}, {} };
+		Triangle tri = { base, base.Add(-20, 10 * anim1), base.Add(-20, -10 * anim1), {}, {} };
 		tri.color = (anim1 >= 0) ? mColor.select1 : mColor.select2; //表か裏かで色を変える.
 		DrawTriangleKR(tri, true, true);
 	}
@@ -255,7 +255,7 @@ void MenuScene::Draw() {
 			//画像のサイズ(Extend倍率分小さくする)
 			imgSize = i->GetSize().ToDbl() * extend + margin;
 			//画像の枠線(位置とサイズは画像に合わせる)
-			Box box = { mLayout.imgPos, imgSize, mColor.frame };
+			Box box = { mLayout.imgPos, imgSize, mColor.frame, 1.0f };
 			DrawBoxKR(box, Anchor::Mid, false);
 		}
 	}
@@ -287,13 +287,14 @@ void MenuScene::Draw() {
 				Line line = {
 					mLayout.menuPos.Add(mLayout.menuSize.x/2, 0),            //始点.
 					DBL_XY(mLayout.imgPos.x-imgSize.x/2, mLayout.menuPos.y), //終点.
-					mColor.line                                              //色.
+					mColor.line,                                             //色.
+					3.0f
 				};
 				//選択してる所にずらす.
 				line.stPos.y += mLayout.menuSpace * selectedIndex;
 				line.edPos.y += mLayout.menuSpace * selectedIndex;
 				//線描画.
-				DrawLineKR(line, false, 3.0f);
+				DrawLineKR(line, false);
 			}
 
 			//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
@@ -301,14 +302,15 @@ void MenuScene::Draw() {
 				Line line = {
 					DBL_XY(mLayout.imgPos.x-30, imgBottomY),  //始点.
 					DBL_XY(mLayout.imgPos.x-30, textBoxTopY), //終点.
-					mColor.line								  //色.
+					mColor.line,							  //色.
+					3.0f
 				};
 				//線1.
-				DrawLineKR(line, false, 3.0f);
+				DrawLineKR(line, false);
 				//線2.
 				line.stPos.x += 60;
 				line.edPos.x += 60;
-				DrawLineKR(line, false, 3.0f);
+				DrawLineKR(line, false);
 			}
 		}
 	}
@@ -320,7 +322,7 @@ void MenuScene::Draw() {
 		int infoX = _int_r(mLayout.menuPos.x - _dbl(infoWidth)/2);
 		int infoY = textBoxY;
 
-		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1 };
+		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1, 1.0f };
 		DrawStr str = { _T(""), INT_XY(infoX, infoY) + mLayout.loreInner, mColor.normal };
 
 		DrawStr str2(_T("操作"), { infoX + 10, infoY - 10 }, 0x00FFFF);
@@ -343,7 +345,7 @@ void MenuScene::Draw() {
 		str2.Draw(Anchor::LD, fontMenu[0].GetFont());
 
 		// 説明文枠の枠線（水色）	
-		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), mColor.frame};
+		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), mColor.frame, 1.0f };
 		DrawBoxKR(box, Anchor::LU, false);
 
 		//説明文用.

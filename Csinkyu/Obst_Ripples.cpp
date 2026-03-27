@@ -250,12 +250,12 @@ void Ripples::DrawWarningEffect(list<RipplesData>::iterator it)
 		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
 
 		Circle cir;
-		cir = { {it->x, it->y}, (float)warningSize,   GetColor(150, 150, 150) };
-		DrawCircleKR(cir, false, true);
-		cir = { {it->x, it->y}, (float)warningSize/2, GetColor(200, 200, 200) };
-		DrawCircleKR(cir, false, true);
-		cir = { {it->x, it->y}, (float)warningSize+5, GetColor(120, 120, 120) }; // 外周リング
-		DrawCircleKR(cir, false, true);
+		cir = { {it->x, it->y}, (float)warningSize,   GetColor(150, 150, 150), 1.0f };
+		DrawCircleKR(cir, Anchor::Mid, false, true);
+		cir = { {it->x, it->y}, (float)warningSize/2, GetColor(200, 200, 200), 1.0f };
+		DrawCircleKR(cir, Anchor::Mid, false, true);
+		cir = { {it->x, it->y}, (float)warningSize+5, GetColor(120, 120, 120), 1.0f }; // 外周リング
+		DrawCircleKR(cir, Anchor::Mid, false, true);
 	}
 }
 
@@ -282,9 +282,9 @@ void Ripples::DrawActiveEffect(list<RipplesData>::iterator it)
 		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
 
 		Circle cir;
-		cir = {{it->x, it->y}, (float)effectSize, GetColor(0, 255, 255)};
-		DrawCircleKR(cir, false, true);
-		cir = {{it->x, it->y}, (float)innerSize,  GetColor(0, 255, 200)};
-		DrawCircleKR(cir, false, true);
+		cir = {{it->x, it->y}, (float)effectSize, GetColor(0, 255, 255), 1.0f};
+		DrawCircleKR(cir, Anchor::Mid, false, true);
+		cir = {{it->x, it->y}, (float)innerSize,  GetColor(0, 255, 200), 1.0f};
+		DrawCircleKR(cir, Anchor::Mid, false, true);
 	}
 }

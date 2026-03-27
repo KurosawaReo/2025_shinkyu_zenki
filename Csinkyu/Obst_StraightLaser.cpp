@@ -85,15 +85,15 @@ void StraightLaserPoint::Draw() {
 /// </summary>
 void StraightLaserPoint::DrawPreLine()
 {
-	//—\‘ªü‚Ì“§–¾“x.
-	const double alpha = Calc::AnimEaseIn((float)predictionTimer / LASER_STR_PREDICTION_TIME); //0.0`1.0‚Ì”ÍˆÍ.
+	//—\‘ªü‚Ì“§–¾“x(0.0`1.0‚Ì”ÍˆÍ)
+	const double alpha = Calc::AnimEase(EaseType::InQuad, predictionTimer/LASER_STR_PREDICTION_TIME);
 	//—\‘ªü‚ÌˆÊ’u.
 	const double centerPos = nextCenterPos;
 
 	{
 		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - alpha));
 
-		Line preLine = { {0, 0}, {0, 0}, {} };
+		Line preLine;
 		//ˆÊ’u‚Ìİ’è.
 		switch (nextDirection)
 		{

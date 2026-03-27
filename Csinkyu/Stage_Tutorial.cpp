@@ -426,8 +426,8 @@ void TutorialStage::UpdateStep4() {
 void TutorialStage::DrawStep1() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::AnimEaseIn ((startTimer.GetPassTime()-0.5)*2);
-	double alpha2 = Calc::AnimEaseOut(endTimer.GetPassTime()*2);
+	double alpha1 = Calc::AnimEase(EaseType::InQuad,  (startTimer.GetPassTime()-0.5)*2);
+	double alpha2 = Calc::AnimEase(EaseType::OutQuad, endTimer.GetPassTime()*2);
 	double alpha  = alpha1 * (1-alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
@@ -464,8 +464,8 @@ void TutorialStage::DrawStep1() {
 void TutorialStage::DrawStep2() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::AnimEaseIn ((startTimer.GetPassTime()-0.5)*2);
-	double alpha2 = Calc::AnimEaseOut(endTimer.GetPassTime()*2);
+	double alpha1 = Calc::AnimEase(EaseType::InQuad,  (startTimer.GetPassTime()-0.5)*2);
+	double alpha2 = Calc::AnimEase(EaseType::OutQuad, endTimer.GetPassTime()*2);
 	double alpha  = alpha1 * (1-alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
@@ -490,8 +490,8 @@ void TutorialStage::DrawStep2() {
 void TutorialStage::DrawStep3() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::AnimEaseIn ((startTimer.GetPassTime()-0.5)*2);
-	double alpha2 = Calc::AnimEaseOut(endTimer.GetPassTime()*2);
+	double alpha1 = Calc::AnimEase(EaseType::InQuad,  (startTimer.GetPassTime()-0.5)*2);
+	double alpha2 = Calc::AnimEase(EaseType::OutQuad, endTimer.GetPassTime()*2);
 	double alpha  = alpha1 * (1-alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
@@ -530,8 +530,8 @@ void TutorialStage::DrawStep3() {
 void TutorialStage::DrawStep4() {
 
 	//開始タイマーと終了タイマーの組み合わせで透過アニメーションを作る.
-	double alpha1 = Calc::AnimEaseIn ((startTimer.GetPassTime()-0.5)*2);
-	double alpha2 = Calc::AnimEaseOut(endTimer.GetPassTime()*2);
+	double alpha1 = Calc::AnimEase(EaseType::InQuad,  (startTimer.GetPassTime()-0.5)*2);
+	double alpha2 = Calc::AnimEase(EaseType::OutQuad, endTimer.GetPassTime()*2);
 	double alpha  = alpha1 * (1-alpha2); //同時に作動しても繋がるように.
 
     //ステップ内項目.
@@ -587,7 +587,7 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 		const int margin = 24;
 		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDbl();
 		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
-		Box    box  = {pos, size, 0x000000};
+		Box    box  = {pos, size, 0x000000, 1.0f};
 
 		//枠背景.
 		{

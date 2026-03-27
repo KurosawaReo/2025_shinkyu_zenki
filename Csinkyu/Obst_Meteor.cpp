@@ -68,7 +68,7 @@ void Meteor::Draw() {
 		for (auto& i : shape.line) {
 			
 			i.color = COLOR_METEOR(pos);
-			DrawLineKR(i, true, 2);
+			DrawLineKR(i, true);
 
 	#if defined DEBUG_METEOR_POINT
 			DrawCircle(i.stPos.x, i.stPos.y, 3, 0xFFFFFF);
@@ -117,9 +117,9 @@ void Meteor::Spawn() {
 		goalPos.x = Calc::RandNum(WINDOW_WID/2 - METEOR_GOAL_RAND_RANGE, WINDOW_WID/2 + METEOR_GOAL_RAND_RANGE);
 		goalPos.y = Calc::RandNum(WINDOW_HEI/2 - METEOR_GOAL_RAND_RANGE, WINDOW_HEI/2 + METEOR_GOAL_RAND_RANGE);
 		//目標地点までの角度を求める.
-		double rad = atan2(goalPos.y - pos.y, goalPos.x - pos.x);
+		double ang = (goalPos.ToDbl() - pos).Angle();
 		//xとyのvectorに分解.
-		vel = Calc::VectorRad(rad);
+		vel = Calc::AngToVector(ang);
 	}
 
 	//隕石の設定.
@@ -131,6 +131,10 @@ void Meteor::Spawn() {
 		//②頂点の位置を抽選.
 		for (auto& i : shape.lineDis) {
 			i = (float)Calc::RandNum(METEOR_LINE_DIS_MIN*10, METEOR_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
+		}
+		//線の設定.
+		for (auto& i : shape.line) {
+			i.thick = 2.0f;
 		}
 	}
 }

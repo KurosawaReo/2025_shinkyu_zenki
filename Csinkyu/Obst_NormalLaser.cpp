@@ -101,17 +101,17 @@ void NormalLaserPoint::Draw() {
 			int blinkAlpha = _int_r(128 + 127 * sin(blinkProgress * M_PI * 8));
 
 			//サイズを徐々に大きく.
-			float dotSize = (float)(3 + AnimEaseOut(blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
-			float dotSize2 = (float)(3 + AnimEaseOut(blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
+			float dotSize  = (float)(3 + AnimEase(EaseType::OutQuad, blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
+			float dotSize2 = (float)(3 + AnimEase(EaseType::OutQuad, blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
 			//円情報.
-			Circle cir = { pos, dotSize, COLOR_PRE_EFFECT };
+			Circle cir = { pos, dotSize, COLOR_PRE_EFFECT, 1.0f };
 
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, blinkAlpha);
 
-				DrawCircleKR(cir, false, true);
+				DrawCircleKR(cir, Anchor::Mid, false, true);
 				cir.r = dotSize2;
-				DrawCircleKR(cir, false, true);
+				DrawCircleKR(cir, Anchor::Mid, false, true);
 			}
 		}
 	}

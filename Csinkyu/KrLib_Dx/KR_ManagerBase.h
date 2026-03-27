@@ -1,6 +1,6 @@
 /*
    - KR_ManagerBase.h - (DxLib)
-   ver.2026/01/31
+   ver.2026/02/19
 
    管理クラスの根底。
 
@@ -10,6 +10,10 @@
    シングルトンにするのがおすすめ。
 */
 #pragma once
+//[include] KR_Global.
+#if !defined DEF_KR_DX_GLOBAL
+  #include "KR_Global.h"
+#endif
 
 //KrLib名前空間.
 namespace KR
@@ -80,21 +84,30 @@ namespace KR
 	{
 	//▼ ===== 変数 ===== ▼.
 	private: 
-		MngAutoExe mode;  //自動実行モード.
-		int        order; //処理優先度.
+		MngAutoExe mode;    //自動実行モード.
+		MngAutoExe befMode; //自動実行モード(1つ前保存用)
+		int        order;   //処理優先度.
 
 	//▼ ===== 関数 ===== ▼.
 	public:
 		//コンストラクタ.
-		ManagerBase(int _order);
+		ManagerBase(int _order, MngAutoExe _mode = MngAutoExe::Active);
 		//デストラクタ(これがあると安全?)
 		virtual ~ManagerBase() = default;
 
-		//set.
-		void       SetOrder      (int _order);
-		void       SetAutoExeMode(MngAutoExe _mode) { mode = _mode; }
-		//get.
-		int        GetOrder()       const { return order; }
+		//order値.
+		void       SetOrder(int _order);
+		int        GetOrder() const { return order; }
+		//自動実行モード.
+		void       SetAutoExeMode(MngAutoExe _mode) { 
+			befMode  = mode;    //元のモードを保存.
+			mode     = _mode;   //モード切り替え.
+		}
+		void       BackAutoExeMode() {
+			auto tmp = mode;
+			mode     = befMode; //1つ前のモードに戻す.
+			befMode  = tmp;     //元のモードを保存.
+		}
 		MngAutoExe GetAutoExeMode() const { return mode; }
 
 		//判定.

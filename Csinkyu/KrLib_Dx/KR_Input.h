@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/07
 
    入力操作機能。
    (オブジェクト指向ver → KR_Object)

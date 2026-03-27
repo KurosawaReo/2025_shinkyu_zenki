@@ -152,10 +152,10 @@ void EffectManager::Draw() {
 			case Effect_Score500:
 			{
 				//座標.
-				DBL_XY pos = {i.pos.x, i.pos.y - AnimEaseOut(i.counter/SCORE_ANIM_TIME)*30};
+				DBL_XY pos = {i.pos.x, i.pos.y - AnimEase(EaseType::OutQuad, i.counter/SCORE_ANIM_TIME)*30};
 				//描画.
 				{
-					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/SCORE_ANIM_TIME)); //透明度.
+					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/SCORE_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 
 					//画像切り替え.
@@ -172,12 +172,12 @@ void EffectManager::Draw() {
 			case Effect_PlayerDash:
 			{
 				//アニメーション値.
-				const double anim = AnimEaseOut(1-i.counter/PLAYER_DASH_EFFECT_TIME);
+				const double anim = AnimEase(EaseType::OutQuad, 1-i.counter/PLAYER_DASH_EFFECT_TIME);
 				//三角形データ.
-				DBL_XY pos1 = i.pos + Calc::VectorDeg(i.ang   ) * 40 * anim;
-				DBL_XY pos2 = i.pos + Calc::VectorDeg(i.ang+90) * 20 * anim;
-				DBL_XY pos3 = i.pos + Calc::VectorDeg(i.ang-90) * 20 * anim;
-				Triangle tri = {{pos1, pos2, pos3}, 0xFFFFFF};
+				DBL_XY pos1 = i.pos + Calc::AngToVector(i.ang   ) * 40 * anim;
+				DBL_XY pos2 = i.pos + Calc::AngToVector(i.ang+90) * 20 * anim;
+				DBL_XY pos3 = i.pos + Calc::AngToVector(i.ang-90) * 20 * anim;
+				Triangle tri = { pos1, pos2, pos3, 0xFFFFFF, 1.0f };
 				//描画.
 				{
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
@@ -188,26 +188,26 @@ void EffectManager::Draw() {
 
 			case Effect_PlayerDeath:
 			{
-				Circle cir= { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF };
+				Circle cir = { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF, 1.0f };
 				//描画.
 				{
-					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/PLAYER_DEATH_ANIM_TIME)); //透明度.
+					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/PLAYER_DEATH_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 		
-					DrawCircleKR(cir, false, true);
+					DrawCircleKR(cir, Anchor::Mid, false, true);
 				}
 			}
 			break;
 
 			case Effect_ReflectLaser:
 			{
-				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT };
+				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT, 1.0f };
 				//描画.
 				{
-					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
+					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 
-					DrawCircleKR(cir, false, true);
+					DrawCircleKR(cir, Anchor::Mid, false, true);
 				}
 			}
 			break;
@@ -221,7 +221,7 @@ void EffectManager::Draw() {
 			    line.color = COLOR_METEOR(i.pos);
 				//描画.
 				{
-					int pow = _int_r(255 * AnimEaseOut(1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
+					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 
 					DrawLineKR(line, true);
@@ -241,16 +241,16 @@ void EffectManager::Draw() {
 			{
 				//共通設定.
 				DrawStr str = { _T("Unknown"), {_int_r(i.pos.x), _int_r(i.pos.y-20)}, 0xFFFFFF};
-				Circle mainCir = { i.pos, i.counter*5, 0xFFFFFF };
+				Circle mainCir = { i.pos, i.counter*5, 0xFFFFFF, 1.0f };
 				Circle lampCir[5] = {
-					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
-					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
-					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
-					{{-1, i.pos.y+20}, 10, 0xFFFFFF},
-					{{-1, i.pos.y+20}, 10, 0xFFFFFF}
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF, 1.0f},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF, 1.0f},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF, 1.0f},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF, 1.0f},
+					{{-1, i.pos.y+20}, 10, 0xFFFFFF, 1.0f}
 				};
 				//アニメーション値.
-				int pow = _int_r(255 * AnimWaveLoop(1 - i.counter/MIDDLE_ANIM_TIME));
+				int pow = _int_r(255 * AnimWave(WaveType::CosLoop, 1 - i.counter/MIDDLE_ANIM_TIME));
 				//何個ランプを使うか.
 				int lampUseCnt  = 0;
 				int lampFillCnt = 0;
@@ -258,7 +258,7 @@ void EffectManager::Draw() {
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 
 					//円.
-					DrawCircleKR(mainCir, false, true);
+					DrawCircleKR(mainCir, Anchor::Mid, false, true);
 					//テキスト.					
 					switch (i.type) 
 					{
@@ -316,7 +316,7 @@ void EffectManager::Draw() {
 						//均等になるように配置する.
 						const int interval = 30; //間隔.
 						lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt-1)/2);
-						DrawCircleKR(lampCir[j], (lampFillCnt >= j+1), true); 
+						DrawCircleKR(lampCir[j], Anchor::Mid, (lampFillCnt >= j+1), true); 
 					}
 				}
 			}

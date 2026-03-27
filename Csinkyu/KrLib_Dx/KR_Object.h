@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/07
 
    オブジェクト機能。
    継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
@@ -56,7 +56,7 @@ namespace KR
 		virtual DBL_XY    GetPos   ()       const = 0;
 		virtual DBL_XY*   GetPosPtr()             = 0;
 		virtual DBL_XY    GetSize  ()       const = 0;
-		virtual ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const = 0;
+		virtual ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDisp = true) const = 0;
 
 		//画像.
 		void      SetDrawImg     (string name);
@@ -74,10 +74,10 @@ namespace KR
 		void      MovePadStick   (float speed);
 		void      MoveMousePos   (bool isMoveX = true, bool isMoveY = true);
 		//描画(Drawの機能)
-		ResultInt DrawGraph      (                                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true);
-		ResultInt DrawRectGraph  (DBL_RECT rect,                                            Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true);
-		ResultInt DrawExtendGraph(DBL_XY sizeRate,                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDis = true);
-		ResultInt DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0},                           bool isFloat = false, bool isCameraDis = true);
+		ResultInt DrawGraph      (                                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDisp = true);
+		ResultInt DrawRectGraph  (DBL_RECT rect,                                            Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDisp = true);
+		ResultInt DrawExtendGraph(DBL_XY sizeRate,                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDisp = true);
+		ResultInt DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0},                           bool isFloat = false, bool isCameraDisp = true);
 	};
 
 	//オブジェクト(円)[継承想定]
@@ -100,8 +100,8 @@ namespace KR
 		void      SetPos   (DBL_XY _pos)       override { cir.pos = _pos; }
 		DBL_XY    GetPos   ()            const override { return cir.pos; }
 		DBL_XY*   GetPosPtr()                  override { return &cir.pos; }
-		DBL_XY    GetSize  ()            const override { return {cir.r, cir.r}; }
-		ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const override;
+		DBL_XY    GetSize  ()            const override { return {cir.r*2, cir.r*2}; }
+		ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDisp = true) const override;
 
 		//当たり判定(Calcの機能)
 		bool      HitCheckCir (const Circle& cir)  const;
@@ -130,7 +130,7 @@ namespace KR
 		DBL_XY    GetPos   ()            const override { return box.pos; }
 		DBL_XY*   GetPosPtr()                  override { return &box.pos; }
 		DBL_XY    GetSize  ()            const override { return box.size; }
-		ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDis = true) const override;
+		ResultInt DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDisp = true) const override;
 
 		//当たり判定(Calcの機能)
 		bool      HitCheckCir(const Circle& cir) const;

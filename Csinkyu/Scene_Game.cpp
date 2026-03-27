@@ -51,7 +51,9 @@ void GameScene::Exit() {
 		timer.Stop();          //演出用タイマー停止.
 		tmGameTime.Stop();     //ゲーム時間停止.
 		tmReflectMode.Reset(); //反射モードリセット.
-		gameMng.StopObjects(); //オブジェクト停止.
+
+		//オブジェクトの動作停止.
+		gameMng.DrawOnlyObjects();
 	}
 }
 //更新.
@@ -173,7 +175,7 @@ void GameScene::DrawReflectMode() {
 		//画面中央に数字を表示.
 		{
 			double dec  = Calc::GetDecimal(tmReflectMode.GetPassTime()); //小数だけ取り出す.
-			double anim = Calc::AnimEaseOut(dec);
+			double anim = Calc::AnimEase(EaseType::OutQuad, dec);
 			{
 				//1秒ごとに薄くなる演出.
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * dec);

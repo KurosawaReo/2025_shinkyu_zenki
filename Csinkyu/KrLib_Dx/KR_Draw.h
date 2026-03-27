@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/10
 
    図形や画像の描画機能。
    (オブジェクト指向ver → KR_Object)
@@ -72,11 +72,11 @@ namespace KR
 		INT_XY    GetSize() const { return size; }
 
 		//描画.
-		ResultInt Draw      (DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDis = true) const;
-		ResultInt DrawRect  (DBL_XY pos, DBL_RECT rect,                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDis = true) const;
-		ResultInt DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDis = true) const;
-		ResultInt DrawRota  (DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0},                           bool isTrans = true, bool isFloat = false, bool isCameraDis = true) const;
-		ResultInt DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool isFloat = false, bool isCameraDis = true) const;
+		ResultInt Draw      (DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
+		ResultInt DrawRect  (DBL_XY pos, DBL_RECT rect,                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
+		ResultInt DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
+		ResultInt DrawRota  (DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0},                           bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
+		ResultInt DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		DrawImg& operator=(const DrawImg&) = delete;
@@ -126,9 +126,9 @@ namespace KR
 		DrawStr(MY_STRING _text, INT_XY _pos, MY_COLOR _color) : text(_text), pos(_pos), color(_color) {}
 
 		//描画.
-		ResultInt Draw	  (                                                                         Anchor anc = Anchor::Mid, int font = -1, bool isCameraDis = true);
-		ResultInt DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical,                                          int font = -1, bool isCameraDis = true);
-		ResultInt DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical,                           int font = -1, bool isCameraDis = true);
+		ResultInt Draw	  (                                                                         Anchor anc = Anchor::Mid, int font = -1, bool isCameraDisp = true);
+		ResultInt DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical,                                          int font = -1, bool isCameraDisp = true);
+		ResultInt DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical,                           int font = -1, bool isCameraDisp = true);
 		//その他.
 		INT_XY    GetTextSize(int font = -1);
 	};
@@ -162,20 +162,26 @@ namespace KR
 		//頂点追加.
 		void AddPoint(DBL_XY pos, MY_COLOR color);
 		//描画.
-		void Draw(bool isClose = false, bool isCameraDis = true);
+		void Draw(bool isClose = false, bool isCameraDisp = true);
 	};
 
-	//図形(2D)
-	ResultInt DrawCircleKR		(const Circle&   cir,                            bool isFill = true, bool isAnti = false, float thick = 1.0f, bool isCameraDis = true);
-	ResultInt DrawBoxKR			(const Box&      box,  Anchor anc = Anchor::Mid, bool isFill = true, bool isAnti = false,                     bool isCameraDis = true);
-	ResultInt DrawTriangleKR	(const Triangle& tri,                            bool isFill = true, bool isAnti = false,                     bool isCameraDis = true);
-	ResultInt DrawLineKR		(const Line&     line,                                               bool isAnti = false, float thick = 1.0f, bool isCameraDis = true);
-	ResultInt DrawPieKR			(const Pie&      pie,                                                bool isAnti = false, float thick = 1.0f, bool isCameraDis = true);
-	ResultInt DrawArcKR			(const Pie&      pie,                                                bool isAnti = false, float thick = 1.0f, bool isCameraDis = true);
+	//2D描画.
+	ResultInt DrawPixelKR       (DBL_XY pos, MY_COLOR color,                                                                       bool isCameraDisp = true);
+	ResultInt DrawCircleKR		(const Circle&     cir,    Anchor anc = Anchor::Mid, bool isFill = true,      bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawBoxKR			(const Box&        box,    Anchor anc = Anchor::Mid, bool isFill = true,      bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawTriangleKR	(const Triangle&   tri,                              bool isFill = true,      bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawLineKR		(const Line&       line,                                                      bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawPieKR			(const Pie&        pie,                                                       bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawArcKR			(const Pie&        pie,                                                       bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawBezierLineKR  (const BezierLine& bLine,                            bool isDot,              bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawSplineKR      (const Spline&     spline, int degree,               bool isDot,              bool isAnti = false, bool isCameraDisp = true);
+	ResultInt DrawPolygonKR     (const Polygon&    poly,                             bool isSurround = false, bool isAnti = false, bool isCameraDisp = true);
+	void      FillPolygon       (const Polygon&    poly,                             bool isSurround = false,                      bool isCameraDisp = true);
+
 	ResultInt DrawWindowGrid	(int wid, int hei, int size, MY_COLOR clrWid = {160, 160, 255}, MY_COLOR clrHei = {255, 160, 160});
 
-	//図形(3D)[試作品]
-	ResultInt DrawBox3DKR		(const Box3D& box, bool isFill = true, bool isCameraDis = true);
+	//3D描画(試作品)
+	ResultInt DrawBox3DKR		(const Box3D& box, bool isFill = true);
 
 	//描画モード設定(スコープ内のみ有効)
 	class DrawMode
