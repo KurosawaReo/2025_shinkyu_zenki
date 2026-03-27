@@ -1,6 +1,6 @@
 /*
    - KR_SceneMng.h - (DxLib)
-   ver.2026/01/31
+   ver.2026/02/19
 
    シーン管理機能。
 */
@@ -57,7 +57,8 @@ namespace KR
 		//get.
 		static string GetSceneName() { return inst.nowSceneName; }
 		//set.
-		static void SetAutoExeMode(MngAutoExe _state);
+		static void SetAutoExeMode (MngAutoExe _state);
+		static void BackAutoExeMode();
 
 		void Init()   override {} //未使用.
 		void Reset()  override;

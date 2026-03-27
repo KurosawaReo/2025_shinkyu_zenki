@@ -143,7 +143,7 @@ void MeteorManager::BreakMeteor(DBL_XY pos, double ang, bool isScore, double sca
 	for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
 		double newDig = ang + _flt(Calc::RandNum(-300, 300)) / 10;	//­‚µŠp“x‚ð‚¸‚ç‚·.
-		data.vec   = Calc::VectorDeg(newDig);						//‚¸‚ç‚µ‚½Šp“x‚ð”½‰f.
+		data.vec   = Calc::AngToVector(newDig);						//‚¸‚ç‚µ‚½Šp“x‚ð”½‰f.
 		data.speed = _flt(Calc::RandNum(50, 300) / 10 * scale);		//‘¬“x’Š‘I.
 		data.len   = _flt(Calc::RandNum(10, 100) / 10 * scale);		//’·‚³’Š‘I.
 		data.ang   = _flt(Calc::RandNum(0, 3599) / 10);				//Šp“x’Š‘I.

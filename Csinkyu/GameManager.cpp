@@ -36,7 +36,7 @@ void GameManager::Init() {
 	srand((unsigned)time(NULL)); //乱数初期化.
 
 	//[KrLib] カメラ.
-	Camera::SetPos(App::GetWindowRect().GetMid().ToDbl());
+	Camera::SetPos(App::GetWindowSize().ToDbl()/2);
 	//[KrLib] 画像.
 	DrawImgMng::LoadFile(_T("Resources/Images/logo_text_only.png"),     "logo");
 	DrawImgMng::LoadFile(_T("Resources/Images/logo_all.png"),           "logo_all");
@@ -73,13 +73,13 @@ void GameManager::Init() {
 #if defined INPUT_CHANGE_ARCADE
 		//アーケード操作.
 		InputMng::AddAction("GameNext",   PadArcadeID::BtnUpper1);
-//		InputMng::AddAction("GamePause",  PadArcadeID::BtnUpper2);
+		InputMng::AddAction("GamePause",  PadArcadeID::BtnUpper2);
 		InputMng::AddAction("PlayerDash", PadArcadeID::BtnUpper3);
 		InputMng::AddAction("GameQuit",   PadArcadeID::BtnStart);
 #else
 		//コントローラ操作.
 		InputMng::AddAction("GameNext",   PadXboxID::A);
-//		InputMng::AddAction("GamePause",  PadXboxID::X);
+		InputMng::AddAction("GamePause",  PadXboxID::X);
 		InputMng::AddAction("PlayerDash", PadXboxID::B);
 		InputMng::AddAction("GameQuit",   PadXboxID::Menu);
 #endif
@@ -131,8 +131,7 @@ void GameManager::Reset() {
 	SceneMng::SetScene("Title");
 
 	//管理クラスリセット.
-	ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Stop);
-	ManagerInsts::GetInst().Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Stop);
+	StopObjects();
 
 	//サウンド.
 	SoundMng::StopAll();
@@ -149,11 +148,15 @@ void GameManager::Update() {
 
 	//ポーズ操作.
 	if (InputMng::IsPushActionTime("GamePause") == 1) {
-		if (gameData.isPause) {
-			GamePauseEnd(); //ポーズ解除.
-		}
-		else {
-			GamePause();    //ポーズする.
+		//ゲームシーンのみポーズ可.
+		if (SceneMng::GetSceneName() == "Game"){
+
+			if (gameData.isPause) {
+				GamePauseEnd(); //ポーズ解除.
+			}
+			else {
+				GamePause();    //ポーズする.
+			}
 		}
 	}
 	//特定の操作でゲーム終了
@@ -190,7 +193,8 @@ void GameManager::GamePause() {
 	bg.Pause();        //背景のポーズ.
 	gameScene.Pause(); //ゲームシーンのポーズ.
 
-	SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //描画のみ.
+	SceneMng::SetAutoExeMode(MngAutoExe::DrawOnly); //シーン      : 描画のみ.
+	DrawOnlyObjects();                              //オブジェクト: 描画のみ.
 }
 //ポーズ解除.
 void GameManager::GamePauseEnd() {
@@ -199,12 +203,16 @@ void GameManager::GamePauseEnd() {
 	bg.PauseEnd();        //背景のポーズ解除.
 	gameScene.PauseEnd(); //ゲームシーンのポーズ解除.
 
-	SceneMng::SetAutoExeMode(MngAutoExe::Active); //自動実行.
+	SceneMng::SetAutoExeMode(MngAutoExe::Active);   //シーン      : 稼働.
+	RestartObjects();                               //オブジェクト: 稼働.
 }
 //ポーズ画面.
 void GameManager::DrawPause() {
+
+#if !defined NO_SHOW_PAUSE
 	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
 	str.Draw(Anchor::Mid, gameData.fonts["size40"].GetFont());
+#endif
 }
 
 //ゲーム終了(死亡)
@@ -261,19 +269,6 @@ void GameManager::GameOver() {
 
 }
 
-//オブジェクト停止.
-void GameManager::StopObjects() {
-
-	ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<Ripples>      ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<Fireworks>    ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-	ManagerInsts::GetInst().Get<EndlessStage> ()->SetAutoExeMode(MngAutoExe::DrawOnly);
-}
-
 //アイテムを使用した時.
 void GameManager::ItemUsed() {
 
@@ -284,5 +279,74 @@ void GameManager::ItemUsed() {
 	if (gameData.stage == Stage_Tutorial) {
 		tutorialStg.SetTakeItem(true);       //指示を送る.
 		tutorialStg.SetReflectFinish(false); //falseにする(指示取り消し)
+	}
+}
+
+//オブジェクト停止.
+void GameManager::StopObjects() {
+
+	//管理クラス取得.
+	vector<ManagerBase*> mngs = {
+		ManagerInsts::GetInst().Get<Player>(),
+		ManagerInsts::GetInst().Get<LaserManager>(),
+		ManagerInsts::GetInst().Get<ItemManager>(),
+		ManagerInsts::GetInst().Get<NormalLaser>(),
+		ManagerInsts::GetInst().Get<MeteorManager>(),
+		ManagerInsts::GetInst().Get<StraightLaser>(),
+		ManagerInsts::GetInst().Get<Ripples>(),
+		ManagerInsts::GetInst().Get<Fireworks>(),
+		ManagerInsts::GetInst().Get<EndlessStage>(),
+		ManagerInsts::GetInst().Get<TutorialStage>()
+	};
+	//全ループ.
+	for (auto& i : mngs) {
+		i->SetAutoExeMode(MngAutoExe::Stop);
+	}
+}
+//オブジェクト描画のみ.
+void GameManager::DrawOnlyObjects() {
+
+	//管理クラス取得.
+	vector<ManagerBase*> mngs = {
+		ManagerInsts::GetInst().Get<Player>(),
+		ManagerInsts::GetInst().Get<LaserManager>(),
+		ManagerInsts::GetInst().Get<ItemManager>(),
+		ManagerInsts::GetInst().Get<NormalLaser>(),
+		ManagerInsts::GetInst().Get<MeteorManager>(),
+		ManagerInsts::GetInst().Get<StraightLaser>(),
+		ManagerInsts::GetInst().Get<Ripples>(),
+		ManagerInsts::GetInst().Get<Fireworks>(),
+		ManagerInsts::GetInst().Get<EndlessStage>(),
+		ManagerInsts::GetInst().Get<TutorialStage>()
+	};
+	//全ループ.
+	for (auto& i : mngs) {
+		//稼働してるクラスをDrawOnlyに変更.
+		if (i->GetAutoExeMode() != MngAutoExe::Stop) {
+			i->SetAutoExeMode(MngAutoExe::DrawOnly);
+		}
+	}
+}
+//オブジェクト稼働再開.
+void GameManager::RestartObjects() {
+
+	//管理クラス取得.
+	vector<ManagerBase*> mngs = {
+		ManagerInsts::GetInst().Get<Player>(),
+		ManagerInsts::GetInst().Get<LaserManager>(),
+		ManagerInsts::GetInst().Get<ItemManager>(),
+		ManagerInsts::GetInst().Get<NormalLaser>(),
+		ManagerInsts::GetInst().Get<MeteorManager>(),
+		ManagerInsts::GetInst().Get<StraightLaser>(),
+		ManagerInsts::GetInst().Get<Ripples>(),
+		ManagerInsts::GetInst().Get<Fireworks>(),
+		ManagerInsts::GetInst().Get<EndlessStage>(),
+		ManagerInsts::GetInst().Get<TutorialStage>()
+	};
+	//全ループ.
+	for (auto& i : mngs) {
+		if (i->GetAutoExeMode() != MngAutoExe::Stop) {
+			i->BackAutoExeMode(); //元のモードへ.
+		}
 	}
 }

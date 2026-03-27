@@ -79,7 +79,7 @@ void TitleScene::Draw() {
 		//切り替え前.
 		if (timer.GetPassTime() < delay1) {
 			//アニメーション値.
-			double anim = Calc::AnimEaseInOut(timer.GetPassTime() / delay1);
+			double anim = Calc::AnimEase(EaseType::InOutQuad, timer.GetPassTime() / delay1);
 			//ロゴ1枚目.
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
@@ -90,8 +90,8 @@ void TitleScene::Draw() {
 		else {
 			//アニメーション値.
 			//1枚目と2枚目の切り替えが自然になるよう、anim2は遅延ありにする.
-			double anim1 = Calc::AnimEaseInOut((timer.GetPassTime() - delay1) / 1.8);
-			double anim2 = Calc::AnimEaseInOut((timer.GetPassTime() - delay1 - 0.4) / 1.8);
+			double anim1 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay1)       / 1.8);
+			double anim2 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay1 - 0.4) / 1.8);
 			//ロゴ1枚目.
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim2));
@@ -111,8 +111,8 @@ void TitleScene::Draw() {
 		const int drawY = WINDOW_HEI / 2 + 130;
 
 		//アニメーション値.
-		double anim1 = Calc::AnimEaseInOut((timer.GetPassTime() - delay3) / 1.5);
-		double anim2 = Calc::AnimEaseInOut((timer.GetPassTime() - delay2) / 1.5);
+		double anim1 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay3) / 1.5);
+		double anim2 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay2) / 1.5);
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), gameData.bestScore); //ベストスコア.
@@ -137,7 +137,7 @@ void TitleScene::Draw() {
 		const int drawY = WINDOW_HEI / 2 + 310;
 
 		//アニメーション値.
-		double anim = Calc::AnimWaveLoop(timer.GetPassTime() - delay4);
+		double anim = Calc::AnimWave(WaveType::CosLoop, timer.GetPassTime() - delay4);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, drawY }, 0xFFFFFF);
 		{

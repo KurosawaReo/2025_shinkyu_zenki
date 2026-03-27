@@ -59,8 +59,8 @@ void UIManager::Draw() {
 		case Stage_Tutorial:
 		{
 			//アニメーション値.
-			double alpha   = Calc::AnimEaseInOut((time-1.0)*2);
-			double alpha2  = Calc::AnimEaseInOut(time-0.2);
+			double alpha   = Calc::AnimEase(EaseType::InOutQuad, (time-1.0)*2);
+			double alpha2  = Calc::AnimEase(EaseType::InOutQuad, time-0.2);
 			double animSin = sin(M_PI * (time-0.2));
 			//テキスト設定.
 			DrawStr str1({}, { WINDOW_WID/2, 70+2 }, 0xFFFFFF);
@@ -100,10 +100,10 @@ void UIManager::Draw() {
 		case Stage_Endless:
 		{
 			//アニメーション値.
-			double alpha1   = Calc::AnimEaseInOut( time-0.1   );
-			double alpha2   = Calc::AnimEaseInOut( time-0.2   );
-			double alpha3   = Calc::AnimEaseInOut( time-0.3   );
-			double alpha4   = Calc::AnimEaseInOut((time-1.0)*2);
+			double alpha1   = Calc::AnimEase(EaseType::InOutQuad,  time-0.1   );
+			double alpha2   = Calc::AnimEase(EaseType::InOutQuad,  time-0.2   );
+			double alpha3   = Calc::AnimEase(EaseType::InOutQuad,  time-0.3   );
+			double alpha4   = Calc::AnimEase(EaseType::InOutQuad, (time-1.0)*2);
 			double animSin1 = sin(M_PI* time-0.1);
 			double animSin2 = sin(M_PI*(time-0.2));
 			double animSin3 = sin(M_PI*(time-0.3));

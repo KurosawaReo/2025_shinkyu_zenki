@@ -1,6 +1,6 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/10
 */
 #include "KR_Draw.h"
 
@@ -8,13 +8,14 @@
 #include "KR_App.h"
 #include "KR_Calc.h"
 #include "KR_Camera.h"
+#include <algorithm>
 
 /*
    [終点の注意]
    DrawBox, DrawLine, DrawExtendGraphなどの終点を設定するものは
    始点から終点-1まで描画される仕様(その方が直感的だと作者は判断したそう)
 
-   例: DrawBox(1, 1, 5, 5, color, FALSE)とした場合
+   例: DrawBox(1, 1, 5, 5, color, false)とした場合
 
    　１２３４５
    １■■■■
@@ -25,7 +26,7 @@
 
    [サイズの-1について]
    画像やテキストの描画で、調整でサイズを-1している。
-   -1が必要かどうかは悩ましいが、これがないと画像をタイルのように並べた時にずれが起きる(検証結果)
+   これがないとタイルのように並べた時にずれが起きるため、多分必要。
 */
 
 //KrLib名前空間.
@@ -38,6 +39,12 @@ namespace KR
 		{0.0, 0.0}, {0.5, 0.0}, {1.0, 0.0},
 		{0.0, 0.5}, {0.5, 0.5}, {1.0, 0.5},
 		{0.0, 1.0}, {0.5, 1.0}, {1.0, 1.0}
+	};
+
+	//ポリゴン塗りつぶし用.
+	struct CrossData {
+		double x;     //交点のx座標.
+		int    delta; //巻数の変化量(+1/-1)
 	};
 
 // ▼*--=<[ DrawImg ]>=--*▼ //
@@ -68,16 +75,14 @@ namespace KR
 	/*
 	   DrawGraphの改造版.
 	*/
-	ResultInt DrawImg::Draw(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat, bool isCameraDis) const {
+	ResultInt DrawImg::Draw(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::Draw"), _T("ハンドル未設定")};
 		}
 
 		//描画座標.
-		DBL_XY newPos = pos;
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
+		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
 
 		//float型かどうか.
 		if (isFloat) {
@@ -107,17 +112,15 @@ namespace KR
 	   DrawRectGraphの改造版.
 	   Rect = 矩形(正方形や長方形のこと)
 	*/
-	ResultInt DrawImg::DrawRect(DBL_XY pos, DBL_RECT rect, Anchor anc, bool isTrans, bool isFloat, bool isCameraDis) const {
+	ResultInt DrawImg::DrawRect(DBL_XY pos, DBL_RECT rect, Anchor anc, bool isTrans, bool isFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawRect"), _T("ハンドル未設定")};
 		}
 
 		//描画座標.
-		DBL_XY newPos = pos;
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
-		//アンカーを含めた描画座標.
+		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
+		//基準点に座標をずらす.
 		newPos -= size.ToDbl() * ANCHOR_POS[_int(anc)];
 		//画像の矩形.
 		INT_XY drawStart = {0, 0};
@@ -173,23 +176,20 @@ namespace KR
 	/*
 	   DrawExtendGraphの改造版.
 	*/
-	ResultInt DrawImg::DrawExtend(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat, bool isCameraDis) const {
+	ResultInt DrawImg::DrawExtend(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawExtend"), _T("ハンドル未設定")};
 		}
 
 		//描画座標.
-		DBL_XY newPos = pos;
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
+		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
 
 		//float型かどうか.
 		if (isFloat) {
-			//始点を求める.
+			//基準点に座標をずらす.
 			float x1 = _flt(newPos.x - (size.x * sizeRate.x) * ANCHOR_POS[_int(anc)].x);
 			float y1 = _flt(newPos.y - (size.y * sizeRate.y) * ANCHOR_POS[_int(anc)].y);
-			//終点を求める.
 			float x2 = _flt(x1 + size.x * sizeRate.x);
 			float y2 = _flt(y1 + size.y * sizeRate.y);
 			//float型描画.
@@ -199,10 +199,9 @@ namespace KR
 			}
 		}
 		else {
-			//始点を求める.
+			//基準点に座標をずらす.
 			int x1 = _int(newPos.x - ((size.x * sizeRate.x)-1) * ANCHOR_POS[_int(anc)].x);
 			int y1 = _int(newPos.y - ((size.y * sizeRate.y)-1) * ANCHOR_POS[_int(anc)].y);
-			//終点を求める.
 			int x2 = _int(x1 + ((size.x * sizeRate.x)-1));
 			int y2 = _int(y1 + ((size.y * sizeRate.y)-1));
 			//int型描画.
@@ -222,7 +221,7 @@ namespace KR
 	   F   : float型描画.
 	   Fast: アルゴリズムが高速になったver.
 	*/
-	ResultInt DrawImg::DrawRota(DBL_XY pos, double extend, double ang, INT_XY pivot, bool isTrans, bool isFloat, bool isCameraDis) const {
+	ResultInt DrawImg::DrawRota(DBL_XY pos, double extend, double ang, INT_XY pivot, bool isTrans, bool isFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawRota"), _T("ハンドル未設定")};
@@ -232,7 +231,7 @@ namespace KR
 		double newAng = ang; //描画角度.
 
 		//カメラ基準に変換.
-		if (isCameraDis) { 
+		if (isCameraDisp) { 
 
 			//[world基準]
 			//カメラ→画像 の距離.
@@ -244,11 +243,11 @@ namespace KR
 			//カメラ→画像 の角度.
 			const double cmrAng = wrdAng - Camera::GetAng(); //カメラの角度を0とする.
 			//カメラ→画像 の位置.
-			const DBL_XY cmrPos = Calc::VectorDeg(cmrAng) * wrdDist; //方向 * 距離.
+			const DBL_XY cmrPos = Calc::AngToVector(cmrAng) * wrdDist; //方向 * 距離.
 			
 			//描画座標が確定.
 			//カメラ基準にするため、画面の半分ずらす.
-			newPos = cmrPos + App::GetWindowRect().GetMid().ToDbl();
+			newPos = cmrPos + App::GetWindowSize().ToDbl()/2;
 			//描画角度が確定.
 			newAng -= Camera::GetAng();
 		}
@@ -286,7 +285,7 @@ namespace KR
 	/*
 	   DrawModiGraphの改造版.
 	*/
-	ResultInt DrawImg::DrawModi(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat, bool isCameraDis) const {
+	ResultInt DrawImg::DrawModi(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat, bool isCameraDisp) const {
 	
 		if (handle == NONE_HANDLE) {
 			return {-3, _T("DrawImg::DrawModi"), _T("ハンドル未設定")};
@@ -295,8 +294,8 @@ namespace KR
 		//描画座標.
 		DBL_XY newPos[4] = { luPos, ruPos, rdPos, ldPos };
 		//カメラ基準に変換.
-		if (isCameraDis) {
-			for (auto& i : newPos) { i -= Camera::GetCameraPos(); }
+		if (isCameraDisp) {
+			for (auto& i : newPos) { i = App::ToWorldPos(i); }
 		}
 
 		//float型かどうか.
@@ -378,7 +377,7 @@ namespace KR
 	/*
 	   画像読み込み(分割)
 
-	   (例)
+	   [例]
 	   DrawImgMng::LoadFileDiv(
 	       _T("test.png"), {64, 64}, {4, 1}, //64×64のサイズで横4つ縦1つに分割.
 	       {"idle","run1","jump","death"}    //登録名.
@@ -420,12 +419,11 @@ namespace KR
 // ▼*--=<[ DrawStr ]>=--*▼ //
 
 	//DrawStringの改造版.
-	ResultInt DrawStr::Draw(Anchor anc, int font, bool isCameraDis) {
+	ResultInt DrawStr::Draw(Anchor anc, int font, bool isCameraDisp) {
 	
 		//描画座標.
-		DBL_XY newPos = pos.ToDbl();
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
+		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos.ToDbl()) : pos.ToDbl();
+
 		//基準点に座標をずらす.
 		int x = _int_r(newPos.x - (GetTextSize(font).x-1) * ANCHOR_POS[_int(anc)].x);
 		int y = _int_r(newPos.y - (GetTextSize(font).y-1) * ANCHOR_POS[_int(anc)].y);
@@ -447,13 +445,13 @@ namespace KR
 		return {0, _T("DrawStr::Draw"), _T("正常終了")};
 	}
 	//DrawRotaStringの改造版.
-	ResultInt DrawStr::DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font, bool isCameraDis) {
+	ResultInt DrawStr::DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical, int font, bool isCameraDisp) {
 
 		DBL_XY newPos = pos.ToDbl(); //描画座標.
 		double newAng = ang;         //描画角度.
 
 		//カメラ基準に変換.
-		if (isCameraDis) {
+		if (isCameraDisp) {
 			//TODO: 画像のDrawRotaみたいに回転対応させる.
 		}
 
@@ -480,13 +478,13 @@ namespace KR
 		return {0, _T("DrawStr::DrawRota"), _T("正常終了")};
 	}
 	//DrawModiStringの改造版.
-	ResultInt DrawStr::DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font, bool isCameraDis) {
+	ResultInt DrawStr::DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical, int font, bool isCameraDisp) {
 
 		//描画座標.
 		DBL_XY newPos[4] = { luPos.ToDbl(), ruPos.ToDbl(), rdPos.ToDbl(), ldPos.ToDbl() };
 		//カメラ基準に変換.
-		if (isCameraDis) {
-			for (auto& i : newPos) { i -= Camera::GetCameraPos(); }
+		if (isCameraDisp) {
+			for (auto& i : newPos) { i = App::ToWorldPos(i); }
 		}
 
 		//デフォルトフォント.
@@ -567,7 +565,7 @@ namespace KR
 		points.push_back(point); //頂点追加.
 	}
 	//描画.
-	void GradLine::Draw(bool isClose, bool isCameraDis) {
+	void GradLine::Draw(bool isClose, bool isCameraDisp) {
 
 		//頂点の数.
 		int count = _int((isClose) ? points.size()+1 : points.size());
@@ -578,9 +576,9 @@ namespace KR
 		for (int i = 0; i < points.size(); i++) {
 			tmp[i] = points[i]; //頂点を登録.
 			//カメラ基準に変換.
-			if (isCameraDis) {
-				tmp[i].pos.x -= _flt(Camera::GetCameraPos().x);
-				tmp[i].pos.y -= _flt(Camera::GetCameraPos().y);
+			if (isCameraDisp) {
+				tmp[i].pos.x -= _flt(App::GetWindowRect().GetLU().x);
+				tmp[i].pos.y -= _flt(App::GetWindowRect().GetLU().y);
 			}
 		}
 		if (isClose) {
@@ -599,26 +597,41 @@ namespace KR
 // ▼*--=<[ function ]>=--*▼ //
 
 	/*
+	   DrawPixelの改造版.
+	*/
+	ResultInt DrawPixelKR(DBL_XY pos, MY_COLOR color, bool isCameraDisp) {
+		//描画座標.
+		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
+		//描画.
+		int err = DrawPixel(_int_r(newPos.x), _int_r(newPos.y), color.GetColorCode());
+		if (err < 0) {
+			return { -1, _T("DrawPixelKR"), _T("DrawPixelエラー") };
+		}
+		return { 0, _T("DrawPixelKR"), _T("正常終了") };
+	}
+
+	/*
 	   DrawCircleの改造版.
 	*/
-	ResultInt DrawCircleKR(const Circle& cir, bool isFill, bool isAnti, float thick, bool isCameraDis) {
+	ResultInt DrawCircleKR(const Circle& cir, Anchor anc, bool isFill, bool isAnti, bool isCameraDisp) {
 
 		//描画座標.
-		DBL_XY newPos = cir.pos;
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
+		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(cir.pos) : cir.pos;
+		//基準点に座標をずらす.
+		float x = _flt(newPos.x - (cir.r*2-1) * (ANCHOR_POS[_int(anc)].x - 0.5));
+		float y = _flt(newPos.y - (cir.r*2-1) * (ANCHOR_POS[_int(anc)].y - 0.5));
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			//posnum(角形数)は60に設定する.
-			int err = DrawCircleAA(_flt(newPos.x), _flt(newPos.y), cir.r, 60, cir.color.GetColorCode(), isFill, thick);
+			int err = DrawCircleAA(x, y, cir.r, 60, cir.color.GetColorCode(), isFill, cir.thick);
 			if (err < 0) {
 				return {-1, _T("DrawCircleKR"), _T("DrawCircleAAエラー")};
 			}
 		}
 		//アンチエイリアスなし.
 		else{
-			int err = DrawCircle(_int_r(newPos.x), _int_r(newPos.y), _int_r(cir.r), cir.color.GetColorCode(), isFill, _int_r(thick));
+			int err = DrawCircle(_int_r(x), _int_r(y), _int_r(cir.r), cir.color.GetColorCode(), isFill, _int_r(cir.thick));
 			if (err < 0) {
 				return {-2, _T("DrawCircleKR"), _T("DrawCircleエラー")};
 			}
@@ -628,28 +641,25 @@ namespace KR
 	
 	/*
 	   DrawBoxの改造版.
+	   thickはAA版にしかないため、AAなしの場合は使わない.
 	*/
-	ResultInt DrawBoxKR(const Box& box, Anchor anc, bool isFill, bool isAnti, bool isCameraDis) {
+	ResultInt DrawBoxKR(const Box& box, Anchor anc, bool isFill, bool isAnti, bool isCameraDisp) {
 
 		if (box.size.x <= 0.0 || box.size.y <= 0.0) {
 			return {-3, _T("DrawCircleKR"), _T("サイズが0.0以下") };
 		}
 
 		//描画座標.
-		DBL_XY newPos = box.pos;
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
-
-		//始点を求める.
-		float x1 = _flt(newPos.x - (box.size.x-1) * ANCHOR_POS[_int(anc)].x);
+		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(box.pos) : box.pos;
+		//基準点に座標をずらす.
+		float x1 = _flt(newPos.x - (box.size.x-1) * ANCHOR_POS[_int(anc)].x); //始点.
 		float y1 = _flt(newPos.y - (box.size.y-1) * ANCHOR_POS[_int(anc)].y);
-		//終点を求める.
-		float x2 = _flt(x1 + box.size.x-1);
+		float x2 = _flt(x1 + box.size.x-1);                                   //終点.
 		float y2 = _flt(y1 + box.size.y-1);
 
 		//アンチエイリアスあり.
 		if (isAnti) {
-			int err = DrawBoxAA(x1, y1, x2+1, y2+1, box.color.GetColorCode(), isFill);
+			int err = DrawBoxAA(x1, y1, x2+1, y2+1, box.color.GetColorCode(), isFill, box.thick);
 			if (err < 0) {
 				return {-1, _T("DrawBoxKR"), _T("DrawBoxAAエラー")};
 			}
@@ -666,14 +676,15 @@ namespace KR
 	
 	/*
 	   DrawTriangleの改造版.
+	   thickはAA版にしかないため、AAなしの場合は使わない.
 	*/
-	ResultInt DrawTriangleKR(const Triangle& tri, bool isFill, bool isAnti, bool isCameraDis) {
+	ResultInt DrawTriangleKR(const Triangle& tri, bool isFill, bool isAnti, bool isCameraDisp) {
 
 		//描画座標.
 		DBL_XY newPos[3] = { tri.pos[0], tri.pos[1], tri.pos[2] };
 		//カメラ基準に変換.
-		if (isCameraDis) {
-			for (auto& i : newPos) { i -= Camera::GetCameraPos(); }
+		if (isCameraDisp) {
+			for (auto& i : newPos) { i = App::ToWorldPos(i); }
 		}
 
 		//アンチエイリアスあり.
@@ -681,7 +692,7 @@ namespace KR
 			int err = DrawTriangleAA(
 				_flt(newPos[0].x), _flt(newPos[0].y),
 				_flt(newPos[1].x), _flt(newPos[1].y),
-				_flt(newPos[2].x), _flt(newPos[2].y), tri.color.GetColorCode(), isFill
+				_flt(newPos[2].x), _flt(newPos[2].y), tri.color.GetColorCode(), isFill, tri.thick
 			);
 			if (err < 0) {
 				return {-1, _T("DrawTriangleKR"), _T("DrawTriangleAAエラー")};
@@ -704,20 +715,20 @@ namespace KR
 	/*
 	   DrawLineの改造版.
 	*/
-	ResultInt DrawLineKR(const Line& line, bool isAnti, float thick, bool isCameraDis) {
+	ResultInt DrawLineKR(const Line& line, bool isAnti, bool isCameraDisp) {
 
 		//描画座標.
 		DBL_XY newPos[2] = { line.stPos, line.edPos };
 		//カメラ基準に変換.
-		if (isCameraDis) {
-			for (auto& i : newPos) { i -= Camera::GetCameraPos(); }
+		if (isCameraDisp) {
+			for (auto& i : newPos) { i = App::ToWorldPos(i); }
 		}
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			int err = DrawLineAA(
 				_flt(newPos[0].x), _flt(newPos[0].y),
-				_flt(newPos[1].x), _flt(newPos[1].y), line.color.GetColorCode(), thick
+				_flt(newPos[1].x), _flt(newPos[1].y), line.color.GetColorCode(), line.thick
 			);
 			if (err < 0) {
 				return {-1, _T("DrawLineKR"), _T("DrawLineAAエラー")};
@@ -727,7 +738,7 @@ namespace KR
 		else {
 			int err = DrawLine(
 				_int_r(newPos[0].x), _int_r(newPos[0].y),
-				_int_r(newPos[1].x), _int_r(newPos[1].y), line.color.GetColorCode(), _int(thick)
+				_int_r(newPos[1].x), _int_r(newPos[1].y), line.color.GetColorCode(), _int_r(line.thick)
 			);
 			if (err < 0) {
 				return {-2, _T("DrawLineKR"), _T("DrawLineエラー")};
@@ -737,35 +748,33 @@ namespace KR
 	}
 	
 	/*
-	   扇形を描画(オリジナル図形)
+	   扇形を描画.
 	*/
-	ResultInt DrawPieKR(const Pie& pie, bool isAnti, float thick, bool isCameraDis) {
+	ResultInt DrawPieKR(const Pie& pie, bool isAnti, bool isCameraDisp) {
 
-		DrawArcKR(pie, isCameraDis, isAnti, thick); //そのまま弧も描く.
-
-		//描画座標.
-		DBL_XY newPos = pie.pos;
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
+		DrawArcKR(pie, isAnti, isCameraDisp); //そのまま弧も描く.
 
 		Line line;     //描画用の線.
 		ResultInt err; //エラー判定用.
 
 		//ベクトルを求める.
-		DBL_XY vec1 = Calc::VectorDeg(pie.stAng);             //扇の始まりの角度.
-		DBL_XY vec2 = Calc::VectorDeg(pie.stAng+pie.arcAng); //扇の終わりの角度.
+		DBL_XY vec1 = Calc::AngToVector(pie.stAng);            //扇の始まりの角度.
+		DBL_XY vec2 = Calc::AngToVector(pie.stAng+pie.arcAng); //扇の終わりの角度.
 		//座標を求める.
-		DBL_XY pos1 = newPos + vec1 * pie.r;
-		DBL_XY pos2 = newPos + vec2 * pie.r;
+		DBL_XY pos1 = pie.pos + vec1 * pie.r;
+		DBL_XY pos2 = pie.pos + vec2 * pie.r;
 		//線1を描画.
-		line = { pos1, newPos, pie.color };
-		err = DrawLineKR(line, isAnti, thick);
+		line.stPos = pos1;
+		line.edPos = pie.pos;
+		line.color = pie.color;
+		line.thick = pie.thick;
+		err = DrawLineKR(line, isAnti, isCameraDisp);
 		if (err.GetCode() < 0) {
 			return {-1, _T("DrawPieKR"), _T("DrawLineKR 1つ目エラー")};
 		}
 		//線2を描画.
-		line = { pos2, newPos, pie.color };
-		err = DrawLineKR(line, isAnti, thick);
+		line.stPos = pos2;
+		err = DrawLineKR(line, isAnti, isCameraDisp);
 		if (err.GetCode() < 0) {
 			return {-2, _T("DrawPieKR"), _T("DrawLineKR 2つ目エラー")};
 		}
@@ -773,30 +782,31 @@ namespace KR
 	}
 	
 	/*
-	   円弧を描画(オリジナル図形)
+	   円弧を描画.
 	*/
-	ResultInt DrawArcKR(const Pie& pie, bool isAnti, float thick, bool isCameraDis) {
-
-		//描画座標.
-		DBL_XY newPos = pie.pos;
-		//カメラ基準に変換.
-		if (isCameraDis) { newPos -= Camera::GetCameraPos(); }
+	ResultInt DrawArcKR(const Pie& pie, bool isAnti, bool isCameraDisp) {
 
 		const double addAng = 1.0;                    //一度で描く線の長さ.
 		const double edAng  = pie.stAng + pie.arcAng; //弧の終わりの角度.
 
 		for (double i = pie.stAng; i <= edAng-addAng; i += addAng) {
+
 			//角度の設定.
 			double ang1 = i - 1;
 			ang1 = max(ang1, pie.stAng); //下限.
 			double ang2 = i + addAng + 1;
-			ang2 = min(ang2, edAng);      //上限.
+			ang2 = min(ang2, edAng);     //上限.
 			//座標の設定.
-			DBL_XY pos1 = Calc::ArcPos(newPos, ang1, pie.r); //繋ぎ目が綺麗になるよう角度を-1する.
-			DBL_XY pos2 = Calc::ArcPos(newPos, ang2, pie.r); //繋ぎ目が綺麗になるよう角度を+1する.
-			Line line = { pos1, pos2, pie.color };
+			DBL_XY pos1 = Calc::ArcPos(pie.pos, ang1, pie.r); //繋ぎ目が綺麗になるよう角度を-1する.
+			DBL_XY pos2 = Calc::ArcPos(pie.pos, ang2, pie.r); //繋ぎ目が綺麗になるよう角度を+1する.
+
+			Line line;
+			line.stPos = pos1;
+			line.edPos = pie.pos;
+			line.color = pie.color;
+			line.thick = pie.thick;
 			//線を描画.
-			ResultInt err = DrawLineKR(line, isAnti, thick);
+			ResultInt err = DrawLineKR(line, isAnti, isCameraDisp);
 			if (err.GetCode() < 0) {
 				return {-1, _T("DrawArcKR"), _T("DrawLineKRエラー")};
 			}
@@ -805,14 +815,229 @@ namespace KR
 	}
 	
 	/*
+	   ベジエ曲線描画.
+	   isDotがtrueの場合、isAntiは使わない.
+	*/
+	ResultInt DrawBezierLineKR(const BezierLine& bLine, bool isDot, bool isAnti, bool isCameraDisp) {
+
+		const int segments = 100; //曲線全体の分割数.
+
+		Line line;                //描画用の線.
+		line.color = bLine.color;
+		line.thick = bLine.thick;
+
+		//ベジェ曲線を細かい線分に分割.
+		for (int i = 0; i < segments; i++) {
+			//タイム値.
+			const double t  = _dbl(i  )/segments;
+			const double nt = _dbl(i+1)/segments;
+			if (isDot) {
+				//1点を取得.
+				DBL_XY pos = Calc::BezierPoint(bLine, t);
+				//描画.
+				ResultInt err = DrawPixelKR(pos, bLine.color, isCameraDisp);
+				if (err.GetCode() < 0) {
+					return { -1, _T("DrawBezierLineKR"), _T("ドット描画でエラー") };
+				}
+			}
+			else {
+				//2点を取得.
+				line.stPos = Calc::BezierPoint(bLine, t);
+				line.edPos = Calc::BezierPoint(bLine, nt);
+				//線描画.
+				ResultInt err = DrawLineKR(line, isAnti, isCameraDisp);
+				if (err.GetCode() < 0) {
+					return { -2, _T("DrawBezierLineKR"), _T("線描画でエラー") };
+				}
+			}
+		}
+		return {0, _T("DrawBezierLineKR"), _T("正常終了")};
+	}
+
+	/*
+	   スプライン曲線描画.
+	   isDotがtrueの場合、isAntiは使わない.
+	*/
+	ResultInt DrawSplineKR(const Spline& spline, int degree, bool isDot, bool isAnti, bool isCameraDisp) {
+
+		const int segments = 100; //曲線全体の分割数.
+
+		//スプライン曲線を細かい線分に分割.
+		for (int i = 0; i < segments; i++) {
+			//タイム値.
+			double t  = _dbl(i)  /segments;
+			double nt = _dbl(i+1)/segments;
+
+			if (isDot) {
+				//1点を取得.
+				DBL_XY pos = Calc::SplinePoint(spline, degree, t);
+				//描画.
+				ResultInt err = DrawPixelKR(pos, spline.color, isCameraDisp);
+				if (err.GetCode() < 0) {
+					return { -1, _T("DrawSplineKR"), _T("ドット描画でエラー") };
+				}
+			}
+			else {
+				//2点を取得.
+				Line line;
+				line.stPos = Calc::SplinePoint(spline, degree, t);
+				line.edPos = Calc::SplinePoint(spline, degree, nt);
+				line.thick = spline.thick;
+				//描画.
+				ResultInt err = DrawLineKR(line, isAnti, isCameraDisp);
+				if (err.GetCode() < 0) {
+					return { -2, _T("DrawSplineKR"), _T("線描画でエラー") };
+				}
+			}
+		}
+
+		return { 0, _T("DrawSplineKR"), _T("正常終了") };
+	}
+
+	/*
+	   ポリゴン描画.
+	   基準点から頂点を相対座標で描く.
+	*/
+	ResultInt DrawPolygonKR(const Polygon& poly, bool isSurround, bool isAnti, bool isCameraDisp) {
+
+		Line line; //描画用.
+		line.color = poly.color;
+		line.thick = poly.thick;
+
+		//ポリゴンの全頂点.
+		for (int i = 0; i < poly.points.size(); i++) {
+			//囲わないなら最後はスキップ.
+			if (i == poly.points.size()-1) {
+				if (!isSurround) { break; }
+			}
+			//始点と終点.
+			line.stPos = poly.pos + poly.points[i];
+			line.edPos = poly.pos + poly.points[(i+1) % poly.points.size()]; //サイズを超えたら0に戻す.
+			//描画.
+			ResultInt err = DrawLineKR(line, isAnti, isCameraDisp);
+			if (err.GetCode() < 0) {
+				return { -1, _T("DrawPolygonKR"), _T("DrawLineKRエラー") };
+			}
+		}
+		return { 0, _T("DrawPolygonKR"), _T("正常終了") };
+	}
+	/*
+	   ===== 問題 =====
+	   以下のように、4本の線・3つの空間があるとする。
+
+	   ｜□□｜□□｜□□｜
+
+	   横に1列ずつ塗りつぶし処理を行い
+	   偶奇規則で2つの線の間を塗るようにすると、内側に塗られない空間ができる。
+
+	   ｜■■｜□□｜■■｜
+　 　　　　	  ↑ここも塗ってほしい
+
+	   しかし、この空間が完全に囲まれているのか、外側へ通じているかは分からない。
+
+	   ===== 解決法 =====
+	   非ゼロ巻数規則を使い、線が下から来たか上から来たかを判定する。
+	   「線が下に行って上に行った時、1つの"囲い"が成立する」この性質を利用したもの。
+
+	   例: 真ん中が囲われてないケース
+	   ↓■■↑□□↑■■↓
+
+	   例: 真ん中が囲われてるケース
+	   ↓■■↓■■↑■■↑
+
+	   これを数値化すればプログラムで実装できる。
+
+	   ===== プログラム =====
+	   横一列を左から右へ調べる。"↓"を通過したら+1 / "↑"を通過したら-1
+	   数値が0以外なら塗る。0なら塗らない。
+
+	   ↓１１↓２２↑１１↑００
+	*/
+	//ポリゴンの1辺(pos1→pos2)と、水平線yが交差するか判定.
+	bool IntersectEdge(const DBL_XY pos1, const DBL_XY pos2, double y, double* x, int* delta) {
+
+		//yがpos1.y～pos2.yの間にある(=交差している)
+		if ((pos1.y <= y && pos2.y > y) || (pos2.y <= y && pos1.y > y)) {
+
+			//線分上の交点比率"t"を求める.
+			//y = pos1.y + t * (pos2.y - pos1.y)
+			double t = (y - pos1.y) / (pos2.y - pos1.y);
+
+			//交点のx座標を返す.
+			*x = pos1.x + t * (pos2.x - pos1.x);
+			//巻数を増減する, yの高さを比較して傾きを調べる.
+			*delta = (pos2.y > pos1.y) ? +1 : -1;
+
+			return true;
+		}
+		return false;
+	}
+	//ポリゴンを塗りつぶす(非ゼロ巻数規則を使用)
+	void FillPolygon(const KR::Polygon& poly, bool isSurround, bool isCameraDisp) {
+
+		//画面の上下y座標を取得.
+		const int upY   = App::GetWindowRect().GetU().y;
+		const int downY = App::GetWindowRect().GetD().y;
+
+		//一列ずつループ.
+		for (int y = upY; y < downY; y++) {
+
+			//交点リスト.
+			vector<CrossData> crossList;
+
+			//ポリゴンの全頂点.
+			for (int i = 0; i < poly.points.size(); i++) {
+				//囲わないなら最後はスキップ.
+				if (i == poly.points.size()-1) {
+					if (!isSurround) { break; }
+				}
+				//絶対座標を取得.
+				const DBL_XY& p0 = poly.pos + poly.points[i];
+				const DBL_XY& p1 = poly.pos + poly.points[(i+1) % poly.points.size()];
+				//引数受け取り用.
+				double x; int delta;
+				//今の一列がポリゴンの一辺と交差するなら.
+				if (IntersectEdge(p0, p1, y, &x, &delta)) {
+					crossList.push_back({ x, delta }); //交点として追加.
+				}
+			}
+
+			//交点をx座標の昇順(左→右)にソート.
+			std::sort(crossList.begin(), crossList.end(),
+				[](auto& a, auto& b) { return a.x < b.x; });
+
+			//左から右へ調べ、交点を通過する.
+			int winding = 0;
+			for (int i = 0; i + 1 < crossList.size(); i++) {
+				//交点を通過(→巻数値が+1/-1)
+				winding += crossList[i].delta;
+				//巻数が0でなければ内側.
+				if (winding != 0) {
+					//次の交点まで塗りつぶす.
+					Line line;
+					line.stPos = { crossList[i].x,   _dbl(y) };
+					line.edPos = { crossList[i + 1].x, _dbl(y) };
+					line.color = poly.color;
+					DrawLineKR(line, false, isCameraDisp);
+				}
+			}
+		}
+	}
+
+	/*
 	   画面全体にグリッド線を描画.
 	*/
 	ResultInt DrawWindowGrid(int wid, int hei, int size, MY_COLOR clrWid, MY_COLOR clrHei) {
 
+		Line line;
+
 		//縦線の描画.
 		for (int x = 0; x < wid; x += size) {
-
-			Line line = { {_dbl(x), 0}, {_dbl(x), _dbl(hei)}, clrHei };
+			//線の設定.
+			line.stPos = { _dbl(x), 0 };
+			line.edPos = { _dbl(x), _dbl(hei) };
+			line.color = clrHei;
+			//描画.
 			ResultInt err = DrawLineKR(line);
 			if (err.GetCode() < 0) {
 				return {-1, _T("DrawWindowGrid"), _T("縦線でエラー")};
@@ -820,8 +1045,11 @@ namespace KR
 		}
 		//横線の描画.
 		for (int y = 0; y < hei; y += size) {
-
-			Line line = { {0, _dbl(y)}, {_dbl(wid), _dbl(y)}, clrWid };
+			//線の設定.
+			line.stPos = { 0, _dbl(y) };
+			line.edPos = { _dbl(wid), _dbl(y) };
+			line.color = clrWid;
+			//描画.
 			ResultInt err = DrawLineKR(line);
 			if (err.GetCode() < 0) {
 				return {-2, _T("DrawWindowGrid"), _T("横線でエラー")};
@@ -833,14 +1061,10 @@ namespace KR
 	/*
 	   キューブ(3D)[試作品]
 	*/
-	ResultInt DrawBox3DKR(const Box3D& box, bool isFill, bool isCameraDis) {
+	ResultInt DrawBox3DKR(const Box3D& box, bool isFill) {
 
 		//描画座標.
 		DBL_XYZ newPos[2] = { box.stPos, box.edPos };
-		//カメラ基準に変換.
-		if (isCameraDis) { 
-			for (auto& i : newPos) { i -= Camera::GetPos3D(); }
-		}
 
 		//座標.
 		VECTOR vec1 = { _flt(newPos[0].x), _flt(newPos[0].y), _flt(newPos[0].z) };

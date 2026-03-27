@@ -64,8 +64,8 @@ void EndScene::Draw() {
 
 	//黒フィルター.
 	{
-		double anim = Calc::AnimEaseInOut(timer.GetPassTime()); //アニメーション値.
-		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000 };
+		double anim = Calc::AnimEase(EaseType::InOutQuad, timer.GetPassTime()); //アニメーション値.
+		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000, 1.0f };
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 128 * anim);
 			DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
@@ -76,7 +76,7 @@ void EndScene::Draw() {
 	if (gameData.stage == Stage_Tutorial) {
 
 		//アニメーション値.
-		double anim = Calc::AnimEaseOut(timer.GetPassTime());
+		double anim = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
 		//テキスト.
 		DrawStr str(_T("チュートリアルではその場で復活します..."), { WINDOW_WID / 2, WINDOW_HEI / 2 }, 0x00FFFF);
 		{
@@ -93,7 +93,7 @@ void EndScene::Draw() {
 		//終了案内.
 		{
 			//アニメーション値.
-			const double anim     = Calc::AnimEaseOut(timer.GetPassTime());
+			const double anim     = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
 			const float  gameTime = gameMng.GetGameScene()->GetGameTime();
 
 			//スコア表示.
@@ -124,7 +124,7 @@ void EndScene::Draw() {
 			if (isBestScore) {
 
 				//アニメーション値.
-				double anim = Calc::AnimEaseOut((timer.GetPassTime() - delay1) * 2);
+				double anim = Calc::AnimEase(EaseType::OutQuad, (timer.GetPassTime() - delay1) * 2);
 				//描画.
 				{
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
@@ -143,7 +143,7 @@ void EndScene::Draw() {
 		if (timer.GetPassTime() > delay2) {
 
 			//アニメーション値.
-			double anim = Calc::AnimWaveLoop(timer.GetPassTime() - delay2);
+			double anim = Calc::AnimWave(WaveType::CosLoop, timer.GetPassTime() - delay2);
 			//テキスト.
 			DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, WINDOW_HEI / 2 + 145 }, 0xFFFFFF);
 			{

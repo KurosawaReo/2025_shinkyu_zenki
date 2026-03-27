@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/02/12
 
    当たり判定、物理、アニメーション曲線などの計算機能。
 */
@@ -10,13 +10,23 @@
   #include "KR_Global.h"
 #endif
 
-//角度変換用.
-#define _rad(x) (x)*(M_PI/180)
-#define _deg(x) (x)*(180/M_PI)
-
 //KrLib名前空間.
 namespace KR
 {
+	//イージングタイプ.
+	enum class EaseType
+	{
+		InQuad,
+		OutQuad,
+		InOutQuad,
+		OutInQuad,
+	};
+	//ループ波形タイプ.
+	enum class WaveType
+	{
+		CosLoop,
+	};
+
 	//計算用の関数群.
 	namespace Calc
 	{
@@ -31,24 +41,24 @@ namespace KR
 		void		FixPosInArea		(DBL_XY* pos, INT_XY size, DBL_RECT rect);
 		bool		IsOutInArea			(DBL_XY  pos, INT_XY size, DBL_RECT rect, bool isCompOut);
 
-		//計算(座標,角度,長さ,ベクトル)
+		//角度,ベクトル.
 		double		Dist				(INT_XY pos1,  INT_XY pos2);
 		double		Dist				(DBL_XY pos1,  DBL_XY pos2);
 		DBL_XY		MidPos				(DBL_XY pos1,  DBL_XY pos2);
 		DBL_XY		ArcPos				(DBL_XY pos, double ang, double len);
 		double		FacingAng			(DBL_XY from, DBL_XY to);
-		DBL_XY		VectorDeg			(double deg);
-		DBL_XY		VectorRad			(double rad);
+		DBL_XY      AngToVector		    (double ang);
+
+		//ベジエ曲線,スプライン曲線.
+		DBL_XY		BezierPoint			(const BezierLine& bLine,  double time);
+		DBL_XY      SplinePoint         (const Spline&     spline, int degree, double time);
 
 		//物理系.
 		void        PhysicsVel          (DBL_XY* vel, DBL_XY maxVel, bool isGround, double gravity, double friction, double airDrag);
 
 		//値の曲線変動(アニメーション用)
-		double		AnimEaseIn			(double time);
-		double		AnimEaseOut			(double time);
-		double		AnimEaseInOut		(double time);
-		double      AnimEaseOutIn		(double time);
-		double		AnimWaveLoop		(double time);
+		double      AnimEase			(EaseType type, double time);
+		double      AnimWave			(WaveType type, double time);
 
 		//値の操作.
 		int         RandNum				(int st, int ed, bool isDxRand = false);
