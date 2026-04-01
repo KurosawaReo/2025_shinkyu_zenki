@@ -83,6 +83,7 @@
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
+    <ClInclude Include="KrLib_cpp\KR_Singleton.h" />
     <ClInclude Include="KrLib_Dx\KR_App.h" />
     <ClInclude Include="KrLib_Dx\KR_Calc.h" />
     <ClInclude Include="KrLib_Dx\KR_Camera.h" />
