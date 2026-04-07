@@ -32,6 +32,6 @@ public:
     Singleton& operator=(const Singleton&) = delete;
 
 protected:
-    Singleton() {}  //継承クラスからのみ生成可,
+    Singleton() {}  //継承クラスからのみ生成可.
     ~Singleton() {}
 };
