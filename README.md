@@ -3,20 +3,20 @@
 -->
 
 <p align="center">
-  <img src="_readme_img/logo_all_black.png" width="500"><br>
+  <img src="readme_img/logo_all_black.png" width="500"><br>
 </p>
 
 ---
 ## 操作説明
 **キーボード**
-<img src="_readme_img/lore_keyboard.png">
+<img src="readme_img/lore_keyboard.png">
 **Xboxコントローラ**
-<img src="_readme_img/lore_xbox_controller.png">
+<img src="readme_img/lore_xbox_controller.png">
 <br>
 
 ---
 ## ゲーム概要
-<img src="_readme_img/game_image.png">
+<img src="readme_img/game_image.png">
 <table>
   <tr>
     <th>開発期間</th>
@@ -49,7 +49,7 @@
 最終スコアでハイスコアを競います。
 
 <div style="display:flex; align-items:center; gap:16px;">
-  <img src="_readme_img/rule1_sakeru.gif" width=200>
+  <img src="readme_img/rule1_sakeru.gif" width=200>
   <div>
     <b>1. 避ける</b><br>
     レーザーや隕石などの障害物に1回でも当たるとゲームオーバー。<br>
@@ -59,7 +59,7 @@
 <br>
 
 <div style="display:flex; align-items:center; gap:16px;">
-  <img src="_readme_img/rule2_toru.gif" width=200>
+  <img src="readme_img/rule2_toru.gif" width=200>
   <div>
     <b>2. 取る</b><br>
     画面上部からアイテムが降ってきます。<br>
@@ -70,7 +70,7 @@
 <br>
 
 <div style="display:flex; align-items:center; gap:16px;">
-  <img src="_readme_img/rule3_hansya.gif" width=200>
+  <img src="readme_img/rule3_hansya.gif" width=200>
   <div>
     <b>3. 反射</b><br>
     反射モード中は、レーザーにわざと当たりに行くことで反射することができます。<br>
@@ -81,7 +81,7 @@
 <br>
 
 <div style="display:flex; align-items:center; gap:16px;">
-  <img src="_readme_img/rule4_kowasu.gif" width=200>
+  <img src="readme_img/rule4_kowasu.gif" width=200>
   <div>
     <b>4. 壊す</b><br>
     反射したレーザーは、近くの隕石に向かって自動で追尾します。<br>
@@ -91,7 +91,7 @@
 <br>
 
 これらのルールは、ゲーム本編の『**チュートリアル**』モードからでも確認できます。
-<img src="_readme_img/menu_tutorial.png">
+<img src="readme_img/menu_tutorial.png">
 
 ## こだわりポイント
 
@@ -104,11 +104,11 @@
 <div style="display: flex; flex-wrap: wrap;">
   <p style="width: 45%; margin: 1%;">
     <font color=00ffff><b>通常モード</b></font>
-    <img src="_readme_img/color_blue.png">
+    <img src="readme_img/color_blue.png">
   </p>
   <p style="width: 45%; margin: 1%;">
     <font color=ff00ff><b>反射モード</b></font>
-    <img src="_readme_img/color_pink.png">
+    <img src="readme_img/color_pink.png">
   </p>
 </div>
 
@@ -118,12 +118,12 @@
 
 ▼`背景アニメーション`
 
-<img src="_readme_img/anim_bg.gif">
+<img src="readme_img/anim_bg.gif">
 <br>
 
 ▼`レベルアップアニメーション`
 
-<img src="_readme_img/anim_levelup.gif">
+<img src="readme_img/anim_levelup.gif">
 <br>
 
 > ### 隕石
@@ -131,11 +131,11 @@
 1. 隕石の線の数を抽選
 2. 隕石の中心から、頂点をどのくらいの距離離すかを抽選
 
-<img src="_readme_img/meteor1.png"> <img src="_readme_img/meteor2.png"> <img src="_readme_img/meteor3.png">
+<img src="readme_img/meteor1.png"> <img src="readme_img/meteor2.png"> <img src="readme_img/meteor3.png">
 
 また、隕石が壊れた時の演出にもこだわり、壊した時の気持ち良さが出るよう工夫しました。
 
-<img src="_readme_img/anim_break_meteor.gif">
+<img src="readme_img/anim_break_meteor.gif">
 <br>
 
 > ### KrLib
