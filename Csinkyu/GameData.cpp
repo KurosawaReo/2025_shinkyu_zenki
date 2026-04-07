@@ -3,4 +3,4 @@
 */
 #include "GameData.h"
 
-GameData GameData::inst;
+//GameData GameData::inst;

@@ -94,5 +94,6 @@
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
     <ClInclude Include="KrLib_Dx\KR_Matrix.h" />
     <ClInclude Include="KrLib_Dx\KR_CurveLine.h" />
+    <ClInclude Include="KrLib_cpp\KR_Singleton.h" />
   </ItemGroup>
 </Project>

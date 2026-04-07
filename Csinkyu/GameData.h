@@ -3,16 +3,10 @@
 */
 #pragma once
 
-//ゲームデータ.[継承不可]
-class GameData final
+//ゲームデータ[継承不可]
+class GameData final : public Singleton<GameData>
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static GameData inst; //自身のインスタンス.
-public:
-	static GameData& GetInst() {
-		return inst;
-	}
+	friend class Singleton<GameData>;
 
 //▼ ===== 変数 ===== ▼.
 public:
@@ -37,9 +31,4 @@ public:
 private:
 	//コンストラクタ.
 	GameData(){}
-
-public:
-	//使用禁止.
-	GameData(const GameData&) = delete;
-	GameData& operator=(const GameData&) = delete;
 };
