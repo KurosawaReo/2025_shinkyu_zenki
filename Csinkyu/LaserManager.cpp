@@ -336,7 +336,8 @@ bool LaserManager::HitLaser(list<LaserData>::iterator it) {
 	if (player.GetActive() && HitLineCir(line, plyHit)) {
 
 		//反射あり.
-		if (player.GetMode() == Player_Reflect)
+		if (player.GetMode() == Player_Reflect || 
+			(player.GetMode() == Player_Normal && player.GetIsDashing()))//ダッシュ中も反射
 		{
 			it->type = Laser_Reflect; //反射モードへ.
 			it->counter = 0;          //リセット.

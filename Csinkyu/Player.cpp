@@ -46,6 +46,11 @@ void Player::Reset()
 	dashTimer    = 0;
 	dashCooldown = 0;
 
+	//ダッシュ関係.
+	
+	dashEndEffectTimer = 0;
+	isDashEndEffect = false;
+
 	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
 		after[i].pos      = hit.pos; //初期位置と同じ.
@@ -151,6 +156,10 @@ void Player::UpdateDash()
 			//ダッシュ開始.
 			if (dashkey)
 			{
+				//ダッシュ音追加..
+				if (auto i = SoundMng::Get("PlayerDash")) {
+					i->Play(false, 80); //再生.
+				}
 				dashTimer    = PLAYER_DASH_DURATION;
 				dashCooldown = PLAYER_DASH_COOLDOWN;
 				isDashing    = true;
