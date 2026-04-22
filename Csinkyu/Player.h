@@ -41,6 +41,12 @@ private:
 	bool           active{};   //有効か.
 	bool           isDebug{};  //デバッグ用.
 
+	float dashEndEffectTimer;//エフェクト残り時間.
+
+	bool isDashEndEffect;    //エフェクト発動フラグ.
+
+
+
 	//残像.
 	float          afterCntr{};	 		        //残像用時間カウンター.
 	AfterEffect    after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
@@ -76,6 +82,8 @@ public:
 		return Calc::Dist(hit.pos, after[1].pos) > 0; //移動距離が0より大きければ.
 	}
 
+	bool GetIsDashing() const { return isDashing; }
+
 	void Init  () override;
 	void Reset () override;
 	void Update() override;
@@ -89,6 +97,9 @@ public:
 
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
+
+	void OnDashEnd();        //ダッシュ終了時エフェクト関数.
+
 
 	//使用禁止.
 	Player(const Player&) = delete;
