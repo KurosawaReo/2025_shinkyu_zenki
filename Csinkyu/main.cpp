@@ -14,8 +14,21 @@ int WINAPI WinMain(
 ){
 #endif
 
-	ResultInt err = App::InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
-	if (err.GetCode() < 0) { return -1; } //初期化エラー.
+	try {
+		//初期化処理.
+		App::InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
+	}
+	catch (const ErrorMsg& err) {
+		Debug::Log(_T("InitDx"), err.GetResult());
+	}
 
-	App::LoopDx();
+	try {
+		//ループ処理.
+		App::LoopDx();
+	}
+	catch (const ErrorMsg& err) {
+		Debug::Log(_T("LoopDx"), err.GetResult());
+	}
+
+	return 0;
 }

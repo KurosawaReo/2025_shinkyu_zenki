@@ -121,13 +121,14 @@ void GameManager::Init() {
 	gameData.fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
 
 	//スコア読み込み.
-	{
+	try {
 		File file;
-		//ファイルを開く.
-		if (file.Open(FILE_DATA, _T("r")).GetCode() == 0) {
-			gameData.bestScore = file.ReadInt();       //数字を読み込んで登録.
-			uiMng.SetDisBestScore(gameData.bestScore); //ベストスコア表示更新.
-		}
+		file.Open(FILE_DATA, _T("r"));             //ファイルを開く.
+		gameData.bestScore = file.ReadInt();       //数字を読み込んで登録.
+		uiMng.SetDisBestScore(gameData.bestScore); //ベストスコア表示更新.
+	}
+	catch (const ErrorMsg& err) {
+		Debug::Log(_T("スコア読み込み"), err.GetResult());
 	}
 
 	//fps表示用.
@@ -264,12 +265,15 @@ void GameManager::GameOver() {
 				if (gameData.score > gameData.bestScore) {
 
 					File file;
-					//ファイルを開く.
-					if (file.Open(FILE_DATA, _T("w"), true).GetCode() == 0) {
-						file.WriteInt(gameData.score);   //スコアを保存.
+					try {
+						file.Open(FILE_DATA, _T("w"), true); //ファイルを開く.
+						file.WriteInt(gameData.score);       //スコアを保存.
+						gameData.bestScore = gameData.score; //スコア更新.
+						endScene.SignBestScore();            //ハイスコアのサイン送信.
 					}
-					gameData.bestScore = gameData.score; //スコア更新.
-					endScene.SignBestScore();            //ハイスコアのサイン送信.
+					catch (const ErrorMsg& err) {
+						Debug::Log(_T("ハイスコア更新"), err.GetResult());
+					}
 				}
 
 #if !defined BGM_NONE
