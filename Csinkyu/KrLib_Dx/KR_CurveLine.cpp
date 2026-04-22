@@ -1,6 +1,5 @@
 /*
    - KR_CurveLine.cpp - (DxLib)
-   ver.2026/02/15
 */
 #include "KR_CurveLine.h"
 
@@ -20,8 +19,8 @@ namespace KR
 	void DragPoint::Update() {
 		//ドラッグされてる時.
 		if (isDrag) {
-			cir.pos   = InputMng::GetMousePos();
-			cir.color = 0x00ffff;
+			SetPos(InputMng::GetMousePos());
+			GetCir()->color = 0x00ffff;
 			//画面外には行かないように.
 			if (IsOutInArea(App::GetWindowRect().ToDbl(), false)) {
 				FixPosInArea(App::GetWindowRect().ToDbl());
@@ -29,20 +28,20 @@ namespace KR
 		}
 		//通常時.
 		else {
-			cir.color = 0xffffff;
+			GetCir()->color = 0xffffff;
 		}
 	}
 
 	//描画(円だけ)
-	void DragPoint::Draw() {
+	void DragPoint::DrawNormal() {
 		DrawShape();
 	}
 	//描画(数字つき)
-	void DragPoint::DrawAndNum(int num) {
+	void DragPoint::DrawWithNum(int num) {
 		//円.
 		DrawShape();
 		//数字.
-		DrawStr str(_to_mystr(num), cir.pos.ToInt().Add(1, 1), ColorID::Black);
+		DrawStr str(_to_mystr(num), GetPos().ToInt().Add(1, 1), ColorID::Black);
 		str.Draw();
 	}
 	
@@ -68,7 +67,7 @@ namespace KR
 		if (InputMng::IsPushMouseTime(MouseID::Left) == 1) {
 			for (auto& i : points) {
 				//カーソルが円の中なら.
-				if (Calc::HitCirCir(mouse, i.GetCir())) {
+				if (Calc::HitCirCir(mouse, *i.GetCir())) {
 					i.SetIsDrag(true);
 					break;
 				}
@@ -192,19 +191,22 @@ namespace KR
 		}
 	}
 	//描画.
-	//isDotがtrueの場合、thickとisAntiは使わない.
-	ResultInt SplineContr::Draw(int degree, bool isDot, bool isAnti, bool isCameraDisp) {
+	//isDotがtrueの場合、isAntiは使わない.
+	void SplineContr::Draw(int degree, bool isDot, bool isAnti, bool isCameraDisp) {
 
 		//制御点の数が足りなければ描画しない.
 		if (spline.points.size() <= degree) {
-			return { -1, _T("SplineContr::Draw"), _T("制御点の数不足") };
+			throw ErrorMsg(_T("SplineContr::Draw"), _T("制御点の数不足"));
+			return;
 		}
 
 		//スプライン曲線.
 		if (isDispLine) {
-			ResultInt err = DrawSplineKR(spline, degree, isDot, isAnti, isCameraDisp);
-			if (err.GetCode() < 0) {
-				return { -2, _T("SplineContr::Draw"), _T("DrawSplineKRエラー") };
+			try {
+				DrawSplineKR(spline, degree, isDot, isAnti, isCameraDisp);
+			}
+			catch (const ErrorMsg& err) {
+				throw ErrorMsg(_T("SplineContr::Draw"), err.GetResult());
 			}
 		}
 		//制御点.
@@ -213,8 +215,6 @@ namespace KR
 				i.Draw();
 			}
 		}
-
-		return { 0, _T("SplineContr::Draw"), _T("正常終了") };
 	}
 
 // ▼*--=<[ FreeContr ]>=--*▼ //
@@ -250,7 +250,7 @@ namespace KR
 		//制御点.
 		if (isDispPoints) {
 			for (int i = 0; i < points.size(); i++) {
-				points[i].DrawAndNum(i);
+				points[i].DrawWithNum(i);
 			}
 		}
 	}

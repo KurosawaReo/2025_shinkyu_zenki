@@ -74,7 +74,7 @@ public:
 	
 	void SpawnLaser       (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
 
-	bool HitLaser		  (list<LaserData>::iterator);				//当たり判定.
+	void HitLaser		  (list<LaserData>::iterator);				//当たり判定.
 	void ReflectLaser     (list<LaserData>::iterator);              //反射.
 	void GenerateLaserLine(list<LaserData>::iterator);              //レーザー描画線を生成.
 	void LaserRefTracking (list<LaserData>::iterator);              //レーザー(reflected)の隕石追尾.

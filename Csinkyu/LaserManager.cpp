@@ -128,10 +128,8 @@ void LaserManager::UpdateLaser() {
 			case Laser_Normal:
 			{
 				//レーザーの当たり判定.
-				if (HitLaser(i)) {
-					bool isErase = true;
-				}
-				
+				HitLaser(i);
+
 				//速度(時間経過で速くなる)
 				const double speed = i->counter * LASER_NOR_SPEED * gameData.speedRate;
 				//レーザーの移動.
@@ -142,9 +140,7 @@ void LaserManager::UpdateLaser() {
 			case Laser_Straight:
 			{
 				//レーザーの当たり判定.
-				if (HitLaser(i)) {
-					bool isErase = true;
-				}
+				HitLaser(i);
 
 				//速度(直線レーザーなので一定速度)
 				const double speed = LASER_STR_SPEED * gameData.speedRate;
@@ -158,32 +154,28 @@ void LaserManager::UpdateLaser() {
 				//ある程度薄くなるまで.
 				if (i->counter <= LASER_FAL_HIT_ABLE) {
 					//レーザーの当たり判定.
-					if (HitLaser(i)) {
-						bool isErase = true;
-					}
+					HitLaser(i);
+				}
+				//時間を超えたら.
+				if (i->counter >= LASER_FAL_DEL_TIME) {
+					isErase = true; //消去する.
+
 				}
 
-				// 重力効果を適用（下向きの加速度）
+				//重力.
 				const double gravity = 0.08 * gameData.speedRate;
 				i->vec.y += gravity;
-
-				// 空気抵抗効果（水平方向の速度を徐々に減少）
+				//空気抵抗.
 				const double airResistance = 0.995;
 				i->vec.x *= airResistance;
-
-				// 速度制限（落下速度が速くなりすぎないように）
+				//落下速度制限.
 				const double maxSpeed = 8.0;
 				if (i->vec.y > maxSpeed) {
 					i->vec.y = maxSpeed;
 				}
 
-				// レーザーの移動
+				//レーザーの移動.
 				i->nowPos += i->vec * gameData.speedRate;
-
-				//時間を超えたら.
-				if (i->counter >= LASER_FAL_DEL_TIME) {
-					isErase = true; //消去する.
-				}
 			}
 			break;
 
@@ -199,7 +191,7 @@ void LaserManager::UpdateLaser() {
 					//隕石があった場合.
 					if (meteor) {
 						i->goalPos  = meteor->GetPos(); //座標登録.
-						i->isGoGoal = true;
+						i->isGoGoal = true;             //そこへ向かう.
 					}
 				}
 
@@ -259,7 +251,7 @@ void LaserManager::UpdateLaser() {
 			i = laser.erase(i); //消去して次へ.
 		}
 		else {
-			GenerateLaserLine(i);           //レーザー描画線の生成.
+			GenerateLaserLine(i);             //レーザー描画線の生成.
 			i->counter += gameData.speedRate; //経過カウンター.
 			i++;
 		}
@@ -318,11 +310,11 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 }
 
 //レーザーの当たり判定.
-bool LaserManager::HitLaser(list<LaserData>::iterator it) {
+void LaserManager::HitLaser(list<LaserData>::iterator it) {
 
 	//プレイヤー当たり判定.
 	Circle plyHit = player.GetHit();
-	//反射モードならサイズを大きくする.
+	//反射モード中は判定を少し大きくする.
 	if (player.GetMode() == Player_Reflect     || 
 		player.GetMode() == Player_SuperReflect) 
 	{
@@ -337,8 +329,8 @@ bool LaserManager::HitLaser(list<LaserData>::iterator it) {
 
 		//反射あり.
 		if (player.GetMode() == Player_Reflect || 
-			(player.GetMode() == Player_Normal && player.GetIsDashing()))//ダッシュ中も反射
-		{
+		   (player.GetMode() == Player_Normal && player.GetIsDashing()) //ダッシュ中も反射.
+		){
 			it->type = Laser_Reflect; //反射モードへ.
 			it->counter = 0;          //リセット.
 			ReflectLaser(it);         //レーザーを反射.
@@ -354,11 +346,10 @@ bool LaserManager::HitLaser(list<LaserData>::iterator it) {
 		else
 		{
 			player.PlayerDeath(); //プレイヤー死亡.
-			return true;             //レーザーを消去する.
 		}
 	}
-	return false; //レーザーを消去しない.
 }
+
 //レーザー反射.
 void LaserManager::ReflectLaser(list<LaserData>::iterator it)
 {
@@ -383,7 +374,13 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator it)
 	if (gameData.stage == Stage_Tutorial) {
 		TutorialStage::GetInst().SetReflectLaser(true);
 	}
+
+	//速度倍率を遅くする.
+	gameData.speedRate = SLOW_MODE_SPEED;
+	//一定時間スローにする.
+	gameData.slowBufCntr = SLOW_MODE_BUF_F;
 }
+
 //レーザー描画線を生成.
 void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 
@@ -416,6 +413,7 @@ void LaserManager::GenerateLaserLine(list<LaserData>::iterator it) {
 		it->befPos = it->nowPos;
 	}
 }
+
 //レーザー(reflected)の隕石追尾.
 void LaserManager::LaserRefTracking(list<LaserData>::iterator it)
 {
@@ -457,6 +455,7 @@ void LaserManager::LaserRefTracking(list<LaserData>::iterator it)
 }
 
 //敵のレーザーが1つでも存在するかどうか.
+//(未使用)
 bool LaserManager::IsExistEnemyLaser(DBL_XY pos, float len) {
 
 	//全てのレーザー.

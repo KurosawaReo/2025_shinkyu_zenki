@@ -1,6 +1,6 @@
 /*
    - KR_CurveLine.h - (DxLib)
-   ver.2026/02/15
+   ver.2026/04/23
 
    ベジエ曲線と、スプライン曲線。
 */
@@ -29,19 +29,21 @@ namespace KR
 		//get.
 		bool GetIsDrag() const { return isDrag; }
 
-		//初期化.
-		void Init() {
-			cir.r = 10;
-			cir.color = ColorID::White;
+		//基本処理.
+		void Init() override {
+			GetCir()->r = 10;
+			GetCir()->color = ColorID::White;
 		}
-		//更新.
-		void Update();
+		void Update ()       override;
+		void Draw   ()       override {};               //未使用.
+		bool IsErase() const override { return false; } //未使用.
+
 		//描画.
-		void Draw();
-		void DrawAndNum(int num);
+		void DrawNormal();
+		void DrawWithNum(int num);
 	};
 
-	//制御点管理[継承想定]
+	//制御点管理 [継承想定]
 	class ContrBase
 	{
 	//▼ ===== 変数 ===== ▼.
@@ -114,14 +116,14 @@ namespace KR
 			spline.color = ColorID::White; //初期カラー.
 		}
 		//set.
-		void      SetColor(ColorID _color);
+		void   SetColor(ColorID _color);
 		//add.
-		void      AddPoint(DBL_XY pos); //制御点追加.
+		void   AddPoint(DBL_XY pos); //制御点追加.
 		//get.
-		DBL_XY    GetSplinePoint(int degree, double time) const;
+		DBL_XY GetSplinePoint(int degree, double time) const;
 
-		void      Update();
-		ResultInt Draw(int degree, bool isDot, bool isAnti = false, bool isCameraDisp = true);
+		void   Update();
+		void   Draw(int degree, bool isDot, bool isAnti = false, bool isCameraDisp = true);
 	};
 
 	/*

@@ -65,10 +65,6 @@ void BG_Tile::Shine() {
 //初期化.
 void BG1::Init() {
 
-	DrawImgMng::LoadFile(_T("Resources/Images/bg_normal.png"),          "bg_normal");
-	DrawImgMng::LoadFile(_T("Resources/Images/bg_reflect.png"),         "bg_reflect");
-	DrawImgMng::LoadFile(_T("Resources/Images/reflect_mode_frame.png"), "reflect_mode_frame");
-
 	{
 		INT_XY imgSize  = DrawImgMng::Get("bg_normal")->GetSize(); //画像サイズ取得.
 		DBL_XY sizeRate = { 0.1, 0.1 };                            //サイズ倍率.

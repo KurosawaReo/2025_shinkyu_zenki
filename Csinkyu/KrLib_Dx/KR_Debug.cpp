@@ -1,6 +1,5 @@
 /*
    - KR_Debug.cpp - (DxLib)
-   ver.2026/02/09
 */
 #include "KR_Debug.h"
 
@@ -36,6 +35,9 @@ namespace KR
 		}
 		void Log(MY_STRING text, DBL_XY pos) {
 			printfDx(_T("%s: %.2f %.2f\n"), text.c_str(), pos.x, pos.y);
+		}
+		void Log(MY_STRING text1, MY_STRING text2) {
+			printfDx(_T("%s: %s\n"), text1.c_str(), text2.c_str());
 		}
 		
 		//マウス座標を表示(ウィンドウ座標)

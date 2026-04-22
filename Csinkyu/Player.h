@@ -41,9 +41,9 @@ private:
 	bool           active{};   //有効か.
 	bool           isDebug{};  //デバッグ用.
 
-	float dashEndEffectTimer;//エフェクト残り時間.
+	float dashEndEffectTimer{};//エフェクト残り時間.
 
-	bool isDashEndEffect;    //エフェクト発動フラグ.
+	bool isDashEndEffect{};    //エフェクト発動フラグ.
 
 
 

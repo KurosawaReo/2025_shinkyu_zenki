@@ -37,33 +37,54 @@ void GameManager::Init() {
 
 	//[KrLib] カメラ.
 	Camera::SetPos(App::GetWindowSize().ToDbl()/2);
+
 	//[KrLib] 画像.
-	DrawImgMng::LoadFile(_T("Resources/Images/logo_text_only.png"),     "logo");
-	DrawImgMng::LoadFile(_T("Resources/Images/logo_all.png"),           "logo_all");
-	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_best_score.png"), "ui_back_best_score");
-	DrawImgMng::LoadFile(_T("Resources/Images/new_record.png"),         "new_record");
-	DrawImgMng::LoadFile(_T("Resources/Images/gameover.png"),           "gameover");
-	DrawImgMng::LoadFile(_T("Resources/Images/reflect.png"),            "reflect");
-	//[KrLib] サウンド(BGM)
-	SoundMng::LoadFile(_T("Resources/Sounds/bgm/Virtual Terminal.mp3"),	     "BGM_Menu");     //メニューBGM.
-	SoundMng::LoadFile(_T("Resources/Sounds/bgm/audiostock_1603723.mp3"),	 "BGM_Tutorial"); //チュートリアルBGM.
-	SoundMng::LoadFile(_T("Resources/Sounds/bgm/Scarlet Radiance.mp3"),		 "BGM_Endless");  //耐久モードBGM.
-	SoundMng::LoadFile(_T("Resources/Sounds/bgm/命ナキ者ノ詩.mp3"),		     "BGM_Over");     //ゲームオーバーBGM.
-	//[KrLib] サウンド(SE)
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1636674.mp3"),	 "MenuCursor");	  //メニューカーソル音.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1636651.mp3"),	 "MenuOK");		  //メニュー決定音.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_461339.mp3"),		 "ItemUse"); 	  //アイテム発動.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1116927_cut.mp3"), "CountDown");	  //カウントダウン.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_63721.mp3"),		 "PowerDown");	  //アイテム解除.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1296254.mp3"),	 "Laser1");		  //レーザー(発射)
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1296256.mp3"),	 "Laser2");		  //レーザー(強発射)
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_218404.mp3"),		 "Laser3");		  //レーザー(反射)
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		 "Ripples");	  //波紋.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		 "Break");		  //隕石破壊.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		 "PlayerDeath");
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1688971.mp3"),     "PlayerDash");   //プレイヤーのダッシュ音.
-	SoundMng::LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),	 "LevelUp");
-	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		 "BestScore");	  //最高スコア更新.
+	DrawImgMng::SetPath(_T("Resources/Images/")); //共通パスの設定.
+	DrawImgMng::LoadFile(_T("logo_text_only.png"),		"logo");
+	DrawImgMng::LoadFile(_T("logo_all.png"),			"logo_all");
+	DrawImgMng::LoadFile(_T("new_record.png"),			"new_record");
+	DrawImgMng::LoadFile(_T("gameover.png"),			"gameover");
+	DrawImgMng::LoadFile(_T("reflect.png"),				"reflect");
+	DrawImgMng::LoadFile(_T("player_normal.png"),		"player_nor");
+	DrawImgMng::LoadFile(_T("player_reflect.png"),		"player_ref");
+	DrawImgMng::LoadFile(_T("item.png"),				"item");
+	DrawImgMng::LoadFile(_T("light_color_ref.png"),		"item_light");
+	DrawImgMng::LoadFile(_T("light_color_nor.png"),		"player_light_nor");
+	DrawImgMng::LoadFile(_T("light_color_ref.png"),		"player_light_ref");
+	DrawImgMng::LoadFile(_T("menu_endless.png"),		"menu0");	//ゲーム開始.
+	DrawImgMng::LoadFile(_T("menu_tutorial.png"),		"menu1");	//チュートリアル.
+	DrawImgMng::LoadFile(_T("menu_title.png"),			"menu2");	//タイトルに戻る.
+	DrawImgMng::LoadFile(_T("bg_normal.png"),			"bg_normal");
+	DrawImgMng::LoadFile(_T("bg_reflect.png"),			"bg_reflect");
+	DrawImgMng::LoadFile(_T("reflect_mode_frame.png"),	"reflect_mode_frame");
+	DrawImgMng::LoadFile(_T("ui_back_level.png"),		"ui_back_level");
+	DrawImgMng::LoadFile(_T("ui_back_best_score.png"),	"ui_back_best_score");
+	DrawImgMng::LoadFile(_T("ui_back_score.png"),		"ui_back_score");
+	DrawImgMng::LoadFile(_T("ui_back_time.png"),		"ui_back_time");
+	DrawImgMng::LoadFile(_T("score100.png"),			"score100");
+	DrawImgMng::LoadFile(_T("score500.png"),			"score500");
+	
+	//[KrLib] サウンド.
+	SoundMng::SetPath(_T("Resources/Sounds/")); //共通パスの設定.
+	SoundMng::LoadFile(_T("bgm/Virtual Terminal.mp3"),	    "BGM_Menu");     //メニューBGM.
+	SoundMng::LoadFile(_T("bgm/audiostock_1603723.mp3"),	"BGM_Tutorial"); //チュートリアルBGM.
+	SoundMng::LoadFile(_T("bgm/Scarlet Radiance.mp3"),		"BGM_Endless");  //耐久モードBGM.
+	SoundMng::LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),		    "BGM_Over");     //ゲームオーバーBGM.
+	SoundMng::LoadFile(_T("se/audiostock_1636674.mp3"),		"MenuCursor");	 //メニューカーソル音.
+	SoundMng::LoadFile(_T("se/audiostock_1636651.mp3"),		"MenuOK");		 //メニュー決定音.
+	SoundMng::LoadFile(_T("se/audiostock_461339.mp3"),		"ItemUse"); 	 //アイテム発動.
+	SoundMng::LoadFile(_T("se/audiostock_1116927_cut.mp3"), "CountDown");	 //カウントダウン.
+	SoundMng::LoadFile(_T("se/audiostock_63721.mp3"),		"PowerDown");	 //アイテム解除.
+	SoundMng::LoadFile(_T("se/audiostock_1296254.mp3"),		"Laser1");		 //レーザー(発射)
+	SoundMng::LoadFile(_T("se/audiostock_1296256.mp3"),		"Laser2");		 //レーザー(強発射)
+	SoundMng::LoadFile(_T("se/audiostock_218404.mp3"),		"Laser3");		 //レーザー(反射)
+	SoundMng::LoadFile(_T("se/audiostock_936158.mp3"),		"Ripples");		 //波紋.
+	SoundMng::LoadFile(_T("se/audiostock_104974.mp3"),		"Break");		 //隕石破壊.
+	SoundMng::LoadFile(_T("se/audiostock_981051.mp3"),		"PlayerDeath");
+	SoundMng::LoadFile(_T("se/audiostock_1688971.mp3"),     "PlayerDash");   //プレイヤーのダッシュ音.
+	SoundMng::LoadFile(_T("se/決定ボタンを押す23.mp3"),		"LevelUp");
+	SoundMng::LoadFile(_T("se/audiostock_184924.mp3"),		"BestScore");	 //最高スコア更新.
+
 	//[KrLib] アクション.
 	{
 		//キー操作.
@@ -100,13 +121,14 @@ void GameManager::Init() {
 	gameData.fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
 
 	//スコア読み込み.
-	{
+	try {
 		File file;
-		//ファイルを開く.
-		if (file.Open(FILE_DATA, _T("r")).GetCode() == 0) {
-			gameData.bestScore = file.ReadInt();       //数字を読み込んで登録.
-			uiMng.SetDisBestScore(gameData.bestScore); //ベストスコア表示更新.
-		}
+		file.Open(FILE_DATA, _T("r"));             //ファイルを開く.
+		gameData.bestScore = file.ReadInt();       //数字を読み込んで登録.
+		uiMng.SetDisBestScore(gameData.bestScore); //ベストスコア表示更新.
+	}
+	catch (const ErrorMsg& err) {
+		Debug::Log(_T("スコア読み込み"), err.GetResult());
 	}
 
 	//fps表示用.
@@ -243,12 +265,15 @@ void GameManager::GameOver() {
 				if (gameData.score > gameData.bestScore) {
 
 					File file;
-					//ファイルを開く.
-					if (file.Open(FILE_DATA, _T("w"), true).GetCode() == 0) {
-						file.WriteInt(gameData.score);   //スコアを保存.
+					try {
+						file.Open(FILE_DATA, _T("w"), true); //ファイルを開く.
+						file.WriteInt(gameData.score);       //スコアを保存.
+						gameData.bestScore = gameData.score; //スコア更新.
+						endScene.SignBestScore();            //ハイスコアのサイン送信.
 					}
-					gameData.bestScore = gameData.score; //スコア更新.
-					endScene.SignBestScore();            //ハイスコアのサイン送信.
+					catch (const ErrorMsg& err) {
+						Debug::Log(_T("ハイスコア更新"), err.GetResult());
+					}
 				}
 
 #if !defined BGM_NONE

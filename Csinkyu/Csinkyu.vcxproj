@@ -44,6 +44,7 @@
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Matrix.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_ObjectMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_SceneMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
     <ClCompile Include="KrLib_Dx\KR_StateMachine.cpp" />

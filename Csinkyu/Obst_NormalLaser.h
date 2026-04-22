@@ -37,12 +37,12 @@ struct FlashEffect
 class NormalLaserPoint
 {
 private:
-	DBL_XY   pos;       //位置.
-	MoveInfo move;      //移動データ.
-	float    speed;     //移動速度.
-	float    counter;   //経過カウンター.
-	float    counterTm; //発射するタイミング.
-	bool	 validFlag; //有効フラグ.
+	DBL_XY   pos{};       //位置.
+	MoveInfo move{};      //移動データ.
+	float    speed{};     //移動速度.
+	float    counter{};   //経過カウンター.
+	float    counterTm{}; //発射するタイミング.
+	bool	 validFlag{}; //有効フラグ.
 
 public:
 	//set.
