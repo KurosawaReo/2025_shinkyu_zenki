@@ -158,7 +158,7 @@ void Player::UpdateDash()
 			{
 				//É_ÉbÉVÉÖâπí«â¡..
 				if (auto i = SoundMng::Get("PlayerDash")) {
-					i->Play(false, 80); //çƒê∂.
+					i->Play(false, 60); //çƒê∂.
 				}
 				dashTimer    = PLAYER_DASH_DURATION;
 				dashCooldown = PLAYER_DASH_COOLDOWN;
