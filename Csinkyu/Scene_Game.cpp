@@ -114,11 +114,12 @@ void GameScene::UpdateReflectMode() {
 
 	//反射モード時間判定.
 	if (gameData.slowBufCntr > 0) {
-		gameData.speedRate = SLOW_MODE_SPEED; //速度倍率を遅くする.
-		gameData.slowBufCntr--;               //カウントを減らす.
-	}
-	else {
-		gameData.speedRate = 1.0; //速度倍率を戻す.
+		gameData.slowBufCntr--; //カウントを減らす.
+
+		//0になったら.
+		if (gameData.slowBufCntr <= 0) {
+			gameData.speedRate = 1.0; //速度倍率を戻す.
+		}
 	}
 
 	//反射モード中.

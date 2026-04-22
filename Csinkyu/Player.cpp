@@ -68,14 +68,6 @@ void Player::Update()
 		UpdateAfterImage();
 		UpdateDash();
 		PlayerMove();
-		
-		//反射モード中.
-		if (gameData.isReflectMode) {
-			//敵のレーザーが近くにあれば.
-			if (LaserManager::GetInst().IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
-				gameData.slowBufCntr = SLOW_MODE_BUF_F;
-			}
-		}
 	}
 }
 //描画.
