@@ -13,7 +13,7 @@ public:
 	StageType  stage{};			//ステージ種類.
 	bool       isPause{};       //ポーズ中かどうか.
 
-	int		   score{};			//スコア.
+	int		   score{};			//スコア.5
 	int		   scoreBef{};		//スコア(時間加算前)
 	int		   bestScore{};		//ベストスコア.
 	int		   level{};			//レベル.
