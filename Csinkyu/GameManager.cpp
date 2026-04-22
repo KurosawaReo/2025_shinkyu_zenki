@@ -61,6 +61,7 @@ void GameManager::Init() {
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_936158.mp3"),		 "Ripples");	  //波紋.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_104974.mp3"),		 "Break");		  //隕石破壊.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_981051.mp3"),		 "PlayerDeath");
+	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_1688971.mp3"),     "PlayerDash");   //プレイヤーのダッシュ音.
 	SoundMng::LoadFile(_T("Resources/Sounds/se/決定ボタンを押す23.mp3"),	 "LevelUp");
 	SoundMng::LoadFile(_T("Resources/Sounds/se/audiostock_184924.mp3"),		 "BestScore");	  //最高スコア更新.
 	//[KrLib] アクション.
