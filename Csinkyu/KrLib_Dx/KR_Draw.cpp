@@ -1,6 +1,5 @@
 /*
    - KR_Draw.cpp - (DxLib)
-   ver.2026/02/10
 */
 #include "KR_Draw.h"
 
@@ -335,6 +334,11 @@ namespace KR
 		images.clear(); //データを空にする.
 	}
 
+	//共通パスを設定.
+	void DrawImgMng::SetPath(MY_STRING _path) {
+		inst.path = _path;
+	}
+
 	//画像取得.
 	DrawImg* DrawImgMng::Get(string saveName) {
 		//存在すれば.
@@ -363,8 +367,11 @@ namespace KR
 			return { -1, _T("DrawImgMng::LoadFile"), _T("使用済みの保存名") };
 		}
 
-		//画像読み込み.
-		int handle = LoadGraph(fileName.c_str());
+		//パスを作成.
+		const MY_STRING pathFull = inst.path + fileName;
+
+		//ファイル読み込み.
+		int handle = LoadGraph(pathFull.c_str());
 		if (handle < 0) {
 			return { -2, _T("DrawImgMng::LoadFile"), _T("LoadGraphエラー") };
 		}
@@ -394,8 +401,11 @@ namespace KR
 
 		//LoadDivGraphからハンドルを取り出す用.
 		int* pHandle = new int[divCnt];
+		//パスを作成.
+		const MY_STRING pathFull = inst.path + fileName;
+
 		//画像読み込み(分割)
-		int err = LoadDivGraph(fileName.c_str(), divCnt, cnt.x, cnt.y, size.x, size.y, pHandle);
+		int err = LoadDivGraph(pathFull.c_str(), divCnt, cnt.x, cnt.y, size.x, size.y, pHandle);
 		if (err < 0) {
 			delete[] pHandle; pHandle = nullptr; //配列破棄.
 			return { -2, _T("DrawImgMng::LoadFileDiv"), _T("LoadDivGraphエラー") };
@@ -1059,7 +1069,7 @@ namespace KR
 	}
 
 	/*
-	   キューブ(3D)[試作品]
+	   キューブ(3D) [試作品]
 	*/
 	ResultInt DrawBox3DKR(const Box3D& box, bool isFill) {
 

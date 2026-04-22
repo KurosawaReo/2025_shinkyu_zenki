@@ -22,12 +22,6 @@ Player Player::inst;
 void Player::Init()
 {
 	isDebug = false;
-
-	//画像読み込み.
-	DrawImgMng::LoadFile(_T("Resources/Images/player_normal.png"),   "player_nor");
-	DrawImgMng::LoadFile(_T("Resources/Images/player_reflect.png"),  "player_ref");
-	DrawImgMng::LoadFile(_T("Resources/Images/light_color_nor.png"), "player_light_nor");
-	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "player_light_ref");
 }
 //リセット(何回でも行う)
 void Player::Reset()

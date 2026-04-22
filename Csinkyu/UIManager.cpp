@@ -19,11 +19,7 @@ UIManager UIManager::inst;
 
 //‰Šú‰».
 void UIManager::Init() {
-	//‰æ‘œ.
-	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_level.png"),      "ui_back_level");
-	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_best_score.png"), "ui_back_best_score");
-	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_score.png"),      "ui_back_score");
-	DrawImgMng::LoadFile(_T("Resources/Images/ui_back_time.png"),       "ui_back_time");
+	
 }
 //ƒŠƒZƒbƒg.
 void UIManager::Reset() {

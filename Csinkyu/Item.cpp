@@ -25,9 +25,7 @@ ItemManager ItemManager::inst;
 //‰Šú‰».
 void ItemManager::Init() 
 {
-	//‰æ‘œ.
-	DrawImgMng::LoadFile(_T("Resources/Images/item.png"),            "item");
-	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "item_light");
+
 }
 //ƒŠƒZƒbƒg.
 void ItemManager::Reset()

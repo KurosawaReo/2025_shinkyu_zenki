@@ -1,6 +1,6 @@
 /*
    - KR_Sound.h - (DxLib)
-   ver.2026/01/28
+   ver.2026/04/23
 
    サウンド再生機能。
 */
@@ -63,8 +63,9 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private: 
-		umap<string, Sound> sounds;
-	
+		umap<string, Sound> sounds; //サウンドデータ.
+		MY_STRING           path;   //共通パス.
+
 	//▼ ===== 関数 ===== ▼.
 	private: 
 		//コンストラクタ.
@@ -73,6 +74,8 @@ namespace KR
 		~SoundMng();
 
 	public:
+		//set.
+		static void      SetPath (MY_STRING path);
 		//get.
 		static Sound*    Get     (string saveName);
 		static bool      TryGet  (string saveName, Sound* ptr);

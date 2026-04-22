@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver.2026/02/10
+   ver.2026/04/23
 
    図形や画像の描画機能。
    (オブジェクト指向ver → KR_Object)
@@ -92,6 +92,7 @@ namespace KR
 	//▼ ===== 変数 ===== ▼.
 	private:
 		umap<string, DrawImg> images; //画像データ.
+		MY_STRING             path;   //共通パス.
 
 	//▼ ===== 関数 ===== ▼.
 	private:
@@ -101,9 +102,11 @@ namespace KR
 		~DrawImgMng();
 
 	public:
+		//set.
+		static void      SetPath    (MY_STRING path);
 		//get.
-		static DrawImg*  Get     (string saveName);
-		static bool      TryGet  (string saveName, DrawImg* ptr);
+		static DrawImg*  Get        (string saveName);
+		static bool      TryGet     (string saveName, DrawImg* ptr);
 		
 		//画像読み込み.
 		static ResultInt LoadFile   (MY_STRING fileName, string saveName);

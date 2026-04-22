@@ -1,6 +1,5 @@
 /*
    - KR_Sound.cpp - (DxLib)
-   ver.2026/01/28
 */
 #include "KR_Sound.h"
 
@@ -151,6 +150,11 @@ namespace KR
 		sounds.clear(); //データを空にする.
 	}
 
+	//共通パスを設定.
+	void SoundMng::SetPath(MY_STRING _path) {
+		inst.path = _path;
+	}
+
 	//サウンド取得.
 	Sound* SoundMng::Get(string saveName) {
 		//存在すれば.
@@ -176,8 +180,12 @@ namespace KR
 		if (inst.sounds.count(saveName) > 0) {
 			return {-1, _T("SoundMng::LoadFile"), _T("使用済みの保存名")};
 		}
+
+		//パスを作成.
+		const MY_STRING pathFull = inst.path + fileName;
+
 		//ファイル読み込み.
-		ResultInt err = inst.sounds[saveName].LoadFile(fileName);
+		ResultInt err = inst.sounds[saveName].LoadFile(pathFull);
 		if (err.GetCode() < 0) {
 			return {-2, _T("SoundMng::LoadFile"), _T("LoadFileエラー")};
 		}
