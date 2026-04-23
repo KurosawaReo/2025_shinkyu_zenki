@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/02/09
+   ver.2026/04/23
 
    KrLib全体で使う汎用プログラム。
 */
@@ -46,8 +46,9 @@ using std::to_wstring;
 #define _deg(n) (n)*(180/M_PI)
 //便利マクロ.
 #define _if_check(n)        assert(n); if(n)             //if文の前に同条件のassertを挟む.
-#define _return(num, condi) if (condi) { return num; }   //条件に合うならreturnする.(cond = 条件)
-#define _get_name(value)    #value                       //名前を取得(変数名など)
+#define _return(num, condi) if (condi) { return num; }   //条件に合うならreturnする(cond = 条件)
+#define _get_name(value)    #value                       //変数名や関数名を取得.
+#define _elif               else if                      //「else if」の略.
 //template用マクロ.
 #define _type_num_only(T)	typename = typename std::enable_if_t<std::is_arithmetic<T>::value> //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
 
@@ -352,27 +353,21 @@ namespace KR
 	using INT_RECT = RECT<int>;    //int型.
 	using DBL_RECT = RECT<double>; //double型.
 
-	//処理の結果(返り値用)
-	class ResultInt final
+	//エラー文(throw用)
+	class ErrorMsg final
 	{
 	private:
-		int       codeNum;  //コード値.
 		MY_STRING funcName; //関数名.
 		MY_STRING msg;      //メッセージ.
 
 	public:
 		//コンストラクタ.
-		ResultInt() :
-			codeNum(0), funcName(_T("None")), msg(_T("No Msg"))
+		ErrorMsg(MY_STRING _funcName, MY_STRING _msg) :
+			funcName(_funcName), msg(_msg)
 		{};
-		ResultInt(int _codeNum, MY_STRING _funcName, MY_STRING _msg) :
-			codeNum(_codeNum), funcName(_funcName), msg(_msg)
-		{};
-		//コード値取得.
-		int GetCode() const { return codeNum; }
-		//結果取得.
+		//結果を取得.
 		MY_STRING GetResult() const {
-			return _T("[") + funcName + _T("] code:") + _to_mystr(codeNum) + _T(", msg:") + msg;
+			return _T("[Error] func name:") + funcName + _T(", msg:") + msg;
 		}
 	};
 

@@ -1,6 +1,6 @@
 /*
    - KR_SceneMng.h - (DxLib)
-   ver.2026/02/19
+   ver.2026/04/23
 
    シーン管理機能。
 */
@@ -17,7 +17,7 @@
 namespace KR
 {
 	/*
-	   シーンクラスの根底[継承想定]
+	   シーンクラスの基礎 [継承想定]
 
 	   Init:   シーン管理クラスに登録した時に実行.
 	   Reset:  Appクラスでリセットした時に実行.
@@ -65,8 +65,8 @@ namespace KR
 		void Update() override;
 		void Draw()   override;
 
-		static void      AddScene(IScene* sceneClass, string saveName); //シーン追加.
-		static ResultInt SetScene(string saveName);                     //シーン変更.
+		static void AddScene(IScene* sceneClass, string saveName); //シーン追加.
+		static void SetScene(string saveName);                     //シーン変更.
 
 		//使用禁止.
 		SceneMng(const SceneMng&) = delete;

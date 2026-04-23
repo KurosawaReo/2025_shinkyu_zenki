@@ -22,12 +22,6 @@ Player Player::inst;
 void Player::Init()
 {
 	isDebug = false;
-
-	//画像読み込み.
-	DrawImgMng::LoadFile(_T("Resources/Images/player_normal.png"),   "player_nor");
-	DrawImgMng::LoadFile(_T("Resources/Images/player_reflect.png"),  "player_ref");
-	DrawImgMng::LoadFile(_T("Resources/Images/light_color_nor.png"), "player_light_nor");
-	DrawImgMng::LoadFile(_T("Resources/Images/light_color_ref.png"), "player_light_ref");
 }
 //リセット(何回でも行う)
 void Player::Reset()
@@ -74,14 +68,6 @@ void Player::Update()
 		UpdateAfterImage();
 		UpdateDash();
 		PlayerMove();
-		
-		//反射モード中.
-		if (gameData.isReflectMode) {
-			//敵のレーザーが近くにあれば.
-			if (LaserManager::GetInst().IsExistEnemyLaser(hit.pos, SLOW_MODE_DIS_LEN)) {
-				gameData.slowBufCntr = SLOW_MODE_BUF_F;
-			}
-		}
 	}
 }
 //描画.

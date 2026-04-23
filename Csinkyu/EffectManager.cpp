@@ -16,9 +16,7 @@ using namespace Calc; //計算機能を使用.
 EffectManager EffectManager::inst;
 
 void EffectManager::Init() {
-	//画像読み込み.
-	DrawImgMng::LoadFile(_T("Resources/Images/score100.png"), "score100");
-	DrawImgMng::LoadFile(_T("Resources/Images/score500.png"), "score500");
+	
 }
 
 void EffectManager::Reset() {

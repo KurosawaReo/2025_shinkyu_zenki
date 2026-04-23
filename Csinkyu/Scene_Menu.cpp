@@ -28,11 +28,6 @@ void MenuScene::Init() {
 	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Anti);
 	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Anti);
 
-	//モードごとの画像読み込み.
-	DrawImgMng::LoadFile(_T("Resources/Images/menu_endless.png"),  "menu0"); //ゲーム開始.
-	DrawImgMng::LoadFile(_T("Resources/Images/menu_tutorial.png"), "menu1"); //チュートリアル.
-	DrawImgMng::LoadFile(_T("Resources/Images/menu_title.png"),    "menu2"); //タイトルに戻る.
-
 	Reset();
 }
 //リセット.

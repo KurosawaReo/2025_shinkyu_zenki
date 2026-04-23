@@ -42,5 +42,6 @@
 #include "KrLib_Dx/KR_StateMachine.h"
 #include "KrLib_Dx/KR_Timer.h"
 #include "KrLib_cpp/KR_File.h"
+#include "KrLib_cpp/KR_Singleton.h"
 
 #include "Global.h"
