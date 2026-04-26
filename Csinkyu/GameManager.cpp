@@ -72,7 +72,8 @@ void GameManager::Init() {
 	SoundMng::LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),		    "BGM_Over");     //ゲームオーバーBGM.
 	SoundMng::LoadFile(_T("se/audiostock_1636674.mp3"),		"MenuCursor");	 //メニューカーソル音.
 	SoundMng::LoadFile(_T("se/audiostock_1636651.mp3"),		"MenuOK");		 //メニュー決定音.
-	SoundMng::LoadFile(_T("se/audiostock_461339.mp3"),		"ItemUse"); 	 //アイテム発動.
+	SoundMng::LoadFile(_T("se/audiostock_461339.mp3"),      "ItemUse"); 	 //アイテム発動.
+	SoundMng::LoadFile(_T("se/player_dash.mp3"),	        "PlayerDash"); 	 //ダッシュ音.
 	SoundMng::LoadFile(_T("se/audiostock_1116927_cut.mp3"), "CountDown");	 //カウントダウン.
 	SoundMng::LoadFile(_T("se/audiostock_63721.mp3"),		"PowerDown");	 //アイテム解除.
 	SoundMng::LoadFile(_T("se/audiostock_1296254.mp3"),		"Laser1");		 //レーザー(発射)
@@ -81,7 +82,6 @@ void GameManager::Init() {
 	SoundMng::LoadFile(_T("se/audiostock_936158.mp3"),		"Ripples");		 //波紋.
 	SoundMng::LoadFile(_T("se/audiostock_104974.mp3"),		"Break");		 //隕石破壊.
 	SoundMng::LoadFile(_T("se/audiostock_981051.mp3"),		"PlayerDeath");
-	SoundMng::LoadFile(_T("se/audiostock_1688971.mp3"),     "PlayerDash");   //プレイヤーのダッシュ音.
 	SoundMng::LoadFile(_T("se/決定ボタンを押す23.mp3"),		"LevelUp");
 	SoundMng::LoadFile(_T("se/audiostock_184924.mp3"),		"BestScore");	 //最高スコア更新.
 

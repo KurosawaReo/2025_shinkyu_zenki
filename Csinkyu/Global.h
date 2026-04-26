@@ -73,9 +73,9 @@ enum StageType
 #define TUTORIAL_RESPAWN_TIME           (1.8)           //チュートリアルでプレイヤーが復活する時間.
 
 #define REFLECT_MODE_TIME				(8)             //反射モード制限時間.
-#define SLOW_MODE_SPEED					(0.2f)			//スロー速度倍率.
+#define SLOW_MODE_SPEED					(0.15f)			//スロー速度倍率.
 #define SLOW_MODE_DIS_LEN				(50)			//スローになるプレイヤーとレーザーの距離範囲.
-#define SLOW_MODE_BUF_F                 (50)            //スローが継続するフレーム数.
+#define SLOW_MODE_BUF_F                 (30)            //スローが継続するフレーム数.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
