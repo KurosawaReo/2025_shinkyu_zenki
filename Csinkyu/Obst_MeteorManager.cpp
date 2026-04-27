@@ -10,13 +10,13 @@
 #include "GameManager.h"
 #include "EffectManager.h"
 //参照.
-static GameData&      gameData  = GameData::GetInst();
-static Player&        player    = Player::GetInst();
-static EffectManager& effectMng = EffectManager::GetInst();
+static GameData*      gameData;
+static Player*        player;
+static EffectManager* effectMng;
+//参照(KRライブラリ)
+static SoundMng*      soundMng;
 
 // ▼*---=[ MeteorManager ]=---*▼ //
-
-MeteorManager MeteorManager::inst;
 
 //範囲内の隕石を取得(1つ)
 Meteor* MeteorManager::GetHitMeteor(Circle cir, bool isDestroy) {
@@ -61,6 +61,10 @@ Meteor* MeteorManager::GetNearestMeteor(DBL_XY pos) {
 
 void MeteorManager::Init() {
 
+	gameData  = ManagerInsts::Get<GameData>();
+	player    = ManagerInsts::Get<Player>();
+	effectMng = ManagerInsts::Get<EffectManager>();
+	soundMng  = ManagerInsts::Get<SoundMng>();
 }
 
 void MeteorManager::Reset() {
@@ -76,12 +80,12 @@ void MeteorManager::Update() {
 
 	//タイマーが残っていれば.
 	if (timer > 0) {
-		timer -= gameData.speedRate;
+		timer -= gameData->speedRate;
 	}
 	//タイマーが0になったら.
 	else {
 		SpawnMeteor(); //隕石生成.
-		timer = METEOR_SPAWN_SPAN * gameData.spawnRate; //タイマー再開(徐々に短くなる)
+		timer = METEOR_SPAWN_SPAN * gameData->spawnRate; //タイマー再開(徐々に短くなる)
 	}
 
 	//全隕石ループ.
@@ -96,8 +100,8 @@ void MeteorManager::Update() {
 		}
 	}
 	//プレイヤーとの当たり判定.
-	if (GetHitMeteor(player.GetHit(), false)) {
-		player.PlayerDeath(); //死亡.
+	if (GetHitMeteor(player->GetHit(), false)) {
+		player->PlayerDeath(); //死亡.
 	}
 }
 
@@ -147,15 +151,15 @@ void MeteorManager::BreakMeteor(DBL_XY pos, double ang, bool isScore, double sca
 		data.speed = _flt(Calc::RandNum(50, 300) / 10 * scale);		//速度抽選.
 		data.len   = _flt(Calc::RandNum(10, 100) / 10 * scale);		//長さ抽選.
 		data.ang   = _flt(Calc::RandNum(0, 3599) / 10);				//角度抽選.
-		effectMng.SpawnEffect(&data);								//エフェクト出現.
+		effectMng->SpawnEffect(&data);								//エフェクト出現.
 	}
 	//スコアエフェクト.
 	if (isScore) {
 		data.type = Effect_Score500;
-		effectMng.SpawnEffect(&data); //エフェクト出現.
+		effectMng->SpawnEffect(&data); //エフェクト出現.
 	}
 	//サウンド.
-	if (auto i = SoundMng::Get("Break")) {
+	if (auto i = soundMng->Get("Break")) {
 		i->Play(false, 74); //再生.
 	}
 }

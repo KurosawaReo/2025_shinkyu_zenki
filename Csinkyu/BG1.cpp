@@ -8,8 +8,9 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameManager& gameMng  = GameManager::GetInst();
-static GameData&    gameData = GameData::GetInst();
+static GameManager* gameMng;
+static GameData*    gameData;
+static BGManager*   bgMng;
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
@@ -27,7 +28,7 @@ void BG_Tile::Update() {
 //描画.
 void BG_Tile::Draw(double slowTime) {
 
-	const float counter = BGManager::GetInst().GetCounter();
+	const float counter = bgMng->GetCounter();
 
 	//通常モード.
 	{
@@ -41,7 +42,7 @@ void BG_Tile::Draw(double slowTime) {
 		}
 	}
 	//反射モード.
-	if (gameData.isReflectMode) {
+	if (gameData->isReflectMode) {
 		//透明度計算.
 		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
@@ -64,6 +65,10 @@ void BG_Tile::Shine() {
 
 //初期化.
 void BG1::Init() {
+
+	gameMng  = ManagerInsts::Get<GameManager>();
+	gameData = ManagerInsts::Get<GameData>();
+	bgMng    = ManagerInsts::Get<BGManager>();
 
 	{
 		INT_XY imgSize  = DrawImgMng::Get("bg_normal")->GetSize(); //画像サイズ取得.
@@ -105,7 +110,7 @@ void BG1::Update() {
 void BG1::Draw() {
 
 	//スローモード経過時間.
-	float pass = gameMng.GetGameScene()->GetReflectModeTime();
+	float pass = gameMng->GetGameScene()->GetReflectModeTime();
 	//最初の0.5秒
 	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
 	time = Calc::AnimEase(EaseType::OutQuad, time); //値の曲線変動.
@@ -115,7 +120,7 @@ void BG1::Draw() {
 		i.Draw(time);
 	}
 	//スローモード中.
-	if (gameData.speedRate) {
+	if (gameData->speedRate) {
 		//グラデーション枠.
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * time);

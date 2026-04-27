@@ -7,22 +7,33 @@
 #include "BGManager.h"
 #include "GameData.h"
 //参照.
-static GameData&  gameData = GameData::GetInst();
-static BGManager& bgMng    = BGManager::GetInst();
+static GameData*  gameData;
+static BGManager* bgMng;
+//参照(KRライブラリ)
+static SoundMng*  soundMng;
+static InputMng*  inputMng;
+static SceneMng*  sceneMng;
 
 //初期化.
 void MenuScene::Init() {
 
-	// 入力アクション登録
-	InputMng::AddAction("MENU_UP",   KeyID::Up);
-	InputMng::AddAction("MENU_UP",   KeyID::W);
-	InputMng::AddAction("MENU_UP",   PadXboxID::Up);
-	InputMng::AddAction("MENU_DOWN", KeyID::Down); 
-	InputMng::AddAction("MENU_DOWN", KeyID::S);
-	InputMng::AddAction("MENU_DOWN", PadXboxID::Down);
-	InputMng::AddAction("MENU_NEXT", KeyID::Space);
-	InputMng::AddAction("MENU_NEXT", KeyID::Enter);
-	InputMng::AddAction("MENU_NEXT", PadXboxID::A);
+	//参照取得.
+	gameData = ManagerInsts::Get<GameData>();
+	bgMng    = ManagerInsts::Get<BGManager>();
+	soundMng = ManagerInsts::Get<SoundMng>();
+	inputMng = ManagerInsts::Get<InputMng>();
+	sceneMng = ManagerInsts::Get<SceneMng>();
+
+	//入力アクション登録.
+	inputMng->AddAction("MENU_UP",   KeyID::Up);
+	inputMng->AddAction("MENU_UP",   KeyID::W);
+	inputMng->AddAction("MENU_UP",   PadXboxID::Up);
+	inputMng->AddAction("MENU_DOWN", KeyID::Down); 
+	inputMng->AddAction("MENU_DOWN", KeyID::S);
+	inputMng->AddAction("MENU_DOWN", PadXboxID::Down);
+	inputMng->AddAction("MENU_NEXT", KeyID::Space);
+	inputMng->AddAction("MENU_NEXT", KeyID::Enter);
+	inputMng->AddAction("MENU_NEXT", PadXboxID::A);
 
 	//フォント作成.
 	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Anti);
@@ -47,11 +58,11 @@ void MenuScene::Exit() {
 void MenuScene::Update() {
 
 	//カーソル移動操作.
-	if (InputMng::IsPushActionTime("MENU_UP") % 20 == 1) {
+	if (inputMng->IsPushActionTime("MENU_UP") % 20 == 1) {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
-	if (InputMng::IsPushActionTime("MENU_DOWN") % 20 == 1) { //長押しにも対応.
+	if (inputMng->IsPushActionTime("MENU_DOWN") % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
@@ -61,40 +72,40 @@ void MenuScene::Update() {
 	}
 
 	//決定操作.
-	if (InputMng::IsPushActionTime("MENU_NEXT") == 1) {
+	if (inputMng->IsPushActionTime("MENU_NEXT") == 1) {
 
 		switch (selectedIndex)
 		{
 			case 0:
 				//耐久モードへ.
-				SceneMng::SetScene("Game");
-				gameData.stage = Stage_Endless;
+				sceneMng->SetScene("Game");
+				gameData->stage = Stage_Endless;
 				//背景変更.
-				bgMng.SetBgNo(1);
+				bgMng->SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
-				SoundMng::StopAll();
-				if (auto i = SoundMng::Get("BGM_Endless")) {
+				soundMng->StopAll();
+				if (auto i = soundMng->Get("BGM_Endless")) {
 					i->Play(true, 68); //再生.
 				}
 #endif
 				break;
 			case 1:
 				//チュートリアルへ.
-				SceneMng::SetScene("Game");
-				gameData.stage = Stage_Tutorial;
+				sceneMng->SetScene("Game");
+				gameData->stage = Stage_Tutorial;
 				//背景変更.
-				bgMng.SetBgNo(1);
+				bgMng->SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
-				SoundMng::StopAll();
-				if (auto i = SoundMng::Get("BGM_Tutorial")) {
+				soundMng->StopAll();
+				if (auto i = soundMng->Get("BGM_Tutorial")) {
 					i->Play(true, 68); //再生.
 				}
 #endif
 				break;
 			case 2:
-				SceneMng::SetScene("Title"); //タイトルへ.
+				sceneMng->SetScene("Title"); //タイトルへ.
 				App::Reset();                //リセット.
 				break;
 
@@ -102,7 +113,7 @@ void MenuScene::Update() {
 		}
 
 		//サウンド.
-		if (auto i = SoundMng::Get("MenuOK")) {
+		if (auto i = soundMng->Get("MenuOK")) {
 			i->Play(false, 70);
 		}
 	}
@@ -403,7 +414,7 @@ void MenuScene::OnCursorMove() {
 	tmBlink.Start(); //点滅時間計測.
 
 	//サウンド.
-	if (auto i = SoundMng::Get("MenuCursor")) {
+	if (auto i = soundMng->Get("MenuCursor")) {
 		i->Play(false, 70);
 	}
 }

@@ -17,16 +17,21 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&      gameData  = GameData::GetInst();
-static EffectManager& effectMng = EffectManager::GetInst();
+static GameData*      gameData;
+static EffectManager* effectMng;
+//参照(KRライブラリ)
+static SoundMng*      soundMng;
+static InputMng*      inputMng;
 
 // ▼*--=<[ StraightLaser ]>=--*▼ //
 
-EndlessStage EndlessStage::inst;
-
 //初期化.
 void EndlessStage::Init() {
-
+	//参照取得.
+	gameData  = ManagerInsts::Get<GameData>();
+	effectMng = ManagerInsts::Get<EffectManager>();
+	soundMng  = ManagerInsts::GetInst().Get<SoundMng>();
+	inputMng  = ManagerInsts::GetInst().Get<InputMng>();
 }
 //リセット.
 void EndlessStage::Reset() {
@@ -36,16 +41,16 @@ void EndlessStage::Reset() {
 void EndlessStage::Update() {
 
 	//最初のみ.
-	if (gameData.counter == 0) {
+	if (gameData->counter == 0) {
 		//サウンド.
-		if (auto i = SoundMng::Get("LevelUp")) {
+		if (auto i = soundMng->Get("LevelUp")) {
 			i->Play(false, 100);
 		}
 		//エフェクト.
 		EffectData data{};
 		data.type = Effect_Endless_Level1;
 		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
-		effectMng.SpawnEffect(&data);
+		effectMng->SpawnEffect(&data);
 
 		//Lv1の出現設定.
 		{
@@ -67,34 +72,34 @@ void EndlessStage::Update() {
 	else {
 #if defined _DEBUG //Releaseでは入れない.
 		//タイマー加速(Debug)
-		if (InputMng::IsPushKey(KeyID::L) == 1) {
-			gameData.counter += 30;
+		if (inputMng->IsPushKey(KeyID::L) == 1) {
+			gameData->counter += 30;
 		}
 #endif
 	}
 
 	//カウンター増加.
-	gameData.counter += _flt(gameData.speedRate * GAME_SPEED);
+	gameData->counter += _flt(gameData->speedRate * GAME_SPEED);
 	//出現間隔.
-	gameData.spawnRate = 1.0f/(1+(gameData.counter/8000)); //100%から少しずつ減少.
+	gameData->spawnRate = 1.0f/(1+(gameData->counter/8000)); //100%から少しずつ減少.
 	//レベル管理.
-	switch (gameData.level)
+	switch (gameData->level)
 	{
 		case 0:
 			break;
 		case 1:
-			if (gameData.counter >= 1500) { //1500 = 出現間隔約??%地点.
-				gameData.level = 2; //Lv2へ.
+			if (gameData->counter >= 1500) { //1500 = 出現間隔約??%地点.
+				gameData->level = 2; //Lv2へ.
 
 				//サウンド.
-				if (auto i = SoundMng::Get("LevelUp")) {
+				if (auto i = soundMng->Get("LevelUp")) {
 					i->Play(false, 100);
 				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level2;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 
 				//Lv2の出現設定.
 #if !defined INVALID_OBST_STR_LASER
@@ -103,18 +108,18 @@ void EndlessStage::Update() {
 			}
 			break;
 		case 2:
-			if (gameData.counter >= 3500) { //3500 = 出現間隔約??%地点.
-				gameData.level = 3; //Lv3へ.
+			if (gameData->counter >= 3500) { //3500 = 出現間隔約??%地点.
+				gameData->level = 3; //Lv3へ.
 
 				//サウンド.
-				if (auto i = SoundMng::Get("LevelUp")) {
+				if (auto i = soundMng->Get("LevelUp")) {
 					i->Play(false, 100);
 				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 
 				//Lv3の出現設定.
 #if !defined INVALID_OBST_RIPPLES
@@ -123,20 +128,20 @@ void EndlessStage::Update() {
 			}
 			break;
 		case 3:
-			if (gameData.counter >= 6000) { //6000 = 出現間隔約??%地点.
-				gameData.level = 4; //Lv4へ.
+			if (gameData->counter >= 6000) { //6000 = 出現間隔約??%地点.
+				gameData->level = 4; //Lv4へ.
 
 				ManagerInsts::GetInst().Get<ItemManager>()->SetItemMaxCnt(2); //アイテムを2つに.
 
 				//サウンド.
-				if (auto i = SoundMng::Get("LevelUp")) {
+				if (auto i = soundMng->Get("LevelUp")) {
 					i->Play(false, 100);
 				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 
 				//Lv4の出現設定.
 #if !defined INVALID_OBST_FIREWORKS
@@ -145,18 +150,18 @@ void EndlessStage::Update() {
 			}
 			break;
 		case 4:
-			if (gameData.counter >= 9000) { //9000 = 出現間隔約??%地点.
-				gameData.level = 5; //Lv5へ.
+			if (gameData->counter >= 9000) { //9000 = 出現間隔約??%地点.
+				gameData->level = 5; //Lv5へ.
 
 				//サウンド.
-				if (auto i = SoundMng::Get("LevelUp")) {
+				if (auto i = soundMng->Get("LevelUp")) {
 					i->Play(false, 100);
 				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Endless_Level5;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 
 				//Lv5の出現設定.
 #if !defined INVALID_OBST_NOR_LASER

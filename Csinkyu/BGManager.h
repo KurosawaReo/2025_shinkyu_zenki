@@ -8,14 +8,6 @@
 //背景クラス.
 class BGManager final : public ManagerBase 
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static BGManager inst;
-public:
-	static BGManager& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	float counter{}; //経過時間.
@@ -25,11 +17,10 @@ private:
 	BG2   bg2{};     //背景2.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	BGManager() : ManagerBase(ORDER_BG_MNG) {}
-
 public:
+	//コンストラクタ.
+	BGManager(int order) : ManagerBase(order) {}
+
 	//set.
 	void  SetBgNo(int _no) { useBgNo = _no; }
 	//get.
@@ -45,6 +36,6 @@ public:
 	void  PauseEnd();
 
 	//使用禁止.
-	BGManager(const BGManager&) = delete;
-	BGManager& operator=(const BGManager&) = delete;
+	BGManager(const BGManager*) = delete;
+	BGManager* operator=(const BGManager*) = delete;
 };

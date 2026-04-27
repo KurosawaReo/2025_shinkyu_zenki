@@ -1,6 +1,6 @@
 /*
    - KR_ObjectMng.h - (DxLib)
-   ver.2026/04/23
+   ver.2026/04/27
 
    オブジェクトを扱う管理クラス。
 */
@@ -9,7 +9,7 @@
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
-//[include] hで使うもの.
+//[include] ".h"で使うもの.
 #include "KR_ManagerBase.h"
 #include "KR_Object.h"
 
@@ -17,27 +17,70 @@
 namespace KR
 {
 	/*
-	   オブジェクト管理クラス [試作品]
-	   ObjectShapeを継承したクラスを登録すれば、まとめてInit, Update, Drawなどの関数を実行できる.
+	   オブジェクト管理クラス.
+	   ObjectShapeを継承したクラスのみ指定可.
+
+	   [注意]
+	   Generateに引数を設定したい場合
+	   管理するobject(Tクラス)に、同じ引数のコンストラクタを用意すること.
 	*/
+	template<typename T> requires std::derived_from<T, ObjectShape>
 	class ObjectMng
 	{
 	//▼ ===== 変数 ===== ▼.
 	private:
-		list<ObjectShape*> objects; //object配列.
+		list<unique_ptr<ObjectShape>> objects; //object実体配列.
 
 	//▼ ===== 関数 ===== ▼.
 	public:
 		//get.
 		int GetObjectCnt() const { return _int(objects.size()); }
 
-		//object追加.
-		void AddObject(ObjectShape* obj) {
-			obj->Init();            //初期化処理.
-			objects.push_back(obj); //配列に追加.
+		//object生成.
+		//コンストラクタの引数も設定可能.
+		template<typename... Args>
+		void NewObject(Args... args) {
+			try {
+				//コンストラクタ実行(引数は任意)
+				auto obj = make_unique<T>(std::forward<Args>(args)...);
+				//初期化.
+				obj->Init();
+				//所有権移動.
+				objects.push_back(std::move(obj));
+			}
+			catch (const std::bad_alloc& err) {
+				throw ErrorMsg(_T("ObjectMng<T>::Generate"), _T("make_uniqueエラー"));
+			}
 		}
-		
-		void Update(); //更新処理.
-		void Draw();   //描画処理.
+
+		//更新.
+		void Update() {
+
+			for (auto i = objects.begin(); i != objects.end(); ) {
+				//activeなobjectのみ.
+				if ((*i)->isActive) {
+					//更新.
+					(*i)->Update();
+					//消滅条件を満たしたら.
+					if ((*i)->IsErase()) {
+						i = objects.erase(i); //削除する.
+					}
+					else {
+						i++; //次のオブジェクト.
+					}
+				}
+				else {
+					i++; //次のオブジェクト.
+				}
+			}
+		}
+
+		//描画.
+		void Draw() {
+			//activeなobjectのみ.
+			for (auto& i : objects) if (i->isActive) {
+				i->Draw();
+			}
+		}
 	};
 }

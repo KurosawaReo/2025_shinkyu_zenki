@@ -10,20 +10,27 @@
 #include "Stage_Tutorial.h"
 #include "GameData.h"
 //参照.
-static GameData&      gameData  = GameData::GetInst();
-static Player&        player    = Player::GetInst();
-static MeteorManager& meteorMng = MeteorManager::GetInst();
-static EffectManager& effectMng = EffectManager::GetInst();
+static GameData*      gameData;
+static Player*        player;
+static MeteorManager* meteorMng;
+static EffectManager* effectMng;
+static TutorialStage* tutorialStg;
+//参照(KRライブラリ)
+static SoundMng*      soundMng;
 
 using namespace Calc; //計算機能を使用.
 
 // ▼*---=[ LaserManager ]=---*▼ //
 
-LaserManager LaserManager::inst;
-
 //初期化.
 void LaserManager::Init() {
 
+	gameData    = ManagerInsts::Get<GameData>();
+	player      = ManagerInsts::Get<Player>();
+	meteorMng   = ManagerInsts::Get<MeteorManager>();
+	effectMng   = ManagerInsts::Get<EffectManager>();
+	tutorialStg = ManagerInsts::Get<TutorialStage>();
+	soundMng    = ManagerInsts::Get<SoundMng>();
 }
 //リセット.
 void LaserManager::Reset() {
@@ -39,7 +46,7 @@ void LaserManager::Reset() {
 //更新.
 void LaserManager::Update() {
 
-	plyPos = player.GetPos(); //プレイヤーの現在位置を取得.
+	plyPos = player->GetPos(); //プレイヤーの現在位置を取得.
 
 	UpdateLaser();     //各レーザーの更新.
 	UpdateLaserLine(); //各レーザー描画線の更新.
@@ -85,7 +92,7 @@ void LaserManager::Draw() {
 	}
 
 	//チュートリアル限定.
-	if (gameData.stage == Stage_Tutorial) {
+	if (gameData->stage == Stage_Tutorial) {
 		//レーザー本体.
 		for (const LaserData& i : laser)
 		{
@@ -131,7 +138,7 @@ void LaserManager::UpdateLaser() {
 				HitLaser(i);
 
 				//速度(時間経過で速くなる)
-				const double speed = i->counter * LASER_NOR_SPEED * gameData.speedRate;
+				const double speed = i->counter * LASER_NOR_SPEED * gameData->speedRate;
 				//レーザーの移動.
 				i->nowPos += i->vec * speed;
 			}
@@ -143,7 +150,7 @@ void LaserManager::UpdateLaser() {
 				HitLaser(i);
 
 				//速度(直線レーザーなので一定速度)
-				const double speed = LASER_STR_SPEED * gameData.speedRate;
+				const double speed = LASER_STR_SPEED * gameData->speedRate;
 				//レーザーの移動.
 				i->nowPos += i->vec * speed;
 			}
@@ -163,7 +170,7 @@ void LaserManager::UpdateLaser() {
 				}
 
 				//重力.
-				const double gravity = 0.08 * gameData.speedRate;
+				const double gravity = 0.08 * gameData->speedRate;
 				i->vec.y += gravity;
 				//空気抵抗.
 				const double airResistance = 0.995;
@@ -175,7 +182,7 @@ void LaserManager::UpdateLaser() {
 				}
 
 				//レーザーの移動.
-				i->nowPos += i->vec * gameData.speedRate;
+				i->nowPos += i->vec * gameData->speedRate;
 			}
 			break;
 
@@ -187,7 +194,7 @@ void LaserManager::UpdateLaser() {
 
 					//最寄りの隕石を取得する.
 					const DBL_XY  laserPos = i->nowPos; //レーザーの現在位置.
-					const Meteor* meteor   = meteorMng.GetNearestMeteor(laserPos);
+					const Meteor* meteor   = meteorMng->GetNearestMeteor(laserPos);
 					//隕石があった場合.
 					if (meteor) {
 						i->goalPos  = meteor->GetPos(); //座標登録.
@@ -198,7 +205,7 @@ void LaserManager::UpdateLaser() {
 				Circle hit = { i->nowPos, 10, {}, {} }; //当たり判定円(仮)
 
 				//隕石と当たっているなら.
-				if (auto meteor = meteorMng.GetHitMeteor(hit, true)) {
+				if (auto meteor = meteorMng->GetHitMeteor(hit, true)) {
 
 					//壊れてない隕石であれば.
 					if (meteor->GetState() == Meteor_Normal) {
@@ -206,8 +213,8 @@ void LaserManager::UpdateLaser() {
 					}
 
 					const double ang = _deg(atan2(i->vec.y, i->vec.x)); //破片の飛ぶ方向.
-					meteorMng.BreakMeteor(i->nowPos, ang, true); //破壊演出.
-					gameData.score += SCORE_BREAK_METEOR;        //スコア加算.
+					meteorMng->BreakMeteor(i->nowPos, ang, true); //破壊演出.
+					gameData->score += SCORE_BREAK_METEOR;        //スコア加算.
 
 					//どっちのタイプかで切り替え.
 					if (i->type == Laser_Reflect) {
@@ -218,8 +225,8 @@ void LaserManager::UpdateLaser() {
 						ReflectLaser(i); //再反射.
 					}
 					//チュートリアルなら指示送信.
-					if (gameData.stage == Stage_Tutorial) {
-						TutorialStage::GetInst().SetBreakMeteor(true);
+					if (gameData->stage == Stage_Tutorial) {
+						tutorialStg->SetBreakMeteor(true);
 					}
 				}
 				else {
@@ -227,7 +234,7 @@ void LaserManager::UpdateLaser() {
 					LaserRefTracking(i);
 
 					//速度(時間経過で速くなる)
-					const double speed = i->counter * LASER_REF_SPEED * gameData.speedRate;
+					const double speed = i->counter * LASER_REF_SPEED * gameData->speedRate;
 					//レーザーの移動.
 					i->nowPos += i->vec * speed;
 				}
@@ -252,7 +259,7 @@ void LaserManager::UpdateLaser() {
 		}
 		else {
 			GenerateLaserLine(i);             //レーザー描画線の生成.
-			i->counter += gameData.speedRate; //経過カウンター.
+			i->counter += gameData->speedRate; //経過カウンター.
 			i++;
 		}
 	}
@@ -263,7 +270,7 @@ void LaserManager::UpdateLaserLine() {
 	for (auto i = line.begin(); i != line.end(); ) {
 
 		//経過時間カウンタ増加.
-		i->counter += gameData.speedRate;
+		i->counter += gameData->speedRate;
 		//一定フレーム経過したら消去.
 		if (i->counter >= LASER_LINE_DEL_TIME) {
 			i = line.erase(i);
@@ -293,17 +300,17 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 
 	//サウンド.
 	if (type == Laser_Normal) {
-		if (auto i = SoundMng::Get("Laser1")) {
+		if (auto i = soundMng->Get("Laser1")) {
 			i->Play(false, 58); //通常レーザー.
 		}
 	}
 	if (type == Laser_Straight) {
-		if (auto i = SoundMng::Get("Laser2")) {
+		if (auto i = soundMng->Get("Laser2")) {
 			i->Play(false, 60); //直線レーザー.
 		}
 	}
 	if (type == Laser_Falling) {
-		if (auto i = SoundMng::Get("Laser1")) {
+		if (auto i = soundMng->Get("Laser1")) {
 			i->Play(false, 45); //落下レーザー（少し音量小さめ）.
 		}
 	}
@@ -313,10 +320,10 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 void LaserManager::HitLaser(list<LaserData>::iterator it) {
 
 	//プレイヤー当たり判定.
-	Circle plyHit = player.GetHit();
+	Circle plyHit = player->GetHit();
 	//反射モード中は判定を少し大きくする.
-	if (player.GetMode() == Player_Reflect     || 
-		player.GetMode() == Player_SuperReflect) 
+	if (player->GetMode() == Player_Reflect     ||
+		player->GetMode() == Player_SuperReflect)
 	{
 		plyHit.r += PLAYER_REF_ADD_SIZE;
 	}
@@ -325,18 +332,18 @@ void LaserManager::HitLaser(list<LaserData>::iterator it) {
 	Line line = { it->nowPos, it->befPos, {}, {} };
 
 	// プレイヤーとレーザーの当たり判定
-	if (player.GetActive() && HitLineCir(line, plyHit)) {
+	if (player->GetActive() && HitLineCir(line, plyHit)) {
 
 		//反射あり.
-		if (player.GetMode() == Player_Reflect || 
-		   (player.GetMode() == Player_Normal && player.GetIsDashing()) //ダッシュ中も反射.
+		if (player->GetMode() == Player_Reflect ||
+		   (player->GetMode() == Player_Normal && player->GetIsDashing()) //ダッシュ中も反射.
 		){
 			it->type = Laser_Reflect; //反射モードへ.
 			it->counter = 0;          //リセット.
 			ReflectLaser(it);         //レーザーを反射.
 		}
 		//反射あり(強化版)
-		else if (player.GetMode() == Player_SuperReflect)
+		else if (player->GetMode() == Player_SuperReflect)
 		{
 			it->type = Laser_SuperReflect; //反射モードへ.
 			it->counter = 0;               //リセット.
@@ -345,7 +352,7 @@ void LaserManager::HitLaser(list<LaserData>::iterator it) {
 		//反射なし.
 		else
 		{
-			player.PlayerDeath(); //プレイヤー死亡.
+			player->PlayerDeath(); //プレイヤー死亡.
 		}
 	}
 }
@@ -364,21 +371,21 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator it)
 	EffectData data{};
 	data.type = Effect_ReflectLaser;
 	data.pos  = it->nowPos;
-	effectMng.SpawnEffect(&data);
+	effectMng->SpawnEffect(&data);
 	//サウンド.
-	if (auto i = SoundMng::Get("Laser3")) {
+	if (auto i = soundMng->Get("Laser3")) {
 		i->Play(false, 58);
 	}
 
 	//チュートリアルなら指示送信.
-	if (gameData.stage == Stage_Tutorial) {
-		TutorialStage::GetInst().SetReflectLaser(true);
+	if (gameData->stage == Stage_Tutorial) {
+		tutorialStg->SetReflectLaser(true);
 	}
 
 	//速度倍率を遅くする.
-	gameData.speedRate = SLOW_MODE_SPEED;
+	gameData->speedRate = SLOW_MODE_SPEED;
 	//一定時間スローにする.
-	gameData.slowBufCntr = SLOW_MODE_BUF_F;
+	gameData->slowBufCntr = SLOW_MODE_BUF_F;
 }
 
 //レーザー描画線を生成.
@@ -441,7 +448,7 @@ void LaserManager::LaserRefTracking(list<LaserData>::iterator it)
 			}
 
 			// 反射レーザーの旋回角度（通常レーザーより少し速く）.
-			double maxTurn = _rad(LASER_REF_ROT_MAX) * gameData.speedRate;
+			double maxTurn = _rad(LASER_REF_ROT_MAX) * gameData->speedRate;
 			if (angleDiff > +maxTurn) angleDiff = +maxTurn;
 			if (angleDiff < -maxTurn) angleDiff = -maxTurn;
 

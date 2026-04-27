@@ -6,16 +6,13 @@
 //依存関係.
 #include "GameData.h"
 //参照.
-static GameData& gameData = GameData::GetInst();
+static GameData* gameData;
 
 // ▼*---=[ BGManager ]=---*▼ //
 
-BGManager BGManager::inst;
-
 //初期化.
 void BGManager::Init() {
-	bg1.Init();
-	bg2.Init();
+	gameData = ManagerInsts::Get<GameData>();
 }
 //リセット.
 void BGManager::Reset() {
@@ -25,9 +22,9 @@ void BGManager::Reset() {
 void BGManager::Update() {
 
 	//ポーズ中の更新はしない.
-	if (gameData.isPause) { return; }
+	if (gameData->isPause) { return; }
 
-	counter += gameData.speedRate; //経過時間.
+	counter += gameData->speedRate; //経過時間.
 
 	switch (useBgNo) {
 		case 0:                 break; //背景なし.

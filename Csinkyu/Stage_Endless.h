@@ -10,23 +10,14 @@
 //エンドレスステージ.
 class EndlessStage final : public ManagerBase 
 {
-//▼実体関係.
-public:
-	static EndlessStage inst; //自身のインスタンス.
-public:
-	static EndlessStage& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	EndlessStage() : ManagerBase(ORDER_ENDLESS_STAGE) {}
-
 public:
+	//コンストラクタ.
+	EndlessStage(int order) : ManagerBase(order) {}
+
 	void Init()   override;
 	void Reset()  override;
 	void Update() override;

@@ -14,14 +14,6 @@
 //ゲームマネージャー.
 class GameManager final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static GameManager inst; //自身のインスタンス.
-public:
-	static GameManager& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	/* シーン関係 */
@@ -35,11 +27,10 @@ private:
 #endif
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	GameManager() : ManagerBase(ORDER_GAME_MNG) {}
-
 public:
+	//コンストラクタ.
+	GameManager(int order) : ManagerBase(order) {}
+
 	//get.
 	GameScene* GetGameScene() { return &gameScene; }
 
@@ -63,6 +54,6 @@ public:
 	void RestartObjects();
 
 	//使用禁止.
-	GameManager(const GameManager&) = delete;
-	GameManager& operator=(const GameManager&) = delete;
+	GameManager(const GameManager*) = delete;
+	GameManager* operator=(const GameManager*) = delete;
 };

@@ -30,14 +30,6 @@ struct FireworksData
 //花火管理.
 class Fireworks final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static Fireworks inst; //自身のインスタンス.
-public:
-	static Fireworks& GetInst() {
-		return inst;
-	}
-
 //▼データ.
 private:
 	list<FireworksData> fireworks;
@@ -45,9 +37,6 @@ private:
 
 //▼ ===== 関数 ===== ▼.
 private:
-	//コンストラクタ
-	Fireworks() : ManagerBase(ORDER_FIREWORKS_MNG) {}
-
 	void GenerateRandomPosition   (float& x, float& y);
 	bool CheckDistance            (float x, float y);
 	void SpawnFireworks           (float x, float y);
@@ -59,12 +48,15 @@ private:
 	void DrawWarningEffect(list<FireworksData>::iterator it);
 
 public:
+	//コンストラクタ
+	Fireworks(int order) : ManagerBase(order) {}
+
 	void Init()   override;
 	void Reset()  override;
 	void Update() override;
 	void Draw()   override;
 
 	//使用禁止.
-	Fireworks(const Fireworks&) = delete;
-	Fireworks& operator=(const Fireworks&) = delete;
+	Fireworks(const Fireworks*) = delete;
+	Fireworks* operator=(const Fireworks*) = delete;
 };

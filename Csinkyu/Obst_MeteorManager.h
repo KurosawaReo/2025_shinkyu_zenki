@@ -9,26 +9,16 @@
 //隕石管理.
 class MeteorManager final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static MeteorManager inst; //自身のインスタンス.
-public:
-	static MeteorManager& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	list<Meteor> meteor;  //隕石配列.
-
 	float		 timer{}; //隕石生成用.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	MeteorManager() : ManagerBase(ORDER_METEOR_MNG) {}
-
 public:
+	//コンストラクタ.
+	MeteorManager(int order) : ManagerBase(order) {}
+
 	//get.
 	Meteor* GetHitMeteor    (Circle cir, bool isDestroy); //範囲内の隕石を取得(1つ)
 	Meteor* GetNearestMeteor(DBL_XY pos);				  //最寄りの隕石を取得.
@@ -42,6 +32,6 @@ public:
 	void BreakMeteor(DBL_XY pos, double ang, bool isScore, double scale = 1); //隕石破壊演出.
 
 	//使用禁止.
-	MeteorManager(const MeteorManager&) = delete;
-	MeteorManager& operator=(const MeteorManager&) = delete;
+	MeteorManager(const MeteorManager*) = delete;
+	MeteorManager* operator=(const MeteorManager*) = delete;
 };
