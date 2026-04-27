@@ -12,7 +12,11 @@ static GameData* gameData;
 
 //初期化.
 void BGManager::Init() {
+	//参照取得.
 	gameData = ManagerInsts::Get<GameData>();
+
+	bg1.Init();
+	bg2.Init();
 }
 //リセット.
 void BGManager::Reset() {
