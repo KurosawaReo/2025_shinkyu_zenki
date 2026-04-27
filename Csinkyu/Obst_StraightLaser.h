@@ -29,24 +29,15 @@ public:
 //直線レーザー.
 class StraightLaser final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static StraightLaser inst;
-public:
-	static StraightLaser& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	StraightLaserPoint points[2];
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	StraightLaser() : ManagerBase(ORDER_STR_LASER_MNG) {}
-
 public:
+	//コンストラクタ.
+	StraightLaser(int order) : ManagerBase(order) {}
+
 	void Init()   override;
 	void Reset()  override;
 	void Update() override;

@@ -18,14 +18,6 @@ struct RipplesData
 //波紋管理.
 class Ripples final : public ManagerBase
 {
-//▼実体関係.
-private:
-	static Ripples inst; //自身のインスタンス.
-public:
-	static Ripples& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	list<RipplesData> ripples; //波紋配列.
@@ -33,11 +25,10 @@ private:
 	float flashTimer{}; //出現タイマー.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	Ripples() : ManagerBase(ORDER_RIPPLES_MNG) {}
-
 public:
+	//コンストラクタ.
+	Ripples(int order) : ManagerBase(order) {}
+
 	void Init()   override;
 	void Reset()  override;
 	void Update() override;

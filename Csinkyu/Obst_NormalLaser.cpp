@@ -12,10 +12,13 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&      gameData  = GameData::GetInst();
-static Player&        player    = Player::GetInst();
-static LaserManager&  laserMng  = LaserManager::GetInst();
-static MeteorManager& meteorMng = MeteorManager::GetInst();
+static GameData*      gameData;
+static Player*        player;
+static LaserManager*  laserMng;
+static MeteorManager* meteorMng;
+static NormalLaser*   normalLaser;
+//参照(KRライブラリ)
+static SceneMng*      sceneMng;
 
 using namespace Calc; //計算機能を使用.
 
@@ -45,10 +48,10 @@ void NormalLaserPoint::Update() {
 
 	//有効なもののみ.
 	if (validFlag) {
-		counter -= gameData.speedRate; //経過カウンター.
+		counter -= gameData->speedRate; //経過カウンター.
 
 		//移動(方向 * 速度 * 速度倍率)
-		pos += GetVec() * speed * gameData.speedRate;
+		pos += GetVec() * speed * gameData->speedRate;
 		//画面サイズ.
 		DBL_RECT winSize = App::GetWindowRect().ToDbl();
 
@@ -69,20 +72,20 @@ void NormalLaserPoint::Update() {
 		if (counter <= counterTm)
 		{
 			//プレイヤー座標.
-			DBL_XY plyPos = player.GetPos();
+			DBL_XY plyPos = player->GetPos();
 			//プレイヤー方向への初期角度計算.
 			double angle = atan2(plyPos.y - pos.y, plyPos.x - pos.x);
 			DBL_XY vel = { cos(angle), sin(angle) };
 
-			laserMng.SpawnLaser(pos, vel, Laser_Normal); //通常レーザー召喚.
-			NormalLaser::GetInst().CreateFlashEffect(pos.x, pos.y); //エフェクトを出す.
+			laserMng->SpawnLaser(pos, vel, Laser_Normal); //通常レーザー召喚.
+			normalLaser->CreateFlashEffect(pos.x, pos.y); //エフェクトを出す.
 
 			counterTm -= LASER_NOR_SHOT_SPAN; //次のレーザーを発射するタイミング.
 		}
 		//0を下回ったらタイマー再開.
 		if (counter <= 0) {
 			//発射開始時間 + 待機時間(待機時間は徐々に短くなる)
-			counter = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData.spawnRate;
+			counter = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData->spawnRate;
 			//発射開始時間.
 			counterTm = LASER_NOR_SHOT_START;
 
@@ -149,11 +152,15 @@ void NormalLaserPoint::MoveRand()
 
 // ▼*--=<[ NormalLaser ]>=--*▼ //
 
-NormalLaser NormalLaser::inst;
-
 //初期化.
 void NormalLaser::Init(){
 	
+	gameData    = ManagerInsts::Get<GameData>();
+	player      = ManagerInsts::Get<Player>();
+	laserMng    = ManagerInsts::Get<LaserManager>();
+	meteorMng   = ManagerInsts::Get<MeteorManager>();
+	normalLaser = ManagerInsts::Get<NormalLaser>();
+	sceneMng    = ManagerInsts::Get<SceneMng>();
 }
 //リセット.
 void NormalLaser::Reset()
@@ -174,7 +181,7 @@ void NormalLaser::Reset()
 void NormalLaser::Update()
 {
 	//ゲーム中のみ.
-	if (SceneMng::GetSceneName() == "Game") {
+	if (sceneMng->GetSceneName() == "Game") {
 
 		//発射台.
 		for (auto& i : points) {
@@ -184,7 +191,7 @@ void NormalLaser::Update()
 		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 			//有効なら.
 			if (flash[i].validFlag) {
-				flash[i].counter += gameData.speedRate;
+				flash[i].counter += gameData->speedRate;
 			}
 		}
 	}
@@ -273,7 +280,7 @@ void NormalLaser::DrawObstFlash() {
 //光るeffectの生成.
 void NormalLaser::CreateFlashEffect(double fx, double fy)
 {
-	DBL_XY pPos = player.GetPos(); //プレイヤー座標取得.
+	DBL_XY pPos = player->GetPos(); //プレイヤー座標取得.
 
 	//未使用のエフェクトスロットを探す.
 	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++)
@@ -303,7 +310,7 @@ void NormalLaser::UseLaserPointCnt(int count) {
 	int tmp = count;
 
 	//全ての発射台.
-	for (auto& i : GetInst().points) {
+	for (auto& i : points) {
 		i.Reset();               //一旦リセット.
 		i.SetValidFlag(tmp > 0); //必要な数だけ有効に.
 		tmp--;

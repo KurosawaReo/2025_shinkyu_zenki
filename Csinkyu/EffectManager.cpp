@@ -7,16 +7,14 @@
 //依存関係.
 #include "GameData.h"
 //参照
-static GameData& gameData = GameData::GetInst();
+static GameData* gameData;
 
 using namespace Calc; //計算機能を使用.
 
 // ▼*---=[ EffectManager ]=---*▼ //
 
-EffectManager EffectManager::inst;
-
 void EffectManager::Init() {
-	
+	gameData = ManagerInsts::Get<GameData>();
 }
 
 void EffectManager::Reset() {
@@ -27,7 +25,7 @@ void EffectManager::Reset() {
 void EffectManager::Update() {
 	
 	//ポーズ中の更新はしない.
-	if (gameData.isPause) { return; }
+	if (gameData->isPause) { return; }
 
 	//全てのエフェクト.
 	for (auto i = effect.begin(); i != effect.end(); ) {
@@ -85,14 +83,14 @@ void EffectManager::Update() {
 			case Effect_BreakMeteor:
 			{
 				//カウンター加算.
-				i->counter += gameData.speedRate;
+				i->counter += gameData->speedRate;
 				//回転.
-				i->ang += 3 * gameData.speedRate;
+				i->ang += 3 * gameData->speedRate;
 				//減速.
 				float newSpeed = i->speed/(1+(i->counter/10));
 				//移動.
-				i->pos.x += i->vec.x * newSpeed * gameData.speedRate;
-				i->pos.y += i->vec.y * newSpeed * gameData.speedRate;
+				i->pos.x += i->vec.x * newSpeed * gameData->speedRate;
+				i->pos.y += i->vec.y * newSpeed * gameData->speedRate;
 
 				//時間経過で消滅.
 				if (i->counter >= METEOR_BREAK_ANIM_TIME) {
@@ -307,7 +305,7 @@ void EffectManager::Draw() {
 							lampFillCnt = 4;
 							break;
 					}
-					str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont());
+					str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
 
 					//ランプ(必要な数だけ)
 					for (int j = 0; j < lampUseCnt; j++) {

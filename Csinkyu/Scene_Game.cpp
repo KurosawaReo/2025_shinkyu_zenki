@@ -12,15 +12,26 @@
 #include "Stage_Tutorial.h"
 #include "Stage_Endless.h"
 //参照.
-static GameData&		gameData	= GameData::GetInst();
-static GameManager&		gameMng		= GameManager::GetInst();
-static Player&			player		= Player::GetInst();
-static BGManager&		bgMng		= BGManager::GetInst();
-static UIManager&		uiMng		= UIManager::GetInst();
-static TutorialStage&	tutorialStg = TutorialStage::GetInst();
+static GameData*	  gameData;
+static GameManager*	  gameMng;
+static Player*		  player;
+static BGManager*	  bgMng;
+static UIManager*	  uiMng;
+static TutorialStage* tutorialStg;
+//参照(KRライブラリ)
+static SoundMng*      soundMng;
 
 //初期化.
 void GameScene::Init() {
+	//参照取得.
+	gameData    = ManagerInsts::Get<GameData>();
+	gameMng     = ManagerInsts::Get<GameManager>();
+	player      = ManagerInsts::Get<Player>();
+	bgMng       = ManagerInsts::Get<BGManager>();
+	uiMng       = ManagerInsts::Get<UIManager>();
+	tutorialStg = ManagerInsts::Get<TutorialStage>();
+	soundMng    = ManagerInsts::Get<SoundMng>();
+
 	timer         = Timer(TimerMode::CountUp, 0);
 	tmGameTime    = Timer(TimerMode::CountUp, 0);
 	tmReflectMode = Timer(TimerMode::CountDown, REFLECT_MODE_TIME);
@@ -46,14 +57,14 @@ void GameScene::Enter() {
 //抜けた瞬間.
 void GameScene::Exit() {
 	//チュートリアル以外のみ.
-	if (gameData.stage != Stage_Tutorial) {
+	if (gameData->stage != Stage_Tutorial) {
 		itemSoundCnt = 0;
 		timer.Stop();          //演出用タイマー停止.
 		tmGameTime.Stop();     //ゲーム時間停止.
 		tmReflectMode.Reset(); //反射モードリセット.
 
 		//オブジェクトの動作停止.
-		gameMng.DrawOnlyObjects();
+		gameMng->DrawOnlyObjects();
 	}
 }
 //更新.
@@ -70,7 +81,7 @@ void GameScene::Update() {
 			tmGameTime.Start(); //ゲーム時間計測開始.
 			isGameStart = true; //ゲーム開始.
 			//ステージ別.
-			switch (gameData.stage)
+			switch (gameData->stage)
 			{
 				case Stage_Tutorial: 
 					ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Active);
@@ -113,12 +124,12 @@ void GameScene::PauseEnd() {
 void GameScene::UpdateReflectMode() {
 
 	//反射モード時間判定.
-	if (gameData.slowBufCntr > 0) {
-		gameData.slowBufCntr--; //カウントを減らす.
+	if (gameData->slowBufCntr > 0) {
+		gameData->slowBufCntr--; //カウントを減らす.
 
 		//0になったら.
-		if (gameData.slowBufCntr <= 0) {
-			gameData.speedRate = 1.0; //速度倍率を戻す.
+		if (gameData->slowBufCntr <= 0) {
+			gameData->speedRate = 1.0; //速度倍率を戻す.
 		}
 	}
 
@@ -129,7 +140,7 @@ void GameScene::UpdateReflectMode() {
 			case 0:
 				//3秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 3) {
-					if (auto i = SoundMng::Get("CountDown")){
+					if (auto i = soundMng->Get("CountDown")){
 						i->Play(false, 78); //再生.
 					}
 					itemSoundCnt++; //次へ.
@@ -138,7 +149,7 @@ void GameScene::UpdateReflectMode() {
 			case 1:
 				//2秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 2) {
-					if (auto i = SoundMng::Get("CountDown")) {
+					if (auto i = soundMng->Get("CountDown")) {
 						i->Play(false, 78); //再生.
 					}
 					itemSoundCnt++; //次へ.
@@ -147,7 +158,7 @@ void GameScene::UpdateReflectMode() {
 			case 2:
 				//1秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 1) {
-					if (auto i = SoundMng::Get("CountDown")) {
+					if (auto i = soundMng->Get("CountDown")) {
 						i->Play(false, 78); //再生.
 					}
 					itemSoundCnt++; //次へ.
@@ -187,7 +198,7 @@ void GameScene::DrawReflectMode() {
 				}
 				//最後の3秒.
 				if (tmReflectMode.GetPassTime() <= 3) {
-					str.Draw(Anchor::Mid, gameData.fonts["size40"].GetFont()); //数字.
+					str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont()); //数字.
 				}
 			}
 		}
@@ -198,19 +209,19 @@ void GameScene::ReflectModeEnd() {
 
 	tmReflectMode.Reset();
 
-	gameData.isReflectMode = false; //反射モード解除.
-	gameData.speedRate = 1.0;		//速度倍率を100%に戻す.
-	gameData.slowBufCntr = 0;		//カウンターを0に.
+	gameData->isReflectMode = false; //反射モード解除.
+	gameData->speedRate = 1.0;		//速度倍率を100%に戻す.
+	gameData->slowBufCntr = 0;		//カウンターを0に.
 	itemSoundCnt = 0;
-	player.SetMode(Player_Normal);  //通常状態に戻す.
+	player->SetMode(Player_Normal);  //通常状態に戻す.
 
 	//効果終了音.
-	if (auto i = SoundMng::Get("PowerDown")) {
+	if (auto i = soundMng->Get("PowerDown")) {
 		i->Play(false, 78); //再生.
 	}
 	//チュートリアルなら指示送信.
-	if (gameData.stage == Stage_Tutorial) {
-		tutorialStg.SetReflectFinish(true); //指示を送る.
+	if (gameData->stage == Stage_Tutorial) {
+		tutorialStg->SetReflectFinish(true); //指示を送る.
 	}
 }
 

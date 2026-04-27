@@ -10,16 +10,18 @@
 #include "LaserManager.h"
 #include "GameData.h"
 //参照.
-static GameData&     gameData     = GameData::GetInst();
-static LaserManager& laserMng = LaserManager::GetInst();
+static GameData*     gameData;
+static LaserManager* laserMng;
+//参照(KRライブラリ)
+static SoundMng*     soundMng;
 
 // ▼*---=[ Fireworks ]=---*▼ //
 
-Fireworks Fireworks::inst;
-
 // 初期化
 void Fireworks::Init() {
-
+	gameData = ManagerInsts::Get<GameData>();
+	laserMng = ManagerInsts::Get<LaserManager>();
+	soundMng = ManagerInsts::GetInst().Get<SoundMng>();
 }
 
 // リセット
@@ -76,7 +78,7 @@ void Fireworks::SpawnFireworks(float x, float y) {
 
 // 花火生成更新
 void Fireworks::UpdateFireworksGeneration() {
-	spawnTimer -= gameData.speedRate;
+	spawnTimer -= gameData->speedRate;
 
 	if (spawnTimer <= 0) {
 		//1～3個の花火をランダム生成.
@@ -98,7 +100,7 @@ void Fireworks::UpdateFireworksGeneration() {
 			}
 		}
 		//出現カウンターリセット.
-		spawnTimer = FIREWORKS_SPAWN_SPAN * gameData.spawnRate;
+		spawnTimer = FIREWORKS_SPAWN_SPAN * gameData->spawnRate;
 	}
 }
 
@@ -107,7 +109,7 @@ void Fireworks::UpdateIndividualFireworks() {
 
 	for (auto i = fireworks.begin(); i != fireworks.end(); ) {
 
-		i->counter -= gameData.speedRate; //カウンター減少.
+		i->counter -= gameData->speedRate; //カウンター減少.
 
 		//警告表示.
 		if (i->counter > 0) {
@@ -119,7 +121,7 @@ void Fireworks::UpdateIndividualFireworks() {
 			//花火のレーザーを生成.
 			CreateFireworksSparks(i->x, i->y);
 			//爆発音.
-			if (auto i = SoundMng::Get("Explosion")) {
+			if (auto i = soundMng->Get("Explosion")) {
 				i->Play(false, 70); //再生.
 			}
 
@@ -153,7 +155,7 @@ void Fireworks::CreateFireworksSparks(float x, float y) {
 		};
 
 		// 落下するレーザーとして生成
-		laserMng.SpawnLaser(pos, vel, Laser_Falling);
+		laserMng->SpawnLaser(pos, vel, Laser_Falling);
 	}
 }
 

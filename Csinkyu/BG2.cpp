@@ -38,7 +38,7 @@ void BG2::Draw() {
 		};
 		line.color = { 80, 120, 255 };
 
-		DrawLineKR(line, true, 1.5f);
+		DrawLineKR(line, true);
 	}
 
 	//====================================
@@ -52,7 +52,7 @@ void BG2::Draw() {
 		arc.arcAng = M_PI / 2;
 		arc.color  = { 120, 200, 255 };
 
-		DrawArcKR(arc, true, 2.0f);
+		DrawArcKR(arc, true);
 	}
 
 	//====================================

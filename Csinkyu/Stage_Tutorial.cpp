@@ -19,23 +19,38 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&			gameData		= GameData::GetInst();
-static GameManager&			gameMng			= GameManager::GetInst();
-static LaserManager&		laserMng		= LaserManager::GetInst();
-static MeteorManager&		meteorMng		= MeteorManager::GetInst();
-static Ripples&				ripples			= Ripples::GetInst();
-static ItemManager&			itemMng			= ItemManager::GetInst();
-static Player&				player			= Player::GetInst();
-static Fireworks&	fireworksMng	= Fireworks::GetInst();
-static EffectManager&		effectMng		= EffectManager::GetInst();
-static UIManager&			uiMng			= UIManager::GetInst();
+static GameData*		gameData;
+static GameManager*		gameMng;
+static LaserManager*	laserMng;
+static MeteorManager*	meteorMng;
+static Ripples*			ripples;
+static ItemManager*		itemMng;
+static Player*			player;
+static Fireworks*		fireworksMng;
+static EffectManager*	effectMng;
+static UIManager*		uiMng;
+//参照(KRライブラリ)
+static SoundMng*		soundMng;
+static SceneMng*		sceneMng;
 
 // ▼*--=<[ TutorialStage ]>=--*▼ //
 
-TutorialStage TutorialStage::inst;
-
 //初期化.
 void TutorialStage::Init() {
+
+	//参照取得.
+	gameData	 = ManagerInsts::Get<GameData>();
+	gameMng		 = ManagerInsts::Get<GameManager>();
+	laserMng	 = ManagerInsts::Get<LaserManager>();
+	meteorMng	 = ManagerInsts::Get<MeteorManager>();
+	ripples		 = ManagerInsts::Get<Ripples>();
+	itemMng		 = ManagerInsts::Get<ItemManager>();
+	player		 = ManagerInsts::Get<Player>();
+	fireworksMng = ManagerInsts::Get<Fireworks>();
+	effectMng	 = ManagerInsts::Get<EffectManager>();
+	uiMng        = ManagerInsts::Get<UIManager>();
+	soundMng	 = ManagerInsts::Get<SoundMng>();
+	sceneMng	 = ManagerInsts::Get<SceneMng>();
 
 	font[0].CreateFontH(_T(""), 25, 1, FontTypeID::Anti);
 	font[1].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
@@ -109,14 +124,14 @@ void TutorialStage::StepInEnd() {
 void TutorialStage::UpdateStep0() {
 
 	//サウンド.
-	if (auto i = SoundMng::Get("LevelUp")) {
+	if (auto i = soundMng->Get("LevelUp")) {
 		i->Play(false, 100); //再生.
 	}
 	//エフェクト.
 	EffectData data{};
 	data.type = Effect_Tutorial_Step1;
 	data.pos  = { WINDOW_WID/2, WINDOW_HEI/2 };
-	effectMng.SpawnEffect(&data);
+	effectMng->SpawnEffect(&data);
 
 	//オブジェクト.
 	ManagerInsts::GetInst().Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Active);
@@ -136,7 +151,7 @@ void TutorialStage::UpdateStep1() {
 		case 0:
 		{
 			//移動したらカウンターを+1
-			if (player.IsMoved()) {
+			if (player->IsMoved()) {
 				plyMoveCntr += 1;
 			}
 
@@ -192,14 +207,14 @@ void TutorialStage::UpdateStep1() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				if (auto i = SoundMng::Get("LevelUp")) {
+				if (auto i = soundMng->Get("LevelUp")) {
 					i->Play(false, 100); //再生.
 				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step2;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 
 				//オブジェクト.
 				ManagerInsts::GetInst().Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Stop);
@@ -254,14 +269,14 @@ void TutorialStage::UpdateStep2() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				if (auto i = SoundMng::Get("LevelUp")) {
+				if (auto i = soundMng->Get("LevelUp")) {
 					i->Play(false, 100); //再生.
 				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 				//オブジェクト.
 				ManagerInsts::GetInst().Get<ItemManager>()->ItemSpawn(0); //アイテム召喚.
 				//終了処理.
@@ -348,18 +363,18 @@ void TutorialStage::UpdateStep3() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				if (auto i = SoundMng::Get("LevelUp")) {
+				if (auto i = soundMng->Get("LevelUp")) {
 					i->Play(false, 100); //再生.
 				}
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-				effectMng.SpawnEffect(&data);
+				effectMng->SpawnEffect(&data);
 				//スコアリセット.
-				gameData.scoreBef = gameData.score = 0;
+				gameData->scoreBef = gameData->score = 0;
 				//スコア表示.
-				uiMng.SignIsShowScore();
+				uiMng->SignIsShowScore();
 
 				//終了処理.
 				StepInEnd();
@@ -380,7 +395,7 @@ void TutorialStage::UpdateStep4() {
 		{
 			//[終了条件] 一定スコアを越える & 反射モードが終わったら.
 			if (endTimer.GetState() != TimerState::Active && 
-				gameData.score >= 2000 && isReflectFinish) 
+				gameData->score >= 2000 && isReflectFinish) 
 			{
 				endTimer.Start();
 			}
@@ -406,7 +421,7 @@ void TutorialStage::UpdateStep4() {
 			{
 #if !defined BGM_NONE
 				//BGMフェードアウト.
-				if (auto i = SoundMng::Get("BGM_Tutorial")) {
+				if (auto i = soundMng->Get("BGM_Tutorial")) {
 					i->FadeOutPlay(TUTORIAL_END_NEXT_TIME); //再生.
 				}
 #endif
@@ -414,7 +429,7 @@ void TutorialStage::UpdateStep4() {
 			}
 			//チュートリアル終了.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
-				SceneMng::SetScene("Title");
+				sceneMng->SetScene("Title");
 				App::Reset(); //全てリセット.
 			}
 		}

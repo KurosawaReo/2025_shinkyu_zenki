@@ -9,13 +9,26 @@
 #include "Player.h"
 #include "UIManager.h"
 //参照.
-static GameManager& gameMng  = GameManager::GetInst();
-static GameData&    gameData = GameData::GetInst();
-static Player&      player   = Player::GetInst();
-static UIManager&   uiMng    = UIManager::GetInst();
+static GameManager* gameMng;
+static GameData*    gameData;
+static Player*      player;
+static UIManager*   uiMng;
+//参照(KRライブラリ)
+static SoundMng*    soundMng;
+static InputMng*    inputMng;
+static SceneMng*    sceneMng;
 
 //初期化.
 void EndScene::Init() {
+	//参照取得.
+	gameMng  = ManagerInsts::Get<GameManager>();
+	gameData = ManagerInsts::Get<GameData>();
+	player   = ManagerInsts::Get<Player>();
+	uiMng    = ManagerInsts::Get<UIManager>();
+	soundMng = ManagerInsts::Get<SoundMng>();
+	inputMng = ManagerInsts::Get<InputMng>();
+	sceneMng = ManagerInsts::Get<SceneMng>();
+
 	timer = Timer(TimerMode::CountUp, 0);
 }
 //リセット.
@@ -36,25 +49,25 @@ void EndScene::Update() {
 
 	//チュートリアルの場合.
 	//→死亡後復活.
-	if (gameData.stage == Stage_Tutorial) {
+	if (gameData->stage == Stage_Tutorial) {
 
-		gameMng.GetGameScene()->Update(); //ゲームシーンと同じ動作をする.
+		gameMng->GetGameScene()->Update(); //ゲームシーンと同じ動作をする.
 
 		//一定時間経過したら.
 		if (timer.GetPassTime() >= TUTORIAL_RESPAWN_TIME) {
 			timer.Reset();              //タイマーリセット.
-			player.PlayerRevival();     //復活.
-			SceneMng::SetScene("Game"); //ゲームシーンへ戻る.
+			player->PlayerRevival();     //復活.
+			sceneMng->SetScene("Game"); //ゲームシーンへ戻る.
 		}
 	}
 	//チュートリアル以外の場合.
 	//→ゲームオーバー.
 	else {
 		//特定の操作でタイトルへ.
-		if (InputMng::IsPushActionTime("GameNext") == 1)
+		if (inputMng->IsPushActionTime("GameNext") == 1)
 		{
-			uiMng.SetDisBestScore(gameData.bestScore); //ベストスコア表示更新.
-			SceneMng::SetScene("Title");               //ゲームシーンへ戻る.
+			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
+			sceneMng->SetScene("Title");               //ゲームシーンへ戻る.
 			App::Reset();
 		}
 	}
@@ -73,7 +86,7 @@ void EndScene::Draw() {
 	}
 
 	//チュートリアルの場合.
-	if (gameData.stage == Stage_Tutorial) {
+	if (gameData->stage == Stage_Tutorial) {
 
 		//アニメーション値.
 		double anim = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
@@ -85,7 +98,7 @@ void EndScene::Draw() {
 			//GAME OVER.
 			DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
 			//テキスト.
-			str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont());
+			str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
 		}
 	}
 	//チュートリアル以外の場合.
@@ -94,13 +107,13 @@ void EndScene::Draw() {
 		{
 			//アニメーション値.
 			const double anim     = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
-			const float  gameTime = gameMng.GetGameScene()->GetGameTime();
+			const float  gameTime = gameMng->GetGameScene()->GetGameTime();
 
 			//スコア表示.
 			TCHAR text[256];
 			_stprintf(
 				text, _T("%d + %d(%.1f秒) = %d点"),
-				gameData.scoreBef, _int(gameTime * 10), gameTime, gameData.score
+				gameData->scoreBef, _int(gameTime * 10), gameTime, gameData->score
 			);
 			//テキストの設定.
 			DrawStr str1(_T("Time Bonus"), { WINDOW_WID / 2, WINDOW_HEI / 2 - 20 }, 0xFFFFFF);
@@ -110,8 +123,8 @@ void EndScene::Draw() {
 
 				DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
 				//画面中央に文字を表示.
-				str1.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont());
-				str2.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont());
+				str1.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
+				str2.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
 			}
 		}
 
@@ -132,7 +145,7 @@ void EndScene::Draw() {
 				}
 				//サウンド.
 				if (!isBestScoreSound) {
-					if (auto i = SoundMng::Get("BestScore")) {
+					if (auto i = soundMng->Get("BestScore")) {
 						i->Play(false, 65); //再生.
 					}
 					isBestScoreSound = true; //一度のみ.
@@ -148,7 +161,7 @@ void EndScene::Draw() {
 			DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, WINDOW_HEI / 2 + 145 }, 0xFFFFFF);
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-				str.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont()); //テキスト.
+				str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
 			}
 		}
 	}

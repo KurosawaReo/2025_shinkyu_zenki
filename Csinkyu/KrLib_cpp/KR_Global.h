@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/04/23
+   ver.2026/04/27
 
    KrLib全体で使う汎用プログラム。
 */
@@ -19,8 +19,9 @@
 #include <map>
 #include <unordered_map>
 #include <array>
-#include <string>     //string型用.
-#include <cmath>      //math.hをラップしたもの.
+#include <memory>
+#include <string> //string型用.
+#include <cmath>  //math.hをラップしたもの.
 //C言語用.
 #include <tchar.h>
 
@@ -30,6 +31,8 @@ using std::list;
 using std::map;
 using std::unordered_map;
 using std::array;
+using std::unique_ptr;
+using std::make_unique;
 using std::string;
 using std::wstring;
 using std::to_string;

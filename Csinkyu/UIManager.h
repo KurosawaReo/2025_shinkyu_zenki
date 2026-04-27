@@ -7,14 +7,6 @@
 //UI管理.
 class UIManager final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static UIManager inst; //自身のインスタンス.
-public:
-	static UIManager& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	int  disBestScore{}; //表示ベストスコア.
@@ -23,11 +15,10 @@ private:
 	bool isShowScore{}; //スコアを表示するかどうか.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	UIManager() : ManagerBase(ORDER_UI_MNG) {}
-
 public:
+	//コンストラクタ.
+	UIManager(int order) : ManagerBase(order) {}
+
 	//sign.
 	void SignIsShowScore() { isShowScore = true; }
 	//set.
@@ -39,6 +30,6 @@ public:
 	void Draw()   override;
 
 	//使用禁止.
-	UIManager(const UIManager&) = delete;
-	UIManager& operator=(const UIManager&) = delete;
+	UIManager(const UIManager*) = delete;
+	UIManager* operator=(const UIManager*) = delete;
 };

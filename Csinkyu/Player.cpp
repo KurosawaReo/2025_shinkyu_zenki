@@ -11,16 +11,27 @@
 #include "GameManager.h"
 #include "GameData.h"
 //参照.
-static GameData&      gameData  = GameData::GetInst();
-static EffectManager& effectMng = EffectManager::GetInst();
+static GameData*      gameData;
+static GameManager*   gameMng;
+static EffectManager* effectMng;
+static TutorialStage* tutorialStg;
+//参照(KRライブラリ)
+static SoundMng*      soundMng;
+static InputMng*      inputMng;
 
 // ▼*--=<[ Player ]>=--*▼ //
-
-Player Player::inst;
 
 //初期化(一回のみ行う)
 void Player::Init()
 {
+	//参照取得.
+	gameData    = ManagerInsts::Get<GameData>();
+	gameMng     = ManagerInsts::Get<GameManager>();
+	effectMng   = ManagerInsts::Get<EffectManager>();
+	tutorialStg = ManagerInsts::Get<TutorialStage>();
+	soundMng    = ManagerInsts::Get<SoundMng>();
+	inputMng    = ManagerInsts::Get<InputMng>();
+
 	isDebug = false;
 }
 //リセット(何回でも行う)
@@ -56,14 +67,14 @@ void Player::Update()
 {
 #if defined _DEBUG //Releaseでは入れない.
 	//無敵モード.
-	if (InputMng::IsPushKeyTime(KeyID::M) == 1) {
+	if (inputMng->IsPushKeyTime(KeyID::M) == 1) {
 		isDebug = !isDebug;
 	}
 #endif
 
 	//有効なら.
 	if (active) {
-		imgRot += 1.5 * gameData.speedRate; //画像回転.
+		imgRot += 1.5 * gameData->speedRate; //画像回転.
 
 		UpdateAfterImage();
 		UpdateDash();
@@ -77,7 +88,7 @@ void Player::Draw()
 	//デバッグ表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont());
+		str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
 	}
 #endif
 
@@ -108,7 +119,7 @@ void Player::Draw()
 		}
 
 		//チュートリアル用.
-		if (gameData.stage == Stage_Tutorial) {
+		if (gameData->stage == Stage_Tutorial) {
 			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToInt(), 0xFFFFFF );
 			str.Draw();
 		}
@@ -120,13 +131,13 @@ void Player::UpdateDash()
 {
 	//ダッシュクールダウン減少.
 	if (dashCooldown > 0){
-		dashCooldown -= 1 * gameData.speedRate;
+		dashCooldown -= 1 * gameData->speedRate;
 	}
 
 	//ダッシュ中なら.
 	if (isDashing)
 	{
-		dashTimer -= 1 * gameData.speedRate;
+		dashTimer -= 1 * gameData->speedRate;
 		//ダッシュ時間切れ.
 		if (dashTimer <= 0)
 		{
@@ -138,12 +149,12 @@ void Player::UpdateDash()
 	{
 		if (dashCooldown <= 0)
 		{
-			bool dashkey = InputMng::IsPushActionTime("PlayerDash") == 1;
+			bool dashkey = inputMng->IsPushActionTime("PlayerDash") == 1;
 			//ダッシュ開始.
 			if (dashkey)
 			{
 				//ダッシュ音追加..
-				if (auto i = SoundMng::Get("PlayerDash")) {
+				if (auto i = soundMng->Get("PlayerDash")) {
 					i->Play(false, 60); //再生.
 				}
 				dashTimer    = PLAYER_DASH_DURATION;
@@ -151,8 +162,8 @@ void Player::UpdateDash()
 				isDashing    = true;
 
 				//チュートリアルなら.
-				if (gameData.stage == Stage_Tutorial) {
-					TutorialStage::GetInst().SetPlayerDash(true);
+				if (gameData->stage == Stage_Tutorial) {
+					tutorialStg->SetPlayerDash(true);
 				}
 			}
 		}
@@ -162,7 +173,7 @@ void Player::UpdateDash()
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	float speed = PLAYER_MOVE_SPEED * gameData.speedRate;
+	float speed = PLAYER_MOVE_SPEED * gameData->speedRate;
 
 	//移動可能なら.
 	if (isMoveAble) {
@@ -173,8 +184,8 @@ void Player::PlayerMove()
 			speed *= 1.0f + _flt(PLAYER_DASH_SPEED * Calc::AnimEase(EaseType::OutQuad, dashTimer/PLAYER_DASH_DURATION));
 		}
 		//移動.
-		hit.pos += InputMng::GetKey4Dir()  * speed;
-		hit.pos += InputMng::GetPadStick() * speed;
+		hit.pos += inputMng->GetKey4Dir()  * speed;
+		hit.pos += inputMng->GetPadStick() * speed;
 		//移動限界.
 		Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
 	}
@@ -190,16 +201,16 @@ void Player::PlayerDeath() {
 	if (active) {
 
 		//サウンド.
-		if (auto i = SoundMng::Get("PlayerDeath")) {
+		if (auto i = soundMng->Get("PlayerDeath")) {
 			i->Play(false, 80); //再生.
 		}
 		//エフェクト.
 		EffectData data{};
 		data.type = Effect_PlayerDeath;
 		data.pos  = hit.pos;
-		effectMng.SpawnEffect(&data);
-		//GamaManagerの関数実行(includeだけすれば使える)
-		GameManager::GetInst().GameOver(); //ゲーム終了.
+		effectMng->SpawnEffect(&data);
+
+		gameMng->GameOver(); //ゲーム終了.
 	
 		isDashing    = false;
 		dashTimer    = 0;
@@ -224,7 +235,7 @@ void Player::PlayerRevival()
 //残像更新.
 void Player::UpdateAfterImage()
 {
-	afterCntr -= gameData.speedRate;
+	afterCntr -= gameData->speedRate;
 
 	//残像を残すタイミングになったら(基本は毎フレーム)
 	if (afterCntr <= 0) {

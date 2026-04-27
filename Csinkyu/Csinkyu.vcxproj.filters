@@ -42,12 +42,11 @@
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
     <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
     <ClCompile Include="KrLib_cpp\KR_File.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
-    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Matrix.cpp" />
     <ClCompile Include="KrLib_Dx\KR_CurveLine.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_ObjectMng.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_ManagerInsts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG1.h" />
@@ -90,11 +89,12 @@
     <ClInclude Include="KrLib_Dx\KR_Timer.h" />
     <ClInclude Include="KrLib_cpp\KR_BigInt.h" />
     <ClInclude Include="KrLib_cpp\KR_File.h" />
-    <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
     <ClInclude Include="KrLib_Dx\KR_Matrix.h" />
     <ClInclude Include="KrLib_Dx\KR_CurveLine.h" />
+    <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Singleton.h" />
+    <ClInclude Include="KrLib_Dx\KR_ManagerInsts.h" />
   </ItemGroup>
 </Project>

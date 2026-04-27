@@ -10,12 +10,17 @@
 #include "GameManager.h"
 #include "LaserManager.h"
 //参照.
-static GameData&      gameData  = GameData::GetInst();
-static LaserManager&  laserMng  = LaserManager::GetInst();
+static GameData*     gameData;
+static LaserManager* laserMng;
 
 // ▼*--=<[ StraightLaserPoint ]>=--*▼ //
 
 void StraightLaserPoint::Init() {
+	
+	//参照取得.
+	gameData = ManagerInsts::Get<GameData>();
+	laserMng = ManagerInsts::Get<LaserManager>();
+
 	currentDirection = 0;
 	nextDirection = 0;
 }
@@ -28,7 +33,7 @@ void StraightLaserPoint::Reset() {
 void StraightLaserPoint::Update() {
 
 	//タイマー更新.
-	laserSpawnTimer -= gameData.speedRate;
+	laserSpawnTimer -= gameData->speedRate;
 
 	//予測線表示タイマー更新.
 	//(レーザー発射の60フレーム前から表示)
@@ -66,7 +71,7 @@ void StraightLaserPoint::Update() {
 
 		//タイマー再開(徐々に短くなる)
 		//予測線の出る時間より短くならないよう設定.
-		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * gameData.spawnRate;
+		laserSpawnTimer = LASER_STR_PREDICTION_TIME + LASER_STR_SPAWN_SPAN * gameData->spawnRate;
 
 		isShowPreLine = false;
 		predictionTimer = 0;
@@ -170,15 +175,13 @@ void StraightLaserPoint::ShotLaser()
 			tmpPos.y = startPos.y;
 		}
 		//直線レーザーを発射.
-		laserMng.SpawnLaser(tmpPos, vel, Laser_Straight);
+		laserMng->SpawnLaser(tmpPos, vel, Laser_Straight);
 	}
 
 	currentDirection = nextDirection; //発射後に現在の方向を更新.
 }
 
 // ▼*--=<[ StraightLaser ]>=--*▼ //
-
-StraightLaser StraightLaser::inst;
 
 /// <summary>
 /// 初期化.
