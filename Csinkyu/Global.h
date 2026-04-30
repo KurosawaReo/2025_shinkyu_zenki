@@ -54,7 +54,7 @@ enum StageType
 //【定数】
 
 //DxLib設定.
-#define FILE_DATA						(_T("Data/score.data"))	//データを保存するファイル.
+#define FILE_DATA_PATH					("Data/score.data")	//データを保存するファイル.
 
 #define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
 
@@ -73,29 +73,11 @@ enum StageType
 #define TUTORIAL_RESPAWN_TIME           (1.8)           //チュートリアルでプレイヤーが復活する時間.
 
 #define REFLECT_MODE_TIME				(8)             //反射モード制限時間.
-#define SLOW_MODE_SPEED					(0.2f)			//スロー速度倍率.
+#define SLOW_MODE_SPEED					(0.15f)			//スロー速度倍率.
 #define SLOW_MODE_DIS_LEN				(50)			//スローになるプレイヤーとレーザーの距離範囲.
-#define SLOW_MODE_BUF_F                 (50)            //スローが継続するフレーム数.
+#define SLOW_MODE_BUF_F                 (30)            //スローが継続するフレーム数.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
-
-//管理クラス.
-//順番: 背景 → オブジェクト → シーン → ステージ → UIなど.
-#define ORDER_GAME_MNG					(0)
-#define ORDER_BG_MNG					(1)
-#define ORDER_METEOR_MNG				(2)
-#define ORDER_NOR_LASER_MNG				(3)				//Normal Laser  (通常レーザー)
-#define ORDER_STR_LASER_MNG				(4)				//Straight Laser(直線レーザー)
-#define ORDER_RIPPLES_MNG				(5)
-#define ORDER_FIREWORKS_MNG				(6)
-#define ORDER_LASER_MNG					(7)
-#define ORDER_ITEM_MNG					(8)
-#define ORDER_PLAYER_MNG				(9)
-#define ORDER_SCENE_MNG					(10)
-#define ORDER_ENDLESS_STAGE				(11)
-#define ORDER_TUTORIAL_STAGE			(12)
-#define ORDER_EFFECT_MNG				(13)
-#define ORDER_UI_MNG					(14)
 
 //プレイヤー.
 #define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)

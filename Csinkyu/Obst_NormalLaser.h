@@ -60,25 +60,16 @@ public:
 //通常レーザー.
 class NormalLaser final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static NormalLaser inst; //自身のインスタンス.
-public:
-	static NormalLaser& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	NormalLaserPoint points[4]{}; //レーザー発射台.
 	FlashEffect flash[LASER_NOR_FLASH_MAX]{};
 
 //▼ ===== 変数 ===== ▼.
-private:
-	//コンストラクタ.
-	NormalLaser() : ManagerBase(ORDER_NOR_LASER_MNG) {}
-
 public:
+	//コンストラクタ.
+	NormalLaser(int order) : ManagerBase(order) {}
+
 	//基本処理.
 	void Init  () override;
 	void Reset () override;
@@ -91,7 +82,7 @@ public:
 	void CreateFlashEffect(double x, double y);
 
 	//何個発射台を使うか.
-	static void UseLaserPointCnt(int count);
+	void UseLaserPointCnt(int count);
 
 	//使用禁止.
 	NormalLaser(const NormalLaser&) = delete;

@@ -20,14 +20,6 @@ struct ItemData
 //アイテム管理クラス.
 class ItemManager final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static ItemManager inst; //自身のインスタンス.
-public:
-	static ItemManager& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	ItemData items[ITEM_COUNT]{};
@@ -36,11 +28,10 @@ private:
 	bool     isItemUseWait{}; //アイテム発動待ちかどうか.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	ItemManager() : ManagerBase(ORDER_ITEM_MNG) {}
-
 public:
+	//コンストラクタ.
+	ItemManager(int order) : ManagerBase(order) {}
+
 	//set.
 	void SetItemMaxCnt(int count) { itemMaxCnt = count; }
 

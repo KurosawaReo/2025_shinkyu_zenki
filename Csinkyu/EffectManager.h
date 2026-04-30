@@ -36,7 +36,7 @@ struct EffectData
 	float      len{};     //長さ.
 };
 //エフェクト.
-struct Effect : public EffectData //TODO: この継承の使い方は不適切らしい.
+struct Effect : public EffectData //TODO: この継承の使い方は不適切.
 {
 	float      counter{}; //時間計測用.
 };
@@ -44,24 +44,15 @@ struct Effect : public EffectData //TODO: この継承の使い方は不適切らしい.
 //エフェクト管理クラス.
 class EffectManager final : public ManagerBase
 {
-//▼実体関係.
-private:
-	static EffectManager inst;
-public:
-	static EffectManager& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	list<Effect> effect; //エフェクト配列.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	EffectManager() : ManagerBase(ORDER_EFFECT_MNG) {}
-
 public:
+	//コンストラクタ.
+	EffectManager(int order) : ManagerBase(order) {}
+
 	void Init()	  override;
 	void Reset()  override;
 	void Update() override;
@@ -70,6 +61,6 @@ public:
 	void SpawnEffect (const EffectData* data); //エフェクト出現.
 
 	//使用禁止.
-	EffectManager(const EffectManager&) = delete;
-	EffectManager& operator=(const EffectManager&) = delete;
+	EffectManager(const EffectManager*) = delete;
+	EffectManager* operator=(const EffectManager*) = delete;
 };

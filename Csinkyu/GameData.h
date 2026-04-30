@@ -1,13 +1,11 @@
 /*
-   - GameData.h -
+   - gameData->h -
 */
 #pragma once
 
 //ゲームデータ[継承不可]
-class GameData final : public Singleton<GameData>
+class GameData final : public ManagerBase
 {
-	friend class Singleton<GameData>;
-
 //▼ ===== 変数 ===== ▼.
 public:
 	StageType  stage{};			//ステージ種類.
@@ -28,7 +26,13 @@ public:
 	umap<string, Font> fonts;	//フォントデータ.
 	
 //▼ ===== 関数 ===== ▼.
-private:
+public:
 	//コンストラクタ.
-	GameData(){}
+	GameData() : ManagerBase(0) {}
+
+	//未使用.
+	void Init()   override {};
+	void Reset()  override {};
+	void Update() override {};
+	void Draw()   override {};
 };

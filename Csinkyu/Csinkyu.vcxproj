@@ -26,7 +26,6 @@
     <ClCompile Include="BG2.cpp" />
     <ClCompile Include="BGManager.cpp" />
     <ClCompile Include="EffectManager.cpp" />
-    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
@@ -44,13 +43,13 @@
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Matrix.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_ObjectMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_SceneMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
     <ClCompile Include="KrLib_Dx\KR_StateMachine.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
     <ClCompile Include="LaserManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_ManagerInsts.cpp" />
     <ClCompile Include="Obst_Fireworks.cpp" />
     <ClCompile Include="Obst_Meteor.cpp" />
     <ClCompile Include="Obst_MeteorManager.cpp" />
@@ -102,6 +101,7 @@
     <ClInclude Include="KrLib_Dx\KR_StateMachine.h" />
     <ClInclude Include="KrLib_Dx\KR_Timer.h" />
     <ClInclude Include="LaserManager.h" />
+    <ClInclude Include="KrLib_Dx\KR_ManagerInsts.h" />
     <ClInclude Include="Obst_Fireworks.h" />
     <ClInclude Include="Obst_Meteor.h" />
     <ClInclude Include="Obst_MeteorManager.h" />

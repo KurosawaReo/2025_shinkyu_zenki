@@ -25,14 +25,6 @@ enum PlayerMode
 //プレイヤー.
 class Player final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static Player inst; //自身のインスタンス.
-public:
-	static Player& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	PlayerMode     mode{};     //モード.
@@ -44,8 +36,6 @@ private:
 	float dashEndEffectTimer{};//エフェクト残り時間.
 
 	bool isDashEndEffect{};    //エフェクト発動フラグ.
-
-
 
 	//残像.
 	float          afterCntr{};	 		        //残像用時間カウンター.
@@ -61,11 +51,10 @@ private:
 	bool           isMoveAble{};     //移動可能かどうか.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	Player() : ManagerBase(ORDER_PLAYER_MNG) {}
-
 public:
+	//コンストラクタ.
+	Player(int order) : ManagerBase(order) {}
+
 	//set.
 	void       SetPos       (DBL_XY     _pos)    { hit.pos    = _pos;    }
 	void       SetActive    (bool       _active) { active     = _active; }
@@ -102,6 +91,6 @@ public:
 
 
 	//使用禁止.
-	Player(const Player&) = delete;
-	Player& operator=(const Player&) = delete;
+	Player(const Player*) = delete;
+	Player* operator=(const Player*) = delete;
 };

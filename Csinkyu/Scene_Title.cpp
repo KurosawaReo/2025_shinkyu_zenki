@@ -8,12 +8,22 @@
 #include "BGManager.h"
 #include "Obst_MeteorManager.h"
 //参照.
-static GameData&      gameData  = GameData::GetInst();
-static BGManager&     bgMng     = BGManager::GetInst();
-static MeteorManager& meteorMng = MeteorManager::GetInst();
+static GameData*      gameData;
+static BGManager*     bgMng;
+static MeteorManager* meteorMng;
+//参照(KRライブラリ)
+static InputMng*      inputMng;
+static SceneMng*      sceneMng;
 
 //初期化.
 void TitleScene::Init() {
+	//参照取得.
+	gameData  = ManagerInsts::Get<GameData>();
+	bgMng     = ManagerInsts::Get<BGManager>();
+	meteorMng = ManagerInsts::Get<MeteorManager>();
+	inputMng  = ManagerInsts::Get<InputMng>();
+	sceneMng  = ManagerInsts::Get<SceneMng>();
+
 	timer = Timer(TimerMode::CountUp, 0);
 }
 //リセット.
@@ -22,8 +32,8 @@ void TitleScene::Reset() {
 }
 //入った瞬間.
 void TitleScene::Enter() {
-	timer.Start();    //タイマー開始.
-	bgMng.SetBgNo(1); //背景を設定.
+	timer.Start();     //タイマー開始.
+	bgMng->SetBgNo(1); //背景を設定.
 }
 //抜けた瞬間.
 void TitleScene::Exit() {
@@ -32,8 +42,8 @@ void TitleScene::Exit() {
 //更新.
 void TitleScene::Update() {
 	//特定の操作でゲーム開始.
-	if (InputMng::IsPushActionTime("GameNext") == 1) {
-		SceneMng::SetScene("Menu"); //メニューシーンへ.
+	if (inputMng->IsPushActionTime("GameNext") == 1) {
+		sceneMng->SetScene("Menu"); //メニューシーンへ.
 	}
 }
 //描画.
@@ -42,7 +52,7 @@ void TitleScene::Draw() {
 	//操作方法明記.
 	DrawStr howPlay(_T(""), { 30, WINDOW_HEI - 30 }, 0x00FFFF);
 	{
-		const int fontH = gameData.fonts["size18"].GetFont();
+		const int fontH = gameData->fonts["size18"].GetFont();
 
 #if defined INPUT_CHANGE_ARCADE
 		howPlay.text = _T("アーケード操作");
@@ -115,11 +125,11 @@ void TitleScene::Draw() {
 		double anim2 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay2) / 1.5);
 		//テキスト.
 		TCHAR text[256];
-		_stprintf(text, _T("BEST SCORE: %d"), gameData.bestScore); //ベストスコア.
+		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
 		DrawStr str(text, { WINDOW_WID / 2, drawY + 1 }, COLOR_BEST_SCORE);
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1);
-			str.Draw(Anchor::Mid, gameData.fonts["size30"].GetFont()); //スコア値.
+			str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont()); //スコア値.
 		}
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim2);
@@ -142,14 +152,14 @@ void TitleScene::Draw() {
 		DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, drawY }, 0xFFFFFF);
 		{
 			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-			str.Draw(Anchor::Mid, gameData.fonts["size26"].GetFont()); //テキスト.
+			str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
 		}
 	}
 	//隕石破壊アニメーション.
 	if (!isTitleAnim) {
 		if (timer.GetPassTime() >= delay5) {
 			//破壊演出.
-			meteorMng.BreakMeteor({ 580, 310 }, -130, false, 1.4);
+			meteorMng->BreakMeteor({ 580, 310 }, -130, false, 1.4);
 			//一度きり.
 			isTitleAnim = true;
 		}

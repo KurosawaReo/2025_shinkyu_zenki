@@ -11,21 +11,27 @@
 #include "GameData.h"
 #include "GameManager.h"
 //参照.
-static GameData&      gamedata  = GameData::GetInst();
-static Player&        player    = Player::GetInst();
-static LaserManager&  laserMng  = LaserManager::GetInst();
-static EffectManager& effectMng = EffectManager::GetInst();
+static GameData*      gameData;
+static GameManager*   gameMng;
+static Player*        player;
+static LaserManager*  laserMng;
+static EffectManager* effectMng;
+//参照(KRライブラリ)
+static SoundMng*      soundMng;
 
 using namespace Calc; //計算機能を使用.
 
 // ▼*---=[ ItemManager ]=---*▼ //
 
-ItemManager ItemManager::inst;
-
 //初期化.
 void ItemManager::Init() 
 {
-
+	gameData  = ManagerInsts::Get<GameData>();
+	gameMng   = ManagerInsts::Get<GameManager>();
+	player    = ManagerInsts::Get<Player>();
+	laserMng  = ManagerInsts::Get<LaserManager>();
+	effectMng = ManagerInsts::Get<EffectManager>();
+	soundMng  = ManagerInsts::Get<SoundMng>();
 }
 //リセット.
 void ItemManager::Reset()
@@ -49,9 +55,9 @@ void ItemManager::Update()
 		if (items[i].active) {
 
 			//カウンター.
-			items[i].counter += gamedata.speedRate;
+			items[i].counter += gameData->speedRate;
 			//落下.
-			items[i].pos.y += ITEM_SPEED * gamedata.speedRate;
+			items[i].pos.y += ITEM_SPEED * gameData->speedRate;
 			//当たり判定.
 			CheckHitPlayer(i);
 
@@ -66,7 +72,7 @@ void ItemManager::Update()
 			//召喚可能なら.
 			if (i+1 <= itemMaxCnt) {
 				//反射モード中は加算しない.
-				items[i].spawnCounter += (gamedata.isReflectMode) ? 0 : 1;
+				items[i].spawnCounter += (gameData->isReflectMode) ? 0 : 1;
 				//一定時間で再生成.
 				if (items[i].spawnCounter > ITEM_RESPAWN_TIME)
 				{
@@ -107,7 +113,7 @@ void ItemManager::Draw()
 			}
 
 			//チュートリアル用.
-			if (gamedata.stage == Stage_Tutorial) {
+			if (gameData->stage == Stage_Tutorial) {
 				DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToInt(), COLOR_ITEM);
 				str.Draw();
 			}
@@ -122,7 +128,7 @@ void ItemManager::ItemSpawn(int idx) {
 	items[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
 	items[idx].pos.y = -ITEM_SIZE;					        	    	 // 画面上部の少し上から開始
 	//タイプを決める.
-	if (gamedata.level < 5) {
+	if (gameData->level < 5) {
 		items[idx].type = Item_Normal;
 	}
 	else {
@@ -142,9 +148,9 @@ void ItemManager::ItemErase(int idx) {
 void ItemManager::ItemUse()
 {
 	//アイテムを使用.
-	GameManager::GetInst().ItemUsed();
+	gameMng->ItemUsed();
 	//サウンド.
-	if (auto i = SoundMng::Get("ItemUse")) {
+	if (auto i = soundMng->Get("ItemUse")) {
 		i->Play(false, 76); //ポワーン.
 	}
 }
@@ -153,12 +159,12 @@ void ItemManager::ItemUse()
 void ItemManager::CheckHitPlayer(int idx)
 {
 	//アイテムが無効orプレイヤーがいないなら処理しない.
-	if (!items[idx].active || !player.GetActive()) {
+	if (!items[idx].active || !player->GetActive()) {
 		return;
 	}
 
 	//プレイヤーの判定を取得.
-	Circle plyHit = player.GetHit();
+	Circle plyHit = player->GetHit();
 	//当たり判定を四角形とする.
 	Box itemBox = { items[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {}, {} };
 	
@@ -169,18 +175,18 @@ void ItemManager::CheckHitPlayer(int idx)
 		EffectData effect{};
 		effect.type = Effect_Score100;
 		effect.pos = items[idx].pos;
-		effectMng.SpawnEffect(&effect);
+		effectMng->SpawnEffect(&effect);
 		//スコア加算.
-		gamedata.score += SCORE_TAKE_ITEM;
+		gameData->score += SCORE_TAKE_ITEM;
 
 		//プレイヤーのモード設定.
 		switch (items[idx].type)
 		{
 			case Item_Normal:
-				player.SetMode(Player_Reflect);
+				player->SetMode(Player_Reflect);
 				break;
 			case Item_Super:
-				player.SetMode(Player_SuperReflect);
+				player->SetMode(Player_SuperReflect);
 				break;
 
 			default: assert(FALSE); break;

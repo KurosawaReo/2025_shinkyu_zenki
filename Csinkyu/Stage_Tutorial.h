@@ -10,14 +10,6 @@
 //チュートリアルステージ.
 class TutorialStage final : public ManagerBase
 {
-//▼ ===== 実体 ===== ▼.
-private:
-	static TutorialStage inst; //自身のインスタンス.
-public:
-	static TutorialStage& GetInst() {
-		return inst;
-	}
-
 //▼ ===== 変数 ===== ▼.
 private:
 	Font   font[2]{};
@@ -37,11 +29,10 @@ private:
 	Timer  endTimer{};        //項目終了時に計測開始.
 
 //▼ ===== 関数 ===== ▼.
-private:
-	//コンストラクタ.
-	TutorialStage() : ManagerBase(ORDER_TUTORIAL_STAGE) {}
-
 public:
+	//コンストラクタ.
+	TutorialStage(int order) : ManagerBase(order) {}
+
 	//set.
 	void SetPlayerDash   (bool _flag) { isPlayerDash    = _flag; }
 	void SetTakeItem     (bool _flag) { isTakeItem      = _flag; }
