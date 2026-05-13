@@ -4,6 +4,7 @@
 #pragma once
 #include "BG1.h"
 #include "BG2.h"
+#include "BG3.h"
 
 //”wŒiƒNƒ‰ƒX.
 class BGManager final : public ManagerBase 
@@ -15,6 +16,7 @@ private:
 	int   useBgNo{}; //‰½”Ô–Ú‚Ì”wŒi‚ğg‚¤‚©.
 	BG1   bg1{};     //”wŒi1.
 	BG2   bg2{};     //”wŒi2.
+	BG3   bg3{};     //”wŒi3.
 
 //¥ ===== ŠÖ” ===== ¥.
 public:

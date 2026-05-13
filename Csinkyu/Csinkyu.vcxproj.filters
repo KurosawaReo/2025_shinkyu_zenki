@@ -47,6 +47,7 @@
     <ClCompile Include="KrLib_Dx\KR_CurveLine.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerInsts.cpp" />
+    <ClCompile Include="BG3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG1.h" />
@@ -96,5 +97,6 @@
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Singleton.h" />
     <ClInclude Include="KrLib_Dx\KR_ManagerInsts.h" />
+    <ClInclude Include="BG3.h" />
   </ItemGroup>
 </Project>

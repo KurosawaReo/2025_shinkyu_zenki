@@ -17,6 +17,7 @@ void BGManager::Init() {
 
 	bg1.Init();
 	bg2.Init();
+	bg3.Init();
 }
 //ƒŠƒZƒbƒg.
 void BGManager::Reset() {
@@ -34,6 +35,7 @@ void BGManager::Update() {
 		case 0:                 break; //”wŒi‚È‚µ.
 		case 1:  bg1.Update();  break; //”wŒi1.
 		case 2:  bg2.Update();  break; //”wŒi2.
+		case 3:  bg3.Update();  break; //”wŒi3.
 		default: assert(false); break;
 	}
 }
@@ -44,6 +46,7 @@ void BGManager::Draw() {
 		case 0:                 break; //”wŒi‚È‚µ.
 		case 1:  bg1.Draw();    break; //”wŒi1.
 		case 2:  bg2.Draw();    break; //”wŒi2.
+		case 3:  bg3.Draw();    break; //”wŒi3.
 		default: assert(false); break;
 	}
 }
@@ -55,6 +58,7 @@ void BGManager::Pause() {
 		case 0:                 break; //”wŒi‚È‚µ.
 		case 1:  bg1.Pause();	break; //”wŒi1.
 		case 2:  bg2.Pause();	break; //”wŒi2.
+		case 3:  bg3.Pause();   break; //”wŒi3.
 		default: assert(false); break;
 	}
 }
@@ -65,6 +69,7 @@ void BGManager::PauseEnd() {
 		case 0:                  break; //”wŒi‚È‚µ.
 		case 1:  bg1.PauseEnd(); break; //”wŒi1.
 		case 2:  bg2.PauseEnd(); break; //”wŒi2.
+		case 3:  bg3.PauseEnd(); break; //”wŒi3.
 		default: assert(false);  break;
 	}
 }

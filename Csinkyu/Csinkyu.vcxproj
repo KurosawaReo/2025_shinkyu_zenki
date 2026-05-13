@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClCompile Include="BG1.cpp" />
     <ClCompile Include="BG2.cpp" />
+    <ClCompile Include="BG3.cpp" />
     <ClCompile Include="BGManager.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -72,6 +73,7 @@
   <ItemGroup>
     <ClInclude Include="BG1.h" />
     <ClInclude Include="BG2.h" />
+    <ClInclude Include="BG3.h" />
     <ClInclude Include="BGManager.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="GameData.h" />

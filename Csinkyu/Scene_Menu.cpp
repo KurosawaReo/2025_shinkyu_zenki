@@ -81,7 +81,7 @@ void MenuScene::Update() {
 				sceneMng->SetScene("Game");
 				gameData->stage = Stage_Endless;
 				//背景変更.
-				bgMng->SetBgNo(1);
+				bgMng->SetBgNo(3);
 #if !defined BGM_NONE
 				//BGM.
 				soundMng->StopAll();
@@ -95,7 +95,7 @@ void MenuScene::Update() {
 				sceneMng->SetScene("Game");
 				gameData->stage = Stage_Tutorial;
 				//背景変更.
-				bgMng->SetBgNo(1);
+				bgMng->SetBgNo(3);
 #if !defined BGM_NONE
 				//BGM.
 				soundMng->StopAll();
