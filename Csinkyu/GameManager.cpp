@@ -334,16 +334,16 @@ void GameManager::StopObjects() {
 
 	//管理クラス取得.
 	vector<ManagerBase*> mngs = {
-		ManagerInsts::GetInst().Get<Player>(),
-		ManagerInsts::GetInst().Get<LaserManager>(),
-		ManagerInsts::GetInst().Get<ItemManager>(),
-		ManagerInsts::GetInst().Get<NormalLaser>(),
-		ManagerInsts::GetInst().Get<MeteorManager>(),
-		ManagerInsts::GetInst().Get<StraightLaser>(),
-		ManagerInsts::GetInst().Get<Ripples>(),
-		ManagerInsts::GetInst().Get<Fireworks>(),
-		ManagerInsts::GetInst().Get<EndlessStage>(),
-		ManagerInsts::GetInst().Get<TutorialStage>()
+		ManagerInsts::Get<Player>(),
+		ManagerInsts::Get<LaserManager>(),
+		ManagerInsts::Get<ItemManager>(),
+		ManagerInsts::Get<NormalLaser>(),
+		ManagerInsts::Get<MeteorManager>(),
+		ManagerInsts::Get<StraightLaser>(),
+		ManagerInsts::Get<Ripples>(),
+		ManagerInsts::Get<Fireworks>(),
+		ManagerInsts::Get<EndlessStage>(),
+		ManagerInsts::Get<TutorialStage>()
 	};
 	//全ループ.
 	for (auto& i : mngs) {
@@ -355,16 +355,16 @@ void GameManager::DrawOnlyObjects() {
 
 	//管理クラス取得.
 	vector<ManagerBase*> mngs = {
-		ManagerInsts::GetInst().Get<Player>(),
-		ManagerInsts::GetInst().Get<LaserManager>(),
-		ManagerInsts::GetInst().Get<ItemManager>(),
-		ManagerInsts::GetInst().Get<NormalLaser>(),
-		ManagerInsts::GetInst().Get<MeteorManager>(),
-		ManagerInsts::GetInst().Get<StraightLaser>(),
-		ManagerInsts::GetInst().Get<Ripples>(),
-		ManagerInsts::GetInst().Get<Fireworks>(),
-		ManagerInsts::GetInst().Get<EndlessStage>(),
-		ManagerInsts::GetInst().Get<TutorialStage>()
+		ManagerInsts::Get<Player>(),
+		ManagerInsts::Get<LaserManager>(),
+		ManagerInsts::Get<ItemManager>(),
+		ManagerInsts::Get<NormalLaser>(),
+		ManagerInsts::Get<MeteorManager>(),
+		ManagerInsts::Get<StraightLaser>(),
+		ManagerInsts::Get<Ripples>(),
+		ManagerInsts::Get<Fireworks>(),
+		ManagerInsts::Get<EndlessStage>(),
+		ManagerInsts::Get<TutorialStage>()
 	};
 	//全ループ.
 	for (auto& i : mngs) {
@@ -379,16 +379,16 @@ void GameManager::RestartObjects() {
 
 	//管理クラス取得.
 	vector<ManagerBase*> mngs = {
-		ManagerInsts::GetInst().Get<Player>(),
-		ManagerInsts::GetInst().Get<LaserManager>(),
-		ManagerInsts::GetInst().Get<ItemManager>(),
-		ManagerInsts::GetInst().Get<NormalLaser>(),
-		ManagerInsts::GetInst().Get<MeteorManager>(),
-		ManagerInsts::GetInst().Get<StraightLaser>(),
-		ManagerInsts::GetInst().Get<Ripples>(),
-		ManagerInsts::GetInst().Get<Fireworks>(),
-		ManagerInsts::GetInst().Get<EndlessStage>(),
-		ManagerInsts::GetInst().Get<TutorialStage>()
+		ManagerInsts::Get<Player>(),
+		ManagerInsts::Get<LaserManager>(),
+		ManagerInsts::Get<ItemManager>(),
+		ManagerInsts::Get<NormalLaser>(),
+		ManagerInsts::Get<MeteorManager>(),
+		ManagerInsts::Get<StraightLaser>(),
+		ManagerInsts::Get<Ripples>(),
+		ManagerInsts::Get<Fireworks>(),
+		ManagerInsts::Get<EndlessStage>(),
+		ManagerInsts::Get<TutorialStage>()
 	};
 	//全ループ.
 	for (auto& i : mngs) {
