@@ -56,7 +56,7 @@ int WINAPI WinMain(
 		App::InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
 	}
 	catch (const ErrorMsg& err) {
-		Debug::Log(_T("InitDx"), err.GetResult());
+		Debug::Log(_T("InitDx"), err.GetMsg());
 	}
 
 	try {
@@ -64,7 +64,7 @@ int WINAPI WinMain(
 		App::LoopDx();
 	}
 	catch (const ErrorMsg& err) {
-		Debug::Log(_T("LoopDx"), err.GetResult());
+		Debug::Log(_T("LoopDx"), err.GetMsg());
 	}
 
 	return 0;

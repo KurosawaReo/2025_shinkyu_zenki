@@ -98,7 +98,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("se/audiostock_184924.mp3"), "BestScore");		//最高スコア更新.
 	}
 	catch (const ErrorMsg& err){
-		Debug::Log(_T("GameManager::Init"), err.GetResult());
+		Debug::Log(_T("GameManager::Init"), err.GetMsg());
 		return;
 	}
 	
@@ -147,7 +147,7 @@ void GameManager::Init() {
 		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
 	}
 	catch (const ErrorMsg& err) {
-		Debug::Log(_T("スコア読み込み"), err.GetResult());
+		Debug::Log(_T("スコア読み込み"), err.GetMsg());
 	}
 
 	//fps表示用.
@@ -293,7 +293,7 @@ void GameManager::GameOver() {
 						endScene.SignBestScore();            //ハイスコアのサイン送信.
 					}
 					catch (const ErrorMsg& err) {
-						Debug::Log(_T("ハイスコア更新"), err.GetResult());
+						Debug::Log(_T("ハイスコア更新"), err.GetMsg());
 					}
 				}
 

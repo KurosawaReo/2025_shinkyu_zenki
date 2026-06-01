@@ -29,6 +29,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Calc.cpp" />
     <ClCompile Include="KrLib_cpp\KR_File.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
@@ -79,6 +80,7 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="KrLib_cpp\KR_BigInt.h" />
+    <ClInclude Include="KrLib_cpp\KR_Calc.h" />
     <ClInclude Include="KrLib_cpp\KR_File.h" />
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
@@ -95,6 +97,7 @@
     <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />
     <ClInclude Include="KrLib_Dx\KR_Matrix.h" />
     <ClInclude Include="KrLib_Dx\KR_Object.h" />
+    <ClInclude Include="KrLib_Dx\KR_ObjectList.h" />
     <ClInclude Include="KrLib_Dx\KR_ObjectMng.h" />
     <ClInclude Include="KrLib_Dx\KR_SceneMng.h" />
     <ClInclude Include="KrLib_Dx\KR_Sound.h" />
