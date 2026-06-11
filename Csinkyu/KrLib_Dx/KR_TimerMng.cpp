@@ -28,6 +28,9 @@ namespace KR
 	//更新.
 	void TimerMng::Update() {
 
+		//予約がない時は処理しない.
+		if (functions.size() <= 0) { return; }
+
 		//現在時刻取得.
 		const float nowTime = gameTimer.GetPassTime();
 		//予約リスト全ループ.
