@@ -351,20 +351,24 @@ namespace KR
 
 	//画像取得.
 	DrawImg* DrawImgMng::Get(string saveName) {
-		//存在すれば.
-		if (inst.images.count(saveName) > 0) {
-			return &inst.images[saveName]; //返す.
+		
+		auto imgIt = inst.images.find(saveName);
+		//存在しなければ.
+		if (imgIt == inst.images.end()) {
+			return nullptr;
 		}
-		return nullptr;
+		return &imgIt->second;
 	}
 	//画像取得(チェックあり)
 	bool DrawImgMng::TryGet(string saveName, DrawImg* ptr) {
-		//存在すれば.
-		if (inst.images.count(saveName) > 0) {
-			ptr = &inst.images[saveName]; //返す.
-			return true; //取得成功.
+
+		auto imgIt = inst.images.find(saveName);
+		//存在しなければ.
+		if (imgIt == inst.images.end()) {
+			return false; //取得失敗.
 		}
-		return false; //取得失敗.
+		ptr = &inst.images[saveName]; //返す.
+		return true; //取得成功.
 	}
 
 	/*
