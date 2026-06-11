@@ -41,19 +41,23 @@ void MenuScene::Init() {
 
 	Reset();
 }
+
 //リセット.
 void MenuScene::Reset() {
 	selectedIndex = 0;
 	tmBlink.Start();
 }
+
 //入った瞬間.
 void MenuScene::Enter() {
 
 }
+
 //抜けた瞬間.
 void MenuScene::Exit() {
 
 }
+
 //更新.
 void MenuScene::Update() {
 
@@ -121,6 +125,7 @@ void MenuScene::Update() {
 	//経過時間.
 	counter += 1;
 }
+
 //描画.
 void MenuScene::Draw() {
 

@@ -34,22 +34,23 @@ int WINAPI WinMain(
 	ManagerInsts::NewManager<InputMng>(0);
 	ManagerInsts::NewManager<SoundMng>(1);
 	ManagerInsts::NewManager<SceneMng>(2);
+	ManagerInsts::NewManager<TimerMng>(3);
 
 	ManagerInsts::NewManager<GameData>();
-	ManagerInsts::NewManager<GameManager>(3);
-	ManagerInsts::NewManager<BGManager>(4);
-	ManagerInsts::NewManager<EffectManager>(5);
-	ManagerInsts::NewManager<ItemManager>(6);
-	ManagerInsts::NewManager<LaserManager>(7);
-	ManagerInsts::NewManager<Fireworks>(8);
-	ManagerInsts::NewManager<MeteorManager>(9);
-	ManagerInsts::NewManager<NormalLaser>(10);
-	ManagerInsts::NewManager<Ripples>(11);
-	ManagerInsts::NewManager<StraightLaser>(12);
-	ManagerInsts::NewManager<Player>(13);
-	ManagerInsts::NewManager<EndlessStage>(14);
-	ManagerInsts::NewManager<TutorialStage>(15);
-	ManagerInsts::NewManager<UIManager>(16);
+	ManagerInsts::NewManager<GameManager>(4);
+	ManagerInsts::NewManager<BGManager>(5);
+	ManagerInsts::NewManager<EffectManager>(6);
+	ManagerInsts::NewManager<ItemManager>(7);
+	ManagerInsts::NewManager<LaserManager>(8);
+	ManagerInsts::NewManager<Fireworks>(9);
+	ManagerInsts::NewManager<MeteorManager>(10);
+	ManagerInsts::NewManager<NormalLaser>(11);
+	ManagerInsts::NewManager<Ripples>(12);
+	ManagerInsts::NewManager<StraightLaser>(13);
+	ManagerInsts::NewManager<Player>(14);
+	ManagerInsts::NewManager<EndlessStage>(15);
+	ManagerInsts::NewManager<TutorialStage>(16);
+	ManagerInsts::NewManager<UIManager>(17);
 
 	//‰Šú‰»ˆ—.
 	App::InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
