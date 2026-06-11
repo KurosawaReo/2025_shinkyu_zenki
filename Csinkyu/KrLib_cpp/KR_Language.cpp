@@ -1,8 +1,5 @@
 /*
    - KR_Language.cpp - (C++)
-   ver.2026/06/11
-
-   多言語対応用の文字列変換機能。
 */
 #include "KR_Language.h"
 

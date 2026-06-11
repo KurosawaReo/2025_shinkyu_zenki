@@ -42,6 +42,7 @@
 #include "KrLib_Dx/KR_Sound.h"
 #include "KrLib_Dx/KR_StateMachine.h"
 #include "KrLib_Dx/KR_Timer.h"
+#include "KrLib_Dx/KR_TimerMng.h"
 #include "KrLib_cpp/KR_Calc.h"
 #include "KrLib_cpp/KR_File.h"
 #include "KrLib_cpp/KR_Singleton.h"

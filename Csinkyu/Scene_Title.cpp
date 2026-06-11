@@ -26,19 +26,23 @@ void TitleScene::Init() {
 
 	timer = Timer(TimerMode::CountUp, 0);
 }
+
 //リセット.
 void TitleScene::Reset() {
 	isTitleAnim = false;
 }
+
 //入った瞬間.
 void TitleScene::Enter() {
 	timer.Start();     //タイマー開始.
 	bgMng->SetBgNo(1); //背景を設定.
 }
+
 //抜けた瞬間.
 void TitleScene::Exit() {
 	timer.Reset(); //タイマーリセット.
 }
+
 //更新.
 void TitleScene::Update() {
 	//特定の操作でゲーム開始.
@@ -46,6 +50,7 @@ void TitleScene::Update() {
 		sceneMng->SetScene("Menu"); //メニューシーンへ.
 	}
 }
+
 //描画.
 void TitleScene::Draw() {
 
