@@ -30,8 +30,8 @@ void EndlessStage::Init() {
 	//参照取得.
 	gameData  = ManagerInsts::Get<GameData>();
 	effectMng = ManagerInsts::Get<EffectManager>();
-	soundMng  = ManagerInsts::GetInst().Get<SoundMng>();
-	inputMng  = ManagerInsts::GetInst().Get<InputMng>();
+	soundMng  = ManagerInsts::Get<SoundMng>();
+	inputMng  = ManagerInsts::Get<InputMng>();
 }
 //リセット.
 void EndlessStage::Reset() {
@@ -54,18 +54,18 @@ void EndlessStage::Update() {
 
 		//Lv1の出現設定.
 		{
-			ManagerInsts::GetInst().Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::Active);
+			ManagerInsts::Get<LaserManager> ()->SetAutoExeMode(MngAutoExe::Active);
 
 #if !defined INVALID_ITEM
-			ManagerInsts::GetInst().Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::Active);
-			ManagerInsts::GetInst().Get<ItemManager>  ()->SetItemMaxCnt(1);    //アイテムは1つ.
+			ManagerInsts::Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::Active);
+			ManagerInsts::Get<ItemManager>  ()->SetItemMaxCnt(1);    //アイテムは1つ.
 #endif
 #if !defined INVALID_OBST_METEOR
-			ManagerInsts::GetInst().Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
+			ManagerInsts::Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
 #if !defined INVALID_OBST_NOR_LASER
-			ManagerInsts::GetInst().Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::Active);
-			ManagerInsts::GetInst().Get<NormalLaser>  ()->UseLaserPointCnt(2); //レーザーは2つ.
+			ManagerInsts::Get<NormalLaser>  ()->SetAutoExeMode(MngAutoExe::Active);
+			ManagerInsts::Get<NormalLaser>  ()->UseLaserPointCnt(2); //レーザーは2つ.
 #endif
 		}
 	}
@@ -103,7 +103,7 @@ void EndlessStage::Update() {
 
 				//Lv2の出現設定.
 #if !defined INVALID_OBST_STR_LASER
-				ManagerInsts::GetInst().Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::Active);
+				ManagerInsts::Get<StraightLaser>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
 			}
 			break;
@@ -123,7 +123,7 @@ void EndlessStage::Update() {
 
 				//Lv3の出現設定.
 #if !defined INVALID_OBST_RIPPLES
-				ManagerInsts::GetInst().Get<Ripples>()->SetAutoExeMode(MngAutoExe::Active);
+				ManagerInsts::Get<Ripples>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
 			}
 			break;
@@ -131,7 +131,7 @@ void EndlessStage::Update() {
 			if (gameData->counter >= 6000) { //6000 = 出現間隔約??%地点.
 				gameData->level = 4; //Lv4へ.
 
-				ManagerInsts::GetInst().Get<ItemManager>()->SetItemMaxCnt(2); //アイテムを2つに.
+				ManagerInsts::Get<ItemManager>()->SetItemMaxCnt(2); //アイテムを2つに.
 
 				//サウンド.
 				if (auto i = soundMng->Get("LevelUp")) {
@@ -145,7 +145,7 @@ void EndlessStage::Update() {
 
 				//Lv4の出現設定.
 #if !defined INVALID_OBST_FIREWORKS
-				ManagerInsts::GetInst().Get<Fireworks>()->SetAutoExeMode(MngAutoExe::Active);
+				ManagerInsts::Get<Fireworks>()->SetAutoExeMode(MngAutoExe::Active);
 #endif
 			}
 			break;
@@ -165,7 +165,7 @@ void EndlessStage::Update() {
 
 				//Lv5の出現設定.
 #if !defined INVALID_OBST_NOR_LASER
-				ManagerInsts::GetInst().Get<NormalLaser>()->UseLaserPointCnt(4); //レーザーは4つ.
+				ManagerInsts::Get<NormalLaser>()->UseLaserPointCnt(4); //レーザーは4つ.
 #endif
 			}
 			break;

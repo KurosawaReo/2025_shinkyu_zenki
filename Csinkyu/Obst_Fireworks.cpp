@@ -21,7 +21,7 @@ static SoundMng*     soundMng;
 void Fireworks::Init() {
 	gameData = ManagerInsts::Get<GameData>();
 	laserMng = ManagerInsts::Get<LaserManager>();
-	soundMng = ManagerInsts::GetInst().Get<SoundMng>();
+	soundMng = ManagerInsts::Get<SoundMng>();
 }
 
 // ƒŠƒZƒbƒg

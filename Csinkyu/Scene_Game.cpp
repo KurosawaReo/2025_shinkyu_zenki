@@ -73,8 +73,8 @@ void GameScene::Update() {
 	//ゲーム開始前.
 	if (!isGameStart) {
 
-		ManagerInsts::GetInst().Get<Player>()->SetAutoExeMode(MngAutoExe::Active);
-		ManagerInsts::GetInst().Get<UIManager>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::Get<Player>()->SetAutoExeMode(MngAutoExe::Active);
+		ManagerInsts::Get<UIManager>()->SetAutoExeMode(MngAutoExe::Active);
 
 		//一定時間経ったら.
 		if (timer.GetPassTime() >= GAME_START_TIME) {
@@ -84,10 +84,10 @@ void GameScene::Update() {
 			switch (gameData->stage)
 			{
 				case Stage_Tutorial: 
-					ManagerInsts::GetInst().Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Active);
+					ManagerInsts::Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Active);
 					break;
 				case Stage_Endless:  
-					ManagerInsts::GetInst().Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Active);
+					ManagerInsts::Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Active);
 					break;
 
 				default: assert(false); break;

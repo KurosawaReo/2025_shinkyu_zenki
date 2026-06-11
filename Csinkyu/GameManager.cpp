@@ -98,7 +98,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("se/audiostock_184924.mp3"), "BestScore");		//最高スコア更新.
 	}
 	catch (const ErrorMsg& err){
-		Debug::Log(_T("GameManager::Init"), err.GetResult());
+		Debug::Log(_T("GameManager::Init"), err.GetMsg());
 		return;
 	}
 	
@@ -147,7 +147,7 @@ void GameManager::Init() {
 		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
 	}
 	catch (const ErrorMsg& err) {
-		Debug::Log(_T("スコア読み込み"), err.GetResult());
+		Debug::Log(_T("スコア読み込み"), err.GetMsg());
 	}
 
 	//fps表示用.
@@ -293,7 +293,7 @@ void GameManager::GameOver() {
 						endScene.SignBestScore();            //ハイスコアのサイン送信.
 					}
 					catch (const ErrorMsg& err) {
-						Debug::Log(_T("ハイスコア更新"), err.GetResult());
+						Debug::Log(_T("ハイスコア更新"), err.GetMsg());
 					}
 				}
 
@@ -334,16 +334,16 @@ void GameManager::StopObjects() {
 
 	//管理クラス取得.
 	vector<ManagerBase*> mngs = {
-		ManagerInsts::GetInst().Get<Player>(),
-		ManagerInsts::GetInst().Get<LaserManager>(),
-		ManagerInsts::GetInst().Get<ItemManager>(),
-		ManagerInsts::GetInst().Get<NormalLaser>(),
-		ManagerInsts::GetInst().Get<MeteorManager>(),
-		ManagerInsts::GetInst().Get<StraightLaser>(),
-		ManagerInsts::GetInst().Get<Ripples>(),
-		ManagerInsts::GetInst().Get<Fireworks>(),
-		ManagerInsts::GetInst().Get<EndlessStage>(),
-		ManagerInsts::GetInst().Get<TutorialStage>()
+		ManagerInsts::Get<Player>(),
+		ManagerInsts::Get<LaserManager>(),
+		ManagerInsts::Get<ItemManager>(),
+		ManagerInsts::Get<NormalLaser>(),
+		ManagerInsts::Get<MeteorManager>(),
+		ManagerInsts::Get<StraightLaser>(),
+		ManagerInsts::Get<Ripples>(),
+		ManagerInsts::Get<Fireworks>(),
+		ManagerInsts::Get<EndlessStage>(),
+		ManagerInsts::Get<TutorialStage>()
 	};
 	//全ループ.
 	for (auto& i : mngs) {
@@ -355,16 +355,16 @@ void GameManager::DrawOnlyObjects() {
 
 	//管理クラス取得.
 	vector<ManagerBase*> mngs = {
-		ManagerInsts::GetInst().Get<Player>(),
-		ManagerInsts::GetInst().Get<LaserManager>(),
-		ManagerInsts::GetInst().Get<ItemManager>(),
-		ManagerInsts::GetInst().Get<NormalLaser>(),
-		ManagerInsts::GetInst().Get<MeteorManager>(),
-		ManagerInsts::GetInst().Get<StraightLaser>(),
-		ManagerInsts::GetInst().Get<Ripples>(),
-		ManagerInsts::GetInst().Get<Fireworks>(),
-		ManagerInsts::GetInst().Get<EndlessStage>(),
-		ManagerInsts::GetInst().Get<TutorialStage>()
+		ManagerInsts::Get<Player>(),
+		ManagerInsts::Get<LaserManager>(),
+		ManagerInsts::Get<ItemManager>(),
+		ManagerInsts::Get<NormalLaser>(),
+		ManagerInsts::Get<MeteorManager>(),
+		ManagerInsts::Get<StraightLaser>(),
+		ManagerInsts::Get<Ripples>(),
+		ManagerInsts::Get<Fireworks>(),
+		ManagerInsts::Get<EndlessStage>(),
+		ManagerInsts::Get<TutorialStage>()
 	};
 	//全ループ.
 	for (auto& i : mngs) {
@@ -379,16 +379,16 @@ void GameManager::RestartObjects() {
 
 	//管理クラス取得.
 	vector<ManagerBase*> mngs = {
-		ManagerInsts::GetInst().Get<Player>(),
-		ManagerInsts::GetInst().Get<LaserManager>(),
-		ManagerInsts::GetInst().Get<ItemManager>(),
-		ManagerInsts::GetInst().Get<NormalLaser>(),
-		ManagerInsts::GetInst().Get<MeteorManager>(),
-		ManagerInsts::GetInst().Get<StraightLaser>(),
-		ManagerInsts::GetInst().Get<Ripples>(),
-		ManagerInsts::GetInst().Get<Fireworks>(),
-		ManagerInsts::GetInst().Get<EndlessStage>(),
-		ManagerInsts::GetInst().Get<TutorialStage>()
+		ManagerInsts::Get<Player>(),
+		ManagerInsts::Get<LaserManager>(),
+		ManagerInsts::Get<ItemManager>(),
+		ManagerInsts::Get<NormalLaser>(),
+		ManagerInsts::Get<MeteorManager>(),
+		ManagerInsts::Get<StraightLaser>(),
+		ManagerInsts::Get<Ripples>(),
+		ManagerInsts::Get<Fireworks>(),
+		ManagerInsts::Get<EndlessStage>(),
+		ManagerInsts::Get<TutorialStage>()
 	};
 	//全ループ.
 	for (auto& i : mngs) {

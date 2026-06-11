@@ -6,14 +6,16 @@
 //[include] ".cpp"ファイルでのみ使うもの.
 #include "KR_Calc.h"
 #include "KR_Input.h"
-
-//参照(KRライブラリ)
-static InputMng* inputMng = ManagerInsts::GetInst().Get<InputMng>();
+#include "KR_ManagerInsts.h"
+#include "../KrLib_cpp/KR_Calc.h"
 
 //KrLib名前空間.
 namespace KR
 {
-// ▼*--=<[ ObjectShape ]>=--*▼ //
+	//参照(KRライブラリ)
+	static InputMng* inputMng = ManagerInsts::Get<InputMng>();
+
+	// ▼*--=<[ ObjectShape ]>=--*▼ //
 
 	//画像.
 	void ObjectShape::SetDrawImg(string name) {
@@ -110,7 +112,7 @@ namespace KR
 					pImg->Draw(pos, anc, true, isFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("ObjectShape::DrawGraph"), err.GetResult());
+					throw ErrorMsg(_T("ObjectShape::DrawGraph"), err.GetMsg());
 					return;
 				}
 			}
@@ -147,7 +149,7 @@ namespace KR
 					pImg->DrawRect(pos, rect, anc, true, isFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("ObjectShape::DrawRectGraph"), err.GetResult());
+					throw ErrorMsg(_T("ObjectShape::DrawRectGraph"), err.GetMsg());
 					return;
 				}
 			}
@@ -184,7 +186,7 @@ namespace KR
 					pImg->DrawExtend(pos, sizeRate, anc, true, isFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("ObjectShape::DrawExtendGraph"), err.GetResult());
+					throw ErrorMsg(_T("ObjectShape::DrawExtendGraph"), err.GetMsg());
 					return;
 				}
 			}
@@ -221,7 +223,7 @@ namespace KR
 					pImg->DrawRota(pos, sizeRate, ang, pivot, true, isFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("ObjectShape::DrawRotaGraph"), err.GetResult());
+					throw ErrorMsg(_T("ObjectShape::DrawRotaGraph"), err.GetMsg());
 					return;
 				}
 			}
@@ -268,7 +270,7 @@ namespace KR
 			DrawCircleKR(tmpCir, Anchor::Mid, isFill, isAnti, isCameraDisp);
 		}
 		catch (const ErrorMsg& err) {
-			throw ErrorMsg(_T("ObjectCir::DrawShape"), err.GetResult());
+			throw ErrorMsg(_T("ObjectCir::DrawShape"), err.GetMsg());
 			return;
 		}
 	}
@@ -299,32 +301,7 @@ namespace KR
 			DrawBoxKR(tmpBox, Anchor::Mid, isFill, isAnti, isCameraDisp);
 		}
 		catch (const ErrorMsg& err) {
-			throw ErrorMsg(_T("ObjectBox::DrawShape"), err.GetResult());
-			return;
-		}
-	}
-
-// ▼*--=<[ ObjectGrid ]>=--*▼ //
-
-	//オブジェクト(ObjectGrid型)の描画.
-	void ObjectGrid::Draw(const DrawImg& img, INT_XY gridPos, INT_XY gridSize) {
-
-		if (!isActive) {
-			throw ErrorMsg(_T("ObjectGrid::Draw"), _T("非アクティブ"));
-			return;
-		}
-
-		//座標.
-		INT_XY newPos = {
-			gridPos.x + pos.x * gridSize.x,
-			gridPos.y + pos.y * gridSize.y
-		};
-		//画像描画.
-		try {
-			img.Draw(newPos.ToDbl(), Anchor::LU);
-		}
-		catch (const ErrorMsg& err) {
-			throw ErrorMsg(_T("ObjectGrid::Draw"), err.GetResult());
+			throw ErrorMsg(_T("ObjectBox::DrawShape"), err.GetMsg());
 			return;
 		}
 	}
