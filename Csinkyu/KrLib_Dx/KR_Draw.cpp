@@ -7,6 +7,7 @@
 #include "KR_App.h"
 #include "KR_Calc.h"
 #include "KR_Camera.h"
+#include "../KrLib_cpp/KR_Calc.h"
 #include <algorithm>
 
 /*
@@ -350,20 +351,24 @@ namespace KR
 
 	//画像取得.
 	DrawImg* DrawImgMng::Get(string saveName) {
-		//存在すれば.
-		if (inst.images.count(saveName) > 0) {
-			return &inst.images[saveName]; //返す.
+		
+		auto imgIt = inst.images.find(saveName);
+		//存在しなければ.
+		if (imgIt == inst.images.end()) {
+			return nullptr;
 		}
-		return nullptr;
+		return &imgIt->second;
 	}
 	//画像取得(チェックあり)
 	bool DrawImgMng::TryGet(string saveName, DrawImg* ptr) {
-		//存在すれば.
-		if (inst.images.count(saveName) > 0) {
-			ptr = &inst.images[saveName]; //返す.
-			return true; //取得成功.
+
+		auto imgIt = inst.images.find(saveName);
+		//存在しなければ.
+		if (imgIt == inst.images.end()) {
+			return false; //取得失敗.
 		}
-		return false; //取得失敗.
+		ptr = &inst.images[saveName]; //返す.
+		return true; //取得成功.
 	}
 
 	/*
@@ -800,7 +805,7 @@ namespace KR
 			DrawLineKR(line, isAnti, isCameraDisp);
 		}
 		catch (const ErrorMsg& err) {
-			throw ErrorMsg(_T("DrawPieKR"), err.GetResult());
+			throw ErrorMsg(_T("DrawPieKR"), err.GetMsg());
 			return;
 		}
 
@@ -810,7 +815,7 @@ namespace KR
 			DrawLineKR(line, isAnti, isCameraDisp);
 		}
 		catch (const ErrorMsg& err) {
-			throw ErrorMsg(_T("DrawPieKR"), err.GetResult());
+			throw ErrorMsg(_T("DrawPieKR"), err.GetMsg());
 			return;
 		}
 	}
@@ -844,7 +849,7 @@ namespace KR
 				DrawLineKR(line, isAnti, isCameraDisp);
 			}
 			catch (const ErrorMsg& err) {
-				throw ErrorMsg(_T("DrawArcKR"), err.GetResult());
+				throw ErrorMsg(_T("DrawArcKR"), err.GetMsg());
 				return;
 			}
 		}
@@ -875,7 +880,7 @@ namespace KR
 					DrawPixelKR(pos, bLine.color, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("DrawBezierLineKR"), err.GetResult());
+					throw ErrorMsg(_T("DrawBezierLineKR"), err.GetMsg());
 					return;
 				}
 			}
@@ -888,7 +893,7 @@ namespace KR
 					DrawLineKR(line, isAnti, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("DrawBezierLineKR"), err.GetResult());
+					throw ErrorMsg(_T("DrawBezierLineKR"), err.GetMsg());
 					return;
 				}
 			}
@@ -917,7 +922,7 @@ namespace KR
 					DrawPixelKR(pos, spline.color, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("DrawSplineKR"), err.GetResult());
+					throw ErrorMsg(_T("DrawSplineKR"), err.GetMsg());
 					return;
 				}
 			}
@@ -932,7 +937,7 @@ namespace KR
 					DrawLineKR(line, isAnti, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
-					throw ErrorMsg(_T("DrawSplineKR"), err.GetResult());
+					throw ErrorMsg(_T("DrawSplineKR"), err.GetMsg());
 					return;
 				}
 			}
@@ -963,7 +968,7 @@ namespace KR
 				DrawLineKR(line, isAnti, isCameraDisp);
 			}
 			catch (const ErrorMsg& err) {
-				throw ErrorMsg(_T("DrawPolygonKR"), err.GetResult());
+				throw ErrorMsg(_T("DrawPolygonKR"), err.GetMsg());
 				return;
 			}
 		}
@@ -1089,7 +1094,7 @@ namespace KR
 				DrawLineKR(line);
 			}
 			catch (const ErrorMsg& err) {
-				throw ErrorMsg(_T("DrawWindowGrid"), err.GetResult());
+				throw ErrorMsg(_T("DrawWindowGrid"), err.GetMsg());
 				return;
 			}
 		}
@@ -1104,7 +1109,7 @@ namespace KR
 				DrawLineKR(line);
 			}
 			catch (const ErrorMsg& err) {
-				throw ErrorMsg(_T("DrawWindowGrid"), err.GetResult());
+				throw ErrorMsg(_T("DrawWindowGrid"), err.GetMsg());
 				return;
 			}
 		}

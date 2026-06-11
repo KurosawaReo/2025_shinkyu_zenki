@@ -51,21 +51,10 @@ int WINAPI WinMain(
 	ManagerInsts::NewManager<TutorialStage>(15);
 	ManagerInsts::NewManager<UIManager>(16);
 
-	try {
-		//初期化処理.
-		App::InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
-	}
-	catch (const ErrorMsg& err) {
-		Debug::Log(_T("InitDx"), err.GetResult());
-	}
-
-	try {
-		//ループ処理.
-		App::LoopDx();
-	}
-	catch (const ErrorMsg& err) {
-		Debug::Log(_T("LoopDx"), err.GetResult());
-	}
+	//初期化処理.
+	App::InitDx(WINDOW_WID, WINDOW_HEI, IS_WINDOW_MODE, FPS, false);
+	//ループ処理.
+	App::LoopDx();
 
 	return 0;
 }
