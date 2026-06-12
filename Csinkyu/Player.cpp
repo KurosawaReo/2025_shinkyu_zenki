@@ -46,6 +46,9 @@ void Player::Reset()
 	isMoveAble = true;
 	active     = true;
 
+	// 感性関連.
+	velocity = {0,0};
+
 	// ダッシュ関連の初期化.
 	isDashing    = false;
 	dashTimer    = 0;
@@ -183,9 +186,21 @@ void Player::PlayerMove()
 			//残り時間に応じて段々減速.
 			speed *= 1.0f + _flt(PLAYER_DASH_SPEED * Calc::AnimEase(EaseType::OutQuad, dashTimer/PLAYER_DASH_DURATION));
 		}
-		//移動.
-		hit.pos += inputMng->GetKey4Dir()  * speed;
-		hit.pos += inputMng->GetPadStick() * speed;
+
+		DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
+
+		DBL_XY targetVel = input * speed;
+
+		const float moveLerp = PLAYER_MOVE_LERP_SPEED;
+
+		velocity.x += (targetVel.x - velocity.x) * moveLerp;
+		velocity.y += (targetVel.y - velocity.y) * moveLerp;
+
+		if (fabs(velocity.x) < 0.01f) velocity.x = 0;
+		if (fabs(velocity.y) < 0.01f) velocity.y = 0;
+
+		hit.pos += velocity * gameData->speedRate;
+
 		//移動限界.
 		Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
 	}
