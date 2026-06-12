@@ -108,7 +108,11 @@ void ItemManager::Draw()
 				}
 				//アイテム本体.
 				{
-					DrawImgMng::Get("item")->DrawExtend(items[i].pos, {0.045, 0.045}, Anchor::Mid, true, true);
+					DBL_XY size = {
+						ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().x,
+						ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().y
+					};
+					DrawImgMng::Get("item")->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
 				}
 			}
 

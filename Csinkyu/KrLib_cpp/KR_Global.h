@@ -20,11 +20,12 @@
 #include <unordered_map>
 #include <array>
 #include <memory>
-#include <string>  //string型用.
-#include <cassert> //assert.h をラップしたもの.
-#include <cmath>   //math.h   をラップしたもの.
-#include <cstdlib> //stdlib.h をラップしたもの.
-#include <ctime>   //time.h   をラップしたもの.
+#include <string>		//string型用.
+#include <cassert>		//assert.h をラップしたもの.
+#include <cmath>		//math.h   をラップしたもの.
+#include <cstdlib>		//stdlib.h をラップしたもの.
+#include <ctime>		//time.h   をラップしたもの.
+#include <functional>	//ラムダ式用.
 //C言語用.
 #include <tchar.h>
 
@@ -40,6 +41,7 @@ using std::string;
 using std::wstring;
 using std::to_string;
 using std::to_wstring;
+using std::function;
 
 //型変換マクロ.
 #define _int(n)   static_cast<int>   (n)        //int型変換マクロ.

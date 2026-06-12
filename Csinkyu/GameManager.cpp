@@ -277,7 +277,7 @@ void GameManager::GameOver() {
 				sceneMng->SetScene("End"); //終了シーンへ.
 
 				gameData->speedRate = 1.0;                             //速度倍率を100%に戻す.
-				gameData->scoreBef = gameData->score;                   //時間加算前のスコアを記録.
+				gameData->scoreBef = gameData->score;                  //時間加算前のスコアを記録.
 				gameData->score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
 
 				//ハイスコア更新.
@@ -287,10 +287,10 @@ void GameManager::GameOver() {
 						//ファイルを開く.
 						File file;
 						file.Open(FILE_DATA_PATH, FileOpenMode::Write);
-
-						file.WriteInt(gameData->score);       //スコアを保存.
+						 
+						file.WriteInt(gameData->score);        //スコアを保存.
 						gameData->bestScore = gameData->score; //スコア更新.
-						endScene.SignBestScore();            //ハイスコアのサイン送信.
+						endScene.SignBestScore();              //ハイスコアのサイン送信.
 					}
 					catch (const ErrorMsg& err) {
 						Debug::Log(_T("ハイスコア更新"), err.GetMsg());
@@ -302,7 +302,7 @@ void GameManager::GameOver() {
 				if (auto i = soundMng->Get("BGM_Endless")) {
 					i->FadeOutPlay(2); //再生.
 				}
-				//ゲームオーバーBGM.;
+				//ゲームオーバーBGM.
 				if (auto i = soundMng->Get("BGM_Over")) {
 					i->Play(true, 68); //再生.
 				}
@@ -310,7 +310,7 @@ void GameManager::GameOver() {
 			}
 			break;
 
-			default: assert(FALSE); break;
+			default: assert(0); break;
 		}
 	}
 
@@ -320,7 +320,7 @@ void GameManager::GameOver() {
 void GameManager::ItemUsed() {
 
 	gameData->isReflectMode = true; //反射モードにする.
-	gameScene.ItemUsed();          //アイテム使用処理.
+	gameScene.ItemUsed();           //アイテム使用処理.
 	
 	//チュートリアルなら指示送信.
 	if (gameData->stage == Stage_Tutorial) {
