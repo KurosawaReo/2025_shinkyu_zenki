@@ -27,18 +27,18 @@ class Player final : public ManagerBase
 {
 //▼ ===== 変数 ===== ▼.
 private:
-	PlayerMode     mode{};     //モード.
+	PlayerMode mode{};			//モード.
 	
-	Circle         hit{};      //プレイヤーの当たり判定円.
-	bool           active{};   //有効か.
-	bool           isDebug{};  //デバッグ用.
+	Circle     hit{};			//プレイヤーの当たり判定円.
+	bool       active{};		//有効か.
+	bool       isDebug{};		//デバッグ用.
 
-	float dashEndEffectTimer{};//エフェクト残り時間.
+	DBL_XY	   velocity{};		//移動速度.
+	DBL_XY	   lastInputVec{};	//最後の入力方向.
 
-	bool isDashEndEffect{};    //エフェクト発動フラグ.
+	float      dashEndEffectTimer{};	//エフェクト残り時間.
 
-	//感性.
-	DBL_XY velocity;
+	bool       isDashEndEffect{};		//エフェクト発動フラグ.
 
 	//残像.
 	float          afterCntr{};	 		        //残像用時間カウンター.

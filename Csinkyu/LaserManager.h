@@ -3,6 +3,7 @@
    レーザー管理クラス.
 */
 #pragma once
+#include "Obst_Meteor.h"
 
 //レーザータイプ.
 enum LaserType
@@ -17,17 +18,17 @@ enum LaserType
 //レーザー本体.
 struct LaserData
 {
-	LaserType type;      //レーザータイプ.
+	LaserType type;       //レーザータイプ.
 
-	DBL_XY    nowPos;    //現在の座標.
-	DBL_XY    befPos;    //前回描画した時にいた座標.
-	DBL_XY    vec;       //進行方向ベクトル.
+	DBL_XY    nowPos;     //現在の座標.
+	DBL_XY    befPos;     //前回描画した時にいた座標.
+	DBL_XY    vec;        //進行方向ベクトル.
 
-	DBL_XY    goalPos;   //目標地点の座標.
-	bool      isGoGoal;  //目標地点に向かって進むか.
+	Meteor*   target;     //目標隕石.
+	bool      isGoTarget; //目標地点に向かって進むか.
 
-	int       logNum;    //記録した軌跡の数.
-	float     counter;   //経過時間.
+	int       logNum;     //記録した軌跡の数.
+	float     counter;    //経過時間.
 };
 
 //レーザーが描く描画線.
@@ -60,20 +61,21 @@ public:
 	void Update() override;
 	void Draw()   override;
 
-	void UpdateLaser();                                             //各レーザーの更新.
-	void UpdateLaserLine();                                         //各レーザー描画線の更新.
+	void UpdateLaser();													//各レーザーの更新.
+	void UpdateLaserLine();												//各レーザー描画線の更新.
 	
-	void SpawnLaser       (DBL_XY pos, DBL_XY vel, LaserType type); //召喚.
+	void SpawnLaser       (DBL_XY pos, DBL_XY vel, LaserType type);		//召喚.
 
-	void HitLaser		  (list<LaserData>::iterator);				//当たり判定.
-	void ReflectLaser     (list<LaserData>::iterator);              //反射.
-	void GenerateLaserLine(list<LaserData>::iterator);              //レーザー描画線を生成.
-	void LaserRefTracking (list<LaserData>::iterator);              //レーザー(reflected)の隕石追尾.
+	void NextLaser        (list<LaserData>::iterator&, bool isErase);	//次のレーザーへ.
+	void HitLaser		  (list<LaserData>::iterator&);					//当たり判定.
+	void ReflectLaser     (list<LaserData>::iterator&);					//反射.
+	void GenerateLaserLine(list<LaserData>::iterator&);					//レーザー描画線を生成.
+	void LaserRefTracking (list<LaserData>::iterator&);					//レーザー(reflected)の隕石追尾.
 
-	bool IsExistEnemyLaser(DBL_XY pos, float len);                  //敵のレーザーが1つでも存在するかどうか.
+	bool IsExistEnemyLaser(DBL_XY pos, float len);						//敵のレーザーが1つでも存在するかどうか.
 
 	//未使用.
-	void LaserReflectRange(Circle cir);							    //レーザーを一括反射.
+	void LaserReflectRange(Circle cir);									//レーザーを一括反射.
 
 	//使用禁止.
 	LaserManager(const LaserManager&) = delete;
