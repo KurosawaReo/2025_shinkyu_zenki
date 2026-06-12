@@ -178,13 +178,12 @@ void Player::UpdateDash()
 //移動処理(斜め対応)
 void Player::PlayerMove()
 {
-	float speed = PLAYER_MOVE_SPEED * gameData->speedRate;
+	float speed = PLAYER_MOVE_SPEED;
 
 	//移動可能なら.
 	if (isMoveAble) {
 		//ダッシュ中なら.
-		if (isDashing)
-		{
+		if (isDashing) {
 			//段々減速.
 			const double rate = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
 			//速度変化.
@@ -196,8 +195,9 @@ void Player::PlayerMove()
 		//目標速度.
 		DBL_XY targetVel = input * speed;
 
-		//Lerpで目標速度に近づける.
+		//Lerp速度.
 		const float moveLerp = PLAYER_MOVE_LERP_SPEED;
+		//Lerpで目標速度に近づける.
 		velocity.x += (targetVel.x - velocity.x) * moveLerp;
 		velocity.y += (targetVel.y - velocity.y) * moveLerp;
 		//誤差は無視.
@@ -264,16 +264,18 @@ void Player::UpdateAfterImage()
 		{
 			after[i] = after[i-1];
 		}
-		//1フレーム目の情報登録.
-		after[0].pos      = hit.pos;                                     //プレイヤー座標.
-		after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
-		after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
-		after[0].isActive = false;                                       //一旦無効にする.
+		//一旦無効にする.
+		after[0].isActive = false;
+
 		//ある程度移動したら.
-		if (fabs(after[0].pos.x - after[1].pos.x) >= 0.5 ||
-			fabs(after[0].pos.y - after[1].pos.y) >= 0.5
+		if (fabs(hit.pos.x - after[1].pos.x) >= 0.5 ||
+			fabs(hit.pos.y - after[1].pos.y) >= 0.5
 		){
-			after[0].isActive = true; //残像を出す.
+			//1フレーム目の情報登録.
+			after[0].pos      = hit.pos;                                     //プレイヤー座標.
+			after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
+			after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
+			after[0].isActive = true;                                        //残像を出す.
 		}
 	}
 }
