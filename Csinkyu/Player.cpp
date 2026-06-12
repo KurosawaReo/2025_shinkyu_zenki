@@ -58,7 +58,6 @@ void Player::Reset()
 	dashCooldown = 0;
 
 	//ダッシュ関係.
-	
 	dashEndEffectTimer = 0;
 	isDashEndEffect = false;
 
@@ -80,7 +79,7 @@ void Player::Update()
 
 	//有効なら.
 	if (active) {
-		imgRot += 1.5 * gameData->speedRate; //画像回転.
+		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate; //画像回転.
 
 		UpdateAfterImage();
 		UpdateDash();
@@ -159,7 +158,7 @@ void Player::UpdateDash()
 			//ダッシュ開始.
 			if (dashkey)
 			{
-				//ダッシュ音追加..
+				//ダッシュ音追加.
 				if (auto i = soundMng->Get("PlayerDash")) {
 					i->Play(false, 60); //再生.
 				}
@@ -183,27 +182,30 @@ void Player::PlayerMove()
 
 	//移動可能なら.
 	if (isMoveAble) {
-		//ダッシュ中は加速.
+		//ダッシュ中なら.
 		if (isDashing)
 		{
-			//残り時間に応じて段々減速.
-			speed *= 1.0f + _flt(PLAYER_DASH_SPEED * Calc::AnimEase(EaseType::OutQuad, dashTimer/PLAYER_DASH_DURATION));
+			//段々減速.
+			const double rate = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
+			//速度変化.
+			speed *= _flt(1.0 + PLAYER_DASH_SPEED * rate);
 		}
 
+		//入力操作.
 		DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
-
+		//目標速度.
 		DBL_XY targetVel = input * speed;
 
+		//Lerpで目標速度に近づける.
 		const float moveLerp = PLAYER_MOVE_LERP_SPEED;
-
 		velocity.x += (targetVel.x - velocity.x) * moveLerp;
 		velocity.y += (targetVel.y - velocity.y) * moveLerp;
-
+		//誤差は無視.
 		if (fabs(velocity.x) < 0.01f) velocity.x = 0;
 		if (fabs(velocity.y) < 0.01f) velocity.y = 0;
 
+		//移動.
 		hit.pos += velocity * gameData->speedRate;
-
 		//移動限界.
 		Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
 	}
@@ -267,9 +269,11 @@ void Player::UpdateAfterImage()
 		after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
 		after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
 		after[0].isActive = false;                                       //一旦無効にする.
-		//位置が変わったら(移動したら)
-		if (after[0].pos.x != after[1].pos.x || after[0].pos.y != after[1].pos.y) {
-			after[0].isActive = true; //有効に.
+		//ある程度移動したら.
+		if (fabs(after[0].pos.x - after[1].pos.x) >= 0.5 ||
+			fabs(after[0].pos.y - after[1].pos.y) >= 0.5
+		){
+			after[0].isActive = true; //残像を出す.
 		}
 	}
 }
@@ -285,6 +289,7 @@ void Player::DrawAfterImage()
 		if (hit.pos.x != after[i].pos.x || hit.pos.y != after[i].pos.y) {
 
 			float anim = (float)i/PLAYER_AFT_IMG_NUM; //アニメーション値.
+
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim));
 	
