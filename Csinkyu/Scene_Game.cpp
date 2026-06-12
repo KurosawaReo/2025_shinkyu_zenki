@@ -36,6 +36,7 @@ void GameScene::Init() {
 	tmGameTime    = Timer(TimerMode::CountUp, 0);
 	tmReflectMode = Timer(TimerMode::CountDown, REFLECT_MODE_TIME);
 }
+
 //リセット.
 void GameScene::Reset() {
 
@@ -47,13 +48,21 @@ void GameScene::Reset() {
 	itemSoundCnt = 0;
 	isGameStart = false;
 }
+
 //入った瞬間.
 void GameScene::Enter() {
+
+	//プレイヤーが死亡していたら.
+	if (!player->GetActive()) {
+		player->PlayerRevival(); //復活.
+	}
+
 	//まだ動いてなければ.
 	if (timer.GetState() != TimerState::Active) {
 		timer.Start(); //タイマー開始.
 	}
 }
+
 //抜けた瞬間.
 void GameScene::Exit() {
 	//チュートリアル以外のみ.
@@ -67,6 +76,7 @@ void GameScene::Exit() {
 		gameMng->DrawOnlyObjects();
 	}
 }
+
 //更新.
 void GameScene::Update() {
 
@@ -99,6 +109,7 @@ void GameScene::Update() {
 		UpdateReflectMode(); //反射モード.
 	}
 }
+
 //描画.
 void GameScene::Draw() {
 	DrawReflectMode();  //反射モード演出.

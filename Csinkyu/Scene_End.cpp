@@ -31,47 +31,56 @@ void EndScene::Init() {
 
 	timer = Timer(TimerMode::CountUp, 0);
 }
+
 //リセット.
 void EndScene::Reset() {
 	isBestScore      = false;
 	isBestScoreSound = false;
 }
+
 //入った瞬間.
 void EndScene::Enter() {
+
 	timer.Start(); //タイマー開始.
+
+	//チュートリアル限定.
+	if (gameData->stage == Stage_Tutorial) {
+
+		//一定時間経過したら.
+		ManagerInsts::Get<TimerMng>()->ReservExe(
+			TUTORIAL_RESPAWN_TIME,
+			[this]() {
+				sceneMng->SetScene("Game"); //ゲームシーンへ戻る.
+			}
+		);
+	}
 }
+
 //抜けた瞬間.
 void EndScene::Exit() {
 	timer.Reset(); //タイマーリセット.
 }
+
 //更新.
 void EndScene::Update() {
 
-	//チュートリアルの場合.
-	//→死亡後復活.
+	//チュートリアル限定.
 	if (gameData->stage == Stage_Tutorial) {
-
-		gameMng->GetGameScene()->Update(); //ゲームシーンと同じ動作をする.
-
-		//一定時間経過したら.
-		if (timer.GetPassTime() >= TUTORIAL_RESPAWN_TIME) {
-			timer.Reset();              //タイマーリセット.
-			player->PlayerRevival();     //復活.
-			sceneMng->SetScene("Game"); //ゲームシーンへ戻る.
-		}
+		//ゲームシーンと同じ動作をする.
+		gameMng->GetGameScene()->Update();
 	}
-	//チュートリアル以外の場合.
-	//→ゲームオーバー.
+	//チュートリアル以外.
 	else {
 		//特定の操作でタイトルへ.
 		if (inputMng->IsPushActionTime("GameNext") == 1)
 		{
 			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
-			sceneMng->SetScene("Title");               //ゲームシーンへ戻る.
+			sceneMng->SetScene("Title");                 //ゲームシーンへ戻る.
 			App::Reset();
 		}
 	}
 }
+
 //描画.
 void EndScene::Draw() {
 

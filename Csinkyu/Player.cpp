@@ -10,6 +10,9 @@
 #include "Stage_Tutorial.h"
 #include "GameManager.h"
 #include "GameData.h"
+
+#include "KrLib_Dx/KR_ManagerInsts.h"
+#include "KrLib_Dx/KR_TimerMng.h"
 //参照.
 static GameData*      gameData;
 static GameManager*   gameMng;
@@ -88,7 +91,7 @@ void Player::Update()
 void Player::Draw()
 {
 #if defined _DEBUG //Releaseでは入れない.
-	//デバッグ表示.
+	//無敵モード表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
 		str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
@@ -211,27 +214,25 @@ void Player::PlayerDeath() {
 
 	//デバッグモード中は無敵.
 	if (isDebug) { return; }
+	//死亡済なら中断.
+	if (!active) { return; }
 
-	//まだ生存してるなら.
-	if (active) {
-
-		//サウンド.
-		if (auto i = soundMng->Get("PlayerDeath")) {
-			i->Play(false, 80); //再生.
-		}
-		//エフェクト.
-		EffectData data{};
-		data.type = Effect_PlayerDeath;
-		data.pos  = hit.pos;
-		effectMng->SpawnEffect(&data);
-
-		gameMng->GameOver(); //ゲーム終了.
-	
-		isDashing    = false;
-		dashTimer    = 0;
-        dashCooldown = 0;
-		active       = false;
+	//サウンド.
+	if (auto i = soundMng->Get("PlayerDeath")) {
+		i->Play(false, 80); //再生.
 	}
+	//エフェクト.
+	EffectData data{};
+	data.type = Effect_PlayerDeath;
+	data.pos  = hit.pos;
+	effectMng->SpawnEffect(&data);
+
+	gameMng->GameOver(); //ゲーム終了.
+	
+	isDashing    = false;
+	dashTimer    = 0;
+    dashCooldown = 0;
+	active       = false;
 }
 
 //プレイヤー復活.
@@ -262,10 +263,10 @@ void Player::UpdateAfterImage()
 			after[i] = after[i-1];
 		}
 		//1フレーム目の情報登録.
-		after[0].pos      = hit.pos;                                         //プレイヤー座標.
+		after[0].pos      = hit.pos;                                     //プレイヤー座標.
 		after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
-		after[0].isDash   = isDashing;                                       //ダッシュ中ならダッシュエフェクトに.
-		after[0].isActive = false;                                           //一旦無効にする.
+		after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
+		after[0].isActive = false;                                       //一旦無効にする.
 		//位置が変わったら(移動したら)
 		if (after[0].pos.x != after[1].pos.x || after[0].pos.y != after[1].pos.y) {
 			after[0].isActive = true; //有効に.
