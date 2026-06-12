@@ -5,12 +5,14 @@
 #include "LaserManager.h"
 
 //依存関係.
+#include "GameData.h"
+#include "GameManager.h"
 #include "Player.h"
 #include "Obst_MeteorManager.h"
 #include "Stage_Tutorial.h"
-#include "GameData.h"
 //参照.
 static GameData*      gameData;
+static GameManager*   gameMng;
 static Player*        player;
 static MeteorManager* meteorMng;
 static EffectManager* effectMng;
@@ -26,6 +28,7 @@ using namespace Calc; //計算機能を使用.
 void LaserManager::Init() {
 
 	gameData    = ManagerInsts::Get<GameData>();
+	gameMng     = ManagerInsts::Get<GameManager>();
 	player      = ManagerInsts::Get<Player>();
 	meteorMng   = ManagerInsts::Get<MeteorManager>();
 	effectMng   = ManagerInsts::Get<EffectManager>();
@@ -355,6 +358,8 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 		){
 			it->type = Laser_Reflect; //反射モードへ.
 			it->counter = 0;          //リセット.
+			
+			gameMng->SlowModeStart(); //スロー発動.
 			ReflectLaser(it);         //レーザーを反射.
 		}
 		//反射あり(強化版)
@@ -362,7 +367,9 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 		{
 			it->type = Laser_SuperReflect; //反射モードへ.
 			it->counter = 0;               //リセット.
-			ReflectLaser(it);              //レーザーを反射.		
+
+			gameMng->SlowModeStart(); //スロー発動.
+			ReflectLaser(it);         //レーザーを反射.		
 		}
 		//反射なし.
 		else
@@ -401,11 +408,6 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 	if (gameData->stage == Stage_Tutorial) {
 		tutorialStg->SetReflectLaser(true);
 	}
-
-	//速度倍率を遅くする.
-	gameData->speedRate = SLOW_MODE_SPEED;
-	//一定時間スローにする.
-	gameData->slowBufCntr = SLOW_MODE_BUF_F;
 }
 
 //レーザー描画線を生成.

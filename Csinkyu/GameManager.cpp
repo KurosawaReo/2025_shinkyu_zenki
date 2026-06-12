@@ -329,6 +329,15 @@ void GameManager::ItemUsed() {
 	}
 }
 
+//スローモード開始.
+void GameManager::SlowModeStart() {
+
+	//速度倍率を遅くする.
+	gameData->speedRate = SLOW_MODE_SPEED;
+	//一定時間スローにする.
+	gameData->slowBufCntr = SLOW_MODE_BUF_F;
+}
+
 //オブジェクト停止.
 void GameManager::StopObjects() {
 

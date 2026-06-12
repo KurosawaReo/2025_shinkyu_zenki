@@ -135,7 +135,7 @@ enum StageType
 
 //障害物: 隕石.
 //#define METEOR_CNT_MAX				(50)			//隕石の最大出現数.
-#define METEOR_SPAWN_SPAN				(150)			//隕石の出現時間間隔.
+#define METEOR_SPAWN_SPAN				(120)			//隕石の出現時間間隔.
 #define METEOR_SPEED					(2)				//移動速度.
 #define METEOR_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
 #define METEOR_DEST_TIME				(20)			//隕石の破壊時間.
@@ -145,8 +145,8 @@ enum StageType
 
 #define METEOR_LINE_CNT_MIN				(5)				//最低n角形.
 #define METEOR_LINE_CNT_MAX				(16)			//最大n角形.
-#define METEOR_LINE_DIS_MIN				(40)			//頂点の最短距離.
-#define METEOR_LINE_DIS_MAX				(60)			//頂点の最大距離.
+#define METEOR_LINE_DIS_MIN				(30)			//頂点の最短距離.
+#define METEOR_LINE_DIS_MAX				(50)			//頂点の最大距離.
 
 //障害物: 波紋.
 #define RIPPLES_FLASH_MAX				(30)            //最大フラッシュエフェクト数
