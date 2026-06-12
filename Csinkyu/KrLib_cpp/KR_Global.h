@@ -127,7 +127,25 @@ namespace KR
 			return { x * other.x, y * other.y };
 		}
 		XY<T> operator/(const XY<T>& other) const {
-			return { x / other.x, y / other.y };
+
+			XY<T> ret{};
+
+			//x‘¤.
+			if (other.x != 0) {
+				ret.x = x / other.x;
+			}
+			else {
+				ret.x = 0;
+			}
+			//y‘¤.
+			if (other.y != 0) {
+				ret.y = y / other.y;
+			}
+			else {
+				ret.y = 0;
+			}
+
+			return ret;
 		}
 		XY<T> operator%(const XY<T>& other) const {
 			return { x % other.x, y % other.y };

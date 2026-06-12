@@ -147,7 +147,8 @@ void GameScene::UpdateReflectMode() {
 	//反射モード中.
 	if (tmReflectMode.GetState() == TimerState::Active) {
 
-		switch (itemSoundCnt) {
+		switch (itemSoundCnt) 
+		{
 			case 0:
 				//3秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 3) {
@@ -221,8 +222,8 @@ void GameScene::ReflectModeEnd() {
 	tmReflectMode.Reset();
 
 	gameData->isReflectMode = false; //反射モード解除.
-	gameData->speedRate = 1.0;		//速度倍率を100%に戻す.
-	gameData->slowBufCntr = 0;		//カウンターを0に.
+	gameData->speedRate = 1.0;		 //速度倍率を100%に戻す.
+	gameData->slowBufCntr = 0;		 //カウンターを0に.
 	itemSoundCnt = 0;
 	player->SetMode(Player_Normal);  //通常状態に戻す.
 

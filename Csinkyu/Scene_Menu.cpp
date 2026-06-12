@@ -110,7 +110,6 @@ void MenuScene::Update() {
 				break;
 			case 2:
 				sceneMng->SetScene("Title"); //タイトルへ.
-				App::Reset();                //リセット.
 				break;
 
 			default: assert(FALSE); break;

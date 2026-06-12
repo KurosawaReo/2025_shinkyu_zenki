@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver.2026/05/07
+   ver.2026/06/12
 
    図形や画像の描画機能。
    (オブジェクト指向ver → KR_Object)
@@ -182,9 +182,6 @@ namespace KR
 	void FillPolygon     (const Polygon&    poly,                             bool isSurround = false,                      bool isCameraDisp = true);
 
 	void DrawWindowGrid	 (int wid, int hei, int size, MY_COLOR clrWid = {160, 160, 255}, MY_COLOR clrHei = {255, 160, 160});
-
-	//3D描画(試作品)
-	void DrawBox3DKR	 (const Box3D& box, bool isFill = true);
 
 	//描画モード設定(スコープ内のみ有効)
 	class DrawMode
