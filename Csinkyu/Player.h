@@ -37,6 +37,9 @@ private:
 
 	bool isDashEndEffect{};    //エフェクト発動フラグ.
 
+	//感性.
+	DBL_XY velocity;
+
 	//残像.
 	float          afterCntr{};	 		        //残像用時間カウンター.
 	AfterEffect    after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
