@@ -50,8 +50,10 @@ void Player::Reset()
 	isMoveAble = true;
 	active     = true;
 
-	// 感性関連.
+	//初期速度.
 	velocity = {0,0};
+	//最後の移動方向(上方向にしておく)
+	lastInputVec = {0, -1};
 
 	// ダッシュ関連の初期化.
 	isDashing    = false;
@@ -188,18 +190,29 @@ void Player::PlayerMove()
 
 	//移動可能なら.
 	if (isMoveAble) {
+
+		//目標速度.
+		DBL_XY targetVel{};
+		//入力操作.
+		DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
+		//入力があれば更新.
+		if (input.x != 0 || input.y != 0) {
+			lastInputVec = input;
+		}
+
 		//ダッシュ中なら.
 		if (isDashing) {
 			//段々減速.
 			const double rate = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
 			//速度変化.
 			speed *= _flt(1.0 + PLAYER_DASH_SPEED * rate);
+			//目標速度変更.
+			targetVel = lastInputVec * speed;
 		}
-
-		//入力操作.
-		DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
-		//目標速度.
-		DBL_XY targetVel = input * speed;
+		else {
+			//目標速度変更.
+		    targetVel = input * speed;
+		}
 
 		//Lerp速度.
 		const double moveLerp = PLAYER_MOVE_LERP_SPEED;

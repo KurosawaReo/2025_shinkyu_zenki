@@ -382,6 +382,11 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 	//角度反映.
 	it->vec = { cos(_rad(ang)), sin(_rad(ang)) };
 
+	//ターゲットが残っていれば.
+	if (it->target) {
+		it->target->SetIsTargeting(false); //ターゲットを解除.
+	}
+
 	//エフェクト.
 	EffectData data{};
 	data.type = Effect_ReflectLaser;

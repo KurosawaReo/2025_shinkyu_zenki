@@ -59,11 +59,17 @@ void Meteor::Draw() {
 	
 	int pow = 255;
 
+#if true
 	//デバッグ.
+	//TODO: これを画像でやりたい.
 	if (isTargeting) {
-		Circle tmp(pos, 10, ColorID::Red, 1);
-		DrawCircleKR(tmp);
+		Circle tmp(pos, 0, 0xff00ff, 1);
+		tmp.r = 10;
+		DrawCircleKR(tmp, Anchor::Mid, false, true);
+		tmp.r = 15;
+		DrawCircleKR(tmp, Anchor::Mid, false, true);
 	}
+#endif
 
 	//破壊モード限定.
 	if (state == Meteor_Destroy) {

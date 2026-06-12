@@ -339,8 +339,11 @@ void TutorialStage::UpdateStep3() {
 
 		case 2:
 		{
-			//[終了条件] 隕石を壊した & 反射モードが終わったら.
-			if (endTimer.GetState() != TimerState::Active && isBreakMeteor && isReflectFinish) {
+			//[終了条件] 隕石を壊した & 反射モードでなければ.
+			if (endTimer.GetState() != TimerState::Active && 
+				isBreakMeteor                             && 
+				player->GetMode() == Player_Normal
+			){
 				endTimer.Start();
 			}
 			//次の説明へ.
@@ -393,10 +396,11 @@ void TutorialStage::UpdateStep4() {
 	{
 		case 0:
 		{
-			//[終了条件] 一定スコアを越える & 反射モードが終わったら.
+			//[終了条件] 一定スコアを越える & 反射モードでなければ.
 			if (endTimer.GetState() != TimerState::Active && 
-				gameData->score >= 2000 && isReflectFinish) 
-			{
+				gameData->score >= 2000                   && 
+				player->GetMode() == Player_Normal
+			){
 				endTimer.Start();
 			}
 			//次の説明へ.
@@ -460,9 +464,9 @@ void TutorialStage::DrawStep1() {
 		case 1:
 		{
 			DrawTopText(1, _T("ダッシュする"), alpha);
-			DrawTopText(2, _T("キーボード　　 : 移動 + SHIFTキー "), alpha);
-			DrawTopText(3, _T("コントローラー : 移動 + Bボタン　 "), alpha);
-			DrawTopText(4, _T("アーケード　　 : 移動 + 右上ボタン"), alpha);
+			DrawTopText(2, _T("キーボード　　 : SHIFTキー "), alpha);
+			DrawTopText(3, _T("コントローラー : Bボタン　 "), alpha);
+			DrawTopText(4, _T("アーケード　　 : 右上ボタン"), alpha);
 		}
 		break;
 
