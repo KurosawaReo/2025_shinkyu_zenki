@@ -37,6 +37,7 @@ void Player::Init()
 
 	isDebug = false;
 }
+
 //リセット(何回でも行う)
 void Player::Reset()
 {
@@ -67,6 +68,7 @@ void Player::Reset()
 		after[i].isActive = false;
 	}
 }
+
 //更新.
 void Player::Update()
 {
@@ -79,13 +81,17 @@ void Player::Update()
 
 	//有効なら.
 	if (active) {
-		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate; //画像回転.
+
+		//画像回転.
+		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate; //実験.
+//		imgRot += (1.5) * gameData->speedRate; //旧.
 
 		UpdateAfterImage();
 		UpdateDash();
 		PlayerMove();
 	}
 }
+
 //描画.
 void Player::Draw()
 {
@@ -196,7 +202,7 @@ void Player::PlayerMove()
 		DBL_XY targetVel = input * speed;
 
 		//Lerp速度.
-		const float moveLerp = PLAYER_MOVE_LERP_SPEED;
+		const double moveLerp = PLAYER_MOVE_LERP_SPEED;
 		//Lerpで目標速度に近づける.
 		velocity.x += (targetVel.x - velocity.x) * moveLerp;
 		velocity.y += (targetVel.y - velocity.y) * moveLerp;

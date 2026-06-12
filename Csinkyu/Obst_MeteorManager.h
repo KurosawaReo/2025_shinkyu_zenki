@@ -20,8 +20,8 @@ public:
 	MeteorManager(int order) : ManagerBase(order) {}
 
 	//get.
-	Meteor* GetHitMeteor    (Circle cir, bool isDestroy); //”ÍˆÍ“à‚Ìè¦Î‚ğæ“¾(1‚Â)
-	Meteor* GetNearestMeteor(DBL_XY pos);				  //ÅŠñ‚è‚Ìè¦Î‚ğæ“¾.
+	Meteor* GetHitMeteor   (Circle cir, bool isDestroy); //”ÍˆÍ“à‚Ìè¦Î‚ğæ“¾(1‚Â)
+	Meteor* GetTargetMeteor(DBL_XY pos);				 //–Ú•W‚Æ‚È‚éè¦Î‚ğ‘I‚Ô.
 
 	void Init()   override;
 	void Reset()  override;

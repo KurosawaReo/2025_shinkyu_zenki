@@ -11,7 +11,10 @@
 static GameData* gameData;
 
 void Meteor::Init() {
+	//取得.
 	gameData = ManagerInsts::Get<GameData>();
+	//隕石出現処理.
+	Spawn();
 }
 
 void Meteor::Reset() {
@@ -56,6 +59,12 @@ void Meteor::Draw() {
 	
 	int pow = 255;
 
+	//デバッグ.
+	if (isTargeting) {
+		Circle tmp(pos, 10, ColorID::Red, 1);
+		DrawCircleKR(tmp);
+	}
+
 	//破壊モード限定.
 	if (state == Meteor_Destroy) {
 		pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
@@ -93,7 +102,7 @@ void Meteor::Draw() {
 	}
 }
 
-//隕石出現.
+//隕石出現処理.
 void Meteor::Spawn() {
 
 	int rnd1 = Calc::RandNum(0, 99);
