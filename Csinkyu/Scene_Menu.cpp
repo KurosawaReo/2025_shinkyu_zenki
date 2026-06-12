@@ -154,11 +154,11 @@ void MenuScene::Draw() {
 
 			Line lines[4] = {
 			//「<」.
-				{ basePos.Add(-55-100*anim3, 30), basePos.Add(-85-100*anim3,   0), 0x00FFFF, 2.0f },
-				{ basePos.Add(-85-100*anim3,  0), basePos.Add(-55-100*anim3, -30), 0x00FFFF, 2.0f },
+				{ basePos + DBL_XY(-55-100*anim3, 30), basePos + DBL_XY(-85-100*anim3,   0), 0x00FFFF, 2.0f },
+				{ basePos + DBL_XY(-85-100*anim3,  0), basePos + DBL_XY(-55-100*anim3, -30), 0x00FFFF, 2.0f },
 			//「>」.
-				{ basePos.Add(+55+100*anim3, 30), basePos.Add(+85+100*anim3,   0), 0x00FFFF, 2.0f },
-				{ basePos.Add(+85+100*anim3,  0), basePos.Add(+55+100*anim3, -30), 0x00FFFF, 2.0f }
+				{ basePos + DBL_XY(+55+100*anim3, 30), basePos + DBL_XY(+85+100*anim3,   0), 0x00FFFF, 2.0f },
+				{ basePos + DBL_XY(+85+100*anim3,  0), basePos + DBL_XY(+55+100*anim3, -30), 0x00FFFF, 2.0f }
 			};
 			//線描画.
 			for (auto& i : lines) {
@@ -170,11 +170,11 @@ void MenuScene::Draw() {
 
 			Line lines[4] = {
 			//「<」.
-				{ basePos.Add(-55-100*anim5, 30), basePos.Add(-85-100*anim5,   0), 0x00FFFF, 2.0f },
-				{ basePos.Add(-85-100*anim5,  0), basePos.Add(-55-100*anim5, -30), 0x00FFFF, 2.0f },
+				{ basePos+ DBL_XY(-55-100*anim5, 30), basePos+ DBL_XY(-85-100*anim5,   0), 0x00FFFF, 2.0f },
+				{ basePos+ DBL_XY(-85-100*anim5,  0), basePos+ DBL_XY(-55-100*anim5, -30), 0x00FFFF, 2.0f },
 			//「>」.
-				{ basePos.Add(+55+100*anim5, 30), basePos.Add(+85+100*anim5,   0), 0x00FFFF, 2.0f },
-				{ basePos.Add(+85+100*anim5,  0), basePos.Add(+55+100*anim5, -30), 0x00FFFF, 2.0f }
+				{ basePos+ DBL_XY(+55+100*anim5, 30), basePos+ DBL_XY(+85+100*anim5,   0), 0x00FFFF, 2.0f },
+				{ basePos+ DBL_XY(+85+100*anim5,  0), basePos+ DBL_XY(+55+100*anim5, -30), 0x00FFFF, 2.0f }
 			};
 			//線描画.
 			for (auto& i : lines) {
@@ -237,12 +237,12 @@ void MenuScene::Draw() {
 	//▼カーソルの三角.
 	{
 		//基準座標.
-		DBL_XY base = mLayout.menuPos.Add(
+		DBL_XY base = mLayout.menuPos + DBL_XY(
 			-mLayout.menuSize.x/2 - 20,			//横にずらす.
 			+mLayout.menuSpace * selectedIndex	//縦にずらす.
 		);
 
-		Triangle tri = { base, base.Add(-20, 10 * anim1), base.Add(-20, -10 * anim1), {}, {} };
+		Triangle tri = { base, base + DBL_XY(-20, 10 * anim1), base + DBL_XY(-20, -10 * anim1), {}, {} };
 		tri.color = (anim1 >= 0) ? mColor.select1 : mColor.select2; //表か裏かで色を変える.
 		DrawTriangleKR(tri, true, true);
 	}
@@ -295,7 +295,7 @@ void MenuScene::Draw() {
 			{
 				//線データ.
 				Line line = {
-					mLayout.menuPos.Add(mLayout.menuSize.x/2, 0),            //始点.
+					mLayout.menuPos + DBL_XY(mLayout.menuSize.x/2, 0),       //始点.
 					DBL_XY(mLayout.imgPos.x-imgSize.x/2, mLayout.menuPos.y), //終点.
 					mColor.line,                                             //色.
 					3.0f

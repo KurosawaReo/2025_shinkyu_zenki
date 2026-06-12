@@ -18,8 +18,6 @@ void BGManager::Init() {
 	bg1.Init();
 	bg2.Init();
 	bg3.Init();
-
-	Debug::Log(_T("ugoita bgmng"));
 }
 //ƒŠƒZƒbƒg.
 void BGManager::Reset() {

@@ -118,7 +118,7 @@ void ItemManager::Draw()
 
 			//チュートリアル用.
 			if (gameData->stage == Stage_Tutorial) {
-				DrawStr str(_T("アイテム"), items[i].pos.Add(0, -35).ToInt(), COLOR_ITEM);
+				DrawStr str(_T("アイテム"), items[i].pos.ToInt() + INT_XY(0, -35), COLOR_ITEM);
 				str.Draw();
 			}
 		}

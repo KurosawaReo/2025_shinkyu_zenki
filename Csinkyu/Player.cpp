@@ -123,7 +123,7 @@ void Player::Draw()
 
 		//チュートリアル用.
 		if (gameData->stage == Stage_Tutorial) {
-			DrawStr str(_T("プレイヤー"), hit.pos.Add(0, -35).ToInt(), 0xFFFFFF );
+			DrawStr str(_T("プレイヤー"), hit.pos.ToInt() + INT_XY(0, -35), 0xFFFFFF );
 			str.Draw();
 		}
 	}

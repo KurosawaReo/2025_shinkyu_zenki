@@ -25,8 +25,6 @@ void TitleScene::Init() {
 	sceneMng  = ManagerInsts::Get<SceneMng>();
 
 	timer = Timer(TimerMode::CountUp, 0);
-
-	Debug::Log(_T("ugoita title"));
 }
 
 //リセット.
@@ -77,10 +75,10 @@ void TitleScene::Draw() {
 		const int margin = 5;
 
 		GradLine line;
-		line.AddPoint(howPlayPos.Add(-margin, margin), { 0, 255, 255 });
-		line.AddPoint(howPlayPos.Add(howPlaySize.x + margin, margin), { 0, 100, 255 });
-		line.AddPoint(howPlayPos.Add(howPlaySize.x + margin, -howPlaySize.y - margin), { 0, 255, 255 });
-		line.AddPoint(howPlayPos.Add(-margin, -howPlaySize.y - margin), { 0, 100, 255 });
+		line.AddPoint(howPlayPos + DBL_XY(-margin, margin),                                 { 0, 255, 255 });
+		line.AddPoint(howPlayPos + DBL_XY(howPlaySize.x + margin, margin),                  { 0, 100, 255 });
+		line.AddPoint(howPlayPos + DBL_XY(howPlaySize.x + margin, -howPlaySize.y - margin), { 0, 255, 255 });
+		line.AddPoint(howPlayPos + DBL_XY(-margin, -howPlaySize.y - margin),                { 0, 100, 255 });
 		line.Draw(true);
 	}
 

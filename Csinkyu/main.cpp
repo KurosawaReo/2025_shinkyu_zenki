@@ -33,12 +33,12 @@ int WINAPI WinMain(
 	//引数で実行順(order値)を入力する.
 	ManagerInsts::NewManager<InputMng>(0);
 	ManagerInsts::NewManager<SoundMng>(1);
-	ManagerInsts::NewManager<SceneMng>(2);
-	ManagerInsts::NewManager<TimerMng>(3);
+	ManagerInsts::NewManager<TimerMng>(2);
 
 	ManagerInsts::NewManager<GameData>();
-	ManagerInsts::NewManager<GameManager>(4);
-	ManagerInsts::NewManager<BGManager>(5);
+	ManagerInsts::NewManager<GameManager>(3);	//リソース読み込みをしてるため最初に.
+	ManagerInsts::NewManager<BGManager>(4);		//背景.
+	ManagerInsts::NewManager<SceneMng>(5);		//シーンクラス.
 	ManagerInsts::NewManager<EffectManager>(6);
 	ManagerInsts::NewManager<ItemManager>(7);
 	ManagerInsts::NewManager<LaserManager>(8);
