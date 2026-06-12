@@ -9,6 +9,8 @@
 #if !defined DEF_KR_DX_GLOBAL
   #include "KR_Global.h"
 #endif
+//[include] ".h"ファイルで使うもの.
+#include "KR_ManagerBase.h"
 
 //KrLib名前空間.
 namespace KR

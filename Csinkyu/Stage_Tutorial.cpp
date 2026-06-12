@@ -600,7 +600,7 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 
 	{
 		const int margin = 24;
-		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDbl();
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).ToDbl() + DBL_XY(-margin/2, -margin/2);
 		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
 		Box    box  = {pos, size, 0x000000, 1.0f};
 
@@ -617,16 +617,16 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 		//枠線グラデーション.
 		GradLine gradLine;
 		if (line == 1) {
-			gradLine.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x,      0), {  0, 100, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x, size.y), {  0, 255, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(     0, size.y), {  0, 100, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos,                          {  0, 255, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x,      0), {  0, 100, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x, size.y), {  0, 255, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(     0, size.y), {  0, 100, 255, _int_r(255*alpha)});
 		}
 		else {
-			gradLine.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
+			gradLine.AddPoint(pos,                          {  0, 255, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
 		}
 		gradLine.Draw(true);
 	}

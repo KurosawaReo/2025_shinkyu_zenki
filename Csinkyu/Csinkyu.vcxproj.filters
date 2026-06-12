@@ -50,6 +50,7 @@
     <ClCompile Include="KrLib_cpp\KR_Calc.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Language.cpp" />
     <ClCompile Include="KrLib_Dx\KR_TimerMng.cpp" />
+    <ClCompile Include="BG3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG1.h" />
@@ -103,5 +104,6 @@
     <ClInclude Include="KrLib_cpp\KR_Calc.h" />
     <ClInclude Include="KrLib_cpp\KR_Language.h" />
     <ClInclude Include="KrLib_Dx\KR_TimerMng.h" />
+    <ClInclude Include="BG3.h" />
   </ItemGroup>
 </Project>

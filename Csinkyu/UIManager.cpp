@@ -134,21 +134,21 @@ void UIManager::Draw() {
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha1);
 
 				str[1].Draw(Anchor::Mid, gameData->fonts["size35"].GetFont());
-				DrawImgMng::Get("ui_back_best_score")->DrawExtend(str[1].pos.Add(0, 28).ToDbl(), {0.35, 0.4});
+				DrawImgMng::Get("ui_back_best_score")->DrawExtend(str[1].pos.ToDbl() + DBL_XY(0, 28), {0.35, 0.4});
 			}
 			//[score]
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha2);
 
 				str[2].Draw(Anchor::Mid, gameData->fonts["size35"].GetFont());
-				DrawImgMng::Get("ui_back_score")->DrawExtend(str[2].pos.Add(0, 28).ToDbl(), {0.35, 0.4});
+				DrawImgMng::Get("ui_back_score")->DrawExtend(str[2].pos.ToDbl() + DBL_XY(0, 28), {0.35, 0.4});
 			}			
 			//[time]
 			{
 				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha3);
 
 				str[3].Draw(Anchor::Mid, gameData->fonts["size35"].GetFont());
-				DrawImgMng::Get("ui_back_time")->DrawExtend(str[3].pos.Add(0, 28).ToDbl(), {0.35, 0.4});
+				DrawImgMng::Get("ui_back_time")->DrawExtend(str[3].pos.ToDbl() + DBL_XY(0, 28), {0.35, 0.4});
 			}
 			//テキスト(光沢用)
 			str[1].color = 0xFFFFFF;

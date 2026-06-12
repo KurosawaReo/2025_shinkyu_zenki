@@ -43,7 +43,7 @@ namespace KR
 		//â~.
 		DrawShape();
 		//êîéö.
-		DrawStr str(_to_mystr(num), GetPos().ToInt().Add(1, 1), ColorID::Black);
+		DrawStr str(_to_mystr(num), GetPos().ToInt() + INT_XY{1, 1}, ColorID::Black);
 		str.Draw();
 	}
 	

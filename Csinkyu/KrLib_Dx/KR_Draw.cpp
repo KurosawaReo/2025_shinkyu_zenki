@@ -1114,23 +1114,4 @@ namespace KR
 			}
 		}
 	}
-
-	/*
-	   キューブ(3D) [試作品]
-	*/
-	void DrawBox3DKR(const Box3D& box, bool isFill) {
-
-		//描画座標.
-		DBL_XYZ newPos[2] = { box.stPos, box.edPos };
-
-		//座標.
-		VECTOR vec1 = { _flt(newPos[0].x), _flt(newPos[0].y), _flt(newPos[0].z) };
-		VECTOR vec2 = { _flt(newPos[1].x), _flt(newPos[1].y), _flt(newPos[1].z) };
-		//描画.
-		int err = DrawCube3D(vec1, vec2, box.difColor.GetColorCode(), box.spcColor.GetColorCode(), isFill);
-		if (err < 0) {
-			throw ErrorMsg(_T("DrawBox3DKR"), _T("描画エラー"));
-			return;
-		}
-	}
 }
