@@ -347,10 +347,10 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 	}
 
 	//レーザーの当たり判定.
-	Line line = { it->nowPos, it->befPos, {}, {} };
+	Circle laserHit = { it->nowPos, LASER_HIT_R, {}, {} };
 
-	// プレイヤーとレーザーの当たり判定
-	if (player->GetActive() && HitLineCir(line, plyHit)) {
+	//プレイヤーとレーザーの当たり判定.
+	if (player->GetActive() && HitCirCir(laserHit, plyHit)) {
 
 		//反射あり.
 		if (player->GetMode() == Player_Reflect ||

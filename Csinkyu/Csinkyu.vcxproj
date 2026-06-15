@@ -41,6 +41,7 @@
     <ClCompile Include="KrLib_Dx\KR_CurveLine.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Debug.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Draw.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_DrawShape.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Global.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="KrLib_Dx\KR_CurveLine.h" />
     <ClInclude Include="KrLib_Dx\KR_Debug.h" />
     <ClInclude Include="KrLib_Dx\KR_Draw.h" />
+    <ClInclude Include="KrLib_Dx\KR_DrawShape.h" />
     <ClInclude Include="KrLib_Dx\KR_Global.h" />
     <ClInclude Include="KrLib_Dx\KR_Input.h" />
     <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />

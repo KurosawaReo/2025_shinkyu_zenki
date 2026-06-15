@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/06/12
+   ver.2026/06/14
 
    KrLib全体で使う汎用プログラム。
 */
@@ -53,10 +53,11 @@ using std::function;
 #define _rad(n) (n)*(M_PI/180)
 #define _deg(n) (n)*(180/M_PI)
 //便利マクロ.
-#define _if_check(n)        assert(n); if(n)             //if文の前に同条件のassertを挟む.
-#define _return(num, condi) if (condi) { return num; }   //条件に合うならreturnする(cond = 条件)
-#define _get_name(value)    #value                       //変数名や関数名を取得.
-#define _elif               else if                      //「else if」の略.
+#define _if_check(n)        assert(n); if(n)						//if文の前に同条件のassertを挟む.
+#define _return(num, condi) if (condi) { return (num); }			//条件に合うならreturnする(cond = 条件)
+#define _get_name(value)    #value									//変数名や関数名を取得.
+#define _elif               else if									//「else if」の略.
+#define _param_ret_ptr(ptr, value)	if (ptr) { *(ptr) = (value); }	//返り値引数ポインタ用.
 //template用マクロ.
 #define _type_num_only(T)	typename = typename std::enable_if_t<std::is_arithmetic<T>::value> //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
 
@@ -313,6 +314,15 @@ namespace KR
 		MY_STRING GetMsg() const {
 			return _T("[Error] FuncName: ") + funcName + _T(", Msg: ") + msg;
 		}
+	};
+
+	//面(当たった面など)
+	enum class Surface
+	{
+		All,        //四面.
+		Horizontal, //左右面.
+		Vertical,   //上下面.
+		None        //なし.
 	};
 
 	//<T> 数値が範囲内か.
