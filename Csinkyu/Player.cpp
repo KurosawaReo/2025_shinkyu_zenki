@@ -284,6 +284,7 @@ void Player::UpdateAfterImage()
 		{
 			after[i] = after[i-1];
 		}
+
 		//一旦無効にする.
 		after[0].isActive = false;
 
@@ -296,6 +297,7 @@ void Player::UpdateAfterImage()
 			after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
 			after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
 			after[0].isActive = true;                                        //残像を出す.
+
 		}
 	}
 }
