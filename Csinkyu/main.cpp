@@ -38,19 +38,18 @@ int WINAPI WinMain(
 	ManagerInsts::NewManager<GameData>();
 	ManagerInsts::NewManager<GameManager>(3);	//リソース読み込みをしてるため最初に.
 	ManagerInsts::NewManager<BGManager>(4);		//背景.
-	ManagerInsts::NewManager<SceneMng>(5);		//シーンクラス.
-
-	ManagerInsts::NewManager<EffectManager>(6);
-	ManagerInsts::NewManager<ItemManager>(7);
-	ManagerInsts::NewManager<LaserManager>(8);
-	ManagerInsts::NewManager<Fireworks>(9);
-	ManagerInsts::NewManager<MeteorManager>(10);
-	ManagerInsts::NewManager<NormalLaser>(11);
-	ManagerInsts::NewManager<Ripples>(12);
-	ManagerInsts::NewManager<StraightLaser>(13);
-	ManagerInsts::NewManager<Player>(14);
-	ManagerInsts::NewManager<EndlessStage>(15);
-	ManagerInsts::NewManager<TutorialStage>(16);
+	ManagerInsts::NewManager<EffectManager>(5);
+	ManagerInsts::NewManager<ItemManager>(6);
+	ManagerInsts::NewManager<LaserManager>(7);
+	ManagerInsts::NewManager<Fireworks>(8);
+	ManagerInsts::NewManager<MeteorManager>(9);
+	ManagerInsts::NewManager<NormalLaser>(10);
+	ManagerInsts::NewManager<Ripples>(11);
+	ManagerInsts::NewManager<StraightLaser>(12);
+	ManagerInsts::NewManager<Player>(13);
+	ManagerInsts::NewManager<EndlessStage>(14);
+	ManagerInsts::NewManager<TutorialStage>(15);
+	ManagerInsts::NewManager<SceneMng>(16);		//シーンクラス.
 	ManagerInsts::NewManager<UIManager>(17);
 
 	//初期化処理.

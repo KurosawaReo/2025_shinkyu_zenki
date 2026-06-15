@@ -139,7 +139,7 @@ enum StageType
 #define METEOR_DEST_TIME				(20)			//隕石の破壊時間.
 #define METEOR_GOAL_RAND_RANGE			(500)			//隕石の目標地点の乱数範囲.
 #define METEOR_BREAK_ANIM_TIME			(50)			//隕石破壊破片のアニメ時間.
-#define METEOR_BREAK_ANIM_CNT			(10)			//隕石破壊破片の数.
+#define METEOR_BREAK_ANIM_CNT			(15)			//隕石破壊破片の数.
 
 #define METEOR_LINE_CNT_MIN				(5)				//最低n角形.
 #define METEOR_LINE_CNT_MAX				(16)			//最大n角形.

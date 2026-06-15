@@ -196,10 +196,8 @@ void LaserManager::UpdateLaser() {
 					//一定時間で目標地点を決める.
 					if (i->counter >= LASER_REF_TRACK_ST_TM) {
 
-						//最寄りの隕石を取得する.
-						const DBL_XY laserPos = i->nowPos; //レーザーの現在位置.
-						Meteor* meteor = meteorMng->GetTargetMeteor(laserPos);
-
+						//ターゲットできる隕石を取得.
+						Meteor* meteor = meteorMng->GetTargetMeteor(i->nowPos);
 						//隕石があった場合.
 						if (meteor) {
 							i->target     = meteor; //隕石を登録.

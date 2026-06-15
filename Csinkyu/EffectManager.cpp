@@ -80,7 +80,18 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_BreakMeteor:
+			case Effect_MeteorCrash:
+			{
+				//カウンター加算.
+				i->counter += gameData->speedRate;
+				//時間経過で消滅.
+				if (i->counter >= METEOR_BREAK_ANIM_TIME) {
+					isErase = true;
+				}
+			}
+			break;
+
+			case Effect_MeteorFragment:
 			{
 				//カウンター加算.
 				i->counter += gameData->speedRate;
@@ -208,13 +219,27 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_BreakMeteor:
+			case Effect_MeteorCrash:
+			{
+				Circle cir = { i.pos, i.counter, COLOR_METEOR(i.pos), 1.0f };
+				//描画.
+				{
+					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+
+					DrawCircleKR(cir, Anchor::Mid, false, true);
+				}
+			}
+			break;
+
+			case Effect_MeteorFragment:
 			{
 				//飛ばす線のデータ.
 				Line line{};
 				line.stPos = ArcPos(i.pos, i.ang,     i.len);
 				line.edPos = ArcPos(i.pos, i.ang+180, i.len);
 			    line.color = COLOR_METEOR(i.pos);
+				line.thick = 1;
 				//描画.
 				{
 					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.

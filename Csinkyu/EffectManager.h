@@ -12,7 +12,8 @@ enum EffectType
 	Effect_PlayerDash,		//プレイヤーダッシュ.
 	Effect_PlayerDeath,		//プレイヤー死亡.
 	Effect_ReflectLaser,	//レーザー反射.
-	Effect_BreakMeteor,		//隕石破壊.
+	Effect_MeteorCrash,		//隕石破壊.
+	Effect_MeteorFragment,	//隕石破片.
 
 	Effect_Endless_Level1,	//耐久モード: Level1演出.
 	Effect_Endless_Level2,	//耐久モード: Level2演出.

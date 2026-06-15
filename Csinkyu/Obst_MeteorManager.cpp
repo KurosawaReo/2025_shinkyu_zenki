@@ -136,28 +136,42 @@ void MeteorManager::SpawnMeteor(){
 	tmp.Init(); //初期化.
 	meteor.push_back(tmp);
 }
+
 //隕石破壊演出.
 void MeteorManager::BreakMeteor(DBL_XY pos, double ang, bool isScore, double scale) {
 	
-	//エフェクトデータ.
-	EffectData data{};
-	data.type = Effect_BreakMeteor;
-	data.pos  = pos;
-	//いくつか出す.
-	for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
+	//破片エフェクト.
+	{
+		EffectData data{};
+		data.type = Effect_MeteorFragment;
+		data.pos  = pos;
+		//いくつか出す.
+		for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
 
-		double newDig = ang + _flt(Calc::RandNum(-300, 300)) / 10;	//少し角度をずらす.
-		data.vec   = Calc::AngToVector(newDig);						//ずらした角度を反映.
-		data.speed = _flt(Calc::RandNum(50, 300) / 10 * scale);		//速度抽選.
-		data.len   = _flt(Calc::RandNum(10, 100) / 10 * scale);		//長さ抽選.
-		data.ang   = _flt(Calc::RandNum(0, 3599) / 10);				//角度抽選.
-		effectMng->SpawnEffect(&data);								//エフェクト出現.
+			double newDig = _flt(Calc::RandNum(0, 3599) / 10);			//飛ぶ方向抽選.
+			data.vec   = Calc::AngToVector(newDig);						//ベクトルに反映.
+
+			data.speed = _flt(Calc::RandNum(50, 200) / 10 * scale);		//速度抽選.
+			data.len   = _flt(Calc::RandNum(30, 120) / 10 * scale);		//長さ抽選.
+			data.ang   = _flt(Calc::RandNum(0, 3599) / 10);				//角度抽選.
+			effectMng->SpawnEffect(&data);								//エフェクト出現.
+		}
+	}
+	//破壊エフェクト.
+	{
+		EffectData data{};
+		data.type = Effect_MeteorCrash;
+		data.pos  = pos;
+		effectMng->SpawnEffect(&data); //エフェクト出現.
 	}
 	//スコアエフェクト.
 	if (isScore) {
+		EffectData data{};
 		data.type = Effect_Score500;
+		data.pos  = pos;
 		effectMng->SpawnEffect(&data); //エフェクト出現.
 	}
+
 	//サウンド.
 	if (auto i = soundMng->Get("Break")) {
 		i->Play(false, 74); //再生.
