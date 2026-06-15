@@ -39,6 +39,7 @@ int WINAPI WinMain(
 	ManagerInsts::NewManager<GameManager>(3);	//リソース読み込みをしてるため最初に.
 	ManagerInsts::NewManager<BGManager>(4);		//背景.
 	ManagerInsts::NewManager<SceneMng>(5);		//シーンクラス.
+
 	ManagerInsts::NewManager<EffectManager>(6);
 	ManagerInsts::NewManager<ItemManager>(7);
 	ManagerInsts::NewManager<LaserManager>(8);
