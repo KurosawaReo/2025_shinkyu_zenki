@@ -47,17 +47,6 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_PlayerDash:
-			{
-				i->counter++;
-
-				//時間経過で消滅.
-				if (i->counter >= PLAYER_DASH_EFFECT_TIME) {
-					isErase = true;
-				}
-			}
-			break;
-
 			case Effect_PlayerDeath:
 			{
 				i->counter++;
@@ -69,7 +58,8 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_ReflectLaser:
+			case Effect_Reflect:
+			case Effect_ReflectSpark:
 			{
 				i->counter++;
 
@@ -176,23 +166,6 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_PlayerDash:
-			{
-				//アニメーション値.
-				const double anim = AnimEase(EaseType::OutQuad, 1-i.counter/PLAYER_DASH_EFFECT_TIME);
-				//三角形データ.
-				DBL_XY pos1 = i.pos + Calc::AngToVector(i.ang   ) * 40 * anim;
-				DBL_XY pos2 = i.pos + Calc::AngToVector(i.ang+90) * 20 * anim;
-				DBL_XY pos3 = i.pos + Calc::AngToVector(i.ang-90) * 20 * anim;
-				Triangle tri = { pos1, pos2, pos3, 0xFFFFFF, 1.0f };
-				//描画.
-				{
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-					DrawTriangleKR(tri, false, true);
-				}
-			}
-			break;
-
 			case Effect_PlayerDeath:
 			{
 				Circle cir = { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF, 1.0f };
@@ -206,12 +179,25 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_ReflectLaser:
+			case Effect_Reflect:
 			{
-				Circle cir = { i.pos, _flt(5+i.counter*1.5), COLOR_PLY_REFLECT, 1.0f };
+				Circle cir = { i.pos, _flt(5+i.counter*2), COLOR_PLY_REFLECT, 1.0f };
 				//描画.
 				{
 					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
+					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+
+					DrawCircleKR(cir, Anchor::Mid, false, true);
+				}
+			}
+			break;
+
+			case Effect_ReflectSpark:
+			{
+				Circle cir = { i.pos, _flt(5 + i.counter * 2), COLOR_PLY_REFLECT, 1.0f };
+				//描画.
+				{
+					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter / LASER_REF_ANIM_TIME)); //透明度.
 					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
 
 					DrawCircleKR(cir, Anchor::Mid, false, true);

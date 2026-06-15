@@ -4,6 +4,7 @@
 #include "BG1.h"
 
 //ˆË‘¶ŠÖŒW.
+#include "Global.h"
 #include "BGManager.h"
 #include "GameData.h"
 #include "GameManager.h"

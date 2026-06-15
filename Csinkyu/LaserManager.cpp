@@ -394,7 +394,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 
 	//エフェクト.
 	EffectData data{};
-	data.type = Effect_ReflectLaser;
+	data.type = Effect_Reflect;
 	data.pos  = it->nowPos;
 	effectMng->SpawnEffect(&data);
 	//サウンド.
