@@ -35,6 +35,7 @@
 #include "KrLib_Dx/KR_Camera.h"
 #include "KrLib_Dx/KR_Debug.h"
 #include "KrLib_Dx/KR_Draw.h"
+#include "KrLib_Dx/KR_DrawShape.h"
 #include "KrLib_Dx/KR_Input.h"
 #include "KrLib_Dx/KR_ManagerBase.h"
 #include "KrLib_Dx/KR_ManagerInsts.h"

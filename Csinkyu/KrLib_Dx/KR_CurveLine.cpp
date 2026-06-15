@@ -6,6 +6,7 @@
 //[include] ".cpp"ファイルでのみ使うもの.
 #include "KR_App.h"
 #include "KR_Calc.h"
+#include "KR_DrawShape.h"
 #include "KR_Camera.h"
 #include "KR_Input.h"
 #include "KR_ManagerInsts.h"

@@ -1,6 +1,6 @@
 /*
    - KR_TimerMng.h - (DxLib)
-   ver.2026/06/11
+   ver.2026/06/14
 
    時間管理機能。[試作品]
 */
@@ -34,6 +34,8 @@ namespace KR
 
 		//予約実行する.
 		void ReservExe(float timer, function<void()> func);
+		//全ての予約を中止する.
+		void ReservCancelAll();
 
 		void Init()   override;
 		void Reset()  override {}

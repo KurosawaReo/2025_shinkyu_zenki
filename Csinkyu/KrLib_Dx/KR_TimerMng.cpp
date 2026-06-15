@@ -20,6 +20,11 @@ namespace KR
 		functions.push_back(newFunc);
 	}
 
+	//全ての予約を中止する.
+	void TimerMng::ReservCancelAll() {
+		functions.clear();
+	}
+
 	//初期化.
 	void TimerMng::Init() {
 		gameTimer.Start(); //タイマー開始.
@@ -29,20 +34,27 @@ namespace KR
 	void TimerMng::Update() {
 
 		//予約がない時は処理しない.
-		if (functions.size() <= 0) { return; }
+		if (functions.empty()) { return; }
 
 		//現在時刻取得.
 		const float nowTime = gameTimer.GetPassTime();
+		//実行する関数.
+		vector<function<void()>> exeFuncs;
+
 		//予約リスト全ループ.
 		for (auto it = functions.begin(); it != functions.end(); ) {
 			//予約時間になったら.
 			if (it->time <= nowTime) {
-				it->func();               //関数実行.
-				it = functions.erase(it); //完了したため削除.
+				exeFuncs.push_back(move(it->func)); //後で実行する.
+				it = functions.erase(it);           //予約削除.
 			}
 			else {
 				it++;
 			}
+		}
+		//後で実行.
+		for (auto& i : exeFuncs) {
+			i();
 		}
 	}
 }
