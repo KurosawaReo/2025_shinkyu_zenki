@@ -109,7 +109,8 @@ void Player::Draw()
 	if (active) {
 		DrawAfterImage();
 
-		const float size = 0.17f;
+		const float size  = 0.17f;
+		const float size2 = 0.05f;
 
 		//プレイヤー描画.
 		if (mode == Player_Reflect ||
@@ -117,7 +118,7 @@ void Player::Draw()
 		){
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get("player_light_ref")->DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+				DrawImgMng::Get("player_light_ref")->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//反射モードの画像.
 			DrawImgMng::Get("player_ref")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
@@ -125,7 +126,7 @@ void Player::Draw()
 		else {
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get("player_light_nor")->DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+				DrawImgMng::Get("player_light_nor")->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//通常モードの画像.
 			DrawImgMng::Get("player_nor")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
