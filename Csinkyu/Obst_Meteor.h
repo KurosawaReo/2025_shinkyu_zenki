@@ -23,21 +23,26 @@ struct MeteorShape
 class Meteor
 {
 private:
-	MeteorState state{};       //隕石の状態.
-	MeteorShape shape{};       //隕石の形データ.
+	MeteorState state{};		//隕石の状態.
+	MeteorShape shape{};		//隕石の形データ.
 
-	DBL_XY      pos{};	       //中心座標.
-	float       ang{};	       //角度.
-	DBL_XY      vel{};         //速度.
-	bool        isErase{};     //消去するかどうか.
+	DBL_XY      pos{};			//中心座標.
+	float       ang{};			//角度.
+	DBL_XY      vel{};			//速度.
 
-	float       destroyCntr{}; //破壊量の度合.
+	bool        isErase{};		//消去するかどうか.
+	bool        isTargeting{};	//レーザーに標的にされているか.
+
+	float       destroyCntr{};	//破壊の度合.
 
 public:
 	//get.
-	DBL_XY      GetPos()     const { return pos; }
-	bool        GetIsErase() const { return isErase; }
-	MeteorState GetState()   const { return state; }
+	DBL_XY      GetPos()		 const { return pos; }
+	MeteorState GetState()		 const { return state; }
+	bool        GetIsErase()	 const { return isErase; }
+	bool        GetIsTargeting() const { return isTargeting; }
+	//set.
+	void        SetIsTargeting(bool flag) { isTargeting = flag; }
 
 	//その他.
 	void Init();
@@ -45,7 +50,7 @@ public:
 	void Update();
 	void Draw();
 
-	void Spawn();					//隕石出現. 
+	void Spawn();					//隕石出現処理. 
 	void Destroy();					//隕石破壊.
 	bool IsHitMeteor(Circle) const;	//隕石の当たり判定.
 

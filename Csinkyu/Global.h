@@ -70,10 +70,10 @@ enum StageType
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 #define TUTORIAL_START_WAIT_TIME        (1.5)           //チュートリアルで項目が開始した時の停止時間.
 #define TUTORIAL_END_NEXT_TIME          (1.0)           //チュートリアルで次に進む間隔時間.
-#define TUTORIAL_RESPAWN_TIME           (1.8)           //チュートリアルでプレイヤーが復活する時間.
+#define TUTORIAL_RESPAWN_TIME           (1.8f)          //チュートリアルでプレイヤーが復活する時間.
 
 #define REFLECT_MODE_TIME				(8)             //反射モード制限時間.
-#define SLOW_MODE_SPEED					(0.2f)			//スロー速度倍率.
+#define SLOW_MODE_SPEED					(0.20f)			//スロー速度倍率.
 #define SLOW_MODE_DIS_LEN				(50)			//スローになるプレイヤーとレーザーの距離範囲.
 #define SLOW_MODE_BUF_F                 (30)            //スローが継続するフレーム数.
 
@@ -85,7 +85,7 @@ enum StageType
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
-#define PLAYER_MOVE_LERP_SPEED          (0.25)          //プレイヤーの感性スピードの調整.
+#define PLAYER_MOVE_LERP_SPEED          (0.2)           //プレイヤーの慣性スピードの調整.
 //プレイヤー > ダッシュ.
 #define PLAYER_DASH_SPEED               (1.8)			//ダッシュ速度.
 #define PLAYER_DASH_DURATION            (20)            //ダッシュ持続時間（フレーム）
@@ -106,11 +106,10 @@ enum StageType
 #define LASER_NOR_SPEED					(0.1)		    //レーザー(normal)   の速度.
 #define LASER_STR_SPEED					(50.0)		    //レーザー(straight) の速度.
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
-//#define LASER_CNT_MAX					(80)			//レーザーの最大数.
-//#define LASER_LINE_CNT_MAX			(14000)			//レーザー描画線の最大数.
 #define LASER_LINE_DEL_TIME				(64)			//レーザー描画線が消える時間.
 #define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
 #define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
+#define LASER_HIT_R						(2)				//レーザーのヒット半径.
 
 //障害物: 通常レーザー.
 #define LASER_NOR_SHOT_RESET			(300)			//砲台の発射リセット時間.
@@ -134,8 +133,7 @@ enum StageType
 #define LASER_FAL_HIT_ABLE				(70)			//↑のうち、当たり判定を持たせる時間.
 
 //障害物: 隕石.
-//#define METEOR_CNT_MAX				(50)			//隕石の最大出現数.
-#define METEOR_SPAWN_SPAN				(150)			//隕石の出現時間間隔.
+#define METEOR_SPAWN_SPAN				(120)			//隕石の出現時間間隔.
 #define METEOR_SPEED					(2)				//移動速度.
 #define METEOR_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
 #define METEOR_DEST_TIME				(20)			//隕石の破壊時間.
@@ -145,8 +143,8 @@ enum StageType
 
 #define METEOR_LINE_CNT_MIN				(5)				//最低n角形.
 #define METEOR_LINE_CNT_MAX				(16)			//最大n角形.
-#define METEOR_LINE_DIS_MIN				(40)			//頂点の最短距離.
-#define METEOR_LINE_DIS_MAX				(60)			//頂点の最大距離.
+#define METEOR_LINE_DIS_MIN				(30)			//頂点の最短距離.
+#define METEOR_LINE_DIS_MAX				(50)			//頂点の最大距離.
 
 //障害物: 波紋.
 #define RIPPLES_FLASH_MAX				(30)            //最大フラッシュエフェクト数
@@ -164,7 +162,6 @@ enum StageType
 #define RIPPLES_MIN_DISTANCE			(100)			//最小距離.
 
 //障害物: 花火.
-//#define FIREWORKS_CNT_MAX				(10)			//最大同時出現数
 #define FIREWORKS_RND_MAX				(2)				//花火出現最大数
 #define FIREWORKS_SPAWN_SPAN			(600)			//花火生成間隔（フレーム）
 #define FIREWORKS_WARNING_DURATION		(120)			//予告を出す長さ（フレーム）
@@ -177,9 +174,6 @@ enum StageType
 //メニュー.
 #define MENU_ELECTR_MOVE_SPEED			(0.1)			//電気の動く速度.
 
-//エフェクト.
-//#define EFFECT_MAX					(70)			//エフェクトの最大出現数.
-
 //スコア.
 #define SCORE_TAKE_ITEM					(100)			//アイテムを取った時のスコア.
 #define SCORE_BREAK_METEOR				(500)			//隕石を壊した時のスコア.
@@ -190,7 +184,6 @@ enum StageType
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
 #define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
 #define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
-//#define COLOR_ITEM					(GetColor( 60, 255,  60))
 #define COLOR_ITEM						(GetColor(255, 155, 255))
 #define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))   //予測演出.
 #define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::AnimWave(WaveType::CosLoop, pos.x/250)), 255)) //隕石.

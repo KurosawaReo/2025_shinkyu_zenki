@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClCompile Include="BG1.cpp" />
     <ClCompile Include="BG2.cpp" />
+    <ClCompile Include="BG3.cpp" />
     <ClCompile Include="BGManager.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -40,6 +41,7 @@
     <ClCompile Include="KrLib_Dx\KR_CurveLine.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Debug.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Draw.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_DrawShape.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Global.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
@@ -75,6 +77,7 @@
   <ItemGroup>
     <ClInclude Include="BG1.h" />
     <ClInclude Include="BG2.h" />
+    <ClInclude Include="BG3.h" />
     <ClInclude Include="BGManager.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="GameData.h" />
@@ -95,6 +98,7 @@
     <ClInclude Include="KrLib_Dx\KR_CurveLine.h" />
     <ClInclude Include="KrLib_Dx\KR_Debug.h" />
     <ClInclude Include="KrLib_Dx\KR_Draw.h" />
+    <ClInclude Include="KrLib_Dx\KR_DrawShape.h" />
     <ClInclude Include="KrLib_Dx\KR_Global.h" />
     <ClInclude Include="KrLib_Dx\KR_Input.h" />
     <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />

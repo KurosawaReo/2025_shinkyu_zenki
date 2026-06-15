@@ -29,31 +29,32 @@ Meteor* MeteorManager::GetHitMeteor(Circle cir, bool isDestroy) {
 	}
 	return nullptr; //隕石はない.
 }
-//最寄りの隕石を取得.
-Meteor* MeteorManager::GetNearestMeteor(DBL_XY pos) {
+
+//目標となる隕石を選ぶ.
+Meteor* MeteorManager::GetTargetMeteor(DBL_XY pos) {
 
 	Meteor* ret = nullptr; //最寄りの隕石.
 	double shortest = -1;  //暫定の最短距離.
 
 	//全隕石ループ.
 	for (auto& i : meteor) {
-		//破壊されてないなら.
-		if (i.GetState() == Meteor_Normal) {
-
-			DBL_XY tmpPos = i.GetPos();              //1つずつ座標取得.
-			double tmpDis = Calc::Dist(tmpPos, pos); //距離を計算.
-
-			//初回限定.
-			if (shortest == -1) {
-				shortest = tmpDis; //暫定1位.
-				ret = &i;
-			}
-			//より近い場所が見つかれば更新.
-			else if (tmpDis < shortest) {
-				shortest = tmpDis;
-				ret = &i;
-			}
+		//破壊されてる or ターゲットされてるならスキップ.
+		if (i.GetState() == Meteor_Destroy || i.GetIsTargeting()){
+			continue;
 		}
+
+		DBL_XY tmpPos = i.GetPos();              //1つずつ座標取得.
+		double tmpDis = Calc::Dist(tmpPos, pos); //距離を計算.
+
+		//初回 or より近ければ更新.
+		if (shortest == -1 || tmpDis < shortest) {
+			shortest = tmpDis;
+			ret = &i;
+		}
+	}
+	//この隕石をターゲット.
+	if (ret) {
+		ret->SetIsTargeting(true);
 	}
 
 	return ret;
@@ -132,8 +133,7 @@ void MeteorManager::Draw() {
 void MeteorManager::SpawnMeteor(){
 	
 	Meteor tmp;
-	tmp.Init();  //初期化.
-	tmp.Spawn(); //スポーン処理.
+	tmp.Init(); //初期化.
 	meteor.push_back(tmp);
 }
 //隕石破壊演出.

@@ -48,6 +48,7 @@ public:
 	//‚»‚Ì‘¼.
 	void GameOver();
 	void ItemUsed();
+	void SlowModeStart();
 
 	void StopObjects();
 	void DrawOnlyObjects();

@@ -69,6 +69,7 @@ void BG2::Draw() {
 		DrawBoxKR(box, Anchor::Mid, false, true);
 	}
 
+	/*
 	//====================================
 	// 背景グリッド（薄く）
 	//====================================
@@ -79,6 +80,7 @@ void BG2::Draw() {
 		{ 40, 40, 80 },
 		{ 40, 40, 80 }
 	);
+	*/
 
 	DrawStr str(_T("ChatGPT作成背景"), App::GetWindowRect().GetMid(), 0xffffff);
 	str.Draw();

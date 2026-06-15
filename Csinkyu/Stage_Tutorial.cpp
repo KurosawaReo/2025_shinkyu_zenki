@@ -339,8 +339,11 @@ void TutorialStage::UpdateStep3() {
 
 		case 2:
 		{
-			//[終了条件] 隕石を壊した & 反射モードが終わったら.
-			if (endTimer.GetState() != TimerState::Active && isBreakMeteor && isReflectFinish) {
+			//[終了条件] 隕石を壊した & 反射モードでなければ.
+			if (endTimer.GetState() != TimerState::Active && 
+				isBreakMeteor                             && 
+				player->GetMode() == Player_Normal
+			){
 				endTimer.Start();
 			}
 			//次の説明へ.
@@ -393,10 +396,11 @@ void TutorialStage::UpdateStep4() {
 	{
 		case 0:
 		{
-			//[終了条件] 一定スコアを越える & 反射モードが終わったら.
+			//[終了条件] 一定スコアを越える & 反射モードでなければ.
 			if (endTimer.GetState() != TimerState::Active && 
-				gameData->score >= 2000 && isReflectFinish) 
-			{
+				gameData->score >= 2000                   && 
+				player->GetMode() == Player_Normal
+			){
 				endTimer.Start();
 			}
 			//次の説明へ.
@@ -460,9 +464,9 @@ void TutorialStage::DrawStep1() {
 		case 1:
 		{
 			DrawTopText(1, _T("ダッシュする"), alpha);
-			DrawTopText(2, _T("キーボード　　 : 移動 + SHIFTキー "), alpha);
-			DrawTopText(3, _T("コントローラー : 移動 + Bボタン　 "), alpha);
-			DrawTopText(4, _T("アーケード　　 : 移動 + 右上ボタン"), alpha);
+			DrawTopText(2, _T("キーボード　　 : SHIFTキー "), alpha);
+			DrawTopText(3, _T("コントローラー : Bボタン　 "), alpha);
+			DrawTopText(4, _T("アーケード　　 : 右上ボタン"), alpha);
 		}
 		break;
 
@@ -600,7 +604,7 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 
 	{
 		const int margin = 24;
-		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).Add(-margin/2, -margin/2).ToDbl();
+		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).ToDbl() + DBL_XY(-margin/2, -margin/2);
 		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
 		Box    box  = {pos, size, 0x000000, 1.0f};
 
@@ -617,16 +621,16 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 		//枠線グラデーション.
 		GradLine gradLine;
 		if (line == 1) {
-			gradLine.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x,      0), {  0, 100, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x, size.y), {  0, 255, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(     0, size.y), {  0, 100, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos,                          {  0, 255, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x,      0), {  0, 100, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x, size.y), {  0, 255, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(     0, size.y), {  0, 100, 255, _int_r(255*alpha)});
 		}
 		else {
-			gradLine.AddPoint(pos,                     {  0, 255, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
-			gradLine.AddPoint(pos.Add(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
+			gradLine.AddPoint(pos,                          {  0, 255, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x,      0), {  0,   0,   0, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(size.x, size.y), {255,   0, 255, _int_r(255*alpha)});
+			gradLine.AddPoint(pos + DBL_XY(     0, size.y), {  0,   0,   0, _int_r(255*alpha)});
 		}
 		gradLine.Draw(true);
 	}

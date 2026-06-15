@@ -11,7 +11,10 @@
 static GameData* gameData;
 
 void Meteor::Init() {
+	//取得.
 	gameData = ManagerInsts::Get<GameData>();
+	//隕石出現処理.
+	Spawn();
 }
 
 void Meteor::Reset() {
@@ -56,6 +59,18 @@ void Meteor::Draw() {
 	
 	int pow = 255;
 
+#if true
+	//デバッグ.
+	//TODO: これを画像でやりたい.
+	if (isTargeting) {
+		Circle tmp(pos, 0, 0xff00ff, 1);
+		tmp.r = 10;
+		DrawCircleKR(tmp, Anchor::Mid, false, true);
+		tmp.r = 15;
+		DrawCircleKR(tmp, Anchor::Mid, false, true);
+	}
+#endif
+
 	//破壊モード限定.
 	if (state == Meteor_Destroy) {
 		pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
@@ -93,7 +108,7 @@ void Meteor::Draw() {
 	}
 }
 
-//隕石出現.
+//隕石出現処理.
 void Meteor::Spawn() {
 
 	int rnd1 = Calc::RandNum(0, 99);
