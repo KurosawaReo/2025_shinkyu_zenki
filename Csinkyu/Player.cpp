@@ -283,16 +283,7 @@ void Player::UpdateAfterImage()
 		{
 			after[i] = after[i-1];
 		}
-<<<<<<< HEAD
-		//1フレーム目の情報登録.
-		after[0].pos      = hit.pos;                                     //プレイヤー座標.
-		after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
-		after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
-		after[0].isActive = false;                                       //一旦無効にする.
-		//位置が変わったら(移動したら)
-		if (after[0].pos.x != after[1].pos.x || after[0].pos.y != after[1].pos.y) {
-			after[0].isActive = true; //有効に.
-=======
+
 		//一旦無効にする.
 		after[0].isActive = false;
 
@@ -305,7 +296,7 @@ void Player::UpdateAfterImage()
 			after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
 			after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
 			after[0].isActive = true;                                        //残像を出す.
->>>>>>> main
+
 		}
 	}
 }
