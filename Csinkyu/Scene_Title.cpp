@@ -163,11 +163,11 @@ void TitleScene::Draw() {
 			str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
 		}
 	}
-	//隕石破壊アニメーション.
+	//破片アニメーション.
 	if (!isTitleAnim) {
 		if (timer.GetPassTime() >= delay5) {
-			//破壊演出.
-			meteorMng->BreakMeteor({ 580, 310 }, -130, false, 1.4);
+			//演出召喚.
+			meteorMng->BreakMeteor({ 960, 850 }, false, 1.4);
 			//一度きり.
 			isTitleAnim = true;
 		}

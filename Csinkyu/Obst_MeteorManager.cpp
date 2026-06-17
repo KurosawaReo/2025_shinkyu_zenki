@@ -138,7 +138,7 @@ void MeteorManager::SpawnMeteor(){
 }
 
 //隕石破壊演出.
-void MeteorManager::BreakMeteor(DBL_XY pos, double ang, bool isScore, double scale) {
+void MeteorManager::BreakMeteor(DBL_XY pos, bool isScore, double scale) {
 	
 	//破片エフェクト.
 	{
