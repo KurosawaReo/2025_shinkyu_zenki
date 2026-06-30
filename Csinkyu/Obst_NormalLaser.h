@@ -4,6 +4,7 @@
    障害物: レーザー発射台(継承元)
 */
 #pragma once
+#include "Global.h"
 
 //移動方向(+1すれば右回転)
 enum MoveDir

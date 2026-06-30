@@ -67,57 +67,74 @@ namespace KR
 		actions[name].inputs.push_back({ InputType::PadArcade, _int(id) }); //Pad操作(arcade)で登録.
 	}
 
-	//キーボード操作取得(十字キー)
-	DBL_XY InputMng::GetKey4Dir() {
+	//キーボード操作取得(上下左右キー)
+	DBL_XY InputMng::GetKey4Dir(bool isWASD, bool isArrow) {
 
-		INT_XY input{}; //入力.
+		INT_XY vec{}; //入力.
 
 		//キー入力に応じて移動力を与える.
-		if (IsPushKey(KeyID::Up)   ||IsPushKey(KeyID::W)) {
-			input.y += -1;
+		if (
+			(IsPushKey(KeyID::Up) && isArrow) ||
+			(IsPushKey(KeyID::W)  && isWASD)
+		){
+			vec.y += -1;
 		}
-		if (IsPushKey(KeyID::Down) ||IsPushKey(KeyID::S)) {
-			input.y += +1;
+		if (
+			(IsPushKey(KeyID::Down) && isArrow) ||
+			(IsPushKey(KeyID::S)    && isWASD)
+		){
+			vec.y += +1;
 		}
-		if (IsPushKey(KeyID::Left) ||IsPushKey(KeyID::A)) {
-			input.x += -1;
+		if (
+			(IsPushKey(KeyID::Left) && isArrow) ||
+			(IsPushKey(KeyID::A)    && isWASD)
+		){
+			vec.x += -1;
 		}
-		if (IsPushKey(KeyID::Right)||IsPushKey(KeyID::D)) {
-			input.x += +1;
+		if (
+			(IsPushKey(KeyID::Right) && isArrow) ||
+			(IsPushKey(KeyID::D)     && isWASD)
+		){
+			vec.x += +1;
 		}
+
 		//入力ベクトル(-1.0～1.0)を返す.
-		return GetVector4Dir(input);
+		return GetVector4Dir(vec);
 	}
+
 	//コントローラ操作取得(十字キー)
 	DBL_XY InputMng::GetPad4Dir() {
 
-		INT_XY input{}; //入力.
+		INT_XY vec{}; //入力.
 
 		//キー入力に応じて移動力を与える.
 		if (IsPushPadBtn(PadXboxID::Up)) {
-			input.y += -1;
+			vec.y += -1;
 		}
 		if (IsPushPadBtn(PadXboxID::Down)) {
-			input.y += +1;
+			vec.y += +1;
 		}
 		if (IsPushPadBtn(PadXboxID::Left)) {
-			input.x += -1;
+			vec.x += -1;
 		}
 		if (IsPushPadBtn(PadXboxID::Right)) {
-			input.x += +1;
+			vec.x += +1;
 		}
 		//入力ベクトル(-1.0～1.0)を返す.
-		return GetVector4Dir(input);
+		return GetVector4Dir(vec);
 	}
+
 	//コントローラ操作取得(スティック)
 	DBL_XY InputMng::GetPadStick() {
 		//範囲-1000～1000を-1.0～1.0に変換.
 		return stickVec.ToDbl() / 1000;
 	}
+	
 	//マウス座標取得.
 	DBL_XY InputMng::GetMousePos() {
 		return App::ToCameraPos(mPos.ToDbl()); //カメラ座標にして返す.
 	}
+	
 	//移動4方向処理(斜め計算)
 	DBL_XY InputMng::GetVector4Dir(INT_XY input) {
 

@@ -61,7 +61,7 @@ bool Ripples::CheckDistance(double x, double y)
 //波紋生成.
 void Ripples::SpawnRipples(double x, double y)
 {
-	RipplesData tmp; //波紋生成.
+	RipplesData tmp{}; //波紋生成.
 
 	tmp.x = x;
 	tmp.y = y;
@@ -249,17 +249,17 @@ void Ripples::DrawWarningEffect(list<RipplesData>::iterator it)
 	}
 
 	//予告エフェクト.
-	{
-		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
-
-		Circle cir;
-		cir = { {it->x, it->y}, (float)warningSize,   GetColor(150, 150, 150), 1.0f };
-		DrawCircleKR(cir, Anchor::Mid, false, true);
-		cir = { {it->x, it->y}, (float)warningSize/2, GetColor(200, 200, 200), 1.0f };
-		DrawCircleKR(cir, Anchor::Mid, false, true);
-		cir = { {it->x, it->y}, (float)warningSize+5, GetColor(120, 120, 120), 1.0f }; // 外周リング
-		DrawCircleKR(cir, Anchor::Mid, false, true);
-	}
+	DrawMode::Exe(
+		DrawModeID::None, DrawBlendModeID::Alpha, alphaValue,
+		[&]() {
+			Circle cir;
+			cir = { {it->x, it->y}, (float)warningSize,   GetColor(150, 150, 150), 1.0f };
+			DrawCircleKR(cir, Anchor::Mid, false, true);
+			cir = { {it->x, it->y}, (float)warningSize/2, GetColor(200, 200, 200), 1.0f };
+			DrawCircleKR(cir, Anchor::Mid, false, true);
+			cir = { {it->x, it->y}, (float)warningSize+5, GetColor(120, 120, 120), 1.0f }; // 外周リング
+		}
+	);
 }
 
 void Ripples::DrawActiveEffect(list<RipplesData>::iterator it)
@@ -281,13 +281,14 @@ void Ripples::DrawActiveEffect(list<RipplesData>::iterator it)
 	int innerSize = effectSize / 2;
 
 	//アクティブエフェクト.
-	{
-		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
-
-		Circle cir;
-		cir = {{it->x, it->y}, (float)effectSize, GetColor(0, 255, 255), 1.0f};
-		DrawCircleKR(cir, Anchor::Mid, false, true);
-		cir = {{it->x, it->y}, (float)innerSize,  GetColor(0, 255, 200), 1.0f};
-		DrawCircleKR(cir, Anchor::Mid, false, true);
-	}
+	DrawMode::Exe(
+		DrawModeID::None, DrawBlendModeID::Alpha, alphaValue,
+		[&]() {
+			Circle cir;
+			cir = {{it->x, it->y}, (float)effectSize, GetColor(0, 255, 255), 1.0f};
+			DrawCircleKR(cir, Anchor::Mid, false, true);
+			cir = {{it->x, it->y}, (float)innerSize,  GetColor(0, 255, 200), 1.0f};
+			DrawCircleKR(cir, Anchor::Mid, false, true);
+		}
+	);
 }

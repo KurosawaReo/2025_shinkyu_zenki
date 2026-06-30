@@ -10,8 +10,6 @@
 #if !defined GLOBAL
 #define GLOBAL
 
-using namespace KR;
-
 //====================================================================//
 //y—ñ‹“‘Ìz
 
@@ -139,7 +137,7 @@ enum StageType
 #define METEOR_DEST_TIME				(20)			//è¦Î‚Ì”j‰óŠÔ.
 #define METEOR_GOAL_RAND_RANGE			(500)			//è¦Î‚Ì–Ú•W’n“_‚Ì—””ÍˆÍ.
 #define METEOR_BREAK_ANIM_TIME			(50)			//è¦Î”j‰ó”j•Ğ‚ÌƒAƒjƒŠÔ.
-#define METEOR_BREAK_ANIM_CNT			(10)			//è¦Î”j‰ó”j•Ğ‚Ì”.
+#define METEOR_BREAK_ANIM_CNT			(15)			//è¦Î”j‰ó”j•Ğ‚Ì”.
 
 #define METEOR_LINE_CNT_MIN				(5)				//Å’ánŠpŒ`.
 #define METEOR_LINE_CNT_MAX				(16)			//Å‘ånŠpŒ`.

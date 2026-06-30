@@ -2,6 +2,8 @@
    - BG2.cpp -
 */
 #include "BG2.h"
+
+#include "Global.h"
 #include <cmath>
 
 //‰Šú‰».
