@@ -99,10 +99,14 @@ void TitleScene::Draw() {
 			//アニメーション値.
 			double anim = Calc::AnimEase(EaseType::InOutQuad, timer.GetPassTime() / delay1);
 			//ロゴ1枚目.
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-				DrawImgMng::Get("logo")->DrawExtend({ WINDOW_WID / 2, logoY }, imgSize, Anchor::Mid, true, true);
-			}
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+				[&]() {
+					DrawImgMng::Get("logo")->DrawExtend(
+						DBL_XY{ WINDOW_WID / 2, _dbl(logoY) }, imgSize, Anchor::Mid, true, true
+					);
+				}
+			);
 		}
 		//切り替え後.
 		else {
@@ -111,15 +115,19 @@ void TitleScene::Draw() {
 			double anim1 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay1)       / 1.8);
 			double anim2 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay1 - 0.4) / 1.8);
 			//ロゴ1枚目.
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim2));
-				DrawImgMng::Get("logo")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
-			}
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim2),
+				[&]() {
+					DrawImgMng::Get("logo")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
+				}
+			);
 			//ロゴ2枚目.
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1);
-				DrawImgMng::Get("logo_all")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
-			}
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1,
+				[&]() {
+					DrawImgMng::Get("logo_all")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
+				}
+			);
 		}
 	}
 
@@ -135,19 +143,24 @@ void TitleScene::Draw() {
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
 		DrawStr str(text, { WINDOW_WID / 2, drawY + 1 }, COLOR_BEST_SCORE);
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1);
-			str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont()); //スコア値.
-		}
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim2);
 
-			//UI
-			DrawImgMng::Get("ui_back_best_score")->
-				DrawExtend({ WINDOW_WID / 2, drawY + (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
-			DrawImgMng::Get("ui_back_best_score")->
-				DrawExtend({ WINDOW_WID / 2, drawY - (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
-		}
+		//描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1,
+			[&]() {
+				str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont()); //スコア値.
+			}
+		);
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim2,
+			[&]() {
+				//UI
+				DrawImgMng::Get("ui_back_best_score")->
+					DrawExtend({ WINDOW_WID / 2, drawY + (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
+				DrawImgMng::Get("ui_back_best_score")->
+					DrawExtend({ WINDOW_WID / 2, drawY - (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
+			}
+		);
 	}
 	//PUSH SPACE.
 	if (timer.GetPassTime() >= delay4) {
@@ -158,10 +171,13 @@ void TitleScene::Draw() {
 		double anim = Calc::AnimWave(WaveType::CosLoop, timer.GetPassTime() - delay4);
 		//テキスト.
 		DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, drawY }, 0xFFFFFF);
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-			str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
-		}
+		//描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+			[&]() {
+				str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
+			}
+		);
 	}
 	//破片アニメーション.
 	if (!isTitleAnim) {

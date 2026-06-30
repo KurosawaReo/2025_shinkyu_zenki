@@ -88,10 +88,12 @@ void LaserManager::Draw() {
 			default: assert(FALSE); break;
 		}
 		//加算合成モードで軌跡を描画(発光エフェクト)
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Add, color);
-			DrawLineKR(tmpLine, true);
-		}
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Add, color,
+			[&]() {
+				DrawLineKR(tmpLine, true);
+			}
+		);
 	}
 
 	//チュートリアル限定.

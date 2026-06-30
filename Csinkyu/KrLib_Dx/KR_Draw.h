@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver.2026/06/13
+   ver.2026/06/30
 
    図形や画像の描画機能。
    (オブジェクト指向ver → KR_Object)
@@ -168,35 +168,16 @@ namespace KR
 		void Draw(bool isClose = false, bool isCameraDisp = true);
 	};
 
-	//描画モード設定(スコープ内のみ有効)
+	//描画モード設定.
 	class DrawMode
 	{
+	//▼ ===== 実体 ===== ▼.
 	private:
-		int oldMode1;
-		int oldMode2;
-		int oldMode2Param;
+		static DrawMode inst; //実体を入れる用.
 
+	//▼ ===== 関数 ===== ▼.
 	public:
-		//コンストラクタ.
-		DrawMode(DrawModeID mode1, DrawBlendModeID mode2) :
-			DrawMode(mode1, mode2, 255)
-		{}
-		DrawMode(DrawModeID mode1, DrawBlendModeID mode2, double mode2Param) :
-			DrawMode(mode1, mode2, _int(mode2Param))
-		{}
-		DrawMode(DrawModeID mode1, DrawBlendModeID mode2, int mode2Param){
-			//現在の設定を保存.
-			oldMode1 = GetDrawMode();
-			GetDrawBlendMode(&oldMode2, &oldMode2Param);
-			//modeを設定.
-			SetDrawMode(_int(mode1));
-			SetDrawBlendMode(_int(mode2), mode2Param);
-		}
-		//デストラクタ.
-		~DrawMode() {
-			//設定を戻す.
-			SetDrawMode(oldMode1);
-			SetDrawBlendMode(oldMode2, oldMode2Param);
-		}
+		//描画モードを設定して描画.
+		static void Exe(DrawModeID mode1, DrawBlendModeID mode2, int mode2Param, function<void()> func);
 	};
 }

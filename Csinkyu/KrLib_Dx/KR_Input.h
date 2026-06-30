@@ -1,6 +1,6 @@
 /*
    - KR_Input.h - (DxLib)
-   ver.2026/04/27
+   ver.2026/06/26
 
    入力操作機能。
    (オブジェクト指向ver → KR_Object)
@@ -208,7 +208,7 @@ namespace KR
 		void   AddAction       (string name, PadArcadeID id);
 
 		//取得.
-		DBL_XY GetKey4Dir();
+		DBL_XY GetKey4Dir(bool isWASD = true, bool isArrow = true);
 		DBL_XY GetPad4Dir();
 		DBL_XY GetPadStick();
 		DBL_XY GetMousePos();

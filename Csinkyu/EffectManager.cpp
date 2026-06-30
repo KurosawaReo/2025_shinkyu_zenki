@@ -151,31 +151,34 @@ void EffectManager::Draw() {
 				//座標.
 				DBL_XY pos = {i.pos.x, i.pos.y - AnimEase(EaseType::OutQuad, i.counter/SCORE_ANIM_TIME)*30};
 				//描画.
-				{
-					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/SCORE_ANIM_TIME)); //透明度.
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
-
-					//画像切り替え.
-					if (i.type == Effect_Score100) {
-						DrawImgMng::Get("score100")->DrawExtend(pos, {0.2, 0.2});
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/SCORE_ANIM_TIME)); //透明度.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+						//画像切り替え.
+						if (i.type == Effect_Score100) {
+							DrawImgMng::Get("score100")->DrawExtend(pos, { 0.2, 0.2 });
+						}
+						else {
+							DrawImgMng::Get("score500")->DrawExtend(pos, { 0.2, 0.2 });
+						}
 					}
-					else {
-						DrawImgMng::Get("score500")->DrawExtend(pos, {0.2, 0.2});
-					}
-				}
+				);
 			}
 			break;
 
 			case Effect_PlayerDeath:
 			{
 				Circle cir = { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF, 1.0f };
+				
 				//描画.
-				{
-					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/PLAYER_DEATH_ANIM_TIME)); //透明度.
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
-		
-					DrawCircleKR(cir, Anchor::Mid, false, true);
-				}
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/PLAYER_DEATH_ANIM_TIME)); //透明度.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+						DrawCircleKR(cir, Anchor::Mid, false, true);
+					}
+				);
 			}
 			break;
 
@@ -183,12 +186,13 @@ void EffectManager::Draw() {
 			{
 				Circle cir = { i.pos, _flt(5+i.counter*2), COLOR_PLY_REFLECT, 1.0f };
 				//描画.
-				{
-					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
-
-					DrawCircleKR(cir, Anchor::Mid, false, true);
-				}
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+						DrawCircleKR(cir, Anchor::Mid, false, true);
+					}
+				);
 			}
 			break;
 
@@ -196,12 +200,13 @@ void EffectManager::Draw() {
 			{
 				Circle cir = { i.pos, _flt(5 + i.counter * 2), COLOR_PLY_REFLECT, 1.0f };
 				//描画.
-				{
-					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter / LASER_REF_ANIM_TIME)); //透明度.
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
-
-					DrawCircleKR(cir, Anchor::Mid, false, true);
-				}
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter / LASER_REF_ANIM_TIME)); //透明度.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+						DrawCircleKR(cir, Anchor::Mid, false, true);
+					}
+				);
 			}
 			break;
 
@@ -209,12 +214,13 @@ void EffectManager::Draw() {
 			{
 				Circle cir = { i.pos, i.counter, COLOR_METEOR(i.pos), 1.0f };
 				//描画.
-				{
-					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
-
-					DrawCircleKR(cir, Anchor::Mid, false, true);
-				}
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+						DrawCircleKR(cir, Anchor::Mid, false, true);
+					}
+				);
 			}
 			break;
 
@@ -227,12 +233,13 @@ void EffectManager::Draw() {
 			    line.color = COLOR_METEOR(i.pos);
 				line.thick = 1;
 				//描画.
-				{
-					int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
-
-					DrawLineKR(line, true);
-				}
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+						DrawLineKR(line, true);
+					}
+				);
 			}
 			break;
 
@@ -261,71 +268,76 @@ void EffectManager::Draw() {
 				//何個ランプを使うか.
 				int lampUseCnt  = 0;
 				int lampFillCnt = 0;
+
+				switch (i.type)
 				{
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, pow);
+					case Effect_Endless_Level1:
+						str.text = _T("Level 1");
+						lampUseCnt = 5;
+						lampFillCnt = 1;
+						break;
+					case Effect_Endless_Level2:
+						str.text = _T("Level 2");
+						lampUseCnt = 5;
+						lampFillCnt = 2;
+						break;
+					case Effect_Endless_Level3:
+						str.text = _T("Level 3");
+						lampUseCnt = 5;
+						lampFillCnt = 3;
+						break;
+					case Effect_Endless_Level4:
+						str.text = _T("Level 4");
+						lampUseCnt = 5;
+						lampFillCnt = 4;
+						break;
+					case Effect_Endless_Level5:
+						str.text = _T("Level 5");
+						lampUseCnt = 5;
+						lampFillCnt = 5;
+						break;
 
-					//円.
-					DrawCircleKR(mainCir, Anchor::Mid, false, true);
-					//テキスト.					
-					switch (i.type) 
-					{
-						case Effect_Endless_Level1:
-							str.text = _T("Level 1");
-							lampUseCnt  = 5;
-							lampFillCnt = 1;
-							break;
-						case Effect_Endless_Level2:
-							str.text = _T("Level 2");
-							lampUseCnt  = 5;
-							lampFillCnt = 2;
-							break;
-						case Effect_Endless_Level3:
-							str.text = _T("Level 3");
-							lampUseCnt  = 5;
-							lampFillCnt = 3;
-							break;
-						case Effect_Endless_Level4:
-							str.text = _T("Level 4");
-							lampUseCnt  = 5;
-							lampFillCnt = 4;
-							break;
-						case Effect_Endless_Level5:
-							str.text = _T("Level 5");
-							lampUseCnt  = 5;
-							lampFillCnt = 5;
-							break;
-
-						case Effect_Tutorial_Step1:
-							str.text = _T("Step 1");
-							lampUseCnt  = 4;
-							lampFillCnt = 1;
-							break;
-						case Effect_Tutorial_Step2:
-							str.text = _T("Step 2");
-							lampUseCnt  = 4;
-							lampFillCnt = 2;
-							break;
-						case Effect_Tutorial_Step3:
-							str.text = _T("Step 3");
-							lampUseCnt  = 4;
-							lampFillCnt = 3;
-							break;
-						case Effect_Tutorial_Step4:
-							str.text = _T("Step 4");
-							lampUseCnt  = 4;
-							lampFillCnt = 4;
-							break;
-					}
-					str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
-
-					//ランプ(必要な数だけ)
-					for (int j = 0; j < lampUseCnt; j++) {
-						//均等になるように配置する.
-						const int interval = 30; //間隔.
-						lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt-1)/2);
-						DrawCircleKR(lampCir[j], Anchor::Mid, (lampFillCnt >= j+1), true); 
-					}
+					case Effect_Tutorial_Step1:
+						str.text = _T("Step 1");
+						lampUseCnt = 4;
+						lampFillCnt = 1;
+						break;
+					case Effect_Tutorial_Step2:
+						str.text = _T("Step 2");
+						lampUseCnt = 4;
+						lampFillCnt = 2;
+						break;
+					case Effect_Tutorial_Step3:
+						str.text = _T("Step 3");
+						lampUseCnt = 4;
+						lampFillCnt = 3;
+						break;
+					case Effect_Tutorial_Step4:
+						str.text = _T("Step 4");
+						lampUseCnt = 4;
+						lampFillCnt = 4;
+						break;
 				}
+
+				//描画.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+
+						//円.
+						DrawCircleKR(mainCir, Anchor::Mid, false, true);
+						//テキスト.					
+						str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
+
+						//ランプ(必要な数だけ)
+						for (int j = 0; j < lampUseCnt; j++) {
+							//均等になるように配置する.
+							const int interval = 30; //間隔.
+							lampCir[j].pos.x = i.pos.x + interval * (j - _flt(lampUseCnt - 1) / 2);
+							DrawCircleKR(lampCir[j], Anchor::Mid, (lampFillCnt >= j + 1), true);
+						}
+					}
+				);
 			}
 			break;
 

@@ -200,19 +200,21 @@ void GameScene::DrawReflectMode() {
 		{
 			double dec  = Calc::GetDecimal(tmReflectMode.GetPassTime()); //è¨êîÇæÇØéÊÇËèoÇ∑.
 			double anim = Calc::AnimEase(EaseType::OutQuad, dec);
-			{
-				//1ïbÇ≤Ç∆Ç…îñÇ≠Ç»ÇÈââèo.
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * dec);
 
-				//ç≈èâÇÃ1ïb.
-				if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME - 1) {
-					DrawImgMng::Get("reflect")->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
+			//ï`âÊ.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, 255 * dec,
+				[&]() {
+					//ç≈èâÇÃ1ïb.
+					if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME - 1) {
+						DrawImgMng::Get("reflect")->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
+					}
+					//ç≈å„ÇÃ3ïb.
+					if (tmReflectMode.GetPassTime() <= 3) {
+						str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont()); //êîéö.
+					}
 				}
-				//ç≈å„ÇÃ3ïb.
-				if (tmReflectMode.GetPassTime() <= 3) {
-					str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont()); //êîéö.
-				}
-			}
+			);
 		}
 	}
 }

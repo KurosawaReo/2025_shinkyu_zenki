@@ -5,10 +5,8 @@
 
 //[include] ".cpp"ファイルでのみ使うもの.
 #include "KR_App.h"
-//#include "KR_Calc.h"
 #include "KR_Camera.h"
 #include "../KrLib_cpp/KR_Calc.h"
-//#include <algorithm>
 
 /*
    [終点の注意]
@@ -609,11 +607,43 @@ namespace KR
 		}
 
 		//描画.
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255);
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, 255,
+			[&]() {
+				//TODO: ↓DX_PRIMTYPE_LINESTRIP以外の機能.
+				DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
+			}
+		);
+	}
 
-			//TODO: ↓DX_PRIMTYPE_LINESTRIP以外の機能.
-			DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
+// ▼*--=<[ DrawMode ]>=--*▼ //
+
+	DrawMode DrawMode::inst;
+
+	//描画モードを設定して描画.
+	void DrawMode::Exe(DrawModeID mode1, DrawBlendModeID mode2, int mode2Param, function<void()> func) {
+
+		//現在の設定を保存.
+		int oldMode1 = GetDrawMode();
+		int oldMode2, oldMode2Param;
+		GetDrawBlendMode(&oldMode2, &oldMode2Param);
+
+		//modeを設定.
+		SetDrawMode(_int(mode1));
+		SetDrawBlendMode(_int(mode2), mode2Param);
+	
+		try {
+			//関数実行.
+			func();
 		}
+		catch (...) {
+			//設定を戻す.
+			SetDrawMode(oldMode1);
+			SetDrawBlendMode(oldMode2, oldMode2Param);
+			throw;
+		}
+		//設定を戻す.
+		SetDrawMode(oldMode1);
+		SetDrawBlendMode(oldMode2, oldMode2Param);
 	}
 }
