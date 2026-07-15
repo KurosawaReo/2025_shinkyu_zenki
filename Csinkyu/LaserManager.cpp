@@ -308,11 +308,6 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			i->Play(false, 60); //直線レーザー.
 		}
 	}
-	if (type == Laser_Falling) {
-		if (auto i = soundMng->Get("Laser1")) {
-			i->Play(false, 45); //落下レーザー（少し音量小さめ）.
-		}
-	}
 }
 
 //次のレーザーへ.

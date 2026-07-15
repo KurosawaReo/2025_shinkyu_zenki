@@ -107,6 +107,8 @@ void Fireworks::UpdateFireworksGeneration() {
 // 個別花火更新
 void Fireworks::UpdateIndividualFireworks() {
 
+	bool isPlaySound = false; //一度のみサウンドを流す用.
+
 	for (auto i = fireworks.begin(); i != fireworks.end(); ) {
 
 		i->counter -= gameData->speedRate; //カウンター減少.
@@ -120,9 +122,13 @@ void Fireworks::UpdateIndividualFireworks() {
 		else {
 			//花火のレーザーを生成.
 			CreateFireworksSparks(i->x, i->y);
+
 			//爆発音.
-			if (auto i = soundMng->Get("Explosion")) {
-				i->Play(false, 70); //再生.
+			if (!isPlaySound) {
+				if (auto i = soundMng->Get("Fireworks")) {
+					i->Play(false, 80); //再生.
+				}
+				isPlaySound = true; //もう再生しない.
 			}
 
 			i = fireworks.erase(i); //消去.
