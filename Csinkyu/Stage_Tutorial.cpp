@@ -610,14 +610,14 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 
 		//ògîwåi.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 100 * alpha,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(100 * alpha),
 			[&]() {
 				DrawBoxKR(box, Anchor::LU);
 			}
 		);
 		//ÉeÉLÉXÉg.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * alpha,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha),
 			[&]() {
 				str.Draw(Anchor::Mid, useFont);
 			}

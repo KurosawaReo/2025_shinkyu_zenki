@@ -38,7 +38,7 @@ void BG_Tile::Draw(double slowTime) {
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
 		//タイル画像描画.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, alpha * sinNum * (1 - slowTime),
+			DrawModeID::None, DrawBlendModeID::Alpha,  _int(alpha * sinNum * (1 - slowTime)),
 			[&]() {
 				DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 			}
@@ -51,7 +51,7 @@ void BG_Tile::Draw(double slowTime) {
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
 		//タイル画像描画.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, alpha * sinNum * slowTime,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha * sinNum * slowTime),
 			[&]() {
 				DrawImgMng::Get("bg_reflect")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 			}
@@ -128,7 +128,7 @@ void BG1::Draw() {
 	if (gameData->speedRate) {
 		//グラデーション枠線.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * time,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * time),
 			[&]() {
 				DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
 			}

@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (DxLib)
-   ver.2026/06/14
+   ver.2026/07/02
 
    当たり判定などの計算機能。
 */
@@ -19,8 +19,8 @@ namespace KR
 		//当たり判定.
 		bool	HitCirCir	(const Circle& cir1, const Circle& cir2);
 		bool	HitBoxBox	(const Box&    box1, const Box&    box2);
-		bool	HitBoxCir	(const Box&    box,  const Circle& cir, Surface* surface = nullptr);
-		bool	HitLineCir	(const Line&   line, const Circle& cir);
+		bool	HitBoxCir	(const Box&    box,  const Circle& cir,  Surface* surface    = nullptr);
+		bool	HitLineCir	(const Line&   line, const Circle& cir,  DBL_XY*  nearestPos = nullptr);
 		bool	HitPie		(const Pie&    pie,  DBL_XY pos);
 
 		//ベジエ曲線,スプライン曲線.

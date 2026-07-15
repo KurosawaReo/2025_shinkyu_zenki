@@ -314,7 +314,7 @@ void Player::DrawAfterImage()
 
 			//•`‰æ.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim),
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim)),
 				[&]() {
 
 					MY_COLOR color;

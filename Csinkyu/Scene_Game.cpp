@@ -203,7 +203,7 @@ void GameScene::DrawReflectMode() {
 
 			//•`‰æ.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, 255 * dec,
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * dec),
 				[&]() {
 					//Å‰‚Ì1•b.
 					if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME - 1) {

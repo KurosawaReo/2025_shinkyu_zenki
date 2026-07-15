@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/06/14
+   ver.2026/07/02
 
    KrLib全体で使う汎用プログラム。
 */
@@ -26,6 +26,7 @@
 #include <cstdlib>		//stdlib.h をラップしたもの.
 #include <ctime>		//time.h   をラップしたもの.
 #include <functional>	//ラムダ式用.
+#include <type_traits>	//concept用.
 //C言語用.
 #include <tchar.h>
 
@@ -58,8 +59,6 @@ using std::function;
 #define _get_name(value)    #value									//変数名や関数名を取得.
 #define _elif               else if									//「else if」の略.
 #define _param_ret_ptr(ptr, value)	if (ptr) { *(ptr) = (value); }	//返り値引数ポインタ用.
-//template用マクロ.
-#define _type_num_only(T)	typename = typename std::enable_if_t<std::is_arithmetic<T>::value> //算術型(int/float/double/char)のみOKとし, そうでない場合は関数を無効にする.
 
 //KrLib名前空間.
 namespace KR
@@ -78,7 +77,7 @@ namespace KR
 	using umap = unordered_map<Key, Value>;
 
 	//xとyの凝縮型.
-	template<typename T> //型を<>で入力して使う.
+	template<typename T> requires std::is_arithmetic_v<T>
 	struct XY
 	{
 		T x, y;
@@ -180,20 +179,19 @@ namespace KR
 		}
 
 		//演算子[+,-,*,/,%] [XY<T>・数値]
-		//右側が数値でなければ無効にする.
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T> operator+(T2 num) const {
 			return { x + static_cast<T>(num), y + static_cast<T>(num) }; //cast後にxとyを加算して返す.
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T> operator-(T2 num) const {
 			return { x - static_cast<T>(num), y - static_cast<T>(num) };
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T> operator*(T2 num) const {
 			return { x * static_cast<T>(num), y * static_cast<T>(num) };
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T> operator/(T2 num) const {
 
 			XY<T> ret{};
@@ -205,7 +203,7 @@ namespace KR
 			ret.y = y / static_cast<T>(num);
 			return ret;
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T> operator%(T2 num) const {
 
 			XY<T> ret{};
@@ -219,28 +217,27 @@ namespace KR
 		}
 
 		//演算子[+=,-=,*=,/=,%=] [XY<T>・数値]
-		//右側が数値でなければ無効にする.
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T>& operator+=(T2 num) {
 			*this = *this + num;
 			return *this; //自身の実体.
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T>& operator-=(T2 num) {
 			*this = *this - num;
 			return *this;
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T>& operator*=(T2 num) {
 			*this = *this * num;
 			return *this;
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T>& operator/=(T2 num) {
 			*this = *this / num;
 			return *this;
 		}
-		template<typename T2, _type_num_only(T2)>
+		template<typename T2> requires std::is_arithmetic_v<T2>
 		XY<T>& operator%=(T2 num) {
 			*this = *this % num;
 			return *this;
@@ -262,7 +259,7 @@ namespace KR
 	using DBL_XY = XY<double>; //double型.
 
 	//四角形型.
-	template<typename T, _type_num_only(T)>
+	template<typename T> requires std::is_arithmetic_v<T>
 	struct RECT
 	{
 		T left;
@@ -326,23 +323,40 @@ namespace KR
 	};
 
 	//<T> 数値が範囲内か.
-	template<typename T, _type_num_only(T)>
+	template<typename T> requires std::is_arithmetic_v<T>
 	bool IsNumInRange(T _num, T _min, T _max) {
 		return (_min <= _num && _num <= _max);
 	}
 	//<T> 数値の上限.
-	template<typename T, _type_num_only(T)>
+	template<typename T> requires std::is_arithmetic_v<T>
 	void NumLimMax(T* _num, T _max) {
 		*_num = std::min(*_num, _max);
 	}
 	//<T> 数値の下限.
-	template<typename T, _type_num_only(T)>
+	template<typename T> requires std::is_arithmetic_v<T>
 	void NumLimMin(T* _num, T _min) {
 		*_num = std::max(*_num, _min);
 	}
 	//<T> 数値の範囲.
-	template<typename T, _type_num_only(T)>
+	template<typename T> requires std::is_arithmetic_v<T>
 	void NumLimRange(T* num, T low, T high) {
 		*num = std::max(low, std::min(*num, high));
+	}
+
+	//ループ実行(引数なし)
+	template<std::invocable Func>
+	void Repeat(int count, Func&& func)
+	{
+		for (int i = 0; i < count; i++) {
+			func(); //実行.
+		}
+	}
+	//ループ実行(ループ変数あり)
+	template<std::invocable<int> Func>
+	void Repeat(int count, Func&& func)
+	{
+		for (int i = 0; i < count; i++) {
+			func(i); //実行, iの値も送る.
+		}
 	}
 }

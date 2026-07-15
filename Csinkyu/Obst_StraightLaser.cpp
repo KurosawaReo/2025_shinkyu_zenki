@@ -120,7 +120,7 @@ void StraightLaserPoint::DrawPreLine()
 
 	//•`‰æ.
 	DrawMode::Exe(
-		DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - alpha),
+		DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - alpha)),
 		[&](){
 			preLine.color = COLOR_PRE_EFFECT;
 			DrawLineKR(preLine, true);

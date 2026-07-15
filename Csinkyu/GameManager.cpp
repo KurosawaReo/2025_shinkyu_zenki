@@ -178,12 +178,27 @@ void GameManager::Reset() {
 
 	//サウンド.
 	soundMng->StopAll();
+
 #if !defined BGM_NONE
 	//メニューBGMを流す.
 	if (auto i = soundMng->Get("BGM_Menu")) {
 		i->Play(true, 90);
 	}
 #endif
+
+	//ゲームシーンのBGM抽選.
+	{
+		//抽選するBGM名.
+		const vector<string> bgmName = {
+			"BGM_Menu",
+			"BGM_Tutorial",
+			"BGM_Endless",
+		};
+		//何番目のBGMを使うか(bgmName配列の中から抽選)
+		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
+		//BGM名を保存.
+		gameSceneBgm = bgmName[bgmNo];
+	}
 }
 
 //更新.
@@ -299,8 +314,8 @@ void GameManager::GameOver() {
 				}
 
 #if !defined BGM_NONE
-				//BGM停止.
-				if (auto i = soundMng->Get("BGM_Endless")) { //TODO <<<< 何のBGMを再生しているか、どこかにBGM名を保存する.
+				//BGMフェードアウト.
+				if (auto i = soundMng->Get(gameSceneBgm)) {
 					i->FadeOutPlay(2); //再生.
 				}
 				//ゲームオーバーBGM.

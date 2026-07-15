@@ -91,7 +91,7 @@ void EndScene::Draw() {
 
 		//描画.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 128 * anim,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(128 * anim),
 			[&]() {
 				DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
 			}
@@ -108,7 +108,7 @@ void EndScene::Draw() {
 
 		//描画.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 			[&]() {
 				//GAME OVER.
 				DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
@@ -137,7 +137,7 @@ void EndScene::Draw() {
 
 			//描画.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 				[&]() {
 					DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
 					//画面中央に文字を表示.
@@ -159,7 +159,7 @@ void EndScene::Draw() {
 				double anim = Calc::AnimEase(EaseType::OutQuad, (timer.GetPassTime() - delay1) * 2);
 				//描画.
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 					[&]() {
 						//NEW RECORD
 						DrawImgMng::Get("new_record")->DrawExtend(
@@ -186,7 +186,7 @@ void EndScene::Draw() {
 
 			//描画.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 				[&]() {
 					str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
 				}
