@@ -52,7 +52,8 @@ enum StageType
 //【定数】
 
 //DxLib設定.
-#define FILE_DATA_PATH					("Data/score.data")	//データを保存するファイル.
+#define FILE_DATA_SCORE					_T("Data/score.data")	//スコア記録.
+#define FILE_DATA_PLAYLOG				_T("Data/playlog.data")	//プレイ歴記録.
 
 #define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
 

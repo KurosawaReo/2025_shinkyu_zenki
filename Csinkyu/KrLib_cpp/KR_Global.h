@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/07/02
+   ver.2026/07/15
 
    KrLib全体で使う汎用プログラム。
 */
@@ -65,11 +65,13 @@ namespace KR
 {
 	//文字コードで切り替え.
 #if defined UNICODE
-	using MY_STRING = wstring;   //wchar_t型.
-	#define _to_mystr to_wstring //to_wstring用.
+	using MY_STRING   = wstring;		//wchar_t型.
+	using MY_FSTREAM = std::wfstream;
+	#define _to_mystr to_wstring		//to_wstring用.
 #else
-	using MY_STRING = string;    //char型.
-	#define _to_mystr to_string  //to_string用.
+	using MY_STRING   = string;			//char型.
+	using MY_FSTREAM = std::fstream;
+	#define _to_mystr to_string			//to_string用.
 #endif
 
 	//省略名.

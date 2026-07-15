@@ -138,17 +138,15 @@ void GameManager::Init() {
 	gameData->fonts["size35"].CreateFontH(_T(""), 35, 1, FontTypeID::Anti);
 	gameData->fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
 
-	//スコア読み込み.
 	try {
-		//ファイルを開く.
+		//[score.data]
 		File file;
-		file.Open(FILE_DATA_PATH, FileOpenMode::Read);
-
-		gameData->bestScore = file.ReadInt();        //数字を読み込んで登録.
-		uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
+		file.Open(FILE_DATA_SCORE, FileOpenMode::Read);	//ファイルを開く.
+		gameData->bestScore = file.ReadInt();			//数字を読み込んで登録.
+		uiMng->SetBestScore(gameData->bestScore);		//ベストスコア反映.
 	}
 	catch (const ErrorMsg& err) {
-		Debug::Log(_T("スコア読み込み"), err.GetMsg());
+		Debug::Log(_T("Dataファイル読み込み"), err.GetMsg());
 	}
 
 	//fps表示用.
@@ -296,21 +294,35 @@ void GameManager::GameOver() {
 				gameData->scoreBef = gameData->score;                  //時間加算前のスコアを記録.
 				gameData->score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
 
-				//ハイスコア更新.
-				if (gameData->score > gameData->bestScore) {
-
-					try {
-						//ファイルを開く.
+				try {
+					//[score.data]
+					if (gameData->score > gameData->bestScore) {
 						File file;
-						file.Open(FILE_DATA_PATH, FileOpenMode::Write);
-						 
-						file.WriteInt(gameData->score);        //スコアを保存.
-						gameData->bestScore = gameData->score; //スコア更新.
-						endScene.SignBestScore();              //ハイスコアのサイン送信.
+						file.Open(FILE_DATA_SCORE, FileOpenMode::Write);	//ファイルを開く.
+						file.WriteInt(gameData->score);						//スコアを保存.
+						gameData->bestScore = gameData->score;				//スコア更新.
+						endScene.SignBestScore();							//ハイスコアのサイン送信.
 					}
-					catch (const ErrorMsg& err) {
-						Debug::Log(_T("ハイスコア更新"), err.GetMsg());
+
+					//[playlog.data]
+					{
+						DATEDATA date;
+						GetDateTime(&date); //現在時刻取得.
+
+						//現在時刻を文字列化.
+						MY_STRING dateStr = Format::StrFormat(
+							_T("%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d score:%0.5d\n"), 
+							date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, gameData->score
+						);
+
+						//ファイルへ追記.
+						File file;
+						file.Open(FILE_DATA_PLAYLOG, FileOpenMode::Out | FileOpenMode::App); //ファイルを開く.
+						file.WriteString(dateStr);
 					}
+				}
+				catch (const ErrorMsg& err) {
+					Debug::Log(_T("Dataファイル読み込み"), err.GetMsg());
 				}
 
 #if !defined BGM_NONE

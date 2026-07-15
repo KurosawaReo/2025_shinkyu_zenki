@@ -74,9 +74,8 @@ void EndScene::Update() {
 		//特定の操作でタイトルへ.
 		if (inputMng->IsPushActionTime("GameNext") == 1)
 		{
-			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
-			sceneMng->SetScene("Title");                 //ゲームシーンへ戻る.
-
+			uiMng->SetBestScore(gameData->bestScore);	//ベストスコア更新.
+			sceneMng->SetScene("Title");				//ゲームシーンへ戻る.
 		}
 	}
 }
