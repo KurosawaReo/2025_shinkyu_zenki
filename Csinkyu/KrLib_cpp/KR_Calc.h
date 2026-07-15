@@ -1,6 +1,6 @@
 /*
    - KR_Calc.h - (C++)
-   ver.2026/06/14
+   ver.2026/07/02
 
    C++だけでできる計算機能。
 */
@@ -12,7 +12,6 @@
 
 //[include] ".h"ファイルで使うもの.
 #include <random>
-#include <type_traits>
 
 //KrLib名前空間.
 namespace KR
@@ -62,7 +61,7 @@ namespace KR
 		double      GetDecimal	(double num);
 
 		//値の抽選.
-		template<typename T>
+		template<typename T> requires std::is_arithmetic_v<T>
 		static T RandNum(T min, T max) {
 
 			//乱数生成器(初回のみ生成).

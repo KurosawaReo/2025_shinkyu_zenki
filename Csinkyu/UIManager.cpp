@@ -123,7 +123,7 @@ void UIManager::Draw() {
 			TCHAR text[256];
 			_stprintf(text, _T("LEVEL %d"),        gameData->level);
 			str[0].text = text;
-			_stprintf(text, _T("BEST SCORE:%05d"), disBestScore);
+			_stprintf(text, _T("BEST SCORE:%05d"), dispBestScore);
 			str[1].text = text;
 			_stprintf(text, _T("SCORE:%05d"),      gameData->score);
 			str[2].text = text;

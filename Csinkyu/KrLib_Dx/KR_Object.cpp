@@ -253,8 +253,8 @@ namespace KR
 		return Calc::HitBoxCir(box, this->cir);
 	}
 	//ü‚Æ‚Ì“–‚½‚è”»’è.
-	bool ObjectCir::HitCheckLine(const Line& line) const {
-		return Calc::HitLineCir(line, this->cir);
+	bool ObjectCir::HitCheckLine(const Line& line, DBL_XY* nearestPos) const {
+		return Calc::HitLineCir(line, this->cir, nearestPos);
 	}
 	//}Œ`: ‰~‚ğ•`‰æ.
 	void ObjectCir::DrawShape(bool isFill, bool isAnti, bool isCameraDisp) const {

@@ -619,31 +619,4 @@ namespace KR
 // ¥*--=<[ DrawMode ]>=--*¥ //
 
 	DrawMode DrawMode::inst;
-
-	//•`‰æƒ‚[ƒh‚ğİ’è‚µ‚Ä•`‰æ.
-	void DrawMode::Exe(DrawModeID mode1, DrawBlendModeID mode2, int mode2Param, function<void()> func) {
-
-		//Œ»İ‚Ìİ’è‚ğ•Û‘¶.
-		int oldMode1 = GetDrawMode();
-		int oldMode2, oldMode2Param;
-		GetDrawBlendMode(&oldMode2, &oldMode2Param);
-
-		//mode‚ğİ’è.
-		SetDrawMode(_int(mode1));
-		SetDrawBlendMode(_int(mode2), mode2Param);
-	
-		try {
-			//ŠÖ”Às.
-			func();
-		}
-		catch (...) {
-			//İ’è‚ğ–ß‚·.
-			SetDrawMode(oldMode1);
-			SetDrawBlendMode(oldMode2, oldMode2Param);
-			throw;
-		}
-		//İ’è‚ğ–ß‚·.
-		SetDrawMode(oldMode1);
-		SetDrawBlendMode(oldMode2, oldMode2Param);
-	}
 }

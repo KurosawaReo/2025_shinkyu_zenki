@@ -6,19 +6,22 @@
 //依存関係.
 #include "BGManager.h"
 #include "GameData.h"
+#include "GameManager.h"
 //参照.
-static GameData*  gameData;
-static BGManager* bgMng;
+static GameData*    gameData;
+static GameManager* gameMng;
+static BGManager*   bgMng;
 //参照(KRライブラリ)
-static SoundMng*  soundMng;
-static InputMng*  inputMng;
-static SceneMng*  sceneMng;
+static SoundMng*    soundMng;
+static InputMng*    inputMng;
+static SceneMng*    sceneMng;
 
 //初期化.
 void MenuScene::Init() {
 
 	//参照取得.
 	gameData = ManagerInsts::Get<GameData>();
+	gameMng  = ManagerInsts::Get<GameManager>();
 	bgMng    = ManagerInsts::Get<BGManager>();
 	soundMng = ManagerInsts::Get<SoundMng>();
 	inputMng = ManagerInsts::Get<InputMng>();
@@ -89,17 +92,13 @@ void MenuScene::Update() {
 				bgMng->SetBgNo(1);
 
 #if !defined BGM_NONE
-				//抽選するBGM名.
-				const vector<string> bgmName = {
-					"BGM_Menu",
-					"BGM_Tutorial",
-					"BGM_Endless",
-				};
-				//何番目のBGMを使うか(bgmName配列の中から抽選)
-				const int bgmNo = Calc::RandNum(0, _int(bgmName.size()-1));
-				//BGMを再生.
+
 				soundMng->StopAll();
-				if (auto i = soundMng->Get(bgmName[bgmNo])) {
+
+				//BGM名を取得.
+				string bgmName = gameMng->GetGameSceneBgm();
+				//BGMを再生.
+				if (auto i = soundMng->Get(bgmName)) {
 					i->Play(true, 68); //再生.
 				}
 #endif
@@ -168,7 +167,7 @@ void MenuScene::Draw() {
 		const DBL_XY basePos = { WINDOW_WID / 2, 80 };
 
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim4,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim4),
 			[&]() {
 				Line lines[4] = {
 					//「<」.
@@ -186,15 +185,15 @@ void MenuScene::Draw() {
 		);
 
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim6,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim6),
 			[&]() {
 				Line lines[4] = {
 					//「<」.
-						{ basePos + DBL_XY(-55 - 100 * anim5, 30), basePos + DBL_XY(-85 - 100 * anim5,   0), 0x00FFFF, 2.0f },
-						{ basePos + DBL_XY(-85 - 100 * anim5,  0), basePos + DBL_XY(-55 - 100 * anim5, -30), 0x00FFFF, 2.0f },
-						//「>」.
-							{ basePos + DBL_XY(+55 + 100 * anim5, 30), basePos + DBL_XY(+85 + 100 * anim5,   0), 0x00FFFF, 2.0f },
-							{ basePos + DBL_XY(+85 + 100 * anim5,  0), basePos + DBL_XY(+55 + 100 * anim5, -30), 0x00FFFF, 2.0f }
+					{ basePos + DBL_XY(-55 - 100 * anim5, 30), basePos + DBL_XY(-85 - 100 * anim5,   0), 0x00FFFF, 2.0f },
+					{ basePos + DBL_XY(-85 - 100 * anim5,  0), basePos + DBL_XY(-55 - 100 * anim5, -30), 0x00FFFF, 2.0f },
+					//「>」.
+					{ basePos + DBL_XY(+55 + 100 * anim5, 30), basePos + DBL_XY(+85 + 100 * anim5,   0), 0x00FFFF, 2.0f },
+					{ basePos + DBL_XY(+85 + 100 * anim5,  0), basePos + DBL_XY(+55 + 100 * anim5, -30), 0x00FFFF, 2.0f }
 				};
 				//線描画.
 				for (auto& i : lines) {

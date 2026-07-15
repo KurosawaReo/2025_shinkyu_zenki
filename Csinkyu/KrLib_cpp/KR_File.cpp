@@ -12,31 +12,24 @@ namespace KR
     }
 
     //ファイルを開く.
-    void File::Open(const std::string& filePath, FileOpenMode mode) {
+    void File::Open(MY_STRING filePath, FileOpenMode mode) {
 
         Close();           //先に閉じる.
         MakeDir(filePath); //ディレクトリがなければ作成.
 
-        //列挙値をモードに変換.
-        std::ios::openmode stdMode;
-        switch (mode)
+        //モード判定.
+        std::ios::openmode stdMode = {};
+        if (HasFlag(mode, FileOpenMode::In))     { stdMode |= std::ios::in;     }
+        if (HasFlag(mode, FileOpenMode::Out))    { stdMode |= std::ios::out;    }
+        if (HasFlag(mode, FileOpenMode::App))    { stdMode |= std::ios::app;    }
+        if (HasFlag(mode, FileOpenMode::Trunc))  { stdMode |= std::ios::trunc;  }
+        if (HasFlag(mode, FileOpenMode::Binary)) { stdMode |= std::ios::binary; }
+        //エラーチェック.
+        if (stdMode == std::ios::openmode{})
         {
-        case FileOpenMode::Read:
-            stdMode = std::ios::in;
-            break;
-        case FileOpenMode::Write:
-            stdMode = std::ios::out;
-            break;
-        case FileOpenMode::Append:
-            stdMode = std::ios::app;
-            break;
-        case FileOpenMode::Trunc:
-            stdMode = std::ios::trunc;
-            break;
-        case FileOpenMode::Binary:
-            stdMode = std::ios::binary;
-            break;
+            throw ErrorMsg(_T("File::Open"), _T("OpenModeが未設定"));
         }
+
         //ファイルを開く.
         fs.open(filePath, stdMode);
         if (!fs.is_open()) {
@@ -69,7 +62,7 @@ namespace KR
     }
 
     //string型読み込み(1行)
-    string File::ReadString()
+    MY_STRING File::ReadString()
     {
         //エラーチェック.
         if (!fs.is_open()) {
@@ -77,7 +70,7 @@ namespace KR
         }
 
         //1行読み込む.
-        string line;
+        MY_STRING line;
         if (!std::getline(fs, line)) {
             throw ErrorMsg(_T("File::ReadString"), _T("ファイル読み込み失敗"));
         }
@@ -87,7 +80,7 @@ namespace KR
     int File::ReadInt()
     {
         //まず文字列で読み込む.
-        std::string str = ReadString();
+        MY_STRING str = ReadString();
         //int型に変換.
         try {
             return std::stoi(str);
@@ -97,7 +90,7 @@ namespace KR
         }
     }
     //string型書き込み.
-    void File::WriteString(const std::string& data)
+    void File::WriteString(MY_STRING data)
     {
         //エラーチェック.
         if (!fs.is_open()) {
