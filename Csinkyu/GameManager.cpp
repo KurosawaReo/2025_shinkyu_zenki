@@ -78,24 +78,25 @@ void GameManager::Init() {
 
 		//[KrLib] サウンド.
 		soundMng->SetPath(_T("Resources/Sounds/")); //共通パスの設定.
-		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"), "BGM_Menu");			//メニューBGM.
-		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"), "BGM_Tutorial");	//チュートリアルBGM.
-		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"), "BGM_Endless");		//耐久モードBGM.
-		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"), "BGM_Over");				//ゲームオーバーBGM.
-		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"), "MenuCursor");		//メニューカーソル音.
-		soundMng->LoadFile(_T("se/audiostock_1636651.mp3"), "MenuOK");			//メニュー決定音.
-		soundMng->LoadFile(_T("se/audiostock_461339.mp3"), "ItemUse"); 			//アイテム発動.
-		soundMng->LoadFile(_T("se/player_dash.mp3"), "PlayerDash"); 			//ダッシュ音.
-		soundMng->LoadFile(_T("se/audiostock_1116927_cut.mp3"), "CountDown");	//カウントダウン.
-		soundMng->LoadFile(_T("se/audiostock_63721.mp3"), "PowerDown");			//アイテム解除.
-		soundMng->LoadFile(_T("se/audiostock_1296254.mp3"), "Laser1");			//レーザー(発射)
-		soundMng->LoadFile(_T("se/audiostock_1296256.mp3"), "Laser2");			//レーザー(強発射)
-		soundMng->LoadFile(_T("se/audiostock_218404.mp3"), "Laser3");			//レーザー(反射)
-		soundMng->LoadFile(_T("se/audiostock_936158.mp3"), "Ripples");			//波紋.
-		soundMng->LoadFile(_T("se/audiostock_104974.mp3"), "Break");			//隕石破壊.
-		soundMng->LoadFile(_T("se/audiostock_981051.mp3"), "PlayerDeath");
-		soundMng->LoadFile(_T("se/決定ボタンを押す23.mp3"), "LevelUp");
-		soundMng->LoadFile(_T("se/audiostock_184924.mp3"), "BestScore");		//最高スコア更新.
+		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"),		"BGM_Menu");		//メニューBGM.
+		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	"BGM_Tutorial");	//チュートリアルBGM.
+		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		"BGM_Endless");		//耐久モードBGM.
+		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			"BGM_Over");		//ゲームオーバーBGM.
+		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		"MenuCursor");		//メニューカーソル音.
+		soundMng->LoadFile(_T("se/audiostock_1636651.mp3"),		"MenuOK");			//メニュー決定音.
+		soundMng->LoadFile(_T("se/audiostock_461339.mp3"),		"ItemUse"); 		//アイテム発動.
+		soundMng->LoadFile(_T("se/player_dash.mp3"),			"PlayerDash"); 		//ダッシュ音.
+		soundMng->LoadFile(_T("se/audiostock_1116927_cut.mp3"), "CountDown");		//カウントダウン.
+		soundMng->LoadFile(_T("se/audiostock_63721.mp3"),		"PowerDown");		//アイテム解除.
+		soundMng->LoadFile(_T("se/audiostock_1296254.mp3"),		"Laser1");			//レーザー(発射)
+		soundMng->LoadFile(_T("se/audiostock_1296256.mp3"),		"Laser2");			//レーザー(強発射)
+		soundMng->LoadFile(_T("se/audiostock_218404.mp3"),		"Laser3");			//レーザー(反射)
+		soundMng->LoadFile(_T("se/audiostock_936158.mp3"),		"Ripples");			//波紋.
+		soundMng->LoadFile(_T("se/fireworks.mp3"),				"Fireworks");		//花火.
+		soundMng->LoadFile(_T("se/audiostock_104974.mp3"),		"Break");			//隕石破壊.
+		soundMng->LoadFile(_T("se/audiostock_981051.mp3"),		"PlayerDeath");
+		soundMng->LoadFile(_T("se/決定ボタンを押す23.mp3"),		"LevelUp");
+		soundMng->LoadFile(_T("se/audiostock_184924.mp3"),		"BestScore");		//最高スコア更新.
 	}
 	catch (const ErrorMsg& err){
 		Debug::Log(_T("GameManager::Init"), err.GetMsg());
@@ -299,7 +300,7 @@ void GameManager::GameOver() {
 
 #if !defined BGM_NONE
 				//BGM停止.
-				if (auto i = soundMng->Get("BGM_Endless")) {
+				if (auto i = soundMng->Get("BGM_Endless")) { //TODO <<<< 何のBGMを再生しているか、どこかにBGM名を保存する.
 					i->FadeOutPlay(2); //再生.
 				}
 				//ゲームオーバーBGM.

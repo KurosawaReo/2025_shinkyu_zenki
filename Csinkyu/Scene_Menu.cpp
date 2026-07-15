@@ -81,20 +81,33 @@ void MenuScene::Update() {
 		switch (selectedIndex)
 		{
 			case 0:
+			{
 				//耐久モードへ.
 				sceneMng->SetScene("Game");
 				gameData->stage = Stage_Endless;
 				//背景変更.
 				bgMng->SetBgNo(1);
+
 #if !defined BGM_NONE
-				//BGM.
+				//抽選するBGM名.
+				const vector<string> bgmName = {
+					"BGM_Menu",
+					"BGM_Tutorial",
+					"BGM_Endless",
+				};
+				//何番目のBGMを使うか(bgmName配列の中から抽選)
+				const int bgmNo = Calc::RandNum(0, _int(bgmName.size()-1));
+				//BGMを再生.
 				soundMng->StopAll();
-				if (auto i = soundMng->Get("BGM_Endless")) {
+				if (auto i = soundMng->Get(bgmName[bgmNo])) {
 					i->Play(true, 68); //再生.
 				}
 #endif
-				break;
+			}
+			break;
+
 			case 1:
+			{
 				//チュートリアルへ.
 				sceneMng->SetScene("Game");
 				gameData->stage = Stage_Tutorial;
@@ -107,10 +120,14 @@ void MenuScene::Update() {
 					i->Play(true, 68); //再生.
 				}
 #endif
-				break;
+			}
+			break;
+
 			case 2:
+			{
 				sceneMng->SetScene("Title"); //タイトルへ.
-				break;
+			}
+			break;
 
 			default: assert(FALSE); break;
 		}
