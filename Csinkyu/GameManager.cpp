@@ -309,10 +309,12 @@ void GameManager::GameOver() {
 						DATEDATA date;
 						GetDateTime(&date); //現在時刻取得.
 
-						//現在時刻を文字列化.
 						MY_STRING dateStr = Format::StrFormat(
-							_T("%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d score:%0.5d\n"), 
-							date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, gameData->score
+							//フォーマット.
+							_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Level:%d / Score:%0.5d / Time:%.1f\n"), 
+							//変数挿入.
+							date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, 
+							Device::GetComputerNameStr(), gameData->level, gameData->score, gameScene.GetGameTime()
 						);
 
 						//ファイルへ追記.

@@ -100,7 +100,7 @@ void TitleScene::Draw() {
 			double anim = Calc::AnimEase(EaseType::InOutQuad, timer.GetPassTime() / delay1);
 			//ロゴ1枚目.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 				[&]() {
 					DrawImgMng::Get("logo")->DrawExtend(
 						DBL_XY{ WINDOW_WID / 2, _dbl(logoY) }, imgSize, Anchor::Mid, true, true
@@ -116,14 +116,14 @@ void TitleScene::Draw() {
 			double anim2 = Calc::AnimEase(EaseType::InOutQuad, (timer.GetPassTime() - delay1 - 0.4) / 1.8);
 			//ロゴ1枚目.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim2),
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim2)),
 				[&]() {
 					DrawImgMng::Get("logo")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
 				}
 			);
 			//ロゴ2枚目.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1,
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim1),
 				[&]() {
 					DrawImgMng::Get("logo_all")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
 				}
@@ -146,13 +146,13 @@ void TitleScene::Draw() {
 
 		//描画.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim1,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim1),
 			[&]() {
 				str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont()); //スコア値.
 			}
 		);
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim2,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim2),
 			[&]() {
 				//UI
 				DrawImgMng::Get("ui_back_best_score")->
@@ -173,7 +173,7 @@ void TitleScene::Draw() {
 		DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, drawY }, 0xFFFFFF);
 		//描画.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 			[&]() {
 				str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
 			}

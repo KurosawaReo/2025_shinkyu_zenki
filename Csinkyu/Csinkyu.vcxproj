@@ -31,6 +31,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Calc.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Device.cpp" />
     <ClCompile Include="KrLib_cpp\KR_File.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Language.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="KrLib_cpp\KR_BigInt.h" />
     <ClInclude Include="KrLib_cpp\KR_Calc.h" />
+    <ClInclude Include="KrLib_cpp\KR_Device.h" />
     <ClInclude Include="KrLib_cpp\KR_File.h" />
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
