@@ -34,9 +34,6 @@ void TitleScene::Reset() {
 
 //入った瞬間.
 void TitleScene::Enter() {
-
-	App::Reset();      //リセット.
-
 	timer.Start();     //タイマー開始.
 	bgMng->SetBgNo(1); //背景を設定.
 }

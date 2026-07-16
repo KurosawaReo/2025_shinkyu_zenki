@@ -76,6 +76,7 @@ void EndScene::Update() {
 		{
 			uiMng->SetBestScore(gameData->bestScore);	//ベストスコア更新.
 			sceneMng->SetScene(_T("Title"));			//ゲームシーンへ戻る.
+			App::Reset();								//リセット.
 		}
 	}
 }
