@@ -209,8 +209,6 @@ void GameManager::Reset() {
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
 		//BGM名を保存.
 		gameSceneBgm = bgmName[bgmNo];
-
-		Debug::Log(_T("BGM"), bgmName[bgmNo]);
 	}
 }
 
