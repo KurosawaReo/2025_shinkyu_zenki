@@ -31,7 +31,7 @@ void MenuScene::Init() {
 	inputMng->AddAction("MENU_UP",   KeyID::Up);
 	inputMng->AddAction("MENU_UP",   KeyID::W);
 	inputMng->AddAction("MENU_UP",   PadXboxID::Up);
-	inputMng->AddAction("MENU_DOWN", KeyID::Down); 
+	inputMng->AddAction("MENU_DOWN", KeyID::Down);
 	inputMng->AddAction("MENU_DOWN", KeyID::S);
 	inputMng->AddAction("MENU_DOWN", PadXboxID::Down);
 	inputMng->AddAction("MENU_NEXT", KeyID::Space);
