@@ -207,10 +207,9 @@ void GameManager::Reset() {
 	{
 		//抽選するBGM名.
 		const vector<MY_STRING> bgmName = {
-//			_T("BGM_Endless_1"),
-//			_T("BGM_Endless_2"), //ちょっと緊迫感がある.
-//			_T("BGM_Endless_8"), //電子感.
-			_T("BGM_Endless_9"),
+			_T("BGM_Endless_1"),
+			_T("BGM_Endless_2"), //ちょっと緊迫感がある.
+			_T("BGM_Endless_8"), //電子感.
 		};
 		//何番目のBGMを使うか(bgmName配列の中から抽選)
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
