@@ -80,12 +80,14 @@ void GameManager::Init() {
 		soundMng->SetPath(_T("Resources/Sounds/")); //共通パスの設定.
 		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"),		"BGM_Menu");		//メニューBGM.
 		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	"BGM_Tutorial");	//チュートリアルBGM.
-		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		"BGM_Endless");		//耐久モードBGM1.
-		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),            "BGM_Endless_2");   //耐久モードBGM2.
-		soundMng->LoadFile(_T("bgm/Frost Vector.mp3"),          "BGM_Endless_3");   //耐久モードBGM3.
-		soundMng->LoadFile(_T("bgm/Bullet Acceleration.mp3"),   "BGM_Endless_4");   //耐久モードBGM4.
-		soundMng->LoadFile(_T("bgm/Shattered Icefront.mp3"),    "BGM_Endless_5");   //耐久モードBGM5.
-
+		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		"BGM_Endless");		//耐久モードBGM.
+		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),            "BGM_Endless_2");   //耐久モードBGM_2.
+		soundMng->LoadFile(_T("bgm/Frost Vector.mp3"),          "BGM_Endless_3");   //耐久モードBGM_3.
+		soundMng->LoadFile(_T("bgm/Bullet Acceleration.mp3"),   "BGM_Endless_4");   //耐久モードBGM_4.
+		soundMng->LoadFile(_T("bgm/Shattered Icefront.mp3"),    "BGM_Endless_5");   //耐久モードBGM_5.
+		soundMng->LoadFile(_T("bgm/Neon Velocity.mp3"),         "BGM_Endless_6");   //耐久モードBGM_6.
+		soundMng->LoadFile(_T("bgm/Unwanted strife.mp3"),       "BGM_Endless_7");   //耐久モードBGM_7.
+		soundMng->LoadFile(_T("bgm/Glacial brilliance.mp3"),    "BGM_Endless_8");   //耐久モードBGM_8.
 		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			"BGM_Over");		//ゲームオーバーBGM.
 		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		"MenuCursor");		//メニューカーソル音.
 		soundMng->LoadFile(_T("se/audiostock_1636651.mp3"),		"MenuOK");			//メニュー決定音.
@@ -198,6 +200,9 @@ void GameManager::Reset() {
 			"BGM_Endless_3",
 			"BGM_Endless_4",
 			"BGM_Endless_5",
+            "BGM_Endless_6",
+			"BGM_Endless_7",
+			"BGM_Endless_8",
 		};
 		//何番目のBGMを使うか(bgmName配列の中から抽選)
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
