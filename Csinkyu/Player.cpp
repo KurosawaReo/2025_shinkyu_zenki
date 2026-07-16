@@ -85,8 +85,7 @@ void Player::Update()
 	if (active) {
 
 		//画像回転.
-		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate; //実験.
-//		imgRot += (1.5) * gameData->speedRate; //旧.
+		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate;
 
 		UpdateAfterImage();
 		UpdateDash();
@@ -109,7 +108,8 @@ void Player::Draw()
 	if (active) {
 		DrawAfterImage();
 
-		const float size = 0.17f;
+		const float size  = 0.17f;
+		const float size2 = 0.05f;
 
 		//プレイヤー描画.
 		if (mode == Player_Reflect ||
@@ -117,7 +117,7 @@ void Player::Draw()
 		){
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get("player_light_ref")->DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+				DrawImgMng::Get("player_light_ref")->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//反射モードの画像.
 			DrawImgMng::Get("player_ref")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
@@ -125,7 +125,7 @@ void Player::Draw()
 		else {
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get("player_light_nor")->DrawExtend(hit.pos, {0.05, 0.05}, Anchor::Mid, true, true);
+				DrawImgMng::Get("player_light_nor")->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//通常モードの画像.
 			DrawImgMng::Get("player_nor")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
@@ -296,7 +296,6 @@ void Player::UpdateAfterImage()
 			after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
 			after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
 			after[0].isActive = true;                                        //残像を出す.
-
 		}
 	}
 }
@@ -313,53 +312,56 @@ void Player::DrawAfterImage()
 
 			float anim = (float)i/PLAYER_AFT_IMG_NUM; //アニメーション値.
 
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - anim));
-	
-				MY_COLOR color;
+			//描画.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim)),
+				[&]() {
 
-				//ダッシュエフェクト.
-				if (after[i].isDash) {
-					//三角形データ.
-					DBL_XY   pos1 = after[i].pos + Calc::AngToVector(after[i].ang)    * (30 * (1-anim));
-					DBL_XY   pos2 = after[i].pos + Calc::AngToVector(after[i].ang+90) * (20 * (1-anim));
-					DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang-90) * (20 * (1-anim));
-					GradLine line;
-					//反射カラー.
-					if (mode == Player_Reflect ||
-						mode == Player_SuperReflect
-					){
-						line.AddPoint(pos2, {255,   0, 255, _int_r(255*(1-anim))});
-						line.AddPoint(pos1, {100,   0, 100, _int_r(255*(1-anim))});
-						line.AddPoint(pos3, {255,   0, 255, _int_r(255*(1-anim))});
+					MY_COLOR color;
+
+					//ダッシュエフェクト.
+					if (after[i].isDash) {
+						//三角形データ.
+						DBL_XY   pos1 = after[i].pos + Calc::AngToVector(after[i].ang) * (30 * (1 - anim));
+						DBL_XY   pos2 = after[i].pos + Calc::AngToVector(after[i].ang + 90) * (20 * (1 - anim));
+						DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang - 90) * (20 * (1 - anim));
+						GradLine line;
+						//反射カラー.
+						if (mode == Player_Reflect ||
+							mode == Player_SuperReflect
+							) {
+							line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim)) });
+							line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim)) });
+							line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim)) });
+						}
+						//通常カラー.
+						else
+						{
+							line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim)) });
+							line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim)) });
+							line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim)) });
+						}
+						line.Draw();
 					}
-					//通常カラー.
-					else
-					{
-						line.AddPoint(pos2, {255, 255, 255, _int_r(255*(1-anim))});
-						line.AddPoint(pos1, {100, 100, 100, _int_r(255*(1-anim))});
-						line.AddPoint(pos3, {255, 255, 255, _int_r(255*(1-anim))});
+					//通常エフェクト.
+					else {
+						//反射カラー.
+						if (mode == Player_Reflect ||
+							mode == Player_SuperReflect
+							) {
+							color = COLOR_PLY_AFT_REF;
+						}
+						//通常カラー.
+						else
+						{
+							color = COLOR_PLY_AFT_NOR;
+						}
+						//円描画.
+						Circle cir = { after[i].pos, PLAYER_SIZE, color, 1.0f };
+						DrawCircleKR(cir, Anchor::Mid, false, true);
 					}
-					line.Draw();
 				}
-				//通常エフェクト.
-				else {
-					//反射カラー.
-					if (mode == Player_Reflect ||
-						mode == Player_SuperReflect
-					){
-						color = COLOR_PLY_AFT_REF;
-					}
-					//通常カラー.
-					else
-					{
-						color = COLOR_PLY_AFT_NOR;
-					}
-					//円描画.
-					Circle cir = { after[i].pos, PLAYER_SIZE, color, 1.0f };
-					DrawCircleKR(cir, Anchor::Mid, false, true);
-				}
-			}
+			);
 		}
 	}
 }

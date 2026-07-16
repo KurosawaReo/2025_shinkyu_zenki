@@ -71,21 +71,21 @@ namespace KR
 		}
 
 		//当たり判定(線と円)
-		bool HitLineCir(const Line& line, const Circle& cir) {
+		bool HitLineCir(const Line& line, const Circle& cir, DBL_XY* nearestPos) {
 
 			//線の長さが0なら計算しない.
 			if (Calc::Dist(line.stPos, line.edPos) == 0) { 
 				return false;
 			}
 
-			//線の始点から終点までのベクトル.
-			DBL_XY v1 = line.stPos - line.edPos;
-			//線の終点から始点までのベクトル.
-			DBL_XY v2 = line.edPos - line.stPos;
-			//線の始点から円までのベクトル.
-			DBL_XY v3 = line.stPos - cir.pos;
-			//線の終点から円までのベクトル.
-			DBL_XY v4 = line.edPos - cir.pos;
+			//線の始点→終点.
+			DBL_XY v1 = line.edPos - line.stPos;
+			//線の終点→始点.
+			DBL_XY v2 = line.stPos - line.edPos;
+			//線の始点→円.
+			DBL_XY v3 = cir.pos - line.stPos;
+			//線の終点→円.
+			DBL_XY v4 = cir.pos - line.edPos;
 
 			//[外積] 線から円の距離を計算.
 			double dist = abs(Calc::CrossProduct(v1.Normalize(), v3));
@@ -93,8 +93,16 @@ namespace KR
 			double ang1 = Calc::DotProduct(v1, v3);
 			double ang2 = Calc::DotProduct(v2, v4);
 
+			//最近傍点の計算.
+			if (nearestPos) {
+				//線の始点から最近傍点までの距離を求める.
+				double dist = Calc::DotProduct(v3, v1.Normalize());
+				//最近傍点の座標を求める.
+				*nearestPos = line.stPos + v1.Normalize() * dist;
+			}
+
 			//当たり判定.
-			if (dist <= cir.r          && //条件1: 線と円の距離が、円の半径以下.
+			if (dist <= cir.r          && //条件1: 線と円の距離が円の半径以下.
 				ang1 >= 0 && ang2 >= 0    //条件2: 線と円の角度差が2つとも鋭角.
 			){
 				return true; //当たった.

@@ -95,34 +95,37 @@ void StraightLaserPoint::DrawPreLine()
 	//ó\ë™ê¸ÇÃà íu.
 	const double centerPos = nextCenterPos;
 
-	{
-		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * (1 - alpha));
+	Line preLine;
 
-		Line preLine;
-		//à íuÇÃê›íË.
-		switch (nextDirection)
-		{
-		case 0: //Å®.
-			preLine.stPos = { -50,             centerPos };
-			preLine.edPos = { WINDOW_WID + 50, centerPos };
-			break;
-		case 1: //Å©.
-			preLine.stPos = { WINDOW_WID + 50, centerPos };
-			preLine.edPos = { -50,             centerPos };
-			break;
-		case 2: //Å´.
-			preLine.stPos = { centerPos, -50 };
-			preLine.edPos = { centerPos, WINDOW_HEI + 50 };
-			break;
-		case 3: //Å™.
-			preLine.stPos = { centerPos, WINDOW_HEI + 50 };
-			preLine.edPos = { centerPos, -50 };
-			break;
-		}
-		//ï`âÊ.
-		preLine.color = COLOR_PRE_EFFECT;
-		DrawLineKR(preLine, true);
+	//à íuÇÃê›íË.
+	switch (nextDirection)
+	{
+	case 0: //Å®.
+		preLine.stPos = { -50,             centerPos };
+		preLine.edPos = { WINDOW_WID + 50, centerPos };
+		break;
+	case 1: //Å©.
+		preLine.stPos = { WINDOW_WID + 50, centerPos };
+		preLine.edPos = { -50,             centerPos };
+		break;
+	case 2: //Å´.
+		preLine.stPos = { centerPos, -50 };
+		preLine.edPos = { centerPos, WINDOW_HEI + 50 };
+		break;
+	case 3: //Å™.
+		preLine.stPos = { centerPos, WINDOW_HEI + 50 };
+		preLine.edPos = { centerPos, -50 };
+		break;
 	}
+
+	//ï`âÊ.
+	DrawMode::Exe(
+		DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - alpha)),
+		[&](){
+			preLine.color = COLOR_PRE_EFFECT;
+			DrawLineKR(preLine, true);
+		}
+	);
 }
 
 /// <summary>

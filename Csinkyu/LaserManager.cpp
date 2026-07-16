@@ -88,10 +88,12 @@ void LaserManager::Draw() {
 			default: assert(FALSE); break;
 		}
 		//加算合成モードで軌跡を描画(発光エフェクト)
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Add, color);
-			DrawLineKR(tmpLine, true);
-		}
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Add, color,
+			[&]() {
+				DrawLineKR(tmpLine, true);
+			}
+		);
 	}
 
 	//チュートリアル限定.
@@ -196,10 +198,8 @@ void LaserManager::UpdateLaser() {
 					//一定時間で目標地点を決める.
 					if (i->counter >= LASER_REF_TRACK_ST_TM) {
 
-						//最寄りの隕石を取得する.
-						const DBL_XY laserPos = i->nowPos; //レーザーの現在位置.
-						Meteor* meteor = meteorMng->GetTargetMeteor(laserPos);
-
+						//ターゲットできる隕石を取得.
+						Meteor* meteor = meteorMng->GetTargetMeteor(i->nowPos);
 						//隕石があった場合.
 						if (meteor) {
 							i->target     = meteor; //隕石を登録.
@@ -308,11 +308,6 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 			i->Play(false, 60); //直線レーザー.
 		}
 	}
-	if (type == Laser_Falling) {
-		if (auto i = soundMng->Get("Laser1")) {
-			i->Play(false, 45); //落下レーザー（少し音量小さめ）.
-		}
-	}
 }
 
 //次のレーザーへ.
@@ -396,7 +391,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 
 	//エフェクト.
 	EffectData data{};
-	data.type = Effect_ReflectLaser;
+	data.type = Effect_Reflect;
 	data.pos  = it->nowPos;
 	effectMng->SpawnEffect(&data);
 	//サウンド.

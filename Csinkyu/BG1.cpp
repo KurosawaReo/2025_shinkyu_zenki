@@ -4,6 +4,7 @@
 #include "BG1.h"
 
 //依存関係.
+#include "Global.h"
 #include "BGManager.h"
 #include "GameData.h"
 #include "GameManager.h"
@@ -35,22 +36,26 @@ void BG_Tile::Draw(double slowTime) {
 		//透明度計算.
 		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
-		//画像.
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alpha * sinNum * (1 - slowTime));
-			DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
-		}
+		//タイル画像描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha,  _int(alpha * sinNum * (1 - slowTime)),
+			[&]() {
+				DrawImgMng::Get("bg_normal")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+			}
+		);
 	}
 	//反射モード.
 	if (gameData->isReflectMode) {
 		//透明度計算.
 		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
 		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
-		//画像.
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alpha * sinNum * slowTime);
-			DrawImgMng::Get("bg_reflect")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
-		}
+		//タイル画像描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha * sinNum * slowTime),
+			[&]() {
+				DrawImgMng::Get("bg_reflect")->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+			}
+		);
 	}
 }
 //発光.
@@ -121,11 +126,13 @@ void BG1::Draw() {
 	}
 	//スローモード中.
 	if (gameData->speedRate) {
-		//グラデーション枠.
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * time);
-			DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
-		}
+		//グラデーション枠線.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * time),
+			[&]() {
+				DrawImgMng::Get("reflect_mode_frame")->Draw({WINDOW_WID/2, WINDOW_HEI/2});
+			}
+		);
 		//枠線.
 		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT, 1.0f };
 		DrawBoxKR(box, Anchor::Mid, false, true);

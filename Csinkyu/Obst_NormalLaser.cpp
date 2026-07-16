@@ -109,13 +109,16 @@ void NormalLaserPoint::Draw() {
 			//‰~î•ñ.
 			Circle cir = { pos, dotSize, COLOR_PRE_EFFECT, 1.0f };
 
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, blinkAlpha);
+			//•`‰æ.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, blinkAlpha,
+				[&]() {
 
-				DrawCircleKR(cir, Anchor::Mid, false, true);
-				cir.r = dotSize2;
-				DrawCircleKR(cir, Anchor::Mid, false, true);
-			}
+					DrawCircleKR(cir, Anchor::Mid, false, true);
+					cir.r = dotSize2;
+					DrawCircleKR(cir, Anchor::Mid, false, true);
+				}
+			);
 		}
 	}
 }
@@ -263,12 +266,15 @@ void NormalLaser::DrawObstFlash() {
 		line2.edPos = tri.pos[2];
 		line1.color = GetColor(0, 255, 255);
 		line2.color = GetColor(0, 255, 255);
-		
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
-			DrawLineKR(line1, true);
-			DrawLineKR(line2, true);
-		}
+		//•`‰æ.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, alphaValue,
+			[&]() {
+				DrawLineKR(line1, true);
+				DrawLineKR(line2, true);
+			}
+		);
+
 		//ƒGƒtƒFƒNƒgŽžŠÔ‚ªI—¹‚µ‚½‚ç–³Œø‰»
 		if (flash[i].counter >= flash[i].Duration)
 		{

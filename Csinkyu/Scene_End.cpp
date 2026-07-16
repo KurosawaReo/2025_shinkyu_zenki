@@ -74,9 +74,8 @@ void EndScene::Update() {
 		//特定の操作でタイトルへ.
 		if (inputMng->IsPushActionTime("GameNext") == 1)
 		{
-			uiMng->SetDisBestScore(gameData->bestScore); //ベストスコア表示更新.
-			sceneMng->SetScene("Title");                 //ゲームシーンへ戻る.
-
+			uiMng->SetBestScore(gameData->bestScore);	//ベストスコア更新.
+			sceneMng->SetScene("Title");				//ゲームシーンへ戻る.
 		}
 	}
 }
@@ -88,10 +87,14 @@ void EndScene::Draw() {
 	{
 		double anim = Calc::AnimEase(EaseType::InOutQuad, timer.GetPassTime()); //アニメーション値.
 		Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000, 1.0f };
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 128 * anim);
-			DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
-		}
+
+		//描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(128 * anim),
+			[&]() {
+				DrawBoxKR(box, Anchor::LU); //画面を暗くする(UI以外)
+			}
+		);
 	}
 
 	//チュートリアルの場合.
@@ -101,14 +104,17 @@ void EndScene::Draw() {
 		double anim = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
 		//テキスト.
 		DrawStr str(_T("チュートリアルではその場で復活します..."), { WINDOW_WID / 2, WINDOW_HEI / 2 }, 0x00FFFF);
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
 
-			//GAME OVER.
-			DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
-			//テキスト.
-			str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
-		}
+		//描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
+			[&]() {
+				//GAME OVER.
+				DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
+				//テキスト.
+				str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
+			}
+		);
 	}
 	//チュートリアル以外の場合.
 	else {
@@ -127,14 +133,17 @@ void EndScene::Draw() {
 			//テキストの設定.
 			DrawStr str1(_T("Time Bonus"), { WINDOW_WID / 2, WINDOW_HEI / 2 - 20 }, 0xFFFFFF);
 			DrawStr str2(text, { WINDOW_WID / 2, WINDOW_HEI / 2 + 20 }, 0xFFFFFF);
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
 
-				DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
-				//画面中央に文字を表示.
-				str1.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
-				str2.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
-			}
+			//描画.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
+				[&]() {
+					DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
+					//画面中央に文字を表示.
+					str1.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
+					str2.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
+				}
+			);
 		}
 
 		const float delay1 = 1.2f;
@@ -148,10 +157,15 @@ void EndScene::Draw() {
 				//アニメーション値.
 				double anim = Calc::AnimEase(EaseType::OutQuad, (timer.GetPassTime() - delay1) * 2);
 				//描画.
-				{
-					DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-					DrawImgMng::Get("new_record")->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 - 330 + anim * 20 }, { 0.4, 0.4 }, Anchor::Mid, true, true); //NEW RECORD
-				}
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
+					[&]() {
+						//NEW RECORD
+						DrawImgMng::Get("new_record")->DrawExtend(
+							{ WINDOW_WID / 2, WINDOW_HEI / 2 - 330 + anim * 20 }, { 0.4, 0.4 }, Anchor::Mid, true, true
+						);
+					}
+				);
 				//サウンド.
 				if (!isBestScoreSound) {
 					if (auto i = soundMng->Get("BestScore")) {
@@ -168,10 +182,14 @@ void EndScene::Draw() {
 			double anim = Calc::AnimWave(WaveType::CosLoop, timer.GetPassTime() - delay2);
 			//テキスト.
 			DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, WINDOW_HEI / 2 + 145 }, 0xFFFFFF);
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim);
-				str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
-			}
+
+			//描画.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
+				[&]() {
+					str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
+				}
+			);
 		}
 	}
 }

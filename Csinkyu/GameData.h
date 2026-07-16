@@ -2,6 +2,7 @@
    - gameData->h -
 */
 #pragma once
+#include "Global.h"
 
 //ゲームデータ[継承不可]
 class GameData final : public ManagerBase

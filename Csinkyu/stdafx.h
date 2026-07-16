@@ -46,6 +46,6 @@
 #include "KrLib_Dx/KR_TimerMng.h"
 #include "KrLib_cpp/KR_Calc.h"
 #include "KrLib_cpp/KR_File.h"
+#include "KrLib_cpp/KR_Format.h"
 #include "KrLib_cpp/KR_Singleton.h"
-
-#include "Global.h"
+using namespace KR;

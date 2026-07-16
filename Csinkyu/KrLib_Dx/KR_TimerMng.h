@@ -1,6 +1,6 @@
 /*
    - KR_TimerMng.h - (DxLib)
-   ver.2026/06/14
+   ver.2026/07/02
 
    時間管理機能。[試作品]
 */
@@ -32,14 +32,26 @@ namespace KR
 		//コンストラクタ.
 		TimerMng(int order) : ManagerBase(order) {}
 
-		//予約実行する.
-		void ReservExe(float timer, function<void()> func);
-		//全ての予約を中止する.
-		void ReservCancelAll();
-
 		void Init()   override;
 		void Reset()  override {}
 		void Update() override;
 		void Draw()   override {}
+
+		//予約実行する.
+		template<std::invocable Func>
+		void ReservExe(float timer, Func&& func) {
+
+			//不正な時間は中断.
+			if (timer < 0) { return; }
+
+			//予約設定.
+			ReservFunc newFunc;
+			newFunc.func = func;
+			newFunc.time = gameTimer.GetPassTime() + timer; //現在時刻 + 何秒後か.
+			//予約リストに追加.
+			functions.push_back(newFunc);
+		}
+		//全ての予約を中止する.
+		void ReservCancelAll();
 	};
 }

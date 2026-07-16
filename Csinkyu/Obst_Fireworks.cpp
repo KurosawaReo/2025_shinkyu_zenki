@@ -61,7 +61,7 @@ bool Fireworks::CheckDistance(float x, float y) {
 // 花火生成.
 void Fireworks::SpawnFireworks(float x, float y) {
 
-	FireworksData tmp; //花火生成.
+	FireworksData tmp{}; //花火生成.
 
 	tmp.targetX = x;
 	tmp.targetY = y;
@@ -107,6 +107,8 @@ void Fireworks::UpdateFireworksGeneration() {
 // 個別花火更新
 void Fireworks::UpdateIndividualFireworks() {
 
+	bool isPlaySound = false; //一度のみサウンドを流す用.
+
 	for (auto i = fireworks.begin(); i != fireworks.end(); ) {
 
 		i->counter -= gameData->speedRate; //カウンター減少.
@@ -120,9 +122,13 @@ void Fireworks::UpdateIndividualFireworks() {
 		else {
 			//花火のレーザーを生成.
 			CreateFireworksSparks(i->x, i->y);
+
 			//爆発音.
-			if (auto i = soundMng->Get("Explosion")) {
-				i->Play(false, 70); //再生.
+			if (!isPlaySound) {
+				if (auto i = soundMng->Get("Fireworks")) {
+					i->Play(false, 80); //再生.
+				}
+				isPlaySound = true; //もう再生しない.
 			}
 
 			i = fireworks.erase(i); //消去.
@@ -211,23 +217,25 @@ void Fireworks::DrawWarningEffect(list<FireworksData>::iterator it) {
 
 	unsigned int color = GetColor(128, 128, 128);
 
-	{
-		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alphaValue);
-	
-		//上向きの三角形.
-		Triangle tri;
-		tri.pos[0] = { centerX, centerY - size }; // 上の頂点
-		tri.pos[1] = { centerX - size * 0.866f, centerY + size * 0.5f }; // 左下の頂点
-		tri.pos[2] = { centerX + size * 0.866f, centerY + size * 0.5f }; // 右下の頂点
-		tri.color = color;
-		DrawTriangleKR(tri, false, true);
+	//描画.
+	DrawMode::Exe(
+		DrawModeID::None, DrawBlendModeID::Alpha, alphaValue,
+		[&]() {
+			//上向きの三角形.
+			Triangle tri;
+			tri.pos[0] = { centerX, centerY - size }; // 上の頂点
+			tri.pos[1] = { centerX - size * 0.866f, centerY + size * 0.5f }; // 左下の頂点
+			tri.pos[2] = { centerX + size * 0.866f, centerY + size * 0.5f }; // 右下の頂点
+			tri.color = color;
+			DrawTriangleKR(tri, false, true);
 
-		//下向きの三角形.
-		Triangle tri2;
-		tri2.pos[0] = { centerX, centerY + size }; // 下の頂点
-		tri2.pos[1] = { centerX - size * 0.866f, centerY - size * 0.5f }; // 左上の頂点
-		tri2.pos[2] = { centerX + size * 0.866f, centerY - size * 0.5f }; // 右上の頂点
-		tri2.color = color;
-		DrawTriangleKR(tri2, false, true);
-	}
+			//下向きの三角形.
+			Triangle tri2;
+			tri2.pos[0] = { centerX, centerY + size }; // 下の頂点
+			tri2.pos[1] = { centerX - size * 0.866f, centerY - size * 0.5f }; // 左上の頂点
+			tri2.pos[2] = { centerX + size * 0.866f, centerY - size * 0.5f }; // 右上の頂点
+			tri2.color = color;
+			DrawTriangleKR(tri2, false, true);
+		}
+	);
 }

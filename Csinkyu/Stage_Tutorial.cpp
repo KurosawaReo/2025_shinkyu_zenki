@@ -609,15 +609,19 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 		Box    box  = {pos, size, 0x000000, 1.0f};
 
 		//枠背景.
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 100*alpha);
-			DrawBoxKR(box, Anchor::LU);
-		}
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(100 * alpha),
+			[&]() {
+				DrawBoxKR(box, Anchor::LU);
+			}
+		);
 		//テキスト.
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255*alpha);
-			str.Draw(Anchor::Mid, useFont);
-		}
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha),
+			[&]() {
+				str.Draw(Anchor::Mid, useFont);
+			}
+		);
 		//枠線グラデーション.
 		GradLine gradLine;
 		if (line == 1) {

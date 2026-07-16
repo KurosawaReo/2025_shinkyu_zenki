@@ -9,8 +9,7 @@ class UIManager final : public ManagerBase
 {
 //▼ ===== 変数 ===== ▼.
 private:
-	int  disBestScore{}; //表示ベストスコア.
-	int  disScore{};     //表示スコア.
+	int  dispBestScore{}; //表示ベストスコア.
 
 	bool isShowScore{}; //スコアを表示するかどうか.
 
@@ -22,7 +21,7 @@ public:
 	//sign.
 	void SignIsShowScore() { isShowScore = true; }
 	//set.
-	void SetDisBestScore(int _score) { disBestScore = _score; }
+	void SetBestScore(int _score) { dispBestScore = _score; }
 
 	void Init()   override;
 	void Reset()  override;

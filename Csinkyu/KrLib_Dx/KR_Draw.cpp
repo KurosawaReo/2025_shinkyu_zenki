@@ -5,10 +5,8 @@
 
 //[include] ".cpp"ファイルでのみ使うもの.
 #include "KR_App.h"
-//#include "KR_Calc.h"
 #include "KR_Camera.h"
 #include "../KrLib_cpp/KR_Calc.h"
-//#include <algorithm>
 
 /*
    [終点の注意]
@@ -609,11 +607,16 @@ namespace KR
 		}
 
 		//描画.
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255);
-
-			//TODO: ↓DX_PRIMTYPE_LINESTRIP以外の機能.
-			DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
-		}
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, 255,
+			[&]() {
+				//TODO: ↓DX_PRIMTYPE_LINESTRIP以外の機能.
+				DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
+			}
+		);
 	}
+
+// ▼*--=<[ DrawMode ]>=--*▼ //
+
+	DrawMode DrawMode::inst;
 }

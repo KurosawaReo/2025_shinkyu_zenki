@@ -96,25 +96,28 @@ void ItemManager::Draw()
 
 		//有効なアイテムを描画.
 		if (items[i].active) {
-			//描画.
-			{
-				//点滅.
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 155 + 100 * AnimWave(WaveType::CosLoop, items[i].counter/30));
 
-				//強化演出.
-				if (items[i].type == Item_Super) {
-					//アイテム発光.
-					DrawImgMng::Get("item_light")->DrawExtend(items[i].pos, {0.05, 0.05});
+			const int pow = _int(155 + 100 * AnimWave(WaveType::CosLoop, items[i].counter / 30)); //透明度.
+
+			//点滅描画.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, pow,
+				[&]() {
+					//強化演出.
+					if (items[i].type == Item_Super) {
+						//アイテム発光.
+						DrawImgMng::Get("item_light")->DrawExtend(items[i].pos, { 0.05, 0.05 });
+					}
+					//アイテム本体.
+					{
+						DBL_XY size = {
+							ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().x,
+							ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().y
+						};
+						DrawImgMng::Get("item")->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
+					}
 				}
-				//アイテム本体.
-				{
-					DBL_XY size = {
-						ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().x,
-						ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().y
-					};
-					DrawImgMng::Get("item")->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
-				}
-			}
+			);
 
 			//チュートリアル用.
 			if (gameData->stage == Stage_Tutorial) {

@@ -6,19 +6,22 @@
 //依存関係.
 #include "BGManager.h"
 #include "GameData.h"
+#include "GameManager.h"
 //参照.
-static GameData*  gameData;
-static BGManager* bgMng;
+static GameData*    gameData;
+static GameManager* gameMng;
+static BGManager*   bgMng;
 //参照(KRライブラリ)
-static SoundMng*  soundMng;
-static InputMng*  inputMng;
-static SceneMng*  sceneMng;
+static SoundMng*    soundMng;
+static InputMng*    inputMng;
+static SceneMng*    sceneMng;
 
 //初期化.
 void MenuScene::Init() {
 
 	//参照取得.
 	gameData = ManagerInsts::Get<GameData>();
+	gameMng  = ManagerInsts::Get<GameManager>();
 	bgMng    = ManagerInsts::Get<BGManager>();
 	soundMng = ManagerInsts::Get<SoundMng>();
 	inputMng = ManagerInsts::Get<InputMng>();
@@ -81,20 +84,29 @@ void MenuScene::Update() {
 		switch (selectedIndex)
 		{
 			case 0:
+			{
 				//耐久モードへ.
 				sceneMng->SetScene("Game");
 				gameData->stage = Stage_Endless;
 				//背景変更.
 				bgMng->SetBgNo(1);
+
 #if !defined BGM_NONE
-				//BGM.
+
 				soundMng->StopAll();
-				if (auto i = soundMng->Get("BGM_Endless")) {
+
+				//BGM名を取得.
+				string bgmName = gameMng->GetGameSceneBgm();
+				//BGMを再生.
+				if (auto i = soundMng->Get(bgmName)) {
 					i->Play(true, 68); //再生.
 				}
 #endif
-				break;
+			}
+			break;
+
 			case 1:
+			{
 				//チュートリアルへ.
 				sceneMng->SetScene("Game");
 				gameData->stage = Stage_Tutorial;
@@ -107,10 +119,14 @@ void MenuScene::Update() {
 					i->Play(true, 68); //再生.
 				}
 #endif
-				break;
+			}
+			break;
+
 			case 2:
+			{
 				sceneMng->SetScene("Title"); //タイトルへ.
-				break;
+			}
+			break;
 
 			default: assert(FALSE); break;
 		}
@@ -138,49 +154,53 @@ void MenuScene::Draw() {
 	const double anim6 = sin(fmod(counter-20, 120)/120 * M_PI);
 
 	//▼メニュー全体の背景.
-	{
-		DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 128);
-
-		Box box = {{0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000, 1.0f};
-		DrawBoxKR(box, Anchor::LU, true);
-	}
+	DrawMode::Exe(
+		DrawModeID::None, DrawBlendModeID::Alpha, 128,
+		[&]() {
+			Box box = { {0, 0}, {WINDOW_WID, WINDOW_HEI}, 0x000000, 1.0f };
+			DrawBoxKR(box, Anchor::LU, true);
+		}
+	);
 	//▼メニュータイトル.
 	{
 		//基準地.
 		const DBL_XY basePos = { WINDOW_WID / 2, 80 };
 
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim4);
-
-			Line lines[4] = {
-			//「<」.
-				{ basePos + DBL_XY(-55-100*anim3, 30), basePos + DBL_XY(-85-100*anim3,   0), 0x00FFFF, 2.0f },
-				{ basePos + DBL_XY(-85-100*anim3,  0), basePos + DBL_XY(-55-100*anim3, -30), 0x00FFFF, 2.0f },
-			//「>」.
-				{ basePos + DBL_XY(+55+100*anim3, 30), basePos + DBL_XY(+85+100*anim3,   0), 0x00FFFF, 2.0f },
-				{ basePos + DBL_XY(+85+100*anim3,  0), basePos + DBL_XY(+55+100*anim3, -30), 0x00FFFF, 2.0f }
-			};
-			//線描画.
-			for (auto& i : lines) {
-				DrawLineKR(i, true);
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim4),
+			[&]() {
+				Line lines[4] = {
+					//「<」.
+						{ basePos + DBL_XY(-55 - 100 * anim3, 30), basePos + DBL_XY(-85 - 100 * anim3,   0), 0x00FFFF, 2.0f },
+						{ basePos + DBL_XY(-85 - 100 * anim3,  0), basePos + DBL_XY(-55 - 100 * anim3, -30), 0x00FFFF, 2.0f },
+						//「>」.
+							{ basePos + DBL_XY(+55 + 100 * anim3, 30), basePos + DBL_XY(+85 + 100 * anim3,   0), 0x00FFFF, 2.0f },
+							{ basePos + DBL_XY(+85 + 100 * anim3,  0), basePos + DBL_XY(+55 + 100 * anim3, -30), 0x00FFFF, 2.0f }
+				};
+				//線描画.
+				for (auto& i : lines) {
+					DrawLineKR(i, true);
+				}
 			}
-		}
-		{
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, 255 * anim6);
+		);
 
-			Line lines[4] = {
-			//「<」.
-				{ basePos+ DBL_XY(-55-100*anim5, 30), basePos+ DBL_XY(-85-100*anim5,   0), 0x00FFFF, 2.0f },
-				{ basePos+ DBL_XY(-85-100*anim5,  0), basePos+ DBL_XY(-55-100*anim5, -30), 0x00FFFF, 2.0f },
-			//「>」.
-				{ basePos+ DBL_XY(+55+100*anim5, 30), basePos+ DBL_XY(+85+100*anim5,   0), 0x00FFFF, 2.0f },
-				{ basePos+ DBL_XY(+85+100*anim5,  0), basePos+ DBL_XY(+55+100*anim5, -30), 0x00FFFF, 2.0f }
-			};
-			//線描画.
-			for (auto& i : lines) {
-				DrawLineKR(i, true);
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim6),
+			[&]() {
+				Line lines[4] = {
+					//「<」.
+					{ basePos + DBL_XY(-55 - 100 * anim5, 30), basePos + DBL_XY(-85 - 100 * anim5,   0), 0x00FFFF, 2.0f },
+					{ basePos + DBL_XY(-85 - 100 * anim5,  0), basePos + DBL_XY(-55 - 100 * anim5, -30), 0x00FFFF, 2.0f },
+					//「>」.
+					{ basePos + DBL_XY(+55 + 100 * anim5, 30), basePos + DBL_XY(+85 + 100 * anim5,   0), 0x00FFFF, 2.0f },
+					{ basePos + DBL_XY(+85 + 100 * anim5,  0), basePos + DBL_XY(+55 + 100 * anim5, -30), 0x00FFFF, 2.0f }
+				};
+				//線描画.
+				for (auto& i : lines) {
+					DrawLineKR(i, true);
+				}
 			}
-		}
+		);
 
 		DrawStr str(_T("モード選択"), basePos.ToInt(), 0x00FFFF);
 		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
@@ -221,11 +241,13 @@ void MenuScene::Draw() {
 				alpha = 128;
 			}
 			//テキスト.
-			{
-				DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alpha);
-				str.Draw(Anchor::Mid, fontMenu[1].GetFont());
-			}
-			
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
+				[&]() {
+					str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+				}
+			);
+
 			//リセット.
 			str.pos = savePos;
 			//スペースを空ける.
@@ -257,11 +279,13 @@ void MenuScene::Draw() {
 	
 		string name = "menu" + to_string(selectedIndex);
 		if (auto i = DrawImgMng::Get(name)) {
-			//画像描画.
-			{
-				DrawMode _(DrawModeID::Bilinear, DrawBlendModeID::None, 255); //画像を滑らかに.
-				i->DrawExtend(mLayout.imgPos, {extend , extend});
-			}
+			//画像を滑らかに.
+			DrawMode::Exe(
+				DrawModeID::Bilinear, DrawBlendModeID::None, 255,
+				[&]() {
+					i->DrawExtend(mLayout.imgPos, { extend , extend });
+				}
+			);
 			//画像のサイズ(Extend倍率分小さくする)
 			imgSize = i->GetSize().ToDbl() * extend + margin;
 			//画像の枠線(位置とサイズは画像に合わせる)
@@ -286,43 +310,46 @@ void MenuScene::Draw() {
 		int textBoxCenterX = textBoxX + textBoxWidth / 2;
 		int textBoxTopY = textBoxY;
 
-		{
-			//線の透明度(155～255)
-			const int alpha = _int_r(155 + 100 * (anim2 + 1.0) / 2.0);
-			DrawMode _(DrawModeID::None, DrawBlendModeID::Alpha, alpha);
+		//線の透明度(155～255)
+		const int alpha = _int_r(155 + 100 * (anim2 + 1.0) / 2.0);
+		//描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, alpha,
+			[&]() {
 
-			//1.メニュー項目から画像への線（メニュー項目右端から画像左端まで）
-			{
-				//線データ.
-				Line line = {
-					mLayout.menuPos + DBL_XY(mLayout.menuSize.x/2, 0),       //始点.
-					DBL_XY(mLayout.imgPos.x-imgSize.x/2, mLayout.menuPos.y), //終点.
-					mColor.line,                                             //色.
-					3.0f
-				};
-				//選択してる所にずらす.
-				line.stPos.y += mLayout.menuSpace * selectedIndex;
-				line.edPos.y += mLayout.menuSpace * selectedIndex;
-				//線描画.
-				DrawLineKR(line, false);
-			}
+				//1.メニュー項目から画像への線（メニュー項目右端から画像左端まで）
+				{
+					//線データ.
+					Line line = {
+						mLayout.menuPos + DBL_XY(mLayout.menuSize.x/2, 0),       //始点.
+						DBL_XY(mLayout.imgPos.x-imgSize.x/2, mLayout.menuPos.y), //終点.
+						mColor.line,                                             //色.
+						3.0f
+					};
+					//選択してる所にずらす.
+					line.stPos.y += mLayout.menuSpace * selectedIndex;
+					line.edPos.y += mLayout.menuSpace * selectedIndex;
+					//線描画.
+					DrawLineKR(line, false);
+				}
 
-			//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
-			{
-				Line line = {
-					DBL_XY(mLayout.imgPos.x-30, imgBottomY),  //始点.
-					DBL_XY(mLayout.imgPos.x-30, textBoxTopY), //終点.
-					mColor.line,							  //色.
-					3.0f
-				};
-				//線1.
-				DrawLineKR(line, false);
-				//線2.
-				line.stPos.x += 60;
-				line.edPos.x += 60;
-				DrawLineKR(line, false);
+				//2.画像から説明文エリアへの線（画像下端から説明文上端まで）
+				{
+					Line line = {
+						DBL_XY(mLayout.imgPos.x-30, imgBottomY),  //始点.
+						DBL_XY(mLayout.imgPos.x-30, textBoxTopY), //終点.
+						mColor.line,							  //色.
+						3.0f
+					};
+					//線1.
+					DrawLineKR(line, false);
+					//線2.
+					line.stPos.x += 60;
+					line.edPos.x += 60;
+					DrawLineKR(line, false);
+				}
 			}
-		}
+		);
 	}
 
 	//▼操作説明（左下）

@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver.2026/06/14
+   ver.2026/07/02
 
    オブジェクト機能。
    継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
@@ -102,7 +102,7 @@ namespace KR
 		//当たり判定.
 		bool      HitCheckCir (const Circle& cir)  const;
 		bool      HitCheckBox (const Box&    box)  const;
-		bool      HitCheckLine(const Line&   line) const;
+		bool      HitCheckLine(const Line&   line, DBL_XY* nearestPos = nullptr) const;
 		//描画.
 		void      DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDisp = true) const override;
 	};

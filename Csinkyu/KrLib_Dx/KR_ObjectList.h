@@ -1,6 +1,6 @@
 /*
    - KR_ObjectList.h - (DxLib)
-   ver.2026/06/14
+   ver.2026/07/02
 
    オブジェクトを扱うリスト。
 */
@@ -24,7 +24,7 @@ namespace KR
 	   Generateに引数を設定したい場合
 	   管理するobject(Tクラス)に、同じ引数のコンストラクタを用意すること.
 	*/
-	template<typename T> requires std::derived_from<T, ObjectShape>
+	template<typename T> requires std::derived_from<T, ObjectShape> and (!std::is_abstract_v<T>)
 	class ObjectList
 	{
 	//▼ ===== 変数 ===== ▼.

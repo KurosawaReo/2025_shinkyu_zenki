@@ -45,15 +45,16 @@
     <ClCompile Include="KrLib_Dx\KR_Global.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_ManagerInsts.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Matrix.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
     <ClCompile Include="KrLib_Dx\KR_SceneMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
     <ClCompile Include="KrLib_Dx\KR_StateMachine.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Timer.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_TimerMng.cpp" />
     <ClCompile Include="LaserManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_ManagerInsts.cpp" />
     <ClCompile Include="Obst_Fireworks.cpp" />
     <ClCompile Include="Obst_Meteor.cpp" />
     <ClCompile Include="Obst_MeteorManager.cpp" />
@@ -71,7 +72,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="KrLib_Dx\KR_TimerMng.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -102,17 +102,16 @@
     <ClInclude Include="KrLib_Dx\KR_Global.h" />
     <ClInclude Include="KrLib_Dx\KR_Input.h" />
     <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />
+    <ClInclude Include="KrLib_Dx\KR_ManagerInsts.h" />
     <ClInclude Include="KrLib_Dx\KR_Matrix.h" />
     <ClInclude Include="KrLib_Dx\KR_Object.h" />
     <ClInclude Include="KrLib_Dx\KR_ObjectList.h" />
-    <ClInclude Include="KrLib_Dx\KR_ObjectMng.h" />
     <ClInclude Include="KrLib_Dx\KR_SceneMng.h" />
     <ClInclude Include="KrLib_Dx\KR_Sound.h" />
     <ClInclude Include="KrLib_Dx\KR_StateMachine.h" />
     <ClInclude Include="KrLib_Dx\KR_Timer.h" />
     <ClInclude Include="KrLib_Dx\KR_TimerMng.h" />
     <ClInclude Include="LaserManager.h" />
-    <ClInclude Include="KrLib_Dx\KR_ManagerInsts.h" />
     <ClInclude Include="Obst_Fireworks.h" />
     <ClInclude Include="Obst_Meteor.h" />
     <ClInclude Include="Obst_MeteorManager.h" />
