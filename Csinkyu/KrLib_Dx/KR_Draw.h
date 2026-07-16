@@ -91,8 +91,8 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private:
-		umap<string, DrawImg> images; //画像データ.
-		MY_STRING             path;   //共通パス.
+		umap<MY_STRING, DrawImg> images; //画像データ.
+		MY_STRING                path;   //共通パス.
 
 	//▼ ===== 関数 ===== ▼.
 	private:
@@ -105,12 +105,12 @@ namespace KR
 		//set.
 		static void      SetPath    (MY_STRING path);
 		//get.
-		static DrawImg*  Get        (string saveName);
-		static bool      TryGet     (string saveName, DrawImg* ptr);
+		static DrawImg*  Get        (MY_STRING saveName);
+		static bool      TryGet     (MY_STRING saveName, DrawImg* ptr);
 		
 		//画像読み込み.
-		static void      LoadFile   (MY_STRING fileName, string saveName);
-		static void      LoadFileDiv(MY_STRING fileName, INT_XY size, INT_XY cnt, vector<string> saveName);
+		static void      LoadFile   (MY_STRING fileName, MY_STRING saveName);
+		static void      LoadFileDiv(MY_STRING fileName, INT_XY size, INT_XY cnt, vector<MY_STRING> saveName);
 
 		//使用禁止.
 		DrawImgMng(const DrawImgMng&) = delete;

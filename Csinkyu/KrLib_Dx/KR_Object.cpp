@@ -16,12 +16,12 @@ namespace KR
 // ¥*--=<[ ObjectShape ]>=--*¥ //
 
 	//‰æ‘œ.
-	void ObjectShape::SetDrawImg(string name) {
+	void ObjectShape::SetDrawImg(MY_STRING name) {
 		useImg.clear();         //ƒŠƒZƒbƒg.
 		useImg.push_back(name); //‰æ‘œ–¼‚ğ“o˜^.
 		useImgNo = 0;           //1–‡‚µ‚©‚È‚¢ê‡‚Í0‚ÅŒÅ’è.
 	}
-	void ObjectShape::SetDrawImgs(vector<string> names, float changeTime) {
+	void ObjectShape::SetDrawImgs(vector<MY_STRING> names, float changeTime) {
 		//“¯‚¶‚à‚Ì‚Å‚È‚¯‚ê‚Î.
 		if (useImg != names) {
 			useImg = names; //‰æ‘œ–¼”z—ñ‚ğ“o˜^.

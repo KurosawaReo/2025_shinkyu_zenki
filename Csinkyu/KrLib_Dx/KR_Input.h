@@ -172,7 +172,7 @@ namespace KR
 		INT_XY mPos{};     //マウス座標.
 		INT_XY stickVec{}; //スティック入力.
 
-		umap<string, ActionData> actions{}; //アクション記録用.
+		umap<MY_STRING, ActionData> actions{}; //アクション記録用.
 
 	//▼ ===== 関数 ===== ▼.
 	private:
@@ -197,15 +197,15 @@ namespace KR
 		int    IsPushPadBtnTime(PadXboxID   id);
 		int    IsPushPadBtnTime(PadSwitchID id);
 		int    IsPushPadBtnTime(PadArcadeID id);
-		bool   IsPushAction    (string name);
-		int    IsPushActionTime(string name);
+		bool   IsPushAction    (MY_STRING name);
+		int    IsPushActionTime(MY_STRING name);
 
 		//アクション.
-		void   AddAction       (string name, KeyID       id);
-		void   AddAction       (string name, MouseID     id);
-		void   AddAction       (string name, PadXboxID   id);
-		void   AddAction       (string name, PadSwitchID id);
-		void   AddAction       (string name, PadArcadeID id);
+		void   AddAction       (MY_STRING name, KeyID       id);
+		void   AddAction       (MY_STRING name, MouseID     id);
+		void   AddAction       (MY_STRING name, PadXboxID   id);
+		void   AddAction       (MY_STRING name, PadSwitchID id);
+		void   AddAction       (MY_STRING name, PadArcadeID id);
 
 		//取得.
 		DBL_XY GetKey4Dir(bool isWASD = true, bool isArrow = true);

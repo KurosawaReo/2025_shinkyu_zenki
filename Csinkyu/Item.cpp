@@ -106,15 +106,15 @@ void ItemManager::Draw()
 					//強化演出.
 					if (items[i].type == Item_Super) {
 						//アイテム発光.
-						DrawImgMng::Get("item_light")->DrawExtend(items[i].pos, { 0.05, 0.05 });
+						DrawImgMng::Get(_T("item_light"))->DrawExtend(items[i].pos, { 0.05, 0.05 });
 					}
 					//アイテム本体.
 					{
 						DBL_XY size = {
-							ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().x,
-							ITEM_SIZE / DrawImgMng::Get("item")->GetSize().ToDbl().y
+							ITEM_SIZE / DrawImgMng::Get(_T("item"))->GetSize().ToDbl().x,
+							ITEM_SIZE / DrawImgMng::Get(_T("item"))->GetSize().ToDbl().y
 						};
-						DrawImgMng::Get("item")->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
+						DrawImgMng::Get(_T("item"))->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
 					}
 				}
 			);
@@ -157,7 +157,7 @@ void ItemManager::ItemUse()
 	//アイテムを使用.
 	gameMng->ItemUsed();
 	//サウンド.
-	if (auto i = soundMng->Get("ItemUse")) {
+	if (auto i = soundMng->Get(_T("ItemUse"))) {
 		i->Play(false, 76); //ポワーン.
 	}
 }

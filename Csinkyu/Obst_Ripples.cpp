@@ -188,7 +188,7 @@ void Ripples::Hitjudgment()
 
 			//ƒTƒEƒ“ƒh.
 			if (!isPlaySound) {
-				if (auto i = soundMng->Get("Ripples")) {
+				if (auto i = soundMng->Get(_T("Ripples"))) {
 					i->Play(false, 73); //Ä¶.
 				}
 				isPlaySound = true; //‚à‚¤Ä¶‚µ‚È‚¢.

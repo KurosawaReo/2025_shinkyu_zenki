@@ -117,18 +117,18 @@ void Player::Draw()
 		){
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get("player_light_ref")->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
+				DrawImgMng::Get(_T("player_light_ref"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//反射モードの画像.
-			DrawImgMng::Get("player_ref")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
+			DrawImgMng::Get(_T("player_ref"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
 		}
 		else {
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get("player_light_nor")->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
+				DrawImgMng::Get(_T("player_light_nor"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//通常モードの画像.
-			DrawImgMng::Get("player_nor")->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
+			DrawImgMng::Get(_T("player_nor"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
 		}
 
 		//チュートリアル用.
@@ -162,12 +162,12 @@ void Player::UpdateDash()
 	{
 		if (dashCooldown <= 0)
 		{
-			bool dashkey = inputMng->IsPushActionTime("PlayerDash") == 1;
+			bool dashkey = inputMng->IsPushActionTime(_T("PlayerDash")) == 1;
 			//ダッシュ開始.
 			if (dashkey)
 			{
 				//ダッシュ音追加.
-				if (auto i = soundMng->Get("PlayerDash")) {
+				if (auto i = soundMng->Get(_T("PlayerDash"))) {
 					i->Play(false, 60); //再生.
 				}
 				dashTimer    = PLAYER_DASH_DURATION;
@@ -239,7 +239,7 @@ void Player::PlayerDeath() {
 	if (!active) { return; }
 
 	//サウンド.
-	if (auto i = soundMng->Get("PlayerDeath")) {
+	if (auto i = soundMng->Get(_T("PlayerDeath"))) {
 		i->Play(false, 80); //再生.
 	}
 	//エフェクト.

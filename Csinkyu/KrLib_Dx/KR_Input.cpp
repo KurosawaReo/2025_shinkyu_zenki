@@ -43,27 +43,27 @@ namespace KR
 		return tmPadBtn[_int(id)];
 	}
 	//ƒAƒNƒVƒ‡ƒ“”»’è.
-	bool InputMng::IsPushAction(string name) {
+	bool InputMng::IsPushAction(MY_STRING name) {
 		return actions[name].time > 0; //‰Ÿ‚µ‚Ä‚éŠÔ‚ª‚ ‚ê‚Îtrue.
 	}
-	int  InputMng::IsPushActionTime(string name) {
+	int  InputMng::IsPushActionTime(MY_STRING name) {
 		return actions[name].time;     //ŠÔ‚ğ•Ô‚·.
 	}
 
 	//ƒAƒNƒVƒ‡ƒ“’Ç‰Á.
-	void InputMng::AddAction(string name, KeyID id) {
+	void InputMng::AddAction(MY_STRING name, KeyID id) {
 		actions[name].inputs.push_back({ InputType::Key,       _int(id) }); //Key‘€ì‚Å“o˜^.
 	}
-	void InputMng::AddAction(string name, MouseID id) {
+	void InputMng::AddAction(MY_STRING name, MouseID id) {
 		actions[name].inputs.push_back({ InputType::Mouse,     _int(id) }); //Mouse‘€ì‚Å“o˜^.
 	}
-	void InputMng::AddAction(string name, PadXboxID id) {
+	void InputMng::AddAction(MY_STRING name, PadXboxID id) {
 		actions[name].inputs.push_back({ InputType::PadXbox,   _int(id) }); //Pad‘€ì(xbox)‚Å“o˜^.
 	}
-	void InputMng::AddAction(string name, PadSwitchID id) {
+	void InputMng::AddAction(MY_STRING name, PadSwitchID id) {
 		actions[name].inputs.push_back({ InputType::PadSwitch, _int(id) }); //Pad‘€ì(switch)‚Å“o˜^.
 	}
-	void InputMng::AddAction(string name, PadArcadeID id) {
+	void InputMng::AddAction(MY_STRING name, PadArcadeID id) {
 		actions[name].inputs.push_back({ InputType::PadArcade, _int(id) }); //Pad‘€ì(arcade)‚Å“o˜^.
 	}
 

@@ -21,16 +21,16 @@ namespace KR
 
 	//▼ ===== 変数 ===== ▼.
 	private:
-		umap<string, umap<string, MY_STRING>> textData;	//言語ごとのテキストデータ.
+		umap<MY_STRING, umap<MY_STRING, MY_STRING>> textData;	//言語ごとのテキストデータ.
 
-		string nowLang;	//現在の言語設定.
+		MY_STRING nowLang;	//現在の言語設定.
 
 	//▼ ===== 関数 ===== ▼.
 	public:
 		//set.
-		static void SetText(string key, string lang, MY_STRING text);
-		static void SetLang(string lang);
+		static void SetText(MY_STRING key, MY_STRING lang, MY_STRING text);
+		static void SetLang(MY_STRING lang);
 		//get.
-		static MY_STRING GetText(string key);
+		static MY_STRING GetText(MY_STRING key);
 	};
 }
