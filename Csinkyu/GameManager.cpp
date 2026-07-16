@@ -80,11 +80,11 @@ void GameManager::Init() {
 		soundMng->SetPath(_T("Resources/Sounds/")); //共通パスの設定.
 		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"),		"BGM_Menu");		//メニューBGM.
 		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	"BGM_Tutorial");	//チュートリアルBGM.
-		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		"BGM_Endless");		//耐久モードBGM1.
-		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),            "BGM_Endless_2");   //耐久モードBGM2.
-		soundMng->LoadFile(_T("bgm/Frost Vector.mp3"),          "BGM_Endless_3");   //耐久モードBGM3.
-		soundMng->LoadFile(_T("bgm/Bullet Acceleration.mp3"),   "BGM_Endless_4");   //耐久モードBGM4.
-		soundMng->LoadFile(_T("bgm/Shattered Icefront.mp3"),    "BGM_Endless_5");   //耐久モードBGM5.
+		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		"BGM_Endless_1");	//エンドレスモードBGM1.
+		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),            "BGM_Endless_2");   //エンドレスモードBGM2.
+		soundMng->LoadFile(_T("bgm/Frost Vector.mp3"),          "BGM_Endless_3");   //エンドレスモードBGM3.
+		soundMng->LoadFile(_T("bgm/Bullet Acceleration.mp3"),   "BGM_Endless_4");   //エンドレスモードBGM4.
+		soundMng->LoadFile(_T("bgm/Shattered Icefront.mp3"),    "BGM_Endless_5");   //エンドレスモードBGM5.
 
 		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			"BGM_Over");		//ゲームオーバーBGM.
 		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		"MenuCursor");		//メニューカーソル音.
@@ -143,15 +143,12 @@ void GameManager::Init() {
 	gameData->fonts["size35"].CreateFontH(_T(""), 35, 1, FontTypeID::Anti);
 	gameData->fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
 
-	try {
-		//[score.data]
-		File file;
-		file.Open(FILE_DATA_SCORE, FileOpenMode::Read);	//ファイルを開く.
-		gameData->bestScore = file.ReadInt();			//数字を読み込んで登録.
-		uiMng->SetBestScore(gameData->bestScore);		//ベストスコア反映.
-	}
-	catch (const ErrorMsg& err) {
-		Debug::Log(_T("Dataファイル読み込み"), err.GetMsg());
+	//[score.data]
+	File file;
+	//ファイルがあれば開く.
+	if (file.Open(FILE_DATA_SCORE, FileOpenMode::Read)) {
+		gameData->bestScore = file.ReadInt();		//数字を読み込んで登録.
+		uiMng->SetBestScore(gameData->bestScore);	//ベストスコア反映.
 	}
 
 	//fps表示用.
@@ -193,7 +190,7 @@ void GameManager::Reset() {
 	{
 		//抽選するBGM名.
 		const vector<string> bgmName = {
-			"BGM_Endless",
+			"BGM_Endless_1",
 			"BGM_Endless_2",
 			"BGM_Endless_3",
 			"BGM_Endless_4",
@@ -301,37 +298,37 @@ void GameManager::GameOver() {
 				gameData->scoreBef = gameData->score;                  //時間加算前のスコアを記録.
 				gameData->score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
 
-				try {
-					//[score.data]
-					if (gameData->score > gameData->bestScore) {
-						File file;
-						file.Open(FILE_DATA_SCORE, FileOpenMode::Write);	//ファイルを開く.
-						file.WriteInt(gameData->score);						//スコアを保存.
-						gameData->bestScore = gameData->score;				//スコア更新.
-						endScene.SignBestScore();							//ハイスコアのサイン送信.
-					}
+				//[score.data]
+				if (gameData->score > gameData->bestScore) {
 
-					//[playlog.data]
-					{
-						DATEDATA date;
-						GetDateTime(&date); //現在時刻取得.
-
-						MY_STRING dateStr = Format::StrFormat(
-							//フォーマット.
-							_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Level:%d / Score:%0.5d / Time:%.1f\n"), 
-							//変数挿入.
-							date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, 
-							Device::GetComputerNameStr(), gameData->level, gameData->score, gameScene.GetGameTime()
-						);
-
-						//ファイルへ追記.
-						File file;
-						file.Open(FILE_DATA_PLAYLOG, FileOpenMode::Out | FileOpenMode::App); //ファイルを開く.
-						file.WriteString(dateStr);
+					File file;
+					//ファイルを開く.
+					if (file.Open(FILE_DATA_SCORE, FileOpenMode::Write)) {
+						file.WriteInt(gameData->score);			//スコアを保存.
+						gameData->bestScore = gameData->score;	//スコア更新.
+						endScene.SignBestScore();				//ハイスコアのサイン送信.
 					}
 				}
-				catch (const ErrorMsg& err) {
-					Debug::Log(_T("Dataファイル読み込み"), err.GetMsg());
+
+				//[playlog.data]
+				{
+					DATEDATA date;
+					GetDateTime(&date); //現在時刻取得.
+
+					MY_STRING dateStr = Format::StrFormat(
+						//フォーマット.
+						_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Level:%d / Score:%0.5d / Time:%.1f\n"), 
+						//変数挿入.
+						date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, 
+						Device::GetComputerNameStr(), gameData->level, gameData->score, gameScene.GetGameTime()
+					);
+
+					//ファイルへ追記.
+					File file;
+					//ファイルを開く.
+					if (file.Open(FILE_DATA_PLAYLOG, FileOpenMode::Out | FileOpenMode::App)) {
+						file.WriteString(dateStr);
+					}
 				}
 
 #if !defined BGM_NONE
