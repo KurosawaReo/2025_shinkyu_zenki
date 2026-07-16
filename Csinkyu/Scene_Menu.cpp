@@ -27,17 +27,6 @@ void MenuScene::Init() {
 	inputMng = ManagerInsts::Get<InputMng>();
 	sceneMng = ManagerInsts::Get<SceneMng>();
 
-	//入力アクション登録.
-	inputMng->AddAction("MENU_UP",   KeyID::Up);
-	inputMng->AddAction("MENU_UP",   KeyID::W);
-	inputMng->AddAction("MENU_UP",   PadXboxID::Up);
-	inputMng->AddAction("MENU_DOWN", KeyID::Down);
-	inputMng->AddAction("MENU_DOWN", KeyID::S);
-	inputMng->AddAction("MENU_DOWN", PadXboxID::Down);
-	inputMng->AddAction("MENU_NEXT", KeyID::Space);
-	inputMng->AddAction("MENU_NEXT", KeyID::Enter);
-	inputMng->AddAction("MENU_NEXT", PadXboxID::A);
-
 	//フォント作成.
 	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Anti);
 	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Anti);
@@ -65,11 +54,11 @@ void MenuScene::Exit() {
 void MenuScene::Update() {
 
 	//カーソル移動操作.
-	if (inputMng->IsPushActionTime("MENU_UP") % 20 == 1) {
+	if (inputMng->IsPushActionTime(_T("MenuUp")) % 20 == 1) {
 		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
-	if (inputMng->IsPushActionTime("MENU_DOWN") % 20 == 1) { //長押しにも対応.
+	if (inputMng->IsPushActionTime(_T("MenuDown")) % 20 == 1) { //長押しにも対応.
 		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
@@ -79,14 +68,14 @@ void MenuScene::Update() {
 	}
 
 	//決定操作.
-	if (inputMng->IsPushActionTime("MENU_NEXT") == 1) {
+	if (inputMng->IsPushActionTime(_T("MenuNext")) == 1) {
 
 		switch (selectedIndex)
 		{
 			case 0:
 			{
 				//耐久モードへ.
-				sceneMng->SetScene("Game");
+				sceneMng->SetScene(_T("Game"));
 				gameData->stage = Stage_Endless;
 				//背景変更.
 				bgMng->SetBgNo(1);
@@ -96,10 +85,11 @@ void MenuScene::Update() {
 				soundMng->StopAll();
 
 				//BGM名を取得.
-				string bgmName = gameMng->GetGameSceneBgm();
+				MY_STRING bgmName = gameMng->GetGameSceneBgm();
 				//BGMを再生.
 				if (auto i = soundMng->Get(bgmName)) {
-					i->Play(true, 68); //再生.
+//					i->Play(true, 68); //再生.
+					i->Play(true, 90); //再生.
 				}
 #endif
 			}
@@ -108,14 +98,14 @@ void MenuScene::Update() {
 			case 1:
 			{
 				//チュートリアルへ.
-				sceneMng->SetScene("Game");
+				sceneMng->SetScene(_T("Game"));
 				gameData->stage = Stage_Tutorial;
 				//背景変更.
 				bgMng->SetBgNo(1);
 #if !defined BGM_NONE
 				//BGM.
 				soundMng->StopAll();
-				if (auto i = soundMng->Get("BGM_Tutorial")) {
+				if (auto i = soundMng->Get(_T("BGM_Tutorial"))) {
 					i->Play(true, 68); //再生.
 				}
 #endif
@@ -124,7 +114,7 @@ void MenuScene::Update() {
 
 			case 2:
 			{
-				sceneMng->SetScene("Title"); //タイトルへ.
+				sceneMng->SetScene(_T("Title")); //タイトルへ.
 			}
 			break;
 
@@ -132,7 +122,7 @@ void MenuScene::Update() {
 		}
 
 		//サウンド.
-		if (auto i = soundMng->Get("MenuOK")) {
+		if (auto i = soundMng->Get(_T("MenuOK"))) {
 			i->Play(false, 70);
 		}
 	}
@@ -277,7 +267,7 @@ void MenuScene::Draw() {
 		const double extend = 0.4; //画像描画倍率.
 		const int    margin = 10;  //枠を画像よりどれだけ大きくするか.
 	
-		string name = "menu" + to_string(selectedIndex);
+		MY_STRING name = _T("menu") + NumToString(selectedIndex);
 		if (auto i = DrawImgMng::Get(name)) {
 			//画像を滑らかに.
 			DrawMode::Exe(
@@ -445,7 +435,7 @@ void MenuScene::OnCursorMove() {
 	tmBlink.Start(); //点滅時間計測.
 
 	//サウンド.
-	if (auto i = soundMng->Get("MenuCursor")) {
+	if (auto i = soundMng->Get(_T("MenuCursor"))) {
 		i->Play(false, 70);
 	}
 }

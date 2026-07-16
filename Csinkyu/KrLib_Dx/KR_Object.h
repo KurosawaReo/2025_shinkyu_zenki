@@ -22,9 +22,9 @@ namespace KR
 	{
 	//▼ ===== 変数 ===== ▼.
 	private:
-		vector<string> useImg{};    //使う画像データ.
-		int            useImgNo{};  //使う画像データのindex.
-		Timer          tmImgAnim{}; //画像切り替え用タイマー.
+		vector<MY_STRING> useImg{};    //使う画像データ.
+		int               useImgNo{};  //使う画像データのindex.
+		Timer             tmImgAnim{}; //画像切り替え用タイマー.
 
 	public:
 		DBL_XY offset{};   //画像をずらす量.
@@ -54,8 +54,8 @@ namespace KR
 		virtual DBL_XY* GetPosPtr()             = 0;
 		virtual DBL_XY  GetSize  ()       const = 0;
 		//画像.
-		void      SetDrawImg     (string name);
-		void      SetDrawImgs    (vector<string> names, float changeTime);
+		void      SetDrawImg     (MY_STRING name);
+		void      SetDrawImgs    (vector<MY_STRING> names, float changeTime);
 		void      SetStopImgAnim (bool isStop);
 		//Calcの機能.
 		void      FixPosInArea   (DBL_RECT rect);

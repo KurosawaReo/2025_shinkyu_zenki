@@ -342,7 +342,7 @@ namespace KR
 	}
 
 	//画像取得.
-	DrawImg* DrawImgMng::Get(string saveName) {
+	DrawImg* DrawImgMng::Get(MY_STRING saveName) {
 		
 		auto imgIt = inst.images.find(saveName);
 		//存在しなければ.
@@ -352,7 +352,7 @@ namespace KR
 		return &imgIt->second;
 	}
 	//画像取得(チェックあり)
-	bool DrawImgMng::TryGet(string saveName, DrawImg* ptr) {
+	bool DrawImgMng::TryGet(MY_STRING saveName, DrawImg* ptr) {
 
 		auto imgIt = inst.images.find(saveName);
 		//存在しなければ.
@@ -366,7 +366,7 @@ namespace KR
 	/*
 	   画像読み込み.
 	*/
-	void DrawImgMng::LoadFile(MY_STRING fileName, string saveName) {
+	void DrawImgMng::LoadFile(MY_STRING fileName, MY_STRING saveName) {
 
 		//既に存在すれば.
 		if (inst.images.count(saveName) > 0) {
@@ -396,7 +396,7 @@ namespace KR
 	       {"idle","run1","jump","death"}    //登録名.
 	   );
 	*/
-	void DrawImgMng::LoadFileDiv(MY_STRING fileName, INT_XY size, INT_XY cnt, vector<string> saveName) {
+	void DrawImgMng::LoadFileDiv(MY_STRING fileName, INT_XY size, INT_XY cnt, vector<MY_STRING> saveName) {
 		
 		const int divCnt = cnt.x * cnt.y; //分割数.
 

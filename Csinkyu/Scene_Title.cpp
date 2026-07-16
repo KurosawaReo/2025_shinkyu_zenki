@@ -34,9 +34,6 @@ void TitleScene::Reset() {
 
 //入った瞬間.
 void TitleScene::Enter() {
-
-	App::Reset();      //リセット.
-
 	timer.Start();     //タイマー開始.
 	bgMng->SetBgNo(1); //背景を設定.
 }
@@ -49,8 +46,8 @@ void TitleScene::Exit() {
 //更新.
 void TitleScene::Update() {
 	//特定の操作でゲーム開始.
-	if (inputMng->IsPushActionTime("GameNext") == 1) {
-		sceneMng->SetScene("Menu"); //メニューシーンへ.
+	if (inputMng->IsPushActionTime(_T("GameNext")) == 1) {
+		sceneMng->SetScene(_T("Menu")); //メニューシーンへ.
 	}
 }
 
@@ -102,7 +99,7 @@ void TitleScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 				[&]() {
-					DrawImgMng::Get("logo")->DrawExtend(
+					DrawImgMng::Get(_T("logo"))->DrawExtend(
 						DBL_XY{ WINDOW_WID / 2, _dbl(logoY) }, imgSize, Anchor::Mid, true, true
 					);
 				}
@@ -118,14 +115,14 @@ void TitleScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim2)),
 				[&]() {
-					DrawImgMng::Get("logo")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
+					DrawImgMng::Get(_T("logo"))->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
 				}
 			);
 			//ロゴ2枚目.
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim1),
 				[&]() {
-					DrawImgMng::Get("logo_all")->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
+					DrawImgMng::Get(_T("logo_all"))->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
 				}
 			);
 		}
@@ -155,9 +152,9 @@ void TitleScene::Draw() {
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim2),
 			[&]() {
 				//UI
-				DrawImgMng::Get("ui_back_best_score")->
+				DrawImgMng::Get(_T("ui_back_best_score"))->
 					DrawExtend({ WINDOW_WID / 2, drawY + (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
-				DrawImgMng::Get("ui_back_best_score")->
+				DrawImgMng::Get(_T("ui_back_best_score"))->
 					DrawExtend({ WINDOW_WID / 2, drawY - (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
 			}
 		);

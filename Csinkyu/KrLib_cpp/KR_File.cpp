@@ -12,7 +12,7 @@ namespace KR
     }
 
     //ファイルを開く.
-    void File::Open(MY_STRING filePath, FileOpenMode mode) {
+    bool File::Open(MY_STRING filePath, FileOpenMode mode) {
 
         Close();           //先に閉じる.
         MakeDir(filePath); //ディレクトリがなければ作成.
@@ -33,8 +33,10 @@ namespace KR
         //ファイルを開く.
         fs.open(filePath, stdMode);
         if (!fs.is_open()) {
-            throw ErrorMsg(_T("File::Open"), _T("ファイル読み込み失敗"));
+            return false; //読み込み失敗.
         }
+
+        return true; //読み込み成功.
     }
 
     //ファイルを閉じる.

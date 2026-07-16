@@ -59,8 +59,8 @@ namespace KR
 	{
 	//▼ ===== 変数 ===== ▼.
 	private: 
-		umap<string, Sound> sounds; //サウンドデータ.
-		MY_STRING           path;   //共通パス.
+		umap<MY_STRING, Sound> sounds; //サウンドデータ.
+		MY_STRING              path;   //共通パス.
 
 	//▼ ===== 関数 ===== ▼.
 	public:
@@ -72,11 +72,11 @@ namespace KR
 		//set.
 		void   SetPath (MY_STRING path);
 		//get.
-		Sound* Get     (string saveName);
-		bool   TryGet  (string saveName, Sound* ptr);
+		Sound* Get     (MY_STRING saveName);
+		bool   TryGet  (MY_STRING saveName, Sound* ptr);
 
-		void   LoadFile(MY_STRING fileName, string saveName); //読み込み.
-		void   StopAll ();									  //全サウンド停止.
+		void   LoadFile(MY_STRING fileName, MY_STRING saveName); //読み込み.
+		void   StopAll ();										 //全サウンド停止.
 	
 		void   Init()   override {} //未使用.
 		void   Reset()  override {} //未使用.

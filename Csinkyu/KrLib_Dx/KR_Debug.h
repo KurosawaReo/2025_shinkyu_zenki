@@ -1,6 +1,6 @@
 /*
    - KR_Debug.h - (DxLib)
-   ver.2026/04/27
+   ver.2026/07/16
 
    変数表示、マウス位置表示などのデバッグ機能。
 */
@@ -20,12 +20,12 @@ namespace KR
 
 		//表示系.
 		void Log        (MY_STRING text);
-		void Log        (MY_STRING text,  int     value);
-		void Log        (MY_STRING text,  float   value);
-		void Log        (MY_STRING text,  double  value);
-		void Log        (MY_STRING text,  bool    value);
-		void Log        (MY_STRING text,  INT_XY  pos);
-		void Log        (MY_STRING text,  DBL_XY  pos);
+		void Log        (MY_STRING text,  int       value);
+		void Log        (MY_STRING text,  float     value);
+		void Log        (MY_STRING text,  double    value);
+		void Log        (MY_STRING text,  bool      value);
+		void Log        (MY_STRING text,  INT_XY    pos);
+		void Log        (MY_STRING text,  DBL_XY    pos);
 		void Log        (MY_STRING text1, MY_STRING text2);
 		void LogMousePos();
 		void LogPadID   ();

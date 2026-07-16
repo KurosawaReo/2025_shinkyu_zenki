@@ -1,6 +1,6 @@
 /*
    - KR_File.h - (C++)
-   ver.2026/07/15
+   ver.2026/07/16
 
    ファイルの読み取り/書き出し機能。
 */
@@ -75,7 +75,7 @@ namespace KR
         bool IsEOF();
 
         //ファイルを開く.
-        void Open(MY_STRING filePath, FileOpenMode mode);
+        bool Open(MY_STRING filePath, FileOpenMode mode);
         //ファイルを閉じる.
         void Close();
         //ディレクトリ作成.

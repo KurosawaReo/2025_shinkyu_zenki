@@ -9,7 +9,7 @@ namespace KR
 	Language Language::inst; //実体生成.
 
 	//翻訳キーにテキストを登録.
-	void Language::SetText(string key, string lang, MY_STRING text) {
+	void Language::SetText(MY_STRING key, MY_STRING lang, MY_STRING text) {
 
 		//空文字の場合は無視.
 		if (key.empty())  { return; }
@@ -18,12 +18,12 @@ namespace KR
 		inst.textData[key][lang] = text;
 	}
 	//言語の設定.
-	void Language::SetLang(string lang) {
+	void Language::SetLang(MY_STRING lang) {
 		inst.nowLang = lang;
 	}
 
 	//翻訳キーからテキストを取得.
-	MY_STRING Language::GetText(string key) {
+	MY_STRING Language::GetText(MY_STRING key) {
 
 		//翻訳キー取得.
 		auto keyIt = inst.textData.find(key);

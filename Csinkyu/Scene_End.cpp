@@ -50,7 +50,7 @@ void EndScene::Enter() {
 		ManagerInsts::Get<TimerMng>()->ReservExe(
 			TUTORIAL_RESPAWN_TIME,
 			[this]() {
-				sceneMng->SetScene("Game"); //ゲームシーンへ戻る.
+				sceneMng->SetScene(_T("Game")); //ゲームシーンへ戻る.
 			}
 		);
 	}
@@ -72,10 +72,11 @@ void EndScene::Update() {
 	//チュートリアル以外.
 	else {
 		//特定の操作でタイトルへ.
-		if (inputMng->IsPushActionTime("GameNext") == 1)
+		if (inputMng->IsPushActionTime(_T("GameNext")) == 1)
 		{
 			uiMng->SetBestScore(gameData->bestScore);	//ベストスコア更新.
-			sceneMng->SetScene("Title");				//ゲームシーンへ戻る.
+			sceneMng->SetScene(_T("Title"));			//ゲームシーンへ戻る.
+			App::Reset();								//リセット.
 		}
 	}
 }
@@ -110,7 +111,7 @@ void EndScene::Draw() {
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 			[&]() {
 				//GAME OVER.
-				DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
+				DrawImgMng::Get(_T("gameover"))->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
 				//テキスト.
 				str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
 			}
@@ -138,7 +139,7 @@ void EndScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 				[&]() {
-					DrawImgMng::Get("gameover")->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
+					DrawImgMng::Get(_T("gameover"))->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
 					//画面中央に文字を表示.
 					str1.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
 					str2.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
@@ -161,14 +162,14 @@ void EndScene::Draw() {
 					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 					[&]() {
 						//NEW RECORD
-						DrawImgMng::Get("new_record")->DrawExtend(
+						DrawImgMng::Get(_T("new_record"))->DrawExtend(
 							{ WINDOW_WID / 2, WINDOW_HEI / 2 - 330 + anim * 20 }, { 0.4, 0.4 }, Anchor::Mid, true, true
 						);
 					}
 				);
 				//サウンド.
 				if (!isBestScoreSound) {
-					if (auto i = soundMng->Get("BestScore")) {
+					if (auto i = soundMng->Get(_T("BestScore"))) {
 						i->Play(false, 65); //再生.
 					}
 					isBestScoreSound = true; //一度のみ.

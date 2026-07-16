@@ -22,12 +22,12 @@ namespace KR
 	}
 
 	//シーン追加.
-	void SceneMng::AddScene(IScene* sceneClass, string saveName) {
+	void SceneMng::AddScene(IScene* sceneClass, MY_STRING saveName) {
 		sceneClass->Init();				//初期化.
 		scenes[saveName] = sceneClass;	//クラスを登録.
 	}
 	//シーン変更.
-	void SceneMng::SetScene(string saveName) {
+	void SceneMng::SetScene(MY_STRING saveName) {
 		//登録されてなければ.
 		if (scenes.count(saveName) <= 0) {
 			throw ErrorMsg(_T("SceneMng::SetScene"), _T("未登録シーン"));

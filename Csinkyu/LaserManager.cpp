@@ -299,12 +299,12 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 
 	//サウンド.
 	if (type == Laser_Normal) {
-		if (auto i = soundMng->Get("Laser1")) {
+		if (auto i = soundMng->Get(_T("Laser1"))) {
 			i->Play(false, 58); //通常レーザー.
 		}
 	}
 	if (type == Laser_Straight) {
-		if (auto i = soundMng->Get("Laser2")) {
+		if (auto i = soundMng->Get(_T("Laser2"))) {
 			i->Play(false, 60); //直線レーザー.
 		}
 	}
@@ -395,7 +395,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 	data.pos  = it->nowPos;
 	effectMng->SpawnEffect(&data);
 	//サウンド.
-	if (auto i = soundMng->Get("Laser3")) {
+	if (auto i = soundMng->Get(_T("Laser3"))) {
 		i->Play(false, 58);
 	}
 
