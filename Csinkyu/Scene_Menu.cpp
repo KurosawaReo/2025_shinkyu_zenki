@@ -88,8 +88,7 @@ void MenuScene::Update() {
 				MY_STRING bgmName = gameMng->GetGameSceneBgm();
 				//BGMを再生.
 				if (auto i = soundMng->Get(bgmName)) {
-//					i->Play(true, 68); //再生.
-					i->Play(true, 90); //再生.
+					i->Play(true, 70); //再生.
 				}
 #endif
 			}
@@ -106,7 +105,7 @@ void MenuScene::Update() {
 				//BGM.
 				soundMng->StopAll();
 				if (auto i = soundMng->Get(_T("BGM_Tutorial"))) {
-					i->Play(true, 68); //再生.
+					i->Play(true, 70); //再生.
 				}
 #endif
 			}
