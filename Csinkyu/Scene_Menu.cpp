@@ -114,6 +114,7 @@ void MenuScene::Update() {
 			case 2:
 			{
 				sceneMng->SetScene(_T("Title")); //タイトルへ.
+				App::Reset();
 			}
 			break;
 
