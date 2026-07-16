@@ -61,7 +61,7 @@ namespace KR
 		double      GetDecimal	(double num);
 
 		//’l‚Ì’Š‘I.
-		template<typename T> requires std::is_arithmetic_v<T>
+		template<typename T> _requires_num_only(T)
 		static T RandNum(T min, T max) {
 
 			//—”¶¬Ší(‰‰ñ‚Ì‚İ¶¬).

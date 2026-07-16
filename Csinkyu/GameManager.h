@@ -16,7 +16,7 @@ class GameManager final : public ManagerBase
 {
 //▼ ===== 変数 ===== ▼.
 private:
-	string gameSceneBgm{}; //ゲームシーンで使用するBGM名.
+	MY_STRING gameSceneBgm{}; //ゲームシーンで使用するBGM名.
 
 	/* シーン関係 */
 	TitleScene titleScene{};
@@ -35,7 +35,7 @@ public:
 
 	//get.
 	GameScene* GetGameScene()    { return &gameScene; }
-	string     GetGameSceneBgm() { return gameSceneBgm; }
+	MY_STRING  GetGameSceneBgm() { return gameSceneBgm; }
 
 	//メイン処理.
 	void Init()   override;

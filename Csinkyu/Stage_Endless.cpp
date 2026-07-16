@@ -43,7 +43,7 @@ void EndlessStage::Update() {
 	//最初のみ.
 	if (gameData->counter == 0) {
 		//サウンド.
-		if (auto i = soundMng->Get("LevelUp")) {
+		if (auto i = soundMng->Get(_T("LevelUp"))) {
 			i->Play(false, 100);
 		}
 		//エフェクト.
@@ -92,7 +92,7 @@ void EndlessStage::Update() {
 				gameData->level = 2; //Lv2へ.
 
 				//サウンド.
-				if (auto i = soundMng->Get("LevelUp")) {
+				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100);
 				}
 				//エフェクト.
@@ -112,7 +112,7 @@ void EndlessStage::Update() {
 				gameData->level = 3; //Lv3へ.
 
 				//サウンド.
-				if (auto i = soundMng->Get("LevelUp")) {
+				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100);
 				}
 				//エフェクト.
@@ -134,7 +134,7 @@ void EndlessStage::Update() {
 				ManagerInsts::Get<ItemManager>()->SetItemMaxCnt(2); //アイテムを2つに.
 
 				//サウンド.
-				if (auto i = soundMng->Get("LevelUp")) {
+				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100);
 				}
 				//エフェクト.
@@ -154,7 +154,7 @@ void EndlessStage::Update() {
 				gameData->level = 5; //Lv5へ.
 
 				//サウンド.
-				if (auto i = soundMng->Get("LevelUp")) {
+				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100);
 				}
 				//エフェクト.

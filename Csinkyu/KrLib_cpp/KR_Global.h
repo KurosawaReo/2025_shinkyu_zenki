@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/07/15
+   ver.2026/07/16
 
    KrLib全体で使う汎用プログラム。
 */
@@ -54,32 +54,44 @@ using std::function;
 #define _rad(n) (n)*(M_PI/180)
 #define _deg(n) (n)*(180/M_PI)
 //便利マクロ.
-#define _if_check(n)        assert(n); if(n)						//if文の前に同条件のassertを挟む.
-#define _return(num, condi) if (condi) { return (num); }			//条件に合うならreturnする(cond = 条件)
-#define _get_name(value)    #value									//変数名や関数名を取得.
-#define _elif               else if									//「else if」の略.
-#define _param_ret_ptr(ptr, value)	if (ptr) { *(ptr) = (value); }	//返り値引数ポインタ用.
+#define _if_check(n)				assert(n); if(n)					//if文の前に同条件のassertを挟む.
+#define _return(num, condi)			if (condi) { return (num); }		//条件に合うならreturnする(cond = 条件)
+#define _get_name(value)			#value								//変数名や関数名を取得.
+#define _elif						else if								//「else if」の略.
+#define _param_ret_ptr(ptr, value)	if (ptr) { *(ptr) = (value); }		//返り値引数ポインタ用.
+#define _requires_num_only(T)		requires std::is_arithmetic_v<T>	//requiresで数値限定を指定する用.
 
 //KrLib名前空間.
 namespace KR
 {
 	//文字コードで切り替え.
 #if defined UNICODE
-	using MY_STRING   = wstring;		//wchar_t型.
-	using MY_FSTREAM = std::wfstream;
-	#define _to_mystr to_wstring		//to_wstring用.
+	using MY_STRING   = wstring;		//string    UNICODE用.
+	using MY_CHAR     = wchar_t;		//char      UNICODE用.
+	using MY_FSTREAM  = std::wfstream;  //fstream   UNICODE用.
 #else
-	using MY_STRING   = string;			//char型.
-	using MY_FSTREAM = std::fstream;
-	#define _to_mystr to_string			//to_string用.
+	using MY_STRING   = string;			//string.
+	using MY_CHAR     = char;			//char.
+	using MY_FSTREAM  = std::fstream;	//fstream.
 #endif
+
+	//数値 → MY_STRING に変換.
+	template<class T> _requires_num_only(T)
+	MY_STRING NumToString(T value)
+	{
+#if defined UNICODE
+		return std::to_wstring(value);
+#else
+		return std::to_string(value);
+#endif
+	}
 
 	//省略名.
 	template<class Key, class Value>
 	using umap = unordered_map<Key, Value>;
 
 	//xとyの凝縮型.
-	template<typename T> requires std::is_arithmetic_v<T>
+	template<typename T> _requires_num_only(T)
 	struct XY
 	{
 		T x, y;
@@ -261,7 +273,7 @@ namespace KR
 	using DBL_XY = XY<double>; //double型.
 
 	//四角形型.
-	template<typename T> requires std::is_arithmetic_v<T>
+	template<typename T> _requires_num_only(T)
 	struct RECT
 	{
 		T left;
@@ -325,22 +337,22 @@ namespace KR
 	};
 
 	//<T> 数値が範囲内か.
-	template<typename T> requires std::is_arithmetic_v<T>
+	template<typename T> _requires_num_only(T)
 	bool IsNumInRange(T _num, T _min, T _max) {
 		return (_min <= _num && _num <= _max);
 	}
 	//<T> 数値の上限.
-	template<typename T> requires std::is_arithmetic_v<T>
+	template<typename T> _requires_num_only(T)
 	void NumLimMax(T* _num, T _max) {
 		*_num = std::min(*_num, _max);
 	}
 	//<T> 数値の下限.
-	template<typename T> requires std::is_arithmetic_v<T>
+	template<typename T> _requires_num_only(T)
 	void NumLimMin(T* _num, T _min) {
 		*_num = std::max(*_num, _min);
 	}
 	//<T> 数値の範囲.
-	template<typename T> requires std::is_arithmetic_v<T>
+	template<typename T> _requires_num_only(T)
 	void NumLimRange(T* num, T low, T high) {
 		*num = std::max(low, std::min(*num, high));
 	}

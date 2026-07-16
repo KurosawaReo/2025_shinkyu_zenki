@@ -3,11 +3,12 @@
 */
 #include "KR_Global.h"
 
+//[include] ".cpp"ファイルでのみ使うもの.
+#include <WinNls.h>
+
 //KrLib名前空間.
 namespace KR
 {
-// ▼*--=<[ function ]>=--*▼ //
-
 	//ColorIDをカラーコードに変換.
 	COLOR_U8 ColorIDToU8(ColorID id) {
 

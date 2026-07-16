@@ -184,7 +184,7 @@ void NormalLaser::Reset()
 void NormalLaser::Update()
 {
 	//ƒQ[ƒ€’†‚Ì‚Ý.
-	if (sceneMng->GetSceneName() == "Game") {
+	if (sceneMng->GetSceneName() == _T("Game")) {
 
 		//”­ŽË‘ä.
 		for (auto& i : points) {

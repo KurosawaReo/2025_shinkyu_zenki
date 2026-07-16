@@ -124,7 +124,7 @@ void TutorialStage::StepInEnd() {
 void TutorialStage::UpdateStep0() {
 
 	//サウンド.
-	if (auto i = soundMng->Get("LevelUp")) {
+	if (auto i = soundMng->Get(_T("LevelUp"))) {
 		i->Play(false, 100); //再生.
 	}
 	//エフェクト.
@@ -207,7 +207,7 @@ void TutorialStage::UpdateStep1() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				if (auto i = soundMng->Get("LevelUp")) {
+				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100); //再生.
 				}
 				//エフェクト.
@@ -269,7 +269,7 @@ void TutorialStage::UpdateStep2() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				if (auto i = soundMng->Get("LevelUp")) {
+				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100); //再生.
 				}
 				//エフェクト.
@@ -366,7 +366,7 @@ void TutorialStage::UpdateStep3() {
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 				//サウンド.
-				if (auto i = soundMng->Get("LevelUp")) {
+				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100); //再生.
 				}
 				//エフェクト.
@@ -425,7 +425,7 @@ void TutorialStage::UpdateStep4() {
 			{
 #if !defined BGM_NONE
 				//BGMフェードアウト.
-				if (auto i = soundMng->Get("BGM_Tutorial")) {
+				if (auto i = soundMng->Get(_T("BGM_Tutorial"))) {
 					i->FadeOutPlay(TUTORIAL_END_NEXT_TIME); //再生.
 				}
 #endif
@@ -433,7 +433,7 @@ void TutorialStage::UpdateStep4() {
 			}
 			//チュートリアル終了.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
-				sceneMng->SetScene("Title");
+				sceneMng->SetScene(_T("Title"));
 				App::Reset(); //全てリセット.
 			}
 		}

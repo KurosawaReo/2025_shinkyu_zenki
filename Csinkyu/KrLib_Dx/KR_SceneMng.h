@@ -40,9 +40,9 @@ namespace KR
 	{
 	//▼ ===== 変数 ===== ▼.
 	private:
-		umap<string, IScene*> scenes{};       //全シーン.
-		StateMachine          sceneChanger{}; //ステートマシン.
-		string                nowSceneName{}; //現シーン名.
+		umap<MY_STRING, IScene*> scenes{};       //全シーン.
+		StateMachine             sceneChanger{}; //ステートマシン.
+		MY_STRING                nowSceneName{}; //現シーン名.
 
 	//▼ ===== 関数 ===== ▼.
 	public:
@@ -50,7 +50,7 @@ namespace KR
 		SceneMng(int order) : ManagerBase(order) {}
 
 		//get.
-		string GetSceneName() { return nowSceneName; }
+		MY_STRING GetSceneName() { return nowSceneName; }
 		//set.
 		void SetAutoExeMode (MngAutoExe _state);
 		void BackAutoExeMode();
@@ -60,8 +60,8 @@ namespace KR
 		void Update() override;
 		void Draw()   override;
 
-		void AddScene(IScene* sceneClass, string saveName); //シーン追加.
-		void SetScene(string saveName);                     //シーン変更.
+		void AddScene(IScene* sceneClass, MY_STRING saveName); //シーン追加.
+		void SetScene(MY_STRING saveName);                     //シーン変更.
 
 		//使用禁止.
 		SceneMng(const SceneMng&) = delete;

@@ -52,59 +52,60 @@ void GameManager::Init() {
 	try {
 		//[KrLib] 画像.
 		DrawImgMng::SetPath(_T("Resources/Images/")); //共通パスの設定.
-		DrawImgMng::LoadFile(_T("logo_text_only.png"),		"logo");
-		DrawImgMng::LoadFile(_T("logo_all.png"),			"logo_all");
-		DrawImgMng::LoadFile(_T("new_record.png"),			"new_record");
-		DrawImgMng::LoadFile(_T("gameover.png"),			"gameover");
-		DrawImgMng::LoadFile(_T("reflect.png"),				"reflect");
-		DrawImgMng::LoadFile(_T("player_normal.png"),		"player_nor");
-		DrawImgMng::LoadFile(_T("player_reflect.png"),		"player_ref");
-		DrawImgMng::LoadFile(_T("item.png"),				"item");
-		DrawImgMng::LoadFile(_T("light_color_ref.png"),		"item_light");
-		DrawImgMng::LoadFile(_T("light_color_nor.png"),		"player_light_nor");
-		DrawImgMng::LoadFile(_T("light_color_ref.png"),		"player_light_ref");
-		DrawImgMng::LoadFile(_T("menu_endless.png"),		"menu0");	//ゲーム開始.
-		DrawImgMng::LoadFile(_T("menu_tutorial.png"),		"menu1");	//チュートリアル.
-		DrawImgMng::LoadFile(_T("menu_title.png"),			"menu2");	//タイトルに戻る.
-		DrawImgMng::LoadFile(_T("bg_normal.png"),			"bg_normal");
-		DrawImgMng::LoadFile(_T("bg_reflect.png"),			"bg_reflect");
-		DrawImgMng::LoadFile(_T("reflect_mode_frame.png"),	"reflect_mode_frame");
-		DrawImgMng::LoadFile(_T("ui_back_level.png"),		"ui_back_level");
-		DrawImgMng::LoadFile(_T("ui_back_best_score.png"),	"ui_back_best_score");
-		DrawImgMng::LoadFile(_T("ui_back_score.png"),		"ui_back_score");
-		DrawImgMng::LoadFile(_T("ui_back_time.png"),		"ui_back_time");
-		DrawImgMng::LoadFile(_T("score100.png"),			"score100");
-		DrawImgMng::LoadFile(_T("score500.png"),			"score500");
+		DrawImgMng::LoadFile(_T("logo_text_only.png"),		_T("logo"));
+		DrawImgMng::LoadFile(_T("logo_all.png"),			_T("logo_all"));
+		DrawImgMng::LoadFile(_T("new_record.png"),			_T("new_record"));
+		DrawImgMng::LoadFile(_T("gameover.png"),			_T("gameover"));
+		DrawImgMng::LoadFile(_T("reflect.png"),				_T("reflect"));
+		DrawImgMng::LoadFile(_T("player_normal.png"),		_T("player_nor"));
+		DrawImgMng::LoadFile(_T("player_reflect.png"),		_T("player_ref"));
+		DrawImgMng::LoadFile(_T("item.png"),				_T("item"));
+		DrawImgMng::LoadFile(_T("light_color_ref.png"),		_T("item_light"));
+		DrawImgMng::LoadFile(_T("light_color_nor.png"),		_T("player_light_nor"));
+		DrawImgMng::LoadFile(_T("light_color_ref.png"),		_T("player_light_ref"));
+		DrawImgMng::LoadFile(_T("menu_endless.png"),		_T("menu0"));				//ゲーム開始.
+		DrawImgMng::LoadFile(_T("menu_tutorial.png"),		_T("menu1"));				//チュートリアル.
+		DrawImgMng::LoadFile(_T("menu_title.png"),			_T("menu2"));				//タイトルに戻る.
+		DrawImgMng::LoadFile(_T("bg_normal.png"),			_T("bg_normal"));
+		DrawImgMng::LoadFile(_T("bg_reflect.png"),			_T("bg_reflect"));
+		DrawImgMng::LoadFile(_T("reflect_mode_frame.png"),	_T("reflect_mode_frame"));
+		DrawImgMng::LoadFile(_T("ui_back_level.png"),		_T("ui_back_level"));
+		DrawImgMng::LoadFile(_T("ui_back_best_score.png"),	_T("ui_back_best_score"));
+		DrawImgMng::LoadFile(_T("ui_back_score.png"),		_T("ui_back_score"));
+		DrawImgMng::LoadFile(_T("ui_back_time.png"),		_T("ui_back_time"));
+		DrawImgMng::LoadFile(_T("score100.png"),			_T("score100"));
+		DrawImgMng::LoadFile(_T("score500.png"),			_T("score500"));
 
 		//[KrLib] サウンド.
 		soundMng->SetPath(_T("Resources/Sounds/")); //共通パスの設定.
-		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"),		"BGM_Menu");		//メニューBGM.
-		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	"BGM_Tutorial");	//チュートリアルBGM.
-		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		"BGM_Endless");		//耐久モードBGM.
-		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),            "BGM_Endless_2");   //耐久モードBGM_2.
-		soundMng->LoadFile(_T("bgm/Frost Vector.mp3"),          "BGM_Endless_3");   //耐久モードBGM_3.
-		soundMng->LoadFile(_T("bgm/Bullet Acceleration.mp3"),   "BGM_Endless_4");   //耐久モードBGM_4.
-		soundMng->LoadFile(_T("bgm/Shattered Icefront.mp3"),    "BGM_Endless_5");   //耐久モードBGM_5.
-		soundMng->LoadFile(_T("bgm/Neon Velocity.mp3"),         "BGM_Endless_6");   //耐久モードBGM_6.
-		soundMng->LoadFile(_T("bgm/Unwanted strife.mp3"),       "BGM_Endless_7");   //耐久モードBGM_7.
-		soundMng->LoadFile(_T("bgm/Glacial brilliance.mp3"),    "BGM_Endless_8");   //耐久モードBGM_8.
-		soundMng->LoadFile(_T("bgm/404 フリーズ・コード.mp3"),  "BGM_Endless_9");   //耐久モードBGM_8.
-		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			"BGM_Over");		//ゲームオーバーBGM.
-		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		"MenuCursor");		//メニューカーソル音.
-		soundMng->LoadFile(_T("se/audiostock_1636651.mp3"),		"MenuOK");			//メニュー決定音.
-		soundMng->LoadFile(_T("se/audiostock_461339.mp3"),		"ItemUse"); 		//アイテム発動.
-		soundMng->LoadFile(_T("se/player_dash.mp3"),			"PlayerDash"); 		//ダッシュ音.
-		soundMng->LoadFile(_T("se/audiostock_1116927_cut.mp3"), "CountDown");		//カウントダウン.
-		soundMng->LoadFile(_T("se/audiostock_63721.mp3"),		"PowerDown");		//アイテム解除.
-		soundMng->LoadFile(_T("se/audiostock_1296254.mp3"),		"Laser1");			//レーザー(発射)
-		soundMng->LoadFile(_T("se/audiostock_1296256.mp3"),		"Laser2");			//レーザー(強発射)
-		soundMng->LoadFile(_T("se/audiostock_218404.mp3"),		"Laser3");			//レーザー(反射)
-		soundMng->LoadFile(_T("se/audiostock_936158.mp3"),		"Ripples");			//波紋.
-		soundMng->LoadFile(_T("se/fireworks.mp3"),				"Fireworks");		//花火.
-		soundMng->LoadFile(_T("se/audiostock_104974.mp3"),		"Break");			//隕石破壊.
-		soundMng->LoadFile(_T("se/audiostock_981051.mp3"),		"PlayerDeath");
-		soundMng->LoadFile(_T("se/決定ボタンを押す23.mp3"),		"LevelUp");
-		soundMng->LoadFile(_T("se/audiostock_184924.mp3"),		"BestScore");		//最高スコア更新.
+		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"),		_T("BGM_Menu"));		//メニューBGM.
+		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial"));	//チュートリアルBGM.
+		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless_1"));	//エンドレスモードBGM1.
+		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),			_T("BGM_Endless_2"));   //エンドレスモードBGM2.
+		soundMng->LoadFile(_T("bgm/Frost Vector.mp3"),			_T("BGM_Endless_3"));   //エンドレスモードBGM3.
+		soundMng->LoadFile(_T("bgm/Bullet Acceleration.mp3"),	_T("BGM_Endless_4"));   //エンドレスモードBGM4.
+		soundMng->LoadFile(_T("bgm/Shattered Icefront.mp3"),	_T("BGM_Endless_5"));   //エンドレスモードBGM5.
+		soundMng->LoadFile(_T("bgm/Neon Velocity.mp3"),			_T("BGM_Endless_6"));   //エンドレスモードBGM6.
+		soundMng->LoadFile(_T("bgm/Unwanted strife.mp3"),		_T("BGM_Endless_7"));   //エンドレスモードBGM7.
+		soundMng->LoadFile(_T("bgm/Glacial brilliance.mp3"),	_T("BGM_Endless_8"));   //エンドレスモードBGM8.
+		soundMng->LoadFile(_T("bgm/404 フリーズ・コード.mp3"),  _T("BGM_Endless_9"));   //エンドレスモードBGM9.
+		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			_T("BGM_Over"));		//ゲームオーバーBGM.
+
+		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		_T("MenuCursor"));		//メニューカーソル音.
+		soundMng->LoadFile(_T("se/audiostock_1636651.mp3"),		_T("MenuOK"));			//メニュー決定音.
+		soundMng->LoadFile(_T("se/audiostock_461339.mp3"),		_T("ItemUse")); 		//アイテム発動.
+		soundMng->LoadFile(_T("se/player_dash.mp3"),			_T("PlayerDash")); 		//ダッシュ音.
+		soundMng->LoadFile(_T("se/audiostock_1116927_cut.mp3"), _T("CountDown"));		//カウントダウン.
+		soundMng->LoadFile(_T("se/audiostock_63721.mp3"),		_T("PowerDown"));		//アイテム解除.
+		soundMng->LoadFile(_T("se/audiostock_1296254.mp3"),		_T("Laser1"));			//レーザー(発射)
+		soundMng->LoadFile(_T("se/audiostock_1296256.mp3"),		_T("Laser2"));			//レーザー(強発射)
+		soundMng->LoadFile(_T("se/audiostock_218404.mp3"),		_T("Laser3"));			//レーザー(反射)
+		soundMng->LoadFile(_T("se/audiostock_936158.mp3"),		_T("Ripples"));			//波紋.
+		soundMng->LoadFile(_T("se/fireworks.mp3"),				_T("Fireworks"));		//花火.
+		soundMng->LoadFile(_T("se/audiostock_104974.mp3"),		_T("Break"));			//隕石破壊.
+		soundMng->LoadFile(_T("se/audiostock_981051.mp3"),		_T("PlayerDeath"));
+		soundMng->LoadFile(_T("se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
+		soundMng->LoadFile(_T("se/audiostock_184924.mp3"),		_T("BestScore"));		//最高スコア更新.
 	}
 	catch (const ErrorMsg& err){
 		Debug::Log(_T("GameManager::Init"), err.GetMsg());
@@ -114,30 +115,43 @@ void GameManager::Init() {
 	//[KrLib] アクション.
 	{
 		//キー操作.
-		inputMng->AddAction("GameNext",   KeyID::Space);
-		inputMng->AddAction("GamePause",  KeyID::P);
-		inputMng->AddAction("PlayerDash", KeyID::ShiftL); //固定キー機能を切っておくこと推奨.
-		inputMng->AddAction("PlayerDash", KeyID::ShiftR);
+		inputMng->AddAction(_T("GameNext"),		KeyID::Space);
+		inputMng->AddAction(_T("GamePause"),	KeyID::P);
+		inputMng->AddAction(_T("PlayerDash"),	KeyID::ShiftL); //固定キー機能を切っておくこと推奨.
+		inputMng->AddAction(_T("PlayerDash"),	KeyID::ShiftR);
+		inputMng->AddAction(_T("MenuUp"),		KeyID::W);
+		inputMng->AddAction(_T("MenuUp"),		KeyID::Up);
+		inputMng->AddAction(_T("MenuDown"),		KeyID::S);
+		inputMng->AddAction(_T("MenuDown"),		KeyID::Down);
+		inputMng->AddAction(_T("MenuNext"),		KeyID::Space);
+		inputMng->AddAction(_T("MenuNext"),		KeyID::Enter);
+
 #if defined INPUT_CHANGE_ARCADE
 		//アーケード操作.
-		inputMng->AddAction("GameNext",   PadArcadeID::BtnUpper1);
-		inputMng->AddAction("GamePause",  PadArcadeID::BtnUpper2);
-		inputMng->AddAction("PlayerDash", PadArcadeID::BtnUpper3);
-		inputMng->AddAction("GameQuit",   PadArcadeID::BtnStart);
+		inputMng->AddAction(_T("GameNext"),		PadArcadeID::BtnUpper1);
+		inputMng->AddAction(_T("GamePause"),	PadArcadeID::BtnUpper2);
+		inputMng->AddAction(_T("PlayerDash"),	PadArcadeID::BtnUpper3);
+		inputMng->AddAction(_T("GameQuit"),		PadArcadeID::BtnStart);
+		inputMng->AddAction(_T("MenuUp"),		PadArcadeID::Up);
+		inputMng->AddAction(_T("MenuDown"),		PadArcadeID::Down);
+		inputMng->AddAction(_T("MenuNext"),		PadArcadeID::BtnUpper1);
 #else
 		//コントローラ操作.
-		inputMng->AddAction("GameNext",   PadXboxID::A);
-		inputMng->AddAction("GamePause",  PadXboxID::X);
-		inputMng->AddAction("PlayerDash", PadXboxID::B);
-		inputMng->AddAction("GameQuit",   PadXboxID::Menu);
+		inputMng->AddAction(_T("GameNext"),		PadXboxID::A);
+		inputMng->AddAction(_T("GamePause"),	PadXboxID::X);
+		inputMng->AddAction(_T("PlayerDash"),	PadXboxID::B);
+		inputMng->AddAction(_T("GameQuit"),		PadXboxID::Menu);
+		inputMng->AddAction(_T("MenuUp"),		PadXboxID::Up);
+		inputMng->AddAction(_T("MenuDown"),		PadXboxID::Down);
+		inputMng->AddAction(_T("MenuNext"),		PadXboxID::A);
 #endif
 	}
 
 	//[KrLib] シーン.
-	sceneMng->AddScene(&titleScene, "Title");
-	sceneMng->AddScene(&menuScene,  "Menu");
-	sceneMng->AddScene(&gameScene,  "Game");
-	sceneMng->AddScene(&endScene,   "End");
+	sceneMng->AddScene(&titleScene, _T("Title"));
+	sceneMng->AddScene(&menuScene,  _T("Menu"));
+	sceneMng->AddScene(&gameScene,  _T("Game"));
+	sceneMng->AddScene(&endScene,   _T("End"));
 
 	//フォント.
 	gameData->fonts["size18"].CreateFontH(_T(""), 20, 1, FontTypeID::Anti);
@@ -146,15 +160,12 @@ void GameManager::Init() {
 	gameData->fonts["size35"].CreateFontH(_T(""), 35, 1, FontTypeID::Anti);
 	gameData->fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
 
-	try {
-		//[score.data]
-		File file;
-		file.Open(FILE_DATA_SCORE, FileOpenMode::Read);	//ファイルを開く.
-		gameData->bestScore = file.ReadInt();			//数字を読み込んで登録.
-		uiMng->SetBestScore(gameData->bestScore);		//ベストスコア反映.
-	}
-	catch (const ErrorMsg& err) {
-		Debug::Log(_T("Dataファイル読み込み"), err.GetMsg());
+	//[score.data]
+	File file;
+	//ファイルがあれば開く.
+	if (file.Open(FILE_DATA_SCORE, FileOpenMode::Read)) {
+		gameData->bestScore = file.ReadInt();		//数字を読み込んで登録.
+		uiMng->SetBestScore(gameData->bestScore);	//ベストスコア反映.
 	}
 
 	//fps表示用.
@@ -177,7 +188,7 @@ void GameManager::Reset() {
 	gameData->isReflectMode = false; //最初はLv1
 
 	//最初はタイトルシーン.
-	sceneMng->SetScene("Title");
+	sceneMng->SetScene(_T("Title"));
 
 	//管理クラスリセット.
 	StopObjects();
@@ -187,7 +198,7 @@ void GameManager::Reset() {
 
 #if !defined BGM_NONE
 	//メニューBGMを流す.
-	if (auto i = soundMng->Get("BGM_Menu")) {
+	if (auto i = soundMng->Get(_T("BGM_Menu"))) {
 		i->Play(true, 90);
 	}
 #endif
@@ -195,21 +206,18 @@ void GameManager::Reset() {
 	//ゲームシーンのBGM抽選.
 	{
 		//抽選するBGM名.
-		const vector<string> bgmName = {
-			"BGM_Endless",
-			"BGM_Endless_2",
-			"BGM_Endless_3",
-			"BGM_Endless_4",
-			"BGM_Endless_5",
-            "BGM_Endless_6",
-			"BGM_Endless_7",
-			"BGM_Endless_8",
-			"BGM_Endless_9",
+		const vector<MY_STRING> bgmName = {
+//			_T("BGM_Endless_1"),
+//			_T("BGM_Endless_2"), //ちょっと緊迫感がある.
+//			_T("BGM_Endless_8"), //電子感.
+			_T("BGM_Endless_9"),
 		};
 		//何番目のBGMを使うか(bgmName配列の中から抽選)
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
 		//BGM名を保存.
 		gameSceneBgm = bgmName[bgmNo];
+
+		Debug::Log(_T("BGM"), bgmName[bgmNo]);
 	}
 }
 
@@ -217,9 +225,9 @@ void GameManager::Reset() {
 void GameManager::Update() {
 
 	//ポーズ操作.
-	if (inputMng->IsPushActionTime("GamePause") == 1) {
+	if (inputMng->IsPushActionTime(_T("GamePause")) == 1) {
 		//ゲームシーンのみポーズ可.
-		if (sceneMng->GetSceneName() == "Game"){
+		if (sceneMng->GetSceneName() == _T("Game")){
 
 			if (gameData->isPause) {
 				GamePauseEnd(); //ポーズ解除.
@@ -230,7 +238,7 @@ void GameManager::Update() {
 		}
 	}
 	//特定の操作でゲーム終了
-	if (inputMng->IsPushActionTime("GameQuit") >= FPS * 1) {
+	if (inputMng->IsPushActionTime(_T("GameQuit")) >= FPS * 1) {
 		App::Quit(); //ボタン長押しで終了.
 	}
 	else if (inputMng->IsPushKey(KeyID::Esc)) {
@@ -289,54 +297,56 @@ void GameManager::DrawPause() {
 void GameManager::GameOver() {
 
 	//念のため2重実行されることを防ぐ用.
-	if (sceneMng->GetSceneName() != "End") {
+	if (sceneMng->GetSceneName() != _T("End")) {
 
 		//ステージ別.
 		switch (gameData->stage)
 		{
 			case Stage_Tutorial:
 			{
-				sceneMng->SetScene("End"); //終了シーンへ.
+				sceneMng->SetScene(_T("End")); //終了シーンへ.
 			}
 			break;
 
 			case Stage_Endless:
 			{
-				sceneMng->SetScene("End"); //終了シーンへ.
+				sceneMng->SetScene(_T("End")); //終了シーンへ.
 
 				gameData->speedRate = 1.0;                             //速度倍率を100%に戻す.
 				gameData->scoreBef = gameData->score;                  //時間加算前のスコアを記録.
 				gameData->score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
 
-				try {
-					//[score.data]
-					if (gameData->score > gameData->bestScore) {
-						File file;
-						file.Open(FILE_DATA_SCORE, FileOpenMode::Write);	//ファイルを開く.
-						file.WriteInt(gameData->score);						//スコアを保存.
-						gameData->bestScore = gameData->score;				//スコア更新.
-						endScene.SignBestScore();							//ハイスコアのサイン送信.
-					}
+				//[score.data]
+				if (gameData->score > gameData->bestScore) {
 
-					//[playlog.data]
-					{
-						DATEDATA date;
-						GetDateTime(&date); //現在時刻取得.
-
-						//現在時刻を文字列化.
-						MY_STRING dateStr = Format::StrFormat(
-							_T("%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d score:%0.5d\n"), 
-							date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, gameData->score
-						);
-
-						//ファイルへ追記.
-						File file;
-						file.Open(FILE_DATA_PLAYLOG, FileOpenMode::Out | FileOpenMode::App); //ファイルを開く.
-						file.WriteString(dateStr);
+					File file;
+					//ファイルを開く.
+					if (file.Open(FILE_DATA_SCORE, FileOpenMode::Write)) {
+						file.WriteInt(gameData->score);			//スコアを保存.
+						gameData->bestScore = gameData->score;	//スコア更新.
+						endScene.SignBestScore();				//ハイスコアのサイン送信.
 					}
 				}
-				catch (const ErrorMsg& err) {
-					Debug::Log(_T("Dataファイル読み込み"), err.GetMsg());
+
+				//[playlog.data]
+				{
+					DATEDATA date;
+					GetDateTime(&date); //現在時刻取得.
+
+					MY_STRING dateStr = Format::StrFormat(
+						//フォーマット.
+						_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Level:%d / Score:%0.5d / Time:%.1f\n"), 
+						//変数挿入.
+						date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, 
+						Device::GetComputerNameStr(), gameData->level, gameData->score, gameScene.GetGameTime()
+					);
+
+					//ファイルへ追記.
+					File file;
+					//ファイルを開く.
+					if (file.Open(FILE_DATA_PLAYLOG, FileOpenMode::Out | FileOpenMode::App)) {
+						file.WriteString(dateStr);
+					}
 				}
 
 #if !defined BGM_NONE
@@ -345,7 +355,7 @@ void GameManager::GameOver() {
 					i->FadeOutPlay(2); //再生.
 				}
 				//ゲームオーバーBGM.
-				if (auto i = soundMng->Get("BGM_Over")) {
+				if (auto i = soundMng->Get(_T("BGM_Over"))) {
 					i->Play(true, 68); //再生.
 				}
 #endif

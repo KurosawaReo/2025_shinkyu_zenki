@@ -152,7 +152,7 @@ void GameScene::UpdateReflectMode() {
 			case 0:
 				//3秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 3) {
-					if (auto i = soundMng->Get("CountDown")){
+					if (auto i = soundMng->Get(_T("CountDown"))){
 						i->Play(false, 78); //再生.
 					}
 					itemSoundCnt++; //次へ.
@@ -161,7 +161,7 @@ void GameScene::UpdateReflectMode() {
 			case 1:
 				//2秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 2) {
-					if (auto i = soundMng->Get("CountDown")) {
+					if (auto i = soundMng->Get(_T("CountDown"))) {
 						i->Play(false, 78); //再生.
 					}
 					itemSoundCnt++; //次へ.
@@ -170,7 +170,7 @@ void GameScene::UpdateReflectMode() {
 			case 2:
 				//1秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 1) {
-					if (auto i = soundMng->Get("CountDown")) {
+					if (auto i = soundMng->Get(_T("CountDown"))) {
 						i->Play(false, 78); //再生.
 					}
 					itemSoundCnt++; //次へ.
@@ -193,7 +193,7 @@ void GameScene::DrawReflectMode() {
 		tmReflectMode.GetPassTime() > 0)
 	{
 		//テキストの設定.
-		MY_STRING text = _to_mystr((int)ceil(tmReflectMode.GetPassTime()));
+		MY_STRING text = NumToString((int)ceil(tmReflectMode.GetPassTime()));
 		DrawStr str(text, { WINDOW_WID / 2, WINDOW_HEI / 2 }, COLOR_ITEM);
 
 		//画面中央に数字を表示.
@@ -207,7 +207,7 @@ void GameScene::DrawReflectMode() {
 				[&]() {
 					//最初の1秒.
 					if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME - 1) {
-						DrawImgMng::Get("reflect")->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
+						DrawImgMng::Get(_T("reflect"))->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
 					}
 					//最後の3秒.
 					if (tmReflectMode.GetPassTime() <= 3) {
@@ -230,7 +230,7 @@ void GameScene::ReflectModeEnd() {
 	player->SetMode(Player_Normal);  //通常状態に戻す.
 
 	//効果終了音.
-	if (auto i = soundMng->Get("PowerDown")) {
+	if (auto i = soundMng->Get(_T("PowerDown"))) {
 		i->Play(false, 78); //再生.
 	}
 	//チュートリアルなら指示送信.
