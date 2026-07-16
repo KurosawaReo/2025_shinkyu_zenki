@@ -88,6 +88,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("bgm/Neon Velocity.mp3"),         "BGM_Endless_6");   //耐久モードBGM_6.
 		soundMng->LoadFile(_T("bgm/Unwanted strife.mp3"),       "BGM_Endless_7");   //耐久モードBGM_7.
 		soundMng->LoadFile(_T("bgm/Glacial brilliance.mp3"),    "BGM_Endless_8");   //耐久モードBGM_8.
+		soundMng->LoadFile(_T("bgm/404 フリーズ・コード.mp3"),  "BGM_Endless_9");   //耐久モードBGM_8.
 		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			"BGM_Over");		//ゲームオーバーBGM.
 		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		"MenuCursor");		//メニューカーソル音.
 		soundMng->LoadFile(_T("se/audiostock_1636651.mp3"),		"MenuOK");			//メニュー決定音.
@@ -203,6 +204,7 @@ void GameManager::Reset() {
             "BGM_Endless_6",
 			"BGM_Endless_7",
 			"BGM_Endless_8",
+			"BGM_Endless_9",
 		};
 		//何番目のBGMを使うか(bgmName配列の中から抽選)
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
