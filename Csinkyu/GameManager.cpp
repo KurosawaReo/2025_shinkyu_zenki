@@ -82,13 +82,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial"));	//チュートリアルBGM.
 		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless_1"));	//エンドレスモードBGM1.
 		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),			_T("BGM_Endless_2"));   //エンドレスモードBGM2.
-		soundMng->LoadFile(_T("bgm/Frost Vector.mp3"),			_T("BGM_Endless_3"));   //エンドレスモードBGM3.
-		soundMng->LoadFile(_T("bgm/Bullet Acceleration.mp3"),	_T("BGM_Endless_4"));   //エンドレスモードBGM4.
-		soundMng->LoadFile(_T("bgm/Shattered Icefront.mp3"),	_T("BGM_Endless_5"));   //エンドレスモードBGM5.
-		soundMng->LoadFile(_T("bgm/Neon Velocity.mp3"),			_T("BGM_Endless_6"));   //エンドレスモードBGM6.
-		soundMng->LoadFile(_T("bgm/Unwanted strife.mp3"),		_T("BGM_Endless_7"));   //エンドレスモードBGM7.
-		soundMng->LoadFile(_T("bgm/Glacial brilliance.mp3"),	_T("BGM_Endless_8"));   //エンドレスモードBGM8.
-		soundMng->LoadFile(_T("bgm/404 フリーズ・コード.mp3"),  _T("BGM_Endless_9"));   //エンドレスモードBGM9.
+		soundMng->LoadFile(_T("bgm/Glacial brilliance.mp3"),	_T("BGM_Endless_3"));   //エンドレスモードBGM3.
 		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			_T("BGM_Over"));		//ゲームオーバーBGM.
 
 		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		_T("MenuCursor"));		//メニューカーソル音.
@@ -208,8 +202,8 @@ void GameManager::Reset() {
 		//抽選するBGM名.
 		const vector<MY_STRING> bgmName = {
 			_T("BGM_Endless_1"),
-			_T("BGM_Endless_2"), //ちょっと緊迫感がある.
-			_T("BGM_Endless_8"), //電子感.
+			_T("BGM_Endless_2"),
+			_T("BGM_Endless_3"),
 		};
 		//何番目のBGMを使うか(bgmName配列の中から抽選)
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
