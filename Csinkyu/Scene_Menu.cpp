@@ -161,11 +161,11 @@ void MenuScene::Draw() {
 			[&]() {
 				Line lines[4] = {
 					//「<」.
-						{ basePos + DBL_XY(-55 - 100 * anim3, 30), basePos + DBL_XY(-85 - 100 * anim3,   0), 0x00FFFF, 2.0f },
-						{ basePos + DBL_XY(-85 - 100 * anim3,  0), basePos + DBL_XY(-55 - 100 * anim3, -30), 0x00FFFF, 2.0f },
-						//「>」.
-							{ basePos + DBL_XY(+55 + 100 * anim3, 30), basePos + DBL_XY(+85 + 100 * anim3,   0), 0x00FFFF, 2.0f },
-							{ basePos + DBL_XY(+85 + 100 * anim3,  0), basePos + DBL_XY(+55 + 100 * anim3, -30), 0x00FFFF, 2.0f }
+					{ basePos + DBL_XY(-55 - 100 * anim3, 30), basePos + DBL_XY(-85 - 100 * anim3,   0), 0x00FFFF, 2.0f },
+					{ basePos + DBL_XY(-85 - 100 * anim3,  0), basePos + DBL_XY(-55 - 100 * anim3, -30), 0x00FFFF, 2.0f },
+					//「>」.
+					{ basePos + DBL_XY(+55 + 100 * anim3, 30), basePos + DBL_XY(+85 + 100 * anim3,   0), 0x00FFFF, 2.0f },
+					{ basePos + DBL_XY(+85 + 100 * anim3,  0), basePos + DBL_XY(+55 + 100 * anim3, -30), 0x00FFFF, 2.0f }
 				};
 				//線描画.
 				for (auto& i : lines) {

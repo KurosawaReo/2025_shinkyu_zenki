@@ -2,6 +2,7 @@
 [2026/07/16 17:30.19] DeviceName:STAR / Level:3 / Score:05206 / Time:60.7
 [2026/07/16 17:30.28] DeviceName:STAR / Level:1 / Score:00071 / Time:7.2
 [2026/07/16 17:31.48] DeviceName:STAR / Level:4 / Score:00779 / Time:77.9
+<<<<<<< HEAD
 [2026/07/17 09:37.22] DeviceName:GM2140067 / Level:1 / Score:00026 / Time:2.6
 [2026/07/17 09:37.41] DeviceName:GM2140067 / Level:1 / Score:03769 / Time:16.9
 [2026/07/17 09:38.32] DeviceName:GM2140067 / Level:2 / Score:14787 / Time:48.8
@@ -80,3 +81,6 @@
 [2026/07/17 13:41.30] DeviceName:GM2140067 / Level:1 / Score:02651 / Time:15.2
 [2026/07/17 13:42.51] DeviceName:GM2140067 / Level:1 / Score:00067 / Time:6.7
 [2026/07/17 13:43.15] DeviceName:GM2140067 / Level:1 / Score:04319 / Time:21.9
+=======
+[2026/07/17 13:06.29] DeviceName:STAR / Level:1 / Score:00543 / Time:4.3
+>>>>>>> Extra/kr18_全体管理
