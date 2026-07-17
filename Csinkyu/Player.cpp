@@ -153,13 +153,17 @@ void Player::UpdateDash()
 	if (isDashing)
 	{
 		dashTimer -= 1 * gameData->speedRate;
+		//ダッシュ反射終了.
+		if (dashTimer <= PLAYER_DASH_DURATION - PLAYER_DASH_REFLECT_TIME)
+		{
+			if (mode == Player_DashReflect)
+			{
+				mode = Player_Normal;
+			}
+		}
 		//ダッシュ時間切れ.
 		if (dashTimer <= 0)
 		{
-			/*if (mode == Player_DashReflect)
-			{
-				mode = Player_Normal;
-			}*/
 			isDashing = false; //ダッシュ終了.
 		}
 	}
@@ -185,16 +189,6 @@ void Player::UpdateDash()
 				{
 					mode = Player_DashReflect;
 				}
-				//ダッシュ反射終了(遅延実行)
-				ManagerInsts::Get<TimerMng>()->ReservExe(
-					PLAYER_DASH_REFLECT_TIME, [&]() {
-						//戻す.
-						if (mode == Player_DashReflect)
-						{
-							mode = Player_Normal;
-						}
-					}
-				);
 
 				//チュートリアルなら.
 				if (gameData->stage == Stage_Tutorial) {
@@ -329,11 +323,13 @@ void Player::DrawAfterImage()
 
 		if (hit.pos.x != after[i].pos.x || hit.pos.y != after[i].pos.y) {
 
-			float anim = (float)i/PLAYER_AFT_IMG_NUM; //アニメーション値.
+			//アニメーション値.
+			const double anim1 = _dbl(i) / PLAYER_AFT_IMG_NUM;
+			const double anim2 = Calc::AnimEase(EaseType::OutQuad, anim1); //イージング版.
 
 			//描画.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim)),
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim1)),
 				[&]() {
 
 					MY_COLOR color;
@@ -341,20 +337,20 @@ void Player::DrawAfterImage()
 					//ダッシュエフェクト.
 					if (after[i].isDash) {
 						//三角形データ.
-						DBL_XY   pos1 = after[i].pos + Calc::AngToVector(after[i].ang) * (30 * (1 - anim));
-						DBL_XY   pos2 = after[i].pos + Calc::AngToVector(after[i].ang + 90) * (20 * (1 - anim));
-						DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang - 90) * (20 * (1 - anim));
+						DBL_XY   pos1 = after[i].pos + Calc::AngToVector(after[i].ang     ) * (30 * (1 - anim1));
+						DBL_XY   pos2 = after[i].pos + Calc::AngToVector(after[i].ang + 90) * (20 * (1 - anim1));
+						DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang - 90) * (20 * (1 - anim1));
 						GradLine line;
 
 						switch (mode)
 						{
-							//反射カラー.
 							case Player_ItemReflect:
 							case Player_ItemReflectSuper:
 							{
-								line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim)) });
-								line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim)) });
-								line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim)) });
+								//三角形のグラデーション線を作成.
+								line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
+								line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim1)) });
+								line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
 							}
 							break;
 
@@ -363,15 +359,25 @@ void Player::DrawAfterImage()
 							{
 								//ダッシュ反射してたら色付き.
 								if (isDashReflect) {
-									line.AddPoint(pos2, { 80, 255,  0, _int_r(255 * (1 - anim)) }); 
-									line.AddPoint(pos1, { 0, 255, 200, _int_r(255 * (1 - anim)) }); 
-									line.AddPoint(pos3, { 0, 120, 255, _int_r(255 * (1 - anim)) });
+
+									//色の変化.
+									MY_COLOR color = { 
+										_int_r(80 * (1 - anim2)),	//R
+										_int_r(255 - 200 * anim2),	//G
+										_int_r(255 * anim2),		//B
+										_int_r(255 * (1 - anim1))   //A(透明度)
+									};
+									//三角形のグラデーション線を作成.
+									line.AddPoint(pos2, color);
+									line.AddPoint(pos1, color);
+									line.AddPoint(pos3, color);
 								}
 								//してなければ通常カラー.
 								else {
-									line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim)) });
-									line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim)) });
-									line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim)) });
+									//三角形のグラデーション線を作成.
+									line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+									line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
+									line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
 								}
 							}
 							break;
