@@ -18,9 +18,10 @@ struct AfterEffect
 //プレイヤーモード.
 enum PlayerMode
 {
-	Player_Normal,
-	Player_Reflect,     //反射モード.
-	Player_SuperReflect //反射モード強化版.
+	Player_Normal,           //通常モード.
+	Player_ItemReflect,      //アイテム反射モード.
+	Player_ItemReflectSuper, //アイテム反射モード強化版.
+	Player_DashReflect,      //反射ダッシュ.
 };
 
 //プレイヤー.
@@ -91,7 +92,7 @@ public:
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
 
-	void OnDashEnd();        //ダッシュ終了時エフェクト関数.
+	//void OnDashEnd();        //ダッシュ終了時エフェクト関数.
 
 
 	//使用禁止.

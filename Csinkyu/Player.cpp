@@ -112,8 +112,8 @@ void Player::Draw()
 		const float size2 = 0.05f;
 
 		//プレイヤー描画.
-		if (mode == Player_Reflect ||
-			mode == Player_SuperReflect
+		if (mode == Player_ItemReflect ||
+			mode == Player_ItemReflectSuper
 		){
 			//ダッシュ演出.
 			if (isDashing) {
@@ -166,7 +166,7 @@ void Player::UpdateDash()
 			//ダッシュ開始.
 			if (dashkey)
 			{
-				//ダッシュ音追加.
+				//ダッシュ音再生.
 				if (auto i = soundMng->Get(_T("PlayerDash"))) {
 					i->Play(false, 60); //再生.
 				}
@@ -174,6 +174,10 @@ void Player::UpdateDash()
 				dashCooldown = PLAYER_DASH_COOLDOWN;
 				isDashing    = true;
 
+				if (mode == Player_Normal)
+				{
+					mode = Player_DashReflect;
+				}
 				//チュートリアルなら.
 				if (gameData->stage == Stage_Tutorial) {
 					tutorialStg->SetPlayerDash(true);
@@ -327,8 +331,8 @@ void Player::DrawAfterImage()
 						DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang - 90) * (20 * (1 - anim));
 						GradLine line;
 						//反射カラー.
-						if (mode == Player_Reflect ||
-							mode == Player_SuperReflect
+						if (mode == Player_ItemReflect ||
+							mode == Player_ItemReflectSuper
 							) {
 							line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim)) });
 							line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim)) });
@@ -346,8 +350,8 @@ void Player::DrawAfterImage()
 					//通常エフェクト.
 					else {
 						//反射カラー.
-						if (mode == Player_Reflect ||
-							mode == Player_SuperReflect
+						if (mode == Player_ItemReflect ||
+							mode == Player_ItemReflectSuper
 							) {
 							color = COLOR_PLY_AFT_REF;
 						}

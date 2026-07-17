@@ -347,6 +347,8 @@ namespace KR
 		auto imgIt = inst.images.find(saveName);
 		//存在しなければ.
 		if (imgIt == inst.images.end()) {
+			throw ErrorMsg(_T("DrawImgMng::Get"), _T("aaaaaaaaaaaエラー"));
+
 			return nullptr;
 		}
 		return &imgIt->second;
@@ -380,7 +382,6 @@ namespace KR
 		//ファイル読み込み.
 		int handle = LoadGraph(pathFull.c_str());
 		if (handle < 0) {
-			throw ErrorMsg(_T("DrawImgMng::LoadFile"), _T("LoadGraphエラー"));
 			return;
 		}
 		//画像登録.
