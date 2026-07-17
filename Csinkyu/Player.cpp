@@ -47,7 +47,6 @@ void Player::Reset()
 	hit        = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {}, {} };
 	mode       = Player_Normal;
 	afterCntr  = 1;
-	isMoveAble = true;
 	active     = true;
 
 	//初期速度.
@@ -56,12 +55,15 @@ void Player::Reset()
 	lastInputVec = {0, -1};
 
 	// ダッシュ関連の初期化.
-	isDashing    = false;
 	dashTimer    = 0;
 	dashCooldown = 0;
 
 	//ダッシュ関係.
 	dashEndEffectTimer = 0;
+
+	//フラグリセット.
+	isDashing       = false;
+    isDashReflect   = false;
 	isDashEndEffect = false;
 
 	//残像配列のリセット.
@@ -209,46 +211,42 @@ void Player::PlayerMove()
 {
 	float speed = PLAYER_MOVE_SPEED;
 
-	//移動可能なら.
-	if (isMoveAble) {
-
-		//目標速度.
-		DBL_XY targetVel{};
-		//入力操作.
-		DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
-		//入力があれば更新.
-		if (input.x != 0 || input.y != 0) {
-			lastInputVec = input;
-		}
-
-		//ダッシュ中なら.
-		if (isDashing) {
-			//段々減速.
-			const double rate = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
-			//速度変化.
-			speed *= _flt(1.0 + PLAYER_DASH_SPEED * rate);
-			//目標速度変更.
-			targetVel = lastInputVec * speed;
-		}
-		else {
-			//目標速度変更.
-		    targetVel = input * speed;
-		}
-
-		//Lerp速度.
-		const double moveLerp = PLAYER_MOVE_LERP_SPEED;
-		//Lerpで目標速度に近づける.
-		velocity.x += (targetVel.x - velocity.x) * moveLerp;
-		velocity.y += (targetVel.y - velocity.y) * moveLerp;
-		//誤差は無視.
-		if (fabs(velocity.x) < 0.01f) velocity.x = 0;
-		if (fabs(velocity.y) < 0.01f) velocity.y = 0;
-
-		//移動.
-		hit.pos += velocity * gameData->speedRate;
-		//移動限界.
-		Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
+	//目標速度.
+	DBL_XY targetVel{};
+	//入力操作.
+	DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
+	//入力があれば更新.
+	if (input.x != 0 || input.y != 0) {
+		lastInputVec = input;
 	}
+
+	//ダッシュ中なら.
+	if (isDashing) {
+		//段々減速.
+		const double rate = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
+		//速度変化.
+		speed *= _flt(1.0 + PLAYER_DASH_SPEED * rate);
+		//目標速度変更.
+		targetVel = lastInputVec * speed;
+	}
+	else {
+		//目標速度変更.
+		targetVel = input * speed;
+	}
+
+	//Lerp速度.
+	const double moveLerp = PLAYER_MOVE_LERP_SPEED;
+	//Lerpで目標速度に近づける.
+	velocity.x += (targetVel.x - velocity.x) * moveLerp;
+	velocity.y += (targetVel.y - velocity.y) * moveLerp;
+	//誤差は無視.
+	if (fabs(velocity.x) < 0.01f) velocity.x = 0;
+	if (fabs(velocity.y) < 0.01f) velocity.y = 0;
+
+	//移動.
+	hit.pos += velocity * gameData->speedRate;
+	//移動限界.
+	Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
 }
 
 //死亡処理.
@@ -347,21 +345,38 @@ void Player::DrawAfterImage()
 						DBL_XY   pos2 = after[i].pos + Calc::AngToVector(after[i].ang + 90) * (20 * (1 - anim));
 						DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang - 90) * (20 * (1 - anim));
 						GradLine line;
-						//反射カラー.
-						if (mode == Player_ItemReflect ||
-							mode == Player_ItemReflectSuper
-							) {
-							line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim)) });
-							line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim)) });
-							line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim)) });
-						}
-						//通常カラー.
-						else
+
+						switch (mode)
 						{
-							line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim)) });
-							line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim)) });
-							line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim)) });
+							//反射カラー.
+							case Player_ItemReflect:
+							case Player_ItemReflectSuper:
+							{
+								line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim)) });
+								line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim)) });
+								line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim)) });
+							}
+							break;
+
+							case Player_Normal:
+							case Player_DashReflect:
+							{
+								//ダッシュ反射してたら色付き.
+								if (isDashReflect) {
+									line.AddPoint(pos2, { 80, 255,  0, _int_r(255 * (1 - anim)) }); 
+									line.AddPoint(pos1, { 0, 255, 200, _int_r(255 * (1 - anim)) }); 
+									line.AddPoint(pos3, { 0, 120, 255, _int_r(255 * (1 - anim)) });
+								}
+								//してなければ通常カラー.
+								else {
+									line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim)) });
+									line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim)) });
+									line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim)) });
+								}
+							}
+							break;
 						}
+
 						line.Draw();
 					}
 					//通常エフェクト.

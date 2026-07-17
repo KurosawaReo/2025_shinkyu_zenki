@@ -350,15 +350,25 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 		switch (player->GetMode())
 		{
 			case  Player_ItemReflect:
-			case  Player_DashReflect:
 			{
 				it->type = Laser_Reflect; //反射モードへ.
 				it->counter = 0;          //リセット.
-					
 				gameMng->SlowModeStart(); //スロー発動.
 				ReflectLaser(it);         //レーザーを反射.
 			}
 			break;
+
+			case  Player_DashReflect:
+			{
+				it->type = Laser_Reflect; //反射モードへ.
+				it->counter = 0;          //リセット.
+				gameMng->SlowModeStart(); //スロー発動.
+				ReflectLaser(it);         //レーザーを反射.
+
+				player->SetIsDashReflect(true); //ダッシュ反射演出開始.
+			}
+			break;
+
 			//反射あり(強化版)
 			case Player_ItemReflectSuper:
 			{

@@ -140,7 +140,8 @@ void GameScene::UpdateReflectMode() {
 
 		//0になったら.
 		if (gameData->slowBufCntr <= 0) {
-			gameData->speedRate = 1.0; //速度倍率を戻す.
+			gameData->speedRate = 1.0;       //速度倍率を戻す.
+			player->SetIsDashReflect(false); //ダッシュ反射演出終了.
 		}
 	}
 
