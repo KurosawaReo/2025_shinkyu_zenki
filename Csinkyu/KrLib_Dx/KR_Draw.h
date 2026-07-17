@@ -69,7 +69,7 @@ namespace KR
 		DrawImg();
 		~DrawImg();
 		//get.
-		INT_XY GetSize() const { return size; }
+        INT_XY GetSize() const { return size; }
 
 		//•`‰æ.
 		void Draw      (DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;

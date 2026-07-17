@@ -18,9 +18,10 @@ struct AfterEffect
 //プレイヤーモード.
 enum PlayerMode
 {
-	Player_Normal,
-	Player_Reflect,     //反射モード.
-	Player_SuperReflect //反射モード強化版.
+	Player_Normal,           //通常モード.
+	Player_ItemReflect,      //アイテム反射モード.
+	Player_ItemReflectSuper, //アイテム反射モード強化版.
+	Player_DashReflect,      //反射ダッシュ.
 };
 
 //プレイヤー.
@@ -39,20 +40,20 @@ private:
 
 	float      dashEndEffectTimer{};	//エフェクト残り時間.
 
-	bool       isDashEndEffect{};		//エフェクト発動フラグ.
+	bool       isDashing{};			//ダッシュ中かどうか.
+	bool       isDashReflect{};		//ダッシュ反射演出を出すか.
+	bool       isDashEndEffect{};	//エフェクト発動フラグ.
 
 	//残像.
 	float          afterCntr{};	 		        //残像用時間カウンター.
 	AfterEffect    after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
 	//ダッシュ.
-	bool           isDashing{};        // ダッシュ中かどうか.
 	float          dashTimer{};        // ダッシュの残り時間.
 	float          dashCooldown{};     // ダッシュのクールダウン.
 
 	double         imgRot{};            //プレイヤーの画像角度.
 
-	bool           isMoveAble{};     //移動可能かどうか.
 
 //▼ ===== 関数 ===== ▼.
 public:
@@ -60,10 +61,10 @@ public:
 	Player(int order) : ManagerBase(order) {}
 
 	//set.
-	void       SetPos       (DBL_XY     _pos)    { hit.pos    = _pos;    }
-	void       SetActive    (bool       _active) { active     = _active; }
-	void       SetMode      (PlayerMode _mode)   { mode       = _mode;   } //モード設定.
-	void       SetIsMoveAble(bool       _flag)   { isMoveAble = _flag;   }
+	void       SetPos          (DBL_XY     _pos)    { hit.pos       = _pos;    }
+	void       SetActive       (bool       _active) { active        = _active; }
+	void       SetMode         (PlayerMode _mode)   { mode          = _mode;   } //モード設定.
+	void       SetIsDashReflect(bool       _flag)   { isDashReflect = _flag;   }
 	//get. 
 	DBL_XY     GetPos()      const { return hit.pos; }
 	bool       GetActive()   const { return active; }
@@ -91,7 +92,7 @@ public:
 	void UpdateAfterImage(); //残像更新.
 	void DrawAfterImage();   //残像描画.
 
-	void OnDashEnd();        //ダッシュ終了時エフェクト関数.
+	//void OnDashEnd();        //ダッシュ終了時エフェクト関数.
 
 
 	//使用禁止.
