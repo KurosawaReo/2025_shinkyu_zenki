@@ -209,8 +209,6 @@ void GameManager::Reset() {
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
 		//BGM名を保存.
 		gameSceneBgm = bgmName[bgmNo];
-
-		Debug::Log(_T("BGM"), bgmName[bgmNo]);
 	}
 }
 
@@ -331,7 +329,7 @@ void GameManager::GameOver() {
 						_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Level:%d / Score:%0.5d / Time:%.1f\n"), 
 						//変数挿入.
 						date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, 
-						Device::GetComputerNameStr(), gameData->level, gameData->score, gameScene.GetGameTime()
+						Device::GetComputerNameStr().c_str(), gameData->level, gameData->score, gameScene.GetGameTime()
 					);
 
 					//ファイルへ追記.
