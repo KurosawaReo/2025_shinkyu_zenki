@@ -344,9 +344,10 @@ namespace KR
 	//画像取得.
 	DrawImg* DrawImgMng::Get(MY_STRING saveName) {
 		
-		auto imgIt = inst.images.find(saveName);
+		const auto imgIt = inst.images.find(saveName);
 		//存在しなければ.
 		if (imgIt == inst.images.end()) {
+			throw ErrorMsg(_T("DrawImgMng::Get"), _T("画像が存在しない"));
 			return nullptr;
 		}
 		return &imgIt->second;
@@ -354,7 +355,7 @@ namespace KR
 	//画像取得(チェックあり)
 	bool DrawImgMng::TryGet(MY_STRING saveName, DrawImg* ptr) {
 
-		auto imgIt = inst.images.find(saveName);
+		const auto imgIt = inst.images.find(saveName);
 		//存在しなければ.
 		if (imgIt == inst.images.end()) {
 			return false; //取得失敗.
@@ -370,7 +371,7 @@ namespace KR
 
 		//既に存在すれば.
 		if (inst.images.count(saveName) > 0) {
-			throw ErrorMsg(_T("DrawImgMng::LoadFile"), _T("使用済みの保存名"));
+			throw ErrorMsg(_T("DrawImgMng::LoadFile"), _T("使用済みの保存名:") + saveName);
 			return;
 		}
 
@@ -380,7 +381,7 @@ namespace KR
 		//ファイル読み込み.
 		int handle = LoadGraph(pathFull.c_str());
 		if (handle < 0) {
-			throw ErrorMsg(_T("DrawImgMng::LoadFile"), _T("LoadGraphエラー"));
+			throw ErrorMsg(_T("DrawImgMng::LoadFile"), _T("読み込み失敗:") + fileName);
 			return;
 		}
 		//画像登録.
