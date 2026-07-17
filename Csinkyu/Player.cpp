@@ -154,6 +154,10 @@ void Player::UpdateDash()
 		//ダッシュ時間切れ.
 		if (dashTimer <= 0)
 		{
+			/*if (mode == Player_DashReflect)
+			{
+				mode = Player_Normal;
+			}*/
 			isDashing = false; //ダッシュ終了.
 		}
 	}
@@ -174,14 +178,27 @@ void Player::UpdateDash()
 				dashCooldown = PLAYER_DASH_COOLDOWN;
 				isDashing    = true;
 
+				//ダッシュ反射開始.
 				if (mode == Player_Normal)
 				{
 					mode = Player_DashReflect;
 				}
+				//ダッシュ反射終了(遅延実行)
+				ManagerInsts::Get<TimerMng>()->ReservExe(
+					PLAYER_DASH_REFLECT_TIME, [&]() {
+						//戻す.
+						if (mode == Player_DashReflect)
+						{
+							mode = Player_Normal;
+						}
+					}
+				);
+
 				//チュートリアルなら.
 				if (gameData->stage == Stage_Tutorial) {
 					tutorialStg->SetPlayerDash(true);
 				}
+
 			}
 		}
 	}
