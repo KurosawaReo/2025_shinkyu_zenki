@@ -325,7 +325,7 @@ void Player::DrawAfterImage()
 
 			//アニメーション値.
 			const double anim1 = _dbl(i) / PLAYER_AFT_IMG_NUM;
-			const double anim2 = Calc::AnimEase(EaseType::OutQuad, anim1); //イージング版.
+			const double anim2 = Calc::AnimEase(EaseType::OutQuad, anim1); //遅めに変化する版.
 
 			//描画.
 			DrawMode::Exe(
@@ -362,7 +362,7 @@ void Player::DrawAfterImage()
 
 									//色の変化.
 									MY_COLOR color = { 
-										_int_r(80 * (1 - anim2)),	//R
+										_int_r( 80 * (1 - anim2)),	//R
 										_int_r(255 - 200 * anim2),	//G
 										_int_r(255 * anim2),		//B
 										_int_r(255 * (1 - anim1))   //A(透明度)
@@ -390,7 +390,7 @@ void Player::DrawAfterImage()
 						//反射カラー.
 						if (mode == Player_ItemReflect ||
 							mode == Player_ItemReflectSuper
-							) {
+						){
 							color = COLOR_PLY_AFT_REF;
 						}
 						//通常カラー.
