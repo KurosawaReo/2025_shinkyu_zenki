@@ -76,8 +76,8 @@ void BG1::Init() {
 	bgMng    = ManagerInsts::Get<BGManager>();
 
 	{
-		INT_XY imgSize  = DrawImgMng::Get(_T("bg_normal"))->GetSize(); //画像サイズ取得.
-		DBL_XY sizeRate = { 0.1, 0.1 };                            //サイズ倍率.
+		INT_XY imgSize  = DrawImgMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
+		DBL_XY sizeRate = { 0.1, 0.1 };                                 //サイズ倍率.
 
 		INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
 

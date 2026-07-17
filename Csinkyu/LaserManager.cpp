@@ -335,8 +335,8 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 	//プレイヤー当たり判定.
 	Circle plyHit = player->GetHit();
 	//反射モード中は判定を少し大きくする.
-	if (player->GetMode() == Player_Reflect      ||
-		player->GetMode() == Player_SuperReflect)
+	if (player->GetMode() == Player_ItemReflect      ||
+		player->GetMode() == Player_ItemReflectSuper)
 	{
 		plyHit.r += PLAYER_REF_ADD_SIZE;
 	}
@@ -346,30 +346,33 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 
 	//プレイヤーとレーザーの当たり判定.
 	if (player->GetActive() && HitCirCir(laserHit, plyHit)) {
-
 		//反射あり.
-		if (player->GetMode() == Player_Reflect ||
-		   (player->GetMode() == Player_Normal && player->GetIsDashing()) //ダッシュ中も反射.
-		){
-			it->type = Laser_Reflect; //反射モードへ.
-			it->counter = 0;          //リセット.
-			
-			gameMng->SlowModeStart(); //スロー発動.
-			ReflectLaser(it);         //レーザーを反射.
-		}
-		//反射あり(強化版)
-		else if (player->GetMode() == Player_SuperReflect)
+		switch (player->GetMode())
 		{
-			it->type = Laser_SuperReflect; //反射モードへ.
-			it->counter = 0;               //リセット.
+			case  Player_ItemReflect:
+			case  Player_DashReflect:
+			{
+				it->type = Laser_Reflect; //反射モードへ.
+				it->counter = 0;          //リセット.
+					
+				gameMng->SlowModeStart(); //スロー発動.
+				ReflectLaser(it);         //レーザーを反射.
+			}
+			break;
+			//反射あり(強化版)
+			case Player_ItemReflectSuper:
+			{
+				it->type = Laser_SuperReflect; //反射モードへ.
+				it->counter = 0;               //リセット.
 
-			gameMng->SlowModeStart(); //スロー発動.
-			ReflectLaser(it);         //レーザーを反射.		
-		}
-		//反射なし.
-		else
-		{
-			player->PlayerDeath(); //プレイヤー死亡.
+				gameMng->SlowModeStart(); //スロー発動.
+				ReflectLaser(it);         //レーザーを反射.		
+			}
+			break;
+			case Player_Normal:
+				player->PlayerDeath(); //プレイヤー死亡.
+		    break;
+
 		}
 	}
 }

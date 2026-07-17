@@ -190,10 +190,10 @@ void ItemManager::CheckHitPlayer(int idx)
 		switch (items[idx].type)
 		{
 			case Item_Normal:
-				player->SetMode(Player_Reflect);
+				player->SetMode(Player_ItemReflect);
 				break;
 			case Item_Super:
-				player->SetMode(Player_SuperReflect);
+				player->SetMode(Player_ItemReflectSuper);
 				break;
 
 			default: assert(FALSE); break;
