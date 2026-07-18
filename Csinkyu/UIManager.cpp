@@ -71,7 +71,7 @@ void UIManager::Draw() {
 
 			// ===== STEP =====
 			//背景画像.
-			DrawImgMng::Get(_T("ui_back_level"))->DrawExtend({ WINDOW_WID/2, 70 }, {0.4, 0.35});
+			GraphMng::Get(_T("ui_back_level"))->DrawExtend({ WINDOW_WID/2, 70 }, {0.4, 0.35});
 			//描画.
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha),
@@ -87,7 +87,7 @@ void UIManager::Draw() {
 					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha2),
 					[&]() {
 						str2.Draw(Anchor::Mid, gameData->fonts["size35"].GetFont());
-						DrawImgMng::Get(_T("ui_back_score"))->DrawExtend({ (double)str2.pos.x, (double)str2.pos.y + 28 }, { 0.35, 0.4 });
+						GraphMng::Get(_T("ui_back_score"))->DrawExtend({ (double)str2.pos.x, (double)str2.pos.y + 28 }, { 0.35, 0.4 });
 					}
 				);
 				//テキスト(光沢用)
@@ -131,7 +131,7 @@ void UIManager::Draw() {
 			str[3].text = text;
 		
 			//[level]
-			DrawImgMng::Get(_T("ui_back_level"))->DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
+			GraphMng::Get(_T("ui_back_level"))->DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
 			//テキスト(main)
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha4),
@@ -144,7 +144,7 @@ void UIManager::Draw() {
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha1),
 				[&]() {
 					str[1].Draw(Anchor::Mid, gameData->fonts["size35"].GetFont());
-					DrawImgMng::Get(_T("ui_back_best_score"))->DrawExtend(str[1].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
+					GraphMng::Get(_T("ui_back_best_score"))->DrawExtend(str[1].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
 				}
 			);
 			//[score]
@@ -152,7 +152,7 @@ void UIManager::Draw() {
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha2),
 				[&]() {
 					str[2].Draw(Anchor::Mid, gameData->fonts["size35"].GetFont());
-					DrawImgMng::Get(_T("ui_back_score"))->DrawExtend(str[2].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
+					GraphMng::Get(_T("ui_back_score"))->DrawExtend(str[2].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
 				}
 			);			
 			//[time]
@@ -160,7 +160,7 @@ void UIManager::Draw() {
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha3),
 				[&]() {
 					str[3].Draw(Anchor::Mid, gameData->fonts["size35"].GetFont());
-					DrawImgMng::Get(_T("ui_back_time"))->DrawExtend(str[3].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
+					GraphMng::Get(_T("ui_back_time"))->DrawExtend(str[3].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
 				}
 			);
 

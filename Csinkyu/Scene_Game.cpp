@@ -54,7 +54,7 @@ void GameScene::Enter() {
 
 	//ÉvÉåÉCÉÑÅ[Ç™éÄñSÇµÇƒÇ¢ÇΩÇÁ.
 	if (!player->GetActive()) {
-		player->PlayerRevival(); //ïúäà.
+		player->Revival(); //ïúäà.
 	}
 
 	//Ç‹ÇæìÆÇ¢ÇƒÇ»ÇØÇÍÇŒ.
@@ -208,7 +208,7 @@ void GameScene::DrawReflectMode() {
 				[&]() {
 					//ç≈èâÇÃ1ïb.
 					if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME - 1) {
-						DrawImgMng::Get(_T("reflect"))->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
+						GraphMng::Get(_T("reflect"))->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
 					}
 					//ç≈å„ÇÃ3ïb.
 					if (tmReflectMode.GetPassTime() <= 3) {

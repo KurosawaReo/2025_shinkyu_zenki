@@ -99,7 +99,7 @@ void TitleScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 				[&]() {
-					DrawImgMng::Get(_T("logo"))->DrawExtend(
+					GraphMng::Get(_T("logo"))->DrawExtend(
 						DBL_XY{ WINDOW_WID / 2, _dbl(logoY) }, imgSize, Anchor::Mid, true, true
 					);
 				}
@@ -115,14 +115,14 @@ void TitleScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim2)),
 				[&]() {
-					DrawImgMng::Get(_T("logo"))->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
+					GraphMng::Get(_T("logo"))->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
 				}
 			);
 			//ロゴ2枚目.
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim1),
 				[&]() {
-					DrawImgMng::Get(_T("logo_all"))->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
+					GraphMng::Get(_T("logo_all"))->DrawExtend({ WINDOW_WID / 2, logoY - anim1 * 80 }, imgSize, Anchor::Mid, true, true);
 				}
 			);
 		}
@@ -152,9 +152,9 @@ void TitleScene::Draw() {
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim2),
 			[&]() {
 				//UI
-				DrawImgMng::Get(_T("ui_back_best_score"))->
+				GraphMng::Get(_T("ui_back_best_score"))->
 					DrawExtend({ WINDOW_WID / 2, drawY + (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
-				DrawImgMng::Get(_T("ui_back_best_score"))->
+				GraphMng::Get(_T("ui_back_best_score"))->
 					DrawExtend({ WINDOW_WID / 2, drawY - (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
 			}
 		);

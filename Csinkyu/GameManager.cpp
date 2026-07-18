@@ -51,33 +51,36 @@ void GameManager::Init() {
 
 	try {
 		//[KrLib] 画像.
-		DrawImgMng::SetPath(_T("Resources/Images/")); //共通パスの設定.
-		DrawImgMng::LoadFile(_T("logo_text_only.png"),		_T("logo"));
-		DrawImgMng::LoadFile(_T("logo_all.png"),			_T("logo_all"));
-		DrawImgMng::LoadFile(_T("new_record.png"),			_T("new_record"));
-		DrawImgMng::LoadFile(_T("gameover.png"),			_T("gameover"));
-		DrawImgMng::LoadFile(_T("reflect.png"),				_T("reflect"));
-		DrawImgMng::LoadFile(_T("player_normal.png"),		_T("player_nor"));
-		DrawImgMng::LoadFile(_T("player_reflect.png"),		_T("player_ref"));
-		DrawImgMng::LoadFile(_T("item.png"),				_T("item"));
-		DrawImgMng::LoadFile(_T("light_color_ref.png"),		_T("item_light"));
-		DrawImgMng::LoadFile(_T("light_color_nor.png"),		_T("player_light_nor"));
-		DrawImgMng::LoadFile(_T("light_color_ref.png"),		_T("player_light_ref"));
-		DrawImgMng::LoadFile(_T("menu_endless.png"),		_T("menu0"));				//ゲーム開始.
-		DrawImgMng::LoadFile(_T("menu_tutorial.png"),		_T("menu1"));				//チュートリアル.
-		DrawImgMng::LoadFile(_T("menu_title.png"),			_T("menu2"));				//タイトルに戻る.
-		DrawImgMng::LoadFile(_T("bg_normal.png"),			_T("bg_normal"));
-		DrawImgMng::LoadFile(_T("bg_reflect.png"),			_T("bg_reflect"));
-		DrawImgMng::LoadFile(_T("reflect_mode_frame.png"),	_T("reflect_mode_frame"));
-		DrawImgMng::LoadFile(_T("ui_back_level.png"),		_T("ui_back_level"));
-		DrawImgMng::LoadFile(_T("ui_back_best_score.png"),	_T("ui_back_best_score"));
-		DrawImgMng::LoadFile(_T("ui_back_score.png"),		_T("ui_back_score"));
-		DrawImgMng::LoadFile(_T("ui_back_time.png"),		_T("ui_back_time"));
-		DrawImgMng::LoadFile(_T("score100.png"),			_T("score100"));
-		DrawImgMng::LoadFile(_T("score500.png"),			_T("score500"));
+		GraphMng::SetPath(_T("Resources/Images/"));	//共通パスの設定.
+		GraphMng::LoadImg(_T("logo_text_only.png"),		_T("logo"));
+		GraphMng::LoadImg(_T("logo_all.png"),			_T("logo_all"));
+		GraphMng::LoadImg(_T("new_record.png"),			_T("new_record"));
+		GraphMng::LoadImg(_T("gameover.png"),			_T("gameover"));
+		GraphMng::LoadImg(_T("reflect.png"),			_T("reflect"));
+		GraphMng::LoadImg(_T("player_normal.png"),		_T("player_nor"));
+		GraphMng::LoadImg(_T("player_reflect.png"),		_T("player_ref"));
+		GraphMng::LoadImg(_T("item.png"),				_T("item"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("item_light"));
+		GraphMng::LoadImg(_T("light_color_nor.png"),	_T("player_light_nor"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("player_light_ref"));
+		GraphMng::LoadImg(_T("bg_normal.png"),			_T("bg_normal"));
+		GraphMng::LoadImg(_T("bg_reflect.png"),			_T("bg_reflect"));
+		GraphMng::LoadImg(_T("reflect_mode_frame.png"),	_T("reflect_mode_frame"));
+		GraphMng::LoadImg(_T("ui_back_level.png"),		_T("ui_back_level"));
+		GraphMng::LoadImg(_T("ui_back_best_score.png"),	_T("ui_back_best_score"));
+		GraphMng::LoadImg(_T("ui_back_score.png"),		_T("ui_back_score"));
+		GraphMng::LoadImg(_T("ui_back_time.png"),		_T("ui_back_time"));
+		GraphMng::LoadImg(_T("score100.png"),			_T("score100"));
+		GraphMng::LoadImg(_T("score500.png"),			_T("score500"));
+
+		//[KrLib] 動画.
+		GraphMng::SetPath(_T("Resources/Movies/"));	//共通パスの設定.
+		GraphMng::LoadMovie(_T("紹介動画.mp4"),			_T("menu_movie1"));
+		GraphMng::LoadMovie(_T("紹介動画.mp4"),			_T("menu_movie2"));
+		GraphMng::LoadMovie(_T("紹介動画.mp4"),			_T("menu_movie3"));
 
 		//[KrLib] サウンド.
-		soundMng->SetPath(_T("Resources/Sounds/")); //共通パスの設定.
+		soundMng->SetPath(_T("Resources/Sounds/"));	//共通パスの設定.
 		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"),		_T("BGM_Menu"));		//メニューBGM.
 		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial"));	//チュートリアルBGM.
 		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless_1"));	//エンドレスモードBGM1.

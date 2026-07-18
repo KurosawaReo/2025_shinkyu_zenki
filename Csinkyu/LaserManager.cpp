@@ -380,7 +380,7 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 			}
 			break;
 			case Player_Normal:
-				player->PlayerDeath(); //プレイヤー死亡.
+				player->Death(); //プレイヤー死亡.
 		    break;
 
 		}

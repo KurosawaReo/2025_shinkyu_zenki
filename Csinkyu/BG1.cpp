@@ -40,7 +40,7 @@ void BG_Tile::Draw(double slowTime) {
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha,  _int(alpha * sinNum * (1 - slowTime)),
 			[&]() {
-				DrawImgMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+				GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 			}
 		);
 	}
@@ -53,7 +53,7 @@ void BG_Tile::Draw(double slowTime) {
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha * sinNum * slowTime),
 			[&]() {
-				DrawImgMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+				GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
 			}
 		);
 	}
@@ -76,7 +76,7 @@ void BG1::Init() {
 	bgMng    = ManagerInsts::Get<BGManager>();
 
 	{
-		INT_XY imgSize  = DrawImgMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
+		INT_XY imgSize  = GraphMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
 		DBL_XY sizeRate = { 0.1, 0.1 };                                 //サイズ倍率.
 
 		INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
@@ -130,7 +130,7 @@ void BG1::Draw() {
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * time),
 			[&]() {
-				DrawImgMng::Get(_T("reflect_mode_frame"))->Draw({WINDOW_WID/2, WINDOW_HEI/2});
+				GraphMng::Get(_T("reflect_mode_frame"))->Draw({WINDOW_WID/2, WINDOW_HEI/2});
 			}
 		);
 		//枠線.

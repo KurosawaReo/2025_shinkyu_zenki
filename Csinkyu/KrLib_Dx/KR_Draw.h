@@ -2,8 +2,7 @@
    - KR_Draw.h - (DxLib)
    ver.2026/07/17
 
-   図形や画像の描画機能。
-   (オブジェクト指向ver → KR_Object)
+   描画に関する機能。
 */
 #pragma once
 //[include] KR_Global.
@@ -46,75 +45,6 @@ namespace KR
 		LU,	U,   RU, //[例] Anchor::LU = Left Up.
 		L,  Mid, R,
 		LD,	D,   RD,
-	};
-
-	//画像クラス.
-	class DrawImg
-	{
-		friend class DrawImgMng; //アクセス許可.
-
-	//▼ ===== 変数 ===== ▼.
-	private:
-		int    handle; //ハンドル.
-		INT_XY size;   //画像のサイズ.
-
-	//▼ ===== 関数 ===== ▼.
-	private:
-		void SetImage(int _handle); //画像登録.
-		void Release();             //画像解放.
-
-	public:
-		//コンストラクタ, デストラクタ.
-		//std::mapを使う関係でpublicに入れておく.
-		DrawImg();
-		~DrawImg();
-		//get.
-        INT_XY GetSize() const { return size; }
-
-		//描画.
-		void Draw      (DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawRect  (DBL_XY pos, DBL_RECT rect,                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawRota  (DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0},                           bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-
-		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
-		DrawImg& operator=(const DrawImg&) = delete;
-	};
-
-	//画像管理クラス.
-	class DrawImgMng final
-	{
-	//▼ ===== 実体 ===== ▼.
-	private:
-		static DrawImgMng inst; //実体を入れる用.
-
-	//▼ ===== 変数 ===== ▼.
-	private:
-		umap<MY_STRING, DrawImg> images; //画像データ.
-		MY_STRING                path;   //共通パス.
-
-	//▼ ===== 関数 ===== ▼.
-	private:
-		//コンストラクタ.
-		DrawImgMng(){}
-		//デストラクタ.
-		~DrawImgMng();
-
-	public:
-		//set.
-		static void      SetPath    (MY_STRING path);
-		//get.
-		static DrawImg*  Get        (MY_STRING saveName);
-		static bool      TryGet     (MY_STRING saveName, DrawImg* ptr);
-		
-		//画像読み込み.
-		static void      LoadFile   (MY_STRING fileName, MY_STRING saveName);
-		static void      LoadFileDiv(MY_STRING fileName, INT_XY size, INT_XY cnt, vector<MY_STRING> saveName);
-
-		//使用禁止.
-		DrawImgMng(const DrawImgMng&) = delete;
-		DrawImgMng& operator=(const DrawImgMng&) = delete;
 	};
 
 	//テキスト描画クラス.

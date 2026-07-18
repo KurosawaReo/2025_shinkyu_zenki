@@ -111,7 +111,7 @@ void EndScene::Draw() {
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 			[&]() {
 				//GAME OVER.
-				DrawImgMng::Get(_T("gameover"))->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
+				GraphMng::Get(_T("gameover"))->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true);
 				//テキスト.
 				str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
 			}
@@ -139,7 +139,7 @@ void EndScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 				[&]() {
-					DrawImgMng::Get(_T("gameover"))->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
+					GraphMng::Get(_T("gameover"))->DrawExtend({ WINDOW_WID / 2, 370 + 30 * anim }, { 0.5, 0.5 }, Anchor::Mid, true, true); //GAME OVER
 					//画面中央に文字を表示.
 					str1.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
 					str2.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
@@ -162,7 +162,7 @@ void EndScene::Draw() {
 					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 					[&]() {
 						//NEW RECORD
-						DrawImgMng::Get(_T("new_record"))->DrawExtend(
+						GraphMng::Get(_T("new_record"))->DrawExtend(
 							{ WINDOW_WID / 2, WINDOW_HEI / 2 - 330 + anim * 20 }, { 0.4, 0.4 }, Anchor::Mid, true, true
 						);
 					}

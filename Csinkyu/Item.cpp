@@ -106,15 +106,15 @@ void ItemManager::Draw()
 					//強化演出.
 					if (items[i].type == Item_Super) {
 						//アイテム発光.
-						DrawImgMng::Get(_T("item_light"))->DrawExtend(items[i].pos, { 0.05, 0.05 });
+						GraphMng::Get(_T("item_light"))->DrawExtend(items[i].pos, { 0.05, 0.05 });
 					}
 					//アイテム本体.
 					{
 						DBL_XY size = {
-							ITEM_SIZE / DrawImgMng::Get(_T("item"))->GetSize().ToDbl().x,
-							ITEM_SIZE / DrawImgMng::Get(_T("item"))->GetSize().ToDbl().y
+							ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().x,
+							ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().y
 						};
-						DrawImgMng::Get(_T("item"))->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
+						GraphMng::Get(_T("item"))->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
 					}
 				}
 			);

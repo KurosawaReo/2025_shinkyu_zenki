@@ -9,10 +9,6 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_Calc.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_File.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_Language.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
     <ClCompile Include="KrLib_Dx\KR_App.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Calc.cpp" />
@@ -49,7 +45,12 @@
     <ClCompile Include="Stage_Tutorial.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="KrLib_Dx\KR_DrawGraph.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Calc.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Device.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_File.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
+    <ClCompile Include="KrLib_cpp\KR_Language.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG1.h" />
@@ -62,11 +63,6 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="KrLib_cpp\KR_BigInt.h" />
-    <ClInclude Include="KrLib_cpp\KR_Calc.h" />
-    <ClInclude Include="KrLib_cpp\KR_File.h" />
-    <ClInclude Include="KrLib_cpp\KR_Format.h" />
-    <ClInclude Include="KrLib_cpp\KR_Global.h" />
-    <ClInclude Include="KrLib_cpp\KR_Language.h" />
     <ClInclude Include="KrLib_cpp\KR_Memory.h" />
     <ClInclude Include="KrLib_cpp\KR_Singleton.h" />
     <ClInclude Include="KrLib_Dx\KR_App.h" />
@@ -104,7 +100,13 @@
     <ClInclude Include="Stage_Tutorial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="KrLib_Dx\KR_DrawGraph.h" />
+    <ClInclude Include="KrLib_cpp\KR_Calc.h" />
     <ClInclude Include="KrLib_cpp\KR_Device.h" />
+    <ClInclude Include="KrLib_cpp\KR_File.h" />
+    <ClInclude Include="KrLib_cpp\KR_Format.h" />
+    <ClInclude Include="KrLib_cpp\KR_Global.h" />
+    <ClInclude Include="KrLib_cpp\KR_Language.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="_memo.txt" />

@@ -1,9 +1,8 @@
 /*
    - KR_DrawShape.h - (DxLib)
-   ver.2026/06/13
+   ver.2026/07/17
 
-   図形や画像の描画機能。
-   (オブジェクト指向ver → KR_Object)
+   図形描画に関する機能。
 */
 #pragma once
 //[include] KR_Global.

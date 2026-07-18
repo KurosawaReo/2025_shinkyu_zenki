@@ -102,7 +102,7 @@ void MeteorManager::Update() {
 	}
 	//ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’è.
 	if (GetHitMeteor(player->GetHit(), false)) {
-		player->PlayerDeath(); //Ž€–S.
+		player->Death(); //Ž€–S.
 	}
 }
 

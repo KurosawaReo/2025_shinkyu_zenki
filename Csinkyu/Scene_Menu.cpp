@@ -36,18 +36,19 @@ void MenuScene::Init() {
 
 //リセット.
 void MenuScene::Reset() {
-	selectedIndex = 0;
+	cursorIdx = 0;
 	tmBlink.Start();
 }
 
 //入った瞬間.
 void MenuScene::Enter() {
-
+	//動画再生.
+	GraphMng::Get(GetPlayMovieName())->PlayMovie(PlayTypeID::Loop, true);
 }
 
 //抜けた瞬間.
 void MenuScene::Exit() {
-
+	StopAllMovie();
 }
 
 //更新.
@@ -55,11 +56,11 @@ void MenuScene::Update() {
 
 	//カーソル移動操作.
 	if (inputMng->IsPushActionTime(_T("MenuUp")) % 20 == 1) {
-		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
+		cursorIdx = (cursorIdx + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
 	if (inputMng->IsPushActionTime(_T("MenuDown")) % 20 == 1) { //長押しにも対応.
-		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
+		cursorIdx = (cursorIdx + 1) % 3;     //+1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
 	//点滅終了.
@@ -70,7 +71,7 @@ void MenuScene::Update() {
 	//決定操作.
 	if (inputMng->IsPushActionTime(_T("MenuNext")) == 1) {
 
-		switch (selectedIndex)
+		switch (cursorIdx)
 		{
 			case 0:
 			{
@@ -207,9 +208,9 @@ void MenuScene::Draw() {
 		};
 		//テキスト色.
 		unsigned int colors[] = {
-			(selectedIndex == 0) ? mColor.select1 : mColor.normal,
-			(selectedIndex == 1) ? mColor.select1 : mColor.normal,
-			(selectedIndex == 2) ? mColor.select1 : mColor.normal
+			(cursorIdx == 0) ? mColor.select1 : mColor.normal,
+			(cursorIdx == 1) ? mColor.select1 : mColor.normal,
+			(cursorIdx == 2) ? mColor.select1 : mColor.normal
 		};
 
 		INT_XY savePos; //保存用.
@@ -225,7 +226,7 @@ void MenuScene::Draw() {
 			
 			int alpha = 255; //透明度.
 			//ブレる処理.
-			if (isBlink && selectedIndex == i) {
+			if (isBlink && cursorIdx == i) {
 				const int add = Calc::RandNum(-5, 5); //ずらす量.
 				str.pos += add;						  //位置をずらす.
 				alpha = 128;
@@ -251,7 +252,7 @@ void MenuScene::Draw() {
 		//基準座標.
 		DBL_XY base = mLayout.menuPos + DBL_XY(
 			-mLayout.menuSize.x/2 - 20,			//横にずらす.
-			+mLayout.menuSpace * selectedIndex	//縦にずらす.
+			+mLayout.menuSpace * cursorIdx	//縦にずらす.
 		);
 
 		Triangle tri = { base, base + DBL_XY(-20, 10 * anim1), base + DBL_XY(-20, -10 * anim1), {}, {} };
@@ -267,18 +268,19 @@ void MenuScene::Draw() {
 		const double extend = 0.4; //画像描画倍率.
 		const int    margin = 10;  //枠を画像よりどれだけ大きくするか.
 	
-		MY_STRING name = _T("menu") + NumToString(selectedIndex);
-		if (auto i = DrawImgMng::Get(name)) {
-			//画像を滑らかに.
+		//画像を取得できたら.
+		if (auto i = GraphMng::Get(GetPlayMovieName())) {
+
+			//画像描画.
 			DrawMode::Exe(
 				DrawModeID::Bilinear, DrawBlendModeID::None, 255,
 				[&]() {
 					i->DrawExtend(mLayout.imgPos, { extend , extend });
 				}
 			);
-			//画像のサイズ(Extend倍率分小さくする)
+			//画像の描画サイズを計算.
 			imgSize = i->GetSize().ToDbl() * extend + margin;
-			//画像の枠線(位置とサイズは画像に合わせる)
+			//枠線描画(画像にぴったり合うように)
 			Box box = { mLayout.imgPos, imgSize, mColor.frame, 1.0f };
 			DrawBoxKR(box, Anchor::Mid, false);
 		}
@@ -317,8 +319,8 @@ void MenuScene::Draw() {
 						3.0f
 					};
 					//選択してる所にずらす.
-					line.stPos.y += mLayout.menuSpace * selectedIndex;
-					line.edPos.y += mLayout.menuSpace * selectedIndex;
+					line.stPos.y += mLayout.menuSpace * cursorIdx;
+					line.edPos.y += mLayout.menuSpace * cursorIdx;
 					//線描画.
 					DrawLineKR(line, false);
 				}
@@ -378,7 +380,7 @@ void MenuScene::Draw() {
 		//説明文用.
 		DrawStr str(_T(""), INT_XY(textBoxX, textBoxY)+mLayout.loreInner, mColor.normal);
 
-		switch (selectedIndex)
+		switch (cursorIdx)
 		{
 			case 0:
 			{
@@ -428,14 +430,32 @@ void MenuScene::Draw() {
 	}
 }
 
+//再生する動画名.
+MY_STRING MenuScene::GetPlayMovieName() {
+	return _T("menu_movie") + NumToString(cursorIdx + 1);
+}
+
 //カーソル移動時の処理.
 void MenuScene::OnCursorMove() {
 
 	isBlink = true;  //点滅させる.
 	tmBlink.Start(); //点滅時間計測.
 
+	//全動画停止.
+	StopAllMovie();
+	//動画再生.
+	GraphMng::Get(GetPlayMovieName())->PlayMovie(PlayTypeID::Loop, true);
+
 	//サウンド.
 	if (auto i = soundMng->Get(_T("MenuCursor"))) {
 		i->Play(false, 70);
 	}
+}
+
+//全ての動画を停止.
+void MenuScene::StopAllMovie() {
+
+	GraphMng::Get(_T("menu_movie1"))->StopMovie();
+	GraphMng::Get(_T("menu_movie2"))->StopMovie();
+	GraphMng::Get(_T("menu_movie3"))->StopMovie();
 }

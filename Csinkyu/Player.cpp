@@ -89,9 +89,9 @@ void Player::Update()
 		//画像回転.
 		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate;
 
-		UpdateAfterImage();
-		UpdateDash();
-		PlayerMove();
+		UpdateAfter(); //残像更新.
+		UpdateDash();  //ダッシュ更新.
+		Move();		   //プレイヤー移動.
 	}
 }
 
@@ -108,7 +108,9 @@ void Player::Draw()
 
 	//有効なら.
 	if (active) {
-		DrawAfterImage();
+
+		//残像描画.
+		DrawAfter();
 
 		const float size  = 0.17f;
 		const float size2 = 0.05f;
@@ -119,18 +121,18 @@ void Player::Draw()
 		){
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get(_T("player_light_ref"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
+				GraphMng::Get(_T("player_light_ref"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//反射モードの画像.
-			DrawImgMng::Get(_T("player_ref"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
+			GraphMng::Get(_T("player_ref"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
 		}
 		else {
 			//ダッシュ演出.
 			if (isDashing) {
-				DrawImgMng::Get(_T("player_light_nor"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
+				GraphMng::Get(_T("player_light_nor"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
 			}
 			//通常モードの画像.
-			DrawImgMng::Get(_T("player_nor"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
+			GraphMng::Get(_T("player_nor"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
 		}
 
 		//チュートリアル用.
@@ -153,6 +155,7 @@ void Player::UpdateDash()
 	if (isDashing)
 	{
 		dashTimer -= 1 * gameData->speedRate;
+
 		//ダッシュ反射終了.
 		if (dashTimer <= PLAYER_DASH_DURATION - PLAYER_DASH_REFLECT_TIME)
 		{
@@ -172,7 +175,7 @@ void Player::UpdateDash()
 	{
 		if (dashCooldown <= 0)
 		{
-			bool dashkey = inputMng->IsPushActionTime(_T("PlayerDash")) == 1;
+			bool dashkey = (inputMng->IsPushActionTime(_T("PlayerDash")) == 1);
 			//ダッシュ開始.
 			if (dashkey)
 			{
@@ -194,14 +197,13 @@ void Player::UpdateDash()
 				if (gameData->stage == Stage_Tutorial) {
 					tutorialStg->SetPlayerDash(true);
 				}
-
 			}
 		}
 	}
 }
 
 //移動処理(斜め対応)
-void Player::PlayerMove()
+void Player::Move()
 {
 	float speed = PLAYER_MOVE_SPEED;
 
@@ -234,8 +236,8 @@ void Player::PlayerMove()
 	velocity.x += (targetVel.x - velocity.x) * moveLerp;
 	velocity.y += (targetVel.y - velocity.y) * moveLerp;
 	//誤差は無視.
-	if (fabs(velocity.x) < 0.01f) velocity.x = 0;
-	if (fabs(velocity.y) < 0.01f) velocity.y = 0;
+	if (fabs(velocity.x) < 0.01f) { velocity.x = 0; }
+	if (fabs(velocity.y) < 0.01f) { velocity.y = 0; }
 
 	//移動.
 	hit.pos += velocity * gameData->speedRate;
@@ -244,7 +246,7 @@ void Player::PlayerMove()
 }
 
 //死亡処理.
-void Player::PlayerDeath() {
+void Player::Death() {
 
 	//デバッグモード中は無敵.
 	if (isDebug) { return; }
@@ -270,10 +272,12 @@ void Player::PlayerDeath() {
 }
 
 //プレイヤー復活.
-void Player::PlayerRevival()
+void Player::Revival()
 {
-	hit.pos = {WINDOW_WID/2, WINDOW_HEI/2};
-	active  = true;
+	//位置・速度リセット.
+	hit.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
+	velocity = {0, 0};
+	active   = true;
 
 	//残像配列のリセット.
 	for (int i = 0; i < _countof(after); i++) {
@@ -283,7 +287,7 @@ void Player::PlayerRevival()
 }
 
 //残像更新.
-void Player::UpdateAfterImage()
+void Player::UpdateAfter()
 {
 	afterCntr -= gameData->speedRate;
 
@@ -314,7 +318,7 @@ void Player::UpdateAfterImage()
 }
 
 //残像描画.
-void Player::DrawAfterImage()
+void Player::DrawAfter()
 {
 	//残像処理.
 	for (int i = 0; i < PLAYER_AFT_IMG_NUM; i++)
@@ -332,78 +336,90 @@ void Player::DrawAfterImage()
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * (1 - anim1)),
 				[&]() {
 
-					MY_COLOR color;
-
 					//ダッシュエフェクト.
 					if (after[i].isDash) {
-						//三角形データ.
-						DBL_XY   pos1 = after[i].pos + Calc::AngToVector(after[i].ang     ) * (30 * (1 - anim1));
-						DBL_XY   pos2 = after[i].pos + Calc::AngToVector(after[i].ang + 90) * (20 * (1 - anim1));
-						DBL_XY   pos3 = after[i].pos + Calc::AngToVector(after[i].ang - 90) * (20 * (1 - anim1));
-						GradLine line;
-
-						switch (mode)
-						{
-							case Player_ItemReflect:
-							case Player_ItemReflectSuper:
-							{
-								//三角形のグラデーション線を作成.
-								line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
-								line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim1)) });
-								line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
-							}
-							break;
-
-							case Player_Normal:
-							case Player_DashReflect:
-							{
-								//ダッシュ反射してたら色付き.
-								if (isDashReflect) {
-
-									//色の変化.
-									MY_COLOR color = { 
-										_int_r( 80 * (1 - anim2)),	//R
-										_int_r(255 - 200 * anim2),	//G
-										_int_r(255 * anim2),		//B
-										_int_r(255 * (1 - anim1))   //A(透明度)
-									};
-									//三角形のグラデーション線を作成.
-									line.AddPoint(pos2, color);
-									line.AddPoint(pos1, color);
-									line.AddPoint(pos3, color);
-								}
-								//してなければ通常カラー.
-								else {
-									//三角形のグラデーション線を作成.
-									line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
-									line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
-									line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
-								}
-							}
-							break;
-						}
-
-						line.Draw();
+						DrawAfterDash(i, anim1, anim2);
 					}
 					//通常エフェクト.
 					else {
-						//反射カラー.
-						if (mode == Player_ItemReflect ||
-							mode == Player_ItemReflectSuper
-						){
-							color = COLOR_PLY_AFT_REF;
-						}
-						//通常カラー.
-						else
-						{
-							color = COLOR_PLY_AFT_NOR;
-						}
-						//円描画.
-						Circle cir = { after[i].pos, PLAYER_SIZE, color, 1.0f };
-						DrawCircleKR(cir, Anchor::Mid, false, true);
+						DrawAfterNor(i);
 					}
 				}
 			);
 		}
 	}
+}
+
+//残像描画(通常時)
+void Player::DrawAfterNor(int idx) {
+
+	MY_COLOR color;
+
+	//反射カラー.
+	if (mode == Player_ItemReflect ||
+		mode == Player_ItemReflectSuper
+		) {
+		color = COLOR_PLY_AFT_REF;
+	}
+	//通常カラー.
+	else
+	{
+		color = COLOR_PLY_AFT_NOR;
+	}
+	//円描画.
+	Circle cir = { after[idx].pos, PLAYER_SIZE, color, 1.0f };
+	DrawCircleKR(cir, Anchor::Mid, false, true);
+}
+
+//残像描画(ダッシュ時)
+void Player::DrawAfterDash(int idx, double anim1, double anim2) {
+
+	//三角形データ.
+	DBL_XY   pos1 = after[idx].pos + Calc::AngToVector(after[idx].ang     ) * (30 * (1 - anim1));
+	DBL_XY   pos2 = after[idx].pos + Calc::AngToVector(after[idx].ang + 90) * (20 * (1 - anim1));
+	DBL_XY   pos3 = after[idx].pos + Calc::AngToVector(after[idx].ang - 90) * (20 * (1 - anim1));
+	GradLine line;
+
+	switch (mode)
+	{
+	case Player_ItemReflect:
+	case Player_ItemReflectSuper:
+	{
+		//三角形のグラデーション線を作成.
+		line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
+		line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim1)) });
+		line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
+	}
+	break;
+
+	case Player_Normal:
+	case Player_DashReflect:
+	{
+		//ダッシュ反射してたら色付き.
+		if (isDashReflect) {
+
+			//色の変化.
+			MY_COLOR color = {
+				_int_r(80 * (1 - anim2)),	//R
+				_int_r(255 - 200 * anim2),	//G
+				_int_r(255 * anim2),		//B
+				_int_r(255 * (1 - anim1))   //A(透明度)
+			};
+			//三角形のグラデーション線を作成.
+			line.AddPoint(pos2, color);
+			line.AddPoint(pos1, color);
+			line.AddPoint(pos3, color);
+		}
+		//してなければ通常カラー.
+		else {
+			//三角形のグラデーション線を作成.
+			line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+			line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
+			line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+		}
+	}
+	break;
+	}
+
+	line.Draw();
 }
