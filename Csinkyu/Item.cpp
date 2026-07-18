@@ -158,7 +158,7 @@ void ItemManager::ItemUse()
 	gameMng->ItemUsed();
 	//サウンド.
 	if (auto i = soundMng->Get(_T("ItemUse"))) {
-		i->Play(false, 76); //ポワーン.
+		i->Play(false, 70); //ポワーン.
 	}
 }
 

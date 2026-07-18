@@ -75,9 +75,9 @@ void GameManager::Init() {
 
 		//[KrLib] 動画.
 		GraphMng::SetPath(_T("Resources/Movies/"));	//共通パスの設定.
-		GraphMng::LoadMovie(_T("紹介動画.mp4"),			_T("menu_movie1"));
-		GraphMng::LoadMovie(_T("紹介動画.mp4"),			_T("menu_movie2"));
-		GraphMng::LoadMovie(_T("紹介動画.mp4"),			_T("menu_movie3"));
+		GraphMng::LoadMovie(_T("menu_movie_endless.mp4"),		_T("menu_movie1"));
+		GraphMng::LoadMovie(_T("menu_movie_tutorial.mp4"),		_T("menu_movie2"));
+		GraphMng::LoadMovie(_T("menu_movie_back_title.mp4"),	_T("menu_movie3"));
 
 		//[KrLib] サウンド.
 		soundMng->SetPath(_T("Resources/Sounds/"));	//共通パスの設定.
@@ -99,7 +99,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("se/audiostock_218404.mp3"),		_T("Laser3"));			//レーザー(反射)
 		soundMng->LoadFile(_T("se/audiostock_936158.mp3"),		_T("Ripples"));			//波紋.
 		soundMng->LoadFile(_T("se/fireworks.mp3"),				_T("Fireworks"));		//花火.
-		soundMng->LoadFile(_T("se/audiostock_104974.mp3"),		_T("Break"));			//隕石破壊.
+		soundMng->LoadFile(_T("se/audiostock_104974.mp3"),		_T("MeteorBreak"));			//隕石破壊.
 		soundMng->LoadFile(_T("se/audiostock_981051.mp3"),		_T("PlayerDeath"));
 		soundMng->LoadFile(_T("se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
 		soundMng->LoadFile(_T("se/audiostock_184924.mp3"),		_T("BestScore"));		//最高スコア更新.
@@ -196,7 +196,7 @@ void GameManager::Reset() {
 #if !defined BGM_NONE
 	//メニューBGMを流す.
 	if (auto i = soundMng->Get(_T("BGM_Menu"))) {
-		i->Play(true, 90);
+		i->Play(true, BGM_VOLUME_MENU);
 	}
 #endif
 

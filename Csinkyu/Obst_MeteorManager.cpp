@@ -173,7 +173,7 @@ void MeteorManager::BreakMeteor(DBL_XY pos, bool isScore, double scale) {
 	}
 
 	//ƒTƒEƒ“ƒh.
-	if (auto i = soundMng->Get(_T("Break"))) {
-		i->Play(false, 74); //Ä¶.
+	if (auto i = soundMng->Get(_T("MeteorBreak"))) {
+		i->Play(false, 65); //Ä¶.
 	}
 }

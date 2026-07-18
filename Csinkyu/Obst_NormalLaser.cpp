@@ -18,6 +18,7 @@ static LaserManager*  laserMng;
 static MeteorManager* meteorMng;
 static NormalLaser*   normalLaser;
 //参照(KRライブラリ)
+static SoundMng*      soundMng;
 static SceneMng*      sceneMng;
 
 using namespace Calc; //計算機能を使用.
@@ -38,17 +39,17 @@ DBL_XY NormalLaserPoint::GetVec() const {
 }
 
 void NormalLaserPoint::Reset() {
-	counter   = LASER_NOR_SHOT_START + 100;
-	counterTm = LASER_NOR_SHOT_START;
+
 	speed     = 3;
 	validFlag = false;
+
 	MoveRand();
 }
+
 void NormalLaserPoint::Update() {
 
 	//有効なもののみ.
 	if (validFlag) {
-		counter -= gameData->speedRate; //経過カウンター.
 
 		//移動(方向 * 速度 * 速度倍率)
 		pos += GetVec() * speed * gameData->speedRate;
@@ -67,63 +68,57 @@ void NormalLaserPoint::Update() {
 				move.dir = static_cast<MoveDir>((move.dir + 1) % MoveDir::Count); //右回り.
 			}
 		}
-
-		//タイミングが来たらレーザー発射.
-		if (counter <= counterTm)
-		{
-			//プレイヤー座標.
-			DBL_XY plyPos = player->GetPos();
-			//プレイヤー方向への初期角度計算.
-			double angle = atan2(plyPos.y - pos.y, plyPos.x - pos.x);
-			DBL_XY vel = { cos(angle), sin(angle) };
-
-			laserMng->SpawnLaser(pos, vel, Laser_Normal); //通常レーザー召喚.
-			normalLaser->CreateFlashEffect(pos.x, pos.y); //エフェクトを出す.
-
-			counterTm -= LASER_NOR_SHOT_SPAN; //次のレーザーを発射するタイミング.
-		}
-		//0を下回ったらタイマー再開.
-		if (counter <= 0) {
-			//発射開始時間 + 待機時間(待機時間は徐々に短くなる)
-			counter = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData->spawnRate;
-			//発射開始時間.
-			counterTm = LASER_NOR_SHOT_START;
-
-			MoveRand();
-		}
 	}
 }
-void NormalLaserPoint::Draw() {
 
+//予告描画.
+void NormalLaserPoint::DrawPrediction(float count) {
+
+	//有効なもののみ.
 	if (validFlag) {
 
-		//予告演出, 発射する前になる度に表示.
-		if (counter <= counterTm + 60) {
-			//点滅.
-			float blinkProgress = (60 - counter) / 60.0f; //0.0～1.0
-			int blinkAlpha = _int_r(128 + 127 * sin(blinkProgress * M_PI * 8));
+		//点滅.
+		float blinkProgress = (60 - count) / 60.0f; //0.0～1.0
+		int   blinkAlpha    = _int_r(128 + 127 * sin(blinkProgress * M_PI * 8));
 
-			//サイズを徐々に大きく.
-			float dotSize  = (float)(3 + AnimEase(EaseType::OutQuad, blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
-			float dotSize2 = (float)(3 + AnimEase(EaseType::OutQuad, blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
-			//円情報.
-			Circle cir = { pos, dotSize, COLOR_PRE_EFFECT, 1.0f };
+		//サイズを徐々に大きく.
+		float dotSize  = (float)(3 + AnimEase(EaseType::OutQuad, blinkProgress) * LASER_NOR_PRE_LASER1_SIZE);
+		float dotSize2 = (float)(3 + AnimEase(EaseType::OutQuad, blinkProgress) * LASER_NOR_PRE_LASER2_SIZE);
+		//円情報.
+		Circle cir = { pos, 0, COLOR_PRE_EFFECT, 1.0f };
 
-			//描画.
-			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, blinkAlpha,
-				[&]() {
+		//描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, blinkAlpha,
+			[&]() {
 
-					DrawCircleKR(cir, Anchor::Mid, false, true);
-					cir.r = dotSize2;
-					DrawCircleKR(cir, Anchor::Mid, false, true);
-				}
-			);
-		}
+				cir.r = dotSize;
+				DrawCircleKR(cir, Anchor::Mid, false, true);
+				cir.r = dotSize2;
+				DrawCircleKR(cir, Anchor::Mid, false, true);
+			}
+		);
 	}
 }
 
-//移動ランダム.
+//レーザー発射.
+void NormalLaserPoint::Shot() {
+
+	//有効なもののみ.
+	if (validFlag) {
+
+		//プレイヤー座標.
+		const DBL_XY plyPos = player->GetPos();
+		//プレイヤー方向への初期角度計算.
+		const double angle  = atan2(plyPos.y - pos.y, plyPos.x - pos.x);
+		const DBL_XY vel    = { cos(angle), sin(angle) };
+
+		laserMng->SpawnLaser(pos, vel, Laser_Normal); //通常レーザー召喚.
+		normalLaser->CreateFlashEffect(pos.x, pos.y); //エフェクトを出す.
+	}
+}
+
+//レーザー移動抽選.
 void NormalLaserPoint::MoveRand()
 {
 	//画面のどの辺にいくか.
@@ -163,13 +158,18 @@ void NormalLaser::Init(){
 	laserMng    = ManagerInsts::Get<LaserManager>();
 	meteorMng   = ManagerInsts::Get<MeteorManager>();
 	normalLaser = ManagerInsts::Get<NormalLaser>();
+	soundMng    = ManagerInsts::Get<SoundMng>();
 	sceneMng    = ManagerInsts::Get<SceneMng>();
 }
+
 //リセット.
 void NormalLaser::Reset()
 {
 	//自動実行設定.
 	SetAutoExeMode(MngAutoExe::Stop);
+
+	counter   = LASER_NOR_SHOT_START + 100;
+	counterTm = LASER_NOR_SHOT_START;
 
 	//発射台.
 	for (auto& i : points) {
@@ -180,16 +180,46 @@ void NormalLaser::Reset()
 		flash[i].validFlag = false; //全て無効に.
 	}
 }
+
 //更新.
 void NormalLaser::Update()
 {
 	//ゲーム中のみ.
 	if (sceneMng->GetSceneName() == _T("Game")) {
 
-		//発射台.
+		counter -= gameData->speedRate; //経過カウンター.
+
+		//発射台更新.
 		for (auto& i : points) {
 			i.Update();
 		}
+
+		//タイミングが来たらレーザー発射.
+		if (counter <= counterTm) {
+			//発射.
+			for (auto& i : points) {
+				i.Shot();
+			}
+			//効果音再生.
+			if (auto i = soundMng->Get(_T("Laser1"))) {
+				i->Play(false, 60);
+			}
+			//次のレーザーを発射するタイミング.
+			counterTm -= LASER_NOR_SHOT_SPAN;
+		}
+
+		//0を下回ったらタイマー再開.
+		if (counter <= 0) {
+			//発射開始時間 + 待機時間(待機時間は徐々に短くなる)
+			counter = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData->spawnRate;
+			//発射開始時間.
+			counterTm = LASER_NOR_SHOT_START;
+			//レーザー移動抽選.
+			for (auto& i : points) {
+				i.MoveRand();
+			}
+		}
+
 		//エフェクト.
 		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
 			//有効なら.
@@ -199,12 +229,16 @@ void NormalLaser::Update()
 		}
 	}
 }
+
 //描画.
 void NormalLaser::Draw()
 {
-	//レーザー発射前の予告●を描画.
-	for (auto& i : points) {
-		i.Draw();
+	//レーザー発射前なら.
+	if (counter <= counterTm + 60) {
+		//予告を出す.
+		for (auto& i : points) {
+			i.DrawPrediction(counter);
+		}
 	}
 
 	DrawObstFlash(); //発射エフェクトの描画.

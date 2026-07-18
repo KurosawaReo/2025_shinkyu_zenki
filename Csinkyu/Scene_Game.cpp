@@ -154,7 +154,7 @@ void GameScene::UpdateReflectMode() {
 				//3•bˆÈ‰º‚É‚È‚Á‚½‚Î‚©‚è‚Ì.
 				if (tmReflectMode.GetPassTime() <= 3) {
 					if (auto i = soundMng->Get(_T("CountDown"))){
-						i->Play(false, 78); //Ä¶.
+						i->Play(false, 70); //Ä¶.
 					}
 					itemSoundCnt++; //Ÿ‚Ö.
 				}
@@ -163,7 +163,7 @@ void GameScene::UpdateReflectMode() {
 				//2•bˆÈ‰º‚É‚È‚Á‚½‚Î‚©‚è‚Ì.
 				if (tmReflectMode.GetPassTime() <= 2) {
 					if (auto i = soundMng->Get(_T("CountDown"))) {
-						i->Play(false, 78); //Ä¶.
+						i->Play(false, 70); //Ä¶.
 					}
 					itemSoundCnt++; //Ÿ‚Ö.
 				}
@@ -172,7 +172,7 @@ void GameScene::UpdateReflectMode() {
 				//1•bˆÈ‰º‚É‚È‚Á‚½‚Î‚©‚è‚Ì.
 				if (tmReflectMode.GetPassTime() <= 1) {
 					if (auto i = soundMng->Get(_T("CountDown"))) {
-						i->Play(false, 78); //Ä¶.
+						i->Play(false, 70); //Ä¶.
 					}
 					itemSoundCnt++; //Ÿ‚Ö.
 				}

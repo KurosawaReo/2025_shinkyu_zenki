@@ -76,6 +76,10 @@ enum StageType
 #define SLOW_MODE_DIS_LEN				(50)			//スローになるプレイヤーとレーザーの距離範囲.
 #define SLOW_MODE_BUF_F                 (30)            //スローが継続するフレーム数.
 
+#define BGM_VOLUME_MENU					(90)			//メニューBGMの音量.
+#define BGM_VOLUME_ENDLESS				(65)			//エンドレスモードBGMの音量.
+#define BGM_VOLUME_TUTORIAL				(65)			//チュートリアルモードBGMの音量.
+
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
 //プレイヤー.

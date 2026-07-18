@@ -181,7 +181,7 @@ void Player::UpdateDash()
 			{
 				//ダッシュ音再生.
 				if (auto i = soundMng->Get(_T("PlayerDash"))) {
-					i->Play(false, 60); //再生.
+					i->Play(false, 50); //再生.
 				}
 				dashTimer    = PLAYER_DASH_DURATION;
 				dashCooldown = PLAYER_DASH_COOLDOWN;
@@ -255,7 +255,7 @@ void Player::Death() {
 
 	//サウンド.
 	if (auto i = soundMng->Get(_T("PlayerDeath"))) {
-		i->Play(false, 80); //再生.
+		i->Play(false, 70); //再生.
 	}
 	//エフェクト.
 	EffectData data{};

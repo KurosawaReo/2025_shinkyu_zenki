@@ -296,18 +296,6 @@ void LaserManager::SpawnLaser(DBL_XY pos, DBL_XY vel, LaserType type) {
 	tmp.isGoTarget = false;
 
 	laser.push_back(tmp); //listに追加.
-
-	//サウンド.
-	if (type == Laser_Normal) {
-		if (auto i = soundMng->Get(_T("Laser1"))) {
-			i->Play(false, 58); //通常レーザー.
-		}
-	}
-	if (type == Laser_Straight) {
-		if (auto i = soundMng->Get(_T("Laser2"))) {
-			i->Play(false, 60); //直線レーザー.
-		}
-	}
 }
 
 //次のレーザーへ.

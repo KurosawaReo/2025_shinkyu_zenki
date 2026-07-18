@@ -89,7 +89,7 @@ void MenuScene::Update() {
 				MY_STRING bgmName = gameMng->GetGameSceneBgm();
 				//BGMを再生.
 				if (auto i = soundMng->Get(bgmName)) {
-					i->Play(true, 70); //再生.
+					i->Play(true, BGM_VOLUME_ENDLESS); //再生.
 				}
 #endif
 			}
@@ -102,11 +102,12 @@ void MenuScene::Update() {
 				gameData->stage = Stage_Tutorial;
 				//背景変更.
 				bgMng->SetBgNo(1);
+
 #if !defined BGM_NONE
 				//BGM.
 				soundMng->StopAll();
 				if (auto i = soundMng->Get(_T("BGM_Tutorial"))) {
-					i->Play(true, 70); //再生.
+					i->Play(true, BGM_VOLUME_TUTORIAL); //再生.
 				}
 #endif
 			}
@@ -251,7 +252,7 @@ void MenuScene::Draw() {
 	{
 		//基準座標.
 		DBL_XY base = mLayout.menuPos + DBL_XY(
-			-mLayout.menuSize.x/2 - 20,			//横にずらす.
+			-mLayout.menuSize.x/2 - 20,		//横にずらす.
 			+mLayout.menuSpace * cursorIdx	//縦にずらす.
 		);
 
@@ -263,9 +264,9 @@ void MenuScene::Draw() {
 	//画像サイズ保存用.
 	DBL_XY imgSize;
 
-	//▼サムネ画像.
+	//▼サムネ.
 	{
-		const double extend = 0.4; //画像描画倍率.
+		const double extend = 0.7; //画像描画倍率.
 		const int    margin = 10;  //枠を画像よりどれだけ大きくするか.
 	
 		//画像を取得できたら.

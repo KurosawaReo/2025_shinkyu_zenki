@@ -16,12 +16,12 @@
 //メニュー設定(レイアウト)
 struct MenuLayout
 {
-	DBL_XY   menuPos       = {370, 280};					//モード枠の位置.
-	DBL_XY   menuSize      = {400,  70};					//モード枠のサイズ.
-	int      menuSpace     = 100;							//モード枠の配置間隔.
-	int      loreInner     = 15;							//説明文が内側にどれだけずれるか.
-	int      loreLineSpace = 30;							//説明文の行間.
-	DBL_XY   imgPos        = {WINDOW_WID-510, 410};			//サムネ画像の基準位置.
+	DBL_XY   menuPos       = {370, 280};			//モード枠の位置.
+	DBL_XY   menuSize      = {400,  70};			//モード枠のサイズ.
+	int      menuSpace     = 100;					//モード枠の配置間隔.
+	int      loreInner     = 15;					//説明文が内側にどれだけずれるか.
+	int      loreLineSpace = 30;					//説明文の行間.
+	DBL_XY   imgPos        = {WINDOW_WID-560, 410};	//サムネの基準位置.
 };
 //メニュー設定(色)
 struct MenuColor 
