@@ -47,8 +47,6 @@ public:
 
 //▼ ===== 変数 ===== ▼.
 private:
-	Font      fontMenu[2]{};  //メニュー用フォント.
-
 	int       cursorIdx = 0;  //カーソルの選択位置.
 	float     counter = 0;    //経過時間.
 

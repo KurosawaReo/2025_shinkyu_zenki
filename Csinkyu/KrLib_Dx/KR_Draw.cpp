@@ -46,8 +46,8 @@ namespace KR
 		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos.ToDbl()) : pos.ToDbl();
 
 		//基準点に座標をずらす.
-		int x = _int_r(newPos.x - (GetTextSize(font).x-1) * ANCHOR_POS[_int(anc)].x);
-		int y = _int_r(newPos.y - (GetTextSize(font).y-1) * ANCHOR_POS[_int(anc)].y);
+		int x = _int_r(newPos.x - (GetTextSize(text, font).x-1) * ANCHOR_POS[_int(anc)].x);
+		int y = _int_r(newPos.y - (GetTextSize(text, font).y-1) * ANCHOR_POS[_int(anc)].y);
 
 		//デフォルトフォント.
 		if (font < 0) {
@@ -136,9 +136,32 @@ namespace KR
 		}
 	}
 
+// ▼*--=<[ Font ]>=--*▼ //
+
+	//コンストラクタ, デストラクタ.
+	Font::Font() {
+		handle = NONE_HANDLE;
+	}
+	Font::~Font() {
+		//ハンドルがあれば.
+		if (handle != NONE_HANDLE) {
+			DeleteFontToHandle(handle); //解放.
+		}
+	}
+	//フォント作成.
+	void Font::Create(MY_STRING fontName, int size, int thick, FontTypeID id) {
+		handle = CreateFontToHandle(fontName.c_str(), size, thick, _int(id));
+	}
+
+// ▼*--=<[ DrawMode ]>=--*▼ //
+
+	DrawMode DrawMode::inst;
+
+// ▼*--=<[ function ]>=--*▼ //
+
 	//テキストのサイズ取得.
-	INT_XY DrawStr::GetTextSize(int font) {
-	
+	INT_XY GetTextSize(MY_STRING text, int font) {
+
 		INT_XY size{};
 
 		TCHAR name[256]{}; //無視.
@@ -157,25 +180,4 @@ namespace KR
 
 		return size;
 	}
-
-// ▼*--=<[ Font ]>=--*▼ //
-
-	//コンストラクタ, デストラクタ.
-	Font::Font() {
-		handle = NONE_HANDLE;
-	}
-	Font::~Font() {
-		//ハンドルがあれば.
-		if (handle != NONE_HANDLE) {
-			DeleteFontToHandle(handle); //解放.
-		}
-	}
-	//フォント作成.
-	void Font::CreateFontH(MY_STRING fontName, int size, int thick, FontTypeID fontId) {
-		handle = CreateFontToHandle(fontName.c_str(), size, thick, _int(fontId));
-	}
-
-// ▼*--=<[ DrawMode ]>=--*▼ //
-
-	DrawMode DrawMode::inst;
 }

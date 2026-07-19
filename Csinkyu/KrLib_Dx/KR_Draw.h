@@ -16,12 +16,12 @@ namespace KR
 	//フォントタイプID(入力しやすくする用)
 	enum class FontTypeID
 	{
-		Normal   = DX_FONTTYPE_NORMAL,
-		Edge     = DX_FONTTYPE_EDGE,
-		Anti     = DX_FONTTYPE_ANTIALIASING,      //アンチエイリアス(滑らかになる)
-		AntiEdge = DX_FONTTYPE_ANTIALIASING_EDGE, //アンチエイリアス & エッジ.
+		Normal      = DX_FONTTYPE_NORMAL,
+		Edge        = DX_FONTTYPE_EDGE,
+		Anti        = DX_FONTTYPE_ANTIALIASING,      //アンチエイリアス(滑らかになる)
+		AntiEdge    = DX_FONTTYPE_ANTIALIASING_EDGE, //アンチエイリアス & エッジ.
 
-		None     = -1, //指定なし.
+		None        = -1, //指定なし.
 	};
 	//描画モードID(入力しやすくする用)
 	enum class DrawModeID
@@ -42,7 +42,7 @@ namespace KR
 	//アンカー(描画の基準点)
 	enum class Anchor
 	{
-		LU,	U,   RU, //[例] Anchor::LU = Left Up.
+		LU,	U,   RU, //[例] Anchor::LU = 左上(Left Up)
 		L,  Mid, R,
 		LD,	D,   RD,
 	};
@@ -59,11 +59,9 @@ namespace KR
 		DrawStr(MY_STRING _text, INT_XY _pos, MY_COLOR _color) : text(_text), pos(_pos), color(_color) {}
 
 		//描画.
-		void   Draw	   (                                                                         Anchor anc = Anchor::Mid, int font = -1, bool isCameraDisp = true);
-		void   DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical,                                          int font = -1, bool isCameraDisp = true);
-		void   DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical,                           int font = -1, bool isCameraDisp = true);
-		//その他.
-		INT_XY GetTextSize(int font = -1);
+		void Draw	 (                                                                         Anchor anc = Anchor::Mid, int font = -1, bool isCameraDisp = true);
+		void DrawRota(INT_XY extend, INT_XY pivot, double ang, bool isVertical,                                          int font = -1, bool isCameraDisp = true);
+		void DrawModi(INT_XY luPos, INT_XY ruPos, INT_XY rdPos, INT_XY ldPos, bool isVertical,                           int font = -1, bool isCameraDisp = true);
 	};
 
 	//フォントクラス.
@@ -77,9 +75,10 @@ namespace KR
 		Font();
 		~Font();
 		//get.
-		int  GetFont() const { return handle; }
+		int GetFont() const { return handle; }
+
 		//フォント作成.
-		void CreateFontH(MY_STRING fontName, int size, int thick, FontTypeID fontId = FontTypeID::None);
+		void Create(MY_STRING fontName, int size, int thick, FontTypeID id = FontTypeID::None);
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		Font& operator=(const Font&) = delete;
@@ -122,4 +121,7 @@ namespace KR
 			SetDrawBlendMode(oldMode2, oldMode2Param);
 		}
 	};
+
+	//テキストのサイズ取得.
+	INT_XY GetTextSize(MY_STRING text, int font = -1);
 }

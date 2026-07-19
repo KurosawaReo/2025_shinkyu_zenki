@@ -102,7 +102,7 @@ void Player::Draw()
 	//無敵モード表示.
 	if (isDebug) {
 		DrawStr str(_T("[Debug] 無敵モード"), {WINDOW_WID/2, WINDOW_HEI/2+300}, COLOR_PLY_DEBUG);
-		str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont());
+		str.Draw(Anchor::Mid, gameData->fonts["jp-size3"].GetFont());
 	}
 #endif
 

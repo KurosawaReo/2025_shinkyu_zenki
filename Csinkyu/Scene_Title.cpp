@@ -57,25 +57,26 @@ void TitleScene::Draw() {
 	//操作方法明記.
 	DrawStr howPlay(_T(""), { 30, WINDOW_HEI - 30 }, 0x00FFFF);
 	{
-		const int fontH = gameData->fonts["size18"].GetFont();
+		const int font = gameData->fonts["jp-size1"].GetFont();
 
 #if defined INPUT_CHANGE_ARCADE
 		howPlay.text = _T("アーケード操作");
 #else
 		howPlay.text = _T("コントローラ操作");
 #endif
-		howPlay.Draw(Anchor::LD, fontH);
+		howPlay.Draw(Anchor::LD, font);
 
 		//枠線グラデーション.
-		const DBL_XY howPlayPos = howPlay.pos.ToDbl();
-		const DBL_XY howPlaySize = howPlay.GetTextSize(fontH).ToDbl();
-		const int margin = 5;
+		const DBL_XY howPlayPos  = howPlay.pos.ToDbl();
+		const DBL_XY howPlaySize = GetTextSize(howPlay.text, font).ToDbl();
+		const DBL_XY offset      = {0, 1};
+		const int    margin      = 6;
 
 		GradLine line;
-		line.AddPoint(howPlayPos + DBL_XY(-margin, margin),                                 { 0, 255, 255 });
-		line.AddPoint(howPlayPos + DBL_XY(howPlaySize.x + margin, margin),                  { 0, 100, 255 });
-		line.AddPoint(howPlayPos + DBL_XY(howPlaySize.x + margin, -howPlaySize.y - margin), { 0, 255, 255 });
-		line.AddPoint(howPlayPos + DBL_XY(-margin, -howPlaySize.y - margin),                { 0, 100, 255 });
+		line.AddPoint(howPlayPos + offset + DBL_XY(-margin, margin),                                 { 0, 255, 255 });
+		line.AddPoint(howPlayPos + offset + DBL_XY(howPlaySize.x + margin, margin),                  { 0, 100, 255 });
+		line.AddPoint(howPlayPos + offset + DBL_XY(howPlaySize.x + margin, -howPlaySize.y - margin), { 0, 255, 255 });
+		line.AddPoint(howPlayPos + offset + DBL_XY(-margin, -howPlaySize.y - margin),                { 0, 100, 255 });
 		line.Draw(true);
 	}
 
@@ -139,13 +140,13 @@ void TitleScene::Draw() {
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
-		DrawStr str(text, { WINDOW_WID / 2, drawY + 1 }, COLOR_BEST_SCORE);
+		DrawStr str(text, { WINDOW_WID / 2, drawY }, COLOR_BEST_SCORE);
 
 		//描画.
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim1),
 			[&]() {
-				str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont()); //スコア値.
+				str.Draw(Anchor::Mid, gameData->fonts["en-size3"].GetFont()); //スコア値.
 			}
 		);
 		DrawMode::Exe(
@@ -167,12 +168,12 @@ void TitleScene::Draw() {
 		//アニメーション値.
 		double anim = Calc::AnimWave(WaveType::CosLoop, timer.GetPassTime() - delay4);
 		//テキスト.
-		DrawStr str(_T("Push SPACE or Ⓐ"), { WINDOW_WID / 2 - 5, drawY }, 0xFFFFFF);
+		DrawStr str(_T("Push [SPACE] [A Button]"), { WINDOW_WID / 2, drawY }, 0xFFFFFF);
 		//描画.
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim),
 			[&]() {
-				str.Draw(Anchor::Mid, gameData->fonts["size26"].GetFont()); //テキスト.
+				str.Draw(Anchor::Mid, gameData->fonts["en-size2"].GetFont()); //テキスト.
 			}
 		);
 	}

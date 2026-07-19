@@ -52,9 +52,6 @@ void TutorialStage::Init() {
 	soundMng	 = ManagerInsts::Get<SoundMng>();
 	sceneMng	 = ManagerInsts::Get<SceneMng>();
 
-	font[0].CreateFontH(_T(""), 25, 1, FontTypeID::Anti);
-	font[1].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
-
 	//タイマー
 	startTimer = Timer(TimerMode::CountUp, 0);
 	endTimer   = Timer(TimerMode::CountUp, 0);
@@ -599,14 +596,18 @@ void TutorialStage::DrawTopText(int line, MY_STRING text, double alpha) {
 			str.color = {255, 255, 255};
 			break;
 	}
+
 	//フォント.
-	const int useFont = (line == 1) ? font[1].GetFont() : font[0].GetFont();
+	const int useFont = (line == 1) ? gameData->fonts["jp-size3"].GetFont() : gameData->fonts["jp-size2"].GetFont();
 
 	{
 		const int margin = 24;
-		DBL_XY pos  = (str.pos - str.GetTextSize(useFont)/2).ToDbl() + DBL_XY(-margin/2, -margin/2);
-		DBL_XY size = (str.GetTextSize(useFont) + margin).ToDbl();
-		Box    box  = {pos, size, 0x000000, 1.0f};
+		//テキストサイズ.
+		const INT_XY textSize = GetTextSize(str.text, useFont);
+
+		const DBL_XY pos  = (str.pos - textSize/2).ToDbl() + DBL_XY(-margin/2, -margin/2);
+		const DBL_XY size = (textSize + margin).ToDbl();
+		const Box    box  = {pos, size, 0x000000, 1.0f};
 
 		//枠背景.
 		DrawMode::Exe(

@@ -150,12 +150,21 @@ void GameManager::Init() {
 	sceneMng->AddScene(&gameScene,  _T("Game"));
 	sceneMng->AddScene(&endScene,   _T("End"));
 
-	//フォント.
-	gameData->fonts["size18"].CreateFontH(_T(""), 20, 1, FontTypeID::Anti);
-	gameData->fonts["size26"].CreateFontH(_T(""), 26, 1, FontTypeID::Anti);
-	gameData->fonts["size30"].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
-	gameData->fonts["size35"].CreateFontH(_T(""), 35, 1, FontTypeID::Anti);
-	gameData->fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
+	//フォント作成.
+	{
+		AddFontFile(_T("Resources/Fonts/Oxanium-VariableFont_wght.ttf"));
+		AddFontFile(_T("Resources/Fonts/MPLUSRounded1c-Regular.ttf"));
+
+		gameData->fonts["jp-size1"].Create(_T("Rounded Mplus 1c"), 18, 1, FontTypeID::Anti);
+		gameData->fonts["jp-size2"].Create(_T("Rounded Mplus 1c"), 23, 1, FontTypeID::Anti);
+		gameData->fonts["jp-size3"].Create(_T("Rounded Mplus 1c"), 30, 1, FontTypeID::Anti);
+		gameData->fonts["jp-size4"].Create(_T("Rounded Mplus 1c"), 35, 1, FontTypeID::Anti);
+		gameData->fonts["en-size1"].Create(_T("Oxanium ExtraLight"), 20, 1, FontTypeID::Anti);
+		gameData->fonts["en-size2"].Create(_T("Oxanium ExtraLight"), 26, 1, FontTypeID::Anti);
+		gameData->fonts["en-size3"].Create(_T("Oxanium ExtraLight"), 30, 1, FontTypeID::Anti);
+		gameData->fonts["en-size4"].Create(_T("Oxanium ExtraLight"), 32, 1, FontTypeID::Anti);
+		gameData->fonts["en-size5"].Create(_T("Oxanium ExtraLight"), 40, 1, FontTypeID::Anti);
+	}
 
 	//[score.data]
 	File file;
@@ -286,7 +295,7 @@ void GameManager::GamePauseEnd() {
 void GameManager::DrawPause() {
 
 	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
-	str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont());
+	str.Draw(Anchor::Mid, gameData->fonts["en-size5"].GetFont());
 }
 
 //ゲーム終了(死亡)

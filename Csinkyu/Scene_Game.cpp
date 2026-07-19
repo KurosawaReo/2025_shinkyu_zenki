@@ -211,7 +211,7 @@ void GameScene::DrawReflectMode() {
 					}
 					//ç≈å„ÇÃ3ïb.
 					if (tmReflectMode.GetPassTime() <= 3) {
-						str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont()); //êîéö.
+						str.Draw(Anchor::Mid, gameData->fonts["en-size5"].GetFont()); //êîéö.
 					}
 				}
 			);

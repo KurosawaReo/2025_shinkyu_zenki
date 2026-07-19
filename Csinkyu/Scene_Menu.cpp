@@ -27,10 +27,6 @@ void MenuScene::Init() {
 	inputMng = ManagerInsts::Get<InputMng>();
 	sceneMng = ManagerInsts::Get<SceneMng>();
 
-	//フォント作成.
-	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Anti);
-	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Anti);
-
 	Reset();
 }
 
@@ -155,9 +151,10 @@ void MenuScene::Draw() {
 	);
 	//▼メニュータイトル.
 	{
-		//基準地.
+		//基準位置.
 		const DBL_XY basePos = { WINDOW_WID / 2, 80 };
 
+		//三角形演出1.
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim4),
 			[&]() {
@@ -175,7 +172,7 @@ void MenuScene::Draw() {
 				}
 			}
 		);
-
+		//三角形演出2.
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim6),
 			[&]() {
@@ -194,18 +191,25 @@ void MenuScene::Draw() {
 			}
 		);
 
-		DrawStr str(_T("モード選択"), basePos.ToInt(), 0x00FFFF);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+		const INT_XY offset = { 0, -1 };
+
+		//テキスト描画.
+		DrawStr str(_T("モード選択"), basePos.ToInt() + offset, 0x00FFFF);
+		str.Draw(Anchor::Mid, gameData->fonts["jp-size4"].GetFont());
 	}
 
 	//▼各選択肢.
 	{
+		const INT_XY offset = {0, -1};
+
 		//テキスト & 枠線用.
-		Box box = { mLayout.menuPos, mLayout.menuSize, mColor.select1, 1.0f };
-		DrawStr str(_T(""), mLayout.menuPos.ToInt(), {});
+		Box     box = { mLayout.menuPos, mLayout.menuSize, mColor.select1, 1.0f };
+		DrawStr str = { _T(""), mLayout.menuPos.ToInt() + offset, {}};
 		//選択肢テキスト.
 		MY_STRING texts[] = {
-			_T("ゲーム開始"), _T("チュートリアル"), _T("タイトルに戻る")
+			_T("ゲーム開始"), 
+			_T("チュートリアル"), 
+			_T("タイトルに戻る")
 		};
 		//テキスト色.
 		unsigned int colors[] = {
@@ -236,7 +240,7 @@ void MenuScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 				[&]() {
-					str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+					str.Draw(Anchor::Mid, gameData->fonts["jp-size4"].GetFont());
 				}
 			);
 
@@ -352,27 +356,31 @@ void MenuScene::Draw() {
 		int infoX = _int_r(mLayout.menuPos.x - _dbl(infoWidth)/2);
 		int infoY = textBoxY;
 
-		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1, 1.0f };
-		DrawStr str = { _T(""), INT_XY(infoX, infoY) + mLayout.loreInner, mColor.normal };
+		Box box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1, 1.0f };
 
 		DrawStr str2(_T("操作"), { infoX + 10, infoY - 10 }, 0x00FFFF);
-		str2.Draw(Anchor::LD, fontMenu[0].GetFont());
+		str2.Draw(Anchor::LD, gameData->fonts["jp-size2"].GetFont());
 
 		DrawBoxKR(box, Anchor::LU, false);
 
-		str.text = _T("選択: ↑↓ or W/S");
-		str.Draw(Anchor::LU, fontMenu[0].GetFont());
+		DrawStr str = { _T(""), INT_XY(infoX, infoY) + mLayout.loreInner, mColor.normal };
 
-		str.pos.y += mLayout.loreLineSpace; //次の行へ.
-		str.pos.y += mLayout.loreLineSpace; //次の行へ.
-		str.text = _T("決定: SPACE/ENTER/Ⓐ");
-		str.Draw(Anchor::LU, fontMenu[0].GetFont());
+		MY_STRING texts[] = {
+			_T("選択: ↑/↓/W/S"),
+			_T("決定: SPACE/ENTER/Aボタン"),
+		};
+		//1行ずつ表示.
+		for (auto& i : texts) {
+			str.text = i;
+			str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+		}
 	}
 
 	//▼モード説明タイトル（説明文枠の上に表示）
 	{
 		DrawStr str2(_T("モード説明"), { textBoxX+10, textBoxY-10 }, 0x00FFFF);
-		str2.Draw(Anchor::LD, fontMenu[0].GetFont());
+		str2.Draw(Anchor::LD, gameData->fonts["jp-size2"].GetFont());
 
 		// 説明文枠の枠線（水色）	
 		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), mColor.frame, 1.0f };
@@ -386,18 +394,18 @@ void MenuScene::Draw() {
 			case 0:
 			{
 				MY_STRING texts[] = {
-					_T("ゲームオーバーになるまで続くエンドレスモード。"),
-					_T("ハイスコアを目指して頑張ろう！"),
+					_T("ゲームオーバーになるまで続くエンドレスモードです。"),
+					_T("ハイスコアを目指しましょう！"),
 					_T(""),
 					_T("[スコア]"),
-					_T("隕石を壊す　　: +500"),
+					_T("隕石を破壊　　: +500"),
 					_T("アイテムを取る: +100"),
-					_T("タイムボーナス: 1秒ごとに +10")
+					_T("タイムボーナス: 1秒ごとに+10")
 				};
 				//1行ずつ表示.
 				for (auto& i : texts) {
 					str.text = i;
-					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
 					str.pos.y += mLayout.loreLineSpace; //次の行へ.
 				}
 			}
@@ -406,18 +414,18 @@ void MenuScene::Draw() {
 			case 1:
 			{
 				MY_STRING texts[] = {
-					_T("基本操作とルールを確認できます。"),
-					_T("STEP1～4まであり、目安は数分で終わります。"),
+					_T("基本操作やルールを確認できます。"),
+					_T("初めて遊ぶ方におすすめです。"),
 					_T(""),
-					_T("STEP1: 基本について"),
-					_T("STEP2: アイテムについて"),
-					_T("STEP3: 反射について"),
-					_T("STEP4: スコアについて")
+					_T("STEP1: 基本操作"),
+					_T("STEP2: アイテム"),
+					_T("STEP3: 反射"),
+					_T("STEP4: スコア")
 				};
 				//1行ずつ表示.
 				for (auto& i : texts) {
 					str.text = i;
-					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
 					str.pos.y += mLayout.loreLineSpace; //次の行へ.
 				}
 			}
@@ -425,7 +433,7 @@ void MenuScene::Draw() {
 
 		case 2:
 			str.text = _T("タイトル画面に戻ります。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
 			break;
 		}
 	}

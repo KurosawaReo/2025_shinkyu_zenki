@@ -170,6 +170,7 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR mainColor) {
         line.color = mainColor;
         line.thick = thick;
 
+        //“§–¾“x‚ðŒvŽZ(‰œ‚Ù‚Ç”–‚­‚·‚é)
         const double alpha = 255 * (1.0 - i.z / Z_MAX) * modeAlpha;
 
         DrawMode::Exe(
@@ -194,12 +195,14 @@ void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
         double scale = FOV / h.z;
 
         double radius = scale * 80;
-
-        if (radius < 3)
+        if (radius < 3) {
             continue;
+        }
 
+        //ƒ|ƒŠƒSƒ“‚Ìì¬.
         KR::Polygon poly;
         poly.color = color;
+        poly.thick = 2;
 
         for (int i = 0; i < 6; i++)
         {
@@ -211,9 +214,8 @@ void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
             poly.points.push_back({x, y});
         }
 
+        //“§–¾“x‚ðŒvŽZ(‰œ‚Ù‚Ç”–‚­‚·‚é)
         const double alpha = 80 * (1.0 - h.z / Z_MAX) * modeAlpha;
-
-        poly.thick = 2;
 
         DrawMode::Exe(
             DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha),
