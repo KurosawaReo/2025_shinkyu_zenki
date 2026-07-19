@@ -1,9 +1,8 @@
 /*
    - KR_DrawShape.h - (DxLib)
-   ver.2026/06/13
+   ver.2026/07/19
 
-   図形や画像の描画機能。
-   (オブジェクト指向ver → KR_Object)
+   図形描画に関する機能。
 */
 #pragma once
 //[include] KR_Global.
@@ -16,6 +15,19 @@
 //KrLib名前空間.
 namespace KR
 {
+	//グラデーション線.
+	class GradLine
+	{
+	private:
+		vector<VERTEX2D> points; //頂点データ.
+
+	public:
+		//頂点追加.
+		void AddPoint(DBL_XY pos, MY_COLOR color);
+		//描画.
+		void Draw(bool isClose = false, bool isCameraDisp = true);
+	};
+
 	void DrawPixelKR	 (DBL_XY pos, MY_COLOR color,                                                                       bool isCameraDisp = true);
 	void DrawCircleKR	 (const Circle&     cir,    Anchor anc = Anchor::Mid, bool isFill = true,      bool isAnti = false, bool isCameraDisp = true);
 	void DrawBoxKR		 (const Box&        box,    Anchor anc = Anchor::Mid, bool isFill = true,      bool isAnti = false, bool isCameraDisp = true);

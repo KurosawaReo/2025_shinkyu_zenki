@@ -11,12 +11,9 @@ class BGManager final : public ManagerBase
 {
 //¥ ===== •Ï” ===== ¥.
 private:
-	float counter{}; //Œo‰ßŠÔ.
+	vector<unique_ptr<BGBase>> bg; //”wŒiƒNƒ‰ƒX”z—ñ.
 
-	int   useBgNo{}; //‰½”Ô–Ú‚Ì”wŒi‚ğg‚¤‚©.
-	BG1   bg1{};     //”wŒi1.
-	BG2   bg2{};     //”wŒi2.
-	BG3   bg3{};     //”wŒi3.
+	int useBgNo{}; //‰½”Ô–Ú‚Ì”wŒi‚ğg‚¤‚©.
 
 //¥ ===== ŠÖ” ===== ¥.
 public:
@@ -25,8 +22,6 @@ public:
 
 	//set.
 	void  SetBgNo(int _no) { useBgNo = _no; }
-	//get.
-	float GetCounter() const { return counter; }
 
 	void  Init()   override;
 	void  Reset()  override;

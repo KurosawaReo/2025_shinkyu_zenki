@@ -86,7 +86,9 @@ void MeteorManager::Update() {
 	//タイマーが0になったら.
 	else {
 		SpawnMeteor(); //隕石生成.
-		timer = METEOR_SPAWN_SPAN * gameData->spawnRate; //タイマー再開(徐々に短くなる)
+
+		//次に出現するまでの時間(徐々に短くなる)
+		timer = METEOR_SPAWN_SPAN * gameData->spawnRate * gameData->spawnRate;
 	}
 
 	//全隕石ループ.
@@ -102,7 +104,7 @@ void MeteorManager::Update() {
 	}
 	//プレイヤーとの当たり判定.
 	if (GetHitMeteor(player->GetHit(), false)) {
-		player->PlayerDeath(); //死亡.
+		player->Death(); //死亡.
 	}
 }
 
@@ -173,7 +175,7 @@ void MeteorManager::BreakMeteor(DBL_XY pos, bool isScore, double scale) {
 	}
 
 	//サウンド.
-	if (auto i = soundMng->Get(_T("Break"))) {
-		i->Play(false, 74); //再生.
+	if (auto i = soundMng->Get(_T("MeteorBreak"))) {
+		i->Play(false, 65); //再生.
 	}
 }

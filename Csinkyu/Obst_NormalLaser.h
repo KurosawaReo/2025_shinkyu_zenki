@@ -41,8 +41,6 @@ private:
 	DBL_XY   pos{};       //位置.
 	MoveInfo move{};      //移動データ.
 	float    speed{};     //移動速度.
-	float    counter{};   //経過カウンター.
-	float    counterTm{}; //発射するタイミング.
 	bool	 validFlag{}; //有効フラグ.
 
 public:
@@ -53,9 +51,11 @@ public:
 
 	void Reset();
 	void Update();
-	void Draw();
 
-	void MoveRand(); //移動方向抽選.
+	void DrawPrediction(float count); //予告描画.
+	
+	void Shot();					//レーザー発射.
+	void MoveRand();				//レーザー移動抽選.
 };
 
 //通常レーザー.
@@ -65,6 +65,10 @@ class NormalLaser final : public ManagerBase
 private:
 	NormalLaserPoint points[4]{}; //レーザー発射台.
 	FlashEffect flash[LASER_NOR_FLASH_MAX]{};
+
+	float counter{};   //経過カウンター.
+	float counterTm{}; //発射するタイミング.
+
 
 //▼ ===== 変数 ===== ▼.
 public:

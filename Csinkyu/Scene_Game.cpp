@@ -54,7 +54,7 @@ void GameScene::Enter() {
 
 	//プレイヤーが死亡していたら.
 	if (!player->GetActive()) {
-		player->PlayerRevival(); //復活.
+		player->Revival(); //復活.
 	}
 
 	//まだ動いてなければ.
@@ -67,13 +67,11 @@ void GameScene::Enter() {
 void GameScene::Exit() {
 	//チュートリアル以外のみ.
 	if (gameData->stage != Stage_Tutorial) {
+
 		itemSoundCnt = 0;
 		timer.Stop();          //演出用タイマー停止.
 		tmGameTime.Stop();     //ゲーム時間停止.
 		tmReflectMode.Reset(); //反射モードリセット.
-
-		//オブジェクトの動作停止.
-		gameMng->DrawOnlyObjects();
 	}
 }
 
@@ -120,6 +118,7 @@ void GameScene::Pause() {
 	tmGameTime.Pause();
 	tmReflectMode.Pause();
 }
+
 //ポーズ解除.
 void GameScene::PauseEnd() {
 	//稼働中だったタイマーは再開.
@@ -154,7 +153,7 @@ void GameScene::UpdateReflectMode() {
 				//3秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 3) {
 					if (auto i = soundMng->Get(_T("CountDown"))){
-						i->Play(false, 78); //再生.
+						i->Play(false, 70); //再生.
 					}
 					itemSoundCnt++; //次へ.
 				}
@@ -163,7 +162,7 @@ void GameScene::UpdateReflectMode() {
 				//2秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 2) {
 					if (auto i = soundMng->Get(_T("CountDown"))) {
-						i->Play(false, 78); //再生.
+						i->Play(false, 70); //再生.
 					}
 					itemSoundCnt++; //次へ.
 				}
@@ -172,7 +171,7 @@ void GameScene::UpdateReflectMode() {
 				//1秒以下になったばかりの時.
 				if (tmReflectMode.GetPassTime() <= 1) {
 					if (auto i = soundMng->Get(_T("CountDown"))) {
-						i->Play(false, 78); //再生.
+						i->Play(false, 70); //再生.
 					}
 					itemSoundCnt++; //次へ.
 				}
@@ -208,11 +207,11 @@ void GameScene::DrawReflectMode() {
 				[&]() {
 					//最初の1秒.
 					if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME - 1) {
-						DrawImgMng::Get(_T("reflect"))->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
+						GraphMng::Get(_T("reflect"))->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
 					}
 					//最後の3秒.
 					if (tmReflectMode.GetPassTime() <= 3) {
-						str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont()); //数字.
+						str.Draw(Anchor::Mid, gameData->fonts["en-size5"].GetFont()); //数字.
 					}
 				}
 			);

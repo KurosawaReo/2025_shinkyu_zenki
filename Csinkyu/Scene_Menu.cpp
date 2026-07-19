@@ -27,27 +27,24 @@ void MenuScene::Init() {
 	inputMng = ManagerInsts::Get<InputMng>();
 	sceneMng = ManagerInsts::Get<SceneMng>();
 
-	//フォント作成.
-	fontMenu[0].CreateFontH(_T("メイリオ"), 28, 3, FontTypeID::Anti);
-	fontMenu[1].CreateFontH(_T("メイリオ"), 36, 3, FontTypeID::Anti);
-
 	Reset();
 }
 
 //リセット.
 void MenuScene::Reset() {
-	selectedIndex = 0;
+	cursorIdx = 0;
 	tmBlink.Start();
 }
 
 //入った瞬間.
 void MenuScene::Enter() {
-
+	//動画再生.
+	GraphMng::Get(GetPlayMovieName())->PlayMovie(PlayTypeID::Loop, true);
 }
 
 //抜けた瞬間.
 void MenuScene::Exit() {
-
+	StopAllMovie();
 }
 
 //更新.
@@ -55,11 +52,11 @@ void MenuScene::Update() {
 
 	//カーソル移動操作.
 	if (inputMng->IsPushActionTime(_T("MenuUp")) % 20 == 1) {
-		selectedIndex = (selectedIndex + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
+		cursorIdx = (cursorIdx + 3 - 1) % 3; //-1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
 	if (inputMng->IsPushActionTime(_T("MenuDown")) % 20 == 1) { //長押しにも対応.
-		selectedIndex = (selectedIndex + 1) % 3;     //+1して、3の余り(0～2)をループ.
+		cursorIdx = (cursorIdx + 1) % 3;     //+1して、3の余り(0～2)をループ.
 		OnCursorMove();
 	}
 	//点滅終了.
@@ -70,7 +67,7 @@ void MenuScene::Update() {
 	//決定操作.
 	if (inputMng->IsPushActionTime(_T("MenuNext")) == 1) {
 
-		switch (selectedIndex)
+		switch (cursorIdx)
 		{
 			case 0:
 			{
@@ -78,7 +75,7 @@ void MenuScene::Update() {
 				sceneMng->SetScene(_T("Game"));
 				gameData->stage = Stage_Endless;
 				//背景変更.
-				bgMng->SetBgNo(1);
+				bgMng->SetBgNo(3);
 
 #if !defined BGM_NONE
 
@@ -88,7 +85,7 @@ void MenuScene::Update() {
 				MY_STRING bgmName = gameMng->GetGameSceneBgm();
 				//BGMを再生.
 				if (auto i = soundMng->Get(bgmName)) {
-					i->Play(true, 70); //再生.
+					i->Play(true, BGM_VOLUME_ENDLESS); //再生.
 				}
 #endif
 			}
@@ -101,11 +98,12 @@ void MenuScene::Update() {
 				gameData->stage = Stage_Tutorial;
 				//背景変更.
 				bgMng->SetBgNo(1);
+
 #if !defined BGM_NONE
 				//BGM.
 				soundMng->StopAll();
 				if (auto i = soundMng->Get(_T("BGM_Tutorial"))) {
-					i->Play(true, 70); //再生.
+					i->Play(true, BGM_VOLUME_TUTORIAL); //再生.
 				}
 #endif
 			}
@@ -153,9 +151,10 @@ void MenuScene::Draw() {
 	);
 	//▼メニュータイトル.
 	{
-		//基準地.
+		//基準位置.
 		const DBL_XY basePos = { WINDOW_WID / 2, 80 };
 
+		//三角形演出1.
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim4),
 			[&]() {
@@ -173,7 +172,7 @@ void MenuScene::Draw() {
 				}
 			}
 		);
-
+		//三角形演出2.
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim6),
 			[&]() {
@@ -192,24 +191,31 @@ void MenuScene::Draw() {
 			}
 		);
 
-		DrawStr str(_T("モード選択"), basePos.ToInt(), 0x00FFFF);
-		str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+		const INT_XY offset = { 0, -1 };
+
+		//テキスト描画.
+		DrawStr str(_T("モード選択"), basePos.ToInt() + offset, 0x00FFFF);
+		str.Draw(Anchor::Mid, gameData->fonts["jp-size4"].GetFont());
 	}
 
 	//▼各選択肢.
 	{
+		const INT_XY offset = {0, -1};
+
 		//テキスト & 枠線用.
-		Box box = { mLayout.menuPos, mLayout.menuSize, mColor.select1, 1.0f };
-		DrawStr str(_T(""), mLayout.menuPos.ToInt(), {});
+		Box     box = { mLayout.menuPos, mLayout.menuSize, mColor.select1, 1.0f };
+		DrawStr str = { _T(""), mLayout.menuPos.ToInt() + offset, {}};
 		//選択肢テキスト.
 		MY_STRING texts[] = {
-			_T("ゲーム開始"), _T("チュートリアル"), _T("タイトルに戻る")
+			_T("ゲーム開始"), 
+			_T("チュートリアル"), 
+			_T("タイトルに戻る")
 		};
 		//テキスト色.
 		unsigned int colors[] = {
-			(selectedIndex == 0) ? mColor.select1 : mColor.normal,
-			(selectedIndex == 1) ? mColor.select1 : mColor.normal,
-			(selectedIndex == 2) ? mColor.select1 : mColor.normal
+			(cursorIdx == 0) ? mColor.select1 : mColor.normal,
+			(cursorIdx == 1) ? mColor.select1 : mColor.normal,
+			(cursorIdx == 2) ? mColor.select1 : mColor.normal
 		};
 
 		INT_XY savePos; //保存用.
@@ -225,7 +231,7 @@ void MenuScene::Draw() {
 			
 			int alpha = 255; //透明度.
 			//ブレる処理.
-			if (isBlink && selectedIndex == i) {
+			if (isBlink && cursorIdx == i) {
 				const int add = Calc::RandNum(-5, 5); //ずらす量.
 				str.pos += add;						  //位置をずらす.
 				alpha = 128;
@@ -234,7 +240,7 @@ void MenuScene::Draw() {
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 				[&]() {
-					str.Draw(Anchor::Mid, fontMenu[1].GetFont());
+					str.Draw(Anchor::Mid, gameData->fonts["jp-size4"].GetFont());
 				}
 			);
 
@@ -250,8 +256,8 @@ void MenuScene::Draw() {
 	{
 		//基準座標.
 		DBL_XY base = mLayout.menuPos + DBL_XY(
-			-mLayout.menuSize.x/2 - 20,			//横にずらす.
-			+mLayout.menuSpace * selectedIndex	//縦にずらす.
+			-mLayout.menuSize.x/2 - 20,		//横にずらす.
+			+mLayout.menuSpace * cursorIdx	//縦にずらす.
 		);
 
 		Triangle tri = { base, base + DBL_XY(-20, 10 * anim1), base + DBL_XY(-20, -10 * anim1), {}, {} };
@@ -262,23 +268,24 @@ void MenuScene::Draw() {
 	//画像サイズ保存用.
 	DBL_XY imgSize;
 
-	//▼サムネ画像.
+	//▼サムネ.
 	{
-		const double extend = 0.4; //画像描画倍率.
+		const double extend = 0.7; //画像描画倍率.
 		const int    margin = 10;  //枠を画像よりどれだけ大きくするか.
 	
-		MY_STRING name = _T("menu") + NumToString(selectedIndex);
-		if (auto i = DrawImgMng::Get(name)) {
-			//画像を滑らかに.
+		//画像を取得できたら.
+		if (auto i = GraphMng::Get(GetPlayMovieName())) {
+
+			//画像描画.
 			DrawMode::Exe(
 				DrawModeID::Bilinear, DrawBlendModeID::None, 255,
 				[&]() {
 					i->DrawExtend(mLayout.imgPos, { extend , extend });
 				}
 			);
-			//画像のサイズ(Extend倍率分小さくする)
+			//画像の描画サイズを計算.
 			imgSize = i->GetSize().ToDbl() * extend + margin;
-			//画像の枠線(位置とサイズは画像に合わせる)
+			//枠線描画(画像にぴったり合うように)
 			Box box = { mLayout.imgPos, imgSize, mColor.frame, 1.0f };
 			DrawBoxKR(box, Anchor::Mid, false);
 		}
@@ -317,8 +324,8 @@ void MenuScene::Draw() {
 						3.0f
 					};
 					//選択してる所にずらす.
-					line.stPos.y += mLayout.menuSpace * selectedIndex;
-					line.edPos.y += mLayout.menuSpace * selectedIndex;
+					line.stPos.y += mLayout.menuSpace * cursorIdx;
+					line.edPos.y += mLayout.menuSpace * cursorIdx;
 					//線描画.
 					DrawLineKR(line, false);
 				}
@@ -349,27 +356,31 @@ void MenuScene::Draw() {
 		int infoX = _int_r(mLayout.menuPos.x - _dbl(infoWidth)/2);
 		int infoY = textBoxY;
 
-		Box     box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1, 1.0f };
-		DrawStr str = { _T(""), INT_XY(infoX, infoY) + mLayout.loreInner, mColor.normal };
+		Box box = { DBL_XY(infoX, infoY), DBL_XY(infoWidth, infoHeight), mColor.select1, 1.0f };
 
 		DrawStr str2(_T("操作"), { infoX + 10, infoY - 10 }, 0x00FFFF);
-		str2.Draw(Anchor::LD, fontMenu[0].GetFont());
+		str2.Draw(Anchor::LD, gameData->fonts["jp-size2"].GetFont());
 
 		DrawBoxKR(box, Anchor::LU, false);
 
-		str.text = _T("選択: ↑↓ or W/S");
-		str.Draw(Anchor::LU, fontMenu[0].GetFont());
+		DrawStr str = { _T(""), INT_XY(infoX, infoY) + mLayout.loreInner, mColor.normal };
 
-		str.pos.y += mLayout.loreLineSpace; //次の行へ.
-		str.pos.y += mLayout.loreLineSpace; //次の行へ.
-		str.text = _T("決定: SPACE/ENTER/Ⓐ");
-		str.Draw(Anchor::LU, fontMenu[0].GetFont());
+		MY_STRING texts[] = {
+			_T("選択: ↑/↓/W/S"),
+			_T("決定: SPACE/ENTER/Aボタン"),
+		};
+		//1行ずつ表示.
+		for (auto& i : texts) {
+			str.text = i;
+			str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
+			str.pos.y += mLayout.loreLineSpace; //次の行へ.
+		}
 	}
 
 	//▼モード説明タイトル（説明文枠の上に表示）
 	{
 		DrawStr str2(_T("モード説明"), { textBoxX+10, textBoxY-10 }, 0x00FFFF);
-		str2.Draw(Anchor::LD, fontMenu[0].GetFont());
+		str2.Draw(Anchor::LD, gameData->fonts["jp-size2"].GetFont());
 
 		// 説明文枠の枠線（水色）	
 		Box box = { DBL_XY(textBoxX, textBoxY), DBL_XY(textBoxWidth, textBoxHeight), mColor.frame, 1.0f };
@@ -378,23 +389,23 @@ void MenuScene::Draw() {
 		//説明文用.
 		DrawStr str(_T(""), INT_XY(textBoxX, textBoxY)+mLayout.loreInner, mColor.normal);
 
-		switch (selectedIndex)
+		switch (cursorIdx)
 		{
 			case 0:
 			{
 				MY_STRING texts[] = {
-					_T("ゲームオーバーになるまで続くエンドレスモード。"),
-					_T("ハイスコアを目指して頑張ろう！"),
+					_T("ゲームオーバーになるまで続くエンドレスモードです。"),
+					_T("ハイスコアを目指しましょう！"),
 					_T(""),
 					_T("[スコア]"),
-					_T("隕石を壊す　　: +500"),
+					_T("隕石を破壊　　: +500"),
 					_T("アイテムを取る: +100"),
-					_T("タイムボーナス: 1秒ごとに +10")
+					_T("タイムボーナス: 1秒ごとに+10")
 				};
 				//1行ずつ表示.
 				for (auto& i : texts) {
 					str.text = i;
-					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
 					str.pos.y += mLayout.loreLineSpace; //次の行へ.
 				}
 			}
@@ -403,18 +414,18 @@ void MenuScene::Draw() {
 			case 1:
 			{
 				MY_STRING texts[] = {
-					_T("基本操作とルールを確認できます。"),
-					_T("STEP1～4まであり、目安は数分で終わります。"),
+					_T("基本操作やルールを確認できます。"),
+					_T("初めて遊ぶ方におすすめです。"),
 					_T(""),
-					_T("STEP1: 基本について"),
-					_T("STEP2: アイテムについて"),
-					_T("STEP3: 反射について"),
-					_T("STEP4: スコアについて")
+					_T("STEP1: 基本操作"),
+					_T("STEP2: アイテム"),
+					_T("STEP3: 反射"),
+					_T("STEP4: スコア")
 				};
 				//1行ずつ表示.
 				for (auto& i : texts) {
 					str.text = i;
-					str.Draw(Anchor::LU, fontMenu[0].GetFont());
+					str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
 					str.pos.y += mLayout.loreLineSpace; //次の行へ.
 				}
 			}
@@ -422,10 +433,15 @@ void MenuScene::Draw() {
 
 		case 2:
 			str.text = _T("タイトル画面に戻ります。");
-			str.Draw(Anchor::LU, fontMenu[0].GetFont());
+			str.Draw(Anchor::LU, gameData->fonts["jp-size2"].GetFont());
 			break;
 		}
 	}
+}
+
+//再生する動画名.
+MY_STRING MenuScene::GetPlayMovieName() {
+	return _T("menu_movie") + NumToString(cursorIdx + 1);
 }
 
 //カーソル移動時の処理.
@@ -434,8 +450,21 @@ void MenuScene::OnCursorMove() {
 	isBlink = true;  //点滅させる.
 	tmBlink.Start(); //点滅時間計測.
 
+	//全動画停止.
+	StopAllMovie();
+	//動画再生.
+	GraphMng::Get(GetPlayMovieName())->PlayMovie(PlayTypeID::Loop, true);
+
 	//サウンド.
 	if (auto i = soundMng->Get(_T("MenuCursor"))) {
 		i->Play(false, 70);
 	}
+}
+
+//全ての動画を停止.
+void MenuScene::StopAllMovie() {
+
+	GraphMng::Get(_T("menu_movie1"))->StopMovie();
+	GraphMng::Get(_T("menu_movie2"))->StopMovie();
+	GraphMng::Get(_T("menu_movie3"))->StopMovie();
 }

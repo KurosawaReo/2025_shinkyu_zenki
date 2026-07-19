@@ -157,10 +157,10 @@ void EffectManager::Draw() {
 					[&]() {
 						//画像切り替え.
 						if (i.type == Effect_Score100) {
-							DrawImgMng::Get(_T("score100"))->DrawExtend(pos, { 0.2, 0.2 });
+							GraphMng::Get(_T("score100"))->DrawExtend(pos, { 0.2, 0.2 });
 						}
 						else {
-							DrawImgMng::Get(_T("score500"))->DrawExtend(pos, { 0.2, 0.2 });
+							GraphMng::Get(_T("score500"))->DrawExtend(pos, { 0.2, 0.2 });
 						}
 					}
 				);
@@ -327,7 +327,7 @@ void EffectManager::Draw() {
 						//円.
 						DrawCircleKR(mainCir, Anchor::Mid, false, true);
 						//テキスト.					
-						str.Draw(Anchor::Mid, gameData->fonts["size30"].GetFont());
+						str.Draw(Anchor::Mid, gameData->fonts["en-size3"].GetFont());
 
 						//ランプ(必要な数だけ)
 						for (int j = 0; j < lampUseCnt; j++) {

@@ -2,23 +2,22 @@
    - BG2.h -
 */
 #pragma once
+#include "BGBase.h"
 
 //背景2.
-class BG2
+class BG2 : public BGBase
 {
 //▼ ===== 変数 ===== ▼.
 private:
-	double angle{};      // 回転用
-	double pulse{};      // 明滅用
-	bool   isPaused{};   // ポーズ状態
 
 //▼ ===== 関数 ===== ▼.
 public:
-	void Init();
-	void Update();
-	void Draw();
+	void Init   ()                 override; //初期化.
+	void Update ()                 override; //更新.
+	void DrawNor(double modeAlpha) override; //描画(通常時)
+	void DrawRef(double modeAlpha) override; //描画(反射モード)
 
 	//ポーズ用.
-	void Pause();
-	void PauseEnd();
+	void Pause()    override;
+	void PauseEnd() override;
 };

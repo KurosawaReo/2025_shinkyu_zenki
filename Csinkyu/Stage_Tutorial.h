@@ -12,8 +12,6 @@ class TutorialStage final : public ManagerBase
 {
 //▼ ===== 変数 ===== ▼.
 private:
-	Font   font[2]{};
-	
 	int    stepNo{};          //現在のステップ番号.
 	int    stepInNo{};        //現在のステップ内番号.
 

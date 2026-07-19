@@ -51,33 +51,36 @@ void GameManager::Init() {
 
 	try {
 		//[KrLib] 画像.
-		DrawImgMng::SetPath(_T("Resources/Images/")); //共通パスの設定.
-		DrawImgMng::LoadFile(_T("logo_text_only.png"),		_T("logo"));
-		DrawImgMng::LoadFile(_T("logo_all.png"),			_T("logo_all"));
-		DrawImgMng::LoadFile(_T("new_record.png"),			_T("new_record"));
-		DrawImgMng::LoadFile(_T("gameover.png"),			_T("gameover"));
-		DrawImgMng::LoadFile(_T("reflect.png"),				_T("reflect"));
-		DrawImgMng::LoadFile(_T("player_normal.png"),		_T("player_nor"));
-		DrawImgMng::LoadFile(_T("player_reflect.png"),		_T("player_ref"));
-		DrawImgMng::LoadFile(_T("item.png"),				_T("item"));
-		DrawImgMng::LoadFile(_T("light_color_ref.png"),		_T("item_light"));
-		DrawImgMng::LoadFile(_T("light_color_nor.png"),		_T("player_light_nor"));
-		DrawImgMng::LoadFile(_T("light_color_ref.png"),		_T("player_light_ref"));
-		DrawImgMng::LoadFile(_T("menu_endless.png"),		_T("menu0"));				//ゲーム開始.
-		DrawImgMng::LoadFile(_T("menu_tutorial.png"),		_T("menu1"));				//チュートリアル.
-		DrawImgMng::LoadFile(_T("menu_title.png"),			_T("menu2"));				//タイトルに戻る.
-		DrawImgMng::LoadFile(_T("bg_normal.png"),			_T("bg_normal"));
-		DrawImgMng::LoadFile(_T("bg_reflect.png"),			_T("bg_reflect"));
-		DrawImgMng::LoadFile(_T("reflect_mode_frame.png"),	_T("reflect_mode_frame"));
-		DrawImgMng::LoadFile(_T("ui_back_level.png"),		_T("ui_back_level"));
-		DrawImgMng::LoadFile(_T("ui_back_best_score.png"),	_T("ui_back_best_score"));
-		DrawImgMng::LoadFile(_T("ui_back_score.png"),		_T("ui_back_score"));
-		DrawImgMng::LoadFile(_T("ui_back_time.png"),		_T("ui_back_time"));
-		DrawImgMng::LoadFile(_T("score100.png"),			_T("score100"));
-		DrawImgMng::LoadFile(_T("score500.png"),			_T("score500"));
+		GraphMng::SetPath(_T("Resources/Images/"));	//共通パスの設定.
+		GraphMng::LoadImg(_T("logo_text_only.png"),		_T("logo"));
+		GraphMng::LoadImg(_T("logo_all.png"),			_T("logo_all"));
+		GraphMng::LoadImg(_T("new_record.png"),			_T("new_record"));
+		GraphMng::LoadImg(_T("gameover.png"),			_T("gameover"));
+		GraphMng::LoadImg(_T("reflect.png"),			_T("reflect"));
+		GraphMng::LoadImg(_T("player_normal.png"),		_T("player_nor"));
+		GraphMng::LoadImg(_T("player_reflect.png"),		_T("player_ref"));
+		GraphMng::LoadImg(_T("item.png"),				_T("item"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("item_light"));
+		GraphMng::LoadImg(_T("light_color_nor.png"),	_T("player_light_nor"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("player_light_ref"));
+		GraphMng::LoadImg(_T("bg_normal.png"),			_T("bg_normal"));
+		GraphMng::LoadImg(_T("bg_reflect.png"),			_T("bg_reflect"));
+		GraphMng::LoadImg(_T("reflect_mode_frame.png"),	_T("reflect_mode_frame"));
+		GraphMng::LoadImg(_T("ui_back_level.png"),		_T("ui_back_level"));
+		GraphMng::LoadImg(_T("ui_back_best_score.png"),	_T("ui_back_best_score"));
+		GraphMng::LoadImg(_T("ui_back_score.png"),		_T("ui_back_score"));
+		GraphMng::LoadImg(_T("ui_back_time.png"),		_T("ui_back_time"));
+		GraphMng::LoadImg(_T("score100.png"),			_T("score100"));
+		GraphMng::LoadImg(_T("score500.png"),			_T("score500"));
+
+		//[KrLib] 動画.
+		GraphMng::SetPath(_T("Resources/Movies/"));	//共通パスの設定.
+		GraphMng::LoadMovie(_T("menu_movie_endless.mp4"),		_T("menu_movie1"));
+		GraphMng::LoadMovie(_T("menu_movie_tutorial.mp4"),		_T("menu_movie2"));
+		GraphMng::LoadMovie(_T("menu_movie_back_title.mp4"),	_T("menu_movie3"));
 
 		//[KrLib] サウンド.
-		soundMng->SetPath(_T("Resources/Sounds/")); //共通パスの設定.
+		soundMng->SetPath(_T("Resources/Sounds/"));	//共通パスの設定.
 		soundMng->LoadFile(_T("bgm/Virtual Terminal.mp3"),		_T("BGM_Menu"));		//メニューBGM.
 		soundMng->LoadFile(_T("bgm/audiostock_1603723.mp3"),	_T("BGM_Tutorial"));	//チュートリアルBGM.
 		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless_1"));	//エンドレスモードBGM1.
@@ -96,7 +99,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("se/audiostock_218404.mp3"),		_T("Laser3"));			//レーザー(反射)
 		soundMng->LoadFile(_T("se/audiostock_936158.mp3"),		_T("Ripples"));			//波紋.
 		soundMng->LoadFile(_T("se/fireworks.mp3"),				_T("Fireworks"));		//花火.
-		soundMng->LoadFile(_T("se/audiostock_104974.mp3"),		_T("Break"));			//隕石破壊.
+		soundMng->LoadFile(_T("se/audiostock_104974.mp3"),		_T("MeteorBreak"));			//隕石破壊.
 		soundMng->LoadFile(_T("se/audiostock_981051.mp3"),		_T("PlayerDeath"));
 		soundMng->LoadFile(_T("se/決定ボタンを押す23.mp3"),		_T("LevelUp"));
 		soundMng->LoadFile(_T("se/audiostock_184924.mp3"),		_T("BestScore"));		//最高スコア更新.
@@ -147,12 +150,21 @@ void GameManager::Init() {
 	sceneMng->AddScene(&gameScene,  _T("Game"));
 	sceneMng->AddScene(&endScene,   _T("End"));
 
-	//フォント.
-	gameData->fonts["size18"].CreateFontH(_T(""), 20, 1, FontTypeID::Anti);
-	gameData->fonts["size26"].CreateFontH(_T(""), 26, 1, FontTypeID::Anti);
-	gameData->fonts["size30"].CreateFontH(_T(""), 30, 1, FontTypeID::Anti);
-	gameData->fonts["size35"].CreateFontH(_T(""), 35, 1, FontTypeID::Anti);
-	gameData->fonts["size40"].CreateFontH(_T(""), 40, 1, FontTypeID::Anti);
+	//フォント作成.
+	{
+		AddFontFile(_T("Resources/Fonts/Oxanium-VariableFont_wght.ttf"));
+		AddFontFile(_T("Resources/Fonts/MPLUSRounded1c-Regular.ttf"));
+
+		gameData->fonts["jp-size1"].Create(_T("Rounded Mplus 1c"), 18, 1, FontTypeID::Anti);
+		gameData->fonts["jp-size2"].Create(_T("Rounded Mplus 1c"), 23, 1, FontTypeID::Anti);
+		gameData->fonts["jp-size3"].Create(_T("Rounded Mplus 1c"), 30, 1, FontTypeID::Anti);
+		gameData->fonts["jp-size4"].Create(_T("Rounded Mplus 1c"), 35, 1, FontTypeID::Anti);
+		gameData->fonts["en-size1"].Create(_T("Oxanium ExtraLight"), 20, 1, FontTypeID::Anti);
+		gameData->fonts["en-size2"].Create(_T("Oxanium ExtraLight"), 26, 1, FontTypeID::Anti);
+		gameData->fonts["en-size3"].Create(_T("Oxanium ExtraLight"), 30, 1, FontTypeID::Anti);
+		gameData->fonts["en-size4"].Create(_T("Oxanium ExtraLight"), 32, 1, FontTypeID::Anti);
+		gameData->fonts["en-size5"].Create(_T("Oxanium ExtraLight"), 40, 1, FontTypeID::Anti);
+	}
 
 	//[score.data]
 	File file;
@@ -186,6 +198,7 @@ void GameManager::Reset() {
 
 	//管理クラスリセット.
 	StopObjects();
+	bg->SetAutoExeMode(MngAutoExe::Active);
 
 	//サウンド.
 	soundMng->StopAll();
@@ -193,7 +206,7 @@ void GameManager::Reset() {
 #if !defined BGM_NONE
 	//メニューBGMを流す.
 	if (auto i = soundMng->Get(_T("BGM_Menu"))) {
-		i->Play(true, 90);
+		i->Play(true, BGM_VOLUME_MENU);
 	}
 #endif
 
@@ -259,16 +272,19 @@ void GameManager::Draw() {
 void GameManager::GamePause() {
 
 	gameData->isPause = true;
+
 	bg->Pause();       //背景のポーズ.
 	gameScene.Pause(); //ゲームシーンのポーズ.
 
 	sceneMng->SetAutoExeMode(MngAutoExe::DrawOnly); //シーン      : 描画のみ.
 	DrawOnlyObjects();                              //オブジェクト: 描画のみ.
 }
+
 //ポーズ解除.
 void GameManager::GamePauseEnd() {
 
 	gameData->isPause = false;
+
 	bg->PauseEnd();       //背景のポーズ解除.
 	gameScene.PauseEnd(); //ゲームシーンのポーズ解除.
 
@@ -278,10 +294,8 @@ void GameManager::GamePauseEnd() {
 //ポーズ画面.
 void GameManager::DrawPause() {
 
-#if !defined NO_SHOW_PAUSE
 	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
-	str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont());
-#endif
+	str.Draw(Anchor::Mid, gameData->fonts["en-size5"].GetFont());
 }
 
 //ゲーム終了(死亡)
@@ -341,11 +355,11 @@ void GameManager::GameOver() {
 				}
 
 #if !defined BGM_NONE
-				//BGMフェードアウト.
+				//元のBGMをフェードアウト.
 				if (auto i = soundMng->Get(gameSceneBgm)) {
 					i->FadeOutPlay(2); //再生.
 				}
-				//ゲームオーバーBGM.
+				//ゲームオーバーBGM再生.
 				if (auto i = soundMng->Get(_T("BGM_Over"))) {
 					i->Play(true, 68); //再生.
 				}
@@ -395,13 +409,15 @@ void GameManager::StopObjects() {
 		ManagerInsts::Get<Ripples>(),
 		ManagerInsts::Get<Fireworks>(),
 		ManagerInsts::Get<EndlessStage>(),
-		ManagerInsts::Get<TutorialStage>()
+		ManagerInsts::Get<TutorialStage>(),
+		ManagerInsts::Get<BGManager>(),
 	};
 	//全ループ.
 	for (auto& i : mngs) {
 		i->SetAutoExeMode(MngAutoExe::Stop);
 	}
 }
+
 //オブジェクト描画のみ.
 void GameManager::DrawOnlyObjects() {
 
@@ -416,7 +432,8 @@ void GameManager::DrawOnlyObjects() {
 		ManagerInsts::Get<Ripples>(),
 		ManagerInsts::Get<Fireworks>(),
 		ManagerInsts::Get<EndlessStage>(),
-		ManagerInsts::Get<TutorialStage>()
+		ManagerInsts::Get<TutorialStage>(),
+		ManagerInsts::Get<BGManager>(),
 	};
 	//全ループ.
 	for (auto& i : mngs) {
@@ -426,6 +443,7 @@ void GameManager::DrawOnlyObjects() {
 		}
 	}
 }
+
 //オブジェクト稼働再開.
 void GameManager::RestartObjects() {
 
@@ -440,7 +458,8 @@ void GameManager::RestartObjects() {
 		ManagerInsts::Get<Ripples>(),
 		ManagerInsts::Get<Fireworks>(),
 		ManagerInsts::Get<EndlessStage>(),
-		ManagerInsts::Get<TutorialStage>()
+		ManagerInsts::Get<TutorialStage>(),
+		ManagerInsts::Get<BGManager>(),
 	};
 	//全ループ.
 	for (auto& i : mngs) {
