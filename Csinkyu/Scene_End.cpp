@@ -8,11 +8,13 @@
 #include "GameData.h"
 #include "Player.h"
 #include "UIManager.h"
+#include "BGManager.h"
 //参照.
 static GameManager* gameMng;
 static GameData*    gameData;
 static Player*      player;
 static UIManager*   uiMng;
+static BGManager*   bgMng;
 //参照(KRライブラリ)
 static SoundMng*    soundMng;
 static InputMng*    inputMng;
@@ -20,11 +22,14 @@ static SceneMng*    sceneMng;
 
 //初期化.
 void EndScene::Init() {
+
 	//参照取得.
 	gameMng  = ManagerInsts::Get<GameManager>();
 	gameData = ManagerInsts::Get<GameData>();
 	player   = ManagerInsts::Get<Player>();
 	uiMng    = ManagerInsts::Get<UIManager>();
+	bgMng    = ManagerInsts::Get<BGManager>();
+
 	soundMng = ManagerInsts::Get<SoundMng>();
 	inputMng = ManagerInsts::Get<InputMng>();
 	sceneMng = ManagerInsts::Get<SceneMng>();
@@ -53,6 +58,11 @@ void EndScene::Enter() {
 				sceneMng->SetScene(_T("Game")); //ゲームシーンへ戻る.
 			}
 		);
+	}
+	//チュートリアル以外.
+	else {
+		bgMng->Pause();             //背景停止.
+		gameMng->DrawOnlyObjects(); //オブジェクト動作停止.
 	}
 }
 

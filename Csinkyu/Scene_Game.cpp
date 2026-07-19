@@ -67,13 +67,11 @@ void GameScene::Enter() {
 void GameScene::Exit() {
 	//チュートリアル以外のみ.
 	if (gameData->stage != Stage_Tutorial) {
+
 		itemSoundCnt = 0;
 		timer.Stop();          //演出用タイマー停止.
 		tmGameTime.Stop();     //ゲーム時間停止.
 		tmReflectMode.Reset(); //反射モードリセット.
-
-		//オブジェクトの動作停止.
-		gameMng->DrawOnlyObjects();
 	}
 }
 
@@ -120,6 +118,7 @@ void GameScene::Pause() {
 	tmGameTime.Pause();
 	tmReflectMode.Pause();
 }
+
 //ポーズ解除.
 void GameScene::PauseEnd() {
 	//稼働中だったタイマーは再開.

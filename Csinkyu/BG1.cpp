@@ -120,14 +120,15 @@ void BG1::DrawRef(double modeAlpha, double count) {
 
 //ポーズする.
 void BG1::Pause() {
+
 	for (auto& i : tiles) {
 		i.shineTimer.Pause();
 	}
-
 }
 
 //ポーズ解除.
 void BG1::PauseEnd() {
+
 	for (auto& i : tiles) {
 		//稼働中だったならリスタート.
 		if (i.shineTimer.GetState() == TimerState::Pause) {

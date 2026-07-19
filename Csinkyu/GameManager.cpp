@@ -189,6 +189,7 @@ void GameManager::Reset() {
 
 	//管理クラスリセット.
 	StopObjects();
+	bg->SetAutoExeMode(MngAutoExe::Active);
 
 	//サウンド.
 	soundMng->StopAll();
@@ -262,16 +263,19 @@ void GameManager::Draw() {
 void GameManager::GamePause() {
 
 	gameData->isPause = true;
+
 	bg->Pause();       //背景のポーズ.
 	gameScene.Pause(); //ゲームシーンのポーズ.
 
 	sceneMng->SetAutoExeMode(MngAutoExe::DrawOnly); //シーン      : 描画のみ.
 	DrawOnlyObjects();                              //オブジェクト: 描画のみ.
 }
+
 //ポーズ解除.
 void GameManager::GamePauseEnd() {
 
 	gameData->isPause = false;
+
 	bg->PauseEnd();       //背景のポーズ解除.
 	gameScene.PauseEnd(); //ゲームシーンのポーズ解除.
 
@@ -396,13 +400,15 @@ void GameManager::StopObjects() {
 		ManagerInsts::Get<Ripples>(),
 		ManagerInsts::Get<Fireworks>(),
 		ManagerInsts::Get<EndlessStage>(),
-		ManagerInsts::Get<TutorialStage>()
+		ManagerInsts::Get<TutorialStage>(),
+		ManagerInsts::Get<BGManager>(),
 	};
 	//全ループ.
 	for (auto& i : mngs) {
 		i->SetAutoExeMode(MngAutoExe::Stop);
 	}
 }
+
 //オブジェクト描画のみ.
 void GameManager::DrawOnlyObjects() {
 
@@ -417,7 +423,8 @@ void GameManager::DrawOnlyObjects() {
 		ManagerInsts::Get<Ripples>(),
 		ManagerInsts::Get<Fireworks>(),
 		ManagerInsts::Get<EndlessStage>(),
-		ManagerInsts::Get<TutorialStage>()
+		ManagerInsts::Get<TutorialStage>(),
+		ManagerInsts::Get<BGManager>(),
 	};
 	//全ループ.
 	for (auto& i : mngs) {
@@ -427,6 +434,7 @@ void GameManager::DrawOnlyObjects() {
 		}
 	}
 }
+
 //オブジェクト稼働再開.
 void GameManager::RestartObjects() {
 
@@ -441,7 +449,8 @@ void GameManager::RestartObjects() {
 		ManagerInsts::Get<Ripples>(),
 		ManagerInsts::Get<Fireworks>(),
 		ManagerInsts::Get<EndlessStage>(),
-		ManagerInsts::Get<TutorialStage>()
+		ManagerInsts::Get<TutorialStage>(),
+		ManagerInsts::Get<BGManager>(),
 	};
 	//全ループ.
 	for (auto& i : mngs) {
