@@ -16,13 +16,18 @@ private:
 		double y;
 		double z;
 
-		// 前フレーム位置
 		double oldZ;
+	};
+	struct WarpHex
+	{
+		double z;
 	};
 
 	static constexpr int POINT_NUM = 220;
-
 	WarpPoint point[POINT_NUM];
+
+	static constexpr int HEX_NUM = 20;
+	WarpHex hex[HEX_NUM];
 
 	double angle; //回転角.
 	double pulse; //明滅.
@@ -30,13 +35,13 @@ private:
 
 //▼ ===== 関数 ===== ▼.
 public:
-	void Init()   override;
-	void Update() override;
+	void Init   ()                 override; //初期化.
+	void Update ()                 override; //更新.
+	void DrawNor(double modeAlpha) override; //描画(通常時)
+	void DrawRef(double modeAlpha) override; //描画(反射モード)
 
-	//描画用.
-	void DrawNor   (double modeAlpha, double count) override;	//描画(通常時)
-	void DrawRef   (double modeAlpha, double count) override;	//描画(反射モード)
-	void DrawCommon(double modeAlpha, MY_COLOR mainColor);		//描画(共通)
+	void DrawPoints(double modeAlpha, MY_COLOR mainColor);
+	void DrawHexagons(double modeAlpha, MY_COLOR color);
 
 	//ポーズ用.
 	void Pause()    override;

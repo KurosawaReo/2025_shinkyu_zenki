@@ -13,8 +13,7 @@ class BGManager final : public ManagerBase
 private:
 	vector<unique_ptr<BGBase>> bg; //”wŒiƒNƒ‰ƒX”z—ñ.
 
-	int    useBgNo{}; //‰½”Ô–Ú‚Ì”wŒi‚ğg‚¤‚©.
-	double counter{}; //Œo‰ßŠÔ.
+	int useBgNo{}; //‰½”Ô–Ú‚Ì”wŒi‚ğg‚¤‚©.
 
 //¥ ===== ŠÖ” ===== ¥.
 public:

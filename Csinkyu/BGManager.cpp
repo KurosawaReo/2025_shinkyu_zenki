@@ -40,8 +40,6 @@ void BGManager::Update() {
 	//ポーズ中の更新はしない.
 	if (gameData->isPause) { return; }
 
-	counter += gameData->speedRate; //経過時間.
-
 	//更新.
 	if (useBgNo != 0) {
 		bg[useBgNo - 1]->Update();
@@ -61,7 +59,7 @@ void BGManager::Draw() {
 	if (modeAlpha < 1.0) {
 		//背景別.
 		if (useBgNo != 0) {
-			bg[useBgNo - 1]->DrawNor(1-modeAlpha, counter);
+			bg[useBgNo - 1]->DrawNor(1-modeAlpha);
 		}
 	}
 
@@ -69,7 +67,7 @@ void BGManager::Draw() {
 	if (modeAlpha > 0.0) {
 		//背景別.
 		if (useBgNo != 0) {
-			bg[useBgNo - 1]->DrawRef(modeAlpha, counter);
+			bg[useBgNo - 1]->DrawRef(modeAlpha);
 		}
 
 		//グラデーション.

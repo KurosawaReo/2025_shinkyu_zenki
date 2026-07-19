@@ -5,16 +5,27 @@
 
 //依存関係.
 #include "Global.h"
+#include "GameData.h"
+//参照.
+static GameData* gameData;
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
 //初期化.
 void BG_Tile::Init() {
-
+	//参照取得.
+	gameData = ManagerInsts::Get<GameData>();
 }
 
 //更新.
 void BG_Tile::Update() {
+
+	counter += gameData->speedRate; //タイマー加算.
+
+	//透明度計算.
+	shine  = 70 + 80 * sin(M_PI * shineTimer.GetPassTime() / 3);
+	sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter * 2) / (WINDOW_WID / 4)) + 1) / 2;
+
 	//0になったら停止.
 	if (shineTimer.GetPassTime() <= 0) {
 		shineTimer.Reset();
@@ -22,11 +33,8 @@ void BG_Tile::Update() {
 }
 
 //描画(通常時)
-void BG_Tile::DrawNor(double modeAlpha, double count) {
+void BG_Tile::DrawNor(double modeAlpha) {
 
-	//透明度計算.
-	const double shine  = 70 + 80 * sin(M_PI * shineTimer.GetPassTime() / 3);
-	const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + count * 2) / (WINDOW_WID / 4)) + 1) / 2;
 	//タイル画像描画.
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
@@ -37,11 +45,8 @@ void BG_Tile::DrawNor(double modeAlpha, double count) {
 }
 
 //描画(反射モード)
-void BG_Tile::DrawRef(double modeAlpha, double count) {
+void BG_Tile::DrawRef(double modeAlpha) {
 
-	//透明度計算.
-	const double shine = 70 + 80 * sin(M_PI * shineTimer.GetPassTime() / 3);
-	const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + count * 2) / (WINDOW_WID / 4)) + 1) / 2;
 	//タイル画像描画.
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
@@ -101,20 +106,20 @@ void BG1::Update() {
 }
 
 //描画(通常時)
-void BG1::DrawNor(double modeAlpha, double count) {
+void BG1::DrawNor(double modeAlpha) {
 
 	//各タイル描画.
 	for (auto& i : tiles) {
-		i.DrawNor(modeAlpha, count);
+		i.DrawNor(modeAlpha);
 	}
 }
 
 //描画(反射モード)
-void BG1::DrawRef(double modeAlpha, double count) {
+void BG1::DrawRef(double modeAlpha) {
 
 	//各タイル描画.
 	for (auto& i : tiles) {
-		i.DrawRef(modeAlpha, count);
+		i.DrawRef(modeAlpha);
 	}
 }
 

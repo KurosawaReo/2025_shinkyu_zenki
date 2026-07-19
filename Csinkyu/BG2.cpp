@@ -14,12 +14,12 @@ void BG2::Update() {
 }
 
 //•`‰æ(’Êí)
-void BG2::DrawNor(double modeAlpha, double count) {
+void BG2::DrawNor(double modeAlpha) {
 
 }
 
 //•`‰æ(”½Ëƒ‚[ƒh)
-void BG2::DrawRef(double modeAlpha, double count) {
+void BG2::DrawRef(double modeAlpha) {
 
 }
 

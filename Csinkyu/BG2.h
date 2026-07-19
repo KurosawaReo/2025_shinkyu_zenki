@@ -12,12 +12,10 @@ private:
 
 //▼ ===== 関数 ===== ▼.
 public:
-	void Init()   override;
-	void Update() override;
-
-	//描画用.
-	void DrawNor(double modeAlpha, double count) override; //描画(通常時)
-	void DrawRef(double modeAlpha, double count) override; //描画(反射モード)
+	void Init   ()                 override; //初期化.
+	void Update ()                 override; //更新.
+	void DrawNor(double modeAlpha) override; //描画(通常時)
+	void DrawRef(double modeAlpha) override; //描画(反射モード)
 
 	//ポーズ用.
 	void Pause()    override;
