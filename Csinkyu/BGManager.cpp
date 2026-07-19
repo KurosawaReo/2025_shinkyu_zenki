@@ -4,25 +4,36 @@
 #include "BGManager.h"
 
 //ˆË‘¶ŠÖŒW.
+#include "GameManager.h"
 #include "GameData.h"
 //QÆ.
-static GameData* gameData;
+static GameManager* gameMng;
+static GameData*    gameData;
 
 // ¥*---=[ BGManager ]=---*¥ //
 
 //‰Šú‰».
 void BGManager::Init() {
+
 	//QÆæ“¾.
+	gameMng  = ManagerInsts::Get<GameManager>();
 	gameData = ManagerInsts::Get<GameData>();
 
-	bg1.Init();
-	bg2.Init();
-	bg3.Init();
+	//”wŒiƒNƒ‰ƒX¶¬.
+	bg.push_back(make_unique<BG1>());
+	bg.push_back(make_unique<BG2>());
+	bg.push_back(make_unique<BG3>());
+	//‰Šú‰».
+	for (auto& i : bg) {
+		i->Init();
+	}
 }
+
 //ƒŠƒZƒbƒg.
 void BGManager::Reset() {
 	useBgNo = 1;
 }
+
 //XV.
 void BGManager::Update() {
 
@@ -31,45 +42,61 @@ void BGManager::Update() {
 
 	counter += gameData->speedRate; //Œo‰ßŠÔ.
 
-	switch (useBgNo) {
-		case 0:                 break; //”wŒi‚È‚µ.
-		case 1:  bg1.Update();  break; //”wŒi1.
-		case 2:  bg2.Update();  break; //”wŒi2.
-		case 3:  bg3.Update();  break; //”wŒi3.
-		default: assert(false); break;
+	//XV.
+	if (useBgNo != 0) {
+		bg[useBgNo - 1]->Update();
 	}
 }
+
 //•`‰æ.
 void BGManager::Draw() {
 
-	switch (useBgNo) {
-		case 0:                 break; //”wŒi‚È‚µ.
-		case 1:  bg1.Draw();    break; //”wŒi1.
-		case 2:  bg2.Draw();    break; //”wŒi2.
-		case 3:  bg3.Draw();    break; //”wŒi3.
-		default: assert(false); break;
+	//ƒXƒ[ƒ‚[ƒhŒo‰ßŠÔ.
+	const float pass = gameMng->GetGameScene()->GetReflectModeTime();
+	//“§–¾“x‚ÌŒvZ.
+	double modeAlpha = 0.5 - (pass - (REFLECT_MODE_TIME - 0.5)); //Å‰‚Ì0.5•b.
+	modeAlpha = Calc::AnimEase(EaseType::OutQuad, modeAlpha);    //0.0`1.0‚Ì”ÍˆÍ‚É‚·‚é.
+
+	//•`‰æ(’Êí)
+	if (modeAlpha < 1.0) {
+		//”wŒi•Ê.
+		if (useBgNo != 0) {
+			bg[useBgNo - 1]->DrawNor(1-modeAlpha, counter);
+		}
+	}
+
+	//•`‰æ(”½Ëƒ‚[ƒh)
+	if (modeAlpha > 0.0) {
+		//”wŒi•Ê.
+		if (useBgNo != 0) {
+			bg[useBgNo - 1]->DrawRef(modeAlpha, counter);
+		}
+
+		//ƒOƒ‰ƒf[ƒVƒ‡ƒ“.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * modeAlpha),
+			[&]() {
+				GraphMng::Get(_T("reflect_mode_frame"))->Draw({ WINDOW_WID / 2, WINDOW_HEI / 2 });
+			}
+		);
+		//˜gü.
+		Box box = { {WINDOW_WID / 2, WINDOW_HEI / 2}, { WINDOW_WID * modeAlpha, WINDOW_HEI * modeAlpha }, COLOR_PLY_REFLECT, 1.0f };
+		DrawBoxKR(box, Anchor::Mid, false, true);
 	}
 }
 
 //ƒ|[ƒY‚·‚é.
 void BGManager::Pause() {
 
-	switch (useBgNo) {
-		case 0:                 break; //”wŒi‚È‚µ.
-		case 1:  bg1.Pause();	break; //”wŒi1.
-		case 2:  bg2.Pause();	break; //”wŒi2.
-		case 3:  bg3.Pause();	break; //”wŒi3.
-		default: assert(false); break;
+	if (useBgNo != 0) {
+		bg[useBgNo - 1]->Pause();
 	}
 }
+
 //ƒ|[ƒY‰ğœ.
 void BGManager::PauseEnd() {
 
-	switch (useBgNo) {
-		case 0:                  break; //”wŒi‚È‚µ.
-		case 1:  bg1.PauseEnd(); break; //”wŒi1.
-		case 2:  bg2.PauseEnd(); break; //”wŒi2.
-		case 3:  bg3.PauseEnd(); break; //”wŒi3.
-		default: assert(false);  break;
+	if (useBgNo != 0) {
+		bg[useBgNo - 1]->PauseEnd();
 	}
 }

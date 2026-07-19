@@ -77,6 +77,7 @@
     <ClInclude Include="BG1.h" />
     <ClInclude Include="BG2.h" />
     <ClInclude Include="BG3.h" />
+    <ClInclude Include="BGBase.h" />
     <ClInclude Include="BGManager.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="GameData.h" />

@@ -1,6 +1,6 @@
 /*
    - KR_Draw.h - (DxLib)
-   ver.2026/07/17
+   ver.2026/07/19
 
    描画に関する機能。
 */
@@ -83,19 +83,6 @@ namespace KR
 
 		//使用禁止(「=」で実体が複製されて、意図せずデストラクタが実行されるのを防ぐため)
 		Font& operator=(const Font&) = delete;
-	};
-
-	//グラデーション線.
-	class GradLine
-	{
-	private:
-		vector<VERTEX2D> points; //頂点データ.
-
-	public:
-		//頂点追加.
-		void AddPoint(DBL_XY pos, MY_COLOR color);
-		//描画.
-		void Draw(bool isClose = false, bool isCameraDisp = true);
 	};
 
 	//描画モード設定.

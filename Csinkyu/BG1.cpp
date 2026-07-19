@@ -5,13 +5,6 @@
 
 //依存関係.
 #include "Global.h"
-#include "BGManager.h"
-#include "GameData.h"
-#include "GameManager.h"
-//参照.
-static GameManager* gameMng;
-static GameData*    gameData;
-static BGManager*   bgMng;
 
 // ▼*---=[ BG_Tile ]=---*▼ //
 
@@ -19,50 +12,50 @@ static BGManager*   bgMng;
 void BG_Tile::Init() {
 
 }
+
 //更新.
 void BG_Tile::Update() {
 	//0になったら停止.
-	if (timer.GetPassTime() <= 0) {
-		timer.Reset();
+	if (shineTimer.GetPassTime() <= 0) {
+		shineTimer.Reset();
 	}
 }
-//描画.
-void BG_Tile::Draw(double slowTime) {
 
-	const float counter = bgMng->GetCounter();
+//描画(通常時)
+void BG_Tile::DrawNor(double modeAlpha, double count) {
 
-	//通常モード.
-	{
-		//透明度計算.
-		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
-		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
-		//タイル画像描画.
-		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha,  _int(alpha * sinNum * (1 - slowTime)),
-			[&]() {
-				GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
-			}
-		);
-	}
-	//反射モード.
-	if (gameData->isReflectMode) {
-		//透明度計算.
-		const double alpha  = 70 + 80 * sin(M_PI * timer.GetPassTime()/3);
-		const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + counter*2)/(WINDOW_WID/4)) + 1) / 2;
-		//タイル画像描画.
-		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha * sinNum * slowTime),
-			[&]() {
-				GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
-			}
-		);
-	}
+	//透明度計算.
+	const double shine  = 70 + 80 * sin(M_PI * shineTimer.GetPassTime() / 3);
+	const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + count * 2) / (WINDOW_WID / 4)) + 1) / 2;
+	//タイル画像描画.
+	DrawMode::Exe(
+		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
+		[&]() {
+			GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+		}
+	);
 }
+
+//描画(反射モード)
+void BG_Tile::DrawRef(double modeAlpha, double count) {
+
+	//透明度計算.
+	const double shine = 70 + 80 * sin(M_PI * shineTimer.GetPassTime() / 3);
+	const double sinNum = (sin(M_PI * _dbl(pos.x - pos.y + count * 2) / (WINDOW_WID / 4)) + 1) / 2;
+	//タイル画像描画.
+	DrawMode::Exe(
+		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
+		[&]() {
+			GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+		}
+	);
+}
+
 //発光.
 void BG_Tile::Shine() {
 	//発光してないなら.
-	if(timer.GetState() != TimerState::Active){
-		timer.Start(); //開始.
+	if (shineTimer.GetState() != TimerState::Active){
+		shineTimer.Start(); //開始.
 	}
 }
 
@@ -71,33 +64,28 @@ void BG_Tile::Shine() {
 //初期化.
 void BG1::Init() {
 
-	gameMng  = ManagerInsts::Get<GameManager>();
-	gameData = ManagerInsts::Get<GameData>();
-	bgMng    = ManagerInsts::Get<BGManager>();
+	INT_XY imgSize = GraphMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
+	DBL_XY sizeRate = { 0.1, 0.1 };                              //サイズ倍率.
 
-	{
-		INT_XY imgSize  = GraphMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
-		DBL_XY sizeRate = { 0.1, 0.1 };                                 //サイズ倍率.
+	INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
 
-		INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
+	//タイルのように貼り付ける.
+	for (int x = 0; x < WINDOW_WID + size.x; x += size.x) {
+		for (int y = -size.y; y < WINDOW_HEI; y += size.y) {
 
-		//タイルのように貼り付ける.
-		for (int x = 0; x < WINDOW_WID + size.x; x += size.x) {
-			for (int y = -size.y; y < WINDOW_HEI; y += size.y) {
+			BG_Tile tile; //タイルを作成.
 
-				BG_Tile tile; //タイルを作成.
-
-				tile.pos.x = x; 
-				tile.pos.y = y;
-				tile.sizeRate = sizeRate;
-				tile.Init();
- 				tiles.push_back(tile); //配列に追加.
-			}
+			tile.pos.x = x;
+			tile.pos.y = y;
+			tile.sizeRate = sizeRate;
+			tile.Init();
+			tiles.push_back(tile); //配列に追加.
 		}
 	}
 
 	tmShine.Start(); //タイマー開始.
 }
+
 //更新.
 void BG1::Update() {
 
@@ -111,46 +99,39 @@ void BG1::Update() {
 		i.Update();
 	}
 }
-//描画.
-void BG1::Draw() {
 
-	//スローモード経過時間.
-	float pass = gameMng->GetGameScene()->GetReflectModeTime();
-	//最初の0.5秒
-	double time = 0.5-(pass -(REFLECT_MODE_TIME-0.5));
-	time = Calc::AnimEase(EaseType::OutQuad, time); //値の曲線変動.
+//描画(通常時)
+void BG1::DrawNor(double modeAlpha, double count) {
 
 	//各タイル描画.
 	for (auto& i : tiles) {
-		i.Draw(time);
+		i.DrawNor(modeAlpha, count);
 	}
-	//スローモード中.
-	if (gameData->speedRate) {
-		//グラデーション枠線.
-		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * time),
-			[&]() {
-				GraphMng::Get(_T("reflect_mode_frame"))->Draw({WINDOW_WID/2, WINDOW_HEI/2});
-			}
-		);
-		//枠線.
-		Box box = { {WINDOW_WID/2, WINDOW_HEI/2}, {WINDOW_WID * time, WINDOW_HEI * time}, COLOR_PLY_REFLECT, 1.0f };
-		DrawBoxKR(box, Anchor::Mid, false, true);
+}
+
+//描画(反射モード)
+void BG1::DrawRef(double modeAlpha, double count) {
+
+	//各タイル描画.
+	for (auto& i : tiles) {
+		i.DrawRef(modeAlpha, count);
 	}
 }
 
 //ポーズする.
 void BG1::Pause() {
 	for (auto& i : tiles) {
-		i.timer.Pause();
+		i.shineTimer.Pause();
 	}
+
 }
+
 //ポーズ解除.
 void BG1::PauseEnd() {
 	for (auto& i : tiles) {
 		//稼働中だったならリスタート.
-		if (i.timer.GetState() == TimerState::Pause) {
-			i.timer.Start();
+		if (i.shineTimer.GetState() == TimerState::Pause) {
+			i.shineTimer.Start();
 		}
 	}
 }

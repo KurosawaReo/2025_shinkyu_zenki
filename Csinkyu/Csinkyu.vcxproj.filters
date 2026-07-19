@@ -8,8 +8,6 @@
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_BigInt.cpp" />
-    <ClCompile Include="KrLib_cpp\KR_Memory.cpp" />
     <ClCompile Include="KrLib_Dx\KR_App.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Calc.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Camera.cpp" />
@@ -21,7 +19,6 @@
     <ClCompile Include="KrLib_Dx\KR_Input.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerBase.cpp" />
     <ClCompile Include="KrLib_Dx\KR_ManagerInsts.cpp" />
-    <ClCompile Include="KrLib_Dx\KR_Matrix.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Object.cpp" />
     <ClCompile Include="KrLib_Dx\KR_SceneMng.cpp" />
     <ClCompile Include="KrLib_Dx\KR_Sound.cpp" />
@@ -62,9 +59,6 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="KrLib_cpp\KR_BigInt.h" />
-    <ClInclude Include="KrLib_cpp\KR_Memory.h" />
-    <ClInclude Include="KrLib_cpp\KR_Singleton.h" />
     <ClInclude Include="KrLib_Dx\KR_App.h" />
     <ClInclude Include="KrLib_Dx\KR_Calc.h" />
     <ClInclude Include="KrLib_Dx\KR_Camera.h" />
@@ -76,7 +70,6 @@
     <ClInclude Include="KrLib_Dx\KR_Input.h" />
     <ClInclude Include="KrLib_Dx\KR_ManagerBase.h" />
     <ClInclude Include="KrLib_Dx\KR_ManagerInsts.h" />
-    <ClInclude Include="KrLib_Dx\KR_Matrix.h" />
     <ClInclude Include="KrLib_Dx\KR_Object.h" />
     <ClInclude Include="KrLib_Dx\KR_ObjectList.h" />
     <ClInclude Include="KrLib_Dx\KR_SceneMng.h" />
@@ -107,6 +100,7 @@
     <ClInclude Include="KrLib_cpp\KR_Format.h" />
     <ClInclude Include="KrLib_cpp\KR_Global.h" />
     <ClInclude Include="KrLib_cpp\KR_Language.h" />
+    <ClInclude Include="BGBase.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="_memo.txt" />

@@ -281,10 +281,8 @@ void GameManager::GamePauseEnd() {
 //ポーズ画面.
 void GameManager::DrawPause() {
 
-#if !defined NO_SHOW_PAUSE
 	DrawStr str(_T("PAUSE"), App::GetWindowRect().GetMid(), 0xffffff);
 	str.Draw(Anchor::Mid, gameData->fonts["size40"].GetFont());
-#endif
 }
 
 //ゲーム終了(死亡)
@@ -344,11 +342,11 @@ void GameManager::GameOver() {
 				}
 
 #if !defined BGM_NONE
-				//BGMフェードアウト.
+				//元のBGMをフェードアウト.
 				if (auto i = soundMng->Get(gameSceneBgm)) {
 					i->FadeOutPlay(2); //再生.
 				}
-				//ゲームオーバーBGM.
+				//ゲームオーバーBGM再生.
 				if (auto i = soundMng->Get(_T("BGM_Over"))) {
 					i->Play(true, 68); //再生.
 				}

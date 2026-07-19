@@ -2,42 +2,43 @@
    - BG3.h -
 */
 #pragma once
-
-#include "DxLib.h"
-#include <vector>
+#include "BGBase.h"
 
 //背景3.
-class BG3
+class BG3 : public BGBase
 {
+//▼ ===== 変数 ===== ▼.
 private:
-
-	//==============================
-	// 六角形1枚分の情報
-	//==============================
-	struct HexData
+	//疑似3Dオブジェクト.
+	struct WarpPoint
 	{
-		float x;
-		float z;
+		double x;
+		double y;
+		double z;
 
-		//高さ(凹凸)
-		float height;
-
-		//発光するか
-		bool isGlow;
+		// 前フレーム位置
+		double oldZ;
 	};
 
-	//六角形リスト.
-	std::vector<HexData> m_hexList;
+	static constexpr int POINT_NUM = 220;
 
-	//光アニメ用.
-	float m_glowAnim = 0.0f;
+	WarpPoint point[POINT_NUM];
 
+	double angle; //回転角.
+	double pulse; //明滅.
+
+
+//▼ ===== 関数 ===== ▼.
 public:
-	void Init();
-	void Update();
-	void Draw();
+	void Init()   override;
+	void Update() override;
+
+	//描画用.
+	void DrawNor   (double modeAlpha, double count) override;	//描画(通常時)
+	void DrawRef   (double modeAlpha, double count) override;	//描画(反射モード)
+	void DrawCommon(double modeAlpha, MY_COLOR mainColor);		//描画(共通)
 
 	//ポーズ用.
-	void Pause();
-	void PauseEnd();
+	void Pause()    override;
+	void PauseEnd() override;
 };

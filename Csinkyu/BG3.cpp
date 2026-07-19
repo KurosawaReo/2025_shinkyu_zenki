@@ -3,389 +3,154 @@
 */
 #include "BG3.h"
 
+#include "Global.h"
 #include <cmath>
-#include <cstdlib>
 
-//=========================================
-// 定数
-//=========================================
+//初期化.
+void BG3::Init() {
+    angle = 0.0;
+    pulse = 0.0;
 
-//六角形サイズ.
-constexpr float HEX_SIZE = 70.0f;
+    // ランダム配置
+    for (int i = 0; i < POINT_NUM; i++)
+    {
+        point[i].x = GetRand(4000) - 2000;
+        point[i].y = GetRand(4000) - 2000;
+        point[i].z = GetRand(3000) + 100;
 
-//グリッド数.
-constexpr int GRID_X = 18;
-constexpr int GRID_Z = 18;
-
-//高さ.
-constexpr float HEIGHT_MIN = 5.0f;
-constexpr float HEIGHT_MAX = 40.0f;
-
-//配置間隔.
-constexpr float HEX_X_SPACING = HEX_SIZE * 1.75f;
-constexpr float HEX_Z_SPACING = HEX_SIZE * 1.50f;
-
-//色.
-constexpr int COLOR_DARK_R = 10;
-constexpr int COLOR_DARK_G = 25;
-constexpr int COLOR_DARK_B = 30;
-
-constexpr int COLOR_LIGHT_R = 40;
-constexpr int COLOR_LIGHT_G = 80;
-constexpr int COLOR_LIGHT_B = 90;
-
-//発光色.
-constexpr int GLOW_R = 50;
-constexpr int GLOW_G = 255;
-constexpr int GLOW_B = 255;
-
-
-//=========================================
-// 六角形頂点取得
-// centerX, centerZ : 中心座標
-// radius           : 六角形サイズ
-// y                 : 高さ
-//=========================================
-static void CreateHexVertices(
-	VECTOR outVertices[6],
-	float centerX,
-	float centerZ,
-	float radius,
-	float y
-)
-{
-	for (int i = 0; i < 6; i++)
-	{
-		//60度ずつ回転.
-		float angle = DX_PI_F / 180.0f * (60.0f * i);
-
-		//円周上に頂点配置.
-		float x = centerX + cosf(angle) * radius;
-		float z = centerZ + sinf(angle) * radius;
-
-		outVertices[i] = VGet(x, y, z);
-	}
+        point[i].oldZ = point[i].z;
+    }
 }
 
+//更新.
+void BG3::Update() {
 
-//=========================================
-// 六角形上面描画
-//=========================================
-static void DrawHexTop(
-	const VECTOR topVertices[6],
-	int color
-)
-{
-	//中心点.
-	VECTOR center = VGet(0, 0, 0);
+    angle += 0.002;
+    pulse += 0.04;
 
-	for (int i = 0; i < 6; i++)
-	{
-		center.x += topVertices[i].x;
-		center.y += topVertices[i].y;
-		center.z += topVertices[i].z;
-	}
+    // ワープ速度
+    constexpr double SPEED = 18.0;
 
-	center.x /= 6.0f;
-	center.y /= 6.0f;
-	center.z /= 6.0f;
+    for (int i = 0; i < POINT_NUM; i++)
+    {
+        point[i].oldZ = point[i].z;
 
-	//扇状三角形で描画.
-	for (int i = 0; i < 6; i++)
-	{
-		int next = (i + 1) % 6;
+        point[i].z -= SPEED;
 
-		DrawTriangle3D(
-			center,
-			topVertices[i],
-			topVertices[next],
-			color,
-			TRUE
-		);
-	}
+        // 手前へ来たら奥へ戻す
+        if (point[i].z < 50)
+        {
+            point[i].x = GetRand(4000) - 2000;
+            point[i].y = GetRand(4000) - 2000;
+            point[i].z = 3000;
+
+            point[i].oldZ = point[i].z;
+        }
+    }
 }
 
-
-//=========================================
-// 側面描画
-//=========================================
-static void DrawHexSides(
-	const VECTOR topVertices[6],
-	float bottomY,
-	int color
-)
-{
-	for (int i = 0; i < 6; i++)
-	{
-		int next = (i + 1) % 6;
-
-		//上面頂点.
-		VECTOR topA = topVertices[i];
-		VECTOR topB = topVertices[next];
-
-		//下面頂点.
-		VECTOR bottomA = VGet(
-			topA.x,
-			bottomY,
-			topA.z
-		);
-
-		VECTOR bottomB = VGet(
-			topB.x,
-			bottomY,
-			topB.z
-		);
-
-		//四角形を三角形2枚で描画.
-		DrawTriangle3D(
-			topA,
-			topB,
-			bottomA,
-			color,
-			TRUE
-		);
-
-		DrawTriangle3D(
-			bottomA,
-			topB,
-			bottomB,
-			color,
-			TRUE
-		);
-	}
+//描画(通常時)
+void BG3::DrawNor(double modeAlpha, double count) {
+    DrawCommon(modeAlpha, { 80, 180, 255 });
 }
 
-
-//=========================================
-// 発光ライン
-//=========================================
-static void DrawGlow(
-	float x,
-	float y,
-	float z,
-	float anim
-)
-{
-	//脈動.
-	float scale =
-		0.8f +
-		sinf(anim + (x + z) * 0.01f) * 0.2f;
-
-	int alpha =
-		(int)(
-			120 +
-			sinf(anim + (x * 0.02f)) * 60
-		);
-
-	alpha = max(0, min(alpha, 255));
-
-	//疑似ブルーム.
-	for (int i = 0; i < 4; i++)
-	{
-		float size =
-			40.0f +
-			i * 15.0f;
-
-		DrawBillboard3D(
-			VGet(x, y + 5.0f, z),
-			0.5f,
-			0.5f,
-			size * scale,
-			0.0f,
-			-1,
-			GetColor(
-				GLOW_R - i * 10,
-				GLOW_G,
-				GLOW_B
-			),
-			TRUE
-		);
-	}
+//描画(反射モード)
+void BG3::DrawRef(double modeAlpha, double count) {
+    DrawCommon(modeAlpha, { 255, 80, 200 });
 }
 
+//描画(共通)
+void BG3::DrawCommon(double modeAlpha, MY_COLOR mainColor) {
 
-//=========================================
-// 初期化
-//=========================================
-void BG3::Init()
-{
-	m_hexList.clear();
+    const DBL_XY center =
+    {
+        WINDOW_WID / 2.0,
+        WINDOW_HEI / 2.0
+    };
 
-	//乱数固定.
-	srand(0);
+    //==============================
+    // 疑似3D ワープライン
+    //==============================
+    constexpr double FOV = 500.0;
 
-	//六角形生成.
-	for (int z = 0; z < GRID_Z; z++)
-	{
-		for (int x = 0; x < GRID_X; x++)
-		{
-			HexData data{};
+    for (int i = 0; i < POINT_NUM; i++)
+    {
+        WarpPoint& p = point[i];
 
-			//奇数行を半マスずらす.
-			float offsetX =
-				(z % 2) ?
-				HEX_X_SPACING * 0.5f :
-				0.0f;
+        // 奥すぎる場合は描画しない
+        if (p.z <= 1.0)
+            continue;
 
-			//配置.
-			data.x =
-				(x * HEX_X_SPACING)
-				+ offsetX
-				- 800.0f;
+        //--------------------------------
+        // 回転
+        //--------------------------------
+        double c = cos(angle * 0.3);
+        double s = sin(angle * 0.3);
 
-			data.z =
-				(z * HEX_Z_SPACING)
-				- 600.0f;
+        double rx = p.x * c - p.y * s;
+        double ry = p.x * s + p.y * c;
 
-			//==========================
-			// 高さ生成
-			// ランダムだと汚いので
-			// sin/cosで自然な凹凸
-			//==========================
-			float noise =
-				sinf(x * 0.45f) +
-				cosf(z * 0.38f);
+        //--------------------------------
+        // 現在座標
+        //--------------------------------
+        double scale = FOV / p.z;
 
-			noise *= 0.5f;
-			noise += 0.5f;
+        DBL_XY now =
+        {
+            center.x + rx * scale,
+            center.y + ry * scale
+        };
 
-			data.height =
-				HEIGHT_MIN +
-				noise *
-				(HEIGHT_MAX - HEIGHT_MIN);
+        //--------------------------------
+        // 前フレーム座標
+        //--------------------------------
+        double oldScale = FOV / p.oldZ;
 
-			//一部だけ発光.
-			data.isGlow =
-				(rand() % 100) < 25;
+        DBL_XY old =
+        {
+            center.x + rx * oldScale,
+            center.y + ry * oldScale
+        };
 
-			m_hexList.push_back(data);
-		}
-	}
+        //--------------------------------
+        // 画面外ならスキップ
+        //--------------------------------
+        if (now.x < -100 || now.x > WINDOW_WID + 100)
+            continue;
+
+        if (now.y < -100 || now.y > WINDOW_HEI + 100)
+            continue;
+
+        //--------------------------------
+        // 線の太さ
+        //--------------------------------
+        double thick = 1.0 + (3000.0 - p.z) / 800.0;
+
+        if (thick > 5.0)
+            thick = 5.0;
+
+        //--------------------------------
+        // 描画
+        //--------------------------------
+        Line line;
+        line.stPos = old;
+        line.edPos = now;
+        line.color = mainColor;
+        line.thick = thick;
+
+        DrawMode::Exe(
+            DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * modeAlpha),
+            [&]() {
+                DrawLineKR(line, true);
+            }
+        );
+    }
 }
 
-//=========================================
-// 更新
-//=========================================
-void BG3::Update()
-{
-	//発光アニメ用時間.
-	m_glowAnim += 0.03f;
+//ポーズする.
+void BG3::Pause() {
 }
 
-
-//=========================================
-// 描画
-//=========================================
-void BG3::Draw()
-{
-	//==================================================
-	// 仮カメラ
-	// 少し下から見上げる角度
-	//==================================================
-	SetCameraPositionAndTarget_UpVecY(
-		VGet(0.0f, 250.0f, -650.0f),
-		VGet(0.0f, 40.0f, 100.0f)
-	);
-
-	//背景色.
-	ClearDrawScreen();
-
-	//==================================================
-	// 六角形描画
-	//==================================================
-	for (const auto& hex : m_hexList)
-	{
-		//----------------------------------------
-		// 六角形頂点生成
-		//----------------------------------------
-		VECTOR topVertices[6];
-
-		CreateHexVertices(
-			topVertices,
-			hex.x,
-			hex.z,
-			HEX_SIZE,
-			hex.height
-		);
-
-		//----------------------------------------
-		// 色決定
-		//----------------------------------------
-		int baseColor;
-
-		//高さによって少し明るさ変更.
-		float brightness =
-			hex.height / HEIGHT_MAX;
-
-		int r =
-			COLOR_DARK_R +
-			(int)(
-				(COLOR_LIGHT_R - COLOR_DARK_R)
-				* brightness
-				);
-
-		int g =
-			COLOR_DARK_G +
-			(int)(
-				(COLOR_LIGHT_G - COLOR_DARK_G)
-				* brightness
-				);
-
-		int b =
-			COLOR_DARK_B +
-			(int)(
-				(COLOR_LIGHT_B - COLOR_DARK_B)
-				* brightness
-				);
-
-		baseColor = GetColor(r, g, b);
-
-		//----------------------------------------
-		// 側面描画
-		//----------------------------------------
-		DrawHexSides(
-			topVertices,
-			-100.0f,
-			baseColor
-		);
-
-		//----------------------------------------
-		// 上面描画
-		//----------------------------------------
-		DrawHexTop(
-			topVertices,
-			baseColor
-		);
-
-		//----------------------------------------
-		// 発光
-		//----------------------------------------
-		if (hex.isGlow)
-		{
-			DrawGlow(
-				hex.x,
-				hex.height,
-				hex.z,
-				m_glowAnim
-			);
-		}
-	}
-}
-
-
-//=========================================
-// ポーズ
-//=========================================
-void BG3::Pause()
-{
-
-}
-
-
-//=========================================
-// ポーズ解除
-//=========================================
-void BG3::PauseEnd()
-{
-
+//ポーズ解除.
+void BG3::PauseEnd() {
 }

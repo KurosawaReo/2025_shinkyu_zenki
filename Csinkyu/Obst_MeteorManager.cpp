@@ -86,7 +86,9 @@ void MeteorManager::Update() {
 	//タイマーが0になったら.
 	else {
 		SpawnMeteor(); //隕石生成.
-		timer = METEOR_SPAWN_SPAN * gameData->spawnRate; //タイマー再開(徐々に短くなる)
+
+		//次に出現するまでの時間(徐々に短くなる)
+		timer = METEOR_SPAWN_SPAN * gameData->spawnRate * gameData->spawnRate;
 	}
 
 	//全隕石ループ.

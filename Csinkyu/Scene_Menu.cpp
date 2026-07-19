@@ -79,7 +79,7 @@ void MenuScene::Update() {
 				sceneMng->SetScene(_T("Game"));
 				gameData->stage = Stage_Endless;
 				//背景変更.
-				bgMng->SetBgNo(1);
+				bgMng->SetBgNo(3);
 
 #if !defined BGM_NONE
 

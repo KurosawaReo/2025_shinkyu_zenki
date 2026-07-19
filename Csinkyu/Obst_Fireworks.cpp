@@ -126,7 +126,7 @@ void Fireworks::UpdateIndividualFireworks() {
 			//”š”­‰¹.
 			if (!isPlaySound) {
 				if (auto i = soundMng->Get(_T("Fireworks"))) {
-					i->Play(false, 80); //Ä¶.
+					i->Play(false, 100); //Ä¶.
 				}
 				isPlaySound = true; //‚à‚¤Ä¶‚µ‚È‚¢.
 			}

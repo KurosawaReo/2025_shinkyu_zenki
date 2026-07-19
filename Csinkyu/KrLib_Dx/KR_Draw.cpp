@@ -175,50 +175,6 @@ namespace KR
 		handle = CreateFontToHandle(fontName.c_str(), size, thick, _int(fontId));
 	}
 
-// ▼*--=<[ GradLine ]>=--*▼ //
-	
-	//頂点追加.
-	void GradLine::AddPoint(DBL_XY pos, MY_COLOR color) {
-
-		VERTEX2D point;
-		point.pos = VGet(_flt(pos.x), _flt(pos.y), 0); //VECTOR型にして登録.
-		point.dif = color.GetColorU8();                //COLOR_U8で登録.
-		point.rhw = 1.0f;                              //2Dでは不要?
-		point.u = point.v = 0.0f;                      //テクスチャUVは使わない.
-
-		points.push_back(point); //頂点追加.
-	}
-	//描画.
-	void GradLine::Draw(bool isClose, bool isCameraDisp) {
-
-		//頂点の数.
-		int count = _int((isClose) ? points.size()+1 : points.size());
-		//頂点配列.
-		vector<VERTEX2D> tmp(count);
-
-		//頂点データをコピー.
-		for (int i = 0; i < points.size(); i++) {
-			tmp[i] = points[i]; //頂点を登録.
-			//カメラ基準に変換.
-			if (isCameraDisp) {
-				tmp[i].pos.x -= _flt(App::GetWindowRect().GetLU().x);
-				tmp[i].pos.y -= _flt(App::GetWindowRect().GetLU().y);
-			}
-		}
-		if (isClose) {
-			tmp[points.size()] = tmp[0]; //終点に始点を入れる.
-		}
-
-		//描画.
-		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, 255,
-			[&]() {
-				//TODO: ↓DX_PRIMTYPE_LINESTRIP以外の機能.
-				DrawPrimitive2D(tmp.data(), count, DX_PRIMTYPE_LINESTRIP, DX_NONE_GRAPH, FALSE);
-			}
-		);
-	}
-
 // ▼*--=<[ DrawMode ]>=--*▼ //
 
 	DrawMode DrawMode::inst;
