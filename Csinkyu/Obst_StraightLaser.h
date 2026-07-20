@@ -9,21 +9,17 @@
 class StraightLaserPoint
 {
 private:
-	float  laserSpawnTimer{};  // レーザー発射タイマー.
-	float  predictionTimer{};  // 予測線タイマー.
-	int    currentDirection{}; // 現在の発射方向
-	double nextCenterPos{};    // 次のレーザー発射位置（予測線用）
-	int    nextDirection{};    // 次の発射方向
-	bool   isShowPreLine{};    // 予測線表示フラグ
+	double centerPos{};	//レーザー発射位置.
+	int    shotDir{};	//発射方向.
 
 public:
 	void Init();
 	void Reset();
-	void Update();
-	void Draw();
 
-	void ShotLaser(); //直線レーザー発射.
-	void DrawPreLine();
+	void ShotLaser();	//レーザー発射.
+	void ShotRand();	//レーザー位置抽選.
+
+	void DrawPreLine(float count);
 };
 
 //直線レーザー.
@@ -32,6 +28,10 @@ class StraightLaser final : public ManagerBase
 //▼ ===== 変数 ===== ▼.
 private:
 	StraightLaserPoint points[2];
+
+	float  counter{};			//レーザー発射タイマー.
+	float  counterPrediction{};	//予測線タイマー.
+	bool   isShowPreLine{};		//予測線表示フラグ.
 
 //▼ ===== 関数 ===== ▼.
 public:

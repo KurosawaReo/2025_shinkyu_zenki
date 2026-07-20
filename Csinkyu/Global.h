@@ -38,7 +38,6 @@ enum StageType
 /* ゲーム設定 */
 //#define INPUT_CHANGE_ARCADE   //定義するとアーケード操作にする, しないとコントローラ操作に.
 //#define BGM_NONE              //定義するとBGMをoffに.
-//#define NO_SHOW_PAUSE		    //定義するとポーズ表示をoffに.
 
 /* 撮影用 */
 //#define INVALID_ITEM            //定義すると「アイテム」　　を無効にする.
@@ -64,8 +63,6 @@ enum StageType
 #define FPS								(80)			//フレームレート.
 
 //ゲーム設定.
-#define GAME_SPEED						(1.0)			//[展示用]ゲーム速度倍率(通常は1.0)
-
 #define GAME_START_TIME					(1.0)			//ゲーム開始するまでの遅延.
 #define TUTORIAL_START_WAIT_TIME        (1.5)           //チュートリアルで項目が開始した時の停止時間.
 #define TUTORIAL_END_NEXT_TIME          (1.0)           //チュートリアルで次に進む間隔時間.
@@ -75,6 +72,10 @@ enum StageType
 #define SLOW_MODE_SPEED					(0.20f)			//スロー速度倍率.
 #define SLOW_MODE_DIS_LEN				(50)			//スローになるプレイヤーとレーザーの距離範囲.
 #define SLOW_MODE_BUF_F                 (30)            //スローが継続するフレーム数.
+
+#define BGM_VOLUME_MENU					(90)			//メニューBGMの音量.
+#define BGM_VOLUME_ENDLESS				(65)			//エンドレスモードBGMの音量.
+#define BGM_VOLUME_TUTORIAL				(65)			//チュートリアルモードBGMの音量.
 
 #define MIDDLE_ANIM_TIME				(120)			//レベルアップアニメーション時間.
 
@@ -91,7 +92,7 @@ enum StageType
 #define PLAYER_DASH_COOLDOWN            (30)            //ダッシュクールダウン（フレーム）
 #define PLAYER_DASH_EFFECT_MAX          (5)             //最大エフェクト数.
 #define PLAYER_DASH_EFFECT_TIME			(10)			//エフェクト時間.
-#define PLAYER_DASH_REFLECT_TIME		(0.5)			//ダッシュ反射の継続時間.
+#define PLAYER_DASH_REFLECT_TIME		(10)			//ダッシュ反射の継続時間.
 
 //アイテム.
 #define ITEM_COUNT						(2)				//アイテムの数.
@@ -133,7 +134,7 @@ enum StageType
 #define LASER_FAL_HIT_ABLE				(70)			//↑のうち、当たり判定を持たせる時間.
 
 //障害物: 隕石.
-#define METEOR_SPAWN_SPAN				(120)			//隕石の出現時間間隔.
+#define METEOR_SPAWN_SPAN				(200)			//隕石の出現時間間隔.
 #define METEOR_SPEED					(2)				//移動速度.
 #define METEOR_DEST_OUT_DIS				(50)			//隕石が画面外で消える距離.
 #define METEOR_DEST_TIME				(20)			//隕石の破壊時間.

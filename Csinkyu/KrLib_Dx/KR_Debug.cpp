@@ -61,17 +61,6 @@ namespace KR
 		void LogPadID() {
 			DrawFormatString(100, 300, 0xFFFFFF, _T("pad:%d"), GetJoypadInputState(DX_INPUT_PAD1));
 		}
-		//行列の値を表示.
-		void LogMatrix3(Matrix3 mat) {
-			//サイズ取得.
-			const int size = _int(mat.m.size());
-			//行列ループ.
-			for (int x = 0; x < size; x++) {
-				for (int y = 0; y < size; y++) {
-					DrawFormatString(50+x*50, 50+y*50, 0xFFFFFF, _T("%.2f"), mat.m[x][y]);
-				}
-			}
-		}
 		//ログ消去.
 		void LogClear() {
 			clsDx();

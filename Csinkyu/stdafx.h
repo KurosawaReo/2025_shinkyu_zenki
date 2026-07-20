@@ -34,7 +34,7 @@
 #include "KrLib_Dx/KR_Calc.h"
 #include "KrLib_Dx/KR_Camera.h"
 #include "KrLib_Dx/KR_Debug.h"
-#include "KrLib_Dx/KR_Draw.h"
+#include "KrLib_Dx/KR_DrawGraph.h"
 #include "KrLib_Dx/KR_DrawShape.h"
 #include "KrLib_Dx/KR_Input.h"
 #include "KrLib_Dx/KR_ManagerBase.h"
@@ -48,5 +48,4 @@
 #include "KrLib_cpp/KR_Device.h"
 #include "KrLib_cpp/KR_File.h"
 #include "KrLib_cpp/KR_Format.h"
-#include "KrLib_cpp/KR_Singleton.h"
 using namespace KR;

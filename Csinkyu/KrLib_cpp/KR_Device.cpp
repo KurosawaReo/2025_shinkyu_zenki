@@ -2,6 +2,10 @@
    - KR_Device.cpp - (C++)
 */
 #pragma once
+#include "KR_Device.h"
+
+//[include] ".cpp"ファイルでのみ使うもの.
+#include <Windows.h>
 
 //KrLib名前空間.
 namespace KR

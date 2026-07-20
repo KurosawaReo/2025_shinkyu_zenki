@@ -183,7 +183,7 @@ void Ripples::Hitjudgment()
 			float playerRadius = 10.0f;
 
 			if (distance < (effectSize * 0.8f + playerRadius)) {
-				player->PlayerDeath();
+				player->Death();
 			}
 
 			//ƒTƒEƒ“ƒh.

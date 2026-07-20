@@ -66,10 +66,12 @@ namespace KR
 {
 	//文字コードで切り替え.
 #if defined UNICODE
-	using MY_STRING   = wstring;		//string    UNICODE用.
-	using MY_CHAR     = wchar_t;		//char      UNICODE用.
-	using MY_FSTREAM  = std::wfstream;  //fstream   UNICODE用.
+	//[UNICODEビルド]
+	using MY_STRING   = wstring;		//string.
+	using MY_CHAR     = wchar_t;		//char.
+	using MY_FSTREAM  = std::wfstream;  //fstream.
 #else
+	//[ANSIビルド]
 	using MY_STRING   = string;			//string.
 	using MY_CHAR     = char;			//char.
 	using MY_FSTREAM  = std::fstream;	//fstream.

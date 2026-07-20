@@ -29,30 +29,30 @@ class Player final : public ManagerBase
 {
 //▼ ===== 変数 ===== ▼.
 private:
-	PlayerMode mode{};			//モード.
+	PlayerMode mode{};					//モード.
 	
-	Circle     hit{};			//プレイヤーの当たり判定円.
-	bool       active{};		//有効か.
-	bool       isDebug{};		//デバッグ用.
+	Circle     hit{};					//プレイヤーの当たり判定円.
+	bool       active{};				//有効か.
+	bool       isDebug{};				//デバッグ用.
 
-	DBL_XY	   velocity{};		//移動速度.
-	DBL_XY	   lastInputVec{};	//最後の入力方向.
+	DBL_XY	   velocity{};				//移動速度.
+	DBL_XY	   lastInputVec{};			//最後の入力方向.
 
 	float      dashEndEffectTimer{};	//エフェクト残り時間.
 
-	bool       isDashing{};			//ダッシュ中かどうか.
-	bool       isDashReflect{};		//ダッシュ反射演出を出すか.
-	bool       isDashEndEffect{};	//エフェクト発動フラグ.
+	bool       isDashing{};				//ダッシュ中かどうか.
+	bool       isDashReflect{};			//ダッシュ反射演出を出すか.
+	bool       isDashEndEffect{};		//エフェクト発動フラグ.
 
 	//残像.
 	float          afterCntr{};	 		        //残像用時間カウンター.
 	AfterEffect    after[PLAYER_AFT_IMG_NUM]{}; //残像位置の履歴.
 
 	//ダッシュ.
-	float          dashTimer{};        // ダッシュの残り時間.
-	float          dashCooldown{};     // ダッシュのクールダウン.
+	float          dashTimer{};			//ダッシュの残り時間.
+	float          dashCooldown{};		//ダッシュのクールダウン.
 
-	double         imgRot{};            //プレイヤーの画像角度.
+	double         imgRot{};			//プレイヤーの画像角度.
 
 
 //▼ ===== 関数 ===== ▼.
@@ -83,17 +83,16 @@ public:
 	void Update() override;
 	void Draw  () override;
 
-	void UpdateDash();       //ダッシュ更新.
+	void UpdateDash();	//ダッシュ更新.
 
-	void PlayerMove();       //プレイヤー移動.
-	void PlayerDeath();      //プレイヤー死亡.
-	void PlayerRevival();    //プレイヤー復活.
+	void Move();		//プレイヤー移動.
+	void Death();		//プレイヤー死亡.
+	void Revival();		//プレイヤー復活.
 
-	void UpdateAfterImage(); //残像更新.
-	void DrawAfterImage();   //残像描画.
-
-	//void OnDashEnd();        //ダッシュ終了時エフェクト関数.
-
+	void UpdateAfter();											//残像更新.
+	void DrawAfter();											//残像描画.
+	void DrawAfterNor(int idx);									//残像描画(通常時)
+	void DrawAfterDash(int idx, double anim1, double anim2);	//残像描画(ダッシュ時)
 
 	//使用禁止.
 	Player(const Player*) = delete;

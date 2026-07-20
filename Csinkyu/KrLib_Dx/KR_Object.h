@@ -1,6 +1,6 @@
 /*
    - KR_Object.h - (DxLib)
-   ver.2026/07/02
+   ver.2026/07/18
 
    オブジェクト機能。
    継承して使うことで、Draw/Calc/Inputの一部機能をオブジェクト指向で使える。
@@ -37,7 +37,7 @@ namespace KR
 			useImg(0), tmImgAnim(TimerMode::CountDown, 0), offset(0, 0), isActive(true)
 		{}
 		//画像更新.
-		void UpdateImg();
+		void UpdateImage();
 
 	public:
 		//基本処理.
@@ -54,9 +54,9 @@ namespace KR
 		virtual DBL_XY* GetPosPtr()             = 0;
 		virtual DBL_XY  GetSize  ()       const = 0;
 		//画像.
-		void      SetDrawImg     (MY_STRING name);
-		void      SetDrawImgs    (vector<MY_STRING> names, float changeTime);
-		void      SetStopImgAnim (bool isStop);
+		void      SetImage		 (MY_STRING name);
+		void      SetImages      (vector<MY_STRING> names, float changeTime);
+		void      StopImageAnim  (bool isStop);
 		//Calcの機能.
 		void      FixPosInArea   (DBL_RECT rect);
 		bool      IsOutInArea    (DBL_RECT rect, bool isCompOut, Surface* surface = nullptr);

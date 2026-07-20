@@ -5,6 +5,7 @@
 
 //[include] ".cpp"ファイルでのみ使うもの.
 #include "KR_Calc.h"
+#include "KR_DrawGraph.h"
 #include "KR_DrawShape.h"
 #include "KR_Input.h"
 #include "KR_ManagerInsts.h"
@@ -16,12 +17,12 @@ namespace KR
 // ▼*--=<[ ObjectShape ]>=--*▼ //
 
 	//画像.
-	void ObjectShape::SetDrawImg(MY_STRING name) {
+	void ObjectShape::SetImage(MY_STRING name) {
 		useImg.clear();         //リセット.
 		useImg.push_back(name); //画像名を登録.
 		useImgNo = 0;           //1枚しかない場合は0で固定.
 	}
-	void ObjectShape::SetDrawImgs(vector<MY_STRING> names, float changeTime) {
+	void ObjectShape::SetImages(vector<MY_STRING> names, float changeTime) {
 		//同じものでなければ.
 		if (useImg != names) {
 			useImg = names; //画像名配列を登録.
@@ -32,7 +33,7 @@ namespace KR
 	}
 	//画像アニメーション設定.
 	//ポーズ画面などに使う想定.
-	void ObjectShape::SetStopImgAnim(bool isStop) {
+	void ObjectShape::StopImageAnim(bool isStop) {
 		if (isStop) {
 			tmImgAnim.Pause(); //停止する(ポーズ)
 		}
@@ -41,7 +42,7 @@ namespace KR
 		}
 	}
 	//画像更新.
-	void ObjectShape::UpdateImg() {
+	void ObjectShape::UpdateImage() {
 		//複数の画像がある場合のみ.
 		if (useImg.size() > 1) {
 			//一定時間で画像切り替え.
@@ -101,12 +102,12 @@ namespace KR
 			return;
 		}
 
-		UpdateImg(); //画像更新.
+		UpdateImage(); //画像更新.
 
 		//画像名を登録しているなら.
 		if (useImg.size() > 0) {
 			//画像データがある場合.
-			if (auto pImg = DrawImgMng::Get(useImg[useImgNo])) {
+			if (auto pImg = GraphMng::Get(useImg[useImgNo])) {
 				//座標にoffsetを足す.
 				DBL_XY pos = GetPos() + offset;
 				//描画.
@@ -138,12 +139,12 @@ namespace KR
 			return;
 		}
 
-		UpdateImg(); //画像更新.
+		UpdateImage(); //画像更新.
 
 		//画像名を登録しているなら.
 		if (useImg.size() > 0) {
 			//画像データがある場合.
-			if (auto pImg = DrawImgMng::Get(useImg[useImgNo])) {
+			if (auto pImg = GraphMng::Get(useImg[useImgNo])) {
 				//座標にoffsetを足す.
 				DBL_XY pos = GetPos() + offset;
 				//描画.
@@ -175,12 +176,12 @@ namespace KR
 			return;
 		}
 
-		UpdateImg(); //画像更新.
+		UpdateImage(); //画像更新.
 
 		//画像名を登録しているなら.
 		if (useImg.size() > 0) {
 			//画像データがある場合.
-			if (auto pImg = DrawImgMng::Get(useImg[useImgNo])) {
+			if (auto pImg = GraphMng::Get(useImg[useImgNo])) {
 				//座標にoffsetを足す.
 				DBL_XY pos = GetPos() + offset;
 				//描画.
@@ -212,12 +213,12 @@ namespace KR
 			return;
 		}
 
-		UpdateImg(); //画像更新.
+		UpdateImage(); //画像更新.
 
 		//画像名を登録しているなら.
 		if (useImg.size() > 0) {
 			//画像データがある場合.
-			if (auto pImg = DrawImgMng::Get(useImg[useImgNo])) {
+			if (auto pImg = GraphMng::Get(useImg[useImgNo])) {
 				//座標にoffsetを足す.
 				DBL_XY pos = GetPos() + offset;
 				//描画.
