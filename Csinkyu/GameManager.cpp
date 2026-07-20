@@ -72,6 +72,7 @@ void GameManager::Init() {
 		GraphMng::LoadImg(_T("ui_back_time.png"),		_T("ui_back_time"));
 		GraphMng::LoadImg(_T("score100.png"),			_T("score100"));
 		GraphMng::LoadImg(_T("score500.png"),			_T("score500"));
+		GraphMng::LoadImg(_T("target.png"),				_T("target"));
 
 		//[KrLib] 動画.
 		GraphMng::SetPath(_T("Resources/Movies/"));	//共通パスの設定.

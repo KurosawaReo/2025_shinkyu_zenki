@@ -61,11 +61,7 @@ void Meteor::Draw() {
 
 	//ターゲットマーク.
 	if (isTargeting) {
-		Circle tmp(pos, 0, 0xff00ff, 1);
-		tmp.r = 10;
-		DrawCircleKR(tmp, Anchor::Mid, false, true);
-		tmp.r = 15;
-		DrawCircleKR(tmp, Anchor::Mid, false, true);
+		GraphMng::Get(_T("target"))->DrawExtend(pos, { 0.1, 0.1 });
 	}
 
 	//破壊モード限定.
@@ -196,13 +192,13 @@ void Meteor::UpdateMeteoLine() {
 		if (state == Meteor_Destroy) {
 
 			//①隕石を構成する線の情報.
-			DBL_XY lineMidPos = Calc::MidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
-			double lineLen    = Calc::Dist(shape.line[i].stPos, lineMidPos);            //長さの半分.
-			double lineAng    = Calc::FacingAng(lineMidPos, shape.line[i].stPos);		//角度.
+			DBL_XY lineMidPos   = Calc::MidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
+			double lineLen      = Calc::Dist(shape.line[i].stPos, lineMidPos);            //長さの半分.
+			double lineAng      = Calc::FacingAng(lineMidPos, shape.line[i].stPos);		  //角度.
 			//②隕石の中央からどんどん離していく.
-			double pivotDis   = Calc::Dist(pos, lineMidPos);                            //隕石の中央からの距離.
-			double pivotAng   = Calc::FacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.
-			DBL_XY newPos     = Calc::ArcPos(pos, pivotAng, pivotDis+destroyCntr);      //距離を増やす.
+			double pivotDis     = Calc::Dist(pos, lineMidPos);                            //隕石の中央からの距離.
+			double pivotAng     = Calc::FacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.
+			DBL_XY newPos       = Calc::ArcPos(pos, pivotAng, pivotDis+destroyCntr);      //距離を増やす.
 			//③新たな線の始点と終点.
 			shape.line[i].stPos = Calc::ArcPos(newPos, lineAng    +destroyCntr, lineLen);
 			shape.line[i].edPos = Calc::ArcPos(newPos, lineAng+180+destroyCntr, lineLen);
