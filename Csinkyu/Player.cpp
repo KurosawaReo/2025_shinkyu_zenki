@@ -112,8 +112,7 @@ void Player::Draw()
 		//残像描画.
 		DrawAfter();
 
-		const float size  = 0.17f;
-		const float size2 = 0.05f;
+		const int alpha = _int(255 * Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION));
 
 		//プレイヤー描画.
 		if (mode == Player_ItemReflect ||
@@ -121,18 +120,38 @@ void Player::Draw()
 		){
 			//ダッシュ演出.
 			if (isDashing) {
-				GraphMng::Get(_T("player_light_ref"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
+				//透過描画.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
+					[&]() {
+						GraphMng::Get(_T("light_ref_player"))->DrawExtend(
+							hit.pos, { PLAYER_LIGHT_DRAW_SIZE, PLAYER_LIGHT_DRAW_SIZE }, Anchor::Mid, true, true
+						);
+					}
+				);
 			}
 			//反射モードの画像.
-			GraphMng::Get(_T("player_ref"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
+			GraphMng::Get(_T("player_ref"))->DrawRota(
+				hit.pos, PLAYER_DRAW_SIZE, imgRot, {0, 0}, true, true
+			);
 		}
 		else {
 			//ダッシュ演出.
 			if (isDashing) {
-				GraphMng::Get(_T("player_light_nor"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
+				//透過描画.
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
+					[&]() {
+						GraphMng::Get(_T("light_nor_player"))->DrawExtend(
+							hit.pos, { PLAYER_LIGHT_DRAW_SIZE, PLAYER_LIGHT_DRAW_SIZE }, Anchor::Mid, true, true
+						);
+					}
+				);
 			}
 			//通常モードの画像.
-			GraphMng::Get(_T("player_nor"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
+			GraphMng::Get(_T("player_nor"))->DrawRota(
+				hit.pos, PLAYER_DRAW_SIZE, imgRot, {0, 0}, true, true
+			);
 		}
 
 		//チュートリアル用.

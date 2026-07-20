@@ -81,6 +81,8 @@ enum StageType
 
 //プレイヤー.
 #define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)
+#define PLAYER_DRAW_SIZE				(0.17)			//プレイヤー本体の描画サイズ.
+#define PLAYER_LIGHT_DRAW_SIZE			(0.40)			//プレイヤー発光の描画サイズ.
 #define PLAYER_REF_ADD_SIZE				(5)				//反射モード時に拡大する当たり判定.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
@@ -88,8 +90,8 @@ enum StageType
 #define PLAYER_MOVE_LERP_SPEED          (0.2)           //プレイヤーの慣性スピードの調整.
 //プレイヤー > ダッシュ.
 #define PLAYER_DASH_SPEED               (1.8)			//ダッシュ速度.
-#define PLAYER_DASH_DURATION            (20)            //ダッシュ持続時間（フレーム）
-#define PLAYER_DASH_COOLDOWN            (30)            //ダッシュクールダウン（フレーム）
+#define PLAYER_DASH_DURATION            (20)            //ダッシュ持続時間(フレーム)
+#define PLAYER_DASH_COOLDOWN            (30)            //ダッシュクールダウン(フレーム)
 #define PLAYER_DASH_EFFECT_MAX          (5)             //最大エフェクト数.
 #define PLAYER_DASH_EFFECT_TIME			(10)			//エフェクト時間.
 #define PLAYER_DASH_REFLECT_TIME		(10)			//ダッシュ反射の継続時間.

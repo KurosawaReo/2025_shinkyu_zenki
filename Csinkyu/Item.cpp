@@ -106,7 +106,7 @@ void ItemManager::Draw()
 					//強化演出.
 					if (items[i].type == Item_Super) {
 						//アイテム発光.
-						GraphMng::Get(_T("item_light"))->DrawExtend(items[i].pos, { 0.05, 0.05 });
+						GraphMng::Get(_T("light_super_item"))->DrawExtend(items[i].pos, { 0.05, 0.05 });
 					}
 					//アイテム本体.
 					{

@@ -60,9 +60,9 @@ void GameManager::Init() {
 		GraphMng::LoadImg(_T("player_normal.png"),		_T("player_nor"));
 		GraphMng::LoadImg(_T("player_reflect.png"),		_T("player_ref"));
 		GraphMng::LoadImg(_T("item.png"),				_T("item"));
-		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("item_light"));
-		GraphMng::LoadImg(_T("light_color_nor.png"),	_T("player_light_nor"));
-		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("player_light_ref"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("light_super_item"));
+		GraphMng::LoadImg(_T("light_color_nor.png"),	_T("light_nor_player"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("light_ref_player"));
 		GraphMng::LoadImg(_T("bg_normal.png"),			_T("bg_normal"));
 		GraphMng::LoadImg(_T("bg_reflect.png"),			_T("bg_reflect"));
 		GraphMng::LoadImg(_T("reflect_mode_frame.png"),	_T("reflect_mode_frame"));
