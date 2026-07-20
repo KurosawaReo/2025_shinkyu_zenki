@@ -18,6 +18,7 @@ constexpr double POINT_LEN    = 18.0;    //飛んでくる線の長さ.
 constexpr double Z_MIN        = 50.0;    //一番手前のz座標.
 constexpr double Z_MAX        = 3000.0;  //一番奥のz座標.
 constexpr double HEX_INTERVAL = 180.0;
+constexpr double FOV          = 500.0;
 
 const MY_COLOR COLOR_NOR = { 80, 180, 255 };
 const MY_COLOR COLOR_REF = { 255, 80, 200 };
@@ -34,9 +35,9 @@ void BG3::Init() {
     //初期位置.
     for (auto& i : point)
     {
-        i.x = GetRand(4000) - 2000;
-        i.y = GetRand(4000) - 2000;
-        i.z = GetRand(Z_MAX) + 100;
+        i.x = Calc::RandNum(-2000.0, 2000.0);
+        i.y = Calc::RandNum(-2000.0, 2000.0);
+        i.z = Calc::RandNum( 100.0,  Z_MAX);
 
         i.oldZ = i.z;
     }
@@ -60,8 +61,8 @@ void BG3::Update() {
         //手前へ来たら奥へ戻す.
         if (i.z < Z_MIN)
         {
-            i.x = GetRand(4000) - 2000;
-            i.y = GetRand(4000) - 2000;
+            i.x = Calc::RandNum(-2000.0, 2000.0);
+            i.y = Calc::RandNum(-2000.0, 2000.0);
             i.z = Z_MAX;
 
             i.oldZ = i.z;
@@ -96,16 +97,11 @@ void BG3::DrawRef(double modeAlpha) {
 //描画(線)
 void BG3::DrawPoints(double modeAlpha, MY_COLOR mainColor) {
 
-    const DBL_XY center =
-    {
-        WINDOW_WID / 2.0,
-        WINDOW_HEI / 2.0
-    };
+    const DBL_XY center = App::GetWindowRect().GetMid().ToDbl();
 
     //==============================
     // 疑似3D ワープライン
     //==============================
-    constexpr double FOV = 500.0;
 
     for (auto& i : point)
     {
@@ -158,8 +154,9 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR mainColor) {
         //--------------------------------
         float thick = _flt(1.0 + (Z_MAX - i.z) / 800.0);
 
-        if (thick > 5.0)
+        if (thick > 5.0) {
             thick = 5.0;
+        }
 
         //--------------------------------
         // 描画
