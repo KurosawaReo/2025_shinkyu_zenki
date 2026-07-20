@@ -1,5 +1,6 @@
 /*
    - BG3.cpp -
+   3Dの背景は画面酔いするリスクがあることに注意。
 */
 #include "BG3.h"
 
@@ -11,10 +12,11 @@
 static GameData* gameData;
 
 /* ===== 定数 ===== */
-constexpr double SPEED        = 10.0;
-constexpr double POINT_LEN    = 18.0;
-constexpr double Z_MIN        = 50.0;   //一番手前のz座標.
-constexpr double Z_MAX        = 3000.0; //一番奥のz座標.
+constexpr double MOVE_SPEED   = 4.0;     //前に移動する速度.
+constexpr double ROT_SPEED    = 0.002;   //回転する速度.
+constexpr double POINT_LEN    = 18.0;    //飛んでくる線の長さ.
+constexpr double Z_MIN        = 50.0;    //一番手前のz座標.
+constexpr double Z_MAX        = 3000.0;  //一番奥のz座標.
 constexpr double HEX_INTERVAL = 180.0;
 
 const MY_COLOR COLOR_NOR = { 80, 180, 255 };
@@ -28,7 +30,6 @@ void BG3::Init() {
     gameData = ManagerInsts::Get<GameData>();
 
     angle = 0.0;
-    pulse = 0.0;
 
     //初期位置.
     for (auto& i : point)
@@ -48,13 +49,12 @@ void BG3::Init() {
 //更新.
 void BG3::Update() {
 
-    angle += 0.002;
-    pulse += 0.04;
+    angle += ROT_SPEED * gameData->speedRate;
 
     for (auto& i : point)
     {
         //移動.
-        i.z -= SPEED * gameData->speedRate;
+        i.z -= MOVE_SPEED * gameData->speedRate;
         i.oldZ = i.z + POINT_LEN;
 
         //手前へ来たら奥へ戻す.
@@ -70,7 +70,7 @@ void BG3::Update() {
     for (auto& i : hex)
     {
         //移動.
-        i.z -= SPEED * gameData->speedRate;
+        i.z -= MOVE_SPEED * gameData->speedRate;
 
         //手前へ来たら奥へ戻す.
         if (i.z < Z_MIN) {
