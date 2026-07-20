@@ -52,26 +52,30 @@ void GameManager::Init() {
 	try {
 		//[KrLib] 画像.
 		GraphMng::SetPath(_T("Resources/Images/"));	//共通パスの設定.
-		GraphMng::LoadImg(_T("logo_text_only.png"),		_T("logo"));
-		GraphMng::LoadImg(_T("logo_all.png"),			_T("logo_all"));
-		GraphMng::LoadImg(_T("new_record.png"),			_T("new_record"));
-		GraphMng::LoadImg(_T("gameover.png"),			_T("gameover"));
-		GraphMng::LoadImg(_T("reflect.png"),			_T("reflect"));
-		GraphMng::LoadImg(_T("player_normal.png"),		_T("player_nor"));
-		GraphMng::LoadImg(_T("player_reflect.png"),		_T("player_ref"));
-		GraphMng::LoadImg(_T("item.png"),				_T("item"));
-		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("item_light"));
-		GraphMng::LoadImg(_T("light_color_nor.png"),	_T("player_light_nor"));
-		GraphMng::LoadImg(_T("light_color_ref.png"),	_T("player_light_ref"));
-		GraphMng::LoadImg(_T("bg_normal.png"),			_T("bg_normal"));
-		GraphMng::LoadImg(_T("bg_reflect.png"),			_T("bg_reflect"));
-		GraphMng::LoadImg(_T("reflect_mode_frame.png"),	_T("reflect_mode_frame"));
-		GraphMng::LoadImg(_T("ui_back_level.png"),		_T("ui_back_level"));
-		GraphMng::LoadImg(_T("ui_back_best_score.png"),	_T("ui_back_best_score"));
-		GraphMng::LoadImg(_T("ui_back_score.png"),		_T("ui_back_score"));
-		GraphMng::LoadImg(_T("ui_back_time.png"),		_T("ui_back_time"));
-		GraphMng::LoadImg(_T("score100.png"),			_T("score100"));
-		GraphMng::LoadImg(_T("score500.png"),			_T("score500"));
+		GraphMng::LoadImg(_T("logo_text_only.png"),			_T("logo"));
+		GraphMng::LoadImg(_T("logo_all.png"),				_T("logo_all"));
+		GraphMng::LoadImg(_T("new_record.png"),				_T("new_record"));
+		GraphMng::LoadImg(_T("gameover.png"),				_T("gameover"));
+		GraphMng::LoadImg(_T("reflect.png"),				_T("reflect"));
+		GraphMng::LoadImg(_T("player_normal.png"),			_T("player_nor"));
+		GraphMng::LoadImg(_T("player_reflect.png"),			_T("player_ref"));
+		GraphMng::LoadImg(_T("player_reflect_barrier.png"),	_T("player_ref_barrier"));
+		GraphMng::LoadImg(_T("item.png"),					_T("item"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),		_T("light_super_item"));
+		GraphMng::LoadImg(_T("light_color_nor.png"),		_T("light_nor_player"));
+		GraphMng::LoadImg(_T("light_color_ref.png"),		_T("light_ref_player"));
+		GraphMng::LoadImg(_T("bg_normal.png"),				_T("bg_normal"));
+		GraphMng::LoadImg(_T("bg_reflect.png"),				_T("bg_reflect"));
+		GraphMng::LoadImg(_T("reflect_mode_frame.png"),		_T("reflect_mode_frame"));
+		GraphMng::LoadImg(_T("ui_back_level.png"),			_T("ui_back_level"));
+		GraphMng::LoadImg(_T("ui_back_best_score.png"),		_T("ui_back_best_score"));
+		GraphMng::LoadImg(_T("ui_back_score.png"),			_T("ui_back_score"));
+		GraphMng::LoadImg(_T("ui_back_time.png"),			_T("ui_back_time"));
+		GraphMng::LoadImg(_T("score100.png"),				_T("score100"));
+		GraphMng::LoadImg(_T("score500.png"),				_T("score500"));
+		GraphMng::LoadImg(_T("target.png"),					_T("target"));
+		GraphMng::LoadImg(_T("bg_star_nor.png"),			_T("bg_star_nor"));
+		GraphMng::LoadImg(_T("bg_star_ref.png"),			_T("bg_star_ref"));
 
 		//[KrLib] 動画.
 		GraphMng::SetPath(_T("Resources/Movies/"));	//共通パスの設定.
@@ -317,9 +321,9 @@ void GameManager::GameOver() {
 			{
 				sceneMng->SetScene(_T("End")); //終了シーンへ.
 
-				gameData->speedRate = 1.0;                             //速度倍率を100%に戻す.
-				gameData->scoreBef = gameData->score;                  //時間加算前のスコアを記録.
-				gameData->score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
+				gameData->speedRate = 1.0;									//速度倍率を100%に戻す.
+				gameData->scoreBef  = gameData->score;						//時間加算前のスコアを記録.
+				gameData->score     += _int(gameScene.GetGameTime() * 10);	//時間ボーナス加算.
 
 				//[score.data]
 				if (gameData->score > gameData->bestScore) {

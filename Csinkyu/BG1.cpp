@@ -9,12 +9,22 @@
 //参照.
 static GameData* gameData;
 
+const DBL_XY SIZE_RATE = { 0.4, 0.4 }; //タイルのサイズ倍率.
+
 // ▼*---=[ BG_Tile ]=---*▼ //
 
 //初期化.
 void BG_Tile::Init() {
 	//参照取得.
 	gameData = ManagerInsts::Get<GameData>();
+}
+
+//リセット.
+void BG_Tile::Reset() {
+	counter = 0;
+	shine   = 0;
+	sinNum  = 0;
+	shineTimer.Reset();
 }
 
 //更新.
@@ -39,7 +49,7 @@ void BG_Tile::DrawNor(double modeAlpha) {
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
 		[&]() {
-			GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+			GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
 		}
 	);
 }
@@ -51,7 +61,7 @@ void BG_Tile::DrawRef(double modeAlpha) {
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
 		[&]() {
-			GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+			GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
 		}
 	);
 }
@@ -70,9 +80,7 @@ void BG_Tile::Shine() {
 void BG1::Init() {
 
 	INT_XY imgSize = GraphMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
-	DBL_XY sizeRate = { 0.1, 0.1 };                              //サイズ倍率.
-
-	INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
+	INT_XY size = { _int_r(imgSize.x * SIZE_RATE.x), _int_r(imgSize.y * SIZE_RATE.y) };
 
 	//タイルのように貼り付ける.
 	for (int x = 0; x < WINDOW_WID + size.x; x += size.x) {
@@ -82,13 +90,23 @@ void BG1::Init() {
 
 			tile.pos.x = x;
 			tile.pos.y = y;
-			tile.sizeRate = sizeRate;
 			tile.Init();
 			tiles.push_back(tile); //配列に追加.
 		}
 	}
 
 	tmShine.Start(); //タイマー開始.
+}
+
+//リセット.
+void BG1::Reset() {
+
+	tmShine.Reset();
+
+	//各タイルリセット.
+	for (auto& i : tiles) {
+		i.Reset();
+	}
 }
 
 //更新.

@@ -30,8 +30,6 @@ enum StageType
 /* デバッグ用 */
 //#define DEBUG_OBJ_ACTIVE		//オブジェクト出現数表示.
 //#define DEBUG_SPAWN_RATE		//召喚間隔表示.
-//#define DEBUG_METEOR_POINT	//隕石目標地点表示.
-//#define DEBUG_METEOR_SPAWN	//隕石召喚範囲表示.
 //#define DEBUG_SHOW_FPS		//FPS表示.　
 //#define DEBUG_CONTR_INPUT		//コントローラ操作表示.
 
@@ -81,22 +79,24 @@ enum StageType
 
 //プレイヤー.
 #define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)
-#define PLAYER_REF_ADD_SIZE				(5)				//反射モード時に拡大する当たり判定.
+#define PLAYER_REF_ADD_SIZE				(12)			//反射モード時に拡大する当たり判定.
+#define PLAYER_DRAW_SIZE				(0.7)			//プレイヤー本体の描画サイズ.
+#define PLAYER_LIGHT_DRAW_SIZE			(0.4)			//プレイヤー発光の描画サイズ.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
 #define PLAYER_MOVE_LERP_SPEED          (0.2)           //プレイヤーの慣性スピードの調整.
 //プレイヤー > ダッシュ.
 #define PLAYER_DASH_SPEED               (1.8)			//ダッシュ速度.
-#define PLAYER_DASH_DURATION            (20)            //ダッシュ持続時間（フレーム）
-#define PLAYER_DASH_COOLDOWN            (30)            //ダッシュクールダウン（フレーム）
+#define PLAYER_DASH_DURATION            (20)            //ダッシュ持続時間(フレーム)
+#define PLAYER_DASH_COOLDOWN            (30)            //ダッシュクールダウン(フレーム)
 #define PLAYER_DASH_EFFECT_MAX          (5)             //最大エフェクト数.
 #define PLAYER_DASH_EFFECT_TIME			(10)			//エフェクト時間.
 #define PLAYER_DASH_REFLECT_TIME		(10)			//ダッシュ反射の継続時間.
 
 //アイテム.
-#define ITEM_COUNT						(2)				//アイテムの数.
-#define ITEM_SIZE						(45)			//アイテムサイズ.
+#define ITEM_SPAWN_TIME					(500)			//アイテムの出現時間.
+#define ITEM_SIZE						(50)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME				(400)           //アイテム復活時間.
 
@@ -181,17 +181,19 @@ enum StageType
 #define SCORE_ANIM_TIME					(50)			//スコアのアニメーション時間.
 
 //カラー.
+#define COLOR_MODE_NOR					(GetColor(50, 255, 255))		//通常モードのメインカラー.
+#define COLOR_MODE_REF					(GetColor(255, 0, 255))			//反射モードのメインカラー.
+#define COLOR_LASER_NORMAL(color)		(GetColor(50, color, 255))		//レーザー(通常)
+#define COLOR_LASER_REFLECT(color)		(GetColor(color/2+128, 0, 255)) //レーザー(反射)
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
-#define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
-#define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
+#define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))		//プレイヤーの残像色(通常)
+#define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))		//プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor(255, 155, 255))
-#define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))   //予測演出.
+#define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))		//予測演出.
 #define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::AnimWave(WaveType::CosLoop, pos.x/250)), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)
-#define COLOR_LASER_NORMAL(color)		(GetColor(50, color, 255))		//レーザー通常カラー.
-#define COLOR_LASER_REFLECT(color)		(GetColor(color/2+128, 0, 255)) //レーザー反射カラー.
 
 #endif

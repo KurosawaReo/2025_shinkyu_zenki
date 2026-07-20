@@ -23,6 +23,12 @@ private:
 	{
 		double z;
 	};
+	struct WarpStar
+	{
+		double x;
+		double y;
+		double z;
+	};
 
 	static constexpr int POINT_NUM = 220;
 	WarpPoint point[POINT_NUM];
@@ -30,18 +36,24 @@ private:
 	static constexpr int HEX_NUM = 20;
 	WarpHex hex[HEX_NUM];
 
+	static constexpr int STAR_NUM = 80;
+	WarpStar star[STAR_NUM];
+
 	double angle; //角度.
 
 
 //▼ ===== 関数 ===== ▼.
 public:
 	void Init   ()                 override; //初期化.
+	void Reset  ()                 override; //リセット.
 	void Update ()                 override; //更新.
 	void DrawNor(double modeAlpha) override; //描画(通常時)
 	void DrawRef(double modeAlpha) override; //描画(反射モード)
 
-	void DrawPoints(double modeAlpha, MY_COLOR mainColor);
+	//パーツ別描画.
+	void DrawPoints  (double modeAlpha, MY_COLOR color);
 	void DrawHexagons(double modeAlpha, MY_COLOR color);
+	void DrawStars   (double modeAlpha, bool isReflect);
 
 	//ポーズ用.
 	void Pause()    override;

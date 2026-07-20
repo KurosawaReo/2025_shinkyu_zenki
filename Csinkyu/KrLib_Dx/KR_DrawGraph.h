@@ -1,6 +1,6 @@
 /*
    - KR_DrawGraph.h - (DxLib)
-   ver.2026/07/18
+   ver.2026/07/20
 
    画像描画に関する機能。
 */
@@ -47,11 +47,11 @@ namespace KR
         INT_XY GetSize() const { return size; }
 
 		//描画(画像/動画)
-		void Draw      (DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawRect  (DBL_XY pos, DBL_RECT rect,                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawRota  (DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0},                           bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
-		void DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool isFloat = false, bool isCameraDisp = true) const;
+		void Draw      (DBL_XY pos,                                                   Anchor anc = Anchor::Mid, bool isTrans = true, bool useFloat = false, bool isCameraDisp = true) const;
+		void DrawRect  (DBL_XY pos, DBL_RECT rect,                                    Anchor anc = Anchor::Mid, bool isTrans = true, bool useFloat = false, bool isCameraDisp = true) const;
+		void DrawExtend(DBL_XY pos, DBL_XY sizeRate,                                  Anchor anc = Anchor::Mid, bool isTrans = true, bool useFloat = false, bool isCameraDisp = true) const;
+		void DrawRota  (DBL_XY pos, double extend, double ang, INT_XY pivot = {0, 0},                           bool isTrans = true, bool useFloat = false, bool isCameraDisp = true) const;
+		void DrawModi  (DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos,                                 bool isTrans = true, bool useFloat = false, bool isCameraDisp = true) const;
 		//動画専用.
 		void PlayMovie (PlayTypeID id, bool isRestart = true);
 		void StopMovie ();
