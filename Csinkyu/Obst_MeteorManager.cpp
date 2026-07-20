@@ -22,7 +22,7 @@ static SoundMng*      soundMng;
 Meteor* MeteorManager::GetHitMeteor(Circle cir, bool isDestroy) {
 
 	//全隕石ループ.
-	for (auto& i : meteor) {
+	for (auto& i : meteors) {
 		if (i.IsHitMeteor(cir)) {
 			return &i; //この隕石を返す.
 		}
@@ -37,7 +37,7 @@ Meteor* MeteorManager::GetTargetMeteor(DBL_XY pos) {
 	double shortest = -1;  //暫定の最短距離.
 
 	//全隕石ループ.
-	for (auto& i : meteor) {
+	for (auto& i : meteors) {
 		//破壊されてる or ターゲットされてるならスキップ.
 		if (i.GetState() == Meteor_Destroy || i.GetIsTargeting()){
 			continue;
@@ -70,11 +70,8 @@ void MeteorManager::Init() {
 
 void MeteorManager::Reset() {
 
-	//自動実行設定.
-	SetAutoExeMode(MngAutoExe::Stop);
-
 	timer = METEOR_SPAWN_SPAN; //初期時間.
-	meteor.clear();            //隕石を全て消去.
+	meteors.clear();           //隕石を全て消去.
 }
 
 void MeteorManager::Update() {
@@ -92,11 +89,11 @@ void MeteorManager::Update() {
 	}
 
 	//全隕石ループ.
-	for (auto i = meteor.begin(); i != meteor.end(); ) {
+	for (auto i = meteors.begin(); i != meteors.end(); ) {
 		i->Update(); //更新.
 		//次の要素へ.
 		if (i->GetIsErase()) {
-			i = meteor.erase(i);
+			i = meteors.erase(i);
 		}
 		else{
 			i++;
@@ -126,7 +123,7 @@ void MeteorManager::Draw() {
 #endif
 
 	//全隕石ループ.
-	for (auto& i : meteor) {
+	for (auto& i : meteors) {
 		i.Draw(); //描画.
 	}
 }
@@ -136,7 +133,7 @@ void MeteorManager::SpawnMeteor(){
 	
 	Meteor tmp;
 	tmp.Init(); //初期化.
-	meteor.push_back(tmp);
+	meteors.push_back(tmp);
 }
 
 //隕石破壊演出.

@@ -11,7 +11,7 @@ class MeteorManager final : public ManagerBase
 {
 //¥ ===== •Ï” ===== ¥.
 private:
-	list<Meteor> meteor;  //è¦Î”z—ñ.
+	list<Meteor> meteors;  //è¦Î”z—ñ.
 	float		 timer{}; //è¦Î¶¬—p.
 
 //¥ ===== ŠÖ” ===== ¥.

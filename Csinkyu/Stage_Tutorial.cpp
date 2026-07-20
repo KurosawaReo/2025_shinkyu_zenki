@@ -132,8 +132,7 @@ void TutorialStage::UpdateStep0() {
 
 	//オブジェクト.
 	ManagerInsts::Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Active);
-	ManagerInsts::Get<NormalLaser>()->UseLaserPointCnt(1); //レーザー数 = 1.
-	ManagerInsts::Get<ItemManager>()->SetItemMaxCnt(1);    //アイテム数 = 1.
+	ManagerInsts::Get<NormalLaser> ()->UseLaserPointCnt(1); //レーザー数 = 1.
 
 	startTimer.Start(); //開始.
 	stepNo++;           //次のステップ.
@@ -215,7 +214,6 @@ void TutorialStage::UpdateStep1() {
 
 				//オブジェクト.
 				ManagerInsts::Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Stop);
-				ManagerInsts::Get<ItemManager>()->ItemSpawn(0); //アイテム召喚.
 
 				//終了処理.
 				StepInEnd();
@@ -274,8 +272,6 @@ void TutorialStage::UpdateStep2() {
 				data.type = Effect_Tutorial_Step3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
-				//オブジェクト.
-				ManagerInsts::Get<ItemManager>()->ItemSpawn(0); //アイテム召喚.
 				//終了処理.
 				StepInEnd();
 				stepNo++;

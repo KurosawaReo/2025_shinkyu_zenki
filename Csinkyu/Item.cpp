@@ -33,128 +33,154 @@ void ItemManager::Init()
 	effectMng = ManagerInsts::Get<EffectManager>();
 	soundMng  = ManagerInsts::Get<SoundMng>();
 }
+
 //リセット.
 void ItemManager::Reset()
 {
-	//自動実行設定.
-	SetAutoExeMode(MngAutoExe::Stop);
-
-	itemMaxCnt = 0; //最大出現数は0にする.
-
-	//全て消滅.
-	for (int i = 0; i < _countof(items); i++) {
-		ItemErase(i);
-	}
+	ItemReset();
 }
+
 //更新.
 void ItemManager::Update()
 {
-	for (int i = 0; i < ITEM_COUNT; i++) {
-
-		//出現済みアイテム.
-		if (items[i].active) {
-
-			//カウンター.
-			items[i].counter += gameData->speedRate;
-			//落下.
-			items[i].pos.y += ITEM_SPEED * gameData->speedRate;
-			//当たり判定.
-			CheckHitPlayer(i);
-
-			//画面下部を超えたら消滅.
-			//チュートリアルテキスト用に余分をつける.
-			if (items[i].pos.y > WINDOW_HEI + ITEM_SIZE + 50) {
-				ItemErase(i);
-			}
-		}
-		//未出現アイテム.
-		else {
-			//召喚可能なら.
-			if (i+1 <= itemMaxCnt) {
-				//反射モード中は加算しない.
-				items[i].spawnCounter += (gameData->isReflectMode) ? 0 : 1;
-				//一定時間で再生成.
-				if (items[i].spawnCounter > ITEM_RESPAWN_TIME)
-				{
-					items[i].spawnCounter = 0; //リセット.
-					ItemSpawn(i);
-				}
-			}
-		}
+	//プレイヤーがいないなら処理しない.
+	if (!player->GetActive()) {
+		return;
+	}
+	//反射モード中は処理しない.
+	if (gameData->isReflectMode) {
+		return;
 	}
 
-	//発動待ちなら(もし何か発動条件をつけるならここに)
-	if (isItemUseWait) {
-		isItemUseWait = false;
-		ItemUse(); //アイテム発動.
+	counter -= gameData->speedRate; //時間経過.
+
+	//アイテム出現.
+	if (counter <= 0) {
+		ItemSpawn();
+		counter = ITEM_SPAWN_TIME;
+	}
+
+	//全アイテムループ.
+	for (auto i = items.begin(); i != items.end(); ) {
+
+		//カウンター.
+		i->counter += gameData->speedRate;
+		//落下.
+		i->pos.y += ITEM_SPEED * gameData->speedRate;
+
+		ItemType type;
+
+		//当たり判定.
+		if (CheckHitPlayer(i, &type)){
+			//効果発動.
+			switch (type)
+			{
+				case Item_Normal:
+					ItemUse(i, false);
+					break;
+				case Item_Super:
+					ItemUse(i, true);
+					break;
+
+				default: assert(false); break;
+			}
+			break;
+		}
+
+		//次の要素へ, 画面下を超えたら消滅.
+		if (i->pos.y > WINDOW_HEI + ITEM_SIZE + 50) {
+			i = items.erase(i);
+		}
+		else {
+			i++;
+		}
 	}
 }
+
 //描画.
 void ItemManager::Draw()
 {
-	for (int i = 0; i < _countof(items); i++) {
+	//全アイテムループ.
+	for (auto& i : items) {
 
-		//有効なアイテムを描画.
-		if (items[i].active) {
+		//透明度.
+		const int alpha = _int(155 + 100 * AnimWave(WaveType::CosLoop, i.counter / 30));
 
-			//透明度.
-			const int alpha = _int(155 + 100 * AnimWave(WaveType::CosLoop, items[i].counter / 30));
-
-			//点滅描画.
-			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
-				[&]() {
-					//強化演出.
-					if (items[i].type == Item_Super) {
-						//アイテム発光.
-						GraphMng::Get(_T("light_super_item"))->DrawExtend(items[i].pos, { 0.05, 0.05 });
-					}
-					//アイテム本体.
-					{
-						DBL_XY size = {
-							ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().x,
-							ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().y
-						};
-						GraphMng::Get(_T("item"))->DrawExtend(items[i].pos, size, Anchor::Mid, true, true);
-					}
+		//点滅描画.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, alpha,
+			[&]() {
+				//強化演出.
+				if (i.type == Item_Super) {
+					//アイテム発光.
+					GraphMng::Get(_T("light_super_item"))->DrawExtend(i.pos, { 0.4, 0.4 });
 				}
-			);
-
-			//チュートリアル用.
-			if (gameData->stage == Stage_Tutorial) {
-				DrawStr str(_T("アイテム"), items[i].pos.ToInt() + INT_XY(0, -35), COLOR_ITEM);
-				str.Draw();
+				//アイテム本体.
+				{
+					DBL_XY size = {
+						ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().x,
+						ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().y
+					};
+					GraphMng::Get(_T("item"))->DrawExtend(i.pos, size, Anchor::Mid, true, true);
+				}
 			}
+		);
+
+		//チュートリアル用.
+		if (gameData->stage == Stage_Tutorial) {
+			DrawStr str(_T("アイテム"), i.pos.ToInt() + INT_XY(0, -35), COLOR_ITEM);
+			str.Draw();
 		}
 	}
 }
 
 //アイテム召喚.
-void ItemManager::ItemSpawn(int idx) {
+void ItemManager::ItemSpawn() {
+
+	ItemData item; //新規アイテム.
 
 	//座標の設定.
-	items[idx].pos.x = (double)RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE); // X座標をランダムに設定
-	items[idx].pos.y = -ITEM_SIZE;					        	    	 // 画面上部の少し上から開始
-	//タイプを決める.
+	item.pos.x = _dbl(Calc::RandNum(ITEM_SIZE, WINDOW_WID-ITEM_SIZE));
+	item.pos.y = -ITEM_SIZE;
+
+	//タイプの設定.
 	if (gameData->level < 5) {
-		items[idx].type = Item_Normal;
+		item.type = Item_Normal;
 	}
 	else {
-		items[idx].type = Item_Super; //Lv5からは強化版へ.
+		item.type = Item_Super; //Lv5からは強化版へ.
 	}
-	// アイテムの状態設定
-	items[idx].active = true; //アクティブフラグ
-	items[idx].counter = 0;
+
+	items.push_back(item); //配列に追加.
 }
-//アイテム消滅.
-void ItemManager::ItemErase(int idx) {
-	items[idx].active = false;
-	items[idx].counter = 0;
-	items[idx].spawnCounter = 0;
+
+//アイテムを全てリセットする.
+void ItemManager::ItemReset() {
+	items.clear();             //全てのアイテムを消去.
+	counter = ITEM_SPAWN_TIME; //カウンターリセット.
 }
+
 //アイテム発動.
-void ItemManager::ItemUse()
+void ItemManager::ItemUse(list<ItemData>::iterator& it, bool isSuper)
 {
+	//エフェクト召喚.
+	EffectData effect{};
+	effect.type = Effect_Score100;
+	effect.pos  = it->pos;
+	effectMng->SpawnEffect(&effect);
+	//スコア加算.
+	gameData->score += SCORE_TAKE_ITEM;
+
+	//プレイヤーのモード設定.
+	if (isSuper) {
+		player->SetMode(Player_ItemReflectSuper);
+	}
+	else {
+		player->SetMode(Player_ItemReflect);
+	}
+
+	ItemReset();
+
 	//アイテムを使用.
 	gameMng->ItemUsed();
 	//サウンド.
@@ -163,51 +189,18 @@ void ItemManager::ItemUse()
 	}
 }
 
-// プレイヤーとの当たり判定
-void ItemManager::CheckHitPlayer(int idx)
+//プレイヤーとの当たり判定.
+bool ItemManager::CheckHitPlayer(list<ItemData>::iterator& it, ItemType* type)
 {
-	//アイテムが無効orプレイヤーがいないなら処理しない.
-	if (!items[idx].active || !player->GetActive()) {
-		return;
-	}
-
 	//プレイヤーの判定を取得.
-	Circle plyHit = player->GetHit();
-	//当たり判定を四角形とする.
-	Box itemBox = { items[idx].pos, {ITEM_SIZE, ITEM_SIZE}, {}, {} };
+	const Circle plyHit = player->GetHit();
+	//当たり判定.
+	const Box itemBox = { it->pos, {ITEM_SIZE, ITEM_SIZE}, {}, {} };
 	
-	//当たった場合.
-	if (HitBoxCir(itemBox, plyHit)) {
-
-		//エフェクト召喚.
-		EffectData effect{};
-		effect.type = Effect_Score100;
-		effect.pos = items[idx].pos;
-		effectMng->SpawnEffect(&effect);
-		//スコア加算.
-		gameData->score += SCORE_TAKE_ITEM;
-
-		//プレイヤーのモード設定.
-		switch (items[idx].type)
-		{
-			case Item_Normal:
-				player->SetMode(Player_ItemReflect);
-				break;
-			case Item_Super:
-				player->SetMode(Player_ItemReflectSuper);
-				break;
-
-			default: assert(FALSE); break;
-		}
-
-		//座標を画面上に移動.
-		items[idx].pos = { -100, -100 };
-		//全てのアイテム.
-		for (int i = 0; i < ITEM_COUNT; i++) {
-			items[i].active  = false; //削除(非アクティブに)
-			items[i].counter = 0;     //カウンターリセット.
-		}
-
-		isItemUseWait = true; //発動待ち.
+	//当たったら.
+	if (Calc::HitBoxCir(itemBox, plyHit)) {
+		*type = it->type; //種類を返す.
+		return true;      //取った.
 	}
+	return false; //取ってない.
 }
