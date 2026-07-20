@@ -97,11 +97,12 @@ void ItemManager::Draw()
 		//有効なアイテムを描画.
 		if (items[i].active) {
 
-			const int pow = _int(155 + 100 * AnimWave(WaveType::CosLoop, items[i].counter / 30)); //透明度.
+			//透明度.
+			const int alpha = _int(155 + 100 * AnimWave(WaveType::CosLoop, items[i].counter / 30));
 
 			//点滅描画.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, pow,
+				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 				[&]() {
 					//強化演出.
 					if (items[i].type == Item_Super) {

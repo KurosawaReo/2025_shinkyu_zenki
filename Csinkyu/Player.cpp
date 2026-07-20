@@ -323,7 +323,7 @@ void Player::DrawPlayer() {
 	//プレイヤー描画.
 	if (mode == Player_ItemReflect ||
 		mode == Player_ItemReflectSuper
-		) {
+	){
 		//ダッシュ演出.
 		if (isDashing) {
 			//発光.

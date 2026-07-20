@@ -29,11 +29,11 @@ void EndScene::Init() {
 	player   = ManagerInsts::Get<Player>();
 	uiMng    = ManagerInsts::Get<UIManager>();
 	bgMng    = ManagerInsts::Get<BGManager>();
-
 	soundMng = ManagerInsts::Get<SoundMng>();
 	inputMng = ManagerInsts::Get<InputMng>();
 	sceneMng = ManagerInsts::Get<SceneMng>();
 
+	//タイマー.
 	timer = Timer(TimerMode::CountUp, 0);
 }
 
