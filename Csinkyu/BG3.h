@@ -1,5 +1,6 @@
 /*
    - BG3.h -
+   3D‚Ì”wŒi‚Í‰æ–ÊŒ‚¢‚·‚éƒŠƒXƒN‚ª‚ ‚é‚±‚Æ‚É’ˆÓB
 */
 #pragma once
 #include "BGBase.h"
@@ -29,8 +30,7 @@ private:
 	static constexpr int HEX_NUM = 20;
 	WarpHex hex[HEX_NUM];
 
-	double angle; //‰ñ“]Šp.
-	double pulse; //–¾–Å.
+	double angle; //Šp“x.
 
 
 //¥ ===== ŠÖ” ===== ¥.
