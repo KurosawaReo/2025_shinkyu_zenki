@@ -15,8 +15,8 @@ enum MeteorState
 //隕石の形データ.
 struct MeteorShape
 {
-	vector<float> lineDis; //隕石の中心からの頂点の距離.
-	vector<Line>  line;    //隕石を構成する線. 
+	vector<float> lineDist;  //隕石の中心からの頂点の距離.
+	vector<Line>  line;      //隕石を構成する線.
 };
 
 //隕石(単体)

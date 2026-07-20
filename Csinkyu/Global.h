@@ -30,8 +30,6 @@ enum StageType
 /* デバッグ用 */
 //#define DEBUG_OBJ_ACTIVE		//オブジェクト出現数表示.
 //#define DEBUG_SPAWN_RATE		//召喚間隔表示.
-//#define DEBUG_METEOR_POINT	//隕石目標地点表示.
-//#define DEBUG_METEOR_SPAWN	//隕石召喚範囲表示.
 //#define DEBUG_SHOW_FPS		//FPS表示.　
 //#define DEBUG_CONTR_INPUT		//コントローラ操作表示.
 
@@ -81,9 +79,9 @@ enum StageType
 
 //プレイヤー.
 #define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)
+#define PLAYER_REF_ADD_SIZE				(12)			//反射モード時に拡大する当たり判定.
 #define PLAYER_DRAW_SIZE				(0.7)			//プレイヤー本体の描画サイズ.
 #define PLAYER_LIGHT_DRAW_SIZE			(0.4)			//プレイヤー発光の描画サイズ.
-#define PLAYER_REF_ADD_SIZE				(5)				//反射モード時に拡大する当たり判定.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
 #define PLAYER_DEATH_ANIM_TIME			(10)			//プレイヤー死亡アニメ時間.
@@ -98,7 +96,7 @@ enum StageType
 
 //アイテム.
 #define ITEM_COUNT						(2)				//アイテムの数.
-#define ITEM_SIZE						(45)			//アイテムサイズ.
+#define ITEM_SIZE						(50)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME				(400)           //アイテム復活時間.
 

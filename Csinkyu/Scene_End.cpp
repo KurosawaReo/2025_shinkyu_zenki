@@ -151,7 +151,7 @@ void EndScene::Draw() {
 
 			//描画(背景)
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, _int(80 * anim),
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(128 * anim),
 				[&]() {
 					//枠線.
 					DrawBoxKR(box, Anchor::Mid, true, true);

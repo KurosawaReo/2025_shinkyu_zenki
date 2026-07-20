@@ -57,43 +57,28 @@ void Meteor::Update() {
 
 void Meteor::Draw() {
 	
-	int pow = 255;
+	int alpha = 255; //透明度.
 
 	//ターゲットマーク.
 	if (isTargeting) {
 		GraphMng::Get(_T("target"))->DrawExtend(pos, { 0.4, 0.4 });
 	}
 
-	//破壊モード限定.
+	//破壊中はだんだん薄くする.
 	if (state == Meteor_Destroy) {
-		pow = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
+		alpha = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
 	}
 
 	//描画.
 	DrawMode::Exe(
-		DrawModeID::None, DrawBlendModeID::Alpha, pow,
+		DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 		[&](){
 
 			//全ての描画線.
 			for (auto& i : shape.line) {
-
 				i.color = COLOR_METEOR(pos);
 				DrawLineKR(i, true);
-
-#if defined DEBUG_METEOR_POINT
-				DrawCircle(i.stPos.x, i.stPos.y, 3, 0xFFFFFF);
-				DrawLine(i.stPos.x, i.stPos.y, pos.x, pos.y, 0x808080);
-#endif
 			}
-#if defined DEBUG_METEOR_POINT
-			DrawCircle(pos.x, pos.y, 5, 0xFFFFFF);
-#endif
-
-#if defined	DEBUG_METEOR_SPAWN
-			//隕石の経路.
-			Line line = { pos + vel * 2000, pos - vel * 2000, 0xFFFFFF };
-			DrawLineKR(&line, true, 2);
-#endif
 
 			//チュートリアル.
 			if (gameData->stage == Stage_Tutorial) {
@@ -137,15 +122,20 @@ void Meteor::Spawn() {
 	{
 		//①何角形にするか抽選.
 		const int lineCnt = Calc::RandNum(METEOR_LINE_CNT_MIN, METEOR_LINE_CNT_MAX);
-		shape.line.   resize(lineCnt);
-		shape.lineDis.resize(lineCnt);
+		shape.line.    resize(lineCnt);
+		shape.lineDist.resize(lineCnt);
+
 		//②頂点の位置を抽選.
-		for (auto& i : shape.lineDis) {
-			i = (float)Calc::RandNum(METEOR_LINE_DIS_MIN*10, METEOR_LINE_DIS_MAX*10)/10; //小数第1位まで抽選する.
+		for (auto& i : shape.lineDist) {
+			//小数第1位まで抽選.
+			i = _flt(
+				Calc::RandNum(METEOR_LINE_DIS_MIN*10, METEOR_LINE_DIS_MAX*10)/10
+			);
 		}
+		
 		//線の設定.
 		for (auto& i : shape.line) {
-			i.thick = 2.0f;
+			i.thick = 3.0f;
 		}
 	}
 }
@@ -185,23 +175,23 @@ void Meteor::UpdateMeteoLine() {
 		//要素数が0未満なら最大値へ移動する.
 		int bef = ((i-1) < 0) ? (_int(shape.line.size())-1) : (i-1);
 
-		shape.line[i].stPos = Calc::ArcPos(pos, ang+  i*rot, shape.lineDis[i]);   //始点: 現在の角度から計算.
-		shape.line[i].edPos = Calc::ArcPos(pos, ang+bef*rot, shape.lineDis[bef]); //終点: 1つ前の角度から計算.
+		shape.line[i].stPos = Calc::ArcPos(pos, ang+  i*rot, shape.lineDist[i]);   //始点: 現在の角度から計算.
+		shape.line[i].edPos = Calc::ArcPos(pos, ang+bef*rot, shape.lineDist[bef]); //終点: 1つ前の角度から計算.
 
 		//破壊時の回転アニメーション.
 		if (state == Meteor_Destroy) {
 
 			//①隕石を構成する線の情報.
-			DBL_XY lineMidPos   = Calc::MidPos(shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
-			double lineLen      = Calc::Dist(shape.line[i].stPos, lineMidPos);            //長さの半分.
-			double lineAng      = Calc::FacingAng(lineMidPos, shape.line[i].stPos);		  //角度.
+			DBL_XY lineMidPos   = Calc::MidPos   (shape.line[i].stPos, shape.line[i].edPos); //中点の位置.
+			double lineLen      = Calc::Dist     (shape.line[i].stPos, lineMidPos);			 //長さの半分.
+			double lineAng      = Calc::FacingAng(lineMidPos, shape.line[i].stPos);			 //角度.
 			//②隕石の中央からどんどん離していく.
-			double pivotDis     = Calc::Dist(pos, lineMidPos);                            //隕石の中央からの距離.
-			double pivotAng     = Calc::FacingAng(pos, lineMidPos);                       //隕石の中央から見た角度.
-			DBL_XY newPos       = Calc::ArcPos(pos, pivotAng, pivotDis+destroyCntr);      //距離を増やす.
+			double pivotDis     = Calc::Dist     (pos, lineMidPos);							 //隕石の中央からの距離.
+			double pivotAng     = Calc::FacingAng(pos, lineMidPos);							 //隕石の中央から見た角度.
+			DBL_XY newPos       = Calc::ArcPos   (pos, pivotAng, pivotDis+destroyCntr);		 //距離を増やす.
 			//③新たな線の始点と終点.
-			shape.line[i].stPos = Calc::ArcPos(newPos, lineAng    +destroyCntr, lineLen);
-			shape.line[i].edPos = Calc::ArcPos(newPos, lineAng+180+destroyCntr, lineLen);
+			shape.line[i].stPos = Calc::ArcPos   (newPos, lineAng    +destroyCntr, lineLen);
+			shape.line[i].edPos = Calc::ArcPos   (newPos, lineAng+180+destroyCntr, lineLen);
 		}
 	}
 }
