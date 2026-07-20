@@ -140,19 +140,19 @@ void TitleScene::Draw() {
 		//テキスト.
 		TCHAR text[256];
 		_stprintf(text, _T("BEST SCORE: %d"), gameData->bestScore); //ベストスコア.
-		DrawStr str(text, { WINDOW_WID / 2, drawY }, COLOR_BEST_SCORE);
+		DrawStr str(text, { WINDOW_WID / 2, drawY-2 }, COLOR_BEST_SCORE);
 
-		//描画.
+		//描画(スコア)
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim1),
 			[&]() {
 				str.Draw(Anchor::Mid, gameData->fonts["en-size3"].GetFont()); //スコア値.
 			}
 		);
+		//描画(画像)
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * anim2),
 			[&]() {
-				//UI
 				GraphMng::Get(_T("ui_back_best_score"))->
 					DrawExtend({ WINDOW_WID / 2, drawY + (10 + 18 * anim2) }, { 0.45, 0.4 }, Anchor::Mid, true, true);
 				GraphMng::Get(_T("ui_back_best_score"))->

@@ -318,7 +318,7 @@ void Player::DrawPlayer() {
 
 	//透明度計算.
 	const int alpha  = _int(255 * Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION));
-	const int alpha2 = _int(128 + 128 * Calc::AnimWave(WaveType::CosLoop, gameMng->GetGameScene()->GetReflectModeTime() * 2));
+	const int alpha2 = _int(80 + 128 * Calc::AnimWave(WaveType::CosLoop, gameMng->GetGameScene()->GetReflectModeTime() * 2));
 
 	//プレイヤー描画.
 	if (mode == Player_ItemReflect ||

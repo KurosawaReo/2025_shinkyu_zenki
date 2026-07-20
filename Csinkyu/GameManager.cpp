@@ -74,6 +74,8 @@ void GameManager::Init() {
 		GraphMng::LoadImg(_T("score100.png"),				_T("score100"));
 		GraphMng::LoadImg(_T("score500.png"),				_T("score500"));
 		GraphMng::LoadImg(_T("target.png"),					_T("target"));
+		GraphMng::LoadImg(_T("bg_star_nor.png"),			_T("bg_star_nor"));
+		GraphMng::LoadImg(_T("bg_star_ref.png"),			_T("bg_star_ref"));
 
 		//[KrLib] 動画.
 		GraphMng::SetPath(_T("Resources/Movies/"));	//共通パスの設定.

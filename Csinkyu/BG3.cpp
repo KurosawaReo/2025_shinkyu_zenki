@@ -19,6 +19,7 @@ constexpr double Z_MIN        = 50.0;    //àÍî‘éËëOÇÃzç¿ïW.
 constexpr double Z_MAX        = 3000.0;  //àÍî‘âúÇÃzç¿ïW.
 constexpr double HEX_INTERVAL = 180.0;
 constexpr double FOV          = 500.0;
+constexpr double FOV_HEX      = 5000.0;
 /* ================ */
 
 //èâä˙âª.
@@ -34,13 +35,19 @@ void BG3::Init() {
     {
         i.x = Calc::RandNum(-2000.0, 2000.0);
         i.y = Calc::RandNum(-2000.0, 2000.0);
-        i.z = Calc::RandNum( 100.0,  Z_MAX);
+        i.z = Calc::RandNum(Z_MIN,  Z_MAX);
 
         i.oldZ = i.z;
     }
     for (int i = 0; i < HEX_NUM; i++)
     {
         hex[i].z = Z_MIN + i * HEX_INTERVAL;
+    }
+    for (auto& i : particle)
+    {
+        i.x = Calc::RandNum(-2000.0, 2000.0);
+        i.y = Calc::RandNum(-2000.0, 2000.0);
+        i.z = Calc::RandNum(Z_MIN, Z_MAX);
     }
 }
 
@@ -75,24 +82,37 @@ void BG3::Update() {
             i.z += HEX_NUM * HEX_INTERVAL;
         }
     }
+    for (auto& i : particle)
+    {
+        i.z -= MOVE_SPEED * gameData->speedRate;
+
+        if (i.z < Z_MIN)
+        {
+            i.x = Calc::RandNum(-2000.0, 2000.0);
+            i.y = Calc::RandNum(-2000.0, 2000.0);
+            i.z = Z_MAX;
+        }
+    }
 }
 
 //ï`âÊ(í èÌéû)
 void BG3::DrawNor(double modeAlpha) {
 
-    DrawHexagons(modeAlpha, COLOR_MODE_NOR);
-    DrawPoints  (modeAlpha, COLOR_MODE_NOR);
+    DrawHexagons (modeAlpha, COLOR_MODE_NOR);
+    DrawPoints   (modeAlpha, COLOR_MODE_NOR);
+    DrawParticles(modeAlpha, COLOR_MODE_NOR);
 }
 
 //ï`âÊ(îΩéÀÉÇÅ[Éh)
 void BG3::DrawRef(double modeAlpha) {
     
-    DrawHexagons(modeAlpha, COLOR_MODE_REF);
-    DrawPoints  (modeAlpha, COLOR_MODE_REF);
+    DrawHexagons (modeAlpha, COLOR_MODE_REF);
+    DrawPoints   (modeAlpha, COLOR_MODE_REF);
+    DrawParticles(modeAlpha, COLOR_MODE_REF);
 }
 
 //ï`âÊ(ê¸)
-void BG3::DrawPoints(double modeAlpha, MY_COLOR mainColor) {
+void BG3::DrawPoints(double modeAlpha, MY_COLOR color) {
 
     const DBL_XY center = App::GetWindowRect().GetMid().ToDbl();
 
@@ -161,7 +181,7 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR mainColor) {
         Line line;
         line.stPos = old;
         line.edPos = now;
-        line.color = mainColor;
+        line.color = color;
         line.thick = thick;
 
         //ìßñæìxÇåvéZ(âúÇŸÇ«îñÇ≠Ç∑ÇÈ)
@@ -179,16 +199,13 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR mainColor) {
 //ï`âÊ(òZäpå`)
 void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
 {
-    constexpr double FOV = 5000;
-
-    double cx = WINDOW_WID / 2.0;
-    double cy = WINDOW_HEI / 2.0;
+    const DBL_XY center = App::GetWindowRect().GetMid().ToDbl();
 
     for (auto& h : hex)
     {
-        double scale = FOV / h.z;
+        const double scale = FOV_HEX / h.z;
 
-        double radius = scale * 80;
+        const double radius = scale * 80;
         if (radius < 3) {
             continue;
         }
@@ -200,10 +217,9 @@ void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
 
         for (int i = 0; i < 6; i++)
         {
-            double a = angle + i * M_PI / 3;
-
-            double x = cx + cos(a) * radius;
-            double y = cy + sin(a) * radius;
+            const double a = angle + i * M_PI / 3;
+            const double x = center.x + cos(a) * radius;
+            const double y = center.y + sin(a) * radius;
 
             poly.points.push_back({x, y});
         }
@@ -216,6 +232,37 @@ void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
             [&]()
             {
                 DrawPolygonKR(poly, true, true);
+            }
+        );
+    }
+}
+
+//ï`âÊ(êØ)
+void BG3::DrawParticles(double modeAlpha, MY_COLOR color)
+{
+    const DBL_XY center = App::GetWindowRect().GetMid().ToDbl();
+
+    for (auto& p : particle)
+    {
+        const double scale = FOV / p.z;
+
+        //ç¿ïW.
+        const DBL_XY pos = {
+            center.x + p.x * scale,
+            center.y + p.y * scale
+        };
+        if (pos.x < -100 || pos.x > WINDOW_WID + 100) { continue; }
+        if (pos.y < -100 || pos.y > WINDOW_HEI + 100) { continue; }
+
+        double size = (1.0 - p.z / Z_MAX) * 0.5;
+
+        const double alpha = 180 * (1.0 - p.z / Z_MAX) * modeAlpha;
+
+        DrawMode::Exe(
+            DrawModeID::None, DrawBlendModeID::Add, _int(alpha),
+            [&]()
+            {
+                GraphMng::Get(_T("bg_star_nor"))->DrawExtend(pos, {size, size}, Anchor::Mid);
             }
         );
     }

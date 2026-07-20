@@ -23,12 +23,21 @@ private:
 	{
 		double z;
 	};
+	struct GlowParticle
+	{
+		double x;
+		double y;
+		double z;
+	};
 
 	static constexpr int POINT_NUM = 220;
 	WarpPoint point[POINT_NUM];
 
 	static constexpr int HEX_NUM = 20;
 	WarpHex hex[HEX_NUM];
+
+	static constexpr int PARTICLE_NUM = 80;
+	GlowParticle particle[PARTICLE_NUM];
 
 	double angle; //角度.
 
@@ -40,8 +49,10 @@ public:
 	void DrawNor(double modeAlpha) override; //描画(通常時)
 	void DrawRef(double modeAlpha) override; //描画(反射モード)
 
-	void DrawPoints(double modeAlpha, MY_COLOR mainColor);
-	void DrawHexagons(double modeAlpha, MY_COLOR color);
+	//パーツ別描画.
+	void DrawPoints   (double modeAlpha, MY_COLOR color);
+	void DrawHexagons (double modeAlpha, MY_COLOR color);
+	void DrawParticles(double modeAlpha, MY_COLOR color);
 
 	//ポーズ用.
 	void Pause()    override;

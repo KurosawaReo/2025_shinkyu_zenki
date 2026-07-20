@@ -49,7 +49,9 @@ void UIManager::Draw() {
 
 	//ゲームシーン経過時間.
 	const float time = gameMng->GetGameScene()->GetSceneTime();
-	
+	//白ラベルのテキストの位置修正.
+	const int offset = -1;
+
 	//ステージ別.
 	switch (gameData->stage) 
 	{
@@ -57,11 +59,11 @@ void UIManager::Draw() {
 		{
 			//アニメーション値.
 			double alpha   = Calc::AnimEase(EaseType::InOutQuad, (time-1.0)*2);
-			double alpha2  = Calc::AnimEase(EaseType::InOutQuad, time-0.2);
+			double alpha2  = Calc::AnimEase(EaseType::InOutQuad,  time-0.2   );
 			double animSin = sin(M_PI * (time-0.2));
 			//テキスト設定.
-			DrawStr str1({}, { WINDOW_WID/2, 70+2 }, 0xFFFFFF);
-			DrawStr str2({}, { WINDOW_WID/2,  150 }, COLOR_SCORE);
+			DrawStr str1({}, { WINDOW_WID/2,  70+offset }, 0xFFFFFF);
+			DrawStr str2({}, { WINDOW_WID/2, 150        }, COLOR_SCORE);
 			
 			TCHAR text[256];
 			_stprintf(text, _T("STEP %d"), tutorialStg->GetStepNo());
@@ -113,14 +115,12 @@ void UIManager::Draw() {
 			const double animSin2 = sin(M_PI * (time - 0.2));
 			const double animSin3 = sin(M_PI * (time - 0.3));
 
-			const int offset = 0;
-
 			//テキスト設定.
 			DrawStr str[4] = {
-				DrawStr({}, {WINDOW_WID/2,      70+offset}, 0xFFFFFF),
-				DrawStr({}, {WINDOW_WID/2-350, 150       }, COLOR_BEST_SCORE),
-				DrawStr({}, {WINDOW_WID/2,     150       }, COLOR_SCORE),
-				DrawStr({}, {WINDOW_WID/2+350, 150       }, COLOR_TIME),
+				DrawStr({}, { WINDOW_WID/2,      70+offset }, 0xFFFFFF),
+				DrawStr({}, { WINDOW_WID/2-350, 150        }, COLOR_BEST_SCORE),
+				DrawStr({}, { WINDOW_WID/2,     150        }, COLOR_SCORE),
+				DrawStr({}, { WINDOW_WID/2+350, 150        }, COLOR_TIME),
 			};
 
 			TCHAR text[256];

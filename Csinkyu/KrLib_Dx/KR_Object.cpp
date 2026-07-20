@@ -95,7 +95,7 @@ namespace KR
 	}
 	
 	//DrawGraph描画.
-	void ObjectShape::DrawGraph(Anchor anc, bool isFloat, bool isCameraDisp) {
+	void ObjectShape::DrawGraph(Anchor anc, bool useFloat, bool isCameraDisp) {
 
 		if (!isActive) {
 			throw ErrorMsg(_T("ObjectShape::DrawGraph"), _T("非アクティブ"));
@@ -112,7 +112,7 @@ namespace KR
 				DBL_XY pos = GetPos() + offset;
 				//描画.
 				try {
-					pImg->Draw(pos, anc, true, isFloat, isCameraDisp);
+					pImg->Draw(pos, anc, true, useFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
 					throw ErrorMsg(_T("ObjectShape::DrawGraph"), err.GetMsg());
@@ -132,7 +132,7 @@ namespace KR
 		}
 	}
 	//DrawRectGraph描画.
-	void ObjectShape::DrawRectGraph(DBL_RECT rect, Anchor anc, bool isFloat, bool isCameraDisp) {
+	void ObjectShape::DrawRectGraph(DBL_RECT rect, Anchor anc, bool useFloat, bool isCameraDisp) {
 
 		if (!isActive) {
 			throw ErrorMsg(_T("ObjectShape::DrawRectGraph"), _T("非アクティブ"));
@@ -149,7 +149,7 @@ namespace KR
 				DBL_XY pos = GetPos() + offset;
 				//描画.
 				try {
-					pImg->DrawRect(pos, rect, anc, true, isFloat, isCameraDisp);
+					pImg->DrawRect(pos, rect, anc, true, useFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
 					throw ErrorMsg(_T("ObjectShape::DrawRectGraph"), err.GetMsg());
@@ -169,7 +169,7 @@ namespace KR
 		}
 	}
 	//DrawExtendGraph描画.
-	void ObjectShape::DrawExtendGraph(DBL_XY sizeRate, Anchor anc, bool isFloat, bool isCameraDisp) {
+	void ObjectShape::DrawExtendGraph(DBL_XY sizeRate, Anchor anc, bool useFloat, bool isCameraDisp) {
 
 		if (!isActive) {
 			throw ErrorMsg(_T("ObjectShape::DrawExtendGraph"), _T("非アクティブ"));
@@ -186,7 +186,7 @@ namespace KR
 				DBL_XY pos = GetPos() + offset;
 				//描画.
 				try {
-					pImg->DrawExtend(pos, sizeRate, anc, true, isFloat, isCameraDisp);
+					pImg->DrawExtend(pos, sizeRate, anc, true, useFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
 					throw ErrorMsg(_T("ObjectShape::DrawExtendGraph"), err.GetMsg());
@@ -206,7 +206,7 @@ namespace KR
 		}
 	}
 	//DrawRotaGraph描画.
-	void ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot, bool isFloat, bool isCameraDisp) {
+	void ObjectShape::DrawRotaGraph(double ang, double sizeRate, INT_XY pivot, bool useFloat, bool isCameraDisp) {
 
 		if (!isActive) {
 			throw ErrorMsg(_T("ObjectShape::DrawRotaGraph"), _T("非アクティブ"));
@@ -223,7 +223,7 @@ namespace KR
 				DBL_XY pos = GetPos() + offset;
 				//描画.
 				try {
-					pImg->DrawRota(pos, sizeRate, ang, pivot, true, isFloat, isCameraDisp);
+					pImg->DrawRota(pos, sizeRate, ang, pivot, true, useFloat, isCameraDisp);
 				}
 				catch (const ErrorMsg& err) {
 					throw ErrorMsg(_T("ObjectShape::DrawRotaGraph"), err.GetMsg());

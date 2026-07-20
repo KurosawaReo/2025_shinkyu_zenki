@@ -54,26 +54,26 @@ namespace KR
 		virtual DBL_XY* GetPosPtr()             = 0;
 		virtual DBL_XY  GetSize  ()       const = 0;
 		//画像.
-		void      SetImage		 (MY_STRING name);
-		void      SetImages      (vector<MY_STRING> names, float changeTime);
-		void      StopImageAnim  (bool isStop);
+		void         SetImage		(MY_STRING name);
+		void         SetImages      (vector<MY_STRING> names, float changeTime);
+		void         StopImageAnim  (bool isStop);
 		//Calcの機能.
-		void      FixPosInArea   (DBL_RECT rect);
-		bool      IsOutInArea    (DBL_RECT rect, bool isCompOut, Surface* surface = nullptr);
-		double    Dist			 (DBL_XY pos);
-		DBL_XY    ArcPos		 (double ang, double len);
-		double    FacingAng		 (DBL_XY targetPos);
+		void         FixPosInArea   (DBL_RECT rect);
+		bool         IsOutInArea    (DBL_RECT rect, bool isCompOut, Surface* surface = nullptr);
+		double       Dist			(DBL_XY pos);
+		DBL_XY       ArcPos		    (double ang, double len);
+		double       FacingAng		(DBL_XY targetPos);
 		//Inputの機能.
-		void      MoveKey4Dir    (float speed);
-		void      MovePad4Dir    (float speed);
-		void      MovePadStick   (float speed);
-		void      MoveMousePos   (bool isMoveX = true, bool isMoveY = true);
+		void         MoveKey4Dir    (float speed);
+		void         MovePad4Dir    (float speed);
+		void         MovePadStick   (float speed);
+		void         MoveMousePos   (bool isMoveX = true, bool isMoveY = true);
 		//Drawの機能.
-		virtual void DrawShape(bool isFill = true, bool isAnti = false, bool isCameraDisp = true) const = 0;
-		void      DrawGraph      (                                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDisp = true);
-		void      DrawRectGraph  (DBL_RECT rect,                                            Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDisp = true);
-		void      DrawExtendGraph(DBL_XY sizeRate,                                          Anchor anc = Anchor::Mid, bool isFloat = false, bool isCameraDisp = true);
-		void      DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0},                           bool isFloat = false, bool isCameraDisp = true);
+		virtual void DrawShape      (bool isFill = true, bool isAnti = false, bool isCameraDisp = true) const = 0;
+		void         DrawGraph      (                                                          Anchor anc = Anchor::Mid, bool useFloat = false, bool isCameraDisp = true);
+		void         DrawRectGraph  (DBL_RECT rect,                                            Anchor anc = Anchor::Mid, bool useFloat = false, bool isCameraDisp = true);
+		void         DrawExtendGraph(DBL_XY sizeRate,                                          Anchor anc = Anchor::Mid, bool useFloat = false, bool isCameraDisp = true);
+		void         DrawRotaGraph  (double ang, double sizeRate = 1.0, INT_XY pivot = {0, 0},                           bool useFloat = false, bool isCameraDisp = true);
 	};
 
 	//オブジェクト(円) [継承想定]

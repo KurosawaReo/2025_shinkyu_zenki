@@ -46,34 +46,37 @@ namespace KR
 	}
 
 	//画像描画.
-	void Graph::Draw(DBL_XY pos, Anchor anc, bool isTrans, bool isFloat, bool isCameraDisp) const {
+	void Graph::Draw(DBL_XY pos, Anchor anc, bool isTrans, bool useFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			throw ErrorMsg(_T("Graph::Draw"), _T("ハンドル未設定"));
 			return;
 		}
 
-		//描画座標.
-		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
+		//描画座標の計算.
+		DBL_XY drawPos;
+		{
+			//カメラを考慮した座標.
+			const DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
+
+			drawPos = {
+				newPos.x - (size.x - 1) * ANCHOR_POS[_int(anc)].x,
+				newPos.y - (size.y - 1) * ANCHOR_POS[_int(anc)].y,
+			};
+		}
 
 		//float型かどうか.
-		if (isFloat) {
-			//基準点に座標をずらす.
-			float x = _flt(newPos.x - (size.x) * ANCHOR_POS[_int(anc)].x);
-			float y = _flt(newPos.y - (size.y) * ANCHOR_POS[_int(anc)].y);
+		if (useFloat) {
 			//float型描画.
-			int err = DrawGraphF(x, y, handle, isTrans);
+			int err = DrawGraphF(_flt(drawPos.x), _flt(drawPos.y), handle, isTrans);
 			if (err < 0) {
 				throw ErrorMsg(_T("Graph::Draw"), _T("DrawGraphFエラー"));
 				return;
 			}
 		}
 		else {
-			//基準点に座標をずらす.
-			int x = _int(newPos.x - (size.x-1) * ANCHOR_POS[_int(anc)].x);
-			int y = _int(newPos.y - (size.y-1) * ANCHOR_POS[_int(anc)].y);
 			//int型描画.
-			int err = DrawGraph(x, y, handle, isTrans);
+			int err = DrawGraph(_int_r(drawPos.x), _int_r(drawPos.y), handle, isTrans);
 			if (err < 0) {
 				throw ErrorMsg(_T("Graph::Draw"), _T("DrawGraphエラー"));
 				return;
@@ -82,47 +85,50 @@ namespace KR
 	}
 
 	//画像描画(Rect)
-	void Graph::DrawRect(DBL_XY pos, DBL_RECT rect, Anchor anc, bool isTrans, bool isFloat, bool isCameraDisp) const {
+	void Graph::DrawRect(DBL_XY pos, DBL_RECT rect, Anchor anc, bool isTrans, bool useFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			throw ErrorMsg(_T("Graph::DrawRect"), _T("ハンドル未設定"));
 			return;
 		}
 
-		//描画座標.
-		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
-		//基準点に座標をずらす.
-		newPos -= size.ToDbl() * ANCHOR_POS[_int(anc)];
+		//描画座標の計算.
+		DBL_XY drawPos;
+		{
+			//カメラを考慮した座標.
+			const DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
+
+			drawPos = newPos - size.ToDbl() * ANCHOR_POS[_int(anc)];
+		}
+
 		//画像の矩形.
 		INT_XY drawStart = {0, 0};
 		INT_XY drawSize  = size;
 
 		//クリッピング(画像の切り取り処理)
-		if (newPos.x < rect.left) {
-			drawStart.x += _int(rect.left - newPos.x);
-			drawSize.x  -= _int(rect.left - newPos.x);
-			newPos.x = rect.left;
+		if (drawPos.x < rect.left) {
+			drawStart.x += _int(rect.left - drawPos.x);
+			drawSize.x  -= _int(rect.left - drawPos.x);
+			drawPos.x = rect.left;
 		}
-		if (newPos.y < rect.up) {
-			drawStart.y += _int(rect.up - newPos.y);
-			drawSize.y  -= _int(rect.up - newPos.y);
-			newPos.y = rect.up;
+		if (drawPos.y < rect.up) {
+			drawStart.y += _int(rect.up - drawPos.y);
+			drawSize.y  -= _int(rect.up - drawPos.y);
+			drawPos.y = rect.up;
 		}
-		if (newPos.x + drawSize.x > rect.right) {
-			drawSize.x -= _int((newPos.x + drawSize.x) - rect.right);
+		if (drawPos.x + drawSize.x > rect.right) {
+			drawSize.x -= _int((drawPos.x + drawSize.x) - rect.right);
 		}
-		if (newPos.y + drawSize.y > rect.down) {
-			drawSize.y -= _int((newPos.y + drawSize.y) - rect.down);
+		if (drawPos.y + drawSize.y > rect.down) {
+			drawSize.y -= _int((drawPos.y + drawSize.y) - rect.down);
 		}
 
 		//描画する範囲があるなら描画.
 		if (drawSize.x > 0 && drawSize.y > 0) {
-			if (isFloat) {
+			if (useFloat) {
 				//float型描画.
 				int err = DrawRectGraphF(
-					_flt(newPos.x), _flt(newPos.y), 
-					drawStart.x, drawStart.y, drawSize.x, drawSize.y, 
-					handle, isTrans
+					_flt(drawPos.x), _flt(drawPos.y), drawStart.x, drawStart.y, drawSize.x, drawSize.y, handle, isTrans
 				);
 				if (err < 0) {
 					throw ErrorMsg(_T("Graph::DrawRect"), _T("DrawRectGraphFエラー"));
@@ -132,9 +138,7 @@ namespace KR
 			else {
 				//int型描画.
 				int err = DrawRectGraph(
-					_int(newPos.x), _int(newPos.y), 
-					drawStart.x, drawStart.y, drawSize.x, drawSize.y, 
-					handle, isTrans
+					_int_r(drawPos.x), _int_r(drawPos.y), drawStart.x, drawStart.y, drawSize.x, drawSize.y, handle, isTrans
 				);
 				if (err < 0) {
 					throw ErrorMsg(_T("Graph::DrawRect"), _T("DrawRectGraphエラー"));
@@ -145,38 +149,46 @@ namespace KR
 	}
 	
 	//画像描画(Extend)
-	void Graph::DrawExtend(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool isFloat, bool isCameraDisp) const {
+	void Graph::DrawExtend(DBL_XY pos, DBL_XY sizeRate, Anchor anc, bool isTrans, bool useFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			throw ErrorMsg(_T("Graph::DrawExtend"), _T("ハンドル未設定"));
 			return;
 		}
 
-		//描画座標.
-		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
+		//描画座標の計算.
+		DBL_XY pos1, pos2;
+		{
+			//カメラを考慮した座標.
+			const DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(pos) : pos;
+
+			//サイズ.
+			const double width  = max(1, _int_r(size.x * sizeRate.x));
+			const double height = max(1, _int_r(size.y * sizeRate.y));
+			//始点.
+			pos1 = {
+				newPos.x - width  * ANCHOR_POS[_int(anc)].x,
+				newPos.y - height * ANCHOR_POS[_int(anc)].y,
+			};
+			//終点.
+			pos2 = {
+				pos1.x + width,
+				pos1.y + height
+			};
+		}
 
 		//float型かどうか.
-		if (isFloat) {
-			//基準点に座標をずらす.
-			float x1 = _flt(newPos.x - (size.x * sizeRate.x) * ANCHOR_POS[_int(anc)].x);
-			float y1 = _flt(newPos.y - (size.y * sizeRate.y) * ANCHOR_POS[_int(anc)].y);
-			float x2 = _flt(x1 + size.x * sizeRate.x);
-			float y2 = _flt(y1 + size.y * sizeRate.y);
+		if (useFloat) {
 			//float型描画.
-			int err = DrawExtendGraphF(x1, y1, x2+1, y2+1, handle, isTrans);
+			int err = DrawExtendGraphF(_flt(pos1.x), _flt(pos1.y), _flt(pos2.x), _flt(pos2.y), handle, isTrans);
 			if (err < 0) {
 				throw ErrorMsg(_T("Graph::DrawExtend"), _T("DrawExtendGraphFエラー"));
 				return;
 			}
 		}
 		else {
-			//基準点に座標をずらす.
-			int x1 = _int(newPos.x - ((size.x * sizeRate.x)-1) * ANCHOR_POS[_int(anc)].x);
-			int y1 = _int(newPos.y - ((size.y * sizeRate.y)-1) * ANCHOR_POS[_int(anc)].y);
-			int x2 = _int(x1 + ((size.x * sizeRate.x)-1));
-			int y2 = _int(y1 + ((size.y * sizeRate.y)-1));
 			//int型描画.
-			int err = DrawExtendGraph(x1, y1, x2+1, y2+1, handle, isTrans);
+			int err = DrawExtendGraph(_int_r(pos1.x), _int_r(pos1.y), _int_r(pos2.x), _int_r(pos2.y), handle, isTrans);
 			if (err < 0) {
 				throw ErrorMsg(_T("Graph::DrawExtend"), _T("DrawExtendGraphエラー"));
 				return;
@@ -185,7 +197,7 @@ namespace KR
 	}
 
 	//画像描画(Rota)
-	void Graph::DrawRota(DBL_XY pos, double extend, double ang, INT_XY pivot, bool isTrans, bool isFloat, bool isCameraDisp) const {
+	void Graph::DrawRota(DBL_XY pos, double extend, double ang, INT_XY pivot, bool isTrans, bool useFloat, bool isCameraDisp) const {
 
 		if (handle == NONE_HANDLE) {
 			throw ErrorMsg(_T("Graph::DrawRota"), _T("ハンドル未設定"));
@@ -218,7 +230,7 @@ namespace KR
 		}
 
 		//float型かどうか.
-		if (isFloat) {
+		if (useFloat) {
 			//回転軸(デフォルトは画像の中心とする)
 			float cx = _flt(size.x/2 + pivot.x);
 			float cy = _flt(size.y/2 + pivot.y);
@@ -249,7 +261,7 @@ namespace KR
 	}
 	
 	//画像描画(Modi)
-	void Graph::DrawModi(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool isFloat, bool isCameraDisp) const {
+	void Graph::DrawModi(DBL_XY luPos, DBL_XY ruPos, DBL_XY rdPos, DBL_XY ldPos, bool isTrans, bool useFloat, bool isCameraDisp) const {
 	
 		if (handle == NONE_HANDLE) {
 			throw ErrorMsg(_T("Graph::DrawModi"), _T("ハンドル未設定"));
@@ -264,7 +276,7 @@ namespace KR
 		}
 
 		//float型かどうか.
-		if (isFloat) {
+		if (useFloat) {
 			//float型描画.
 			int err = DrawModiGraphF(
 				_flt(newPos[0].x), _flt(newPos[0].y), _flt(newPos[1].x), _flt(newPos[1].y),
