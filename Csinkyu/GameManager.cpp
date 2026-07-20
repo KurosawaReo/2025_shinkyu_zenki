@@ -321,9 +321,9 @@ void GameManager::GameOver() {
 			{
 				sceneMng->SetScene(_T("End")); //終了シーンへ.
 
-				gameData->speedRate = 1.0;                             //速度倍率を100%に戻す.
-				gameData->scoreBef = gameData->score;                  //時間加算前のスコアを記録.
-				gameData->score += _int(gameScene.GetGameTime() * 10); //時間ボーナス加算.
+				gameData->speedRate = 1.0;									//速度倍率を100%に戻す.
+				gameData->scoreBef  = gameData->score;						//時間加算前のスコアを記録.
+				gameData->score     += _int(gameScene.GetGameTime() * 10);	//時間ボーナス加算.
 
 				//[score.data]
 				if (gameData->score > gameData->bestScore) {

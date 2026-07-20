@@ -19,6 +19,14 @@ void BG_Tile::Init() {
 	gameData = ManagerInsts::Get<GameData>();
 }
 
+//リセット.
+void BG_Tile::Reset() {
+	counter = 0;
+	shine   = 0;
+	sinNum  = 0;
+	shineTimer.Reset();
+}
+
 //更新.
 void BG_Tile::Update() {
 
@@ -41,7 +49,7 @@ void BG_Tile::DrawNor(double modeAlpha) {
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
 		[&]() {
-			GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+			GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
 		}
 	);
 }
@@ -53,7 +61,7 @@ void BG_Tile::DrawRef(double modeAlpha) {
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
 		[&]() {
-			GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), sizeRate, Anchor::Mid);
+			GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
 		}
 	);
 }
@@ -82,13 +90,23 @@ void BG1::Init() {
 
 			tile.pos.x = x;
 			tile.pos.y = y;
-			tile.sizeRate = SIZE_RATE;
 			tile.Init();
 			tiles.push_back(tile); //配列に追加.
 		}
 	}
 
 	tmShine.Start(); //タイマー開始.
+}
+
+//リセット.
+void BG1::Reset() {
+
+	tmShine.Reset();
+
+	//各タイルリセット.
+	for (auto& i : tiles) {
+		i.Reset();
+	}
 }
 
 //更新.

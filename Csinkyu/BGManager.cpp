@@ -31,7 +31,13 @@ void BGManager::Init() {
 
 //リセット.
 void BGManager::Reset() {
+
 	useBgNo = 1;
+
+	//リセット.
+	for (auto& i : bg) {
+		i->Reset();
+	}
 }
 
 //更新.

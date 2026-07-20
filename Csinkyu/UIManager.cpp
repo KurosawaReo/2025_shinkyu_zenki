@@ -123,6 +123,14 @@ void UIManager::Draw() {
 				DrawStr({}, { WINDOW_WID/2+350, 150        }, COLOR_TIME),
 			};
 
+			//ƒQ[ƒ€ŽžŠÔ.
+			float fixTime;
+			{
+				//¬”‘æ“ñˆÊˆÈ‰º‚ÍØ‚èŽÌ‚Ä‚é(ŸŽè‚ÉŽlŽÌŒÜ“ü‚³‚ê‚Ä‚µ‚Ü‚¤‚½‚ß)
+				const float gameTime = gameMng->GetGameScene()->GetGameTime();
+				fixTime = floorf(gameTime * 10.0f) / 10.0f;
+			}
+
 			TCHAR text[256];
 			_stprintf(text, _T("LEVEL %d"),        gameData->level);
 			str[0].text = text;
@@ -130,7 +138,7 @@ void UIManager::Draw() {
 			str[1].text = text;
 			_stprintf(text, _T("SCORE:%05d"),      gameData->score);
 			str[2].text = text;
-			_stprintf(text, _T("TIME:%.1f"),       gameMng->GetGameScene()->GetGameTime());
+			_stprintf(text, _T("TIME:%.1f"),       fixTime);
 			str[3].text = text;
 		
 			//[level]

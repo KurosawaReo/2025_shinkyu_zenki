@@ -13,6 +13,7 @@ private:
 //▼ ===== 関数 ===== ▼.
 public:
 	void Init   ()                 override; //初期化.
+	void Reset  ()                 override; //リセット.
 	void Update ()                 override; //更新.
 	void DrawNor(double modeAlpha) override; //描画(通常時)
 	void DrawRef(double modeAlpha) override; //描画(反射モード)

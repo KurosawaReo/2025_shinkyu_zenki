@@ -10,16 +10,16 @@ class BG_Tile
 	friend class BG1; //アクセス許可.
 private:
 	INT_XY pos{};
-	DBL_XY sizeRate{};
 
+	double counter{}; //経過時間.
 	double shine{};
 	double sinNum{};
-	double counter{}; //経過時間.
 
 	Timer shineTimer = Timer(TimerMode::CountDown, 3); //発光する時間.
 
 public:
 	void Init   ();                 //初期化.
+	void Reset  ();                 //リセット.
 	void Update ();                 //更新.
 	void DrawNor(double modeAlpha); //描画(通常時)
 	void DrawRef(double modeAlpha); //描画(反射モード)
@@ -39,6 +39,7 @@ private:
 //▼ ===== 関数 ===== ▼.
 public:
 	void Init   ()                 override; //初期化.
+	void Reset  ()                 override; //リセット.
 	void Update ()                 override; //更新.
 	void DrawNor(double modeAlpha) override; //描画(通常時)
 	void DrawRef(double modeAlpha) override; //描画(反射モード)

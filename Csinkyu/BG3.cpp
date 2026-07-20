@@ -23,19 +23,23 @@ constexpr double FOV_HEX      = 5000.0;
 /* ================ */
 
 //初期化.
-void BG3::Init() {
-
+void BG3::Init() 
+{
     //参照取得.
     gameData = ManagerInsts::Get<GameData>();
+}
 
+//リセット.
+void BG3::Reset() 
+{
     angle = 0.0;
-
+    
     //初期位置.
     for (auto& i : point)
     {
         i.x = Calc::RandNum(-2000.0, 2000.0);
         i.y = Calc::RandNum(-2000.0, 2000.0);
-        i.z = Calc::RandNum(Z_MIN,  Z_MAX);
+        i.z = Calc::RandNum(Z_MIN, Z_MAX);
 
         i.oldZ = i.z;
     }
@@ -43,7 +47,7 @@ void BG3::Init() {
     {
         hex[i].z = Z_MIN + i * HEX_INTERVAL;
     }
-    for (auto& i : particle)
+    for (auto& i : star)
     {
         i.x = Calc::RandNum(-2000.0, 2000.0);
         i.y = Calc::RandNum(-2000.0, 2000.0);
@@ -52,8 +56,8 @@ void BG3::Init() {
 }
 
 //更新.
-void BG3::Update() {
-
+void BG3::Update()
+{
     angle += ROT_SPEED * gameData->speedRate;
 
     for (auto& i : point)
@@ -82,7 +86,7 @@ void BG3::Update() {
             i.z += HEX_NUM * HEX_INTERVAL;
         }
     }
-    for (auto& i : particle)
+    for (auto& i : star)
     {
         i.z -= MOVE_SPEED * gameData->speedRate;
 
@@ -96,24 +100,25 @@ void BG3::Update() {
 }
 
 //描画(通常時)
-void BG3::DrawNor(double modeAlpha) {
-
-    DrawHexagons (modeAlpha, COLOR_MODE_NOR);
-    DrawPoints   (modeAlpha, COLOR_MODE_NOR);
-    DrawParticles(modeAlpha, COLOR_MODE_NOR);
+void BG3::DrawNor(double modeAlpha) 
+{
+    DrawHexagons(modeAlpha, COLOR_MODE_NOR);
+    DrawPoints  (modeAlpha, COLOR_MODE_NOR);
+    DrawStars   (modeAlpha, false);
 }
 
 //描画(反射モード)
-void BG3::DrawRef(double modeAlpha) {
-    
-    DrawHexagons (modeAlpha, COLOR_MODE_REF);
-    DrawPoints   (modeAlpha, COLOR_MODE_REF);
-    DrawParticles(modeAlpha, COLOR_MODE_REF);
+void BG3::DrawRef(double modeAlpha) 
+{    
+    DrawHexagons(modeAlpha, COLOR_MODE_REF);
+    DrawPoints  (modeAlpha, COLOR_MODE_REF);
+    DrawStars   (modeAlpha, true);
 }
 
 //描画(線)
-void BG3::DrawPoints(double modeAlpha, MY_COLOR color) {
-
+void BG3::DrawPoints(double modeAlpha, MY_COLOR color) 
+{
+    //画面中央.
     const DBL_XY center = App::GetWindowRect().GetMid().ToDbl();
 
     //==============================
@@ -169,11 +174,7 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR color) {
         //--------------------------------
         // 線の太さ
         //--------------------------------
-        float thick = _flt(1.0 + (Z_MAX - i.z) / 800.0);
-
-        if (thick > 5.0) {
-            thick = 5.0;
-        }
+        float thick = _flt(5.0 * (1.0 - i.z/Z_MAX));
 
         //--------------------------------
         // 描画
@@ -185,7 +186,7 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR color) {
         line.thick = thick;
 
         //透明度を計算(奥ほど薄くする)
-        const double alpha = 160 * (1.0 - i.z / Z_MAX) * modeAlpha;
+        const double alpha = 128 * (1.0 - i.z/Z_MAX) * modeAlpha;
 
         DrawMode::Exe(
             DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha),
@@ -199,6 +200,7 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR color) {
 //描画(六角形)
 void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
 {
+    //画面中央.
     const DBL_XY center = App::GetWindowRect().GetMid().ToDbl();
 
     for (auto& h : hex)
@@ -225,7 +227,7 @@ void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
         }
 
         //透明度を計算(奥ほど薄くする)
-        const double alpha = 80 * (1.0 - h.z / Z_MAX) * modeAlpha;
+        const double alpha = 80 * (1.0 - h.z/Z_MAX) * modeAlpha;
 
         DrawMode::Exe(
             DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha),
@@ -238,31 +240,36 @@ void BG3::DrawHexagons(double modeAlpha, MY_COLOR color)
 }
 
 //描画(星)
-void BG3::DrawParticles(double modeAlpha, MY_COLOR color)
+void BG3::DrawStars(double modeAlpha, bool isReflect)
 {
+    //画面中央.
     const DBL_XY center = App::GetWindowRect().GetMid().ToDbl();
 
-    for (auto& p : particle)
+    for (auto& i : star)
     {
-        const double scale = FOV / p.z;
+        const double scale = FOV / i.z;
+        const double size  = 0.3 * (1.0 - i.z/Z_MAX);
+        const double alpha = 128 * (1.0 - i.z/Z_MAX) * modeAlpha;
 
         //座標.
         const DBL_XY pos = {
-            center.x + p.x * scale,
-            center.y + p.y * scale
+            center.x + i.x * scale,
+            center.y + i.y * scale
         };
         if (pos.x < -100 || pos.x > WINDOW_WID + 100) { continue; }
         if (pos.y < -100 || pos.y > WINDOW_HEI + 100) { continue; }
-
-        double size = (1.0 - p.z / Z_MAX) * 0.5;
-
-        const double alpha = 180 * (1.0 - p.z / Z_MAX) * modeAlpha;
 
         DrawMode::Exe(
             DrawModeID::None, DrawBlendModeID::Add, _int(alpha),
             [&]()
             {
-                GraphMng::Get(_T("bg_star_nor"))->DrawExtend(pos, {size, size}, Anchor::Mid);
+                //反射モードになったら変色.
+                if (isReflect) {
+                    GraphMng::Get(_T("bg_star_ref"))->DrawExtend(pos, {size, size}, Anchor::Mid);
+                }
+                else {
+                    GraphMng::Get(_T("bg_star_nor"))->DrawExtend(pos, {size, size}, Anchor::Mid);
+                }
             }
         );
     }

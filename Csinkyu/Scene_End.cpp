@@ -132,8 +132,15 @@ void EndScene::Draw() {
 		//終了案内.
 		{
 			//アニメーション値.
-			const double anim     = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
-			const float  gameTime = gameMng->GetGameScene()->GetGameTime();
+			const double anim = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
+
+			//ゲーム時間.
+			float fixTime;
+			{
+				//小数第二位以下は切り捨てる(勝手に四捨五入されてしまうため)
+				const float gameTime = gameMng->GetGameScene()->GetGameTime();
+ 				fixTime = floorf(gameTime * 10.0f) / 10.0f;
+			}
 
 			const int font = gameData->fonts["en-size2"].GetFont();
 			const int lineSpace = 40;
@@ -141,7 +148,7 @@ void EndScene::Draw() {
 			//テキスト.
 			MY_STRING texts[] = {
 				_T("Time Bonus"),
-				Format::StrFormat(_T("%d + %d (%.1f sec) = %d"), gameData->scoreBef, _int(gameTime * 10), gameTime, gameData->score),
+				Format::StrFormat(_T("%d + %d (%.1f sec) = %d"), gameData->scoreBef, _int(fixTime * 10), fixTime, gameData->score),
 			};
 			DrawStr str = { _T(""), { WINDOW_WID / 2, WINDOW_HEI / 2 - 20 }, 0xFFFFFF };
 			//テキストサイズ.
