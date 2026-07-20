@@ -9,6 +9,8 @@
 //参照.
 static GameData* gameData;
 
+const DBL_XY SIZE_RATE = { 0.4, 0.4 }; //タイルのサイズ倍率.
+
 // ▼*---=[ BG_Tile ]=---*▼ //
 
 //初期化.
@@ -70,9 +72,7 @@ void BG_Tile::Shine() {
 void BG1::Init() {
 
 	INT_XY imgSize = GraphMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
-	DBL_XY sizeRate = { 0.1, 0.1 };                              //サイズ倍率.
-
-	INT_XY size = { _int_r(imgSize.x * sizeRate.x), _int_r(imgSize.y * sizeRate.y) };
+	INT_XY size = { _int_r(imgSize.x * SIZE_RATE.x), _int_r(imgSize.y * SIZE_RATE.y) };
 
 	//タイルのように貼り付ける.
 	for (int x = 0; x < WINDOW_WID + size.x; x += size.x) {
@@ -82,7 +82,7 @@ void BG1::Init() {
 
 			tile.pos.x = x;
 			tile.pos.y = y;
-			tile.sizeRate = sizeRate;
+			tile.sizeRate = SIZE_RATE;
 			tile.Init();
 			tiles.push_back(tile); //配列に追加.
 		}

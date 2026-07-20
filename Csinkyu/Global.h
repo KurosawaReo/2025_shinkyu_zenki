@@ -81,8 +81,8 @@ enum StageType
 
 //プレイヤー.
 #define PLAYER_SIZE						(18)			//プレイヤーサイズ(半径)
-#define PLAYER_DRAW_SIZE				(0.17)			//プレイヤー本体の描画サイズ.
-#define PLAYER_LIGHT_DRAW_SIZE			(0.40)			//プレイヤー発光の描画サイズ.
+#define PLAYER_DRAW_SIZE				(0.7)			//プレイヤー本体の描画サイズ.
+#define PLAYER_LIGHT_DRAW_SIZE			(0.4)			//プレイヤー発光の描画サイズ.
 #define PLAYER_REF_ADD_SIZE				(5)				//反射モード時に拡大する当たり判定.
 #define PLAYER_MOVE_SPEED				(8)				//プレイヤー移動速度.
 #define PLAYER_AFT_IMG_NUM				(9)             //残像データの数.
@@ -183,17 +183,19 @@ enum StageType
 #define SCORE_ANIM_TIME					(50)			//スコアのアニメーション時間.
 
 //カラー.
+#define COLOR_MODE_NOR					(GetColor(50, 255, 255))		//通常モードのメインカラー.
+#define COLOR_MODE_REF					(GetColor(255, 0, 255))			//反射モードのメインカラー.
+#define COLOR_LASER_NORMAL(color)		(GetColor(50, color, 255))		//レーザー(通常)
+#define COLOR_LASER_REFLECT(color)		(GetColor(color/2+128, 0, 255)) //レーザー(反射)
 #define COLOR_PLY_REFLECT				(GetColor(255, 155, 255))
 #define COLOR_PLY_DEBUG					(GetColor(255, 150, 150))
-#define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))	//プレイヤーの残像色(通常)
-#define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))	//プレイヤーの残像色(反射)
+#define COLOR_PLY_AFT_NOR				(GetColor(105, 105, 105))		//プレイヤーの残像色(通常)
+#define COLOR_PLY_AFT_REF				(GetColor(255,   0, 255))		//プレイヤーの残像色(反射)
 #define COLOR_ITEM						(GetColor(255, 155, 255))
-#define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))   //予測演出.
+#define COLOR_PRE_EFFECT				(GetColor(128, 128, 128))		//予測演出.
 #define COLOR_METEOR(pos)				(GetColor(0, _int_r(100 + 155 * Calc::AnimWave(WaveType::CosLoop, pos.x/250)), 255)) //隕石.
 #define COLOR_BEST_SCORE				(0x20F7DE)
 #define COLOR_SCORE						(0x00FFA0)
 #define COLOR_TIME						(0x80FF9C)
-#define COLOR_LASER_NORMAL(color)		(GetColor(50, color, 255))		//レーザー通常カラー.
-#define COLOR_LASER_REFLECT(color)		(GetColor(color/2+128, 0, 255)) //レーザー反射カラー.
 
 #endif

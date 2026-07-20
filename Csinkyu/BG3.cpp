@@ -19,9 +19,6 @@ constexpr double Z_MIN        = 50.0;    //一番手前のz座標.
 constexpr double Z_MAX        = 3000.0;  //一番奥のz座標.
 constexpr double HEX_INTERVAL = 180.0;
 constexpr double FOV          = 500.0;
-
-const MY_COLOR COLOR_NOR = { 80, 180, 255 };
-const MY_COLOR COLOR_REF = { 255, 80, 200 };
 /* ================ */
 
 //初期化.
@@ -83,15 +80,15 @@ void BG3::Update() {
 //描画(通常時)
 void BG3::DrawNor(double modeAlpha) {
 
-    DrawHexagons(modeAlpha, COLOR_NOR);
-    DrawPoints  (modeAlpha, COLOR_NOR);
+    DrawHexagons(modeAlpha, COLOR_MODE_NOR);
+    DrawPoints  (modeAlpha, COLOR_MODE_NOR);
 }
 
 //描画(反射モード)
 void BG3::DrawRef(double modeAlpha) {
     
-    DrawHexagons(modeAlpha, COLOR_REF);
-    DrawPoints  (modeAlpha, COLOR_REF);
+    DrawHexagons(modeAlpha, COLOR_MODE_REF);
+    DrawPoints  (modeAlpha, COLOR_MODE_REF);
 }
 
 //描画(線)
@@ -168,7 +165,7 @@ void BG3::DrawPoints(double modeAlpha, MY_COLOR mainColor) {
         line.thick = thick;
 
         //透明度を計算(奥ほど薄くする)
-        const double alpha = 255 * (1.0 - i.z / Z_MAX) * modeAlpha;
+        const double alpha = 160 * (1.0 - i.z / Z_MAX) * modeAlpha;
 
         DrawMode::Exe(
             DrawModeID::None, DrawBlendModeID::Alpha, _int(alpha),

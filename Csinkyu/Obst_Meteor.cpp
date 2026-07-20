@@ -61,7 +61,7 @@ void Meteor::Draw() {
 
 	//ターゲットマーク.
 	if (isTargeting) {
-		GraphMng::Get(_T("target"))->DrawExtend(pos, { 0.1, 0.1 });
+		GraphMng::Get(_T("target"))->DrawExtend(pos, { 0.4, 0.4 });
 	}
 
 	//破壊モード限定.
