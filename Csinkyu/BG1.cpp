@@ -49,7 +49,7 @@ void BG_Tile::DrawNor(double modeAlpha) {
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
 		[&]() {
-			GraphMng::Get(_T("bg_normal"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
+			GraphMng::Get(_T("bg_tile_nor"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
 		}
 	);
 }
@@ -61,7 +61,7 @@ void BG_Tile::DrawRef(double modeAlpha) {
 	DrawMode::Exe(
 		DrawModeID::None, DrawBlendModeID::Alpha, _int(shine * sinNum * modeAlpha),
 		[&]() {
-			GraphMng::Get(_T("bg_reflect"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
+			GraphMng::Get(_T("bg_tile_ref"))->DrawExtend(pos.ToDbl(), SIZE_RATE, Anchor::Mid);
 		}
 	);
 }
@@ -79,7 +79,7 @@ void BG_Tile::Shine() {
 //初期化.
 void BG1::Init() {
 
-	INT_XY imgSize = GraphMng::Get(_T("bg_normal"))->GetSize();  //画像サイズ取得.
+	INT_XY imgSize = GraphMng::Get(_T("bg_tile_nor"))->GetSize();  //画像サイズ取得.
 	INT_XY size = { _int_r(imgSize.x * SIZE_RATE.x), _int_r(imgSize.y * SIZE_RATE.y) };
 
 	//タイルのように貼り付ける.

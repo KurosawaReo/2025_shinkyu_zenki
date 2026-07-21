@@ -18,10 +18,9 @@ public:
 	//コンストラクタ.
 	UIManager(int order) : ManagerBase(order) {}
 
-	//sign.
-	void SignIsShowScore() { isShowScore = true; }
 	//set.
-	void SetBestScore(int _score) { dispBestScore = _score; }
+	void SetIsShowScore(bool _flag)  { isShowScore   = _flag;  }
+	void SetBestScore  (int  _score) { dispBestScore = _score; }
 
 	void Init()   override;
 	void Reset()  override;

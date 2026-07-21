@@ -36,10 +36,11 @@ public:
 	void Draw()   override;
 
 	void ItemSpawn(); //アイテム召喚.
-	void ItemReset(); //アイテムを全てリセットする.
+	void ItemReset(); //全てリセット.
 
-	void ItemUse(list<ItemData>::iterator&, bool isSuper); //アイテム発動.
+	void ItemUse(list<ItemData>::iterator&, bool isSuper);     //アイテム発動.
 
+	void SpawnNow();                                           //今すぐアイテムを出現させる.
 	bool CheckHitPlayer(list<ItemData>::iterator&, ItemType*); //アイテム取得判定.
 
 	//使用禁止.

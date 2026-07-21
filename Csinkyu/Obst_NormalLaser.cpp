@@ -165,9 +165,6 @@ void NormalLaser::Init(){
 //リセット.
 void NormalLaser::Reset()
 {
-	//自動実行設定.
-	SetAutoExeMode(MngAutoExe::Stop);
-
 	counter   = LASER_NOR_SHOT_START + 100;
 	counterTm = LASER_NOR_SHOT_START;
 
@@ -184,48 +181,44 @@ void NormalLaser::Reset()
 //更新.
 void NormalLaser::Update()
 {
-	//ゲーム中のみ.
-	if (sceneMng->GetSceneName() == _T("Game")) {
+	counter -= gameData->speedRate; //経過カウンター.
 
-		counter -= gameData->speedRate; //経過カウンター.
+	//発射台更新.
+	for (auto& i : points) {
+		i.Update();
+	}
 
-		//発射台更新.
+	//タイミングが来たらレーザー発射.
+	if (counter <= counterTm) {
+		//発射.
 		for (auto& i : points) {
-			i.Update();
+			i.Shot();
 		}
-
-		//タイミングが来たらレーザー発射.
-		if (counter <= counterTm) {
-			//発射.
-			for (auto& i : points) {
-				i.Shot();
-			}
-			//効果音再生.
-			if (auto i = soundMng->Get(_T("Laser1"))) {
-				i->Play(false, 60);
-			}
-			//次のレーザーを発射するタイミング.
-			counterTm -= LASER_NOR_SHOT_SPAN;
+		//効果音再生.
+		if (auto i = soundMng->Get(_T("Laser1"))) {
+			i->Play(false, 60);
 		}
+		//次のレーザーを発射するタイミング.
+		counterTm -= LASER_NOR_SHOT_SPAN;
+	}
 
-		//0を下回ったらタイマー再開.
-		if (counter <= 0) {
-			//発射開始時間 + 待機時間(待機時間は徐々に短くなる)
-			counter = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData->spawnRate;
-			//発射開始時間.
-			counterTm = LASER_NOR_SHOT_START;
-			//レーザー移動抽選.
-			for (auto& i : points) {
-				i.MoveRand();
-			}
+	//0を下回ったらタイマー再開.
+	if (counter <= 0) {
+		//発射開始時間 + 待機時間(待機時間は徐々に短くなる)
+		counter = LASER_NOR_SHOT_START + LASER_NOR_SHOT_RESET * gameData->spawnRate;
+		//発射開始時間.
+		counterTm = LASER_NOR_SHOT_START;
+		//レーザー移動抽選.
+		for (auto& i : points) {
+			i.MoveRand();
 		}
+	}
 
-		//エフェクト.
-		for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
-			//有効なら.
-			if (flash[i].validFlag) {
-				flash[i].counter += gameData->speedRate;
-			}
+	//エフェクト.
+	for (int i = 0; i < LASER_NOR_FLASH_MAX; i++) {
+		//有効なら.
+		if (flash[i].validFlag) {
+			flash[i].counter += gameData->speedRate;
 		}
 	}
 }

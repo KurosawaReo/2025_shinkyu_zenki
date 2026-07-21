@@ -121,7 +121,7 @@ void LaserManager::Draw() {
 
 			//有効なレーザーに表示する.
 			DrawStr str(_T("レーザー"), i.nowPos.ToInt(), color);
-			str.Draw();
+			str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
 		}
 	}
 }
