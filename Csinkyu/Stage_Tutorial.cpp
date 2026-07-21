@@ -347,10 +347,14 @@ void TutorialStage::UpdateStep3() {
 			//次に進行する時の処理.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 
-				//動画.
-				GraphMng::Get(_T("reflect_mode_death"))->PlayMovie(PlayTypeID::Loop);
-				//ゲーム速度.
-				gameData->speedRate = 0.1;
+				timerMng->ReservExe(
+					1.0f, []() {
+						//ゲーム速度.
+						gameData->speedRate = 0.1;
+						//動画.
+						GraphMng::Get(_T("reflect_mode_death"))->PlayMovie(PlayTypeID::Loop);
+					}
+				);
 
 				//終了処理.
 				StepInnerEnd();
@@ -510,7 +514,7 @@ void TutorialStage::DrawStep3() {
         case 1:
         {
             DrawTopText(1, drawAlpha, _T("レーザーを反射する"));
-            DrawTopText(2, drawAlpha, _T("反射モードの間だけ、「レーザー」に当たると跳ね返せます。"));
+            DrawTopText(2, drawAlpha, _T("反射モード中のみ、「レーザー」に当たると跳ね返せます。"));
         }
         break;
 
