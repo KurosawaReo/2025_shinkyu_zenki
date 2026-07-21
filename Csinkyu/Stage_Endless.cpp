@@ -58,7 +58,6 @@ void EndlessStage::Update() {
 
 #if !defined INVALID_ITEM
 			ManagerInsts::Get<ItemManager>  ()->SetAutoExeMode(MngAutoExe::Active);
-			ManagerInsts::Get<ItemManager>  ()->SetItemMaxCnt(1);    //アイテムは1つ.
 #endif
 #if !defined INVALID_OBST_METEOR
 			ManagerInsts::Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
@@ -130,8 +129,6 @@ void EndlessStage::Update() {
 		case 3:
 			if (gameData->counter >= 6000) { //6000 = 出現間隔約??%地点.
 				gameData->level = 4; //Lv4へ.
-
-				ManagerInsts::Get<ItemManager>()->SetItemMaxCnt(2); //アイテムを2つに.
 
 				//サウンド.
 				if (auto i = soundMng->Get(_T("LevelUp"))) {

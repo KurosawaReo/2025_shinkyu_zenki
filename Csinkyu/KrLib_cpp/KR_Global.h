@@ -1,6 +1,6 @@
 /*
    - KR_Global.h - (C++)
-   ver.2026/07/16
+   ver.2026/07/20
 
    KrLib全体で使う汎用プログラム。
 */
@@ -45,11 +45,11 @@ using std::to_wstring;
 using std::function;
 
 //型変換マクロ.
-#define _int(n)   static_cast<int>   (n)        //int型変換マクロ.
-#define _int_r(n) static_cast<int>   (round(n)) //int型変換マクロ(四捨五入)
-#define _flt(n)   static_cast<float> (n)        //float型変換マクロ.
-#define _dbl(n)   static_cast<double>(n)        //double型変換マクロ.
-#define _byte(n)  static_cast<BYTE>  (n)        //BYTE型変換マクロ.
+#define _int(n)   static_cast<int>   (n)             //int型変換マクロ.
+#define _int_r(n) static_cast<int>   (std::round(n)) //int型変換マクロ(四捨五入)
+#define _flt(n)   static_cast<float> (n)             //float型変換マクロ.
+#define _dbl(n)   static_cast<double>(n)             //double型変換マクロ.
+#define _byte(n)  static_cast<BYTE>  (n)             //BYTE型変換マクロ.
 //角度変換マクロ.
 #define _rad(n) (n)*(M_PI/180)
 #define _deg(n) (n)*(180/M_PI)

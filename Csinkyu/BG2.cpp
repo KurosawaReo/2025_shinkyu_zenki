@@ -8,6 +8,11 @@ void BG2::Init() {
 
 }
 
+//リセット.
+void BG2::Reset() {
+
+}
+
 //更新.
 void BG2::Update() {
 

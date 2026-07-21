@@ -91,16 +91,21 @@ namespace KR
 	*/
 	void DrawCircleKR(const Circle& cir, Anchor anc, bool isFill, bool isAnti, bool isCameraDisp) {
 
-		//描画座標.
-		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(cir.pos) : cir.pos;
-		//基準点に座標をずらす.
-		float x = _flt(newPos.x - (cir.r * 2 - 1) * (ANCHOR_POS[_int(anc)].x - 0.5));
-		float y = _flt(newPos.y - (cir.r * 2 - 1) * (ANCHOR_POS[_int(anc)].y - 0.5));
+		//描画座標の計算.
+		DBL_XY drawPos;
+		{
+			const DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(cir.pos) : cir.pos;
+
+			drawPos = {
+				newPos.x - (cir.r * 2 - 1) * (ANCHOR_POS[_int(anc)].x - 0.5),
+				newPos.y - (cir.r * 2 - 1) * (ANCHOR_POS[_int(anc)].y - 0.5)
+			};
+		}
 
 		//アンチエイリアスあり.
 		if (isAnti) {
 			//posnum(角形数)は60に設定する.
-			int err = DrawCircleAA(x, y, cir.r, 60, cir.color.GetColorCode(), isFill, cir.thick);
+			int err = DrawCircleAA(_flt(drawPos.x), _flt(drawPos.y), cir.r, 60, cir.color.GetColorCode(), isFill, cir.thick);
 			if (err < 0) {
 				throw ErrorMsg(_T("DrawCircleKR"), _T("DrawCircleAAエラー"));
 				return;
@@ -108,7 +113,7 @@ namespace KR
 		}
 		//アンチエイリアスなし.
 		else {
-			int err = DrawCircle(_int_r(x), _int_r(y), _int_r(cir.r), cir.color.GetColorCode(), isFill, _int_r(cir.thick));
+			int err = DrawCircle(_int_r(drawPos.x), _int_r(drawPos.y), _int_r(cir.r), cir.color.GetColorCode(), isFill, _int_r(cir.thick));
 			if (err < 0) {
 				throw ErrorMsg(_T("DrawCircleKR"), _T("DrawCircleエラー"));
 				return;
@@ -126,17 +131,30 @@ namespace KR
 			return;
 		}
 
-		//描画座標.
-		DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(box.pos) : box.pos;
-		//基準点に座標をずらす.
-		float x1 = _flt(newPos.x - (box.size.x - 1) * ANCHOR_POS[_int(anc)].x); //始点.
-		float y1 = _flt(newPos.y - (box.size.y - 1) * ANCHOR_POS[_int(anc)].y);
-		float x2 = _flt(x1 + box.size.x - 1);                                   //終点.
-		float y2 = _flt(y1 + box.size.y - 1);
+		//描画座標の計算.
+		DBL_XY pos1, pos2;
+		{
+			//描画座標.
+			const DBL_XY newPos = (isCameraDisp) ? App::ToWorldPos(box.pos) : box.pos;
+
+			//サイズ.
+			const double width  = box.size.x;
+			const double height = box.size.y;
+			//始点.
+			pos1 = {
+				newPos.x - width  * ANCHOR_POS[_int(anc)].x,
+				newPos.y - height * ANCHOR_POS[_int(anc)].y,
+			};
+			//終点.
+			pos2 = {
+				pos1.x + width,
+				pos1.y + height
+			};
+		}
 
 		//アンチエイリアスあり.
 		if (isAnti) {
-			int err = DrawBoxAA(x1, y1, x2 + 1, y2 + 1, box.color.GetColorCode(), isFill, box.thick);
+			int err = DrawBoxAA(_flt(pos1.x), _flt(pos1.y), _flt(pos2.x), _flt(pos2.y), box.color.GetColorCode(), isFill, box.thick);
 			if (err < 0) {
 				throw ErrorMsg(_T("DrawBoxKR"), _T("DrawBoxAAエラー"));
 				return;
@@ -144,7 +162,7 @@ namespace KR
 		}
 		//アンチエイリアスなし.
 		else {
-			int err = DrawBox(_int(x1), _int(y1), _int(x2 + 1), _int(y2 + 1), box.color.GetColorCode(), isFill);
+			int err = DrawBox(_int_r(pos1.x), _int_r(pos1.y), _int_r(pos2.x), _int_r(pos2.y), box.color.GetColorCode(), isFill);
 			if (err < 0) {
 				throw ErrorMsg(_T("DrawBoxKR"), _T("DrawBoxエラー"));
 				return;
@@ -317,8 +335,8 @@ namespace KR
 		//ベジェ曲線を細かい線分に分割.
 		for (int i = 0; i < segments; i++) {
 			//タイム値.
-			const double t = _dbl(i) / segments;
-			const double nt = _dbl(i + 1) / segments;
+			const double t  = _dbl(i)   / segments;
+			const double nt = _dbl(i+1) / segments;
 			if (isDot) {
 				//1点を取得.
 				DBL_XY pos = Calc::BezierPoint(bLine, t);
@@ -430,29 +448,29 @@ namespace KR
 	   偶奇規則で2つの線の間を塗るようにすると、内側に塗られない空間ができる。
 
 	   ｜■■｜□□｜■■｜
-	　 　　　　	  ↑ここも塗ってほしい
+	　 　　　　	↑ここも塗ってほしい
 
-		   しかし、この空間が完全に囲まれているのか、外側へ通じているかは分からない。
+		しかし、この空間が完全に囲まれているのか、外側へ通じているかは分からない。
 
-		   ===== 解決法 =====
-		   非ゼロ巻数規則を使い、線が下から来たか上から来たかを判定する。
-		   「線が下に行って上に行った時、1つの"囲い"が成立する」この性質を利用したもの。
+		===== 解決法 =====
+		非ゼロ巻数規則を使い、線が下から来たか上から来たかを判定する。
+		「線が下に行って上に行った時、1つの"囲い"が成立する」この性質を利用したもの。
 
-		   例: 真ん中が囲われてないケース
-		   ↓■■↑□□↑■■↓
+		例: 真ん中が囲われてないケース
+		↓■■↑□□↑■■↓
 
-		   例: 真ん中が囲われてるケース
-		   ↓■■↓■■↑■■↑
+		例: 真ん中が囲われてるケース
+		↓■■↓■■↑■■↑
 
-		   これを数値化すればプログラムで実装できる。
+		これを数値化すればプログラムで実装できる。
 
-		   ===== プログラム =====
-		   横一列を左から右へ調べる。"↓"を通過したら+1 / "↑"を通過したら-1
-		   数値が0以外なら塗る。0なら塗らない。
+		===== プログラム =====
+		横一列を左から右へ調べる。"↓"を通過したら+1 / "↑"を通過したら-1
+		数値が0以外なら塗る。0なら塗らない。
 
-		   ↓１１↓２２↑１１↑００
-		*/
-		//ポリゴンの1辺(pos1→pos2)と、水平線yが交差するか判定.
+		↓１１↓２２↑１１↑００
+	*/
+	//ポリゴンの1辺(pos1→pos2)と、水平線yが交差するか判定.
 	bool IntersectEdge(const DBL_XY pos1, const DBL_XY pos2, double y, double* x, int* delta) {
 
 		//yがpos1.y～pos2.yの間にある(=交差している)

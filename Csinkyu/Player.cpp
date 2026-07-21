@@ -89,8 +89,8 @@ void Player::Update()
 		//画像回転.
 		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate;
 
-		UpdateAfter(); //残像更新.
 		UpdateDash();  //ダッシュ更新.
+		UpdateAfter(); //残像更新.
 		Move();		   //プレイヤー移動.
 	}
 }
@@ -111,35 +111,8 @@ void Player::Draw()
 
 		//残像描画.
 		DrawAfter();
-
-		const float size  = 0.17f;
-		const float size2 = 0.05f;
-
-		//プレイヤー描画.
-		if (mode == Player_ItemReflect ||
-			mode == Player_ItemReflectSuper
-		){
-			//ダッシュ演出.
-			if (isDashing) {
-				GraphMng::Get(_T("player_light_ref"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
-			}
-			//反射モードの画像.
-			GraphMng::Get(_T("player_ref"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
-		}
-		else {
-			//ダッシュ演出.
-			if (isDashing) {
-				GraphMng::Get(_T("player_light_nor"))->DrawExtend(hit.pos, { size2, size2 }, Anchor::Mid, true, true);
-			}
-			//通常モードの画像.
-			GraphMng::Get(_T("player_nor"))->DrawRota(hit.pos, size, imgRot, {0, 0}, true, true);
-		}
-
-		//チュートリアル用.
-		if (gameData->stage == Stage_Tutorial) {
-			DrawStr str(_T("プレイヤー"), hit.pos.ToInt() + INT_XY(0, -35), 0xFFFFFF );
-			str.Draw();
-		}
+		//本体描画.
+		DrawPlayer();
 	}
 }
 
@@ -202,90 +175,6 @@ void Player::UpdateDash()
 	}
 }
 
-//移動処理(斜め対応)
-void Player::Move()
-{
-	float speed = PLAYER_MOVE_SPEED;
-
-	//目標速度.
-	DBL_XY targetVel{};
-	//入力操作.
-	DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
-	//入力があれば更新.
-	if (input.x != 0 || input.y != 0) {
-		lastInputVec = input;
-	}
-
-	//ダッシュ中なら.
-	if (isDashing) {
-		//段々減速.
-		const double rate = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
-		//速度変化.
-		speed *= _flt(1.0 + PLAYER_DASH_SPEED * rate);
-		//目標速度変更.
-		targetVel = lastInputVec * speed;
-	}
-	else {
-		//目標速度変更.
-		targetVel = input * speed;
-	}
-
-	//Lerp速度.
-	const double moveLerp = PLAYER_MOVE_LERP_SPEED;
-	//Lerpで目標速度に近づける.
-	velocity.x += (targetVel.x - velocity.x) * moveLerp;
-	velocity.y += (targetVel.y - velocity.y) * moveLerp;
-	//誤差は無視.
-	if (fabs(velocity.x) < 0.01f) { velocity.x = 0; }
-	if (fabs(velocity.y) < 0.01f) { velocity.y = 0; }
-
-	//移動.
-	hit.pos += velocity * gameData->speedRate;
-	//移動限界.
-	Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, {0, 0, WINDOW_WID-1, WINDOW_HEI-1});
-}
-
-//死亡処理.
-void Player::Death() {
-
-	//デバッグモード中は無敵.
-	if (isDebug) { return; }
-	//死亡済なら中断.
-	if (!active) { return; }
-
-	//サウンド.
-	if (auto i = soundMng->Get(_T("PlayerDeath"))) {
-		i->Play(false, 70); //再生.
-	}
-	//エフェクト.
-	EffectData data{};
-	data.type = Effect_PlayerDeath;
-	data.pos  = hit.pos;
-	effectMng->SpawnEffect(&data);
-
-	gameMng->GameOver(); //ゲーム終了.
-	
-	isDashing    = false;
-	dashTimer    = 0;
-    dashCooldown = 0;
-	active       = false;
-}
-
-//プレイヤー復活.
-void Player::Revival()
-{
-	//位置・速度リセット.
-	hit.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
-	velocity = {0, 0};
-	active   = true;
-
-	//残像配列のリセット.
-	for (int i = 0; i < _countof(after); i++) {
-		after[i].pos = hit.pos;
-		after[i].isActive = false;
-	}
-}
-
 //残像更新.
 void Player::UpdateAfter()
 {
@@ -298,20 +187,20 @@ void Player::UpdateAfter()
 		//残像データを後ろにずらす.
 		for (int i = PLAYER_AFT_IMG_NUM - 1; i > 0; i--)
 		{
-			after[i] = after[i-1];
+			after[i] = after[i - 1];
 		}
 
 		//一旦無効にする.
 		after[0].isActive = false;
 
 		//ある程度移動したら.
-		if (fabs(hit.pos.x - after[1].pos.x) >= 0.5 ||
-			fabs(hit.pos.y - after[1].pos.y) >= 0.5
-		){
+		if (fabs(hit.pos.x - after[1].pos.x) >= 1.0 ||
+			fabs(hit.pos.y - after[1].pos.y) >= 1.0
+			) {
 			//1フレーム目の情報登録.
-			after[0].pos      = hit.pos;                                     //プレイヤー座標.
-			after[0].ang      = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
-			after[0].isDash   = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
+			after[0].pos = hit.pos;                                     //プレイヤー座標.
+			after[0].ang = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
+			after[0].isDash = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
 			after[0].isActive = true;                                        //残像を出す.
 		}
 	}
@@ -423,3 +312,151 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 
 	line.Draw();
 }
+
+//本体描画.
+void Player::DrawPlayer() {
+
+	//透明度計算.
+	const int alpha  = _int(255 * Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION));
+	const int alpha2 = _int(80 + 128 * Calc::AnimWave(WaveType::CosLoop, gameMng->GetGameScene()->GetReflectModeTime() * 2));
+
+	//プレイヤー描画.
+	if (mode == Player_ItemReflect ||
+		mode == Player_ItemReflectSuper
+	){
+		//ダッシュ演出.
+		if (isDashing) {
+			//発光.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
+				[&]() {
+					GraphMng::Get(_T("light_ref_player"))->DrawExtend(
+						hit.pos, { PLAYER_LIGHT_DRAW_SIZE, PLAYER_LIGHT_DRAW_SIZE }, Anchor::Mid, true, true
+					);
+				}
+			);
+		}
+		//反射バリア.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, alpha2,
+			[&]() {
+				GraphMng::Get(_T("player_ref_barrier"))->DrawExtend(
+					hit.pos, { PLAYER_DRAW_SIZE, PLAYER_DRAW_SIZE }, Anchor::Mid, true, true
+				);
+			}
+		);
+		//プレイヤー.
+		GraphMng::Get(_T("player_ref"))->DrawRota(
+			hit.pos, PLAYER_DRAW_SIZE, imgRot, { 0, 0 }, true, true
+		);
+	}
+	else {
+		//ダッシュ演出.
+		if (isDashing) {
+			//発光.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
+				[&]() {
+					GraphMng::Get(_T("light_nor_player"))->DrawExtend(
+						hit.pos, { PLAYER_LIGHT_DRAW_SIZE, PLAYER_LIGHT_DRAW_SIZE }, Anchor::Mid, true, true
+					);
+				}
+			);
+		}
+		//プレイヤー.
+		GraphMng::Get(_T("player_nor"))->DrawRota(
+			hit.pos, PLAYER_DRAW_SIZE, imgRot, { 0, 0 }, true, true
+		);
+	}
+
+	//チュートリアル用.
+	if (gameData->stage == Stage_Tutorial) {
+		DrawStr str(_T("プレイヤー"), hit.pos.ToInt() + INT_XY(0, -35), 0xFFFFFF);
+		str.Draw();
+	}
+}
+
+//移動処理(斜め対応)
+void Player::Move()
+{
+	float speed = PLAYER_MOVE_SPEED;
+
+	//目標速度.
+	DBL_XY targetVel{};
+	//入力操作.
+	DBL_XY input = inputMng->GetKey4Dir() + inputMng->GetPadStick();
+	//入力があれば更新.
+	if (input.x != 0 || input.y != 0) {
+		lastInputVec = input;
+	}
+
+	//ダッシュ中なら.
+	if (isDashing) {
+		//段々減速.
+		const double rate = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
+		//速度変化.
+		speed *= _flt(1.0 + PLAYER_DASH_SPEED * rate);
+		//目標速度変更.
+		targetVel = lastInputVec * speed;
+	}
+	else {
+		//目標速度変更.
+		targetVel = input * speed;
+	}
+
+	//Lerp速度.
+	const double moveLerp = PLAYER_MOVE_LERP_SPEED;
+	//Lerpで目標速度に近づける.
+	velocity.x += (targetVel.x - velocity.x) * moveLerp;
+	velocity.y += (targetVel.y - velocity.y) * moveLerp;
+	//誤差は無視.
+	if (fabs(velocity.x) < 0.01f) { velocity.x = 0; }
+	if (fabs(velocity.y) < 0.01f) { velocity.y = 0; }
+
+	//移動.
+	hit.pos += velocity * gameData->speedRate;
+	//移動限界.
+	Calc::FixPosInArea(&hit.pos, { PLAYER_SIZE * 2, PLAYER_SIZE * 2 }, { 0, 0, WINDOW_WID - 1, WINDOW_HEI - 1 });
+}
+
+//死亡処理.
+void Player::Death() {
+
+	//デバッグモード中は無敵.
+	if (isDebug) { return; }
+	//死亡済なら中断.
+	if (!active) { return; }
+
+	//サウンド.
+	if (auto i = soundMng->Get(_T("PlayerDeath"))) {
+		i->Play(false, 70); //再生.
+	}
+	//エフェクト.
+	EffectData data{};
+	data.type = Effect_PlayerDeath;
+	data.pos = hit.pos;
+	effectMng->SpawnEffect(&data);
+
+	gameMng->GameOver(); //ゲーム終了.
+
+	isDashing = false;
+	dashTimer = 0;
+	dashCooldown = 0;
+	active = false;
+}
+
+//プレイヤー復活.
+void Player::Revival()
+{
+	//位置・速度リセット.
+	hit.pos = { WINDOW_WID / 2, WINDOW_HEI / 2 };
+	velocity = { 0, 0 };
+	active = true;
+
+	//残像配列のリセット.
+	for (int i = 0; i < _countof(after); i++) {
+		after[i].pos = hit.pos;
+		after[i].isActive = false;
+	}
+}
+
