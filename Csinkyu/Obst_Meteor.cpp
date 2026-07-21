@@ -83,7 +83,7 @@ void Meteor::Draw() {
 			//チュートリアル.
 			if (gameData->stage == Stage_Tutorial) {
 				DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
-				str.Draw();
+				str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
 			}
 		}
 	);

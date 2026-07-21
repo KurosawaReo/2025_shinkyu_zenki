@@ -41,13 +41,10 @@ void Player::Init()
 //リセット(何回でも行う)
 void Player::Reset()
 {
-	//自動実行設定.
-	SetAutoExeMode(MngAutoExe::Stop);
-
-	hit        = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {}, {} };
-	mode       = Player_Normal;
-	afterCntr  = 1;
-	active     = true;
+	hit       = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {}, {} };
+	mode      = Player_Normal;
+	afterCntr = 1;
+	active    = true;
 
 	//初期速度.
 	velocity = {0,0};
@@ -268,48 +265,57 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 	DBL_XY   pos2 = after[idx].pos + Calc::AngToVector(after[idx].ang + 90) * (20 * (1 - anim1));
 	DBL_XY   pos3 = after[idx].pos + Calc::AngToVector(after[idx].ang - 90) * (20 * (1 - anim1));
 	GradLine line;
-
+	
+	//モード別.
 	switch (mode)
 	{
-	case Player_ItemReflect:
-	case Player_ItemReflectSuper:
-	{
-		//三角形のグラデーション線を作成.
-		line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
-		line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim1)) });
-		line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
-	}
-	break;
-
-	case Player_Normal:
-	case Player_DashReflect:
-	{
-		//ダッシュ反射してたら色付き.
-		if (isDashReflect) {
-
-			//色の変化.
-			MY_COLOR color = {
-				_int_r(80 * (1 - anim2)),	//R
-				_int_r(255 - 200 * anim2),	//G
-				_int_r(255 * anim2),		//B
-				_int_r(255 * (1 - anim1))   //A(透明度)
-			};
+		case Player_ItemReflect:
+		case Player_ItemReflectSuper:
+		{
 			//三角形のグラデーション線を作成.
-			line.AddPoint(pos2, color);
-			line.AddPoint(pos1, color);
-			line.AddPoint(pos3, color);
+			line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
+			line.AddPoint(pos1, { 100,   0, 100, _int_r(255 * (1 - anim1)) });
+			line.AddPoint(pos3, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
 		}
-		//してなければ通常カラー.
-		else {
+		break;
+
+		case Player_Normal:
+		case Player_DashReflect:
+		{
 			//三角形のグラデーション線を作成.
 			line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
 			line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
 			line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+
+#if false
+			//ダッシュ反射してたら色付き.
+			if (isDashReflect) {
+
+				//色の変化.
+				MY_COLOR color = {
+					_int_r(80 * (1 - anim2)),	//R
+					_int_r(255 - 200 * anim2),	//G
+					_int_r(255 * anim2),		//B
+					_int_r(255 * (1 - anim1))   //A(透明度)
+				};
+				//三角形のグラデーション線を作成.
+				line.AddPoint(pos2, color);
+				line.AddPoint(pos1, color);
+				line.AddPoint(pos3, color);
+			}
+			//してなければ通常カラー.
+			else {
+				//三角形のグラデーション線を作成.
+				line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+				line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
+				line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+			}
+#endif
 		}
-	}
-	break;
+		break;
 	}
 
+	//ダッシュエフェクト描画.
 	line.Draw();
 }
 
@@ -371,8 +377,8 @@ void Player::DrawPlayer() {
 
 	//チュートリアル用.
 	if (gameData->stage == Stage_Tutorial) {
-		DrawStr str(_T("プレイヤー"), hit.pos.ToInt() + INT_XY(0, -35), 0xFFFFFF);
-		str.Draw();
+		DrawStr str(_T("プレイヤー"), hit.pos.ToInt() + INT_XY(0, -40), 0xFFFFFF);
+		str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
 	}
 }
 

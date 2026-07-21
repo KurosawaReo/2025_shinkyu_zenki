@@ -328,6 +328,12 @@ void TutorialStage::UpdateStep3() {
 
 				//オブジェクト.
 				ManagerInsts::Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
+				//オブジェクト(遅延実行)
+				timerMng->ReservExe(
+					1.0f, []() {
+						ManagerInsts::Get<ItemManager>()->SpawnNow();
+					}
+				);
 
 				//終了処理.
 				StepInnerEnd();
@@ -343,6 +349,8 @@ void TutorialStage::UpdateStep3() {
 
 				//動画.
 				GraphMng::Get(_T("reflect_mode_death"))->PlayMovie(PlayTypeID::Loop);
+				//ゲーム速度.
+				gameData->speedRate = 0.1;
 
 				//終了処理.
 				StepInnerEnd();
@@ -373,6 +381,8 @@ void TutorialStage::UpdateStep3() {
 
 				//動画.
 				GraphMng::Get(_T("reflect_mode_death"))->StopMovie();
+				//ゲーム速度.
+				gameData->speedRate = 1.0;
 
 				//終了処理.
 				StepInnerEnd();
@@ -433,7 +443,7 @@ void TutorialStage::DrawStep1() {
     {
         case 0:
         {
-            DrawTopText(1, drawAlpha, _T("プレイヤーを移動させる"));
+            DrawTopText(1, drawAlpha, _T("移動する"));
             DrawTopText(2, drawAlpha, _T("キーボード　　 : WASD / ↑↓←→"));
             DrawTopText(3, drawAlpha, _T("コントローラー : 左スティック　 "));
 			DrawTopText(4, drawAlpha, _T("アーケード　　 : レバー　　　　 "));
@@ -451,9 +461,8 @@ void TutorialStage::DrawStep1() {
 
         case 2:
         {
-            DrawTopText(1, drawAlpha, _T("攻撃をよける"));
-            DrawTopText(2, drawAlpha, _T("青いものは敵です。当たると即死します。"));
-            DrawTopText(3, drawAlpha, _T("灰色:予告, 青色:攻撃"));
+            DrawTopText(1, drawAlpha, _T("障害物をさける"));
+            DrawTopText(2, drawAlpha, _T("青いものは障害物です。当たるとゲームオーバーになります。"));
         }
         break;
 
@@ -470,14 +479,14 @@ void TutorialStage::DrawStep2() {
         case 0:
         {
             DrawTopText(1, drawAlpha, _T("アイテムをとる"));
-            DrawTopText(2, drawAlpha, _T("アイテムは画面上から降ってきます。触れると自動で取れます。"));
+            DrawTopText(2, drawAlpha, _T("アイテムは上から降ってきます。触れるだけで取れます。"));
         }
         break;
 
         case 1:
         {
             DrawTopText(1, drawAlpha, _T("アイテム発動"));
-            DrawTopText(2, drawAlpha, _T("触れると効果が発動し、一定時間経つと解除されます。"));
+            DrawTopText(2, drawAlpha, _T("アイテムを取ると効果が発動し、一定時間経つと解除されます。"));
         }
         break;
 
@@ -494,39 +503,49 @@ void TutorialStage::DrawStep3() {
         case 0:
         {
             DrawTopText(1, drawAlpha, _T("反射モード"));
-            DrawTopText(2, drawAlpha, _T("アイテムを取ると反射モードになります。"));
+            DrawTopText(2, drawAlpha, _T("アイテムを取ると「反射モード」へ変化します。"));
         }
         break;
 
         case 1:
         {
-            DrawTopText(1, drawAlpha, _T("レーザーを跳ね返す"));
-            DrawTopText(2, drawAlpha, _T("反射モード中は、レーザーに当たると跳ね返せます。"));
+            DrawTopText(1, drawAlpha, _T("レーザーを反射する"));
+            DrawTopText(2, drawAlpha, _T("反射モードの間だけ、「レーザー」に当たると跳ね返せます。"));
         }
         break;
 
         case 2:
         {
             DrawTopText(1, drawAlpha, _T("隕石をこわす"));
-            DrawTopText(2, drawAlpha, _T("跳ね返したレーザーは、隕石に向かって飛んでいきます。"));
+            DrawTopText(2, drawAlpha, _T("跳ね返したレーザーは、「隕石」に向かって自動で飛んでいきます。"));
         }
         break;
 
 		case 3:
 		{
+			//背景描画.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(128 * drawAlpha),
+				[]() {
+					Box box = { App::GetWindowRect().GetMid().ToDbl(), App::GetWindowSize().ToDbl(), 0x000000, 0 };
+					DrawBoxKR(box);
+				}
+			);
+			
 			DrawTopText(1, drawAlpha, _T("反射モードの注意"));
-			DrawTopText(2, drawAlpha, _T("無敵ではないので、レーザー以外は当たると死にます。ご注意ください。"));
+			DrawTopText(2, drawAlpha, _T("反射モード中でも、レーザー以外に当たると死にます。"));
+			DrawTopText(3, drawAlpha, _T("無敵ではありません。"));
 
 			//動画描画.
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * drawAlpha),
 				[]() {
 					//座標 & サイズ.
-					const DBL_XY pos  = App::GetWindowRect().GetMid().ToDbl();
+					const DBL_XY pos  = App::GetWindowRect().GetMid().ToDbl() + DBL_XY(0, 100);
 					const DBL_XY size = GraphMng::Get(_T("reflect_mode_death"))->GetSize().ToDbl();
 
 					//動画.
-					GraphMng::Get(_T("reflect_mode_death"))->Draw(App::GetWindowRect().GetMid().ToDbl());
+					GraphMng::Get(_T("reflect_mode_death"))->Draw(pos);
 					//枠線.
 					Box box = { pos, size, COLOR_MODE_NOR, 2 };
 					DrawBoxKR(box, Anchor::Mid, false, true);
@@ -547,8 +566,8 @@ void TutorialStage::DrawStep4() {
     {
         case 0:
         {
-            DrawTopText(2, drawAlpha, _T("最後に、スコアを2000点稼いでみましょう。"));
-			DrawTopText(3, drawAlpha, _T("アイテムを取る:+100, 隕石を壊す:+500"));
+            DrawTopText(2, drawAlpha, _T("最後にスコアを2000点稼いでみましょう。"));
+			DrawTopText(3, drawAlpha, _T("アイテムをとる:+100  隕石をこわす:+500"));
         }
         break;
 
