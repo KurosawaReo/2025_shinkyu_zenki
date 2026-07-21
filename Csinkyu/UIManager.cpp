@@ -22,17 +22,21 @@ void UIManager::Init() {
 	gameData    = ManagerInsts::Get<GameData>();
 	tutorialStg = ManagerInsts::Get<TutorialStage>();
 }
+
 //リセット.
 void UIManager::Reset() {
+
 	//自動実行設定.
 	SetAutoExeMode(MngAutoExe::Stop);
 
 	isShowScore = false;
 }
+
 //更新.
 void UIManager::Update() {
 
 }
+
 //描画.
 void UIManager::Draw() {
 

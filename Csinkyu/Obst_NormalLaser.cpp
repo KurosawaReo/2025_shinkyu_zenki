@@ -165,9 +165,6 @@ void NormalLaser::Init(){
 //リセット.
 void NormalLaser::Reset()
 {
-	//自動実行設定.
-	SetAutoExeMode(MngAutoExe::Stop);
-
 	counter   = LASER_NOR_SHOT_START + 100;
 	counterTm = LASER_NOR_SHOT_START;
 

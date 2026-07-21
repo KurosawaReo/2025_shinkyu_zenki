@@ -19,6 +19,7 @@ static SoundMng*     soundMng;
 
 // 初期化
 void Fireworks::Init() {
+
 	gameData = ManagerInsts::Get<GameData>();
 	laserMng = ManagerInsts::Get<LaserManager>();
 	soundMng = ManagerInsts::Get<SoundMng>();
@@ -27,15 +28,13 @@ void Fireworks::Init() {
 // リセット
 void Fireworks::Reset() {
 
-	//自動実行設定.
-	SetAutoExeMode(MngAutoExe::Stop);
-	
 	spawnTimer = 120;  //最初は少し待機.
 	fireworks.clear(); //花火を全て消去.
 }
 
 // ランダム位置生成
 void Fireworks::GenerateRandomPosition(float& x, float& y) {
+
 	int margin = 80;
 	x = (float)(margin + (rand() % (WINDOW_WID - margin * 2)));
 	y = (float)(margin + (rand() % (WINDOW_HEI - margin * 2 - FIREWORKS_LAUNCH_HEIGHT)));
