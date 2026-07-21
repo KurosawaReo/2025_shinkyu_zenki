@@ -341,7 +341,7 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			default: assert(FALSE); break;
+			default: assert(false); break;
 		}
 	}
 }

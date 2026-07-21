@@ -150,10 +150,10 @@ void UIManager::Draw() {
 				DrawMode::Exe(
 					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha4),
 					[&]() {
-						//テキスト.
-						str[0].Draw(Anchor::Mid, gameData->fonts["en-size5"].GetFont());
 						//画像.
 						GraphMng::Get(_T("ui_back_level"))->DrawExtend({WINDOW_WID/2, 70}, {0.4, 0.35});
+						//テキスト.
+						str[0].Draw(Anchor::Mid, gameData->fonts["en-size5"].GetFont());
 					}
 				);
 			}
@@ -162,10 +162,10 @@ void UIManager::Draw() {
 				DrawMode::Exe(
 					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha1),
 					[&]() {
-						//テキスト.
-						str[1].Draw(Anchor::Mid, gameData->fonts["en-size4"].GetFont());
 						//画像.
 						GraphMng::Get(_T("ui_back_best_score"))->DrawExtend(str[1].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
+						//テキスト.
+						str[1].Draw(Anchor::Mid, gameData->fonts["en-size4"].GetFont());
 					}
 				);
 			}
@@ -174,10 +174,10 @@ void UIManager::Draw() {
 				DrawMode::Exe(
 					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha2),
 					[&]() {
-						//テキスト.
-						str[2].Draw(Anchor::Mid, gameData->fonts["en-size4"].GetFont());
 						//画像.
 						GraphMng::Get(_T("ui_back_score"))->DrawExtend(str[2].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
+						//テキスト.
+						str[2].Draw(Anchor::Mid, gameData->fonts["en-size4"].GetFont());
 					}
 				);
 			}
@@ -186,10 +186,10 @@ void UIManager::Draw() {
 				DrawMode::Exe(
 					DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha3),
 					[&]() {
-						//テキスト.
-						str[3].Draw(Anchor::Mid, gameData->fonts["en-size4"].GetFont());
 						//画像.
 						GraphMng::Get(_T("ui_back_time"))->DrawExtend(str[3].pos.ToDbl() + DBL_XY(0, 28), { 0.35, 0.4 });
+						//テキスト.
+						str[3].Draw(Anchor::Mid, gameData->fonts["en-size4"].GetFont());
 					}
 				);
 			}

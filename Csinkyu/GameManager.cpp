@@ -61,11 +61,10 @@ void GameManager::Init() {
 		GraphMng::LoadImg(_T("player_reflect.png"),			_T("player_ref"));
 		GraphMng::LoadImg(_T("player_reflect_barrier.png"),	_T("player_ref_barrier"));
 		GraphMng::LoadImg(_T("item.png"),					_T("item"));
+		GraphMng::LoadImg(_T("item_super.png"),				_T("item_super"));
 		GraphMng::LoadImg(_T("light_color_ref.png"),		_T("light_super_item"));
 		GraphMng::LoadImg(_T("light_color_nor.png"),		_T("light_nor_player"));
 		GraphMng::LoadImg(_T("light_color_ref.png"),		_T("light_ref_player"));
-		GraphMng::LoadImg(_T("bg_normal.png"),				_T("bg_normal"));
-		GraphMng::LoadImg(_T("bg_reflect.png"),				_T("bg_reflect"));
 		GraphMng::LoadImg(_T("reflect_mode_frame.png"),		_T("reflect_mode_frame"));
 		GraphMng::LoadImg(_T("ui_back_level.png"),			_T("ui_back_level"));
 		GraphMng::LoadImg(_T("ui_back_best_score.png"),		_T("ui_back_best_score"));
@@ -74,6 +73,8 @@ void GameManager::Init() {
 		GraphMng::LoadImg(_T("score100.png"),				_T("score100"));
 		GraphMng::LoadImg(_T("score500.png"),				_T("score500"));
 		GraphMng::LoadImg(_T("target.png"),					_T("target"));
+		GraphMng::LoadImg(_T("bg_tile_nor.png"),			_T("bg_tile_nor"));
+		GraphMng::LoadImg(_T("bg_tile_ref.png"),			_T("bg_tile_ref"));
 		GraphMng::LoadImg(_T("bg_star_nor.png"),			_T("bg_star_nor"));
 		GraphMng::LoadImg(_T("bg_star_ref.png"),			_T("bg_star_ref"));
 

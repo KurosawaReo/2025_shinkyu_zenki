@@ -102,6 +102,11 @@ void ItemManager::Draw()
 		//透明度.
 		const int alpha = _int(155 + 100 * AnimWave(WaveType::CosLoop, i.counter / 30));
 
+		const DBL_XY size = {
+			ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().x,
+			ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().y
+		};
+
 		//点滅描画.
 		DrawMode::Exe(
 			DrawModeID::None, DrawBlendModeID::Alpha, alpha,
@@ -110,13 +115,11 @@ void ItemManager::Draw()
 				if (i.type == Item_Super) {
 					//アイテム発光.
 					GraphMng::Get(_T("light_super_item"))->DrawExtend(i.pos, { 0.4, 0.4 });
+					//アイテム本体.
+					GraphMng::Get(_T("item_super"))->DrawExtend(i.pos, size, Anchor::Mid, true, true);
 				}
-				//アイテム本体.
-				{
-					DBL_XY size = {
-						ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().x,
-						ITEM_SIZE / GraphMng::Get(_T("item"))->GetSize().ToDbl().y
-					};
+				else {
+					//アイテム本体.
 					GraphMng::Get(_T("item"))->DrawExtend(i.pos, size, Anchor::Mid, true, true);
 				}
 			}
