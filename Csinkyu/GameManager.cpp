@@ -83,6 +83,7 @@ void GameManager::Init() {
 		GraphMng::LoadMovie(_T("menu_movie_tutorial.mp4"),		_T("menu_movie2"));
 		GraphMng::LoadMovie(_T("menu_movie_back_title.mp4"),	_T("menu_movie3"));
 		GraphMng::LoadMovie(_T("reflect_mode_death.mp4"),		_T("reflect_mode_death"));
+		GraphMng::LoadMovie(_T("dash_reflect.mp4"),				_T("dash_reflect"));
 
 		//[KrLib] サウンド.
 		soundMng->SetPath(_T("Resources/Sounds/"));	//共通パスの設定.

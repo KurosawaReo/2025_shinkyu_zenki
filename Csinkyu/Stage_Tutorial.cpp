@@ -32,6 +32,8 @@ static SoundMng*		soundMng;
 static SceneMng*		sceneMng;
 static TimerMng*		timerMng;
 
+constexpr int MOVIE_BACK_ALPHA = 160; //動画再生中の暗転の透明度.
+
 // ▼*--=<[ TutorialStage ]>=--*▼ //
 
 //初期化.
@@ -347,12 +349,15 @@ void TutorialStage::UpdateStep3() {
 			//次に進行する時の処理.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
 
+				//動画用.
 				timerMng->ReservExe(
 					1.0f, []() {
-						//ゲーム速度.
-						gameData->speedRate = 0.1;
 						//動画.
 						GraphMng::Get(_T("reflect_mode_death"))->PlayMovie(PlayTypeID::Loop);
+						//ゲーム速度.
+						gameData->speedRate = 0.1;
+						//無敵にする.
+						player->SetIsNoDeath(true);
 					}
 				);
 
@@ -363,7 +368,29 @@ void TutorialStage::UpdateStep3() {
 		}
 		break;
 
+
 		case 3:
+		{
+			//次に進行する時の処理.
+			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
+				//動画.
+				GraphMng::Get(_T("reflect_mode_death"))->StopMovie();
+
+				timerMng->ReservExe(
+					1.0f, []() {
+						GraphMng::Get(_T("dash_reflect"))->PlayMovie(PlayTypeID::Loop);
+					}
+				);
+
+				//終了処理.
+				StepInnerEnd();
+				stepInnerNo++;
+			}
+		}
+		break;
+
+		case 4:
 		{
 			//次に進行する時の処理.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
@@ -381,12 +408,12 @@ void TutorialStage::UpdateStep3() {
 
 				//スコア表示.
 				gameData->scoreBef = gameData->score = 0;
-				uiMng->SignIsShowScore();
+				uiMng->SetIsShowScore(true);
 
-				//動画.
-				GraphMng::Get(_T("reflect_mode_death"))->StopMovie();
-				//ゲーム速度.
-				gameData->speedRate = 1.0;
+				//動画用.
+				GraphMng::Get(_T("dash_reflect"))->StopMovie();
+				gameData->speedRate = 1.0;   //ゲーム速度.
+				player->SetIsNoDeath(false); //無敵解除.
 
 				//終了処理.
 				StepInnerEnd();
@@ -416,6 +443,9 @@ void TutorialStage::UpdateStep4() {
 				ManagerInsts::Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Stop);
 				ManagerInsts::Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Stop);
 				ManagerInsts::Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Stop);
+
+				//スコア非表示.
+				uiMng->SetIsShowScore(false);
 
 				//終了処理.
 				StepInnerEnd();
@@ -514,22 +544,22 @@ void TutorialStage::DrawStep3() {
         case 1:
         {
             DrawTopText(1, drawAlpha, _T("レーザーを反射する"));
-            DrawTopText(2, drawAlpha, _T("反射モード中のみ、「レーザー」に当たると跳ね返せます。"));
+            DrawTopText(2, drawAlpha, _T("反射モード中は、「レーザー」に当たると跳ね返せます。"));
         }
         break;
 
-        case 2:
-        {
-            DrawTopText(1, drawAlpha, _T("隕石をこわす"));
-            DrawTopText(2, drawAlpha, _T("跳ね返したレーザーは、「隕石」に向かって自動で飛んでいきます。"));
-        }
-        break;
+		case 2:
+		{
+			DrawTopText(1, drawAlpha, _T("隕石をこわす"));
+			DrawTopText(2, drawAlpha, _T("跳ね返したレーザーは、「隕石」に向かって自動で飛んでいきます。"));
+		}
+		break;
 
 		case 3:
 		{
 			//背景描画.
 			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, _int(128 * drawAlpha),
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(MOVIE_BACK_ALPHA * drawAlpha),
 				[]() {
 					Box box = { App::GetWindowRect().GetMid().ToDbl(), App::GetWindowSize().ToDbl(), 0x000000, 0 };
 					DrawBoxKR(box);
@@ -543,7 +573,7 @@ void TutorialStage::DrawStep3() {
 			//動画描画.
 			DrawMode::Exe(
 				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * drawAlpha),
-				[]() {
+				[&]() {
 					//座標 & サイズ.
 					const DBL_XY pos  = App::GetWindowRect().GetMid().ToDbl() + DBL_XY(0, 100);
 					const DBL_XY size = GraphMng::Get(_T("reflect_mode_death"))->GetSize().ToDbl();
@@ -551,8 +581,49 @@ void TutorialStage::DrawStep3() {
 					//動画.
 					GraphMng::Get(_T("reflect_mode_death"))->Draw(pos);
 					//枠線.
-					Box box = { pos, size, COLOR_MODE_NOR, 2 };
-					DrawBoxKR(box, Anchor::Mid, false, true);
+					GradLine gradLine;
+					gradLine.AddPoint(pos + DBL_XY(-size.x/2, -size.y/2), {0, 255, 255, _int_r(255 * drawAlpha)});
+					gradLine.AddPoint(pos + DBL_XY(+size.x/2, -size.y/2), { 0, 100, 255, _int_r(255 * drawAlpha) });
+					gradLine.AddPoint(pos + DBL_XY(+size.x/2, +size.y/2), { 0, 255, 255, _int_r(255 * drawAlpha) });
+					gradLine.AddPoint(pos + DBL_XY(-size.x/2, +size.y/2), { 0, 100, 255, _int_r(255 * drawAlpha) });
+					gradLine.Draw(true);
+				}
+			);
+		}
+		break;
+
+		case 4:
+		{
+			//背景描画.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(MOVIE_BACK_ALPHA * drawAlpha),
+				[]() {
+					Box box = { App::GetWindowRect().GetMid().ToDbl(), App::GetWindowSize().ToDbl(), 0x000000, 0 };
+					DrawBoxKR(box);
+				}
+			);
+
+			DrawTopText(1, drawAlpha, _T("パリィ"));
+			DrawTopText(2, drawAlpha, _T("ダッシュした瞬間にレーザーに当たっても跳ね返せます。"));
+			DrawTopText(3, drawAlpha, _T("腕に自信がある人は挑戦してみてください！"));
+
+			//動画描画.
+			DrawMode::Exe(
+				DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * drawAlpha),
+				[&]() {
+					//座標 & サイズ.
+					const DBL_XY pos = App::GetWindowRect().GetMid().ToDbl() + DBL_XY(0, 100);
+					const DBL_XY size = GraphMng::Get(_T("dash_reflect"))->GetSize().ToDbl();
+
+					//動画.
+					GraphMng::Get(_T("dash_reflect"))->Draw(pos);
+					//枠線.
+					GradLine gradLine;
+					gradLine.AddPoint(pos + DBL_XY(-size.x / 2, -size.y / 2), { 0, 255, 255, _int_r(255 * drawAlpha) });
+					gradLine.AddPoint(pos + DBL_XY(+size.x / 2, -size.y / 2), { 0, 100, 255, _int_r(255 * drawAlpha) });
+					gradLine.AddPoint(pos + DBL_XY(+size.x / 2, +size.y / 2), { 0, 255, 255, _int_r(255 * drawAlpha) });
+					gradLine.AddPoint(pos + DBL_XY(-size.x / 2, +size.y / 2), { 0, 100, 255, _int_r(255 * drawAlpha) });
+					gradLine.Draw(true);
 				}
 			);
 		}
@@ -734,7 +805,12 @@ bool TutorialStage::IsEnd(int stepNo, int stepInnerNo) {
 
 				//一定時間が経過したら.
 				case 3:
-					ret = startTimer.GetPassTime() >= 6.0;
+					ret = startTimer.GetPassTime() >= 8.0;
+					break;
+
+				//一定時間が経過したら.
+				case 4:
+					ret = startTimer.GetPassTime() >= 8.0;
 					break;
 
 				default: assert(false); break;

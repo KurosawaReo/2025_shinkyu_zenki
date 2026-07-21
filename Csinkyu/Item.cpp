@@ -43,10 +43,6 @@ void ItemManager::Reset()
 //更新.
 void ItemManager::Update()
 {
-	//プレイヤーがいないなら処理しない.
-	if (!player->GetActive()) {
-		return;
-	}
 	//反射モード中は処理しない.
 	if (gameData->isReflectMode) {
 		return;
@@ -200,6 +196,11 @@ void ItemManager::SpawnNow() {
 //プレイヤーとの当たり判定.
 bool ItemManager::CheckHitPlayer(list<ItemData>::iterator& it, ItemType* type)
 {
+	//プレイヤーがいなければ判定しない.
+	if (!player->GetActive()) {
+		return false;
+	}
+
 	//プレイヤーの判定を取得.
 	const Circle plyHit = player->GetHit();
 	//当たり判定.

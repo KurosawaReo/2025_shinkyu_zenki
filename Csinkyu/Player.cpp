@@ -432,6 +432,8 @@ void Player::Death() {
 	if (isDebug) { return; }
 	//Ž€–SÏ‚È‚ç’†’f.
 	if (!active) { return; }
+	//–³“G‚È‚ç’†’f.
+	if (isNoDeath) { return; }
 
 	//ƒTƒEƒ“ƒh.
 	if (auto i = soundMng->Get(_T("PlayerDeath"))) {
