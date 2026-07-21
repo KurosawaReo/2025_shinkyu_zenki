@@ -154,10 +154,13 @@ void ItemManager::ItemSpawn() {
 	items.push_back(item); //配列に追加.
 }
 
-//アイテムを全てリセットする.
+//全てリセット.
 void ItemManager::ItemReset() {
-	items.clear();             //全てのアイテムを消去.
-	counter = ITEM_SPAWN_TIME; //カウンターリセット.
+	
+	//全てのアイテムを消去.
+	items.clear();
+	//カウンターリセット.
+	counter = ITEM_SPAWN_TIME;
 }
 
 //アイテム発動.
@@ -187,6 +190,11 @@ void ItemManager::ItemUse(list<ItemData>::iterator& it, bool isSuper)
 	if (auto i = soundMng->Get(_T("ItemUse"))) {
 		i->Play(false, 70); //ポワーン.
 	}
+}
+
+//今すぐアイテムを出現させる.
+void ItemManager::SpawnNow() {
+	counter = 0;
 }
 
 //プレイヤーとの当たり判定.

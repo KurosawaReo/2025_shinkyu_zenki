@@ -202,10 +202,12 @@ void TutorialStage::UpdateStep1() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
 				//サウンド.
 				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100); //再生.
 				}
+
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step2;
@@ -214,6 +216,7 @@ void TutorialStage::UpdateStep1() {
 
 				//オブジェクト.
 				ManagerInsts::Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Stop);
+				ManagerInsts::Get<ItemManager>()->SpawnNow();
 
 				//終了処理.
 				StepInEnd();
@@ -243,8 +246,10 @@ void TutorialStage::UpdateStep2() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
 				//オブジェクト.
 				ManagerInsts::Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Stop);
+
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -263,15 +268,21 @@ void TutorialStage::UpdateStep2() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
 				//サウンド.
 				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100); //再生.
 				}
+
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
+
+				//オブジェクト.
+				ManagerInsts::Get<ItemManager>()->SpawnNow();
+
 				//終了処理.
 				StepInEnd();
 				stepNo++;
@@ -321,8 +332,10 @@ void TutorialStage::UpdateStep3() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
 				//オブジェクト.
 				ManagerInsts::Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Active);
+
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -358,18 +371,20 @@ void TutorialStage::UpdateStep3() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
 				//サウンド.
 				if (auto i = soundMng->Get(_T("LevelUp"))) {
 					i->Play(false, 100); //再生.
 				}
+
 				//エフェクト.
 				EffectData data{};
 				data.type = Effect_Tutorial_Step4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
-				//スコアリセット.
-				gameData->scoreBef = gameData->score = 0;
+
 				//スコア表示.
+				gameData->scoreBef = gameData->score = 0;
 				uiMng->SignIsShowScore();
 
 				//終了処理.
@@ -398,11 +413,13 @@ void TutorialStage::UpdateStep4() {
 			}
 			//次の説明へ.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
 				//オブジェクト.
 				ManagerInsts::Get<ItemManager>()->SetAutoExeMode(MngAutoExe::Stop);
 				ManagerInsts::Get<NormalLaser>()->SetAutoExeMode(MngAutoExe::Stop);
 				ManagerInsts::Get<LaserManager>()->SetAutoExeMode(MngAutoExe::Stop);
 				ManagerInsts::Get<MeteorManager>()->SetAutoExeMode(MngAutoExe::Stop);
+
 				//終了処理.
 				StepInEnd();
 				stepInNo++;
@@ -426,6 +443,7 @@ void TutorialStage::UpdateStep4() {
 			}
 			//チュートリアル終了.
 			if (endTimer.GetPassTime() >= TUTORIAL_END_NEXT_TIME) {
+
 				sceneMng->SetScene(_T("Title"));
 				App::Reset(); //全てリセット.
 			}
