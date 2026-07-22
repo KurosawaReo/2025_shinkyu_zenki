@@ -9,22 +9,21 @@ enum EffectType
 {
 	Effect_Score100,
 	Effect_Score500,
-	Effect_PlayerDeath,		//プレイヤー死亡.
-	Effect_Reflect,			//反射.
-	Effect_PlayerDashReflectSpark, //反射ダッシュ.
-	Effect_ReflectSpark,	//反射火花.
-	Effect_MeteorCrash,		//隕石破壊.
-	Effect_MeteorFragment,	//隕石破片.
+	Effect_PlayerDeath,				//プレイヤー死亡.
+	Effect_PlayerDashReflectSpark,	//反射ダッシュ.
+	Effect_Reflect,					//反射.
+	Effect_MeteorCrash,				//隕石破壊.
+	Effect_MeteorFragment,			//隕石破片.
 
-	Effect_Endless_Level1,	//耐久モード: Level1演出.
-	Effect_Endless_Level2,	//耐久モード: Level2演出.
-	Effect_Endless_Level3,	//耐久モード: Level3演出.
-	Effect_Endless_Level4,	//耐久モード: Level4演出.
-	Effect_Endless_Level5,	//耐久モード: Level5演出.
-	Effect_Tutorial_Step1,	//チュートリアル: step1演出.
-	Effect_Tutorial_Step2,	//チュートリアル: step2演出.
-	Effect_Tutorial_Step3,	//チュートリアル: step3演出.
-	Effect_Tutorial_Step4,	//チュートリアル: step4演出.
+	Effect_Endless_Level1,			//耐久モード: Level1演出.
+	Effect_Endless_Level2,			//耐久モード: Level2演出.
+	Effect_Endless_Level3,			//耐久モード: Level3演出.
+	Effect_Endless_Level4,			//耐久モード: Level4演出.
+	Effect_Endless_Level5,			//耐久モード: Level5演出.
+	Effect_Tutorial_Step1,			//チュートリアル: step1演出.
+	Effect_Tutorial_Step2,			//チュートリアル: step2演出.
+	Effect_Tutorial_Step3,			//チュートリアル: step3演出.
+	Effect_Tutorial_Step4,			//チュートリアル: step4演出.
 };
 //エフェクトデータ.
 struct EffectData
