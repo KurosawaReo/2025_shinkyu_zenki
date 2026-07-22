@@ -26,10 +26,12 @@ static InputMng*      inputMng;
 
 void Player::SetIsDashReflect(bool _flag) { 
 
+	/*
 	//フラグがONになった瞬間のみ.
 	if (!isDashReflect && _flag) {
 		SpawnDashReflectEffect(); //スパーク演出を召喚.
 	}
+	*/
 
 	isDashReflect = _flag;
 }
@@ -486,20 +488,22 @@ void Player::SpawnDashReflectEffect()
 
 	for (int s = 0; s < sparkNum; s++)
 	{
-		const double ang = baseAng + Calc::RandNum(-40, 40);
-		const double speed = Calc::RandNum(2.0, 6.0);
+		//角度抽選.
+		const double ang   = baseAng + Calc::RandNum(-40, 40);
+		//速度抽選.
+		const double speed = Calc::RandNum(4.0, 15.0);
 
 		//サウンド.
 		if (auto i = soundMng->Get(_T("PlayerParry"))) {
-			i->Play(false, 42);
+			i->Play(false, 60);
 		}
 		//エフェクト.
 		EffectData data{};
-		data.type = Effect_PlayerDashReflectSpark;
-		data.pos = hit.pos;
-		data.vec = Calc::AngToVector(ang);
+		data.type  = Effect_PlayerDashReflect;
+		data.pos   = hit.pos;
+		data.vec   = Calc::AngToVector(ang);
 		data.speed = _flt(speed);
-		data.ang = _flt(ang);
+		data.ang   = _flt(ang);
 		effectMng->SpawnEffect(&data);
 	}
 }

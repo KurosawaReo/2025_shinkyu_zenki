@@ -69,7 +69,7 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_PlayerDashReflectSpark:
+			case Effect_PlayerDashReflect:
 			{
 				//カウンター計算.
 				i->counter += gameData->speedRate;
@@ -85,7 +85,6 @@ void EffectManager::Update() {
 				if (i->counter >= PLAYER_DASH_SPARK_ANIM_TIME) {
 					isErase = true;
 				}
-
 			}
 			break;
 
@@ -205,7 +204,7 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_PlayerDashReflectSpark:
+			case Effect_PlayerDashReflect:
 			{
 				//進行度(0→1).
 				const double t = i.counter / PLAYER_DASH_SPARK_ANIM_TIME;
