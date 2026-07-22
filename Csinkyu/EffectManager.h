@@ -9,11 +9,11 @@ enum EffectType
 {
 	Effect_Score100,
 	Effect_Score500,
-	Effect_PlayerDeath,				//プレイヤー死亡.
-	Effect_PlayerDashReflectSpark,	//反射ダッシュ.
-	Effect_Reflect,					//反射.
-	Effect_MeteorCrash,				//隕石破壊.
-	Effect_MeteorFragment,			//隕石破片.
+	Effect_PlayerDeath,			//プレイヤー死亡.
+	Effect_PlayerDashReflect,	//反射ダッシュ.
+	Effect_Reflect,				//反射.
+	Effect_MeteorCrash,			//隕石破壊.
+	Effect_MeteorFragment,		//隕石破片.
 
 	Effect_Endless_Level1,			//耐久モード: Level1演出.
 	Effect_Endless_Level2,			//耐久モード: Level2演出.
