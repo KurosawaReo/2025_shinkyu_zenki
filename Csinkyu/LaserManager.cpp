@@ -357,7 +357,9 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 				gameMng->SlowModeStart(); //スロー発動.
 				ReflectLaser(it);         //レーザーを反射.
 
-				player->SetIsDashReflect(true); //ダッシュ反射演出開始.
+				//ダッシュ反射演出.
+				player->SetIsDashReflect(true);   //フラグON.
+				player->SpawnDashReflectEffect(); //スパーク演出召喚.
 			}
 			break;
 

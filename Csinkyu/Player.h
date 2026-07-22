@@ -41,7 +41,6 @@ private:
 
 	bool			isDashing{};			//ダッシュ中かどうか.
 	bool			isDashReflect{};		//ダッシュ反射演出を出すか.
-	bool            prevIsDashReflect{};    //前フレームのisDashReflect(変化検知用)
 	bool			isDashEndEffect{};		//エフェクト発動フラグ.
 	bool            isNoDeath{};            //無敵かどうか(チュートリアル用)
 	bool			isDebug{};				//デバッグ用.
@@ -87,10 +86,10 @@ public:
 	void Update() override;
 	void Draw  () override;
 
+	//Update系.
 	void UpdateDash   ();	//ダッシュ更新.
-	void SpawnDashReflectSpark(); //反射スパーク生成.
 	void UpdateAfter  ();	//残像更新.
-
+	//Draw系.
 	void DrawAfter    ();									 //残像描画.
 	void DrawAfterNor (int idx);						  	 //残像描画(通常時)
 	void DrawAfterDash(int idx, double anim1, double anim2); //残像描画(ダッシュ時)
@@ -99,6 +98,8 @@ public:
 	void Move();		//プレイヤー移動.
 	void Death();		//プレイヤー死亡.
 	void Revival();		//プレイヤー復活.
+
+	void SpawnDashReflectEffect(); //ダッシュ反射エフェクト生成.
 
 	//使用禁止.
 	Player(const Player*) = delete;
