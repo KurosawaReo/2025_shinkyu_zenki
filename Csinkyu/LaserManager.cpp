@@ -358,8 +358,7 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 				ReflectLaser(it);         //レーザーを反射.
 
 				//ダッシュ反射演出.
-				player->SetIsDashReflect(true);   //フラグON.
-				player->SpawnDashReflectEffect(); //スパーク演出召喚.
+				player->SetIsDashReflect(true); //フラグON.
 			}
 			break;
 
