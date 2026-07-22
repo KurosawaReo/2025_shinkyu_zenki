@@ -603,7 +603,7 @@ void TutorialStage::DrawStep3() {
 				}
 			);
 
-			DrawTopText(1, drawAlpha, _T("パリィ"));
+			DrawTopText(1, drawAlpha, _T("ダッシュ反射"));
 			DrawTopText(2, drawAlpha, _T("ダッシュした瞬間にレーザーに当たっても跳ね返せます。"));
 			DrawTopText(3, drawAlpha, _T("腕に自信がある人は挑戦してみてください！"));
 

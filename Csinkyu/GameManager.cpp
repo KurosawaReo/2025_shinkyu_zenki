@@ -56,7 +56,7 @@ void GameManager::Init() {
 		GraphMng::LoadImg(_T("logo_all.png"),				_T("logo_all"));
 		GraphMng::LoadImg(_T("new_record.png"),				_T("new_record"));
 		GraphMng::LoadImg(_T("gameover.png"),				_T("gameover"));
-		GraphMng::LoadImg(_T("reflect.png"),				_T("reflect"));
+		GraphMng::LoadImg(_T("reflect_text.png"),			_T("reflect_text"));
 		GraphMng::LoadImg(_T("player_normal.png"),			_T("player_nor"));
 		GraphMng::LoadImg(_T("player_reflect.png"),			_T("player_ref"));
 		GraphMng::LoadImg(_T("player_reflect_barrier.png"),	_T("player_ref_barrier"));
@@ -77,6 +77,7 @@ void GameManager::Init() {
 		GraphMng::LoadImg(_T("bg_tile_ref.png"),			_T("bg_tile_ref"));
 		GraphMng::LoadImg(_T("bg_star_nor.png"),			_T("bg_star_nor"));
 		GraphMng::LoadImg(_T("bg_star_ref.png"),			_T("bg_star_ref"));
+		GraphMng::LoadImg(_T("reflect_effect.png"),			_T("reflect_effect"));
 
 		//[KrLib] 動画.
 		GraphMng::SetPath(_T("Resources/Movies/"));	//共通パスの設定.

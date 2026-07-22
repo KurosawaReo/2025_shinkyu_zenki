@@ -17,11 +17,12 @@ namespace KR
 	namespace Calc
 	{
 		//当たり判定.
-		bool	HitCirCir	(const Circle& cir1, const Circle& cir2);
-		bool	HitBoxBox	(const Box&    box1, const Box&    box2);
-		bool	HitBoxCir	(const Box&    box,  const Circle& cir,  Surface* surface    = nullptr);
-		bool	HitLineCir	(const Line&   line, const Circle& cir,  DBL_XY*  nearestPos = nullptr);
-		bool	HitPie		(const Pie&    pie,  DBL_XY pos);
+		bool	HitCirCir	(const Circle& cir1,  const Circle& cir2);
+		bool	HitBoxBox	(const Box&    box1,  const Box&    box2);
+		bool	HitBoxCir	(const Box&    box,   const Circle& cir,  Surface* surface    = nullptr);
+		bool	HitLineCir	(const Line&   line,  const Circle& cir,  DBL_XY*  nearestPos = nullptr);
+		bool	HitLineLine	(const Line&   line1, const Line&   line2);
+		bool	HitPie		(const Pie&    pie,   DBL_XY pos);
 
 		//ベジエ曲線,スプライン曲線.
 		DBL_XY	BezierPoint	(const BezierLine& bLine,  double time);

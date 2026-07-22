@@ -109,8 +109,8 @@ enum StageType
 #define LASER_REF_SPEED					(0.5)		    //レーザー(reflected)の速度.
 #define LASER_LINE_DEL_TIME				(64)			//レーザー描画線が消える時間.
 #define LASER_LINE_DRAW_LEN				(2)				//レーザー描画線を描く最低の長さ(DrawLineAAの関係上)
-#define LASER_REF_ANIM_TIME				(20)			//反射アニメーション時間.
-#define LASER_HIT_R						(2)				//レーザーのヒット半径.
+#define LASER_REF_ANIM_TIME				(30)			//反射アニメーション時間.
+#define LASER_HIT_R						(3)				//レーザーのヒット半径.
 
 //障害物: 通常レーザー.
 #define LASER_NOR_SHOT_RESET			(300)			//砲台の発射リセット時間.
