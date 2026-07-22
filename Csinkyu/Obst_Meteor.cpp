@@ -59,12 +59,6 @@ void Meteor::Draw() {
 	
 	int alpha = 255; //透明度.
 
-	//ターゲットマーク.
-	if (isTargeting) {
-		const double size = 0.34;
-		GraphMng::Get(_T("target"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
-	}
-
 	//破壊中はだんだん薄くする.
 	if (state == Meteor_Destroy) {
 		alpha = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
@@ -81,13 +75,22 @@ void Meteor::Draw() {
 				DrawLineKR(i, true);
 			}
 
-			//チュートリアル.
+			//チュートリアル限定.
 			if (gameData->stage == Stage_Tutorial) {
-				DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
-				str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
+				//ターゲットされてなければ.
+				if (!isTargeting) {
+					DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
+					str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
+				}
 			}
 		}
 	);
+
+	//ターゲットマーク.
+	if (isTargeting) {
+		const double size = 0.34;
+		GraphMng::Get(_T("target"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
+	}
 }
 
 //隕石出現処理.
