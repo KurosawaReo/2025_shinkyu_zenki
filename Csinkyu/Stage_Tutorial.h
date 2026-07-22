@@ -1,9 +1,5 @@
 /*
-   - Stage_Endless.h -
-
-   [Stage]
-   ・Endless
-   ・Tutorial <-
+   - Stage_Tutorial.h -
 */
 #pragma once
 
@@ -13,9 +9,10 @@ class TutorialStage final : public ManagerBase
 //▼ ===== 変数 ===== ▼.
 private:
 	int    stepNo{};          //現在のステップ番号.
-	int    stepInNo{};        //現在のステップ内番号.
+	int    stepInnerNo{};     //現在のステップ内番号.
 
 	int    plyMoveCntr{};     //プレイヤーの移動カウンター.
+	float  drawAlpha{};       //描画用透明度.
 
 	bool   isPlayerDash{};    //プレイヤーがダッシュしたかどうか.
 	bool   isTakeItem{};      //アイテムを取ったかどうか.
@@ -37,30 +34,32 @@ public:
 	void SetReflectLaser (bool _flag) { isReflectLaser  = _flag; }
 	void SetReflectFinish(bool _flag) { isReflectFinish = _flag; }
 	void SetBreakMeteor  (bool _flag) { isBreakMeteor   = _flag; }
-	//get
+	//get.
 	int  GetStepNo() const { return stepNo; }
 
+	//基本処理.
 	void Init()   override;
 	void Reset()  override;
 	void Update() override;
 	void Draw()   override;
-
-	void ResetSignFlag();
-	void StepInEnd();
-
+	//Update分割.
 	void UpdateStep0();
 	void UpdateStep1();
 	void UpdateStep2();
 	void UpdateStep3();
 	void UpdateStep4();
-
+	//Draw分割.
 	void DrawStep1();
 	void DrawStep2();
 	void DrawStep3();
 	void DrawStep4();
 
-	void DrawTopText(int line, MY_STRING text, double alpha);
+	void DrawTopText(int line, double alpha, MY_STRING text);
+	bool IsEnd(int stepNo, int stepInnerNo);
 
+	void ResetSignFlag();
+	void StepInnerEnd();
+	
 	//使用禁止.
 	TutorialStage(const TutorialStage&) = delete;
 	TutorialStage& operator=(const TutorialStage&) = delete;

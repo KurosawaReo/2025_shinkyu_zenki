@@ -1,9 +1,5 @@
 /*
    - Stage_Endless.h -
-
-   [Stage]
-   EEndless <-
-   ETutorial
 */
 #pragma once
 

@@ -28,9 +28,6 @@ void Ripples::Init()
 //リセット(何回でも行う)
 void Ripples::Reset()
 {
-	//自動実行設定.
-	SetAutoExeMode(MngAutoExe::Stop);
-
 	flashTimer = 80; //最初は少しだけ待機.
 	ripples.clear(); //波紋を全て消去.
 }

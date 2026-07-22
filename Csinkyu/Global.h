@@ -95,7 +95,7 @@ enum StageType
 #define PLAYER_DASH_REFLECT_TIME		(10)			//ダッシュ反射の継続時間.
 
 //アイテム.
-#define ITEM_SPAWN_TIME					(500)			//アイテムの出現時間.
+#define ITEM_SPAWN_TIME					(600)			//アイテムの出現時間.
 #define ITEM_SIZE						(50)			//アイテムサイズ.
 #define ITEM_SPEED						(3)				//アイテム移動スピード.  
 #define ITEM_RESPAWN_TIME				(400)           //アイテム復活時間.
@@ -117,7 +117,7 @@ enum StageType
 #define LASER_NOR_SHOT_START			(20)			//砲台の発射開始時間.
 #define LASER_NOR_SHOT_SPAN				(5)				//砲台の発射間隔時間.
 
-#define LASER_NOR_FLASH_MAX				(30)            //最大フラッシュエフェクト数
+#define LASER_NOR_FLASH_MAX				(30)            //最大フラッシュエフェクト数.
 #define LASER_NOR_FLASH_SIZE_INIT		(3.0f)          //フラッシュエフェクトの初期サイズ.
 #define LASER_NOR_FLASH_SIZE_SPREAD		(-7)            //フラッシュエフェクトの拡大量.
 #define LASER_NOR_FLASH_VALID_TM		(100)           //フラッシュエフェクトの持続フレーム.
@@ -131,7 +131,7 @@ enum StageType
 
 //障害物: 落下レーザー(花火用)
 #define LASER_FAL_DEL_TIME				(100)			//消えるまでの時間.
-#define LASER_FAL_HIT_ABLE				(70)			//↑のうち、当たり判定を持たせる時間.
+#define LASER_FAL_HIT_ABLE				(60)			//↑のうち、当たり判定を持たせる時間.
 
 //障害物: 隕石.
 #define METEOR_SPAWN_SPAN				(200)			//隕石の出現時間間隔.
@@ -148,7 +148,7 @@ enum StageType
 #define METEOR_LINE_DIS_MAX				(50)			//頂点の最大距離.
 
 //障害物: 波紋.
-#define RIPPLES_FLASH_MAX				(30)            //最大フラッシュエフェクト数
+#define RIPPLES_FLASH_MAX				(30)            //最大フラッシュエフェクト数.
 #define RIPPLES_FLASH_SIZE_INIT			(5.0f)          //フラッシュエフェクトの初期サイズ.
 #define RIPPLES_FLASH_SIZE_SPREAD		(3)             //フラッシュエフェクトの拡大量.
 #define RIPPLES_FLASH_BLINK_TM			(15.0f)         //フラッシュエフェクトの点滅時間.
