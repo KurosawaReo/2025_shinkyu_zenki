@@ -207,7 +207,9 @@ void GameScene::DrawReflectMode() {
 				[&]() {
 					//ç≈èâÇÃ1ïb.
 					if (tmReflectMode.GetPassTime() > REFLECT_MODE_TIME - 1) {
-						GraphMng::Get(_T("reflect"))->DrawExtend({ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim });
+						GraphMng::Get(_T("reflect"))->DrawExtend(
+							{ WINDOW_WID / 2, WINDOW_HEI / 2 }, { 0.3 + 0.2 * anim, 0.3 + 0.2 * anim }, Anchor::Mid, true, true
+						);
 					}
 					//ç≈å„ÇÃ3ïb.
 					if (tmReflectMode.GetPassTime() <= 3) {

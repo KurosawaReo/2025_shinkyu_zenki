@@ -265,10 +265,10 @@ void BG3::DrawStars(double modeAlpha, bool isReflect)
             {
                 //”½ŽËƒ‚[ƒh‚É‚È‚Á‚½‚ç•ÏF.
                 if (isReflect) {
-                    GraphMng::Get(_T("bg_star_ref"))->DrawExtend(pos, {size, size}, Anchor::Mid);
+                    GraphMng::Get(_T("bg_star_ref"))->DrawExtend(pos, {size, size}, Anchor::Mid, true, true);
                 }
                 else {
-                    GraphMng::Get(_T("bg_star_nor"))->DrawExtend(pos, {size, size}, Anchor::Mid);
+                    GraphMng::Get(_T("bg_star_nor"))->DrawExtend(pos, {size, size}, Anchor::Mid, true, true);
                 }
             }
         );

@@ -157,10 +157,10 @@ void EffectManager::Draw() {
 					[&]() {
 						//‰æ‘œØ‚è‘Ö‚¦.
 						if (i.type == Effect_Score100) {
-							GraphMng::Get(_T("score100"))->DrawExtend(pos, { 0.3, 0.3 });
+							GraphMng::Get(_T("score100"))->DrawExtend(pos, { 0.3, 0.3 }, Anchor::Mid, true, true);
 						}
 						else {
-							GraphMng::Get(_T("score500"))->DrawExtend(pos, { 0.3, 0.3 });
+							GraphMng::Get(_T("score500"))->DrawExtend(pos, { 0.3, 0.3 }, Anchor::Mid, true, true);
 						}
 					}
 				);
