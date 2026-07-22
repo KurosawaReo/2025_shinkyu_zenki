@@ -170,17 +170,21 @@ void EffectManager::Draw() {
 			{
 				//座標.
 				DBL_XY pos = {i.pos.x, i.pos.y - AnimEase(EaseType::OutQuad, i.counter/SCORE_ANIM_TIME)*30};
+				//透明度.
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/SCORE_ANIM_TIME));
+
+				const double size = 0.6;
+
 				//描画.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/SCORE_ANIM_TIME)); //透明度.
 				DrawMode::Exe(
 					DrawModeID::None, DrawBlendModeID::Alpha, pow,
 					[&]() {
 						//画像切り替え.
 						if (i.type == Effect_Score100) {
-							GraphMng::Get(_T("score100"))->DrawExtend(pos, { 0.3, 0.3 }, Anchor::Mid, true, true);
+							GraphMng::Get(_T("score100"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
 						}
 						else {
-							GraphMng::Get(_T("score500"))->DrawExtend(pos, { 0.3, 0.3 }, Anchor::Mid, true, true);
+							GraphMng::Get(_T("score500"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
 						}
 					}
 				);
@@ -230,13 +234,15 @@ void EffectManager::Draw() {
 
 			case Effect_Reflect:
 			{
-				Circle cir = { i.pos, _flt(5+i.counter*2), COLOR_PLY_REFLECT, 1.0f };
+				const double size  = 0.2 + 0.4 * i.counter/LASER_REF_ANIM_TIME;
+				const DBL_XY pos   = i.pos;
+				const int    alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
+
 				//描画.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
-						DrawCircleKR(cir, Anchor::Mid, false, true);
+						GraphMng::Get(_T("reflect_effect"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
 					}
 				);
 			}

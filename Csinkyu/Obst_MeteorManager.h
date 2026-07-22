@@ -20,8 +20,9 @@ public:
 	MeteorManager(int order) : ManagerBase(order) {}
 
 	//get.
-	Meteor* GetHitMeteor   (Circle cir, bool isDestroy); //範囲内の隕石を取得(1つ)
-	Meteor* GetTargetMeteor(DBL_XY pos);				 //目標となる隕石を選ぶ.
+	Meteor* GetHitMeteor   (Line   hit, bool isDestroy);	//範囲内の隕石を取得(1つ)
+	Meteor* GetHitMeteor   (Circle hit, bool isDestroy);	//範囲内の隕石を取得(1つ)
+	Meteor* GetTargetMeteor(DBL_XY pos);					//目標となる隕石を選ぶ.
 
 	void Init()   override;
 	void Reset()  override;

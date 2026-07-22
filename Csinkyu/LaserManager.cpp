@@ -143,9 +143,9 @@ void LaserManager::UpdateLaser() {
 				HitLaser(i);
 
 				//速度(時間経過で速くなる)
-				const double speed = i->counter * LASER_NOR_SPEED * gameData->speedRate;
-				//レーザーの移動.
-				i->nowPos += i->vec * speed;
+				const double speed = i->counter * LASER_NOR_SPEED;
+				//レーザー移動.
+				MoveLaser(i, speed);
 			}
 			break;
 
@@ -155,9 +155,9 @@ void LaserManager::UpdateLaser() {
 				HitLaser(i);
 
 				//速度(直線レーザーなので一定速度)
-				const double speed = LASER_STR_SPEED * gameData->speedRate;
-				//レーザーの移動.
-				i->nowPos += i->vec * speed;
+				const double speed = LASER_STR_SPEED;
+				//レーザー移動.
+				MoveLaser(i, speed);
 			}
 			break;
 
@@ -185,8 +185,8 @@ void LaserManager::UpdateLaser() {
 					i->vec.y = maxSpeed;
 				}
 
-				//レーザーの移動.
-				i->nowPos += i->vec * gameData->speedRate;
+				//レーザー移動.
+				MoveLaser(i, 1.0);
 			}
 			break;
 
@@ -208,10 +208,8 @@ void LaserManager::UpdateLaser() {
 					}
 				}
 
-				Circle hit = { i->nowPos, 10, {}, {} }; //当たり判定円(仮)
-
 				//隕石と当たっているなら.
-				if (auto meteor = meteorMng->GetHitMeteor(hit, true)) {
+				if (auto meteor = meteorMng->GetHitMeteor(i->hit, true)) {
 
 					//壊れてない隕石であれば.
 					if (meteor->GetState() == Meteor_Normal) {
@@ -219,8 +217,8 @@ void LaserManager::UpdateLaser() {
 					}
 
 					const double ang = _deg(atan2(i->vec.y, i->vec.x)); //破片の飛ぶ方向.
-					meteorMng->BreakMeteor(i->nowPos, ang, true); //破壊演出.
-					gameData->score += SCORE_BREAK_METEOR;        //スコア加算.
+					meteorMng->BreakMeteor(i->nowPos, ang, true);		//破壊演出.
+					gameData->score += SCORE_BREAK_METEOR;				//スコア加算.
 
 					//どっちのタイプかで切り替え.
 					if (i->type == Laser_Reflect) {
@@ -241,8 +239,8 @@ void LaserManager::UpdateLaser() {
 
 					//速度(時間経過で速くなる)
 					const double speed = i->counter * LASER_REF_SPEED * gameData->speedRate;
-					//レーザーの移動.
-					i->nowPos += i->vec * speed;
+					//レーザー移動.
+					MoveLaser(i, speed);
 				}
 			}
 			break;
@@ -320,7 +318,12 @@ void LaserManager::NextLaser(list<LaserData>::iterator& it, bool isErase) {
 //レーザーの当たり判定.
 void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 
-	//プレイヤー当たり判定.
+	//プレイヤーが無効なら中断.
+	if (!player->GetActive()) {
+		return;
+	}
+
+	//プレイヤーの当たり判定.
 	Circle plyHit = player->GetHit();
 	//反射モード中は判定を少し大きくする.
 	if (player->GetMode() == Player_ItemReflect      ||
@@ -329,15 +332,16 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 		plyHit.r += PLAYER_REF_ADD_SIZE;
 	}
 
-	//レーザーの当たり判定.
-	Circle laserHit = { it->nowPos, LASER_HIT_R, {}, {} };
+	//レーザーの当たり判定(円)
+	Circle laserHit = {it->nowPos, LASER_HIT_R, {}, {}};
 
 	//プレイヤーとレーザーの当たり判定.
-	if (player->GetActive() && HitCirCir(laserHit, plyHit)) {
+	if (HitCirCir(laserHit, plyHit)) {
+
 		//反射あり.
 		switch (player->GetMode())
 		{
-			case  Player_ItemReflect:
+			case Player_ItemReflect:
 			{
 				it->type = Laser_Reflect; //反射モードへ.
 				it->counter = 0;          //リセット.
@@ -346,7 +350,7 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 			}
 			break;
 
-			case  Player_DashReflect:
+			case Player_DashReflect:
 			{
 				it->type = Laser_Reflect; //反射モードへ.
 				it->counter = 0;          //リセット.
@@ -367,10 +371,12 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 				ReflectLaser(it);         //レーザーを反射.		
 			}
 			break;
-			case Player_Normal:
-				player->Death(); //プレイヤー死亡.
-		    break;
 
+			case Player_Normal:
+			{
+				player->Death(); //プレイヤー死亡.
+			}
+		    break;
 		}
 	}
 }
@@ -404,6 +410,16 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 	if (gameData->stage == Stage_Tutorial) {
 		tutorialStg->SetReflectLaser(true);
 	}
+}
+
+//レーザー移動.
+void LaserManager::MoveLaser(list<LaserData>::iterator& it, double speed) {
+
+	//レーザーの移動.
+	it->nowPos += it->vec * speed * gameData->speedRate;
+	//当たり判定の更新.
+	it->hit.stPos = it->nowPos;
+	it->hit.edPos = it->befPos;
 }
 
 //レーザー描画線を生成.

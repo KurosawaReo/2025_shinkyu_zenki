@@ -18,12 +18,24 @@ static SoundMng*      soundMng;
 
 // ▼*---=[ MeteorManager ]=---*▼ //
 
-//範囲内の隕石を取得(1つ)
-Meteor* MeteorManager::GetHitMeteor(Circle cir, bool isDestroy) {
+//当たった隕石を1つ取得(線と線)
+Meteor* MeteorManager::GetHitMeteor(Line hit, bool isDestroy) {
 
 	//全隕石ループ.
 	for (auto& i : meteors) {
-		if (i.IsHitMeteor(cir)) {
+		if (i.IsHitMeteor(hit)) {
+			return &i; //この隕石を返す.
+		}
+	}
+	return nullptr; //隕石はない.
+}
+
+//当たった隕石を1つ取得(線と線)
+Meteor* MeteorManager::GetHitMeteor(Circle hit, bool isDestroy) {
+
+	//全隕石ループ.
+	for (auto& i : meteors) {
+		if (i.IsHitMeteor(hit)) {
 			return &i; //この隕石を返す.
 		}
 	}
@@ -99,6 +111,7 @@ void MeteorManager::Update() {
 			i++;
 		}
 	}
+
 	//プレイヤーとの当たり判定.
 	if (GetHitMeteor(player->GetHit(), false)) {
 		player->Death(); //死亡.
