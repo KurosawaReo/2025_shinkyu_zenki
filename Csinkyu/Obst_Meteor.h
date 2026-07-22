@@ -50,9 +50,10 @@ public:
 	void Update();
 	void Draw();
 
-	void Spawn();					//隕石出現処理. 
-	void Destroy();					//隕石破壊.
-	bool IsHitMeteor(Circle) const;	//隕石の当たり判定.
+	void Spawn();						//隕石出現処理. 
+	void Destroy();						//隕石破壊.
+	bool IsHitMeteor(Line   hit) const;	//隕石の当たり判定.
+	bool IsHitMeteor(Circle hit) const;	//隕石の当たり判定.
 
-	void UpdateMeteoLine();			//隕石を構成する線の更新.
+	void UpdateMeteoLine();				//隕石を構成する線の更新.
 };

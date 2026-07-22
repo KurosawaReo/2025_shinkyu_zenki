@@ -109,6 +109,38 @@ namespace KR
 			}
 			return false; //“–‚½‚Á‚Ä‚È‚¢.
 		}
+		
+		double Cross(DBL_XY a, DBL_XY b, DBL_XY p)
+		{
+			return (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x);
+		}
+		bool OnSegment(DBL_XY a, DBL_XY b, DBL_XY p)
+		{
+			return
+				min(a.x, b.x) <= p.x && p.x <= max(a.x, b.x) &&
+				min(a.y, b.y) <= p.y && p.y <= max(a.y, b.y);
+		}
+		//“–‚½‚è”»’è(ü‚Æü)
+		bool HitLineLine(const Line& line1, const Line& line2) {
+
+			const double s1 = Cross(line1.stPos, line1.edPos, line2.stPos);
+			const double s2 = Cross(line1.stPos, line1.edPos, line2.edPos);
+			const double s3 = Cross(line2.stPos, line2.edPos, line1.stPos);
+			const double s4 = Cross(line2.stPos, line2.edPos, line1.edPos);
+
+			//’Êí‚ÌŒð·.
+			if ((s1 * s2 < 0) && (s3 * s4 < 0)) {
+				return true;
+			}
+
+			//üã‚É‚ ‚éê‡.
+			if (s1 == 0 && OnSegment(line1.stPos, line1.edPos, line2.stPos)) { return true; }
+			if (s2 == 0 && OnSegment(line1.stPos, line1.edPos, line2.edPos)) { return true; }
+			if (s3 == 0 && OnSegment(line2.stPos, line2.edPos, line1.stPos)) { return true; }
+			if (s4 == 0 && OnSegment(line2.stPos, line2.edPos, line1.edPos)) { return true; }
+
+			return false;
+		}
 
 		//“–‚½‚è”»’è(îŒ`‚Æ“_)
 		bool HitPie(const Pie& pie, DBL_XY pos) {

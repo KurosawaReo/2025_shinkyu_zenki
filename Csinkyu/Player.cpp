@@ -229,8 +229,8 @@ void Player::UpdateAfter()
 			//1フレーム目の情報登録.
 			after[0].pos = hit.pos;                                     //プレイヤー座標.
 			after[0].ang = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
-			after[0].isDash = isDashing;                                   //ダッシュ中ならダッシュエフェクトに.
-			after[0].isActive = true;                                        //残像を出す.
+			after[0].isDash = isDashing;                                //ダッシュ中ならダッシュエフェクトに.
+			after[0].isActive = true;                                   //残像を出す.
 		}
 	}
 }

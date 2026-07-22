@@ -147,15 +147,30 @@ void Meteor::Destroy() {
 	destroyCntr = 0;        //0から開始.
 }
 
-//隕石の当たり判定.
-bool Meteor::IsHitMeteor(Circle cir) const {
+//隕石の当たり判定(線と線)
+bool Meteor::IsHitMeteor(Line hit) const {
 
 	//破壊されてない隕石なら.
 	if (state == Meteor_Normal) {
 		//全ての線で判定.
 		for (const auto& i : shape.line) {
-			//線とプレイヤーが当たったら.
-			if (Calc::HitLineCir(i, cir)) {
+			if (Calc::HitLineLine(i, hit)) {
+				return true; //当たった.
+			}
+		}
+	}
+
+	return false; //当たっていない.
+}
+
+//隕石の当たり判定(線と円)
+bool Meteor::IsHitMeteor(Circle hit) const {
+
+	//破壊されてない隕石なら.
+	if (state == Meteor_Normal) {
+		//全ての線で判定.
+		for (const auto& i : shape.line) {
+			if (Calc::HitLineCir(i, hit)) {
 				return true; //当たった.
 			}
 		}

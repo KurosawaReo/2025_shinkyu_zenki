@@ -199,7 +199,7 @@ void ItemManager::SpawnNow() {
 //プレイヤーとの当たり判定.
 bool ItemManager::CheckHitPlayer(list<ItemData>::iterator& it, ItemType* type)
 {
-	//プレイヤーがいなければ判定しない.
+	//プレイヤーが無効なら中断.
 	if (!player->GetActive()) {
 		return false;
 	}
