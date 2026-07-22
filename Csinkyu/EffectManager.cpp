@@ -70,6 +70,26 @@ void EffectManager::Update() {
 			}
 			break;
 
+			case Effect_PlayerDashReflectSpark:
+			{
+				//カウンター計算.
+				i->counter += gameData->speedRate;
+				//回転.
+				i->ang += 10 * gameData->speedRate;
+				//減速.
+				float newSpeed = i->speed / (1 + (i->counter / 5));
+				//移動.
+				i->pos.x += i->vec.x * newSpeed * gameData->spawnRate;
+				i->pos.y += i->vec.y * newSpeed * gameData->spawnRate;
+
+				//時間経過で消滅.
+				if (i->counter >= PLAYER_DASH_SPARK_ANIM_TIME) {
+					isErase = true;
+				}
+
+			}
+			break;
+
 			case Effect_MeteorCrash:
 			{
 				//カウンター加算.
@@ -181,6 +201,32 @@ void EffectManager::Draw() {
 					DrawModeID::None, DrawBlendModeID::Alpha, pow,
 					[&]() {
 						DrawCircleKR(cir, Anchor::Mid, false, true);
+					}
+				);
+			}
+			break;
+
+			case Effect_PlayerDashReflectSpark:
+			{
+				//進行度(0→1).
+				const double t = i.counter / PLAYER_DASH_SPARK_ANIM_TIME;
+
+				//線の長さ(徐々に短くなる).
+				const float sparkLen = _flt(8 * (1 - t));
+
+				//飛ばす線データ.
+				Line line{};
+				line.stPos = ArcPos(i.pos, i.ang, sparkLen);
+				line.edPos = ArcPos(i.pos, i.ang + 180, sparkLen);
+				line.color = 0x00FFFF;
+				line.thick = 2;
+
+				//透明度.
+				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - t));
+				DrawMode::Exe(
+					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					[&]() {
+						DrawLineKR(line, true);
 					}
 				);
 			}

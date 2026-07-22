@@ -92,6 +92,7 @@ enum StageType
 #define PLAYER_DASH_COOLDOWN            (30)            //ダッシュクールダウン(フレーム)
 #define PLAYER_DASH_EFFECT_MAX          (5)             //最大エフェクト数.
 #define PLAYER_DASH_EFFECT_TIME			(10)			//エフェクト時間.
+#define PLAYER_DASH_SPARK_ANIM_TIME     (20)            //反射スパークの寿命(フレーム).
 #define PLAYER_DASH_REFLECT_TIME		(10)			//ダッシュ反射の継続時間.
 
 //アイテム.
