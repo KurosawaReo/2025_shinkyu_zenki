@@ -59,7 +59,6 @@ void EffectManager::Update() {
 			break;
 
 			case Effect_Reflect:
-			case Effect_ReflectSpark:
 			{
 				i->counter++;
 
@@ -243,20 +242,6 @@ void EffectManager::Draw() {
 					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
 						GraphMng::Get(_T("reflect_effect"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
-					}
-				);
-			}
-			break;
-
-			case Effect_ReflectSpark:
-			{
-				Circle cir = { i.pos, _flt(5 + i.counter * 2), COLOR_PLY_REFLECT, 1.0f };
-				//•`‰æ.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter / LASER_REF_ANIM_TIME)); //“§–¾“x.
-				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
-					[&]() {
-						DrawCircleKR(cir, Anchor::Mid, false, true);
 					}
 				);
 			}
