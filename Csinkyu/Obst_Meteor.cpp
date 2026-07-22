@@ -61,7 +61,8 @@ void Meteor::Draw() {
 
 	//ターゲットマーク.
 	if (isTargeting) {
-		GraphMng::Get(_T("target"))->DrawExtend(pos, { 0.4, 0.4 });
+		const double size = 0.34;
+		GraphMng::Get(_T("target"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
 	}
 
 	//破壊中はだんだん薄くする.
