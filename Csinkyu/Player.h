@@ -22,6 +22,7 @@ enum PlayerMode
 	Player_ItemReflect,      //アイテム反射モード.
 	Player_ItemReflectSuper, //アイテム反射モード強化版.
 	Player_DashReflect,      //反射ダッシュ.
+	Player_DashReflectSpark, //ダッシュエフェクト.
 };
 
 //プレイヤー.
@@ -40,6 +41,7 @@ private:
 
 	bool			isDashing{};			//ダッシュ中かどうか.
 	bool			isDashReflect{};		//ダッシュ反射演出を出すか.
+	bool            prevIsDashReflect{};    //前フレームのisDashReflect(変化検知用)
 	bool			isDashEndEffect{};		//エフェクト発動フラグ.
 	bool            isNoDeath{};            //無敵かどうか(チュートリアル用)
 	bool			isDebug{};				//デバッグ用.
@@ -86,6 +88,7 @@ public:
 	void Draw  () override;
 
 	void UpdateDash   ();	//ダッシュ更新.
+	void SpawnDashReflectSpark(); //反射スパーク生成.
 	void UpdateAfter  ();	//残像更新.
 
 	void DrawAfter    ();									 //残像描画.

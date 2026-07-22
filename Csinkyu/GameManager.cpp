@@ -99,6 +99,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("se/audiostock_1636651.mp3"),		_T("MenuOK"));			//メニュー決定音.
 		soundMng->LoadFile(_T("se/audiostock_461339.mp3"),		_T("ItemUse")); 		//アイテム発動.
 		soundMng->LoadFile(_T("se/player_dash.mp3"),			_T("PlayerDash")); 		//ダッシュ音.
+		soundMng->LoadFile(_T("se/audiostock_1677973.mp3"),     _T("PlayerParry"));     //パリィ音
 		soundMng->LoadFile(_T("se/audiostock_1116927_cut.mp3"), _T("CountDown"));		//カウントダウン.
 		soundMng->LoadFile(_T("se/audiostock_63721.mp3"),		_T("PowerDown"));		//アイテム解除.
 		soundMng->LoadFile(_T("se/audiostock_1296254.mp3"),		_T("Laser1"));			//レーザー(発射)
