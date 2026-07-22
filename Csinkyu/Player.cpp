@@ -86,6 +86,12 @@ void Player::Update()
 		//画像回転.
 		imgRot += (1.0 + velocity.Dist()*0.5) * gameData->speedRate;
 
+		//反射フラグがfalse→trueに切り替わった瞬間を検知.
+		if (isDashReflect && !prevIsDashReflect)
+		{
+			SpawnDashReflectSpark(); //パーティクル生成関数(新規).
+		}
+		prevIsDashReflect = isDashReflect; //今回の値を保存.
 		UpdateDash();  //ダッシュ更新.
 		UpdateAfter(); //残像更新.
 		Move();		   //プレイヤー移動.
@@ -169,6 +175,32 @@ void Player::UpdateDash()
 				}
 			}
 		}
+	}
+}
+
+//反射スパーク生成.
+void Player::SpawnDashReflectSpark()
+{
+	const double baseAng = Calc::FacingAng({ 0,0 }, lastInputVec);
+	const int sparkNum = 10;
+
+	for (int s = 0; s < sparkNum; s++)
+	{
+
+		const double ang = baseAng + Calc::RandNum(-40, 40);
+		const double speed = Calc::RandNum(2.0, 6.0);
+
+		//サウンド.
+		if (auto i = soundMng->Get(_T("PlayerParry"))) {
+			i->Play(false, 58);
+		}
+		EffectData data{};
+		data.type = Effect_PlayerDashReflectSpark;
+		data.pos = hit.pos;
+		data.vec = Calc::AngToVector(ang);
+		data.speed = _flt(speed);
+		data.ang = _flt(ang);
+		effectMng->SpawnEffect(&data);
 	}
 }
 
@@ -283,11 +315,11 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 		case Player_DashReflect:
 		{
 			//三角形のグラデーション線を作成.
-			line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
-			line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
-			line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+			//line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
+			//line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
+			//line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
 
-#if false
+#if true
 			//ダッシュ反射してたら色付き.
 			if (isDashReflect) {
 
