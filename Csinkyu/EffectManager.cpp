@@ -188,7 +188,7 @@ void EffectManager::Draw() {
 
 			case Effect_Reflect:
 			{
-				const double size  = 0.2 * i.counter/LASER_REF_ANIM_TIME;
+				const double size  = 0.2 + 0.4 * i.counter/LASER_REF_ANIM_TIME;
 				const DBL_XY pos   = i.pos;
 				const int    alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //“§–¾“x.
 
