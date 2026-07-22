@@ -67,7 +67,7 @@ public:
 	void       SetActive       (bool       _flag) { active        = _flag; }
 	void       SetMode         (PlayerMode _mode) { mode          = _mode; }
 	void       SetIsNoDeath    (bool       _flag) { isNoDeath     = _flag; }
-	void       SetIsDashReflect(bool       _flag) { isDashReflect = _flag; }
+	void       SetIsDashReflect(bool       _flag);
 	//get. 
 	DBL_XY     GetPos()      const { return hit.pos; }
 	bool       GetActive()   const { return active; }

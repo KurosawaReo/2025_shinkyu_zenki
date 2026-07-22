@@ -24,6 +24,16 @@ static InputMng*      inputMng;
 
 // ▼*--=<[ Player ]>=--*▼ //
 
+void Player::SetIsDashReflect(bool _flag) { 
+
+	//フラグがONになった瞬間のみ.
+	if (!isDashReflect && _flag) {
+		SpawnDashReflectEffect(); //スパーク演出を召喚.
+	}
+
+	isDashReflect = _flag;
+}
+
 //初期化(一回のみ行う)
 void Player::Init()
 {
@@ -481,7 +491,7 @@ void Player::SpawnDashReflectEffect()
 
 		//サウンド.
 		if (auto i = soundMng->Get(_T("PlayerParry"))) {
-			i->Play(false, 58);
+			i->Play(false, 42);
 		}
 		//エフェクト.
 		EffectData data{};
