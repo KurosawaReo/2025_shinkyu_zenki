@@ -294,12 +294,6 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 		case Player_Normal:
 		case Player_DashReflect:
 		{
-			//三角形のグラデーション線を作成.
-			//line.AddPoint(pos2, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
-			//line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
-			//line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
-
-#if true
 			//ダッシュ反射してたら色付き.
 			if (isDashReflect) {
 
@@ -322,7 +316,6 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 				line.AddPoint(pos1, { 100, 100, 100, _int_r(255 * (1 - anim1)) });
 				line.AddPoint(pos3, { 255, 255, 255, _int_r(255 * (1 - anim1)) });
 			}
-#endif
 		}
 		break;
 	}
