@@ -57,6 +57,8 @@ public:
 	void DrawOnlyObjects();
 	void RestartObjects();
 
+	void WritePlayLog(bool isTutorial);
+
 	//Žg—p‹ÖŽ~.
 	GameManager(const GameManager*) = delete;
 	GameManager* operator=(const GameManager*) = delete;
