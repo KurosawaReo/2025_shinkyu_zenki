@@ -205,7 +205,7 @@ void Player::UpdateAfter()
 		//ある程度移動したら.
 		if (fabs(hit.pos.x - after[1].pos.x) >= 1.0 ||
 			fabs(hit.pos.y - after[1].pos.y) >= 1.0
-			) {
+		){
 			//1フレーム目の情報登録.
 			after[0].pos = hit.pos;                                     //プレイヤー座標.
 			after[0].ang = Calc::FacingAng(after[0].pos, after[1].pos); //移動方向.
@@ -495,7 +495,7 @@ void Player::SpawnDashReflectEffect()
 
 		//サウンド.
 		if (auto i = soundMng->Get(_T("PlayerParry"))) {
-			i->Play(false, 60);
+			i->Play(false, 50);
 		}
 		//エフェクト.
 		EffectData data{};
