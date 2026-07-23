@@ -98,6 +98,8 @@ void MenuScene::Update() {
 				gameData->stage = Stage_Tutorial;
 				//背景変更.
 				bgMng->SetBgNo(1);
+				//プレイログに記録.
+				gameMng->WritePlayLog(true);
 
 #if !defined BGM_NONE
 				//BGM.

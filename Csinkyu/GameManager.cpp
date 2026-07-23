@@ -343,25 +343,7 @@ void GameManager::GameOver() {
 				}
 
 				//[playlog.data]
-				{
-					DATEDATA date;
-					GetDateTime(&date); //現在時刻取得.
-
-					MY_STRING dateStr = Format::StrFormat(
-						//フォーマット.
-						_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Level:%d / Score:%0.5d / Time:%.1f\n"), 
-						//変数挿入.
-						date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec, 
-						Device::GetComputerNameStr().c_str(), gameData->level, gameData->score, gameScene.GetGameTime()
-					);
-
-					//ファイルへ追記.
-					File file;
-					//ファイルを開く.
-					if (file.Open(FILE_DATA_PLAYLOG, FileOpenMode::Out | FileOpenMode::App)) {
-						file.WriteString(dateStr);
-					}
-				}
+				WritePlayLog(false);
 
 #if !defined BGM_NONE
 				//元のBGMをフェードアウト.
@@ -475,5 +457,40 @@ void GameManager::RestartObjects() {
 		if (i->GetAutoExeMode() != MngAutoExe::Stop) {
 			i->BackAutoExeMode(); //元のモードへ.
 		}
+	}
+}
+
+//プレイログを書き込む.
+void GameManager::WritePlayLog(bool isTutorial) {
+
+	DATEDATA date;
+	GetDateTime(&date); //現在時刻取得.
+
+	MY_STRING dateStr;
+	
+	if (isTutorial) {
+		dateStr = Format::StrFormat(
+			//フォーマット.
+			_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Mode:Tutorial\n"),
+			//変数挿入.
+			date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec,
+			Device::GetComputerNameStr().c_str()
+		);
+	}
+	else {
+		dateStr = Format::StrFormat(
+			//フォーマット.
+			_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Mode:Endless (Level:%d, Score:%0.5d, Time:%.1f)\n"),
+			//変数挿入.
+			date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec,
+			Device::GetComputerNameStr().c_str(), gameData->level, gameData->score, gameScene.GetGameTime()
+		);
+	}
+
+	//ファイルを開く.
+	File file;
+	if (file.Open(FILE_DATA_PLAYLOG, FileOpenMode::Out | FileOpenMode::App)) {
+		//ファイルへ追記.
+		file.WriteString(dateStr);
 	}
 }
