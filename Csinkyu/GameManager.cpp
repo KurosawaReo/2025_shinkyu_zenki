@@ -193,15 +193,6 @@ void GameManager::Init() {
 //リセット(何回でも行う)
 void GameManager::Reset() {
 
-	//データ.
-	gameData->scoreBef      = 0;
-	gameData->score         = 0;
-	gameData->counter       = 0;
-	gameData->speedRate     = 1.0;   //通常は100%
-	gameData->spawnRate     = 1.0;   //最初は100%
-	gameData->level         = 1;     //最初はLv1
-	gameData->isReflectMode = false; //最初はLv1
-
 	//最初はタイトルシーン.
 	sceneMng->SetScene(_T("Title"));
 
@@ -326,19 +317,20 @@ void GameManager::GameOver() {
 			{
 				sceneMng->SetScene(_T("End")); //終了シーンへ.
 
-				gameData->speedRate = 1.0;									//速度倍率を100%に戻す.
-				gameData->scoreBef  = gameData->score;						//時間加算前のスコアを記録.
-				gameData->score     += _int(gameScene.GetGameTime() * 10);	//時間ボーナス加算.
+				gameData->speedRate = 1.0; //速度倍率を100%に戻す.
+
+				//最終スコア.
+				const int finalScore = gameData->GetScore();
 
 				//[score.data]
-				if (gameData->score > gameData->bestScore) {
+				if (finalScore > gameData->bestScore) {
 
 					File file;
 					//ファイルを開く.
 					if (file.Open(FILE_DATA_SCORE, FileOpenMode::Write)) {
-						file.WriteInt(gameData->score);			//スコアを保存.
-						gameData->bestScore = gameData->score;	//スコア更新.
-						endScene.SignBestScore();				//ハイスコアのサイン送信.
+						file.WriteInt(finalScore);			//スコアを保存.
+						gameData->bestScore = finalScore;	//スコア更新.
+						endScene.SignBestScore();			//ハイスコアのサイン送信.
 					}
 				}
 
@@ -483,7 +475,7 @@ void GameManager::WritePlayLog(bool isTutorial) {
 			_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Mode:Endless (Level:%d, Score:%0.5d, Time:%.1f)\n"),
 			//変数挿入.
 			date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec,
-			Device::GetComputerNameStr().c_str(), gameData->level, gameData->score, gameScene.GetGameTime()
+			Device::GetComputerNameStr().c_str(), gameData->level, gameData->GetScore(), gameScene.GetGameTime()
 		);
 	}
 

@@ -407,7 +407,7 @@ void TutorialStage::UpdateStep3() {
 				effectMng->SpawnEffect(&data);
 
 				//スコア表示.
-				gameData->scoreBef = gameData->score = 0;
+				gameData->ResetScore();
 				uiMng->SetIsShowScore(true);
 
 				//動画用.
@@ -825,7 +825,7 @@ bool TutorialStage::IsEnd(int stepNo, int stepInnerNo) {
 			{
 				//一定スコアを越える & 反射モードでなければ.
 				case 0:
-					ret = gameData->score >= 2000 && player->GetMode() == Player_Normal;
+					ret = gameData->GetScore() >= 2000 && player->GetMode() == Player_Normal;
 					break;
 
 				//一定時間が経過したら.

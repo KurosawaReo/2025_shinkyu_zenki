@@ -171,7 +171,7 @@ void ItemManager::ItemUse(list<ItemData>::iterator& it, bool isSuper)
 	effect.pos  = it->pos;
 	effectMng->SpawnEffect(&effect);
 	//スコア加算.
-	gameData->score += SCORE_TAKE_ITEM;
+	gameData->AddScore(SCORE_TAKE_ITEM);
 
 	//プレイヤーのモード設定.
 	if (isSuper) {

@@ -70,9 +70,9 @@ void UIManager::Draw() {
 			DrawStr str2({}, { WINDOW_WID/2, 150        }, COLOR_SCORE);
 			
 			TCHAR text[256];
-			_stprintf(text, _T("STEP %d"), tutorialStg->GetStepNo());
+			_stprintf(text, _T("STEP %d"),    tutorialStg->GetStepNo());
 			str1.text = text;
-			_stprintf(text, _T("SCORE:%05d"), gameData->score);
+			_stprintf(text, _T("SCORE:%05d"), gameData->GetScore());
 			str2.text = text;
 
 			// ===== STEP =====
@@ -140,7 +140,7 @@ void UIManager::Draw() {
 			str[0].text = text;
 			_stprintf(text, _T("BEST SCORE:%05d"), dispBestScore);
 			str[1].text = text;
-			_stprintf(text, _T("SCORE:%05d"),      gameData->score);
+			_stprintf(text, _T("SCORE:%05d"),      gameData->GetScore());
 			str[2].text = text;
 			_stprintf(text, _T("TIME:%.1f"),       fixTime);
 			str[3].text = text;

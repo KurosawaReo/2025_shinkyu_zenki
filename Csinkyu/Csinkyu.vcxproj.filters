@@ -48,6 +48,7 @@
     <ClCompile Include="KrLib_cpp\KR_File.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Format.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Language.cpp" />
+    <ClCompile Include="GameData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG1.h" />
