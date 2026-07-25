@@ -355,7 +355,7 @@ void TutorialStage::UpdateStep3() {
 						//動画.
 						GraphMng::Get(_T("reflect_mode_death"))->PlayMovie(PlayTypeID::Loop);
 						//ゲーム速度.
-						gameData->speedRate = 0.1;
+						gameData->speedRate = 0.1f;
 						//無敵にする.
 						player->SetIsNoDeath(true);
 					}
@@ -412,7 +412,7 @@ void TutorialStage::UpdateStep3() {
 
 				//動画用.
 				GraphMng::Get(_T("dash_reflect"))->StopMovie();
-				gameData->speedRate = 1.0;   //ゲーム速度.
+				gameData->speedRate = 1.0f;  //ゲーム速度.
 				player->SetIsNoDeath(false); //無敵解除.
 
 				//終了処理.

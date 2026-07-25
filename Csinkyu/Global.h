@@ -52,7 +52,7 @@ enum StageType
 #define FILE_DATA_SCORE					_T("Data/highscore.data")	//ハイスコア記録.
 #define FILE_DATA_PLAYLOG				_T("Data/playlog.data")		//プレイ歴記録.
 
-#define IS_WINDOW_MODE					(FALSE)			//ウィンドウモードにするか.
+#define IS_WINDOW_MODE					(false)			//ウィンドウモードにするか.
 
 #define WINDOW_WID						(1920)			//ウィンドウの横幅.
 #define WINDOW_HEI						(1080)			//ウィンドウの縦幅.
