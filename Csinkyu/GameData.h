@@ -4,6 +4,19 @@
 #pragma once
 #include "Global.h"
 
+//ステージの種類.
+enum class StageType
+{
+	Endless,
+	Tutorial,
+};
+
+//操作方法の種類.
+enum class OperateType
+{
+
+};
+
 //ゲームデータ[継承不可]
 class GameData final : public ManagerBase
 {

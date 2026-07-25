@@ -6,13 +6,13 @@
 #include "Obst_Meteor.h"
 
 //レーザータイプ.
-enum LaserType
+enum class LaserType
 {
-	Laser_Normal,       //通常レーザー.
-	Laser_Straight,     //直線レーザー.
-	Laser_Reflect,      //反射レーザー.
-	Laser_SuperReflect, //反射レーザー強化版.
-	Laser_Falling,      //落下レーザー(花火用)
+	Normal,       //通常レーザー.
+	Straight,     //直線レーザー.
+	Reflect,      //反射レーザー.
+	SuperReflect, //反射レーザー強化版.
+	Falling,      //落下レーザー(花火用)
 };
 
 //レーザー本体.

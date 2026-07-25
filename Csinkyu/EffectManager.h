@@ -5,26 +5,27 @@
 #pragma once
 
 //エフェクトタイプ.
-enum EffectType
+enum class EffectType
 {
-	Effect_Score100,
-	Effect_Score500,
-	Effect_PlayerDeath,			//プレイヤー死亡.
-	Effect_PlayerDashReflect,	//反射ダッシュ.
-	Effect_Reflect,				//反射.
-	Effect_MeteorCrash,			//隕石破壊.
-	Effect_MeteorFragment,		//隕石破片.
+	Score100,
+	Score500,
+	PlayerDeath,		//プレイヤー死亡.
+	PlayerDashReflect,	//反射ダッシュ.
+	Reflect,			//反射.
+	MeteorCrash,		//隕石破壊.
+	MeteorFragment,		//隕石破片.
 
-	Effect_Endless_Level1,			//耐久モード: Level1演出.
-	Effect_Endless_Level2,			//耐久モード: Level2演出.
-	Effect_Endless_Level3,			//耐久モード: Level3演出.
-	Effect_Endless_Level4,			//耐久モード: Level4演出.
-	Effect_Endless_Level5,			//耐久モード: Level5演出.
-	Effect_Tutorial_Step1,			//チュートリアル: step1演出.
-	Effect_Tutorial_Step2,			//チュートリアル: step2演出.
-	Effect_Tutorial_Step3,			//チュートリアル: step3演出.
-	Effect_Tutorial_Step4,			//チュートリアル: step4演出.
+	Endless_Level1,		//耐久モード: Level1演出.
+	Endless_Level2,		//耐久モード: Level2演出.
+	Endless_Level3,		//耐久モード: Level3演出.
+	Endless_Level4,		//耐久モード: Level4演出.
+	Endless_Level5,		//耐久モード: Level5演出.
+	Tutorial_Step1,		//チュートリアル: step1演出.
+	Tutorial_Step2,		//チュートリアル: step2演出.
+	Tutorial_Step3,		//チュートリアル: step3演出.
+	Tutorial_Step4,		//チュートリアル: step4演出.
 };
+
 //エフェクトデータ.
 struct EffectData
 {
@@ -35,10 +36,6 @@ struct EffectData
 	float      speed{};   //速さ.
 	float      ang{};     //角度.
 	float      len{};     //長さ.
-};
-//エフェクト.
-struct Effect : public EffectData //TODO: この継承の使い方は不適切.
-{
 	float      counter{}; //時間計測用.
 };
 
@@ -47,7 +44,7 @@ class EffectManager final : public ManagerBase
 {
 //▼ ===== 変数 ===== ▼.
 private:
-	list<Effect> effect; //エフェクト配列.
+	list<EffectData> effect; //エフェクト配列.
 
 //▼ ===== 関数 ===== ▼.
 public:

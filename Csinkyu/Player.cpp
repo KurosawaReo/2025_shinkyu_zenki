@@ -54,7 +54,7 @@ void Player::Init()
 void Player::Reset()
 {
 	hit       = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {}, {} };
-	mode      = Player_Normal;
+	mode      = PlayerMode::Normal;
 	afterCntr = 1;
 	active    = true;
 
@@ -141,9 +141,9 @@ void Player::UpdateDash()
 		//ダッシュ反射終了.
 		if (dashTimer <= PLAYER_DASH_DURATION - PLAYER_DASH_REFLECT_TIME)
 		{
-			if (mode == Player_DashReflect)
+			if (mode == PlayerMode::DashReflect)
 			{
-				mode = Player_Normal;
+				mode = PlayerMode::Normal;
 			}
 		}
 		//ダッシュ時間切れ.
@@ -170,13 +170,13 @@ void Player::UpdateDash()
 				isDashing    = true;
 
 				//ダッシュ反射開始.
-				if (mode == Player_Normal)
+				if (mode == PlayerMode::Normal)
 				{
-					mode = Player_DashReflect;
+					mode = PlayerMode::DashReflect;
 				}
 
 				//チュートリアルなら.
-				if (gameData->stage == Stage_Tutorial) {
+				if (gameData->stage == StageType::Tutorial) {
 					tutorialStg->SetPlayerDash(true);
 				}
 			}
@@ -254,8 +254,8 @@ void Player::DrawAfterNor(int idx) {
 	MY_COLOR color;
 
 	//反射カラー.
-	if (mode == Player_ItemReflect ||
-		mode == Player_ItemReflectSuper
+	if (mode == PlayerMode::ItemReflect ||
+		mode == PlayerMode::ItemReflectSuper
 	){
 		color = COLOR_PLY_AFT_REF;
 	}
@@ -281,8 +281,8 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 	//モード別.
 	switch (mode)
 	{
-		case Player_ItemReflect:
-		case Player_ItemReflectSuper:
+		case PlayerMode::ItemReflect:
+		case PlayerMode::ItemReflectSuper:
 		{
 			//三角形のグラデーション線を作成.
 			line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
@@ -291,8 +291,8 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 		}
 		break;
 
-		case Player_Normal:
-		case Player_DashReflect:
+		case PlayerMode::Normal:
+		case PlayerMode::DashReflect:
 		{
 			//ダッシュ反射してたら色付き.
 			if (isDashReflect) {
@@ -332,8 +332,8 @@ void Player::DrawPlayer() {
 	const int alpha2 = _int(80 + 128 * Calc::AnimWave(WaveType::CosLoop, gameMng->GetGameScene()->GetReflectModeTime() * 2));
 
 	//プレイヤー描画.
-	if (mode == Player_ItemReflect ||
-		mode == Player_ItemReflectSuper
+	if (mode == PlayerMode::ItemReflect ||
+		mode == PlayerMode::ItemReflectSuper
 	){
 		//ダッシュ演出.
 		if (isDashing) {
@@ -381,7 +381,7 @@ void Player::DrawPlayer() {
 	}
 
 	//チュートリアル用.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		DrawStr str(_T("プレイヤー"), hit.pos.ToInt() + INT_XY(0, -40), 0xFFFFFF);
 		str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
 	}
@@ -446,7 +446,7 @@ void Player::Death() {
 	}
 	//エフェクト.
 	EffectData data{};
-	data.type = Effect_PlayerDeath;
+	data.type = EffectType::PlayerDeath;
 	data.pos = hit.pos;
 	effectMng->SpawnEffect(&data);
 
@@ -492,7 +492,7 @@ void Player::SpawnDashReflectEffect()
 		}
 		//エフェクト.
 		EffectData data{};
-		data.type  = Effect_PlayerDashReflect;
+		data.type  = EffectType::PlayerDashReflect;
 		data.pos   = hit.pos;
 		data.vec   = Calc::AngToVector(ang);
 		data.speed = _flt(speed);

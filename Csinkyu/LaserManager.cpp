@@ -75,13 +75,13 @@ void LaserManager::Draw() {
 		//線の色(時間経過で色が変化)
 		switch (i.type)
 		{
-			case Laser_Normal:
-			case Laser_Straight:
-			case Laser_Falling:
+			case LaserType::Normal:
+			case LaserType::Straight:
+			case LaserType::Falling:
 				tmpLine.color = COLOR_LASER_NORMAL(color); //通常カラー.
 				break;
-			case Laser_Reflect:
-			case Laser_SuperReflect:
+			case LaserType::Reflect:
+			case LaserType::SuperReflect:
 				tmpLine.color = COLOR_LASER_REFLECT(color); //反射カラー.
 				break;
 
@@ -97,7 +97,7 @@ void LaserManager::Draw() {
 	}
 
 	//チュートリアル限定.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		//レーザー本体.
 		for (const LaserData& i : laser)
 		{
@@ -106,13 +106,13 @@ void LaserManager::Draw() {
 			//色を指定.
 			switch (i.type)
 			{
-				case Laser_Normal:
-				case Laser_Straight:
-				case Laser_Falling:
+				case LaserType::Normal:
+				case LaserType::Straight:
+				case LaserType::Falling:
 					color = GetColor(50, 255, 255); //色の設定.
 					break;
-				case Laser_Reflect:
-				case Laser_SuperReflect:
+				case LaserType::Reflect:
+				case LaserType::SuperReflect:
 					color = GetColor(255, 0, 255); //色の設定.
 					break;
 
@@ -137,7 +137,7 @@ void LaserManager::UpdateLaser() {
 		//レーザータイプ別.
 		switch (i->type)
 		{
-			case Laser_Normal:
+			case LaserType::Normal:
 			{
 				//レーザーの当たり判定.
 				HitLaser(i);
@@ -149,7 +149,7 @@ void LaserManager::UpdateLaser() {
 			}
 			break;
 
-			case Laser_Straight:
+			case LaserType::Straight:
 			{
 				//レーザーの当たり判定.
 				HitLaser(i);
@@ -161,7 +161,7 @@ void LaserManager::UpdateLaser() {
 			}
 			break;
 
-			case Laser_Falling:
+			case LaserType::Falling:
 			{
 				//ある程度薄くなるまで.
 				if (i->counter <= LASER_FAL_HIT_ABLE) {
@@ -190,8 +190,8 @@ void LaserManager::UpdateLaser() {
 			}
 			break;
 
-			case Laser_Reflect:
-			case Laser_SuperReflect:
+			case LaserType::Reflect:
+			case LaserType::SuperReflect:
 			{
 				//ターゲットが決まってなければ.
 				if (!i->target) {
@@ -212,7 +212,7 @@ void LaserManager::UpdateLaser() {
 				if (auto meteor = meteorMng->GetHitMeteor(i->hit, true)) {
 
 					//壊れてない隕石であれば.
-					if (meteor->GetState() == Meteor_Normal) {
+					if (meteor->GetState() == MeteorState::Normal) {
 						meteor->Destroy(); //隕石を破壊.
 					}
 
@@ -221,7 +221,7 @@ void LaserManager::UpdateLaser() {
 					gameData->AddScore(SCORE_BREAK_METEOR);				//スコア加算.
 
 					//どっちのタイプかで切り替え.
-					if (i->type == Laser_Reflect) {
+					if (i->type == LaserType::Reflect) {
 						isErase = true; //消去する.
 					}
 					else {
@@ -229,7 +229,7 @@ void LaserManager::UpdateLaser() {
 						ReflectLaser(i); //再反射.
 					}
 					//チュートリアルなら指示送信.
-					if (gameData->stage == Stage_Tutorial) {
+					if (gameData->stage == StageType::Tutorial) {
 						tutorialStg->SetBreakMeteor(true);
 					}
 				}
@@ -326,8 +326,8 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 	//プレイヤーの当たり判定.
 	Circle plyHit = player->GetHit();
 	//反射モード中は判定を少し大きくする.
-	if (player->GetMode() == Player_ItemReflect      ||
-		player->GetMode() == Player_ItemReflectSuper)
+	if (player->GetMode() == PlayerMode::ItemReflect      ||
+		player->GetMode() == PlayerMode::ItemReflectSuper)
 	{
 		plyHit.r += PLAYER_REF_ADD_SIZE;
 	}
@@ -341,18 +341,18 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 		//反射あり.
 		switch (player->GetMode())
 		{
-			case Player_ItemReflect:
+			case PlayerMode::ItemReflect:
 			{
-				it->type = Laser_Reflect; //反射モードへ.
+				it->type = LaserType::Reflect; //反射モードへ.
 				it->counter = 0;          //リセット.
 				gameMng->SlowModeStart(); //スロー発動.
 				ReflectLaser(it);         //レーザーを反射.
 			}
 			break;
 
-			case Player_DashReflect:
+			case PlayerMode::DashReflect:
 			{
-				it->type = Laser_Reflect; //反射モードへ.
+				it->type = LaserType::Reflect; //反射モードへ.
 				it->counter = 0;          //リセット.
 				gameMng->SlowModeStart(); //スロー発動.
 				ReflectLaser(it);         //レーザーを反射.
@@ -364,9 +364,9 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 			break;
 
 			//反射あり(強化版)
-			case Player_ItemReflectSuper:
+			case PlayerMode::ItemReflectSuper:
 			{
-				it->type = Laser_SuperReflect; //反射モードへ.
+				it->type = LaserType::SuperReflect; //反射モードへ.
 				it->counter = 0;               //リセット.
 
 				gameMng->SlowModeStart(); //スロー発動.
@@ -374,7 +374,7 @@ void LaserManager::HitLaser(list<LaserData>::iterator& it) {
 			}
 			break;
 
-			case Player_Normal:
+			case PlayerMode::Normal:
 			{
 				player->Death(); //プレイヤー死亡.
 			}
@@ -400,7 +400,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 
 	//エフェクト.
 	EffectData data{};
-	data.type = Effect_Reflect;
+	data.type = EffectType::Reflect;
 	data.pos  = it->nowPos;
 	effectMng->SpawnEffect(&data);
 	//サウンド.
@@ -409,7 +409,7 @@ void LaserManager::ReflectLaser(list<LaserData>::iterator& it)
 	}
 
 	//チュートリアルなら指示送信.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		tutorialStg->SetReflectLaser(true);
 	}
 }
@@ -441,7 +441,7 @@ void LaserManager::GenerateLaserLine(list<LaserData>::iterator& it) {
 		tmp.counter = 0;		//経過時間.
 
 		//落下レーザーの設定.
-		if (tmp.type == Laser_Falling) {
+		if (tmp.type == LaserType::Falling) {
 			//レーザーの経過時間を反映.
 			//落下レーザー消滅時間が、レーザー描画線消滅時間に合わさるよう計算.
 			tmp.counter = it->counter * LASER_LINE_DEL_TIME / LASER_FAL_DEL_TIME;
@@ -509,12 +509,12 @@ bool LaserManager::IsExistEnemyLaser(DBL_XY pos, float len) {
 	//全てのレーザー.
 	for (const auto& i : laser) {
 		//敵のレーザーなら.
-		if (i.type == Laser_Normal   ||
-			i.type == Laser_Straight ||
-			i.type == Laser_Falling)
+		if (i.type == LaserType::Normal   ||
+			i.type == LaserType::Straight ||
+			i.type == LaserType::Falling)
 		{
 			//消えかかってる落下レーザーは除外.
-			if (i.type == Laser_Falling &&
+			if (i.type == LaserType::Falling &&
 				i.counter > LASER_FAL_HIT_ABLE) 
 			{
 				continue;

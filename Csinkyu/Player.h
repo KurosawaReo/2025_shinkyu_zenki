@@ -16,13 +16,13 @@ struct AfterEffect
 };
 
 //プレイヤーモード.
-enum PlayerMode
+enum class PlayerMode
 {
-	Player_Normal,           //通常モード.
-	Player_ItemReflect,      //アイテム反射モード.
-	Player_ItemReflectSuper, //アイテム反射モード強化版.
-	Player_DashReflect,      //反射ダッシュ.
-	Player_DashReflectSpark, //ダッシュエフェクト.
+	Normal,           //通常モード.
+	ItemReflect,      //アイテム反射モード.
+	ItemReflectSuper, //アイテム反射モード強化版.
+	DashReflect,      //反射ダッシュ.
+	DashReflectSpark, //ダッシュエフェクト.
 };
 
 //プレイヤー.

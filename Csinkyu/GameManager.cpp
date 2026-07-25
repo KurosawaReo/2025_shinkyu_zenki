@@ -307,13 +307,13 @@ void GameManager::GameOver() {
 		//ステージ別.
 		switch (gameData->stage)
 		{
-			case Stage_Tutorial:
+			case StageType::Tutorial:
 			{
 				sceneMng->SetScene(_T("End")); //終了シーンへ.
 			}
 			break;
 
-			case Stage_Endless:
+			case StageType::Endless:
 			{
 				sceneMng->SetScene(_T("End")); //終了シーンへ.
 
@@ -363,7 +363,7 @@ void GameManager::ItemUsed() {
 	gameScene.ItemUsed();           //アイテム使用処理.
 	
 	//チュートリアルなら指示送信.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		tutorialStg->SetTakeItem(true);       //指示を送る.
 		tutorialStg->SetReflectFinish(false); //falseにする(指示取り消し)
 	}

@@ -49,7 +49,7 @@ void EndScene::Enter() {
 	timer.Start(); //タイマー開始.
 
 	//チュートリアル限定.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 
 		//一定時間経過したら.
 		ManagerInsts::Get<TimerMng>()->ReservExe(
@@ -75,7 +75,7 @@ void EndScene::Exit() {
 void EndScene::Update() {
 
 	//チュートリアル限定.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		//ゲームシーンと同じ動作をする.
 		gameMng->GetGameScene()->Update();
 	}
@@ -109,7 +109,7 @@ void EndScene::Draw() {
 	}
 
 	//チュートリアルの場合.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 
 		//アニメーション値.
 		double anim = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());

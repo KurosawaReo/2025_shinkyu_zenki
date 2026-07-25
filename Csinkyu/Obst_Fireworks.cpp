@@ -60,7 +60,7 @@ bool Fireworks::CheckDistance(float x, float y) {
 // 花火生成.
 void Fireworks::SpawnFireworks(float x, float y) {
 
-	FireworksData tmp{}; //花火生成.
+	FwData tmp{}; //花火生成.
 
 	tmp.targetX = x;
 	tmp.targetY = y;
@@ -69,7 +69,6 @@ void Fireworks::SpawnFireworks(float x, float y) {
 	tmp.vx = 0.0f;
 	tmp.vy = 0.0f;
 	tmp.counter = FIREWORKS_WARNING_DURATION;
-	tmp.state = FIREWORKS_STATE_WARNING;
 	tmp.sparkCount = FIREWORKS_SPARKS_COUNT + (rand() % 8);
 
 	fireworks.push_back(tmp); //listに追加.
@@ -114,7 +113,6 @@ void Fireworks::UpdateIndividualFireworks() {
 
 		//警告表示.
 		if (i->counter > 0) {
-			i->state = FIREWORKS_STATE_WARNING;
 			i++; //次の要素へ.
 		}
 		//爆発.
@@ -160,7 +158,7 @@ void Fireworks::CreateFireworksSparks(float x, float y) {
 		};
 
 		// 落下するレーザーとして生成
-		laserMng->SpawnLaser(pos, vel, Laser_Falling);
+		laserMng->SpawnLaser(pos, vel, LaserType::Falling);
 	}
 }
 
@@ -185,7 +183,7 @@ void Fireworks::Draw() {
 }
 
 // 予告エフェクト描画
-void Fireworks::DrawWarningEffect(list<FireworksData>::iterator it) {
+void Fireworks::DrawWarningEffect(list<FwData>::iterator it) {
 
 	const float sepTime     = 30; //区切り時間.
 	const float elapsedTime = it->counter;

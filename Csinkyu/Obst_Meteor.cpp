@@ -32,19 +32,19 @@ void Meteor::Update() {
 	//状態別処理.
 	switch (state)
 	{
-		case Meteor_Normal:
+		case MeteorState::Normal:
 			//画面外で消去.
 			if (Calc::IsOutInArea(pos, { METEOR_LINE_DIS_MAX*2, METEOR_LINE_DIS_MAX*2 }, {0, 0, WINDOW_WID, WINDOW_HEI}, true)){
 				isErase = true; //消去する.
 			}
 			break;
 
-		case Meteor_Destroy:
+		case MeteorState::Destroy:
 			//破壊量の度合.
 			destroyCntr += gameData->speedRate;
 			//時間が終了したら.
 			if (destroyCntr >= METEOR_DEST_TIME) {
-				state   = Meteor_Normal; //元に戻す.
+				state   = MeteorState::Normal; //元に戻す.
 				isErase = true;          //消去する.
 			}
 			break;
@@ -60,7 +60,7 @@ void Meteor::Draw() {
 	int alpha = 255; //透明度.
 
 	//破壊中はだんだん薄くする.
-	if (state == Meteor_Destroy) {
+	if (state == MeteorState::Destroy) {
 		alpha = _int_r(255 * (1-destroyCntr/METEOR_DEST_TIME)); //少しずつ減少(255→0)
 	}
 
@@ -76,7 +76,7 @@ void Meteor::Draw() {
 			}
 
 			//チュートリアル限定.
-			if (gameData->stage == Stage_Tutorial) {
+			if (gameData->stage == StageType::Tutorial) {
 				//ターゲットされてなければ.
 				if (!isTargeting) {
 					DrawStr str(_T("隕石"), pos.ToInt(), COLOR_METEOR(pos));
@@ -146,7 +146,7 @@ void Meteor::Spawn() {
 
 //隕石破壊.
 void Meteor::Destroy() {
-	state = Meteor_Destroy; //破壊モードに.
+	state = MeteorState::Destroy; //破壊モードに.
 	destroyCntr = 0;        //0から開始.
 }
 
@@ -154,7 +154,7 @@ void Meteor::Destroy() {
 bool Meteor::IsHitMeteor(Line hit) const {
 
 	//破壊されてない隕石なら.
-	if (state == Meteor_Normal) {
+	if (state == MeteorState::Normal) {
 		//全ての線で判定.
 		for (const auto& i : shape.line) {
 			if (Calc::HitLineLine(i, hit)) {
@@ -170,7 +170,7 @@ bool Meteor::IsHitMeteor(Line hit) const {
 bool Meteor::IsHitMeteor(Circle hit) const {
 
 	//破壊されてない隕石なら.
-	if (state == Meteor_Normal) {
+	if (state == MeteorState::Normal) {
 		//全ての線で判定.
 		for (const auto& i : shape.line) {
 			if (Calc::HitLineCir(i, hit)) {
@@ -198,7 +198,7 @@ void Meteor::UpdateMeteoLine() {
 		shape.line[i].edPos = Calc::ArcPos(pos, ang+bef*rot, shape.lineDist[bef]); //終点: 1つ前の角度から計算.
 
 		//破壊時の回転アニメーション.
-		if (state == Meteor_Destroy) {
+		if (state == MeteorState::Destroy) {
 
 			//①隕石を構成する線の情報.
 			DBL_XY lineMidPos   = Calc::MidPos   (shape.line[i].stPos, shape.line[i].edPos); //中点の位置.

@@ -77,7 +77,7 @@ void StraightLaserPoint::ShotLaser()
 			tmpPos.y = startPos.y;
 		}
 		//’¼üƒŒ[ƒU[‚ð”­ŽË.
-		laserMng->SpawnLaser(tmpPos, vel, Laser_Straight);
+		laserMng->SpawnLaser(tmpPos, vel, LaserType::Straight);
 	}
 }
 

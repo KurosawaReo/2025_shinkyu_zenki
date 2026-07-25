@@ -73,7 +73,7 @@ void MenuScene::Update() {
 			{
 				//耐久モードへ.
 				sceneMng->SetScene(_T("Game"));
-				gameData->stage = Stage_Endless;
+				gameData->stage = StageType::Endless;
 				//背景変更.
 				bgMng->SetBgNo(3);
 
@@ -95,7 +95,7 @@ void MenuScene::Update() {
 			{
 				//チュートリアルへ.
 				sceneMng->SetScene(_T("Game"));
-				gameData->stage = Stage_Tutorial;
+				gameData->stage = StageType::Tutorial;
 				//背景変更.
 				bgMng->SetBgNo(1);
 				//プレイログに記録.

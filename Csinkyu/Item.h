@@ -2,10 +2,10 @@
 #include "Global.h"
 
 //アイテムタイプ.
-enum ItemType
+enum class ItemType
 {
-	Item_Normal, //通常.
-	Item_Super,  //強化版.
+	Normal, //通常.
+	Super,  //強化版.
 };
 
 //アイテムデータ.
