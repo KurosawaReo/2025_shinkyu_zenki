@@ -495,13 +495,15 @@ void Player::Revival()
 //反射スパーク生成.
 void Player::SpawnEffectSpark()
 {
+	//何個出すか.
+	const int sparkNum = 4;
+
 	const double baseAng = Calc::FacingAng({ 0,0 }, lastInputVec);
-	const int sparkNum = 10;
 
 	for (int s = 0; s < sparkNum; s++)
 	{
 		//角度抽選.
-		const double ang   = baseAng + Calc::RandNum(-40, 40);
+		const double ang   = baseAng + Calc::RandNum(-30, 30);
 		//速度抽選.
 		const double speed = Calc::RandNum(4.0, 15.0);
 

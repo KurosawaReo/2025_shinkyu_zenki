@@ -169,13 +169,13 @@ void EffectManager::Draw() {
 				//座標.
 				DBL_XY pos = {i.pos.x, i.pos.y - AnimEase(EaseType::OutQuad, i.counter/SCORE_ANIM_TIME)*30};
 				//透明度.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/SCORE_ANIM_TIME));
+				const int alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/SCORE_ANIM_TIME));
 
 				const double size = 0.6;
 
 				//描画.
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
 						//画像切り替え.
 						if (i.type == EffectType::Score100) {
@@ -191,12 +191,13 @@ void EffectManager::Draw() {
 
 			case EffectType::PlayerDeath:
 			{
-				Circle cir = { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF, 1.0f };
-				
+				//透明度.
+				const int alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/PLAYER_DEATH_ANIM_TIME));
+
+				Circle cir = { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF, 1.0f };				
 				//描画.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/PLAYER_DEATH_ANIM_TIME)); //透明度.
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
 						DrawCircleKR(cir, Anchor::Mid, false, true);
 					}
@@ -207,22 +208,21 @@ void EffectManager::Draw() {
 			case EffectType::PlayerDashReflect:
 			{
 				//進行度(0→1).
-				const double t = i.counter / PLAYER_DASH_SPARK_ANIM_TIME;
-
-				//線の長さ(徐々に短くなる).
-				const float sparkLen = _flt(8 * (1 - t));
+				const double time     = i.counter / PLAYER_DASH_SPARK_ANIM_TIME;
+				//線の長さ(徐々に短くなる)
+				const float  sparkLen = _flt(8 * (1 - time));
+				//透明度.
+				const int    alpha    = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - time));
 
 				//飛ばす線データ.
 				Line line{};
-				line.stPos = ArcPos(i.pos, i.ang, sparkLen);
-				line.edPos = ArcPos(i.pos, i.ang + 180, sparkLen);
+				line.stPos = ArcPos(i.pos, i.ang,     sparkLen);
+				line.edPos = ArcPos(i.pos, i.ang+180, sparkLen);
 				line.color = 0x00FFFF;
 				line.thick = 2;
 
-				//透明度.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - t));
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
 						DrawLineKR(line, true);
 					}
@@ -234,7 +234,8 @@ void EffectManager::Draw() {
 			{
 				const double size  = 0.2 + 0.4 * i.counter/LASER_REF_ANIM_TIME;
 				const DBL_XY pos   = i.pos;
-				const int    alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME)); //透明度.
+				//透明度.
+				const int    alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/LASER_REF_ANIM_TIME));
 
 				//描画.
 				DrawMode::Exe(
@@ -248,11 +249,13 @@ void EffectManager::Draw() {
 
 			case EffectType::MeteorCrash:
 			{
+				//透明度.
+				const int alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME));
+
 				Circle cir = { i.pos, i.counter, COLOR_METEOR(i.pos), 1.0f };
 				//描画.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
 						DrawCircleKR(cir, Anchor::Mid, false, true);
 					}
@@ -262,16 +265,19 @@ void EffectManager::Draw() {
 
 			case EffectType::MeteorFragment:
 			{
+				//透明度.
+				const int alpha = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME));
+
 				//飛ばす線のデータ.
 				Line line{};
 				line.stPos = ArcPos(i.pos, i.ang,     i.len);
 				line.edPos = ArcPos(i.pos, i.ang+180, i.len);
 			    line.color = COLOR_METEOR(i.pos);
 				line.thick = 1;
+
 				//描画.
-				const int pow = _int_r(255 * AnimEase(EaseType::OutQuad, 1 - i.counter/METEOR_BREAK_ANIM_TIME)); //透明度.
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
 						DrawLineKR(line, true);
 					}
@@ -289,6 +295,9 @@ void EffectManager::Draw() {
 			case EffectType::Tutorial_Step3:
 			case EffectType::Tutorial_Step4:
 			{
+				//透明度.
+				const int alpha = _int_r(255 * AnimWave(WaveType::CosLoop, 1 - i.counter / MIDDLE_ANIM_TIME));
+
 				//共通設定.
 				DrawStr str = { _T("Unknown"), {_int_r(i.pos.x), _int_r(i.pos.y-20)}, 0xFFFFFF};
 				Circle mainCir = { i.pos, i.counter*5, 0xFFFFFF, 1.0f };
@@ -299,8 +308,6 @@ void EffectManager::Draw() {
 					{{-1, i.pos.y+20}, 10, 0xFFFFFF, 1.0f},
 					{{-1, i.pos.y+20}, 10, 0xFFFFFF, 1.0f}
 				};
-				//アニメーション値.
-				int pow = _int_r(255 * AnimWave(WaveType::CosLoop, 1 - i.counter/MIDDLE_ANIM_TIME));
 				//何個ランプを使うか.
 				int lampUseCnt  = 0;
 				int lampFillCnt = 0;
@@ -357,7 +364,7 @@ void EffectManager::Draw() {
 
 				//描画.
 				DrawMode::Exe(
-					DrawModeID::None, DrawBlendModeID::Alpha, pow,
+					DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 					[&]() {
 
 						//円.
