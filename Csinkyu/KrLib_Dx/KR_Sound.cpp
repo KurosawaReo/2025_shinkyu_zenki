@@ -174,7 +174,7 @@ namespace KR
 	
 		//既に存在すれば.
 		if (sounds.count(saveName) > 0) {
-			throw ErrorMsg(_T("SoundMng::LoadFile"), _T("使用済みの保存名:") + saveName);
+			throw ErrorMsg(_T("SoundMng::LoadFile"), _T("使用済みの保存名(") + saveName + _T(")"));
 			return;
 		}
 

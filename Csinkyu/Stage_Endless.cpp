@@ -46,7 +46,7 @@ void EndlessStage::Update() {
 		}
 		//エフェクト.
 		EffectData data{};
-		data.type = Effect_Endless_Level1;
+		data.type = EffectType::Endless_Level1;
 		data.pos = { WINDOW_WID/2, WINDOW_HEI/2 };
 		effectMng->SpawnEffect(&data);
 
@@ -94,7 +94,7 @@ void EndlessStage::Update() {
 				}
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Endless_Level2;
+				data.type = EffectType::Endless_Level2;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 
@@ -114,7 +114,7 @@ void EndlessStage::Update() {
 				}
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Endless_Level3;
+				data.type = EffectType::Endless_Level3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 
@@ -134,7 +134,7 @@ void EndlessStage::Update() {
 				}
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Endless_Level4;
+				data.type = EffectType::Endless_Level4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 
@@ -154,7 +154,7 @@ void EndlessStage::Update() {
 				}
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Endless_Level5;
+				data.type = EffectType::Endless_Level5;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 

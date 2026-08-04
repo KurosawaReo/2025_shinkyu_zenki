@@ -71,10 +71,10 @@ void ItemManager::Update()
 			//効果発動.
 			switch (type)
 			{
-				case Item_Normal:
+				case ItemType::Normal:
 					ItemUse(i, false);
 					break;
-				case Item_Super:
+				case ItemType::Super:
 					ItemUse(i, true);
 					break;
 
@@ -112,7 +112,7 @@ void ItemManager::Draw()
 			DrawModeID::None, DrawBlendModeID::Alpha, alpha,
 			[&]() {
 				//強化演出.
-				if (i.type == Item_Super) {
+				if (i.type == ItemType::Super) {
 					//アイテム発光.
 					GraphMng::Get(_T("light_super_item"))->DrawExtend(i.pos, { 0.4, 0.4 });
 					//アイテム本体.
@@ -126,7 +126,7 @@ void ItemManager::Draw()
 		);
 
 		//チュートリアル用.
-		if (gameData->stage == Stage_Tutorial) {
+		if (gameData->stage == StageType::Tutorial) {
 			DrawStr str(_T("アイテム"), i.pos.ToInt() + INT_XY(0, -35), COLOR_ITEM);
 			str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
 		}
@@ -144,10 +144,10 @@ void ItemManager::ItemSpawn() {
 
 	//タイプの設定.
 	if (gameData->level < 5) {
-		item.type = Item_Normal;
+		item.type = ItemType::Normal;
 	}
 	else {
-		item.type = Item_Super; //Lv5からは強化版へ.
+		item.type = ItemType::Super; //Lv5からは強化版へ.
 	}
 
 	items.push_back(item); //配列に追加.
@@ -167,18 +167,18 @@ void ItemManager::ItemUse(list<ItemData>::iterator& it, bool isSuper)
 {
 	//エフェクト召喚.
 	EffectData effect{};
-	effect.type = Effect_Score100;
+	effect.type = EffectType::Score100;
 	effect.pos  = it->pos;
 	effectMng->SpawnEffect(&effect);
 	//スコア加算.
-	gameData->score += SCORE_TAKE_ITEM;
+	gameData->AddScore(SCORE_TAKE_ITEM);
 
 	//プレイヤーのモード設定.
 	if (isSuper) {
-		player->SetMode(Player_ItemReflectSuper);
+		player->SetMode(PlayerMode::ItemReflectSuper);
 	}
 	else {
-		player->SetMode(Player_ItemReflect);
+		player->SetMode(PlayerMode::ItemReflect);
 	}
 
 	ItemReset();

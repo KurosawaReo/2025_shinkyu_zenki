@@ -35,8 +35,8 @@ void EffectManager::Update() {
 		//タイプ別.
 		switch (i->type) 
 		{
-			case Effect_Score100:
-			case Effect_Score500:
+			case EffectType::Score100:
+			case EffectType::Score500:
 			{
 				i->counter++;
 
@@ -47,7 +47,7 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_PlayerDeath:
+			case EffectType::PlayerDeath:
 			{
 				i->counter++;
 
@@ -58,7 +58,7 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_Reflect:
+			case EffectType::Reflect:
 			{
 				i->counter++;
 
@@ -69,7 +69,7 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_PlayerDashReflect:
+			case EffectType::PlayerDashReflect:
 			{
 				//カウンター計算.
 				i->counter += gameData->speedRate;
@@ -88,7 +88,7 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_MeteorCrash:
+			case EffectType::MeteorCrash:
 			{
 				//カウンター加算.
 				i->counter += gameData->speedRate;
@@ -99,7 +99,7 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_MeteorFragment:
+			case EffectType::MeteorFragment:
 			{
 				//カウンター加算.
 				i->counter += gameData->speedRate;
@@ -118,15 +118,15 @@ void EffectManager::Update() {
 			}
 			break;
 
-			case Effect_Endless_Level1:
-			case Effect_Endless_Level2:
-			case Effect_Endless_Level3:
-			case Effect_Endless_Level4:
-			case Effect_Endless_Level5:
-			case Effect_Tutorial_Step1:
-			case Effect_Tutorial_Step2:
-			case Effect_Tutorial_Step3:
-			case Effect_Tutorial_Step4:
+			case EffectType::Endless_Level1:
+			case EffectType::Endless_Level2:
+			case EffectType::Endless_Level3:
+			case EffectType::Endless_Level4:
+			case EffectType::Endless_Level5:
+			case EffectType::Tutorial_Step1:
+			case EffectType::Tutorial_Step2:
+			case EffectType::Tutorial_Step3:
+			case EffectType::Tutorial_Step4:
 			{
 				i->counter++;
 
@@ -163,8 +163,8 @@ void EffectManager::Draw() {
 		//タイプ別.　
 		switch (i.type)
 		{
-			case Effect_Score100:
-			case Effect_Score500:
+			case EffectType::Score100:
+			case EffectType::Score500:
 			{
 				//座標.
 				DBL_XY pos = {i.pos.x, i.pos.y - AnimEase(EaseType::OutQuad, i.counter/SCORE_ANIM_TIME)*30};
@@ -178,7 +178,7 @@ void EffectManager::Draw() {
 					DrawModeID::None, DrawBlendModeID::Alpha, pow,
 					[&]() {
 						//画像切り替え.
-						if (i.type == Effect_Score100) {
+						if (i.type == EffectType::Score100) {
 							GraphMng::Get(_T("score100"))->DrawExtend(pos, { size, size }, Anchor::Mid, true, true);
 						}
 						else {
@@ -189,7 +189,7 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_PlayerDeath:
+			case EffectType::PlayerDeath:
 			{
 				Circle cir = { i.pos, PLAYER_SIZE+i.counter/2, 0xFFFFFF, 1.0f };
 				
@@ -204,7 +204,7 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_PlayerDashReflect:
+			case EffectType::PlayerDashReflect:
 			{
 				//進行度(0→1).
 				const double t = i.counter / PLAYER_DASH_SPARK_ANIM_TIME;
@@ -230,7 +230,7 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_Reflect:
+			case EffectType::Reflect:
 			{
 				const double size  = 0.2 + 0.4 * i.counter/LASER_REF_ANIM_TIME;
 				const DBL_XY pos   = i.pos;
@@ -246,7 +246,7 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_MeteorCrash:
+			case EffectType::MeteorCrash:
 			{
 				Circle cir = { i.pos, i.counter, COLOR_METEOR(i.pos), 1.0f };
 				//描画.
@@ -260,7 +260,7 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_MeteorFragment:
+			case EffectType::MeteorFragment:
 			{
 				//飛ばす線のデータ.
 				Line line{};
@@ -279,15 +279,15 @@ void EffectManager::Draw() {
 			}
 			break;
 
-			case Effect_Endless_Level1:
-			case Effect_Endless_Level2:
-			case Effect_Endless_Level3:
-			case Effect_Endless_Level4:
-			case Effect_Endless_Level5:
-			case Effect_Tutorial_Step1:
-			case Effect_Tutorial_Step2:
-			case Effect_Tutorial_Step3:
-			case Effect_Tutorial_Step4:
+			case EffectType::Endless_Level1:
+			case EffectType::Endless_Level2:
+			case EffectType::Endless_Level3:
+			case EffectType::Endless_Level4:
+			case EffectType::Endless_Level5:
+			case EffectType::Tutorial_Step1:
+			case EffectType::Tutorial_Step2:
+			case EffectType::Tutorial_Step3:
+			case EffectType::Tutorial_Step4:
 			{
 				//共通設定.
 				DrawStr str = { _T("Unknown"), {_int_r(i.pos.x), _int_r(i.pos.y-20)}, 0xFFFFFF};
@@ -307,48 +307,48 @@ void EffectManager::Draw() {
 
 				switch (i.type)
 				{
-					case Effect_Endless_Level1:
+					case EffectType::Endless_Level1:
 						str.text = _T("Level 1");
 						lampUseCnt = 5;
 						lampFillCnt = 1;
 						break;
-					case Effect_Endless_Level2:
+					case EffectType::Endless_Level2:
 						str.text = _T("Level 2");
 						lampUseCnt = 5;
 						lampFillCnt = 2;
 						break;
-					case Effect_Endless_Level3:
+					case EffectType::Endless_Level3:
 						str.text = _T("Level 3");
 						lampUseCnt = 5;
 						lampFillCnt = 3;
 						break;
-					case Effect_Endless_Level4:
+					case EffectType::Endless_Level4:
 						str.text = _T("Level 4");
 						lampUseCnt = 5;
 						lampFillCnt = 4;
 						break;
-					case Effect_Endless_Level5:
+					case EffectType::Endless_Level5:
 						str.text = _T("Level 5");
 						lampUseCnt = 5;
 						lampFillCnt = 5;
 						break;
 
-					case Effect_Tutorial_Step1:
+					case EffectType::Tutorial_Step1:
 						str.text = _T("Step 1");
 						lampUseCnt = 4;
 						lampFillCnt = 1;
 						break;
-					case Effect_Tutorial_Step2:
+					case EffectType::Tutorial_Step2:
 						str.text = _T("Step 2");
 						lampUseCnt = 4;
 						lampFillCnt = 2;
 						break;
-					case Effect_Tutorial_Step3:
+					case EffectType::Tutorial_Step3:
 						str.text = _T("Step 3");
 						lampUseCnt = 4;
 						lampFillCnt = 3;
 						break;
-					case Effect_Tutorial_Step4:
+					case EffectType::Tutorial_Step4:
 						str.text = _T("Step 4");
 						lampUseCnt = 4;
 						lampFillCnt = 4;
@@ -384,16 +384,5 @@ void EffectManager::Draw() {
 
 //エフェクト出現.
 void EffectManager::SpawnEffect(const EffectData* data) {
-
-	Effect tmp; //エフェクト作成.
-
-	tmp.type  = data->type;
-	tmp.pos   = data->pos;
-	tmp.vec   = data->vec;
-	tmp.speed = data->speed;
-	tmp.ang   = data->ang;
-	tmp.len   = data->len;
-	tmp.counter = 0;       //0から開始.
-
-	effect.push_back(tmp); //listに追加.
+	effect.push_back(*data); //listに追加.
 }

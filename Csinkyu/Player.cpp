@@ -24,16 +24,19 @@ static InputMng*      inputMng;
 
 // ▼*--=<[ Player ]>=--*▼ //
 
-void Player::SetIsDashReflect(bool _flag) { 
+//移動したか.
+bool Player::IsMoved() const {
+	//移動距離が0より大きければtrue.
+	return Calc::Dist(hit.pos, after[1].pos) > 0;
+}
 
-	/*
-	//フラグがONになった瞬間のみ.
-	if (!isDashReflect && _flag) {
-		SpawnDashReflectEffect(); //スパーク演出を召喚.
+//ダッシュ反射可能か.
+bool Player::IsDashReflect() const {
+	//継続時間内であれば.
+	if (dashTimer > PLAYER_DASH_DURATION - PLAYER_DASH_REFLECT_TIME) {
+		return true; //可能.
 	}
-	*/
-
-	isDashReflect = _flag;
+	return false; //不可能.
 }
 
 //初期化(一回のみ行う)
@@ -54,7 +57,7 @@ void Player::Init()
 void Player::Reset()
 {
 	hit       = { { WINDOW_WID / 2, WINDOW_HEI / 2 + 200 }, PLAYER_SIZE, {}, {} };
-	mode      = Player_Normal;
+	mode      = PlayerMode::Normal;
 	afterCntr = 1;
 	active    = true;
 
@@ -72,7 +75,7 @@ void Player::Reset()
 
 	//フラグリセット.
 	isDashing       = false;
-    isDashReflect   = false;
+	isDashRefEffect = false;
 	isDashEndEffect = false;
 
 	//残像配列のリセット.
@@ -139,11 +142,11 @@ void Player::UpdateDash()
 		dashTimer -= 1 * gameData->speedRate;
 
 		//ダッシュ反射終了.
-		if (dashTimer <= PLAYER_DASH_DURATION - PLAYER_DASH_REFLECT_TIME)
+		if (!IsDashReflect())
 		{
-			if (mode == Player_DashReflect)
+			if (mode == PlayerMode::DashReflect)
 			{
-				mode = Player_Normal;
+				mode = PlayerMode::Normal;
 			}
 		}
 		//ダッシュ時間切れ.
@@ -170,13 +173,13 @@ void Player::UpdateDash()
 				isDashing    = true;
 
 				//ダッシュ反射開始.
-				if (mode == Player_Normal)
+				if (mode == PlayerMode::Normal)
 				{
-					mode = Player_DashReflect;
+					mode = PlayerMode::DashReflect;
 				}
 
 				//チュートリアルなら.
-				if (gameData->stage == Stage_Tutorial) {
+				if (gameData->stage == StageType::Tutorial) {
 					tutorialStg->SetPlayerDash(true);
 				}
 			}
@@ -254,8 +257,8 @@ void Player::DrawAfterNor(int idx) {
 	MY_COLOR color;
 
 	//反射カラー.
-	if (mode == Player_ItemReflect ||
-		mode == Player_ItemReflectSuper
+	if (mode == PlayerMode::ItemReflect ||
+		mode == PlayerMode::ItemReflectSuper
 	){
 		color = COLOR_PLY_AFT_REF;
 	}
@@ -281,8 +284,8 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 	//モード別.
 	switch (mode)
 	{
-		case Player_ItemReflect:
-		case Player_ItemReflectSuper:
+		case PlayerMode::ItemReflect:
+		case PlayerMode::ItemReflectSuper:
 		{
 			//三角形のグラデーション線を作成.
 			line.AddPoint(pos2, { 255,   0, 255, _int_r(255 * (1 - anim1)) });
@@ -291,11 +294,11 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 		}
 		break;
 
-		case Player_Normal:
-		case Player_DashReflect:
+		case PlayerMode::Normal:
+		case PlayerMode::DashReflect:
 		{
 			//ダッシュ反射してたら色付き.
-			if (isDashReflect) {
+			if (isDashRefEffect) {
 
 				//色の変化.
 				MY_COLOR color = {
@@ -328,60 +331,76 @@ void Player::DrawAfterDash(int idx, double anim1, double anim2) {
 void Player::DrawPlayer() {
 
 	//透明度計算.
-	const int alpha  = _int(255 * Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION));
-	const int alpha2 = _int(80 + 128 * Calc::AnimWave(WaveType::CosLoop, gameMng->GetGameScene()->GetReflectModeTime() * 2));
+	const double alpha  = Calc::AnimEase(EaseType::OutQuad, dashTimer / PLAYER_DASH_DURATION);
+	const double alpha2 = Calc::AnimWave(WaveType::CosLoop, gameMng->GetGameScene()->GetReflectModeTime() * 2);
 
-	//プレイヤー描画.
-	if (mode == Player_ItemReflect ||
-		mode == Player_ItemReflectSuper
+	//使用する画像名.
+	MY_STRING imgDash   = _T("null");
+	MY_STRING imgPlayer = _T("null");
+
+	if (mode == PlayerMode::ItemReflect ||
+		mode == PlayerMode::ItemReflectSuper
 	){
 		//ダッシュ演出.
 		if (isDashing) {
-			//発光.
-			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
-				[&]() {
-					GraphMng::Get(_T("light_ref_player"))->DrawExtend(
-						hit.pos, { PLAYER_LIGHT_DRAW_SIZE, PLAYER_LIGHT_DRAW_SIZE }, Anchor::Mid, true, true
-					);
-				}
-			);
+			imgDash = _T("light_ref_player");
 		}
+		//プレイヤー本体.
+		imgPlayer = _T("player_ref");
+	}
+	else 
+	{
+		//ダッシュ演出.
+		if (isDashing) {
+			imgDash = _T("light_nor_player");
+		}
+		//プレイヤー本体.
+		imgPlayer = _T("player_nor");
+	}
+
+	//ダッシュ時.
+	if (isDashing) {
+		//発光.
+		DrawMode::Exe(
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(255 * alpha),
+			[&]() {
+				GraphMng::Get(imgDash)->DrawExtend(
+					hit.pos, { PLAYER_LIGHT_DRAW_SIZE, PLAYER_LIGHT_DRAW_SIZE }, Anchor::Mid, true, true
+				);
+			}
+		);
+	}
+
+	//反射モード時.
+	if (mode == PlayerMode::ItemReflect ||
+		mode == PlayerMode::ItemReflectSuper
+	){
 		//反射バリア.
 		DrawMode::Exe(
-			DrawModeID::None, DrawBlendModeID::Alpha, alpha2,
+			DrawModeID::None, DrawBlendModeID::Alpha, _int(80 + 128 * alpha2),
 			[&]() {
 				GraphMng::Get(_T("player_ref_barrier"))->DrawExtend(
 					hit.pos, { PLAYER_DRAW_SIZE, PLAYER_DRAW_SIZE }, Anchor::Mid, true, true
 				);
 			}
 		);
-		//プレイヤー.
-		GraphMng::Get(_T("player_ref"))->DrawRota(
-			hit.pos, PLAYER_DRAW_SIZE, imgRot, { 0, 0 }, true, true
-		);
 	}
 	else {
-		//ダッシュ演出.
-		if (isDashing) {
-			//発光.
-			DrawMode::Exe(
-				DrawModeID::None, DrawBlendModeID::Alpha, alpha,
-				[&]() {
-					GraphMng::Get(_T("light_nor_player"))->DrawExtend(
-						hit.pos, { PLAYER_LIGHT_DRAW_SIZE, PLAYER_LIGHT_DRAW_SIZE }, Anchor::Mid, true, true
-					);
-				}
-			);
-		}
-		//プレイヤー.
-		GraphMng::Get(_T("player_nor"))->DrawRota(
-			hit.pos, PLAYER_DRAW_SIZE, imgRot, { 0, 0 }, true, true
-		);
+		//TODO: ダッシュ反射の継続時間が分かる演出をどうするか?
+		/*
+		//ダッシュ反射円.
+		Circle cir = { hit.pos, _flt(40 * alpha), COLOR_MODE_REF, 1 };
+		DrawCircleKR(cir, Anchor::Mid, false, true);
+		*/
 	}
 
+	//プレイヤー本体.
+	GraphMng::Get(imgPlayer)->DrawRota(
+		hit.pos, PLAYER_DRAW_SIZE, imgRot, { 0, 0 }, true, true
+	);
+
 	//チュートリアル用.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		DrawStr str(_T("プレイヤー"), hit.pos.ToInt() + INT_XY(0, -40), 0xFFFFFF);
 		str.Draw(Anchor::Mid, gameData->fonts["jp-size1"].GetFont());
 	}
@@ -446,7 +465,7 @@ void Player::Death() {
 	}
 	//エフェクト.
 	EffectData data{};
-	data.type = Effect_PlayerDeath;
+	data.type = EffectType::PlayerDeath;
 	data.pos = hit.pos;
 	effectMng->SpawnEffect(&data);
 
@@ -474,7 +493,7 @@ void Player::Revival()
 }
 
 //反射スパーク生成.
-void Player::SpawnDashReflectEffect()
+void Player::SpawnEffectSpark()
 {
 	const double baseAng = Calc::FacingAng({ 0,0 }, lastInputVec);
 	const int sparkNum = 10;
@@ -492,7 +511,7 @@ void Player::SpawnDashReflectEffect()
 		}
 		//エフェクト.
 		EffectData data{};
-		data.type  = Effect_PlayerDashReflect;
+		data.type  = EffectType::PlayerDashReflect;
 		data.pos   = hit.pos;
 		data.vec   = Calc::AngToVector(ang);
 		data.speed = _flt(speed);

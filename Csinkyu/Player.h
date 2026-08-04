@@ -16,13 +16,13 @@ struct AfterEffect
 };
 
 //プレイヤーモード.
-enum PlayerMode
+enum class PlayerMode
 {
-	Player_Normal,           //通常モード.
-	Player_ItemReflect,      //アイテム反射モード.
-	Player_ItemReflectSuper, //アイテム反射モード強化版.
-	Player_DashReflect,      //反射ダッシュ.
-	Player_DashReflectSpark, //ダッシュエフェクト.
+	Normal,           //通常モード.
+	ItemReflect,      //アイテム反射モード.
+	ItemReflectSuper, //アイテム反射モード強化版.
+	DashReflect,      //反射ダッシュ.
+	DashReflectSpark, //ダッシュエフェクト.
 };
 
 //プレイヤー.
@@ -40,7 +40,7 @@ private:
 	float			dashEndEffectTimer{};	//エフェクト残り時間.
 
 	bool			isDashing{};			//ダッシュ中かどうか.
-	bool			isDashReflect{};		//ダッシュ反射演出を出すか.
+	bool			isDashRefEffect{};		//ダッシュ反射エフェクトを出すか.
 	bool			isDashEndEffect{};		//エフェクト発動フラグ.
 	bool            isNoDeath{};            //無敵かどうか(チュートリアル用)
 	bool			isDebug{};				//デバッグ用.
@@ -63,23 +63,20 @@ public:
 	Player(int order) : ManagerBase(order) {}
 
 	//set.
-	void       SetPos          (DBL_XY     _pos ) { hit.pos       = _pos;  }
-	void       SetActive       (bool       _flag) { active        = _flag; }
-	void       SetMode         (PlayerMode _mode) { mode          = _mode; }
-	void       SetIsNoDeath    (bool       _flag) { isNoDeath     = _flag; }
-	void       SetIsDashReflect(bool       _flag);
+	void       SetPos            (DBL_XY     _pos ) { hit.pos         = _pos;  }
+	void       SetActive         (bool       _flag) { active          = _flag; }
+	void       SetMode           (PlayerMode _mode) { mode            = _mode; }
+	void       SetIsNoDeath      (bool       _flag) { isNoDeath       = _flag; }
+	void       SetIsDashRefEffect(bool       _flag) { isDashRefEffect = _flag; }
 	//get. 
-	DBL_XY     GetPos()      const { return hit.pos; }
-	bool       GetActive()   const { return active; }
-	PlayerMode GetMode()     const { return mode; }
-	Circle     GetHit()      const { return hit; }
+	DBL_XY     GetPos()       const { return hit.pos;   }
+	bool       GetActive()    const { return active;    }
+	PlayerMode GetMode()      const { return mode;      }
+	Circle     GetHit()       const { return hit;       }
+	bool       GetIsDashing() const { return isDashing; }
 	
-	//移動したか.
-	bool IsMoved() const { 
-		return Calc::Dist(hit.pos, after[1].pos) > 0; //移動距離が0より大きければ.
-	}
-
-	bool GetIsDashing() const { return isDashing; }
+	bool IsMoved()       const;
+	bool IsDashReflect() const;
 
 	void Init  () override;
 	void Reset () override;
@@ -99,7 +96,7 @@ public:
 	void Death();		//プレイヤー死亡.
 	void Revival();		//プレイヤー復活.
 
-	void SpawnDashReflectEffect(); //ダッシュ反射エフェクト生成.
+	void SpawnEffectSpark(); //ダッシュ反射エフェクト生成.
 
 	//使用禁止.
 	Player(const Player*) = delete;

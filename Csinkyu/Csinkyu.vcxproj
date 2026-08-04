@@ -27,6 +27,7 @@
     <ClCompile Include="BG3.cpp" />
     <ClCompile Include="BGManager.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="KrLib_cpp\KR_Calc.cpp" />

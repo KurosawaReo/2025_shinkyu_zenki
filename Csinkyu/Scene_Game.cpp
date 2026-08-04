@@ -66,7 +66,7 @@ void GameScene::Enter() {
 //抜けた瞬間.
 void GameScene::Exit() {
 	//チュートリアル以外のみ.
-	if (gameData->stage != Stage_Tutorial) {
+	if (gameData->stage != StageType::Tutorial) {
 
 		itemSoundCnt = 0;
 		timer.Stop();          //演出用タイマー停止.
@@ -91,10 +91,10 @@ void GameScene::Update() {
 			//ステージ別.
 			switch (gameData->stage)
 			{
-				case Stage_Tutorial: 
+				case StageType::Tutorial:
 					ManagerInsts::Get<TutorialStage>()->SetAutoExeMode(MngAutoExe::Active);
 					break;
-				case Stage_Endless:  
+				case StageType::Endless:
 					ManagerInsts::Get<EndlessStage>()-> SetAutoExeMode(MngAutoExe::Active);
 					break;
 
@@ -139,8 +139,8 @@ void GameScene::UpdateReflectMode() {
 
 		//0になったら.
 		if (gameData->slowBufCntr <= 0) {
-			gameData->speedRate = 1.0;       //速度倍率を戻す.
-			player->SetIsDashReflect(false); //ダッシュ反射演出終了.
+			gameData->speedRate = 1.0;         //速度倍率を戻す.
+			player->SetIsDashRefEffect(false); //ダッシュ反射演出終了.
 		}
 	}
 
@@ -229,14 +229,14 @@ void GameScene::ReflectModeEnd() {
 	gameData->speedRate = 1.0;		 //速度倍率を100%に戻す.
 	gameData->slowBufCntr = 0;		 //カウンターを0に.
 	itemSoundCnt = 0;
-	player->SetMode(Player_Normal);  //通常状態に戻す.
+	player->SetMode(PlayerMode::Normal);  //通常状態に戻す.
 
 	//効果終了音.
 	if (auto i = soundMng->Get(_T("PowerDown"))) {
 		i->Play(false, 78); //再生.
 	}
 	//チュートリアルなら指示送信.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		tutorialStg->SetReflectFinish(true); //指示を送る.
 	}
 }

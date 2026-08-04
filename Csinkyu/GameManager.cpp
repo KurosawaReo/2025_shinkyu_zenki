@@ -94,6 +94,7 @@ void GameManager::Init() {
 		soundMng->LoadFile(_T("bgm/Scarlet Radiance.mp3"),		_T("BGM_Endless_1"));	//エンドレスモードBGM1.
 		soundMng->LoadFile(_T("bgm/CODE FROST.mp3"),			_T("BGM_Endless_2"));   //エンドレスモードBGM2.
 		soundMng->LoadFile(_T("bgm/Glacial brilliance.mp3"),	_T("BGM_Endless_3"));   //エンドレスモードBGM3.
+		soundMng->LoadFile(_T("bgm/Crystal Reverie.mp3"),		_T("BGM_Endless_4"));   //エンドレスモードBGM3.
 		soundMng->LoadFile(_T("bgm/命ナキ者ノ詩.mp3"),			_T("BGM_Over"));		//ゲームオーバーBGM.
 
 		soundMng->LoadFile(_T("se/audiostock_1636674.mp3"),		_T("MenuCursor"));		//メニューカーソル音.
@@ -193,15 +194,6 @@ void GameManager::Init() {
 //リセット(何回でも行う)
 void GameManager::Reset() {
 
-	//データ.
-	gameData->scoreBef      = 0;
-	gameData->score         = 0;
-	gameData->counter       = 0;
-	gameData->speedRate     = 1.0;   //通常は100%
-	gameData->spawnRate     = 1.0;   //最初は100%
-	gameData->level         = 1;     //最初はLv1
-	gameData->isReflectMode = false; //最初はLv1
-
 	//最初はタイトルシーン.
 	sceneMng->SetScene(_T("Title"));
 
@@ -226,6 +218,7 @@ void GameManager::Reset() {
 			_T("BGM_Endless_1"),
 			_T("BGM_Endless_2"),
 			_T("BGM_Endless_3"),
+			_T("BGM_Endless_4"),
 		};
 		//何番目のBGMを使うか(bgmName配列の中から抽選)
 		const int bgmNo = Calc::RandNum(0, _int(bgmName.size() - 1));
@@ -316,29 +309,30 @@ void GameManager::GameOver() {
 		//ステージ別.
 		switch (gameData->stage)
 		{
-			case Stage_Tutorial:
+			case StageType::Tutorial:
 			{
 				sceneMng->SetScene(_T("End")); //終了シーンへ.
 			}
 			break;
 
-			case Stage_Endless:
+			case StageType::Endless:
 			{
 				sceneMng->SetScene(_T("End")); //終了シーンへ.
 
-				gameData->speedRate = 1.0;									//速度倍率を100%に戻す.
-				gameData->scoreBef  = gameData->score;						//時間加算前のスコアを記録.
-				gameData->score     += _int(gameScene.GetGameTime() * 10);	//時間ボーナス加算.
+				gameData->speedRate = 1.0; //速度倍率を100%に戻す.
+
+				//最終スコア.
+				const int finalScore = gameData->GetScore();
 
 				//[score.data]
-				if (gameData->score > gameData->bestScore) {
+				if (finalScore > gameData->bestScore) {
 
 					File file;
 					//ファイルを開く.
 					if (file.Open(FILE_DATA_SCORE, FileOpenMode::Write)) {
-						file.WriteInt(gameData->score);			//スコアを保存.
-						gameData->bestScore = gameData->score;	//スコア更新.
-						endScene.SignBestScore();				//ハイスコアのサイン送信.
+						file.WriteInt(finalScore);			//スコアを保存.
+						gameData->bestScore = finalScore;	//スコア更新.
+						endScene.SignBestScore();			//ハイスコアのサイン送信.
 					}
 				}
 
@@ -371,7 +365,7 @@ void GameManager::ItemUsed() {
 	gameScene.ItemUsed();           //アイテム使用処理.
 	
 	//チュートリアルなら指示送信.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		tutorialStg->SetTakeItem(true);       //指示を送る.
 		tutorialStg->SetReflectFinish(false); //falseにする(指示取り消し)
 	}
@@ -483,7 +477,7 @@ void GameManager::WritePlayLog(bool isTutorial) {
 			_T("[%d/%0.2d/%0.2d %0.2d:%0.2d.%0.2d] DeviceName:%s / Mode:Endless (Level:%d, Score:%0.5d, Time:%.1f)\n"),
 			//変数挿入.
 			date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec,
-			Device::GetComputerNameStr().c_str(), gameData->level, gameData->score, gameScene.GetGameTime()
+			Device::GetComputerNameStr().c_str(), gameData->level, gameData->GetScore(), gameScene.GetGameTime()
 		);
 	}
 

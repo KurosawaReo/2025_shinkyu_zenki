@@ -59,7 +59,7 @@ void UIManager::Draw() {
 	//ステージ別.
 	switch (gameData->stage) 
 	{
-		case Stage_Tutorial:
+		case StageType::Tutorial:
 		{
 			//アニメーション値.
 			double alpha   = Calc::AnimEase(EaseType::InOutQuad, (time-1.0)*2);
@@ -70,9 +70,9 @@ void UIManager::Draw() {
 			DrawStr str2({}, { WINDOW_WID/2, 150        }, COLOR_SCORE);
 			
 			TCHAR text[256];
-			_stprintf(text, _T("STEP %d"), tutorialStg->GetStepNo());
+			_stprintf(text, _T("STEP %d"),    tutorialStg->GetStepNo());
 			str1.text = text;
-			_stprintf(text, _T("SCORE:%05d"), gameData->score);
+			_stprintf(text, _T("SCORE:%05d"), gameData->GetScoreNoTime());
 			str2.text = text;
 
 			// ===== STEP =====
@@ -108,7 +108,7 @@ void UIManager::Draw() {
 		}
 		break;
 
-		case Stage_Endless:
+		case StageType::Endless:
 		{
 			//アニメーション値.
 			const double alpha1   = Calc::AnimEase(EaseType::InOutQuad, (time - 0.1)    );
@@ -140,7 +140,7 @@ void UIManager::Draw() {
 			str[0].text = text;
 			_stprintf(text, _T("BEST SCORE:%05d"), dispBestScore);
 			str[1].text = text;
-			_stprintf(text, _T("SCORE:%05d"),      gameData->score);
+			_stprintf(text, _T("SCORE:%05d"),      gameData->GetScore());
 			str[2].text = text;
 			_stprintf(text, _T("TIME:%.1f"),       fixTime);
 			str[3].text = text;

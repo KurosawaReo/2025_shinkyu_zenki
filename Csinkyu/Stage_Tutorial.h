@@ -12,7 +12,7 @@ private:
 	int    stepInnerNo{};     //現在のステップ内番号.
 
 	int    plyMoveCntr{};     //プレイヤーの移動カウンター.
-	float  drawAlpha{};       //描画用透明度.
+	double drawAlpha{};       //描画用透明度.
 
 	bool   isPlayerDash{};    //プレイヤーがダッシュしたかどうか.
 	bool   isTakeItem{};      //アイテムを取ったかどうか.

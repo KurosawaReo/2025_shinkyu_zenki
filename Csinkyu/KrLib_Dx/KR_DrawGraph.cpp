@@ -339,7 +339,7 @@ namespace KR
 		const auto imgIt = inst.graphs.find(saveName);
 		//存在しなければ.
 		if (imgIt == inst.graphs.end()) {
-			throw ErrorMsg(_T("GraphMng::Get"), _T("取得失敗:") + saveName);
+			throw ErrorMsg(_T("GraphMng::Get"), _T("取得失敗(") + saveName + _T(")"));
 			return nullptr;
 		}
 		return &imgIt->second;
@@ -363,7 +363,7 @@ namespace KR
 
 		//既に存在すれば.
 		if (inst.graphs.count(saveName) > 0) {
-			throw ErrorMsg(_T("GraphMng::LoadImg"), _T("使用済みの保存名:") + saveName);
+			throw ErrorMsg(_T("GraphMng::LoadImg"), _T("使用済みの保存名(") + saveName + _T(")"));
 			return;
 		}
 
@@ -373,7 +373,7 @@ namespace KR
 		//ファイル読み込み(画像用)
 		int handle = LoadGraph(pathFull.c_str());
 		if (handle < 0) {
-			throw ErrorMsg(_T("GraphMng::LoadImg"), _T("読み込み失敗:") + fileName);
+			throw ErrorMsg(_T("GraphMng::LoadImg"), _T("読み込み失敗(") + fileName + _T(")"));
 			return;
 		}
 		//画像登録.
@@ -434,7 +434,7 @@ namespace KR
 
 		//既に存在すれば.
 		if (inst.graphs.count(saveName) > 0) {
-			throw ErrorMsg(_T("GraphMng::LoadMovie"), _T("使用済みの保存名:") + saveName);
+			throw ErrorMsg(_T("GraphMng::LoadMovie"), _T("使用済みの保存名(") + saveName + _T(")"));
 			return;
 		}
 
@@ -444,7 +444,7 @@ namespace KR
 		//ファイル読み込み(動画用)
 		int handle = OpenMovieToGraph(pathFull.c_str());
 		if (handle < 0) {
-			throw ErrorMsg(_T("GraphMng::LoadMovie"), _T("読み込み失敗:") + fileName);
+			throw ErrorMsg(_T("GraphMng::LoadMovie"), _T("読み込み失敗(") + fileName + _T(")"));
 			return;
 		}
 		//画像登録.

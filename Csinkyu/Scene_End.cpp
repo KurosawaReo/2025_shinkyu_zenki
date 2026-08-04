@@ -49,7 +49,7 @@ void EndScene::Enter() {
 	timer.Start(); //タイマー開始.
 
 	//チュートリアル限定.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 
 		//一定時間経過したら.
 		ManagerInsts::Get<TimerMng>()->ReservExe(
@@ -75,7 +75,7 @@ void EndScene::Exit() {
 void EndScene::Update() {
 
 	//チュートリアル限定.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 		//ゲームシーンと同じ動作をする.
 		gameMng->GetGameScene()->Update();
 	}
@@ -109,7 +109,7 @@ void EndScene::Draw() {
 	}
 
 	//チュートリアルの場合.
-	if (gameData->stage == Stage_Tutorial) {
+	if (gameData->stage == StageType::Tutorial) {
 
 		//アニメーション値.
 		double anim = Calc::AnimEase(EaseType::OutQuad, timer.GetPassTime());
@@ -148,8 +148,12 @@ void EndScene::Draw() {
 			//テキスト.
 			MY_STRING texts[] = {
 				_T("Time Bonus"),
-				Format::StrFormat(_T("%d + %d (%.1f sec) = %d"), gameData->scoreBef, _int(fixTime * 10), fixTime, gameData->score),
+				Format::StrFormat(
+					_T("%d + %d (%.1f sec) = %d"), 
+					gameData->GetScoreNoTime(), _int(fixTime * 10), fixTime, gameData->GetScore()
+				),
 			};
+
 			DrawStr str = { _T(""), { WINDOW_WID / 2, WINDOW_HEI / 2 - 20 }, 0xFFFFFF };
 			//テキストサイズ.
 			const INT_XY textSize = GetTextSize(texts[1], font);

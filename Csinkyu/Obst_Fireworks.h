@@ -5,18 +5,9 @@
 */
 #pragma once
 
-// 花火の状態
-enum FireworksState {
-	FIREWORKS_STATE_WARNING,    // 予告状態
-	FIREWORKS_STATE_EXPLODING,  // 爆発中
-	FIREWORKS_STATE_FALLING     // 落下中
-};
-
-// 花火データ構造
-struct FireworksData 
+//花火(Fireworks)データ.
+struct FwData 
 {
-	FireworksState state;      // 現在の状態.
-
 	float x, y;                // 座標
 	float targetX, targetY;    // 目標座標（爆発位置）
 	float vx, vy;              // 速度
@@ -32,8 +23,8 @@ class Fireworks final : public ManagerBase
 {
 //▼データ.
 private:
-	list<FireworksData> fireworks;
-	float				spawnTimer{};
+	list<FwData> fireworks;
+	float		 spawnTimer{};
 
 //▼ ===== 関数 ===== ▼.
 private:
@@ -45,7 +36,7 @@ private:
 	void CreateFireworksSparks    (float x, float y);
 
 	//描画用.
-	void DrawWarningEffect(list<FireworksData>::iterator it);
+	void DrawWarningEffect(list<FwData>::iterator it);
 
 public:
 	//コンストラクタ

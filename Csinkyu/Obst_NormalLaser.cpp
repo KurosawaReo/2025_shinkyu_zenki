@@ -113,7 +113,7 @@ void NormalLaserPoint::Shot() {
 		const double angle  = atan2(plyPos.y - pos.y, plyPos.x - pos.x);
 		const DBL_XY vel    = { cos(angle), sin(angle) };
 
-		laserMng->SpawnLaser(pos, vel, Laser_Normal); //通常レーザー召喚.
+		laserMng->SpawnLaser(pos, vel, LaserType::Normal); //通常レーザー召喚.
 		normalLaser->CreateFlashEffect(pos.x, pos.y); //エフェクトを出す.
 	}
 }

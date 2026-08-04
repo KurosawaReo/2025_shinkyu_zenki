@@ -51,7 +51,7 @@ Meteor* MeteorManager::GetTargetMeteor(DBL_XY pos) {
 	//全隕石ループ.
 	for (auto& i : meteors) {
 		//破壊されてる or ターゲットされてるならスキップ.
-		if (i.GetState() == Meteor_Destroy || i.GetIsTargeting()){
+		if (i.GetState() == MeteorState::Destroy || i.GetIsTargeting()){
 			continue;
 		}
 
@@ -155,7 +155,7 @@ void MeteorManager::BreakMeteor(DBL_XY pos, bool isScore, double scale) {
 	//破片エフェクト.
 	{
 		EffectData data{};
-		data.type = Effect_MeteorFragment;
+		data.type = EffectType::MeteorFragment;
 		data.pos  = pos;
 		//いくつか出す.
 		for (int i = 0; i < METEOR_BREAK_ANIM_CNT; i++) {
@@ -172,14 +172,14 @@ void MeteorManager::BreakMeteor(DBL_XY pos, bool isScore, double scale) {
 	//破壊エフェクト.
 	{
 		EffectData data{};
-		data.type = Effect_MeteorCrash;
+		data.type = EffectType::MeteorCrash;
 		data.pos  = pos;
 		effectMng->SpawnEffect(&data); //エフェクト出現.
 	}
 	//スコアエフェクト.
 	if (isScore) {
 		EffectData data{};
-		data.type = Effect_Score500;
+		data.type = EffectType::Score500;
 		data.pos  = pos;
 		effectMng->SpawnEffect(&data); //エフェクト出現.
 	}

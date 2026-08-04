@@ -144,7 +144,7 @@ void TutorialStage::UpdateStep0() {
 	}
 	//エフェクト.
 	EffectData data{};
-	data.type = Effect_Tutorial_Step1;
+	data.type = EffectType::Tutorial_Step1;
 	data.pos  = { WINDOW_WID/2, WINDOW_HEI/2 };
 	effectMng->SpawnEffect(&data);
 
@@ -211,7 +211,7 @@ void TutorialStage::UpdateStep1() {
 
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Tutorial_Step2;
+				data.type = EffectType::Tutorial_Step2;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 
@@ -270,7 +270,7 @@ void TutorialStage::UpdateStep2() {
 
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Tutorial_Step3;
+				data.type = EffectType::Tutorial_Step3;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 
@@ -355,7 +355,7 @@ void TutorialStage::UpdateStep3() {
 						//動画.
 						GraphMng::Get(_T("reflect_mode_death"))->PlayMovie(PlayTypeID::Loop);
 						//ゲーム速度.
-						gameData->speedRate = 0.1;
+						gameData->speedRate = 0.1f;
 						//無敵にする.
 						player->SetIsNoDeath(true);
 					}
@@ -402,17 +402,17 @@ void TutorialStage::UpdateStep3() {
 
 				//エフェクト.
 				EffectData data{};
-				data.type = Effect_Tutorial_Step4;
+				data.type = EffectType::Tutorial_Step4;
 				data.pos  = {WINDOW_WID/2, WINDOW_HEI/2};
 				effectMng->SpawnEffect(&data);
 
 				//スコア表示.
-				gameData->scoreBef = gameData->score = 0;
+				gameData->ResetScore();
 				uiMng->SetIsShowScore(true);
 
 				//動画用.
 				GraphMng::Get(_T("dash_reflect"))->StopMovie();
-				gameData->speedRate = 1.0;   //ゲーム速度.
+				gameData->speedRate = 1.0f;  //ゲーム速度.
 				player->SetIsNoDeath(false); //無敵解除.
 
 				//終了処理.
@@ -473,7 +473,7 @@ void TutorialStage::UpdateStep4() {
 void TutorialStage::DrawStep1() {
 
     //ステップ内項目.
-    switch (stepInnerNo) 
+    switch (stepInnerNo)
     {
         case 0:
         {
@@ -800,7 +800,7 @@ bool TutorialStage::IsEnd(int stepNo, int stepInnerNo) {
 
 				//隕石を壊した & 反射モードでなければ.
 				case 2:
-					ret = isBreakMeteor && player->GetMode() == Player_Normal;
+					ret = isBreakMeteor && player->GetMode() == PlayerMode::Normal;
 					break;
 
 				//一定時間が経過したら.
@@ -825,7 +825,7 @@ bool TutorialStage::IsEnd(int stepNo, int stepInnerNo) {
 			{
 				//一定スコアを越える & 反射モードでなければ.
 				case 0:
-					ret = gameData->score >= 2000 && player->GetMode() == Player_Normal;
+					ret = gameData->GetScoreNoTime() >= 2000 && player->GetMode() == PlayerMode::Normal;
 					break;
 
 				//一定時間が経過したら.
